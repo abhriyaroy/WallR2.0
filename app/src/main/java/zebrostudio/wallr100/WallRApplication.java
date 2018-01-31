@@ -2,9 +2,16 @@ package zebrostudio.wallr100;
 
 import android.app.Application;
 
-/**
- * Created by royab on 29-01-2018.
- */
+import zebrostudio.wallr100.di.component.ApplicationComponent;
 
 public class WallRApplication extends Application {
+
+    ApplicationComponent mApplicationComponent;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+
+    }
 }

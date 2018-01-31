@@ -1,11 +1,150 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="WallrTheme" parent="Theme.Guillotine" />
+
+    <style name="Theme.Guillotine" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimaryDark">@color/guillotine_background_dark</item>
+        <item name="colorPrimary">@color/guillotine_background</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
     </style>
 
+
+    <style name="CustomActionBar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:windowActionBarOverlay">true</item>
+        <!-- Support library compatibility -->
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+
+    <!-- Base application theme. -->
+
+
+    <style name="MaterialSearchViewStyle">
+        <!-- Background for the search bar -->
+        <item name="searchBackground">@color/guillotine_background</item>
+
+        <!-- Change voice icon -->
+        <item name="searchVoiceIcon">@drawable/ic_action_voice_search_inverted</item>
+
+        <!-- Change clear text icon -->
+        <item name="searchCloseIcon">@drawable/ic_action_navigation_close_inverted</item>
+
+        <!-- Change up icon -->
+        <item name="searchBackIcon">@drawable/ic_action_navigation_arrow_back_inverted</item>
+
+        <!-- Change icon for the suggestions -->
+        <item name="searchSuggestionIcon">@drawable/ic_suggestion</item>
+
+        <!-- Change background for the suggestions list view -->
+        <item name="searchSuggestionBackground">@android:color/white</item>
+
+        <!-- Change text color for edit text. This will also be the color of the cursor -->
+        <item name="android:textColor">@android:color/white</item>
+
+        <!-- Change hint text color for edit text -->
+        <item name="android:textColorHint">@android:color/darker_gray</item>
+
+        <!-- Hint for edit text -->
+        <item name="android:hint">@string/search_hint</item>
+    </style>
+
+    <style name="LinearLayout" />
+
+    <style name="LinearLayout.GuillotineItem">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
+    <style name="TextView" />
+
+    <style name="TextView.ToolbarTitle">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="TextView.GuillotineItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/guillotine_small_margin</item>
+        <item name="android:textSize">@dimen/guillotine_item_text_size</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="TextView.GuillotineItem.Selected">
+        <item name="android:textColor">@color/selected_item_color</item>
+    </style>
+
+    <style name="Toolbar">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@color/guillotine_background</item>
+    </style>
+
+    <style name="ImageView" />
+
+    <style name="ImageView.ContentItem">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="ImageView.Hamburger" parent="Widget.AppCompat.ActionButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginBottom">
+            @dimen/abc_action_bar_overflow_padding_start_material
+        </item>
+    </style>
+
+    <style name="ImageView.GuillotineItem">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginLeft">@dimen/guillotine_large_margin</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <style name="overflow_menu" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:ellipsize">none</item>
+    </style>
+
+    <style name="Switch" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">@color/colorAccent</item>
+
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">@color/white</item>
+
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">@color/white</item>
+    </style>
+
+    <color name="gray">#757575</color>
+
+    <!--<style name="FullscreenTheme" parent="WallrTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style> -->
 </resources>

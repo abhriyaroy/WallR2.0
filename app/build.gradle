@@ -16,6 +16,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         renderscriptTargetApi 23
         renderscriptSupportModeEnabled true
+        multiDexEnabled true
         lintOptions {
             abortOnError false
         }
@@ -26,8 +27,8 @@ android {
             preDexLibraries = true
             javaMaxHeapSize "2g"
         }
-        manifestPlaceholders = [onesignal_app_id : "ff94f0fe-e700-4b66-9f26-5408fca95297",
-                                onesignal_google_project_number : "REMOTE"]
+        manifestPlaceholders = [onesignal_app_id               : "ff94f0fe-e700-4b66-9f26-5408fca95297",
+                                onesignal_google_project_number: "REMOTE"]
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -45,6 +46,7 @@ android {
 
 dependencies {
     final SUPPORT_LIBRARY_VERSION = '26.1.0'
+    final GOOGLE_PLAYSERVICES_VERSION = '10.8.1'
     final CONSTARAINT_LAYOUT_VERSION = '1.0.2'
     final MULTIDEX_VERSION = '1.0.1'
     final RETROFIT_VERSION = '2.3.0'
@@ -56,6 +58,8 @@ dependencies {
     final PERMISSIONS_DISPATCHER_VERSION = '3.1.0'
     final RX_IMAGEPICKER_VERSION = '2.0.2'
     final RX_JAVA_VERSION = '2.2.0-SNAPSHOT'
+    final DAGGER_VERSION = '2.14.1'
+    final BUTTERKNIFE_VERSION = '8.8.1'
     final EVERNOTE_JOB_VERSION = '1.2.2'
     final SMARTTAB_LAYOUT_VERSION = '1.6.1@aar'
     final RECYCLERVIEW_ANIMATOR_VERSION = '2.2.3'
@@ -76,6 +80,7 @@ dependencies {
     final FLAT_BUTTON_VERSION = 'v1.1'
     final COLOR_PICKER_VERSION = '1.0.8'
 
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
     // Support libraries
@@ -87,6 +92,7 @@ dependencies {
     compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support.constraint:constraint-layout:$CONSTARAINT_LAYOUT_VERSION"
     compile "com.android.support:multidex:$MULTIDEX_VERSION"
+    compile "com.google.android.gms:play-services:$GOOGLE_PLAYSERVICES_VERSION"
 
     // Networking libraries
     compile "com.google.code.gson:gson:$GSON_VERSION"
@@ -114,6 +120,14 @@ dependencies {
     // Rx Java
     compile "com.mlsdev.rximagepicker:library:$RX_IMAGEPICKER_VERSION"
     compile "io.reactivex.rxjava2:rxjava:$RX_JAVA_VERSION"
+
+    // Dagger
+    compile "com.google.dagger:dagger:$DAGGER_VERSION"
+    annotationProcessor "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+
+    // Butterknife
+    compile "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
 
     // Services
     compile "com.evernote:android-job:$EVERNOTE_JOB_VERSION"
