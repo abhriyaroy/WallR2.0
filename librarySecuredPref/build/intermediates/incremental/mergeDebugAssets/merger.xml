@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="C:\Android studio Projects\WallR2.0\librarySecuredPref\src\main\assets"/><source path="C:\Android studio Projects\WallR2.0\librarySecuredPref\build\generated\assets\shaders\debug"/></dataSet><dataSet config="debug"><source path="C:\Android studio Projects\WallR2.0\librarySecuredPref\src\debug\assets"/></dataSet></merger>

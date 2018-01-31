@@ -1,0 +1,17 @@
+apply plugin: 'com.android.library'
+
+android {
+  compileSdkVersion 26
+  buildToolsVersion '26.0.2'
+  resourcePrefix 'ms__'
+
+  defaultConfig {
+    minSdkVersion 14
+    targetSdkVersion 26
+  }
+}
+
+dependencies {
+  testCompile 'junit:junit:4.12'
+  compile 'com.android.support:support-annotations:26.0.2'
+}

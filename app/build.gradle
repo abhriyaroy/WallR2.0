@@ -1,4 +1,9 @@
+plugins {
+    id 'com.onesignal.androidsdk.onesignal-gradle-plugin' version '0.8.1'
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
 
 android {
     compileSdkVersion 26
@@ -7,21 +12,144 @@ android {
         minSdkVersion 17
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0"
+        versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        renderscriptTargetApi 23
+        renderscriptSupportModeEnabled true
+        lintOptions {
+            abortOnError false
+        }
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+        }
+        dexOptions {
+            preDexLibraries = true
+            javaMaxHeapSize "2g"
+        }
+        manifestPlaceholders = [onesignal_app_id : "ff94f0fe-e700-4b66-9f26-5408fca95297",
+                                onesignal_google_project_number : "REMOTE"]
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles 'proguard-rules.pro'
         }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    final SUPPORT_LIBRARY_VERSION = '26.1.0'
+    final CONSTARAINT_LAYOUT_VERSION = '1.0.2'
+    final MULTIDEX_VERSION = '1.0.1'
+    final RETROFIT_VERSION = '2.3.0'
+    final GSON_CONVERTOR_VERSION = '2.3.0'
+    final GSON_VERSION = '2.3.0'
+    final CRASHANALYTICS_VERSION = '2.8.0@aar'
+    final ONESIGNAL_VERSION = '[3.7.1, 3.99.99]'
+    final FIREBASE_VERSION = '10.8.1'
+    final PERMISSIONS_DISPATCHER_VERSION = '3.1.0'
+    final RX_IMAGEPICKER_VERSION = '2.0.2'
+    final RX_JAVA_VERSION = '2.2.0-SNAPSHOT'
+    final EVERNOTE_JOB_VERSION = '1.2.2'
+    final SMARTTAB_LAYOUT_VERSION = '1.6.1@aar'
+    final RECYCLERVIEW_ANIMATOR_VERSION = '2.2.3'
+    final CIRCLEIMAGEVIEW_VERSION = '2.2.0'
+    final PHOTOVIEW_VERSION = '2.1.3'
+    final BLURVIEW_VERSION = '1.3.4'
+    final CALLIGRAPHY_VERSION = '2.3.0'
+    final RECYCLERVIEW_DRAGSELECT_VERSION = '1.0.0'
+    final MAATERIALCAB_VERSION = '0.1.12'
+    final SPINKITVIEW_VERSION = '1.1.0'
+    final TAPTARGETVIEW_VERSION = '1.11.0'
+    final WAVESWIPEREFRESH_LAYOUT_VERSION = '1.6'
+    final SLIDINGUP_PANEL_VERSION = '3.4.0'
+    final MATERIAL_RIPPLE_VERSION = '1.0.2'
+    final MATERIAL_DIALOGS_VERSION = '0.9.6.0'
+    final ZOOMY_VERSION = '1.0.0'
+    final FLOATINGACTION_BUTTON_VERSION = '1.10.1'
+    final FLAT_BUTTON_VERSION = 'v1.1'
+    final COLOR_PICKER_VERSION = '1.0.8'
+
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    // Support libraries
+    compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:percent:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support.constraint:constraint-layout:$CONSTARAINT_LAYOUT_VERSION"
+    compile "com.android.support:multidex:$MULTIDEX_VERSION"
+
+    // Networking libraries
+    compile "com.google.code.gson:gson:$GSON_VERSION"
+    compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+    compile "com.squareup.retrofit2:converter-gson:$GSON_CONVERTOR_VERSION"
+
+    // Backend libraries for communication with servers
+    implementation("com.crashlytics.sdk.android:crashlytics:$CRASHANALYTICS_VERSION") {
+        transitive = true;
+    }
+    compile "com.onesignal:OneSignal:$ONESIGNAL_VERSION"
+    compile "com.google.firebase:firebase-core:$FIREBASE_VERSION"
+    compile "com.google.firebase:firebase-messaging:$FIREBASE_VERSION"
+    compile "com.google.firebase:firebase-ads:$FIREBASE_VERSION"
+    compile "com.google.firebase:firebase-storage:$FIREBASE_VERSION"
+    compile "com.google.firebase:firebase-database:$FIREBASE_VERSION"
+
+    // Android permissions library
+    compile("com.github.hotchemi:permissionsdispatcher:$PERMISSIONS_DISPATCHER_VERSION") {
+        // if you don't use android.app.Fragment you can exclude support for them
+        exclude module: "support-v13"
+    }
+    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$PERMISSIONS_DISPATCHER_VERSION"
+
+    // Rx Java
+    compile "com.mlsdev.rximagepicker:library:$RX_IMAGEPICKER_VERSION"
+    compile "io.reactivex.rxjava2:rxjava:$RX_JAVA_VERSION"
+
+    // Services
+    compile "com.evernote:android-job:$EVERNOTE_JOB_VERSION"
+
+    // UI component libraries
+    compile "com.ogaclejapan.smarttablayout:library:$SMARTTAB_LAYOUT_VERSION"
+    compile "com.ogaclejapan.smarttablayout:utils-v4:$SMARTTAB_LAYOUT_VERSION"
+    compile "jp.wasabeef:recyclerview-animators:$RECYCLERVIEW_ANIMATOR_VERSION"
+    compile "de.hdodenhof:circleimageview:$CIRCLEIMAGEVIEW_VERSION"
+    compile "com.github.chrisbanes:PhotoView:$PHOTOVIEW_VERSION"
+    compile "com.eightbitlab:blurview:$BLURVIEW_VERSION"
+    compile "uk.co.chrisjenx:calligraphy:$CALLIGRAPHY_VERSION"
+    compile "com.afollestad:drag-select-recyclerview:$RECYCLERVIEW_DRAGSELECT_VERSION"
+    compile "com.afollestad:material-cab:$MAATERIALCAB_VERSION"
+    compile "com.github.ybq:Android-SpinKit:$SPINKITVIEW_VERSION"
+    compile "com.getkeepsafe.taptargetview:taptargetview:$TAPTARGETVIEW_VERSION"
+    compile "com.github.recruit-lifestyle:WaveSwipeRefreshLayout:$WAVESWIPEREFRESH_LAYOUT_VERSION"
+    compile "com.sothree.slidinguppanel:library:$SLIDINGUP_PANEL_VERSION"
+    compile "com.balysv:material-ripple:$MATERIAL_RIPPLE_VERSION"
+    compile "com.afollestad.material-dialogs:core:$MATERIAL_DIALOGS_VERSION"
+    compile "com.ablanco.zoomy:zoomy:$ZOOMY_VERSION"
+    compile "com.getbase:floatingactionbutton:$FLOATINGACTION_BUTTON_VERSION"
+    compile "com.github.jd-alexander:android-flat-button:$FLAT_BUTTON_VERSION"
+    compile "com.github.skydoves:colorpickerview:$COLOR_PICKER_VERSION"
+
+    // Module dependencies
+    implementation project(':libraryAltex')
+    implementation project(':libraryExpandIcon')
+    implementation project(':libraryFragmentBack')
+    implementation project(':libraryGuillotineMenu')
+    implementation project(':libraryLowPoly')
+    implementation project(':libraryMaterialSpinner')
+    implementation project(':librarySearch')
+    implementation project(':librarySecuredPref')
+    implementation project(':libraryUcrop')
+    implementation project(':libraryUrlShortener')
 }
+
+apply plugin: 'com.google.gms.google-services'

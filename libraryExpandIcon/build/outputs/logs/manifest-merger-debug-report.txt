@@ -1,0 +1,19 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\Android studio Projects\WallR2.0\libraryExpandIcon\src\main\AndroidManifest.xml:1:1-5:12
+INJECTED from C:\Android studio Projects\WallR2.0\libraryExpandIcon\src\main\AndroidManifest.xml:1:1-5:12
+INJECTED from C:\Android studio Projects\WallR2.0\libraryExpandIcon\src\main\AndroidManifest.xml:1:1-5:12
+	package
+		ADDED from C:\Android studio Projects\WallR2.0\libraryExpandIcon\src\main\AndroidManifest.xml:1:11-48
+		INJECTED from C:\Android studio Projects\WallR2.0\libraryExpandIcon\src\main\AndroidManifest.xml
+		INJECTED from C:\Android studio Projects\WallR2.0\libraryExpandIcon\src\main\AndroidManifest.xml
+application
+ADDED from C:\Android studio Projects\WallR2.0\libraryExpandIcon\src\main\AndroidManifest.xml:3:3-17
+uses-sdk
+INJECTED from C:\Android studio Projects\WallR2.0\libraryExpandIcon\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Android studio Projects\WallR2.0\libraryExpandIcon\src\main\AndroidManifest.xml
+INJECTED from C:\Android studio Projects\WallR2.0\libraryExpandIcon\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\Android studio Projects\WallR2.0\libraryExpandIcon\src\main\AndroidManifest.xml
+		ADDED from C:\Android studio Projects\WallR2.0\libraryExpandIcon\src\main\AndroidManifest.xml
+		INJECTED from C:\Android studio Projects\WallR2.0\libraryExpandIcon\src\main\AndroidManifest.xml
