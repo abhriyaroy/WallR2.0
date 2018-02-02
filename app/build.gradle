@@ -52,6 +52,7 @@ dependencies {
     final RETROFIT_VERSION = '2.3.0'
     final GSON_CONVERTOR_VERSION = '2.3.0'
     final GSON_VERSION = '2.3.0'
+    final GLIDE_VERSION = '4.5.0'
     final CRASHANALYTICS_VERSION = '2.8.0@aar'
     final ONESIGNAL_VERSION = '[3.7.1, 3.99.99]'
     final FIREBASE_VERSION = '10.8.1'
@@ -98,6 +99,8 @@ dependencies {
     compile "com.google.code.gson:gson:$GSON_VERSION"
     compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
     compile "com.squareup.retrofit2:converter-gson:$GSON_CONVERTOR_VERSION"
+    compile "com.github.bumptech.glide:glide:$GLIDE_VERSION"
+    annotationProcessor "com.github.bumptech.glide:compiler:$GLIDE_VERSION"
 
     // Backend libraries for communication with servers
     implementation("com.crashlytics.sdk.android:crashlytics:$CRASHANALYTICS_VERSION") {
@@ -161,7 +164,6 @@ dependencies {
     implementation project(':libraryLowPoly')
     implementation project(':libraryMaterialSpinner')
     implementation project(':librarySearch')
-    implementation project(':librarySecuredPref')
     implementation project(':libraryUcrop')
     implementation project(':libraryUrlShortener')
 }

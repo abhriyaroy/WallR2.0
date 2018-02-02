@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/content_hamburger"
+            style="@style/ImageView.Hamburger"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:src="@drawable/hamburger_90" />
+
+        <library_textView.CanaroTextView
+            android:id="@+id/Header_toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/explore"
+            android:textSize="@dimen/guillotine_item_text_size" />
+
+        <ImageView
+            android:id="@+id/imageViewSearchToolbar"
+            android:layout_width="42dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:padding="6dp"
+            android:src="@drawable/ic_search_white_48dp"
+            android:transitionName="searchTransition" />
+
+        <ImageView
+            android:id="@+id/imageViewSelectToolbar"
+            android:layout_width="42dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:padding="6dp"
+            android:src="@drawable/ic_select_all_white_24dp" />
+    </RelativeLayout>
+
+    <ViewStub
+        android:id="@+id/cab_stub2"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize" />
+
+</FrameLayout>

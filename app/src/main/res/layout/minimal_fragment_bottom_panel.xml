@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/tools"
+    android:id="@+id/solid_fragment_bottom_layout"
+    android:layout_width="match_parent"
+    android:layout_height="54dp"
+    android:layout_gravity="bottom">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp">
+
+        <View
+            android:id="@+id/shadow_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/shadow_top" />
+
+
+        <android.support.percent.PercentRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/shadow_spinner"
+            android:background="@color/color_primary_dark">
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinner"
+                android:layout_height="wrap_content"
+                app:layout_widthPercent="35%"
+                app:ms_background_color="@color/color_primary_dark"
+                app:ms_dropdown_height="wrap_content"
+                app:ms_dropdown_max_height="350dp" />
+
+            <RelativeLayout
+                android:id="@+id/spinner_view_stub"
+                android:clickable="false"
+                app:layout_widthPercent="25%"
+                app:ms_dropdown_height="wrap_content" />
+
+
+        </android.support.percent.PercentRelativeLayout>
+
+    </RelativeLayout>
+
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/select_solid_bitmap_fab"
+        fab:fab_colorNormal="@color/colorAccent"
+        fab:fab_colorPressed="@color/rippleColor5"
+        fab:fab_icon="@drawable/ic_arrow_forward_white_24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="11dp"
+        android:layout_marginRight="24dp"
+        android:elevation="8dp"
+        android:visibility="visible" />
+
+</RelativeLayout>

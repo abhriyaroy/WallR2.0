@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<eightbitlab.com.blurview.BlurView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/blurViewMainActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true">
+
+        <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/spin_kitMainActivity"
+            style="@style/SpinKitView.Large.FoldingCube"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_centerInParent="true"
+            android:padding="10dp"
+            app:SpinKit_Color="#fff" />
+
+        <library_textView.CanaroTextView
+            android:id="@+id/LoadingTextMainActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/spin_kitMainActivity"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="4dp"
+            android:paddingTop="4dp"
+            android:text="@string/finalising_wallpaper_please_wait"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+</eightbitlab.com.blurview.BlurView>

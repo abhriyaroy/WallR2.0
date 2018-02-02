@@ -3,6 +3,8 @@ package zebrostudio.wallr100.di.module;
 import android.app.Activity;
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
+
 import dagger.Module;
 import dagger.Provides;
 import zebrostudio.wallr100.di.ActivityContext;
@@ -25,4 +27,10 @@ public class ActivityModule {
     Context provideActivityContext() {
         return mActivity;
     }
+
+    @Provides
+    Crashlytics providesCrashlytics(){
+        return new Crashlytics();
+    }
+
 }

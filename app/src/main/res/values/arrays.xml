@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="downloadQualities">
+    <string-array name="array_download_qualities">
         <item>Super High</item>
         <item>High</item>
         <item>Medium</item>
@@ -8,7 +8,7 @@
         <item>Super Low</item>
     </string-array>
 
-    <string-array name="downloadQualitiesWithCrystallized">
+    <string-array name="array_download_qualities_crystallized">
         <item>Super High</item>
         <item>High</item>
         <item>Medium</item>
@@ -18,19 +18,19 @@
     </string-array>
 
 
-    <string-array name="downloadQualitiesSearch">
+    <string-array name="array_download_qualities_search">
         <item>Super High</item>
         <item>High</item>
     </string-array>
 
-    <string-array name="downloadQualitiesSearchWithCrystallized">
+    <string-array name="array_download_qualities_search_crystallized">
         <item>Super High</item>
         <item>High</item>
         <item>Crystallized Version</item>
     </string-array>
 
 
-    <string-array name="changeWallpaperAfterTime">
+    <string-array name="array_change_wallpaper_after">
         <item>30 Minutes</item>
         <item>1 Hour</item>
         <item>6 Hours</item>

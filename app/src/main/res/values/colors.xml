@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#e51c23</color>
-    <color name="guillotine_background">#212121</color>
+    <color name="color_primary">#212121</color>
+    <color name="color_primary_dark">#151613</color>
+    <color name="color_accent">#e51c23</color>
     <color name="pro_background">#1a1a1a</color>
-    <color name="guillotine_background_dark">#151613</color>
     <color name="selected_item_color">#e51c23</color>
-    <color name="dialogBackground">#2a2a2a</color>
-    <color name="placeholder">#2a2a2a</color>
-    <color name="rippleColor1">#f2f2f2</color>
-    <color name="rippleColor5">#ec6065</color>
-    <color name="puchaseButton">#fff</color>
-    <color name="restoreButton">#fff</color>
-    <color name="white">#fff</color>
+    <color name="colour_dialog_primary">#2a2a2a</color>
+    <color name="color_ripple_white">#f2f2f2</color>
+    <color name="color_ripple_red">#ec6065</color>
+    <color name="color_white">#fff</color>
     <color name="slide1">#7b1fa2</color>
-    <color name="proStatusBar">#102027</color>
-    <color name="proStatusBar1">#1c2428</color>
+    <color name="color_status_bar">#1c2428</color>
+    <color name="color_status_bar_dark">#102027</color>
+    <color name="color_black_overlay">#66000000</color>
+    <color name="black">#000</color>
+    <color name="black_light">#191919</color>
 
     <string-array name="colors_array">
         <!-- Material -->
@@ -85,8 +83,6 @@
         <item>#63A285</item>
         <item>#CECE8E</item>
     </string-array>
-
-    <color name="black_overlay">#66000000</color>
 
     #e74c3c
     #c0392b
