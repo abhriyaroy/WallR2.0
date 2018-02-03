@@ -13,7 +13,7 @@ import com.yalantis.guillotine.interfaces.GuillotineListener;
 import javax.inject.Inject;
 
 import zebrostudio.wallr100.R;
-import zebrostudio.wallr100.ui.MainActivity;
+import zebrostudio.wallr100.di.ActivityContext;
 
 public class GuillotineUtils {
 
@@ -27,7 +27,7 @@ public class GuillotineUtils {
     private View mHamburgerIcon;
 
     @Inject
-    public GuillotineUtils(MainActivity activity) {
+    public GuillotineUtils(@ActivityContext Activity activity) {
         mActivity = activity;
     }
 
@@ -55,10 +55,6 @@ public class GuillotineUtils {
         };
     }
 
-    public boolean getGuillotineState() {
-        return mIsGuillotineOpened;
-    }
-
     public void guillotineAnimationBuilder() {
         mGuillotineAnimationBuilder = new GuillotineAnimation.GuillotineBuilder(
                 mGuillotineMenu, mGuillotineMenu.findViewById(R.id.guillotine_hamburger), mHamburgerIcon)
@@ -67,6 +63,10 @@ public class GuillotineUtils {
                 .setGuillotineListener(mGuillotineListener)
                 .setClosedOnStart(true)
                 .build();
+    }
+
+    public boolean getGuillotineState() {
+        return mIsGuillotineOpened;
     }
 
 }

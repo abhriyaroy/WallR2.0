@@ -24,6 +24,12 @@ public class ActivityModule {
     }
 
     @Provides
+    @ActivityContext
+    public Activity providesActivity(){
+        return mActivity;
+    }
+
+    @Provides
     Crashlytics providesCrashlytics(){
         return new Crashlytics();
     }

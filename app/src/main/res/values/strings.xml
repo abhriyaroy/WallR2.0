@@ -124,4 +124,7 @@
     <string name="deatil_activity_banner_ad" translatable="false">ca-app-pub-9055921707624141/2662240913</string>
     <string name="main_activity_interstitial_ad" translatable="false">ca-app-pub-9055921707624141/7865490114</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

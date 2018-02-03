@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 
 import javax.inject.Inject;
 
-import zebrostudio.wallr100.ui.MainActivity;
+import zebrostudio.wallr100.di.ActivityContext;
 
 public class SharedPrefsUtils {
 
@@ -15,7 +15,7 @@ public class SharedPrefsUtils {
     private Context mContext;
 
     @Inject
-    public SharedPrefsUtils(MainActivity context){
+    public SharedPrefsUtils(@ActivityContext Activity context){
         mContext = context;
     }
 
@@ -24,12 +24,28 @@ public class SharedPrefsUtils {
         mSharedPreferencesEditor = mSharedPreference.edit();
     }
 
-    public void writeData(){
-
+    public boolean writeIntData(String keyName, int value){
+        return mSharedPreferencesEditor.putInt(keyName,value).commit();
     }
 
-    public int readIntData(){
-        return 1;
+    public int readIntData(String keyName){
+        return mSharedPreference.getInt(keyName,0);
+    }
+
+    public boolean writeStringData(String keyName, String value){
+        return mSharedPreferencesEditor.putString(keyName,value).commit();
+    }
+
+    public String readStringData(String keyName){
+        return mSharedPreference.getString(keyName,null);
+    }
+
+    public boolean writeBooleanData(String keyName, boolean value){
+        return mSharedPreferencesEditor.putBoolean(keyName,value).commit();
+    }
+
+    public boolean readBooleanData(String keyName){
+        return mSharedPreference.getBoolean(keyName,false);
     }
 
 }

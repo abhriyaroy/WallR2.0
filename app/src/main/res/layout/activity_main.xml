@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/root_layout"
-    tools:context="zebrostudio.wallr100.ui.MainActivity">
+    tools:context="zebrostudio.wallr100.ui.main.MainActivity">
 
     <View
         android:layout_width="match_parent"

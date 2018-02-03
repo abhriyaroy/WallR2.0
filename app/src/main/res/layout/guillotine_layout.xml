@@ -7,7 +7,7 @@
     android:background="@color/color_primary"
     android:clickable="true"
     android:orientation="vertical"
-    tools:context=".ui.MainActivity">
+    tools:context=".ui.main.MainActivity">
 
     <RelativeLayout
         android:layout_width="wrap_content"
