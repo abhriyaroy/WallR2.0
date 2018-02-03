@@ -1,12 +1,13 @@
 <resources>
     <string name="app_name">WallR</string>
+    <string name="pro_caps">PRO</string>
     <string name="search_activity_title">Searchable Activity</string>
     <string name="menu_settings_toast_msg">Settings</string>
     <string name="cab_title_x"> %1$d Selected</string>
 
     <!-- Main Activity -->
     <string name="guillotine_explore_title">Explore</string>
-    <string name="guillotine_collections_title">Top Picks</string>
+    <string name="guillotine_top_picks_title">Top Picks</string>
     <string name="guillotine_categories_title">Categories</string>
     <string name="guillotine_collection_title">Collection</string>
     <string name="guillotine_minimal_title">Minimal</string>

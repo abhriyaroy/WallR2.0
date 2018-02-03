@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/root_layout"
     tools:context="zebrostudio.wallr100.ui.MainActivity">
 
     <View
@@ -22,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
-            app:layout_behavior="zebrostudio.wallr100.DisableAppBarLayoutBehaviour">
+            app:layout_behavior="zebrostudio.wallr100.utils.DisableAppBarLayoutBehaviour">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -84,12 +85,12 @@
                     android:layout_marginRight="16dp"
                     android:layout_centerVertical="true"/>
 
-                <library_textView.CanaroTextView
+                <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@id/switchView"
-                    android:text="@string/automatic_wallpaper_changer"
+                    android:text="@string/buy_pro_wallpaper_changer_header"
                     android:textColor="#99A3A4"
                     android:layout_alignParentLeft="true"
                     android:maxLines="1"

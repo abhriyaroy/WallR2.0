@@ -4,8 +4,8 @@
     <style name="WallrTheme" parent="Theme.Guillotine" />
 
     <style name="Theme.Guillotine" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimaryDark">@color/guillotine_background_dark</item>
-        <item name="colorPrimary">@color/guillotine_background</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorPrimary">@color/color_primary</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
     </style>
@@ -20,7 +20,7 @@
 
     <style name="MaterialSearchViewStyle">
         <!-- Background for the search bar -->
-        <item name="searchBackground">@color/guillotine_background</item>
+        <item name="searchBackground">@color/color_primary</item>
 
         <!-- Change voice icon -->
         <item name="searchVoiceIcon">@drawable/ic_action_voice_search_inverted</item>
@@ -85,7 +85,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:minHeight">?attr/actionBarSize</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:background">@color/guillotine_background</item>
+        <item name="android:background">@color/color_primary</item>
     </style>
 
     <style name="ImageView" />
@@ -124,13 +124,13 @@
 
     <style name="Switch" parent="Theme.AppCompat.Light">
         <!-- active thumb & track color (30% transparency) -->
-        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/color_accent</item>
 
         <!-- inactive thumb color -->
-        <item name="colorSwitchThumbNormal">@color/white</item>
+        <item name="colorSwitchThumbNormal">@color/color_white</item>
 
         <!-- inactive track color (30% transparency) -->
-        <item name="android:colorForeground">@color/white</item>
+        <item name="android:colorForeground">@color/color_white</item>
     </style>
 
     <color name="gray">#757575</color>
@@ -144,6 +144,6 @@
     </style>
 
     <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/black_overlay</item>
+        <item name="android:background">@color/color_black_overlay</item>
     </style>
 </resources>

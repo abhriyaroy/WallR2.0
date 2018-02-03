@@ -18,11 +18,6 @@ public class ActivityModule {
     }
 
     @Provides
-    Activity provideActivity() {
-        return mActivity;
-    }
-
-    @Provides
     @ActivityContext
     Context provideActivityContext() {
         return mActivity;

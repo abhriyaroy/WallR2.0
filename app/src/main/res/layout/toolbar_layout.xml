@@ -15,13 +15,13 @@
             android:clickable="true"
             android:src="@drawable/hamburger_90" />
 
-        <library_textView.CanaroTextView
+        <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
             android:id="@+id/Header_toolbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/explore"
+            android:text="@string/guillotine_explore_title"
             android:textSize="@dimen/guillotine_item_text_size" />
 
         <ImageView

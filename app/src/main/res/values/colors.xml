@@ -13,7 +13,7 @@
     <color name="color_status_bar">#1c2428</color>
     <color name="color_status_bar_dark">#102027</color>
     <color name="color_black_overlay">#66000000</color>
-    <color name="black">#000</color>
+    <color name="color_black">#000</color>
     <color name="black_light">#191919</color>
 
     <string-array name="colors_array">
