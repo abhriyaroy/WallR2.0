@@ -1,23 +1,19 @@
 package zebrostudio.wallr100;
 
-import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.bumptech.glide.request.target.ViewTarget;
-import com.evernote.android.job.Job;
-import com.evernote.android.job.JobCreator;
-import com.evernote.android.job.JobManager;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
 import com.onesignal.OneSignal;
 
-import zebrostudio.wallr100.di.component.ApplicationComponent;
-import zebrostudio.wallr100.di.component.DaggerApplicationComponent;
+import dagger.android.AndroidInjector;
+import dagger.android.support.DaggerApplication;
+import zebrostudio.wallr100.di.component.AppComponent;
+import zebrostudio.wallr100.di.component.DaggerAppComponent;
 
-public class WallRApplication extends Application {
-
-    ApplicationComponent mApplicationComponent;
+public class WallRApplication extends DaggerApplication {
 
     @Override
     public void onCreate() {
@@ -26,10 +22,17 @@ public class WallRApplication extends Application {
         configureOneSignalSdk();
         configureGlideTag();
         configureAutomaticWallpaperChangerJob();
-        mApplicationComponent = DaggerApplicationComponent.builder()
+        /*mApplicationComponent = DaggerApplicationComponent.builder()
                 .build();
-        mApplicationComponent.inject(this);
+        mApplicationComponent.inject(this);*/
 
+    }
+
+    @Override
+    protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
+        AppComponent appComponent = DaggerAppComponent.builder().application(this).build();
+        appComponent.inject(this);
+        return appComponent;
     }
 
     @Override
@@ -58,9 +61,5 @@ public class WallRApplication extends Application {
 
     private void configureAutomaticWallpaperChangerJob() {
         // needs to be configured
-    }
-
-    private ApplicationComponent getApplicationComponent(){
-        return mApplicationComponent;
     }
 }

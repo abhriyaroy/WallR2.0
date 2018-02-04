@@ -63,13 +63,13 @@
             android:tint="#fff" />
 
         <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
-            android:id="@+id/explore_textView"
+            android:id="@+id/explore_textview"
             style="@style/TextView.GuillotineItem"
             android:text="@string/guillotine_explore_title" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/collections_group"
+        android:id="@+id/top_picks_group"
         style="@style/LinearLayout.GuillotineItem"
         android:layout_centerHorizontal="true">
 
@@ -78,13 +78,13 @@
             android:src="@drawable/collections_icon" />
 
         <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
-            android:id="@+id/collections_textView"
+            android:id="@+id/top_picks_textview"
             style="@style/TextView.GuillotineItem"
             android:text="@string/guillotine_top_picks_title" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/Categories_group"
+        android:id="@+id/categories_group"
         style="@style/LinearLayout.GuillotineItem"
         android:layout_centerHorizontal="true">
 
@@ -94,14 +94,14 @@
             android:src="@drawable/categories_icon" />
 
         <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
-            android:id="@+id/categories_textView"
+            android:id="@+id/categories_textview"
             style="@style/TextView.GuillotineItem"
             android:text="@string/guillotine_categories_title" />
     </LinearLayout>
 
 
     <LinearLayout
-        android:id="@+id/solid_wallpaper_group"
+        android:id="@+id/minimal_group"
         style="@style/LinearLayout.GuillotineItem"
         android:layout_centerHorizontal="true">
 
@@ -111,7 +111,7 @@
             android:src="@drawable/ic_pie_chart_24" />
 
         <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
-            android:id="@+id/solid_wallpaper_textView"
+            android:id="@+id/minimal_textview"
             style="@style/TextView.GuillotineItem"
             android:ellipsize="end"
             android:maxLines="1"
@@ -119,7 +119,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/gallery_group"
+        android:id="@+id/collection_group"
         style="@style/LinearLayout.GuillotineItem"
         android:layout_centerHorizontal="true">
 
@@ -128,13 +128,13 @@
             android:src="@drawable/gallery_icon" />
 
         <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
-            android:id="@+id/gallery_textView"
+            android:id="@+id/collection_textview"
             style="@style/TextView.GuillotineItem"
             android:text="@string/guillotine_collection_title" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/contactus_group"
+        android:id="@+id/feedback_group"
         style="@style/LinearLayout.GuillotineItem">
 
         <ImageView
@@ -143,13 +143,13 @@
             android:tint="@color/color_white" />
 
         <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
-            android:id="@+id/contact_us"
+            android:id="@+id/feedback_textview"
             style="@style/TextView.GuillotineItem"
             android:text="@string/guillotine_feedback_title" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/pro_group"
+        android:id="@+id/buy_pro_group"
         style="@style/LinearLayout.GuillotineItem"
         android:background="@color/color_white">
 
@@ -158,7 +158,7 @@
             android:src="@drawable/ic_crown_48" />
 
         <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
-            android:id="@+id/buyPro"
+            android:id="@+id/buy_pro_textview"
             style="@style/TextView.GuillotineItem"
             android:text="@string/guillotine_buy_pro_title"
             android:textColor="@color/color_black" />

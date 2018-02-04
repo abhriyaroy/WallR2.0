@@ -19,7 +19,7 @@ public class SharedPrefsUtils {
         mContext = context;
     }
 
-    public void initSharedPrefs(){
+    public void init(){
         mSharedPreference = mContext.getSharedPreferences("preferences", Activity.MODE_PRIVATE);
         mSharedPreferencesEditor = mSharedPreference.edit();
     }
