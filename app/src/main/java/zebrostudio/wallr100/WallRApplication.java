@@ -8,11 +8,14 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
 import com.onesignal.OneSignal;
 
+import javax.inject.Singleton;
+
 import dagger.android.AndroidInjector;
 import dagger.android.support.DaggerApplication;
 import zebrostudio.wallr100.di.component.AppComponent;
 import zebrostudio.wallr100.di.component.DaggerAppComponent;
 
+@Singleton
 public class WallRApplication extends DaggerApplication {
 
     @Override

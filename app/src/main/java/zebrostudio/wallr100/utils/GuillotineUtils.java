@@ -1,13 +1,12 @@
 package zebrostudio.wallr100.utils;
 
-import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.yalantis.guillotine.animation.GuillotineAnimation;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
@@ -15,27 +14,33 @@ import com.yalantis.guillotine.interfaces.GuillotineListener;
 import javax.inject.Inject;
 
 import zebrostudio.wallr100.R;
-import zebrostudio.wallr100.di.ActivityContext;
-import zebrostudio.wallr100.di.ApplicationContext;
 import zebrostudio.wallr100.ui.main.MainActivity;
+import zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView;
 
 public class GuillotineUtils {
 
     private static final long RIPPLE_DURATION = 250;
-    private Activity mActivity;
+
+    private MainActivity mActivity;
     private Toolbar mToolbar;
     private View mGuillotineMenu;
     private GuillotineListener mGuillotineListener;
     private boolean mIsGuillotineOpened;
     private GuillotineAnimation mGuillotineAnimationBuilder;
     private View mHamburgerIcon;
-    LinearLayout mExploreBackLayout;
-    LinearLayout mTopPicksLayout;
-    LinearLayout mCategoriesLayout;
-    LinearLayout mMinimalLayout;
-    LinearLayout mCollectionLayout;
-    LinearLayout mFeedBackLayout;
-    LinearLayout mBuyProLayout;
+    private LinearLayout mExploreLayout;
+    private LinearLayout mTopPicksLayout;
+    private LinearLayout mCategoriesLayout;
+    private LinearLayout mMinimalLayout;
+    private LinearLayout mCollectionLayout;
+    private LinearLayout mFeedBackLayout;
+    private LinearLayout mBuyProLayout;
+    private CanaroTextView mExploreGuillotineTitle;
+    private CanaroTextView mTopPicksGuillotineTitle;
+    private CanaroTextView mCategoriesGuillotineTitle;
+    private CanaroTextView mMinimalGuillotineTitle;
+    private CanaroTextView mCollectionGuillotineTitle;
+    private CanaroTextView mBuyProGuillotineTitle;
 
     @Inject
     public GuillotineUtils(MainActivity activity) {
@@ -88,31 +93,121 @@ public class GuillotineUtils {
     }
 
     public void takeViewObject(GuillotineViewObject guillotineViewObject) {
-
-        this.mExploreBackLayout = guillotineViewObject.getmExploreLayout();
-        this.mTopPicksLayout = guillotineViewObject.getmTopPicksLayout();
-        this.mCategoriesLayout = guillotineViewObject.getmCategoriesLayout();
-        this.mMinimalLayout = guillotineViewObject.getmMinimalLayout();
-        this.mCategoriesLayout = guillotineViewObject.getmCategoriesLayout();
-        this.mCollectionLayout = guillotineViewObject.getmCollectionLayout();
-        this.mFeedBackLayout = guillotineViewObject.getmFeedBackLayout();
-        this.mBuyProLayout = guillotineViewObject.getmBuyProLayout();
+        mExploreLayout = guillotineViewObject.getmExploreLayout();
+        mTopPicksLayout = guillotineViewObject.getmTopPicksLayout();
+        mCategoriesLayout = guillotineViewObject.getmCategoriesLayout();
+        mMinimalLayout = guillotineViewObject.getmMinimalLayout();
+        mCategoriesLayout = guillotineViewObject.getmCategoriesLayout();
+        mCollectionLayout = guillotineViewObject.getmCollectionLayout();
+        mFeedBackLayout = guillotineViewObject.getmFeedBackLayout();
+        mBuyProLayout = guillotineViewObject.getmBuyProLayout();
+        mExploreGuillotineTitle = guillotineViewObject.getmExploreTitleView();
+        mTopPicksGuillotineTitle = guillotineViewObject.getmTopPicksTitleView();
+        mCategoriesGuillotineTitle = guillotineViewObject.getmCategoriesTitleView();
+        mMinimalGuillotineTitle = guillotineViewObject.getmMinimalTitleView();
+        mCollectionGuillotineTitle = guillotineViewObject.getmCollectionTitleView();
+        mBuyProLayout = guillotineViewObject.getmBuyProLayout();
 
         setMenuItemsClickListener();
-
     }
 
     private void setMenuItemsClickListener() {
-        mExploreBackLayout.setOnClickListener(new View.OnClickListener() {
+        mExploreLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mActivity.getBaseContext(),"hellooo",Toast.LENGTH_LONG).show();
+                mActivity.exploreGuillotineMenuItemClicked();
+            }
+        });
+
+        mTopPicksLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mActivity.topPicksGuillotineMenuItemClicked();
+            }
+        });
+
+        mCategoriesLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mActivity.categoriesGuillotineMenuItemClicked();
+            }
+        });
+
+        mMinimalLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mActivity.minimalGuillotineMenuItemClicked();
+            }
+        });
+
+        mCollectionLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mActivity.collectionsGuillotineMenuItemClicked();
+            }
+        });
+
+        mFeedBackLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mActivity.feedbackGuillotineMenuItemClicked();
+            }
+        });
+
+        mBuyProLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mActivity.buyProGuillotineMenuItemClicked();
             }
         });
     }
 
+    public void highLightExploreGuillotineMenuItem(){
+        mExploreGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
+        mTopPicksGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        mCategoriesGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        mMinimalGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        mCollectionGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+    }
+
+    public void highLightTopPicksGuillotineMenuItem(){
+        mExploreGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        mTopPicksGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
+        mCategoriesGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        mMinimalGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        mCollectionGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+    }
+
+    public void highLightCategoriesGuillotineMenuItem(){
+        mExploreGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        mTopPicksGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        mCategoriesGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
+        mMinimalGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        mCollectionGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+    }
+
+    public void highLightMinimalGuillotineMenuItem(){
+        mExploreGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        mTopPicksGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        mCategoriesGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        mMinimalGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
+        mCollectionGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+    }
+
+    public void highLightCollectionsGuillotineMenuItem(){
+        mExploreGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        mTopPicksGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        mCategoriesGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        mMinimalGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        mCollectionGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
+    }
+
     public boolean getGuillotineState() {
         return mIsGuillotineOpened;
+    }
+
+    public void closeguillotineMenu() {
+        mGuillotineAnimationBuilder.close();
     }
 
 }

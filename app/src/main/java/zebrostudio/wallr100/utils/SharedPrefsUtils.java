@@ -1,13 +1,16 @@
 package zebrostudio.wallr100.utils;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import zebrostudio.wallr100.di.ActivityContext;
+import zebrostudio.wallr100.di.ApplicationScope;
 
+@Singleton
 public class SharedPrefsUtils {
 
     private SharedPreferences mSharedPreference;
@@ -15,7 +18,7 @@ public class SharedPrefsUtils {
     private Context mContext;
 
     @Inject
-    public SharedPrefsUtils(@ActivityContext Activity context){
+    public SharedPrefsUtils(@ApplicationScope Application context){
         mContext = context;
     }
 

@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="WallrTheme" parent="Theme.Guillotine" />
+    <style name="wallr_theme" parent="Theme.Guillotine" />
 
     <style name="Theme.Guillotine" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
@@ -135,7 +135,7 @@
 
     <color name="gray">#757575</color>
 
-    <style name="FullscreenTheme" parent="WallrTheme">
+    <style name="FullscreenTheme" parent="wallr_theme">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowBackground">@null</item>
