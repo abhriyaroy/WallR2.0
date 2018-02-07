@@ -17,11 +17,14 @@ import dagger.android.support.DaggerFragment;
 import zebrostudio.wallr100.R;
 import zebrostudio.wallr100.ui.main.MainActivity;
 import zebrostudio.wallr100.utils.FragmentTags;
+import zebrostudio.wallr100.utils.UiCustomizationHelper;
 
 public class ExploreFragment extends DaggerFragment implements BackFragment {
 
     @Inject
     MainActivity mMainActivity;
+    @Inject
+    UiCustomizationHelper mUiCustomizationHelper;
 
     @Inject
     public ExploreFragment() {
@@ -53,8 +56,7 @@ public class ExploreFragment extends DaggerFragment implements BackFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mMainActivity.setTitle(FragmentTags.EXPLORE_FRAGMENT_TAG);
-        mMainActivity.setTitlePadding(0,0,0,0);
+        setUpUi();
     }
 
     @Override
@@ -70,5 +72,15 @@ public class ExploreFragment extends DaggerFragment implements BackFragment {
     @Override
     public int getBackPriority() {
         return 0;
+    }
+
+    private void setUpUi() {
+        mMainActivity.setTitle(FragmentTags.EXPLORE_FRAGMENT_TAG);
+        mMainActivity.setTitlePadding(0,0,0,0);
+        mUiCustomizationHelper.showSearchOption();
+        mUiCustomizationHelper.hideMultiSelectOption();
+        mUiCustomizationHelper.hideSmartTabLayout();
+        mUiCustomizationHelper.hideCollectionSwitchLayout();
+        mUiCustomizationHelper.hideMinimalBottomPanel();
     }
 }

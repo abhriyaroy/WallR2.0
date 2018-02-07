@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.crashlytics.android.Crashlytics;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import javax.inject.Inject;
 
@@ -58,6 +59,10 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     public ImageView mMultiSelectIcon;
     @BindView(R.id.minimal_fragment_bottom_layout)
     public RelativeLayout mMinimalFragmentBottomLayout;
+    @BindView(R.id.tab_layout)
+    public SmartTabLayout mSmartTabLayout;
+    @BindView(R.id.collection_switch_layout)
+    public RelativeLayout mCollectionSwitchLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,20 +225,5 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
     }
 
-    public void hideSearchOption() {
-        mSearchIcon.setVisibility(View.GONE);
-    }
-
-    public void showSearchOption() {
-        mSearchIcon.setVisibility(View.VISIBLE);
-    }
-
-    public void hideMultiSelectOption() {
-        mMultiSelectIcon.setVisibility(View.GONE);
-    }
-
-    public void showMultiSelectOption() {
-        mMultiSelectIcon.setVisibility(View.VISIBLE);
-    }
 
 }

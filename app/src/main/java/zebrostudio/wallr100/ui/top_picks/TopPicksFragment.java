@@ -14,11 +14,14 @@ import dagger.android.support.DaggerFragment;
 import zebrostudio.wallr100.R;
 import zebrostudio.wallr100.ui.main.MainActivity;
 import zebrostudio.wallr100.utils.FragmentTags;
+import zebrostudio.wallr100.utils.UiCustomizationHelper;
 
 public class TopPicksFragment extends DaggerFragment {
 
     @Inject
     MainActivity mMainActivity;
+    @Inject
+    UiCustomizationHelper mUiCustomizationHelper;
 
     @Inject
     public TopPicksFragment() {
@@ -44,13 +47,22 @@ public class TopPicksFragment extends DaggerFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mMainActivity.setTitle(FragmentTags.TOP_PICKS_FRAGMENT_TAG);
-        mMainActivity.setTitlePadding(0,0,0,0);
+        setUpUi();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    private void setUpUi() {
+        mMainActivity.setTitle(FragmentTags.TOP_PICKS_FRAGMENT_TAG);
+        mMainActivity.setTitlePadding(0,0,0,0);
+        mUiCustomizationHelper.showSearchOption();
+        mUiCustomizationHelper.hideMultiSelectOption();
+        mUiCustomizationHelper.showSmartTabLayout();
+        mUiCustomizationHelper.hideCollectionSwitchLayout();
+        mUiCustomizationHelper.hideMinimalBottomPanel();
     }
 
 }

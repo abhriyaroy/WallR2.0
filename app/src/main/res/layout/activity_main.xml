@@ -37,7 +37,7 @@
             </android.support.v7.widget.Toolbar>
 
             <com.ogaclejapan.smarttablayout.SmartTabLayout
-                android:id="@+id/viewpagertab_categories"
+                android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:textAlignment="center"
@@ -72,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:background="@color/color_primary"
-                android:id="@+id/gallery_collection_switch_layout"
+                android:id="@+id/collection_switch_layout"
                 android:layout_alignParentTop="true">
 
                 <android.support.v7.widget.SwitchCompat

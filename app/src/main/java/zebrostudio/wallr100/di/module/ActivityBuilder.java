@@ -2,13 +2,23 @@ package zebrostudio.wallr100.di.module;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
+import zebrostudio.wallr100.ui.buy_pro.BuyProActivity;
+import zebrostudio.wallr100.ui.buy_pro.BuyProActivityModule;
 import zebrostudio.wallr100.ui.main.MainActivity;
 import zebrostudio.wallr100.ui.main.MainActivityModule;
+import zebrostudio.wallr100.ui.search.SearchActivity;
+import zebrostudio.wallr100.ui.search.SearchActivityModule;
 
 @Module
 public abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = MainActivityModule.class)
     abstract MainActivity bindMainActivity();
+
+    @ContributesAndroidInjector(modules = SearchActivityModule.class)
+    abstract SearchActivity bindSearchActivity();
+
+    @ContributesAndroidInjector(modules = BuyProActivityModule.class)
+    abstract BuyProActivity bindBuyProActivity();
 
 }
