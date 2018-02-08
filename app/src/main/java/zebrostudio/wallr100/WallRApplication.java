@@ -3,32 +3,28 @@ package zebrostudio.wallr100;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
-import com.bumptech.glide.request.target.ViewTarget;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.FirebaseDatabase;
-import com.onesignal.OneSignal;
-
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.AndroidInjector;
 import dagger.android.support.DaggerApplication;
+import zebrostudio.wallr100.data.DataManager;
 import zebrostudio.wallr100.di.component.AppComponent;
 import zebrostudio.wallr100.di.component.DaggerAppComponent;
 
 @Singleton
 public class WallRApplication extends DaggerApplication {
 
+    @Inject
+    DataManager mDataManager;
+
     @Override
     public void onCreate() {
         super.onCreate();
-        configureFirebasePersistance();
-        configureOneSignalSdk();
-        configureGlideTag();
-        configureAutomaticWallpaperChangerJob();
-        /*mApplicationComponent = DaggerApplicationComponent.builder()
-                .build();
-        mApplicationComponent.inject(this);*/
-
+        mDataManager.requestFirebasePersistenceInitialization(this);
+        mDataManager.requestOneSignalSdkInitialization(this);
+        mDataManager.requestGlideTagConfiguration();
+        mDataManager.requestAutomaticWallpaperChangerJobInitialization();
     }
 
     @Override
@@ -44,25 +40,4 @@ public class WallRApplication extends DaggerApplication {
         MultiDex.install(this);
     }
 
-    private void configureFirebasePersistance() {
-        if (!FirebaseApp.getApps(this).isEmpty()) {
-            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-            firebaseDatabase.setPersistenceEnabled(true);
-        }
-    }
-
-    private void configureOneSignalSdk() {
-        OneSignal.startInit(this)
-                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
-                .unsubscribeWhenNotificationsAreDisabled(true)
-                .init();
-    }
-
-    private void configureGlideTag() {
-        ViewTarget.setTagId(R.id.glide_tag);
-    }
-
-    private void configureAutomaticWallpaperChangerJob() {
-        // needs to be configured
-    }
 }

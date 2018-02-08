@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.di.module;
+package zebrostudio.wallr100.di.modules;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;

@@ -10,8 +10,8 @@ import dagger.android.AndroidInjector;
 import dagger.android.support.AndroidSupportInjectionModule;
 import dagger.android.support.DaggerApplication;
 import zebrostudio.wallr100.WallRApplication;
-import zebrostudio.wallr100.di.module.ApplicationModule;
-import zebrostudio.wallr100.di.module.ActivityBuilder;
+import zebrostudio.wallr100.di.modules.ApplicationModule;
+import zebrostudio.wallr100.di.modules.ActivityBuilder;
 
 @Singleton
 @Component(modules = {
@@ -19,6 +19,7 @@ import zebrostudio.wallr100.di.module.ActivityBuilder;
         ApplicationModule.class,
         ActivityBuilder.class})
 public interface AppComponent extends AndroidInjector<DaggerApplication> {
+
     void inject(WallRApplication wallRApplication);
 
     @Override
@@ -31,4 +32,5 @@ public interface AppComponent extends AndroidInjector<DaggerApplication> {
 
         AppComponent build();
     }
+
 }

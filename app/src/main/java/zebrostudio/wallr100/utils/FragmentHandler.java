@@ -15,11 +15,6 @@ import zebrostudio.wallr100.ui.top_picks.TopPicksFragment;
 public class FragmentHandler {
 
     @Inject
-    FragmentHandler() {
-
-    }
-
-    @Inject
     MainActivity mMainActivity;
     @Inject
     ExploreFragment mExploreFragment;
@@ -35,42 +30,47 @@ public class FragmentHandler {
     private FragmentManager mSupportFragmentManager;
     private int mFragmentContainer;
 
+    @Inject
+    FragmentHandler() {
+
+    }
+
     public void init() {
         mSupportFragmentManager = mMainActivity.getSupportFragmentManager();
         mFragmentContainer = R.id.home_container;
     }
 
-    public void replaceWithExploreFragment() {
+    public void replaceContainerWithExploreFragment() {
         mSupportFragmentManager.beginTransaction()
-                .replace(R.id.home_container, mExploreFragment, FragmentTags.EXPLORE_FRAGMENT_TAG)
+                .replace(mFragmentContainer, mExploreFragment, FragmentTags.EXPLORE_FRAGMENT_TAG)
                 .addToBackStack(null)
                 .commit();
     }
 
-    public void replaceWithTopPicksFragment() {
+    public void replaceContainerWithTopPicksFragment() {
         mSupportFragmentManager.beginTransaction()
-                .replace(R.id.home_container, mTopPicksFragment, FragmentTags.TOP_PICKS_FRAGMENT_TAG)
+                .replace(mFragmentContainer, mTopPicksFragment, FragmentTags.TOP_PICKS_FRAGMENT_TAG)
                 .addToBackStack(null)
                 .commit();
     }
 
-    public void replaceWithCategoriesFragment() {
+    public void replaceContainerWithCategoriesFragment() {
         mSupportFragmentManager.beginTransaction()
-                .replace(R.id.home_container, mCategoriesFragment, FragmentTags.CATEGORIES_FRAGMENT_TAG)
+                .replace(mFragmentContainer, mCategoriesFragment, FragmentTags.CATEGORIES_FRAGMENT_TAG)
                 .addToBackStack(null)
                 .commit();
     }
 
-    public void replaceWithMinimalFragment() {
+    public void replaceContainerWithMinimalFragment() {
         mSupportFragmentManager.beginTransaction()
-                .replace(R.id.home_container, mMinimalFragment, FragmentTags.MINIMAL_FRAGMENT_TAG)
+                .replace(mFragmentContainer, mMinimalFragment, FragmentTags.MINIMAL_FRAGMENT_TAG)
                 .addToBackStack(null)
                 .commit();
     }
 
-    public void replaceWithCollectionsFragment() {
+    public void replaceContainerWithCollectionsFragment() {
         mSupportFragmentManager.beginTransaction()
-                .replace(R.id.home_container, mCollectionsFragment, FragmentTags.COLLECTIONS_FRAGMENT_TAG)
+                .replace(mFragmentContainer, mCollectionsFragment, FragmentTags.COLLECTIONS_FRAGMENT_TAG)
                 .addToBackStack(null)
                 .commit();
     }

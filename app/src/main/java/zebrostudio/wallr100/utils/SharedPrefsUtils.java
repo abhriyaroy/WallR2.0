@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import zebrostudio.wallr100.di.ApplicationScope;
+import zebrostudio.wallr100.di.ApplicationContext;
 
 @Singleton
 public class SharedPrefsUtils {
@@ -18,7 +18,7 @@ public class SharedPrefsUtils {
     private Context mContext;
 
     @Inject
-    public SharedPrefsUtils(@ApplicationScope Application context){
+    public SharedPrefsUtils(@ApplicationContext Context context){
         mContext = context;
     }
 
@@ -27,27 +27,27 @@ public class SharedPrefsUtils {
         mSharedPreferencesEditor = mSharedPreference.edit();
     }
 
-    public boolean writeIntData(String keyName, int value){
+    public boolean setIntData(String keyName, int value){
         return mSharedPreferencesEditor.putInt(keyName,value).commit();
     }
 
-    public int readIntData(String keyName){
+    public int getIntData(String keyName){
         return mSharedPreference.getInt(keyName,0);
     }
 
-    public boolean writeStringData(String keyName, String value){
+    public boolean setStringData(String keyName, String value){
         return mSharedPreferencesEditor.putString(keyName,value).commit();
     }
 
-    public String readStringData(String keyName){
+    public String getStringData(String keyName){
         return mSharedPreference.getString(keyName,null);
     }
 
-    public boolean writeBooleanData(String keyName, boolean value){
+    public boolean setBooleanData(String keyName, boolean value){
         return mSharedPreferencesEditor.putBoolean(keyName,value).commit();
     }
 
-    public boolean readBooleanData(String keyName){
+    public boolean getBooleanData(String keyName){
         return mSharedPreference.getBoolean(keyName,false);
     }
 

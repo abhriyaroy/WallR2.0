@@ -13,11 +13,19 @@ public interface MainActivityContract {
 
         void setTitlePadding(int left, int top, int right, int bottom);
 
-        void initGuillotineViewObject();
-
         void configureNavigationBar();
 
+        void initGuillotineViewObject();
+
         void closeGuillotineMenu();
+
+        void hideBuyProGuillotineMenuItem();
+
+        void showBuyProGuillotineMenuItem();
+
+        void hideProBadge();
+
+        void showProBadge();
 
         void exploreGuillotineMenuItemClicked();
 
@@ -63,5 +71,7 @@ public interface MainActivityContract {
         void requestFeedbackTool();
 
         void requestBuyProActivity();
+
+        void checkIfProUser();
     }
 }

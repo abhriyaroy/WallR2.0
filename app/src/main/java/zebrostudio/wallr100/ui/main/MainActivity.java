@@ -122,6 +122,13 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     }
 
     @Override
+    public void configureNavigationBar() {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.color_primary_dark));
+        }
+    }
+
+    @Override
     public void initGuillotineViewObject() {
         mGuillotineViewObject.setmExploreLayout((LinearLayout) findViewById(R.id.explore_group));
         mGuillotineViewObject.setmExploreTitleView((CanaroTextView) findViewById(R.id.explore_textview));
@@ -139,15 +146,28 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     }
 
     @Override
-    public void configureNavigationBar() {
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.color_primary_dark));
-        }
+    public void closeGuillotineMenu() {
+        mGuillotineUtils.closeguillotineMenu();
     }
 
     @Override
-    public void closeGuillotineMenu() {
-        mGuillotineUtils.closeguillotineMenu();
+    public void hideBuyProGuillotineMenuItem() {
+
+    }
+
+    @Override
+    public void showBuyProGuillotineMenuItem() {
+
+    }
+
+    @Override
+    public void hideProBadge() {
+
+    }
+
+    @Override
+    public void showProBadge() {
+
     }
 
     @Override
@@ -188,31 +208,31 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     @Override
     public void showExploreFragment() {
         mGuillotineUtils.highLightExploreGuillotineMenuItem();
-        mFragmentHandler.replaceWithExploreFragment();
+        mFragmentHandler.replaceContainerWithExploreFragment();
     }
 
     @Override
     public void showTopPicksFragment() {
         mGuillotineUtils.highLightTopPicksGuillotineMenuItem();
-        mFragmentHandler.replaceWithTopPicksFragment();
+        mFragmentHandler.replaceContainerWithTopPicksFragment();
     }
 
     @Override
     public void showCategoriesFragment() {
         mGuillotineUtils.highLightCategoriesGuillotineMenuItem();
-        mFragmentHandler.replaceWithCategoriesFragment();
+        mFragmentHandler.replaceContainerWithCategoriesFragment();
     }
 
     @Override
     public void showMinimalFragment() {
         mGuillotineUtils.highLightMinimalGuillotineMenuItem();
-        mFragmentHandler.replaceWithMinimalFragment();
+        mFragmentHandler.replaceContainerWithMinimalFragment();
     }
 
     @Override
     public void showCollectionsFragment() {
         mGuillotineUtils.highLightCollectionsGuillotineMenuItem();
-        mFragmentHandler.replaceWithCollectionsFragment();
+        mFragmentHandler.replaceContainerWithCollectionsFragment();
     }
 
     @Override

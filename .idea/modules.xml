@@ -4,6 +4,15 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/WallR2.0.iml" filepath="$PROJECT_DIR$/WallR2.0.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraryAltex/libraryAltex.iml" filepath="$PROJECT_DIR$/libraryAltex/libraryAltex.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraryExpandIcon/libraryExpandIcon.iml" filepath="$PROJECT_DIR$/libraryExpandIcon/libraryExpandIcon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraryFragmentBack/libraryFragmentBack.iml" filepath="$PROJECT_DIR$/libraryFragmentBack/libraryFragmentBack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraryGuillotineMenu/libraryGuillotineMenu.iml" filepath="$PROJECT_DIR$/libraryGuillotineMenu/libraryGuillotineMenu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraryLowPoly/libraryLowPoly.iml" filepath="$PROJECT_DIR$/libraryLowPoly/libraryLowPoly.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraryMaterialSpinner/libraryMaterialSpinner.iml" filepath="$PROJECT_DIR$/libraryMaterialSpinner/libraryMaterialSpinner.iml" />
+      <module fileurl="file://$PROJECT_DIR$/librarySearch/librarySearch.iml" filepath="$PROJECT_DIR$/librarySearch/librarySearch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraryUcrop/libraryUcrop.iml" filepath="$PROJECT_DIR$/libraryUcrop/libraryUcrop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraryUrlShortener/libraryUrlShortener.iml" filepath="$PROJECT_DIR$/libraryUrlShortener/libraryUrlShortener.iml" />
     </modules>
   </component>
 </project>

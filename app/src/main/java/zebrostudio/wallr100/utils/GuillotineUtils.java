@@ -111,6 +111,24 @@ public class GuillotineUtils {
         setMenuItemsClickListener();
     }
 
+    private void hideBuyProTitle(){
+        mBuyProLayout.setVisibility(View.GONE);
+        mBuyProLayout.setClickable(false);
+    }
+
+    private void showBuyProTitle(){
+        mBuyProLayout.setVisibility(View.VISIBLE);
+        mBuyProLayout.setClickable(true);
+    }
+
+    private void hideProBadge(){
+
+    }
+
+    private void showProBadge(){
+
+    }
+
     private void setMenuItemsClickListener() {
         mExploreLayout.setOnClickListener(new View.OnClickListener() {
             @Override

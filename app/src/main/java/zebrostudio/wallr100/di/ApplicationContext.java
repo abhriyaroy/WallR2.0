@@ -7,5 +7,5 @@ import javax.inject.Qualifier;
 
 @Qualifier
 @Retention(RetentionPolicy.CLASS)
-public @interface ApplicationScope {
+public @interface ApplicationContext {
 }

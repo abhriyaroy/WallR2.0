@@ -6,7 +6,7 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.android.ContributesAndroidInjector;
 import zebrostudio.wallr100.data.DataManager;
-import zebrostudio.wallr100.di.module.FragmentScope;
+import zebrostudio.wallr100.di.modules.FragmentScope;
 import zebrostudio.wallr100.ui.categories.CategoriesFragment;
 import zebrostudio.wallr100.ui.collection.CollectionFragment;
 import zebrostudio.wallr100.ui.explore.ExploreFragment;

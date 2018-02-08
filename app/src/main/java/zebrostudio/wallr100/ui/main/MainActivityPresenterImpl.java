@@ -1,7 +1,5 @@
 package zebrostudio.wallr100.ui.main;
 
-import javax.inject.Inject;
-
 import zebrostudio.wallr100.data.DataManager;
 import zebrostudio.wallr100.utils.FragmentTags;
 
@@ -27,50 +25,50 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
 
     @Override
     public void requestExploreFragmentInflation() {
-        if (!mDataManager.getCurrentlyInflatedFragemntTag()
+        if (!mDataManager.getCurrentlyInflatedFragmentTag()
                 .equalsIgnoreCase(FragmentTags.EXPLORE_FRAGMENT_TAG)) {
             mMainView.showExploreFragment();
-            mDataManager.setCurrentlyInflatedFragemntTag(FragmentTags.EXPLORE_FRAGMENT_TAG);
+            mDataManager.setCurrentlyInflatedFragmentTag(FragmentTags.EXPLORE_FRAGMENT_TAG);
         }
         mMainView.closeGuillotineMenu();
     }
 
     @Override
     public void requestTopPicksFragmentInflation() {
-        if (!mDataManager.getCurrentlyInflatedFragemntTag()
+        if (!mDataManager.getCurrentlyInflatedFragmentTag()
                 .equalsIgnoreCase(FragmentTags.TOP_PICKS_FRAGMENT_TAG)) {
             mMainView.showTopPicksFragment();
-            mDataManager.setCurrentlyInflatedFragemntTag(FragmentTags.TOP_PICKS_FRAGMENT_TAG);
+            mDataManager.setCurrentlyInflatedFragmentTag(FragmentTags.TOP_PICKS_FRAGMENT_TAG);
         }
         mMainView.closeGuillotineMenu();
     }
 
     @Override
     public void requestCategoriesFragmentInflation() {
-        if (!mDataManager.getCurrentlyInflatedFragemntTag()
+        if (!mDataManager.getCurrentlyInflatedFragmentTag()
                 .equalsIgnoreCase(FragmentTags.CATEGORIES_FRAGMENT_TAG)) {
             mMainView.showCategoriesFragment();
-            mDataManager.setCurrentlyInflatedFragemntTag(FragmentTags.CATEGORIES_FRAGMENT_TAG);
+            mDataManager.setCurrentlyInflatedFragmentTag(FragmentTags.CATEGORIES_FRAGMENT_TAG);
         }
         mMainView.closeGuillotineMenu();
     }
 
     @Override
     public void requestMinimalFragmentInflation() {
-        if (!mDataManager.getCurrentlyInflatedFragemntTag()
+        if (!mDataManager.getCurrentlyInflatedFragmentTag()
                 .equalsIgnoreCase(FragmentTags.MINIMAL_FRAGMENT_TAG)) {
             mMainView.showMinimalFragment();
-            mDataManager.setCurrentlyInflatedFragemntTag(FragmentTags.MINIMAL_FRAGMENT_TAG);
+            mDataManager.setCurrentlyInflatedFragmentTag(FragmentTags.MINIMAL_FRAGMENT_TAG);
         }
         mMainView.closeGuillotineMenu();
     }
 
     @Override
     public void requestCollectionsFragmentInflation() {
-        if (!mDataManager.getCurrentlyInflatedFragemntTag()
+        if (!mDataManager.getCurrentlyInflatedFragmentTag()
                 .equalsIgnoreCase(FragmentTags.COLLECTIONS_FRAGMENT_TAG)) {
             mMainView.showCollectionsFragment();
-            mDataManager.setCurrentlyInflatedFragemntTag(FragmentTags.COLLECTIONS_FRAGMENT_TAG);
+            mDataManager.setCurrentlyInflatedFragmentTag(FragmentTags.COLLECTIONS_FRAGMENT_TAG);
         }
         mMainView.closeGuillotineMenu();
     }
@@ -84,5 +82,15 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
     @Override
     public void requestBuyProActivity() {
 
+    }
+
+    @Override
+    public void checkIfProUser() {
+        if (mDataManager.checkIfProLocal()){
+            mMainView.hideBuyProGuillotineMenuItem();
+            mMainView.showProBadge();
+        }
+        else {
+        }
     }
 }
