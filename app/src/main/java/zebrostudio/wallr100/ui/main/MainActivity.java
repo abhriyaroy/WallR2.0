@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.crashlytics.android.Crashlytics;
@@ -24,7 +23,6 @@ import zebrostudio.wallr100.R;
 import zebrostudio.wallr100.ui.feedback.Feedback;
 import zebrostudio.wallr100.utils.FragmentHandler;
 import zebrostudio.wallr100.utils.GuillotineUtils;
-import zebrostudio.wallr100.utils.GuillotineViewObject;
 import zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView;
 
 public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View {
@@ -36,8 +34,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     Crashlytics crashlytics;
     @Inject
     GuillotineUtils mGuillotineUtils;
-    @Inject
-    GuillotineViewObject mGuillotineViewObject;
     @Inject
     MainActivityContract.Presenter mPresenter;
     @Inject
@@ -79,13 +75,16 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
                 mRootView,
                 mToolbar,
                 mHamburgerIcon);
-        initGuillotineViewObject();
-        mGuillotineUtils.takeViewObject(mGuillotineViewObject);
 
         mFragmentHandler.init();
         mPresenter.bindView(this);
         mPresenter.requestExploreFragmentInflation();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -97,23 +96,10 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     @Override
     public void onBackPressed() {
         if (mGuillotineUtils.getGuillotineState() == IS_OPEN) {
-            mGuillotineUtils.closeguillotineMenu();
+            mGuillotineUtils.closeGuillotineMenu();
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public void setUpToolbar() {
-        if (mToolbar != null) {
-            setSupportActionBar(mToolbar);
-            getSupportActionBar().setTitle(null);
-        }
-    }
-
-    @Override
-    public void setTitle(String title) {
-        mToolbarTitle.setText(title);
     }
 
     @Override
@@ -129,25 +115,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     }
 
     @Override
-    public void initGuillotineViewObject() {
-        mGuillotineViewObject.setmExploreLayout((LinearLayout) findViewById(R.id.explore_group));
-        mGuillotineViewObject.setmExploreTitleView((CanaroTextView) findViewById(R.id.explore_textview));
-        mGuillotineViewObject.setmTopPicksLayout((LinearLayout) findViewById(R.id.top_picks_group));
-        mGuillotineViewObject.setmTopPicksTitleView((CanaroTextView) findViewById(R.id.top_picks_textview));
-        mGuillotineViewObject.setmCategoriesLayout((LinearLayout) findViewById(R.id.categories_group));
-        mGuillotineViewObject.setmCategoriesTitleView((CanaroTextView) findViewById(R.id.categories_textview));
-        mGuillotineViewObject.setmMinimalLayout((LinearLayout) findViewById(R.id.minimal_group));
-        mGuillotineViewObject.setmMinimalTitleView((CanaroTextView) findViewById(R.id.minimal_textview));
-        mGuillotineViewObject.setmCollectionLayout((LinearLayout) findViewById(R.id.collection_group));
-        mGuillotineViewObject.setmCollectionTitleView((CanaroTextView) findViewById(R.id.collection_textview));
-        mGuillotineViewObject.setmFeedBackLayout((LinearLayout) findViewById(R.id.feedback_group));
-        mGuillotineViewObject.setmBuyProLayout((LinearLayout) findViewById(R.id.buy_pro_group));
-        mGuillotineViewObject.setmBuyProTitleView((CanaroTextView) findViewById(R.id.buy_pro_textview));
-    }
-
-    @Override
     public void closeGuillotineMenu() {
-        mGuillotineUtils.closeguillotineMenu();
+        mGuillotineUtils.closeGuillotineMenu();
     }
 
     @Override
@@ -245,5 +214,15 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
     }
 
+    public void setUpToolbar() {
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setTitle(null);
+        }
+    }
+
+    public void setTitle(String title) {
+        mToolbarTitle.setText(title);
+    }
 
 }

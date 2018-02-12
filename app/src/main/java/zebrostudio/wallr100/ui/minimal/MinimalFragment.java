@@ -12,10 +12,12 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 import zebrostudio.wallr100.R;
+import zebrostudio.wallr100.di.ActivityScope;
 import zebrostudio.wallr100.ui.main.MainActivity;
 import zebrostudio.wallr100.utils.FragmentTags;
 import zebrostudio.wallr100.utils.UiCustomizationHelper;
 
+@ActivityScope
 public class MinimalFragment extends DaggerFragment {
 
     @Inject

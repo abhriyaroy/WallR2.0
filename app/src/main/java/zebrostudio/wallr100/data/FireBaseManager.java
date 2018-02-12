@@ -21,7 +21,7 @@ public class FireBaseManager {
     }
 
     public Single configureFirebasePersistence(final Application application) {
-        Single singleFirebaseInitializer = Single.create(new SingleOnSubscribe() {
+        return Single.create(new SingleOnSubscribe() {
             @Override
             public void subscribe(SingleEmitter singleEmitter) throws Exception {
                 if (!FirebaseApp.getApps(application).isEmpty()) {
@@ -30,6 +30,5 @@ public class FireBaseManager {
                 }
             }
         });
-        return singleFirebaseInitializer;
     }
 }

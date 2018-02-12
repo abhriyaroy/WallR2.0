@@ -7,15 +7,9 @@ public interface MainActivityContract {
 
     interface View extends BaseView<Presenter> {
 
-        void setUpToolbar();
-
-        void setTitle(String title);
-
         void setTitlePadding(int left, int top, int right, int bottom);
 
         void configureNavigationBar();
-
-        void initGuillotineViewObject();
 
         void closeGuillotineMenu();
 

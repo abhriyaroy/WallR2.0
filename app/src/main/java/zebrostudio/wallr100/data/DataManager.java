@@ -9,6 +9,7 @@ import com.onesignal.OneSignal;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.disposables.CompositeDisposable;
 import zebrostudio.wallr100.R;
 import zebrostudio.wallr100.utils.SharedPrefsUtils;
 
@@ -17,16 +18,21 @@ public class DataManager {
 
     private String mCurrentlyInflatedFragmentTag = "";
     private FireBaseManager mFireBaseManager;
-    SharedPrefsUtils mSharedPrefsUtils;
+    private SharedPrefsUtils mSharedPrefsUtils;
+    private CompositeDisposable mCompositeDisposable;
 
-    public DataManager(FireBaseManager fireBaseManager, SharedPrefsUtils sharedPrefsUtils){
+    public DataManager(FireBaseManager fireBaseManager,
+                       SharedPrefsUtils sharedPrefsUtils,
+                       CompositeDisposable compositeDisposable){
         mFireBaseManager = fireBaseManager;
         mSharedPrefsUtils = sharedPrefsUtils;
         mSharedPrefsUtils.init();
+        mCompositeDisposable = compositeDisposable;
     }
 
     public void requestFirebasePersistenceInitialization(Application application){
-        mFireBaseManager.configureFirebasePersistence(application).subscribe();
+        mCompositeDisposable.add(mFireBaseManager.configureFirebasePersistence(application)
+                .subscribe());
     }
 
     public void requestOneSignalSdkInitialization(Application application){
@@ -54,5 +60,9 @@ public class DataManager {
 
     public boolean checkIfProLocal(){
        return mSharedPrefsUtils.getBooleanData("purchased");
+    }
+
+    public void disposeObservables(){
+        mCompositeDisposable.dispose();
     }
 }

@@ -10,9 +10,11 @@ import com.crashlytics.android.Crashlytics;
 
 import javax.inject.Inject;
 
+import zebrostudio.wallr100.di.ActivityScope;
 import zebrostudio.wallr100.ui.main.MainActivity;
 import zebrostudio.wallr100.utils.Toasty;
 
+@ActivityScope
 public class Feedback {
 
     private MainActivity mMainActivity;

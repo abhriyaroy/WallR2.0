@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.disposables.CompositeDisposable;
 import zebrostudio.wallr100.WallRApplication;
 import zebrostudio.wallr100.data.DataManager;
 import zebrostudio.wallr100.data.FireBaseManager;
@@ -23,14 +24,23 @@ public abstract class ApplicationModule {
 
     @Singleton
     @Provides
-    static SharedPrefsUtils providesSharedPrefsUtils(@ApplicationContext Context context){
+    static SharedPrefsUtils providesSharedPrefsUtils(@ApplicationContext Context context) {
         return new SharedPrefsUtils(context);
     }
 
     @Singleton
     @Provides
-    static DataManager providesDataManager(FireBaseManager fireBaseManager, SharedPrefsUtils sharedPrefsUtils){
-        return new DataManager(fireBaseManager, sharedPrefsUtils);
+    static DataManager providesDataManager(FireBaseManager fireBaseManager,
+                                           SharedPrefsUtils sharedPrefsUtils,
+                                           CompositeDisposable compositeDisposable) {
+        return new DataManager(fireBaseManager,
+                sharedPrefsUtils,
+                compositeDisposable);
+    }
+
+    @Provides
+    static CompositeDisposable providesCompositeDisposable(){
+        return new CompositeDisposable();
     }
 
 }

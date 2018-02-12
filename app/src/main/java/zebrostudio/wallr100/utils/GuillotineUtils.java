@@ -13,6 +13,9 @@ import com.yalantis.guillotine.interfaces.GuillotineListener;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import zebrostudio.wallr100.R;
 import zebrostudio.wallr100.ui.main.MainActivity;
 import zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView;
@@ -24,23 +27,35 @@ public class GuillotineUtils {
     private MainActivity mActivity;
     private Toolbar mToolbar;
     private View mGuillotineMenu;
+    private Unbinder mUnbinder;
     private GuillotineListener mGuillotineListener;
     private boolean mIsGuillotineOpened;
     private GuillotineAnimation mGuillotineAnimationBuilder;
     private View mHamburgerIcon;
-    private LinearLayout mExploreLayout;
-    private LinearLayout mTopPicksLayout;
-    private LinearLayout mCategoriesLayout;
-    private LinearLayout mMinimalLayout;
-    private LinearLayout mCollectionLayout;
-    private LinearLayout mFeedBackLayout;
-    private LinearLayout mBuyProLayout;
-    private CanaroTextView mExploreGuillotineTitle;
-    private CanaroTextView mTopPicksGuillotineTitle;
-    private CanaroTextView mCategoriesGuillotineTitle;
-    private CanaroTextView mMinimalGuillotineTitle;
-    private CanaroTextView mCollectionGuillotineTitle;
-    private CanaroTextView mBuyProGuillotineTitle;
+    @BindView(R.id.explore_group)
+    LinearLayout mExploreLayout;
+    @BindView(R.id.top_picks_group)
+    LinearLayout mTopPicksLayout;
+    @BindView(R.id.categories_group)
+    LinearLayout mCategoriesLayout;
+    @BindView(R.id.minimal_group)
+    LinearLayout mMinimalLayout;
+    @BindView(R.id.collection_group)
+    LinearLayout mCollectionLayout;
+    @BindView(R.id.feedback_group)
+    LinearLayout mFeedBackLayout;
+    @BindView(R.id.buy_pro_group)
+    LinearLayout mBuyProLayout;
+    @BindView(R.id.explore_textview)
+    CanaroTextView mExploreGuillotineTitle;
+    @BindView(R.id.top_picks_textview)
+    CanaroTextView mTopPicksGuillotineTitle;
+    @BindView(R.id.categories_textview)
+    CanaroTextView mCategoriesGuillotineTitle;
+    @BindView(R.id.minimal_textview)
+    CanaroTextView mMinimalGuillotineTitle;
+    @BindView(R.id.collection_textview)
+    CanaroTextView mCollectionGuillotineTitle;
 
     @Inject
     public GuillotineUtils(MainActivity activity) {
@@ -53,6 +68,7 @@ public class GuillotineUtils {
         setToolbar(toolbar);
         setGuillotineListener();
         guillotineAnimationBuilder();
+        setMenuItemsClickListener();
     }
 
     private void setToolbar(Toolbar toolbar) {
@@ -61,6 +77,7 @@ public class GuillotineUtils {
 
     private void inflateAndAddGuillotineMenu(Context context, FrameLayout rootView) {
         mGuillotineMenu = LayoutInflater.from(context).inflate(R.layout.guillotine_layout, null);
+        mUnbinder = ButterKnife.bind(this, mGuillotineMenu);
         rootView.addView(mGuillotineMenu);
     }
 
@@ -90,25 +107,6 @@ public class GuillotineUtils {
                 .setGuillotineListener(mGuillotineListener)
                 .setClosedOnStart(true)
                 .build();
-    }
-
-    public void takeViewObject(GuillotineViewObject guillotineViewObject) {
-        mExploreLayout = guillotineViewObject.getmExploreLayout();
-        mTopPicksLayout = guillotineViewObject.getmTopPicksLayout();
-        mCategoriesLayout = guillotineViewObject.getmCategoriesLayout();
-        mMinimalLayout = guillotineViewObject.getmMinimalLayout();
-        mCategoriesLayout = guillotineViewObject.getmCategoriesLayout();
-        mCollectionLayout = guillotineViewObject.getmCollectionLayout();
-        mFeedBackLayout = guillotineViewObject.getmFeedBackLayout();
-        mBuyProLayout = guillotineViewObject.getmBuyProLayout();
-        mExploreGuillotineTitle = guillotineViewObject.getmExploreTitleView();
-        mTopPicksGuillotineTitle = guillotineViewObject.getmTopPicksTitleView();
-        mCategoriesGuillotineTitle = guillotineViewObject.getmCategoriesTitleView();
-        mMinimalGuillotineTitle = guillotineViewObject.getmMinimalTitleView();
-        mCollectionGuillotineTitle = guillotineViewObject.getmCollectionTitleView();
-        mBuyProLayout = guillotineViewObject.getmBuyProLayout();
-
-        setMenuItemsClickListener();
     }
 
     private void hideBuyProTitle(){
@@ -180,43 +178,37 @@ public class GuillotineUtils {
         });
     }
 
-    public void highLightExploreGuillotineMenuItem(){
-        mExploreGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
+    public void resetAllMenuItemHighlighting(){
+        mExploreGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
         mTopPicksGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
         mCategoriesGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
         mMinimalGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
         mCollectionGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+    }
+
+    public void highLightExploreGuillotineMenuItem(){
+        resetAllMenuItemHighlighting();
+        mExploreGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
+
     }
 
     public void highLightTopPicksGuillotineMenuItem(){
-        mExploreGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        resetAllMenuItemHighlighting();
         mTopPicksGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
-        mCategoriesGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
-        mMinimalGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
-        mCollectionGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
     }
 
     public void highLightCategoriesGuillotineMenuItem(){
-        mExploreGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
-        mTopPicksGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        resetAllMenuItemHighlighting();
         mCategoriesGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
-        mMinimalGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
-        mCollectionGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
     }
 
     public void highLightMinimalGuillotineMenuItem(){
-        mExploreGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
-        mTopPicksGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
-        mCategoriesGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        resetAllMenuItemHighlighting();
         mMinimalGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
-        mCollectionGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
     }
 
     public void highLightCollectionsGuillotineMenuItem(){
-        mExploreGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
-        mTopPicksGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
-        mCategoriesGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
-        mMinimalGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
+        resetAllMenuItemHighlighting();
         mCollectionGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
     }
 
@@ -224,7 +216,7 @@ public class GuillotineUtils {
         return mIsGuillotineOpened;
     }
 
-    public void closeguillotineMenu() {
+    public void closeGuillotineMenu() {
         mGuillotineAnimationBuilder.close();
     }
 
