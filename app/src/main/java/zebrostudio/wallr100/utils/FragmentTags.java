@@ -1,5 +1,8 @@
 package zebrostudio.wallr100.utils;
 
+/**
+ * Stores the tags of various fragments of the app
+ */
 public class FragmentTags {
 
     public static final String EXPLORE_FRAGMENT_TAG = "Explore";

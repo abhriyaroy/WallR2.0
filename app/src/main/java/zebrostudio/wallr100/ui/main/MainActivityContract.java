@@ -21,20 +21,6 @@ public interface MainActivityContract {
 
         void showProBadge();
 
-        void exploreGuillotineMenuItemClicked();
-
-        void topPicksGuillotineMenuItemClicked();
-
-        void categoriesGuillotineMenuItemClicked();
-
-        void minimalGuillotineMenuItemClicked();
-
-        void collectionsGuillotineMenuItemClicked();
-
-        void feedbackGuillotineMenuItemClicked();
-
-        void buyProGuillotineMenuItemClicked();
-
         void showExploreFragment();
 
         void showTopPicksFragment();

@@ -28,18 +28,8 @@ public abstract class ApplicationModule {
         return new SharedPrefsUtils(context);
     }
 
-    @Singleton
     @Provides
-    static DataManager providesDataManager(FireBaseManager fireBaseManager,
-                                           SharedPrefsUtils sharedPrefsUtils,
-                                           CompositeDisposable compositeDisposable) {
-        return new DataManager(fireBaseManager,
-                sharedPrefsUtils,
-                compositeDisposable);
-    }
-
-    @Provides
-    static CompositeDisposable providesCompositeDisposable(){
+    static CompositeDisposable providesCompositeDisposable() {
         return new CompositeDisposable();
     }
 

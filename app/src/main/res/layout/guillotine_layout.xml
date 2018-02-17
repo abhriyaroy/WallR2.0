@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
+                <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
                     android:id="@+id/title_guillotine"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
                     android:textColor="#fff"
                     android:textSize="35sp" />
 
-                <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
+                <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
                     android:id="@+id/pro_badge_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
             android:src="@drawable/explore_icon_new"
             android:tint="#fff" />
 
-        <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
             android:id="@+id/explore_textview"
             style="@style/TextView.GuillotineItem"
             android:text="@string/guillotine_explore_title" />
@@ -77,7 +77,7 @@
             style="@style/ImageView.GuillotineItem"
             android:src="@drawable/collections_icon" />
 
-        <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
             android:id="@+id/top_picks_textview"
             style="@style/TextView.GuillotineItem"
             android:text="@string/guillotine_top_picks_title" />
@@ -93,7 +93,7 @@
             android:padding="1dp"
             android:src="@drawable/categories_icon" />
 
-        <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
             android:id="@+id/categories_textview"
             style="@style/TextView.GuillotineItem"
             android:text="@string/guillotine_categories_title" />
@@ -110,7 +110,7 @@
             android:padding="1dp"
             android:src="@drawable/ic_pie_chart_24" />
 
-        <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
             android:id="@+id/minimal_textview"
             style="@style/TextView.GuillotineItem"
             android:ellipsize="end"
@@ -127,7 +127,7 @@
             style="@style/ImageView.GuillotineItem"
             android:src="@drawable/gallery_icon" />
 
-        <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
             android:id="@+id/collection_textview"
             style="@style/TextView.GuillotineItem"
             android:text="@string/guillotine_collection_title" />
@@ -142,7 +142,7 @@
             android:src="@drawable/ic_account_us_48"
             android:tint="@color/color_white" />
 
-        <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
             android:id="@+id/feedback_textview"
             style="@style/TextView.GuillotineItem"
             android:text="@string/guillotine_feedback_title" />
@@ -157,7 +157,7 @@
             style="@style/ImageView.GuillotineItem"
             android:src="@drawable/ic_crown_48" />
 
-        <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
             android:id="@+id/buy_pro_textview"
             style="@style/TextView.GuillotineItem"
             android:text="@string/guillotine_buy_pro_title"

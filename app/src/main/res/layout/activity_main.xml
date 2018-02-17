@@ -85,7 +85,7 @@
                     android:layout_marginRight="16dp"
                     android:layout_centerVertical="true"/>
 
-                <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
+                <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"

@@ -2,6 +2,7 @@ package zebrostudio.wallr100.data;
 
 
 import android.app.Application;
+import android.content.Context;
 
 import com.bumptech.glide.request.target.ViewTarget;
 import com.onesignal.OneSignal;
@@ -9,8 +10,11 @@ import com.onesignal.OneSignal;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import zebrostudio.wallr100.R;
+import zebrostudio.wallr100.di.ApplicationContext;
 import zebrostudio.wallr100.utils.SharedPrefsUtils;
 
 @Singleton
@@ -18,24 +22,38 @@ public class DataManager {
 
     private String mCurrentlyInflatedFragmentTag = "";
     private FireBaseManager mFireBaseManager;
+    private IabManager mIabManager;
     private SharedPrefsUtils mSharedPrefsUtils;
     private CompositeDisposable mCompositeDisposable;
+    private boolean isIabSetup;
+    private Context mApplicationContext;
 
-    public DataManager(FireBaseManager fireBaseManager,
+    @Inject
+    public DataManager(@ApplicationContext Context context,
+                       FireBaseManager fireBaseManager,
+                       IabManager iabManager,
                        SharedPrefsUtils sharedPrefsUtils,
-                       CompositeDisposable compositeDisposable){
+                       CompositeDisposable compositeDisposable) {
+        mApplicationContext = context;
         mFireBaseManager = fireBaseManager;
+        mIabManager = iabManager;
         mSharedPrefsUtils = sharedPrefsUtils;
-        mSharedPrefsUtils.init();
         mCompositeDisposable = compositeDisposable;
     }
 
-    public void requestFirebasePersistenceInitialization(Application application){
-        mCompositeDisposable.add(mFireBaseManager.configureFirebasePersistence(application)
+    public void initResources() {
+        mSharedPrefsUtils.init();
+
+    }
+
+    public void requestFirebasePersistenceInitialization(Application application) {
+        mCompositeDisposable.add(mFireBaseManager.completableFirebasePersistence(application)
+                .observeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe());
     }
 
-    public void requestOneSignalSdkInitialization(Application application){
+    public void requestOneSignalSdkInitialization(Application application) {
         OneSignal.startInit(application)
                 .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
                 .unsubscribeWhenNotificationsAreDisabled(true)
@@ -46,7 +64,7 @@ public class DataManager {
         ViewTarget.setTagId(R.id.glide_tag);
     }
 
-    public void requestAutomaticWallpaperChangerJobInitialization(){
+    public void requestAutomaticWallpaperChangerJobInitialization() {
 
     }
 
@@ -58,11 +76,11 @@ public class DataManager {
         this.mCurrentlyInflatedFragmentTag = mCurrentlyInflatedFragmentTag;
     }
 
-    public boolean checkIfProLocal(){
-       return mSharedPrefsUtils.getBooleanData("purchased");
+    public boolean checkIfProLocal() {
+        return mSharedPrefsUtils.getBooleanData("purchased");
     }
 
-    public void disposeObservables(){
+    public void disposeObservables() {
         mCompositeDisposable.dispose();
     }
 }

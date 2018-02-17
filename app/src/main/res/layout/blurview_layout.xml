@@ -19,7 +19,7 @@
             android:padding="10dp"
             app:SpinKit_Color="#fff" />
 
-        <zebrostudio.wallr100.utils.canaroTextViewUtils.CanaroTextView
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
             android:id="@+id/LoadingTextMainActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

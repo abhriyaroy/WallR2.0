@@ -8,9 +8,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reactivex.Single;
-import io.reactivex.SingleEmitter;
-import io.reactivex.SingleOnSubscribe;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 
 @Singleton
 public class FireBaseManager {
@@ -20,13 +20,14 @@ public class FireBaseManager {
 
     }
 
-    public Single configureFirebasePersistence(final Application application) {
-        return Single.create(new SingleOnSubscribe() {
+    public Observable<Void> completableFirebasePersistence(final Application application) {
+        return Observable.create(new ObservableOnSubscribe<Void>() {
             @Override
-            public void subscribe(SingleEmitter singleEmitter) throws Exception {
+            public void subscribe(ObservableEmitter<Void> observableEmitter) throws Exception {
                 if (!FirebaseApp.getApps(application).isEmpty()) {
                     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                     firebaseDatabase.setPersistenceEnabled(true);
+                    observableEmitter.onComplete();
                 }
             }
         });
