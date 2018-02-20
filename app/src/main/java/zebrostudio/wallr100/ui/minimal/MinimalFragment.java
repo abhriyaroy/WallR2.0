@@ -18,10 +18,12 @@ import zebrostudio.wallr100.utils.FragmentTags;
 import zebrostudio.wallr100.utils.UiCustomizationHelper;
 
 @ActivityScope
-public class MinimalFragment extends DaggerFragment {
+public class MinimalFragment extends DaggerFragment implements MinimalFragmentContract.MinimalView {
 
     @Inject
     MainActivity mMainActivity;
+    @Inject
+    MinimalPresenterImpl mMinimalPresenter;
     @Inject
     UiCustomizationHelper mUiCustomizationHelper;
 
@@ -45,17 +47,20 @@ public class MinimalFragment extends DaggerFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mMinimalPresenter.bindView(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         setUpUi();
+        mMinimalPresenter.updateCurrentFragmentTag();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        mMinimalPresenter.unbindView();
     }
 
     private void setUpUi() {

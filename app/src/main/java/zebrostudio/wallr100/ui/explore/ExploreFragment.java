@@ -3,6 +3,7 @@ package zebrostudio.wallr100.ui.explore;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 
 import javax.inject.Inject;
@@ -53,6 +54,7 @@ public class ExploreFragment extends DaggerFragment implements ExploreFragmentCo
     public void onResume() {
         super.onResume();
         setUpUi();
+        Log.d(FragmentTags.EXPLORE_FRAGMENT_TAG,"onresume");
         mExplorePresenter.updateCurrentFragmentTag();
     }
 

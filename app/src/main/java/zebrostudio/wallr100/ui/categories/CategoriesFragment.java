@@ -97,6 +97,7 @@ public class CategoriesFragment extends DaggerFragment
     public void onResume() {
         super.onResume();
         setUpUi();
+        Log.d(FragmentTags.CATEGORIES_FRAGMENT_TAG,"onresume");
         mCategoriesPresenter.updateCurrentFragmentTag();
     }
 
