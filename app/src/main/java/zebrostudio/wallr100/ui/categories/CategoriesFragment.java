@@ -34,12 +34,15 @@ import zebrostudio.wallr100.utils.FragmentTags;
 import zebrostudio.wallr100.utils.UiCustomizationHelper;
 
 @ActivityScope
-public class CategoriesFragment extends DaggerFragment {
+public class CategoriesFragment extends DaggerFragment
+        implements CategoriesFragmentContract.CategoriesView {
 
     private Unbinder mUnbinder;
 
     @Inject
     MainActivity mMainActivity;
+    @Inject
+    CategoriesPresenterImpl mCategoriesPresenter;
     @Inject
     UiCustomizationHelper mUiCustomizationHelper;
 
@@ -68,6 +71,7 @@ public class CategoriesFragment extends DaggerFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mCategoriesPresenter.bindView(this);
     }
 
     @Override
@@ -93,12 +97,14 @@ public class CategoriesFragment extends DaggerFragment {
     public void onResume() {
         super.onResume();
         setUpUi();
+        mCategoriesPresenter.updateCurrentFragmentTag();
     }
 
 
     @Override
     public void onDetach() {
         super.onDetach();
+        mCategoriesPresenter.unbindView();
     }
 
     private void setUpUi() {

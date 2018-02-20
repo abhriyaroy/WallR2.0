@@ -15,10 +15,13 @@ import zebrostudio.wallr100.ui.main.MainActivity;
 import zebrostudio.wallr100.utils.FragmentTags;
 import zebrostudio.wallr100.utils.UiCustomizationHelper;
 
-public class CollectionFragment extends DaggerFragment {
+public class CollectionFragment extends DaggerFragment
+        implements CollectionFragmentContract.CollectionView{
 
     @Inject
     MainActivity mMainActivity;
+    @Inject
+    CollectionPresenterImpl mCollectionPresenter;
     @Inject
     UiCustomizationHelper mUiCustomizationHelper;
 
@@ -42,6 +45,7 @@ public class CollectionFragment extends DaggerFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mCollectionPresenter.bindView(this);
     }
 
     @Override
@@ -54,11 +58,13 @@ public class CollectionFragment extends DaggerFragment {
     public void onResume() {
         super.onResume();
         setUpUi();
+        mCollectionPresenter.updateCurrentFragmentTag();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        mCollectionPresenter.unbindView();
     }
 
     private void setUpUi() {

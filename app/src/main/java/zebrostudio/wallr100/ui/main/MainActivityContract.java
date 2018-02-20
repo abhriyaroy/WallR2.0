@@ -34,6 +34,12 @@ public interface MainActivityContract {
         void showFeedBackTool();
 
         void showBuyProActivity();
+
+        void showAppExitConfirmationToast();
+
+        void resetExitConfirmationOnTimeout();
+
+        void exitFromApp();
     }
 
     interface Presenter extends BasePresenter<View> {
@@ -53,5 +59,9 @@ public interface MainActivityContract {
         void requestBuyProActivity();
 
         void checkIfProUser();
+
+        boolean handleBackPress();
+
+        void resetExitConfirmation();
     }
 }

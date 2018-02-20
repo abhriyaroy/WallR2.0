@@ -14,5 +14,7 @@ public interface ExploreFragmentContract {
         void bindView(ExploreView exploreView);
 
         void unBindView();
+
+        void updateCurrentFragmentTag();
     }
 }

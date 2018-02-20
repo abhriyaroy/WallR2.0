@@ -1,5 +1,7 @@
 package zebrostudio.wallr100.ui.main;
 
+import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -23,6 +26,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
 import dagger.android.support.DaggerAppCompatActivity;
 import io.fabric.sdk.android.Fabric;
 import zebrostudio.wallr100.R;
@@ -33,11 +38,12 @@ import zebrostudio.wallr100.ui.feedback.Feedback;
 import zebrostudio.wallr100.ui.minimal.MinimalFragment;
 import zebrostudio.wallr100.ui.top_picks.TopPicksFragment;
 import zebrostudio.wallr100.utils.FragmentTags;
+import zebrostudio.wallr100.utils.Toasty;
 import zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView;
 
-public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View {
+public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View{
 
-    private static boolean IS_OPEN = true;
+    private static final boolean IS_OPEN = true;
     private static final long RIPPLE_DURATION = 250;
 
     private Unbinder mUnBinder;
@@ -110,6 +116,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        AndroidInjection.inject(this);
         mGuillotineMenu = LayoutInflater.from(this).inflate(R.layout.guillotine_layout, null);
         mRootView = findViewById(R.id.root_layout);
         mRootView.addView(mGuillotineMenu);
@@ -145,7 +152,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         if (getGuillotineState() == IS_OPEN) {
             closeGuillotineMenu();
         } else {
-            super.onBackPressed();
+            if (!mPresenter.handleBackPress()){
+                super.onBackPressed();
+            }
         }
     }
 
@@ -246,6 +255,31 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
     }
 
+    @Override
+    public void showAppExitConfirmationToast() {
+        try {
+            Toasty.info(this, "Press back again to exit",
+                    Toast.LENGTH_SHORT, true).show();
+        } catch (NullPointerException e) {
+
+        }
+    }
+
+    @Override
+    public void resetExitConfirmationOnTimeout() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mPresenter.resetExitConfirmation();
+            }
+        }, 2000);
+    }
+
+    @Override
+    public void exitFromApp() {
+        this.finish();
+    }
+
     @OnClick(R.id.explore_group)
     public void exploreGuillotineMenuItemClicked() {
         mPresenter.requestExploreFragmentInflation();
@@ -337,6 +371,4 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     public boolean getGuillotineState() {
         return mIsGuillotineOpened;
     }
-
-
 }

@@ -1,5 +1,6 @@
 package zebrostudio.wallr100;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
@@ -7,6 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.DaggerApplication;
 import zebrostudio.wallr100.data.DataManager;
 import zebrostudio.wallr100.di.component.AppComponent;
@@ -16,11 +18,14 @@ import zebrostudio.wallr100.di.component.DaggerAppComponent;
 public class WallRApplication extends DaggerApplication {
 
     @Inject
+    DispatchingAndroidInjector<Activity> activityInjector;
+    @Inject
     DataManager mDataManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
         mDataManager.requestFirebasePersistenceInitialization(this);
         mDataManager.requestOneSignalSdkInitialization(this);
         mDataManager.requestGlideTagConfiguration();
@@ -39,5 +44,4 @@ public class WallRApplication extends DaggerApplication {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
-
 }

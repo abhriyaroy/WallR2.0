@@ -7,13 +7,14 @@ import dagger.Provides;
 import dagger.android.ContributesAndroidInjector;
 import zebrostudio.wallr100.data.DataManager;
 import zebrostudio.wallr100.di.modules.FragmentScope;
+import zebrostudio.wallr100.ui.base_fragment.BaseFragmentModule;
 import zebrostudio.wallr100.ui.categories.CategoriesFragment;
 import zebrostudio.wallr100.ui.collection.CollectionFragment;
 import zebrostudio.wallr100.ui.explore.ExploreFragment;
 import zebrostudio.wallr100.ui.minimal.MinimalFragment;
 import zebrostudio.wallr100.ui.top_picks.TopPicksFragment;
 
-@Module
+@Module(includes = BaseFragmentModule.class)
 public abstract class MainActivityModule {
 
     @FragmentScope

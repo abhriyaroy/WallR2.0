@@ -8,6 +8,7 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
     DataManager mDataManager;
 
     private MainActivityContract.View mMainView;
+    private boolean mConfirmExit;
 
     MainActivityPresenterImpl(DataManager dataManager) {
         mDataManager = dataManager;
@@ -28,7 +29,6 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
         if (!mDataManager.getCurrentlyInflatedFragmentTag()
                 .equalsIgnoreCase(FragmentTags.EXPLORE_FRAGMENT_TAG)) {
             mMainView.showExploreFragment();
-            mDataManager.setCurrentlyInflatedFragmentTag(FragmentTags.EXPLORE_FRAGMENT_TAG);
         }
         mMainView.closeGuillotineMenu();
     }
@@ -38,7 +38,6 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
         if (!mDataManager.getCurrentlyInflatedFragmentTag()
                 .equalsIgnoreCase(FragmentTags.TOP_PICKS_FRAGMENT_TAG)) {
             mMainView.showTopPicksFragment();
-            mDataManager.setCurrentlyInflatedFragmentTag(FragmentTags.TOP_PICKS_FRAGMENT_TAG);
         }
         mMainView.closeGuillotineMenu();
     }
@@ -48,7 +47,6 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
         if (!mDataManager.getCurrentlyInflatedFragmentTag()
                 .equalsIgnoreCase(FragmentTags.CATEGORIES_FRAGMENT_TAG)) {
             mMainView.showCategoriesFragment();
-            mDataManager.setCurrentlyInflatedFragmentTag(FragmentTags.CATEGORIES_FRAGMENT_TAG);
         }
         mMainView.closeGuillotineMenu();
     }
@@ -58,7 +56,6 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
         if (!mDataManager.getCurrentlyInflatedFragmentTag()
                 .equalsIgnoreCase(FragmentTags.MINIMAL_FRAGMENT_TAG)) {
             mMainView.showMinimalFragment();
-            mDataManager.setCurrentlyInflatedFragmentTag(FragmentTags.MINIMAL_FRAGMENT_TAG);
         }
         mMainView.closeGuillotineMenu();
     }
@@ -68,7 +65,6 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
         if (!mDataManager.getCurrentlyInflatedFragmentTag()
                 .equalsIgnoreCase(FragmentTags.COLLECTIONS_FRAGMENT_TAG)) {
             mMainView.showCollectionsFragment();
-            mDataManager.setCurrentlyInflatedFragmentTag(FragmentTags.COLLECTIONS_FRAGMENT_TAG);
         }
         mMainView.closeGuillotineMenu();
     }
@@ -86,11 +82,32 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
 
     @Override
     public void checkIfProUser() {
-        if (mDataManager.checkIfProLocal()){
+        if (mDataManager.checkIfProLocal()) {
             mMainView.hideBuyProGuillotineMenuItem();
             mMainView.showProBadge();
+        } else {
         }
-        else {
+    }
+
+    @Override
+    public boolean handleBackPress() {
+        if (mDataManager.getCurrentlyInflatedFragmentTag()
+                .equalsIgnoreCase(FragmentTags.EXPLORE_FRAGMENT_TAG)) {
+            if (mConfirmExit) {
+                mMainView.exitFromApp();
+            }
+
+            mConfirmExit = true;
+            mMainView.showAppExitConfirmationToast();
+            mMainView.resetExitConfirmationOnTimeout();
+            return true;
+        } else {
+            return false;
         }
+    }
+
+    @Override
+    public void resetExitConfirmation() {
+        mConfirmExit = false;
     }
 }
