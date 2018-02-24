@@ -10,6 +10,8 @@ public interface CategoriesFragmentContract {
     }
 
     interface CategoriesPresenter extends BasePresenter<CategoriesView>{
+
         void updateCurrentFragmentTag();
+
     }
 }

@@ -12,6 +12,10 @@ import io.reactivex.CompletableOnSubscribe;
 import zebrostudio.wallr100.utils.iabutils.IabHelper;
 import zebrostudio.wallr100.utils.iabutils.IabResult;
 
+/**
+ * Responsible for handling all purchase related events. Is called upon from the DataManager
+ * ({@link DataManager})
+ */
 public class IabManager {
 
     private IabHelper mIabHelper;

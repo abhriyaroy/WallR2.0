@@ -10,6 +10,8 @@ public interface CollectionFragmentContract {
     }
 
     interface CollectionPresenter extends BasePresenter<CollectionView> {
+
         void updateCurrentFragmentTag();
+
     }
 }

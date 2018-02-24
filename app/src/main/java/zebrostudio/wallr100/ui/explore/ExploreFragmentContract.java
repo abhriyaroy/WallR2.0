@@ -11,10 +11,7 @@ public interface ExploreFragmentContract {
 
     interface ExplorePresenter extends BasePresenter<ExploreView>{
 
-        void bindView(ExploreView exploreView);
-
-        void unBindView();
-
         void updateCurrentFragmentTag();
+
     }
 }

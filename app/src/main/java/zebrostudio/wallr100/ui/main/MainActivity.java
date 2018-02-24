@@ -1,11 +1,11 @@
 package zebrostudio.wallr100.ui.main;
 
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -27,7 +27,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import dagger.android.AndroidInjection;
-import dagger.android.AndroidInjector;
 import dagger.android.support.DaggerAppCompatActivity;
 import io.fabric.sdk.android.Fabric;
 import zebrostudio.wallr100.R;
@@ -36,12 +35,17 @@ import zebrostudio.wallr100.ui.collection.CollectionFragment;
 import zebrostudio.wallr100.ui.explore.ExploreFragment;
 import zebrostudio.wallr100.ui.feedback.Feedback;
 import zebrostudio.wallr100.ui.minimal.MinimalFragment;
-import zebrostudio.wallr100.ui.top_picks.TopPicksFragment;
+import zebrostudio.wallr100.ui.toppicks.TopPicksFragment;
 import zebrostudio.wallr100.utils.FragmentTags;
 import zebrostudio.wallr100.utils.Toasty;
 import zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView;
 
-public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View{
+/**
+ *  Loads in when the app is opened. It is responsible for handling the various fragments which
+ *  represent the various groups of wallpapers. This is also responsible for handling the
+ *  Guillotine Menu which is a customized replacement to the traditional navigation drawer.
+ */
+public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View {
 
     private static final boolean IS_OPEN = true;
     private static final long RIPPLE_DURATION = 250;
@@ -127,8 +131,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         setUpToolbar();
         configureNavigationBar();
 
-        guillotineAnimationBuilder();
         setGuillotineListener();
+        guillotineAnimationBuilder();
 
         mPresenter.bindView(this);
         mPresenter.requestExploreFragmentInflation();
@@ -152,7 +156,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         if (getGuillotineState() == IS_OPEN) {
             closeGuillotineMenu();
         } else {
-            if (!mPresenter.handleBackPress()){
+            if (!mPresenter.handleBackPress()) {
                 super.onBackPressed();
             }
         }
@@ -168,6 +172,11 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.color_primary_dark));
         }
+    }
+
+    @Override
+    public boolean getGuillotineState() {
+        return mIsGuillotineOpened;
     }
 
     @Override
@@ -197,8 +206,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
     @Override
     public void showExploreFragment() {
-        resetAllMenuItemHighlighting();
-        mExploreGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
         getSupportFragmentManager().beginTransaction()
                 .replace(mFragmentContainer, mExploreFragment, FragmentTags.EXPLORE_FRAGMENT_TAG)
                 .addToBackStack(null)
@@ -207,8 +214,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
     @Override
     public void showTopPicksFragment() {
-        resetAllMenuItemHighlighting();
-        mTopPicksGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
         getSupportFragmentManager().beginTransaction()
                 .replace(mFragmentContainer, mTopPicksFragment, FragmentTags.TOP_PICKS_FRAGMENT_TAG)
                 .addToBackStack(null)
@@ -227,8 +232,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
     @Override
     public void showMinimalFragment() {
-        resetAllMenuItemHighlighting();
-        mMinimalGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
         getSupportFragmentManager().beginTransaction()
                 .replace(mFragmentContainer, mMinimalFragment, FragmentTags.MINIMAL_FRAGMENT_TAG)
                 .addToBackStack(null)
@@ -237,8 +240,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
     @Override
     public void showCollectionsFragment() {
-        resetAllMenuItemHighlighting();
-        mCollectionGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
         getSupportFragmentManager().beginTransaction()
                 .replace(mFragmentContainer, mCollectionsFragment, FragmentTags.COLLECTIONS_FRAGMENT_TAG)
                 .addToBackStack(null)
@@ -266,7 +267,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     }
 
     @Override
-    public void resetExitConfirmationOnTimeout() {
+    public void runTimeoutChecker() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -330,11 +331,13 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         mGuillotineListener = new GuillotineListener() {
             @Override
             public void onGuillotineOpened() {
+                Log.d("Mainactivity","guillotine is open");
                 mIsGuillotineOpened = true;
             }
 
             @Override
             public void onGuillotineClosed() {
+                Log.d("Mainactivity","guillotine is closed");
                 mIsGuillotineOpened = false;
             }
         };
@@ -368,7 +371,28 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         mCollectionGuillotineTitle.setTextColor(Color.parseColor("#ffffff"));
     }
 
-    public boolean getGuillotineState() {
-        return mIsGuillotineOpened;
+    public void highlightExploreMenu() {
+        resetAllMenuItemHighlighting();
+        mExploreGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
+    }
+
+    public void highlightTopPicksMenu() {
+        resetAllMenuItemHighlighting();
+        mTopPicksGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
+    }
+
+    public void highlightCategoriesMenu() {
+        resetAllMenuItemHighlighting();
+        mCategoriesGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
+    }
+
+    public void highlightMinimalMenu() {
+        resetAllMenuItemHighlighting();
+        mMinimalGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
+    }
+
+    public void highlightCollectionsMenu() {
+        resetAllMenuItemHighlighting();
+        mCollectionGuillotineTitle.setTextColor(Color.parseColor("#e51c23"));
     }
 }

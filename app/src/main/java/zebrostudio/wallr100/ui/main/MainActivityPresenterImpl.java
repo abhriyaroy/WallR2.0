@@ -3,6 +3,10 @@ package zebrostudio.wallr100.ui.main;
 import zebrostudio.wallr100.data.DataManager;
 import zebrostudio.wallr100.utils.FragmentTags;
 
+/**
+ * Listens to user actions from the UI ({@link MainActivity}), retrieves the data and updates
+ * the UI as required.
+ */
 public class MainActivityPresenterImpl implements MainActivityContract.Presenter {
 
     DataManager mDataManager;
@@ -86,23 +90,30 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
             mMainView.hideBuyProGuillotineMenuItem();
             mMainView.showProBadge();
         } else {
+            mMainView.showBuyProGuillotineMenuItem();
+            mMainView.hideProBadge();
         }
     }
 
     @Override
     public boolean handleBackPress() {
-        if (mDataManager.getCurrentlyInflatedFragmentTag()
-                .equalsIgnoreCase(FragmentTags.EXPLORE_FRAGMENT_TAG)) {
-            if (mConfirmExit) {
-                mMainView.exitFromApp();
-            }
-
-            mConfirmExit = true;
-            mMainView.showAppExitConfirmationToast();
-            mMainView.resetExitConfirmationOnTimeout();
+        if (mMainView.getGuillotineState()) {
+            mMainView.closeGuillotineMenu();
             return true;
         } else {
-            return false;
+            if (mDataManager.getCurrentlyInflatedFragmentTag()
+                    .equalsIgnoreCase(FragmentTags.EXPLORE_FRAGMENT_TAG)) {
+                if (mConfirmExit) {
+                    mMainView.exitFromApp();
+                }
+
+                mConfirmExit = true;
+                mMainView.showAppExitConfirmationToast();
+                mMainView.runTimeoutChecker();
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 

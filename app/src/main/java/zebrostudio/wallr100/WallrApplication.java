@@ -14,8 +14,11 @@ import zebrostudio.wallr100.data.DataManager;
 import zebrostudio.wallr100.di.component.AppComponent;
 import zebrostudio.wallr100.di.component.DaggerAppComponent;
 
+/**
+ *  Application class for the app
+ */
 @Singleton
-public class WallRApplication extends DaggerApplication {
+public class WallrApplication extends DaggerApplication {
 
     @Inject
     DispatchingAndroidInjector<Activity> activityInjector;

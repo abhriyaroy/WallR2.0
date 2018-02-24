@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.ui.top_picks.standouts;
+package zebrostudio.wallr100.ui.toppicks.standouts;
 
 import zebrostudio.wallr100.ui.base_fragment.BaseFragment;
 

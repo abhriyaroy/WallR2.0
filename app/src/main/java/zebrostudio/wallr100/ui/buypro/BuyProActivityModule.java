@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.ui.buy_pro;
+package zebrostudio.wallr100.ui.buypro;
 
 import dagger.Module;
 

@@ -12,13 +12,12 @@ import javax.inject.Inject;
 import dagger.android.support.DaggerFragment;
 import zebrostudio.wallr100.R;
 
-public class BaseFragment extends DaggerFragment implements
+public abstract class BaseFragment extends DaggerFragment implements
         BaseFragmentContract.BaseFragmentView {
 
     @Inject
     BaseFragmentPresenterImpl mBasePresenter;
 
-    @Inject
     public BaseFragment() {
         // Required empty public constructor
     }

@@ -5,9 +5,14 @@ import javax.inject.Inject;
 import zebrostudio.wallr100.data.DataManager;
 import zebrostudio.wallr100.utils.FragmentTags;
 
+/**
+ * Listens to user actions from the UI ({@link MinimalFragment}), retrieves the data and updates
+ * the UI as required.
+ */
 public class MinimalPresenterImpl implements MinimalFragmentContract.MinimalPresenter {
 
-    DataManager mDataManager;
+    private DataManager mDataManager;
+    private MinimalFragmentContract.MinimalView mMinimalView;
 
     @Inject
     MinimalPresenterImpl(DataManager dataManager){
@@ -16,12 +21,12 @@ public class MinimalPresenterImpl implements MinimalFragmentContract.MinimalPres
 
     @Override
     public void bindView(MinimalFragmentContract.MinimalView view) {
-
+        mMinimalView = view;
     }
 
     @Override
     public void unbindView() {
-
+        mMinimalView = null;
     }
 
     @Override

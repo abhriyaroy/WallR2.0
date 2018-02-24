@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.ui.top_picks.popular;
+package zebrostudio.wallr100.ui.toppicks.popular;
 
 import zebrostudio.wallr100.ui.base_fragment.BaseFragment;
 

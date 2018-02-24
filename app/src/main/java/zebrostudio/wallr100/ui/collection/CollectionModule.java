@@ -1,8 +1,9 @@
 package zebrostudio.wallr100.ui.collection;
 
-/**
- * Created by royab on 19-02-2018.
- */
+import dagger.Module;
+import zebrostudio.wallr100.di.FragmentScope;
 
+@FragmentScope
+@Module
 public class CollectionModule {
 }

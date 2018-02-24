@@ -1,10 +1,8 @@
-package zebrostudio.wallr100.ui.top_picks;
+package zebrostudio.wallr100.ui.toppicks;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,19 +21,25 @@ import dagger.android.support.DaggerFragment;
 import zebrostudio.wallr100.R;
 import zebrostudio.wallr100.di.ActivityScope;
 import zebrostudio.wallr100.ui.main.MainActivity;
-import zebrostudio.wallr100.ui.top_picks.popular.PopularWallpapersFragment;
-import zebrostudio.wallr100.ui.top_picks.recents.RecentWallpapersFragment;
-import zebrostudio.wallr100.ui.top_picks.standouts.StandoutWallpaperFragment;
+import zebrostudio.wallr100.ui.toppicks.popular.PopularWallpapersFragment;
+import zebrostudio.wallr100.ui.toppicks.recents.RecentWallpapersFragment;
+import zebrostudio.wallr100.ui.toppicks.standouts.StandoutWallpaperFragment;
 import zebrostudio.wallr100.utils.FragmentTags;
 import zebrostudio.wallr100.utils.UiCustomizationHelper;
 
+/**
+ *  Displays the Recent, Popular, Standout wallpaper fragments.
+ */
 @ActivityScope
-public class TopPicksFragment extends DaggerFragment {
+public class TopPicksFragment extends DaggerFragment
+        implements TopPicksFragmentContract.TopPicksView {
 
     private Unbinder mUnbinder;
 
     @Inject
     MainActivity mMainActivity;
+    @Inject
+    TopPicksPresenterImpl mTopPicksPresenter;
     @Inject
     UiCustomizationHelper mUiCustomizationHelper;
 
@@ -64,6 +68,7 @@ public class TopPicksFragment extends DaggerFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mTopPicksPresenter.bindView(this);
     }
 
     @Override
@@ -86,11 +91,14 @@ public class TopPicksFragment extends DaggerFragment {
     public void onResume() {
         super.onResume();
         setUpUi();
+        mTopPicksPresenter.updateCurrentFragmentTag();
+        ((MainActivity)getActivity()).highlightTopPicksMenu();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        mTopPicksPresenter.unbindView();
     }
 
     @Override

@@ -33,6 +33,9 @@ import zebrostudio.wallr100.ui.main.MainActivity;
 import zebrostudio.wallr100.utils.FragmentTags;
 import zebrostudio.wallr100.utils.UiCustomizationHelper;
 
+/**
+ *  Displays Food, Nature, Objects, People, Technology wallpaper fragments.
+ */
 @ActivityScope
 public class CategoriesFragment extends DaggerFragment
         implements CategoriesFragmentContract.CategoriesView {
@@ -97,8 +100,8 @@ public class CategoriesFragment extends DaggerFragment
     public void onResume() {
         super.onResume();
         setUpUi();
-        Log.d(FragmentTags.CATEGORIES_FRAGMENT_TAG,"onresume");
         mCategoriesPresenter.updateCurrentFragmentTag();
+        ((MainActivity)getActivity()).highlightCategoriesMenu();
     }
 
 

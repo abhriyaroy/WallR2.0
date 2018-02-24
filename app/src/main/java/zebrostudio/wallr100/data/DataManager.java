@@ -17,11 +17,15 @@ import zebrostudio.wallr100.R;
 import zebrostudio.wallr100.di.ApplicationContext;
 import zebrostudio.wallr100.utils.SharedPrefsUtils;
 
+/**
+ *  Serves as a manager to provide necessary data to the presenters or to perform jobs
+ *  in the background as requested by the presenters.
+ */
 @Singleton
 public class DataManager {
 
     private String mCurrentlyInflatedFragmentTag = "";
-    private FireBaseManager mFireBaseManager;
+    private FirebaseManager mFirebaseManager;
     private IabManager mIabManager;
     private SharedPrefsUtils mSharedPrefsUtils;
     private CompositeDisposable mCompositeDisposable;
@@ -30,12 +34,12 @@ public class DataManager {
 
     @Inject
     public DataManager(@ApplicationContext Context context,
-                       FireBaseManager fireBaseManager,
+                       FirebaseManager firebaseManager,
                        IabManager iabManager,
                        SharedPrefsUtils sharedPrefsUtils,
                        CompositeDisposable compositeDisposable) {
         mApplicationContext = context;
-        mFireBaseManager = fireBaseManager;
+        mFirebaseManager = firebaseManager;
         mIabManager = iabManager;
         mSharedPrefsUtils = sharedPrefsUtils;
         mCompositeDisposable = compositeDisposable;
@@ -47,7 +51,7 @@ public class DataManager {
     }
 
     public void requestFirebasePersistenceInitialization(Application application) {
-        mCompositeDisposable.add(mFireBaseManager.completableFirebasePersistence(application)
+        mCompositeDisposable.add(mFirebaseManager.completableFirebasePersistence(application)
                 .observeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe());

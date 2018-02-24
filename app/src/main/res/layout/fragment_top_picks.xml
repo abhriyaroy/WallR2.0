@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="zebrostudio.wallr100.ui.top_picks.TopPicksFragment">
+    tools:context="zebrostudio.wallr100.ui.toppicks.TopPicksFragment">
 
     <FrameLayout
         android:layout_width="match_parent"

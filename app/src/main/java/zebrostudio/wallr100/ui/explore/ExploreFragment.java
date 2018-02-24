@@ -16,6 +16,9 @@ import zebrostudio.wallr100.ui.main.MainActivity;
 import zebrostudio.wallr100.utils.FragmentTags;
 import zebrostudio.wallr100.utils.UiCustomizationHelper;
 
+/**
+ *  Displays the Explore section wallpapers.
+ */
 @ActivityScope
 public class ExploreFragment extends DaggerFragment implements ExploreFragmentContract.ExploreView {
 
@@ -54,8 +57,8 @@ public class ExploreFragment extends DaggerFragment implements ExploreFragmentCo
     public void onResume() {
         super.onResume();
         setUpUi();
-        Log.d(FragmentTags.EXPLORE_FRAGMENT_TAG,"onresume");
         mExplorePresenter.updateCurrentFragmentTag();
+        ((MainActivity)getActivity()).highlightExploreMenu();
     }
 
     @Override

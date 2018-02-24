@@ -6,36 +6,46 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.android.ContributesAndroidInjector;
 import zebrostudio.wallr100.data.DataManager;
-import zebrostudio.wallr100.di.modules.FragmentScope;
+import zebrostudio.wallr100.di.FragmentScope;
+import zebrostudio.wallr100.ui.base_fragment.BaseFragment;
 import zebrostudio.wallr100.ui.base_fragment.BaseFragmentModule;
 import zebrostudio.wallr100.ui.categories.CategoriesFragment;
+import zebrostudio.wallr100.ui.categories.CategoriesModule;
 import zebrostudio.wallr100.ui.collection.CollectionFragment;
+import zebrostudio.wallr100.ui.collection.CollectionModule;
 import zebrostudio.wallr100.ui.explore.ExploreFragment;
+import zebrostudio.wallr100.ui.explore.ExploreModule;
 import zebrostudio.wallr100.ui.minimal.MinimalFragment;
-import zebrostudio.wallr100.ui.top_picks.TopPicksFragment;
+import zebrostudio.wallr100.ui.minimal.MinimalModule;
+import zebrostudio.wallr100.ui.toppicks.TopPicksFragment;
+import zebrostudio.wallr100.ui.toppicks.TopPicksModule;
 
 @Module(includes = BaseFragmentModule.class)
 public abstract class MainActivityModule {
 
     @FragmentScope
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = ExploreModule.class)
     abstract ExploreFragment exploreFragment();
 
     @FragmentScope
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = TopPicksModule.class)
     abstract TopPicksFragment topPicksFragment();
 
     @FragmentScope
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = CategoriesModule.class)
     abstract CategoriesFragment categoriesFragment();
 
     @FragmentScope
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = MinimalModule.class)
     abstract MinimalFragment minimalFragment();
 
     @FragmentScope
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = CollectionModule.class)
     abstract CollectionFragment collectionFragment();
+
+    @FragmentScope
+    @ContributesAndroidInjector(modules = BaseFragmentModule.class)
+    abstract BaseFragment baseFragment();
 
     @Provides
     static MainActivityContract.Presenter providesMainActivityPresenter(DataManager dataManager) {

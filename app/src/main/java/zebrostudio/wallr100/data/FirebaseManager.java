@@ -12,11 +12,15 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 
+/**
+ * Responsible for handling all firebase related events. Is called upon from the DataManager
+ * ({@link DataManager})
+ */
 @Singleton
-public class FireBaseManager {
+public class FirebaseManager {
 
     @Inject
-    FireBaseManager(){
+    FirebaseManager(){
 
     }
 

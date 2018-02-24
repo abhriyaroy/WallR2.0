@@ -3,6 +3,9 @@ package zebrostudio.wallr100.ui.main;
 import zebrostudio.wallr100.BasePresenter;
 import zebrostudio.wallr100.BaseView;
 
+/**
+ * This specifies the contract between the view and the presenter.
+ */
 public interface MainActivityContract {
 
     interface View extends BaseView<Presenter> {
@@ -10,6 +13,8 @@ public interface MainActivityContract {
         void setTitlePadding(int left, int top, int right, int bottom);
 
         void configureNavigationBar();
+
+        boolean getGuillotineState();
 
         void closeGuillotineMenu();
 
@@ -37,7 +42,7 @@ public interface MainActivityContract {
 
         void showAppExitConfirmationToast();
 
-        void resetExitConfirmationOnTimeout();
+        void runTimeoutChecker();
 
         void exitFromApp();
     }

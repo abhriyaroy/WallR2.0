@@ -9,9 +9,6 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.disposables.CompositeDisposable;
-import zebrostudio.wallr100.WallRApplication;
-import zebrostudio.wallr100.data.DataManager;
-import zebrostudio.wallr100.data.FireBaseManager;
 import zebrostudio.wallr100.di.ApplicationContext;
 import zebrostudio.wallr100.utils.SharedPrefsUtils;
 

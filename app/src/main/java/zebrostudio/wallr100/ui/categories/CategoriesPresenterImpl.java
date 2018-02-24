@@ -5,9 +5,14 @@ import javax.inject.Inject;
 import zebrostudio.wallr100.data.DataManager;
 import zebrostudio.wallr100.utils.FragmentTags;
 
+/**
+ * Listens to user actions from the UI ({@link CategoriesFragment}), retrieves the data and updates
+ * the UI as required.
+ */
 public class CategoriesPresenterImpl implements CategoriesFragmentContract.CategoriesPresenter {
 
-    DataManager mDataManager;
+    private DataManager mDataManager;
+    private CategoriesFragmentContract.CategoriesView mCategoriesView;
 
     @Inject
     CategoriesPresenterImpl(DataManager dataManager){
@@ -16,12 +21,12 @@ public class CategoriesPresenterImpl implements CategoriesFragmentContract.Categ
 
     @Override
     public void bindView(CategoriesFragmentContract.CategoriesView view) {
-
+        mCategoriesView = view;
     }
 
     @Override
     public void unbindView() {
-
+        mCategoriesView = null;
     }
 
     @Override

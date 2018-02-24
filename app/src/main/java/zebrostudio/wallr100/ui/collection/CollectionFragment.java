@@ -3,7 +3,6 @@ package zebrostudio.wallr100.ui.collection;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,9 @@ import zebrostudio.wallr100.ui.main.MainActivity;
 import zebrostudio.wallr100.utils.FragmentTags;
 import zebrostudio.wallr100.utils.UiCustomizationHelper;
 
+/**
+ *  Displays the wallpapers that the user adds to his collection
+ */
 public class CollectionFragment extends DaggerFragment
         implements CollectionFragmentContract.CollectionView{
 
@@ -59,8 +61,8 @@ public class CollectionFragment extends DaggerFragment
     public void onResume() {
         super.onResume();
         setUpUi();
-        Log.d(FragmentTags.COLLECTIONS_FRAGMENT_TAG,"onresume");
         mCollectionPresenter.updateCurrentFragmentTag();
+        ((MainActivity)getActivity()).highlightCollectionsMenu();
     }
 
     @Override

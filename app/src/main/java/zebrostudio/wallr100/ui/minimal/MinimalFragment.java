@@ -17,6 +17,9 @@ import zebrostudio.wallr100.ui.main.MainActivity;
 import zebrostudio.wallr100.utils.FragmentTags;
 import zebrostudio.wallr100.utils.UiCustomizationHelper;
 
+/**
+ *  Displays the Minimal wallpapers.
+ */
 @ActivityScope
 public class MinimalFragment extends DaggerFragment implements MinimalFragmentContract.MinimalView {
 
@@ -55,6 +58,7 @@ public class MinimalFragment extends DaggerFragment implements MinimalFragmentCo
         super.onResume();
         setUpUi();
         mMinimalPresenter.updateCurrentFragmentTag();
+        ((MainActivity)getActivity()).highlightMinimalMenu();
     }
 
     @Override

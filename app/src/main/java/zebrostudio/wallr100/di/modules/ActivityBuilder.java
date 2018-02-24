@@ -2,8 +2,8 @@ package zebrostudio.wallr100.di.modules;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
-import zebrostudio.wallr100.ui.buy_pro.BuyProActivity;
-import zebrostudio.wallr100.ui.buy_pro.BuyProActivityModule;
+import zebrostudio.wallr100.ui.buypro.BuyProActivity;
+import zebrostudio.wallr100.ui.buypro.BuyProActivityModule;
 import zebrostudio.wallr100.ui.main.MainActivity;
 import zebrostudio.wallr100.ui.main.MainActivityModule;
 import zebrostudio.wallr100.ui.search.SearchActivity;
