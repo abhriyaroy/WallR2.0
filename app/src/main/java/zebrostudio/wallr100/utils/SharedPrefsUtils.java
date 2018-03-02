@@ -1,7 +1,6 @@
 package zebrostudio.wallr100.utils;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -20,6 +19,7 @@ public class SharedPrefsUtils {
     @Inject
     public SharedPrefsUtils(@ApplicationContext Context context){
         mContext = context;
+        init();
     }
 
     public void init(){
@@ -33,6 +33,14 @@ public class SharedPrefsUtils {
 
     public int getIntData(String keyName){
         return mSharedPreference.getInt(keyName,0);
+    }
+
+    public boolean setLongData(String keyName, long value){
+        return mSharedPreferencesEditor.putLong(keyName,value).commit();
+    }
+
+    public long getLongData(String keyName){
+        return mSharedPreference.getLong(keyName,0);
     }
 
     public boolean setStringData(String keyName, String value){

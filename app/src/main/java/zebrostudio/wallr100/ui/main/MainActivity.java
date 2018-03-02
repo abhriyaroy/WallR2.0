@@ -1,5 +1,7 @@
 package zebrostudio.wallr100.ui.main;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.graphics.Color;
 import android.os.Build;
@@ -30,6 +32,7 @@ import dagger.android.AndroidInjection;
 import dagger.android.support.DaggerAppCompatActivity;
 import io.fabric.sdk.android.Fabric;
 import zebrostudio.wallr100.R;
+import zebrostudio.wallr100.ui.buypro.BuyProActivity;
 import zebrostudio.wallr100.ui.categories.CategoriesFragment;
 import zebrostudio.wallr100.ui.collection.CollectionFragment;
 import zebrostudio.wallr100.ui.explore.ExploreFragment;
@@ -115,12 +118,13 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     CanaroTextView mMinimalGuillotineTitle;
     @BindView(R.id.collection_textview)
     CanaroTextView mCollectionGuillotineTitle;
+    @BindView(R.id.pro_badge_text_view)
+    CanaroTextView mProBadge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AndroidInjection.inject(this);
         mGuillotineMenu = LayoutInflater.from(this).inflate(R.layout.guillotine_layout, null);
         mRootView = findViewById(R.id.root_layout);
         mRootView.addView(mGuillotineMenu);
@@ -136,6 +140,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
         mPresenter.bindView(this);
         mPresenter.requestExploreFragmentInflation();
+        mPresenter.checkIfProUser();
 
     }
 
@@ -186,22 +191,24 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
     @Override
     public void hideBuyProGuillotineMenuItem() {
-
+        mBuyProLayout.setVisibility(View.GONE);
+        mBuyProLayout.setClickable(false);
     }
 
     @Override
     public void showBuyProGuillotineMenuItem() {
-
+        mBuyProLayout.setVisibility(View.VISIBLE);
+        mBuyProLayout.setClickable(true);
     }
 
     @Override
     public void hideProBadge() {
-
+        mProBadge.setVisibility(View.GONE);
     }
 
     @Override
     public void showProBadge() {
-
+        mProBadge.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -252,11 +259,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     }
 
     @Override
-    public void showBuyProActivity() {
-
-    }
-
-    @Override
     public void showAppExitConfirmationToast() {
         try {
             Toasty.info(this, "Press back again to exit",
@@ -279,6 +281,11 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     @Override
     public void exitFromApp() {
         this.finish();
+    }
+
+    @Override
+    public PackageManager getAppPackageManager(){
+        return MainActivity.this.getPackageManager();
     }
 
     @OnClick(R.id.explore_group)
@@ -313,7 +320,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
     @OnClick(R.id.buy_pro_group)
     public void buyProGuillotineMenuItemClicked() {
-        mPresenter.requestBuyProActivity();
+        Intent intent = new Intent(this, BuyProActivity.class);
+        startActivity(intent);
+        closeGuillotineMenu();
     }
 
     public void setUpToolbar() {
@@ -351,16 +360,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
                 .setGuillotineListener(mGuillotineListener)
                 .setClosedOnStart(true)
                 .build();
-    }
-
-    private void hideBuyProTitle() {
-        mBuyProLayout.setVisibility(View.GONE);
-        mBuyProLayout.setClickable(false);
-    }
-
-    private void showBuyProTitle() {
-        mBuyProLayout.setVisibility(View.VISIBLE);
-        mBuyProLayout.setClickable(true);
     }
 
     public void resetAllMenuItemHighlighting() {

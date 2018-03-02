@@ -80,11 +80,6 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
     }
 
     @Override
-    public void requestBuyProActivity() {
-
-    }
-
-    @Override
     public void checkIfProUser() {
         if (mDataManager.checkIfProLocal()) {
             mMainView.hideBuyProGuillotineMenuItem();

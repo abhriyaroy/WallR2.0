@@ -1,5 +1,7 @@
 package zebrostudio.wallr100.ui.main;
 
+import android.content.pm.PackageManager;
+
 import zebrostudio.wallr100.BasePresenter;
 import zebrostudio.wallr100.BaseView;
 
@@ -38,13 +40,13 @@ public interface MainActivityContract {
 
         void showFeedBackTool();
 
-        void showBuyProActivity();
-
         void showAppExitConfirmationToast();
 
         void runTimeoutChecker();
 
         void exitFromApp();
+
+        PackageManager getAppPackageManager();
     }
 
     interface Presenter extends BasePresenter<View> {
@@ -60,8 +62,6 @@ public interface MainActivityContract {
         void requestCollectionsFragmentInflation();
 
         void requestFeedbackTool();
-
-        void requestBuyProActivity();
 
         void checkIfProUser();
 
