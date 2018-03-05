@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ExpandIconView"><attr format="boolean" name="eiv_roundedCorners"/><attr format="boolean" name="eiv_switchColor"/><attr format="color" name="eiv_color"/><attr format="color" name="eiv_colorMore"/><attr format="color" name="eiv_colorLess"/><attr format="integer" name="eiv_animationDuration"/><attr format="dimension" name="eiv_padding"/></declare-styleable>
+</resources>

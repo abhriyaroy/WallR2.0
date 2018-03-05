@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "164588276522",
+    "firebase_url": "https://wallrproduction.firebaseio.com",
+    "project_id": "wallrproduction",
+    "storage_bucket": "wallrproduction.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:164588276522:android:3a669e2ae95de6b4",
+        "android_client_info": {
+          "package_name": "wallr100.zebrostudio.wallradmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "164588276522-rt77efh6ljmvhaidj7te4d7c6ibtddj7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArXGVHDZOgXdzUGl5vrJU_F4zxkrVc8mM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:164588276522:android:8423adc5a9695a9d",
+        "android_client_info": {
+          "package_name": "zebrostudio.wallr100"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "164588276522-rt77efh6ljmvhaidj7te4d7c6ibtddj7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArXGVHDZOgXdzUGl5vrJU_F4zxkrVc8mM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

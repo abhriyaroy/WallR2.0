@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.buypro.BuyProActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/pro_background"
+        android:scrollbars="none"
+        android:overScrollMode="never" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <!-- #512DA8   #37474F-->
+
+            <RelativeLayout
+                android:id="@+id/topHalf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#37474F"
+                android:paddingBottom="8dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true">
+
+                <ImageView
+                    android:id="@+id/backButtonPro"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_margin="5dp"
+                    android:elevation="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/back_icon"/>
+
+                <ImageView
+                    android:id="@+id/proLogo"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_below="@+id/backButtonPro"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="8dp"
+                    />
+
+                <info.hoang8f.widget.FButton
+                    android:id="@+id/purchaseButton"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/proLogo"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/text_buy_pro_caps"
+                    android:textAlignment="center"
+                    android:textColor="#000"
+                    app:fButtonColor="#fff"
+                    app:cornerRadius="4dp"
+                    app:shadowEnabled="false"
+                    app:shadowHeight="0dp"
+                    />
+
+                <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
+                    android:id="@+id/restoreButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/purchaseButton"
+                    android:layout_centerHorizontal="true"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:padding="10dp"
+                    android:text="@string/text_already_purchased_restore"
+                    android:textColor="#fff"
+                    android:textSize="13sp"/>
+
+            </RelativeLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/titlePanel"
+                android:layout_below="@id/topHalf">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="20dp"
+                    >
+
+                    <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
+                        android:id="@+id/buy_pro_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/text_pro_features"
+                        android:textColor="#fff"
+                        android:textSize="20sp"
+                        />
+
+                    <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/buy_pro_title"
+                        android:text="@string/msg_buy_pro_description"
+                        android:textColor="#fff"
+                        android:textSize="16sp"
+                        />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:background="@drawable/drop_shadow"
+                    android:layout_gravity="top"/>
+
+            </FrameLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/titlePanel">
+
+                <include layout="@layout/pro_features_layout" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+    </ScrollView>
+
+</FrameLayout>

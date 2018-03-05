@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/recycler11"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:layout_below="@id/titlePanel"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground"
+        >
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="34dp"
+            android:paddingTop="4dp"
+            android:src="@drawable/ic_not_interested_white_48dp"
+            android:id="@+id/addFreeImage"
+            android:layout_marginRight="20dp"/>
+
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buy_pro_ads_header"
+            android:layout_alignTop="@id/addFreeImage"
+            android:textSize="15sp"
+            android:layout_toRightOf="@id/addFreeImage"
+            android:textColor="#fff"
+            android:id="@+id/bigText1"/>
+
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/bigText1"
+            android:layout_below="@id/bigText1"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:textSize="12sp"
+            android:text="@string/buy_pro_ads_sub_header"
+            android:textColor="#dbd4cf"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/recycler1"
+        android:layout_below="@id/recycler11"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:id="@+id/saveImagePro"
+            android:layout_marginRight="20dp"
+            android:paddingTop="6dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_hd_69"/>
+        </RelativeLayout>
+
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buy_pro_downloads_header"
+            android:textSize="15sp"
+            android:layout_alignTop="@id/saveImagePro"
+            android:layout_toRightOf="@id/saveImagePro"
+            android:textColor="#fff"
+            android:id="@+id/bigText2"/>
+
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/bigText2"
+            android:layout_below="@id/bigText2"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:textSize="12sp"
+            android:text="@string/buy_pro_downloads_sub_header"
+            android:textColor="#dbd4cf"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_alignLeft="@id/recycler1"
+        android:layout_alignRight="@id/recycler1"
+        android:id="@+id/recycler2"
+        android:layout_below="@id/recycler1"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="34dp"
+            android:src="@drawable/ic_dashboard_white_48dp"
+            android:id="@+id/changeWallpaper"
+            android:paddingTop="4dp"
+            android:layout_marginRight="20dp"/>
+
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buy_pro_wallpaper_changer_header"
+            android:textSize="15sp"
+            android:layout_alignTop="@id/changeWallpaper"
+            android:layout_toRightOf="@id/changeWallpaper"
+            android:textColor="#fff"
+            android:id="@+id/bigText3"/>
+
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/bigText3"
+            android:layout_below="@id/bigText3"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:textSize="12sp"
+            android:text="@string/buy_pro_wallpaper_changer_sub_header"
+            android:textColor="#dbd4cf"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_alignLeft="@id/recycler1"
+        android:layout_alignRight="@id/recycler1"
+        android:id="@+id/recycler3"
+        android:layout_below="@id/recycler2"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground"
+        >
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="34dp"
+            android:paddingTop="4dp"
+            android:src="@drawable/ic_change_history_white_48dp"
+            android:id="@+id/crystallizeWallpaper"
+            android:layout_marginRight="20dp"/>
+
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buy_pro_crystallize_header"
+            android:layout_alignTop="@id/crystallizeWallpaper"
+            android:textSize="15sp"
+            android:layout_toRightOf="@id/crystallizeWallpaper"
+            android:textColor="#fff"
+            android:id="@+id/bigText4"/>
+
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/bigText4"
+            android:layout_below="@id/bigText4"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:textSize="12sp"
+            android:text="@string/buy_pro_crystallize_sub_header"
+            android:textColor="#dbd4cf"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_alignLeft="@id/recycler1"
+        android:layout_alignRight="@id/recycler1"
+        android:id="@+id/recycler4"
+        android:layout_below="@id/recycler3"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground"
+        >
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="34dp"
+            android:paddingTop="4dp"
+            android:src="@drawable/ic_share_white_48dp"
+            android:id="@+id/shareWallpapers"
+            android:layout_marginRight="20dp"/>
+
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buy_pro_share_header"
+            android:textSize="15sp"
+            android:layout_toRightOf="@id/shareWallpapers"
+            android:textColor="#fff"
+            android:layout_alignTop="@id/shareWallpapers"
+            android:id="@+id/bigText5"/>
+
+        <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/bigText5"
+            android:layout_below="@id/bigText5"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:textSize="12sp"
+            android:text="@string/buy_pro_share_sub_header"
+            android:textColor="#dbd4cf"/>
+    </RelativeLayout>
+
+</RelativeLayout>

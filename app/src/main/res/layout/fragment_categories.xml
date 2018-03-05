@@ -1,0 +1,25 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="zebrostudio.wallr100.ui.categories.CategoriesFragment">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/tab_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+        <View android:background="@drawable/drop_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_gravity="top"/>
+
+
+    </FrameLayout>
+
+</FrameLayout>

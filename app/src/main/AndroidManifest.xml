@@ -1,11 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="zebrostudio.wallr100">
 
     <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:name=".WallrApplication"
+        android:allowBackup="false"
+        android:icon="@drawable/wallr_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:largeHeap="true"
+        android:roundIcon="@drawable/wallr_logo"
+        android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" />
+        android:theme="@style/wallr_theme"
+        tools:replace="android:allowBackup">
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:persistent="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/wallr_theme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.SEARCH" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".ui.search.SearchActivity" />
+
+        <activity android:name=".ui.buypro.BuyProActivity" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="db1a5e4db429e11109f45d1ce4f56cfa59584149" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/wallr_logo" />
+
+    </application>
+
 </manifest>

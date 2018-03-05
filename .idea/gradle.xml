@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/libraryAltex" />
+            <option value="$PROJECT_DIR$/libraryExpandIcon" />
+            <option value="$PROJECT_DIR$/libraryFragmentBack" />
+            <option value="$PROJECT_DIR$/libraryGuillotineMenu" />
+            <option value="$PROJECT_DIR$/libraryLowPoly" />
+            <option value="$PROJECT_DIR$/libraryMaterialSpinner" />
+            <option value="$PROJECT_DIR$/librarySearch" />
+            <option value="$PROJECT_DIR$/libraryUcrop" />
+            <option value="$PROJECT_DIR$/libraryUrlShortener" />
+          </set>
+        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

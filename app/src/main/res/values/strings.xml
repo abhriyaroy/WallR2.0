@@ -1,3 +1,130 @@
 <resources>
     <string name="app_name">WallR</string>
+    <string name="pro_caps">PRO</string>
+    <string name="search_activity_title">Searchable Activity</string>
+    <string name="menu_settings_toast_msg">Settings</string>
+    <string name="cab_title_x"> %1$d Selected</string>
+
+    <!-- Main Activity -->
+    <string name="guillotine_explore_title">Explore</string>
+    <string name="guillotine_top_picks_title">Top Picks</string>
+    <string name="guillotine_categories_title">Categories</string>
+    <string name="guillotine_collection_title">Collection</string>
+    <string name="guillotine_minimal_title">Minimal</string>
+    <string name="guillotine_feedback_title">Feedback</string>
+    <string name="guillotine_buy_pro_title">Buy Pro</string>
+    <string name="text_automatic_wallpaper_changer">Automatic Wallpaper Changer</string>
+    <string name="text_change_wallpaper_interval">Change wallpaper interval</string>
+    <string name="text_shuffle_wallpapers">Shuffle Wallpapers</string>
+    <string name="msg_purchase_successful">Purchase successful! Thank you for purchasing the pro version of the app</string>
+    <string name="msg_purchase_restored_successfully">Your purchase has been restored successfully</string>
+    <string name="msg_options">Options</string>
+    <string name="msg_import_from_local">Import from local storage</string>
+    <string name="msg_importing_images">Importing wallpapers. Please wait...</string>
+    <string name="msg_setting_wallpaper">Setting wallpaper...</string>
+    <string name="msg_drag_drop_to_reorder">Drag and drop to reorder</string>
+    <string name="msg_saving_crystallized">Saving crystallized wallpaper...</string>
+    <string name="msg_crystallized_download_location">
+        The crystallized wallpaper has been downloaded on your device at </string>
+    <string name="msg_add_solid_color">Add solid color</string>
+    <string name="msg_swipe_down_retry">Swipe down to retry</string>
+    <string name="error_unable_to_load_wallpaper">
+        \Unable to load wallpaper. Please ensure you have a working internet connection</string>
+    <string name="error_oops_unable_to_load_wallpapers">Oops. Unable to load wallpapers</string>
+    <string name="error_working_internet_connection">
+        Please ensure you have a working internet connection</string>
+    <string name="error_unable_to_search">Unable to search right now</string>
+    <string name="error_unable_to_restore_purchase">Unable to restore your purchase</string>
+    <string name="error_try_restoring">Unable to continue purchase. If you have already purchased the app, click on Restore.</string>
+    <string name="error_invalid_purchase">Purchase is invalid</string>
+    <string name="error_please_exit_selection">Please exit the selection mode to add a new colour</string>
+
+    <!-- Detail Activity -->
+    <string name="text_crystallize">CRYSTALLIZE</string>
+    <string name="text_download">DOWNLOAD</string>
+    <string name="text_save">SAVE</string>
+    <string name="text_quick_set">QUICK SET</string>
+    <string name="text_add_to_collection">ADD TO COLLECTION</string>
+    <string name="text_edit_and_set">EDIT AND SET</string>
+    <string name="text_share">SHARE WITH</string>
+    <string name="text_unsplash_com">www.unsplash.com</string>
+    <string name="text_retry">Retry</string>
+    <string name="text_full_hd">Ultra HD</string>
+    <string name="text_raw">Raw</string>
+    <string name="text_super_high">Super High</string>
+    <string name="text_high">High</string>
+    <string name="text_medium">Medium</string>
+    <string name="text_low">Low</string>
+    <string name="text_super_low">Super Low</string>
+    <string name="text_unsplash">unsplash.com</string>
+    <string name="msg__pro_only_feature_need_to_purchase_the_pro_account">
+        This is a PRO only feature. You need to purchase the pro account to enjoy this feature.</string>
+    <string name="msg_star_pro_only_feature__to_purchase_the_pro_account">
+        *This is a PRO only feature. You need to purchase the pro account to enjoy this feature.</string>
+    <string name="msg_generates_a_beautiful_and_unique_artwork_of_the_current_wallpaper">
+        Generates a beautiful and unique artwork of the current wallpaper using WallR\'s innovative Crystallize algorithm. It can give your device the fresh look it deserves.</string>
+    <string name="msg_share_intent">
+        Get high-quality wallpapers for your Android device - WallR</string>
+    <string name="msg_share_link_using">Share link using</string>
+    <string name="msg_preparing_shareable_wallpaper">Preparing shareable wallpaper...</string>
+    <string name="msg_generating_wallpaper_please_wait">Getting stuff ready. Please wait...</string>
+    <string name="msg_crystallizing_wait">Crystallizing wallpaper. Please wait!</string>
+    <string name="msg_or">Or</string>
+    <string name="msg_choose">CHOOSE</string>
+    <string name="msg_choose_download_quality">Choose Download Quality</string>
+    <string name="msg_finalising_wallpaper">Finalizing wallpaper...</string>
+    <string name="msg_grabbing_best_quality_wallpaper">Grabbing the best quality wallpaper...</string>
+    <string name="msg_setting_up_the_necessary_resources">Setting up the necessary resources...</string>
+    <string name="msg_opening_editing_tool_now">Firing up the editing tool...</string>
+    <string name="msg_crystallising_wallpaper">Crystallizing wallpaper...</string>
+    <string name="msg_adding_image_to_gallery">Adding wallpaper to collection....</string>
+    <string name="msg_fetching_sharable_link">Fetching sharable link...</string>
+    <string name="msg_verifying_purchase">Verifying your purchase, please wait...</string>
+    <string name="error_never_ask_again_content">
+        This app may not work correctly without the requested permissions. Open the app settings screen to grant the app permissions manually.</string>
+    <string name="error_unable_to_download_wallpaper">
+        Unable to download wallpaper. Please ensure you have a working internet connection</string>
+    <string name="error_unable_to_load_high_definition_image">
+        Unable to load high-definition preview. Please ensure you have a working internet connection</string>
+    <string name="error_share">
+        Unable to fetch shareable link. Please ensure you have a working internet connection</string>
+
+    <!-- Buy Pro Activity -->
+    <string name="buy_pro_title">WallR Pro</string>
+    <string name="buy_pro_sub_title">Get the ultimate customization tool for your homescreen.</string>
+    <string name="buy_pro_ads_header">Ads Free Experience</string>
+    <string name="buy_pro_downloads_header">Ultra HD Wallpaper Downloads</string>
+    <string name="buy_pro_wallpaper_changer_header">Automatic Wallpaper Changer</string>
+    <string name="buy_pro_crystallize_header">Crystallized Wallpapers</string>
+    <string name="buy_pro_share_header">Share Wallpapers</string>
+    <string name="buy_pro_ads_sub_header">We don\'t like ads, just like you don\'t. Enjoy a complete ads free experience</string>
+    <string name="buy_pro_downloads_sub_header">You can now download ultra HD versions of any wallpaper of your choice and keep it in your device</string>
+    <string name="buy_pro_wallpaper_changer_sub_header">Changes your homescreen with new and fresh wallpapers automatically after a chosen period of time</string>
+    <string name="buy_pro_crystallize_sub_header">Generates a crystallized version of the current wallpaper and gives your homescreen an unique look and feel</string>
+    <string name="buy_pro_share_sub_header">Share your favourite wallpapers with anyone you want in just one click</string>
+    <string name="text_buy_pro_caps">BUY PRO</string>
+    <string name="text_already_purchased_restore">Already purchased? <b>Restore</b></string>
+    <string name="text_pro_features">Pro Features</string>
+    <string name="msg_verifying_restore">Restoring your purchase, please wait...</string>
+    <string name="msg_buy_pro_description">
+        Buy the PRO version of the app to unlock new and amazing features and enjoy the app fully!</string>
+
+    <!-- Rate this app dialog -->
+    <string name="rta_dialog_title">Rate this app</string>
+    <string name="rta_dialog_message">If you enjoy using WallR, would you mind taking a moment to rate it? It won\'t take more than a minute. Thank you for your support</string>
+    <string name="rta_dialog_ok">Rate now</string>
+    <string name="rta_dialog_cancel">Later</string>
+    <string name="rta_dialog_no">No, thanks</string>
+
+    <!-- Search Activity -->
+    <string name="text_type_in_a_search_query">Type in a search query</string>
+    <string name="error_we_found_nothing">Woah there! We found nothing</string>
+
+    <!-- Ad ids -->
+    <string name="deatil_activity_banner_ad" translatable="false">ca-app-pub-9055921707624141/2662240913</string>
+    <string name="main_activity_interstitial_ad" translatable="false">ca-app-pub-9055921707624141/7865490114</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
