@@ -36,68 +36,6 @@
 
             </android.support.v7.widget.Toolbar>
 
-            <com.ogaclejapan.smarttablayout.SmartTabLayout
-                android:id="@+id/tab_layout"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:textAlignment="center"
-                app:stl_indicatorAlwaysInCenter="true"
-                app:stl_indicatorWithoutPadding="false"
-                app:stl_indicatorInFront="false"
-                app:stl_indicatorInterpolation="smart"
-                app:stl_indicatorGravity="bottom"
-                app:stl_indicatorColor="#e51c23"
-                app:stl_indicatorThickness="2dp"
-                app:stl_indicatorWidth="auto"
-                app:stl_indicatorCornerRadius="2dp"
-                app:stl_overlineColor="#4D000000"
-                app:stl_overlineThickness="0dp"
-                app:stl_underlineColor="#4D000000"
-                app:stl_underlineThickness="0dp"
-                app:stl_dividerColor="#4D000000"
-                app:stl_dividerThickness="0dp"
-                app:stl_defaultTabBackground="?attr/selectableItemBackground"
-                app:stl_defaultTabTextAllCaps="true"
-                app:stl_defaultTabTextColor="#fff"
-                app:stl_defaultTabTextSize="14sp"
-                app:stl_defaultTabTextHorizontalPadding="16dp"
-                app:stl_defaultTabTextMinWidth="0dp"
-                app:stl_distributeEvenly="false"
-                app:stl_clickable="true"
-                app:stl_titleOffset="24dp"
-                app:stl_drawDecorationAfterTab="true"
-                />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="@color/color_primary"
-                android:id="@+id/collection_switch_layout"
-                android:layout_alignParentTop="true">
-
-                <android.support.v7.widget.SwitchCompat
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:theme="@style/Switch"
-                    android:id="@+id/switchView"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="16dp"
-                    android:layout_centerVertical="true"/>
-
-                <zebrostudio.wallr100.utils.canarotextviewutils.CanaroTextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/switchView"
-                    android:text="@string/buy_pro_wallpaper_changer_header"
-                    android:textColor="#99A3A4"
-                    android:layout_alignParentLeft="true"
-                    android:maxLines="1"
-                    android:textSize="16sp"
-                    android:ellipsize="end"
-                    android:layout_marginLeft="24dp"/>
-            </RelativeLayout>
 
         </android.support.design.widget.AppBarLayout>
 
@@ -115,7 +53,5 @@
             />
 
     </android.support.design.widget.CoordinatorLayout>
-
-    <include layout="@layout/blurview_layout"/>
 
 </FrameLayout>

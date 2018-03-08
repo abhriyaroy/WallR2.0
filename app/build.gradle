@@ -33,13 +33,17 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     // Android support libraries
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIBRARY}"
-    compile "com.android.support:recyclerview-v7:${SUPPORT_LIBRARY}"
-    compile "com.android.support:percent:${SUPPORT_LIBRARY}"
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIBRARY}"
-    compile "com.android.support:support-v4:${SUPPORT_LIBRARY}"
-    compile "com.android.support:design:${SUPPORT_LIBRARY}"
-    compile "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT}"
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
+    compile "com.android.support:recyclerview-v7:${SUPPORT_LIBRARY_VERSION}"
+    compile "com.android.support:percent:${SUPPORT_LIBRARY_VERSION}"
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
+    compile "com.android.support:support-v4:${SUPPORT_LIBRARY_VERSION}"
+    compile "com.android.support:design:${SUPPORT_LIBRARY_VERSION}"
+    compile "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
+
+    // UI component libraries
+    compile "com.ogaclejapan.smarttablayout:library:${SMARTTAB_LAYOUT_VERSION}"
+    compile "com.ogaclejapan.smarttablayout:utils-v4:${SMARTTAB_LAYOUT_VERSION}"
 
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
