@@ -1,0 +1,7 @@
+ext {
+
+    SUPPORT_LIBRARY = '26.1.0'
+    CONSTRAINT_LAYOUT = '1.0.2'
+    GOOGLE_PLAYSERVICES = '10.8.1'
+
+}
