@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.utils;
+package com.zebrostudio.customview;
 
 import android.content.Context;
 import android.support.design.widget.AppBarLayout;
@@ -6,14 +6,14 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class DisableAppBarLayoutBehaviour extends AppBarLayout.Behavior {
+public class DisableAppBarBehaviour extends AppBarLayout.Behavior {
   private boolean enabled = true;
 
-  public DisableAppBarLayoutBehaviour() {
+  public DisableAppBarBehaviour() {
     super();
   }
 
-  public DisableAppBarLayoutBehaviour(Context context, AttributeSet attrs) {
+  public DisableAppBarBehaviour(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 

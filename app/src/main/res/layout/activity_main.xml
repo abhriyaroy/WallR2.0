@@ -6,28 +6,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="zebrostudio.wallr100.ui.main.MainActivity"
-    >
+>
 
   <View
       android:layout_width="match_parent"
       android:layout_height="@dimen/guillotine_actionbar_background_view_height"
       android:layout_gravity="top"
       android:background="@color/color_primary"
-      />
+  />
 
   <android.support.design.widget.CoordinatorLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical"
-      >
+  >
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        app:layout_behavior="zebrostudio.wallr100.utils.DisableAppBarLayoutBehaviour"
-        >
+        app:layout_behavior="com.zebrostudio.customview.DisableAppBarLayoutBehaviour"
+    >
 
       <android.support.v7.widget.Toolbar
           android:id="@+id/toolbar"
@@ -35,7 +35,7 @@
           app:layout_scrollFlags="scroll|enterAlways|snap"
           app:popupTheme="@style/overflow_menu"
           style="@style/Toolbar"
-          >
+      >
 
         <include layout="@layout/toolbar_layout"/>
 
@@ -47,7 +47,7 @@
         android:id="@+id/cab_stub"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        />
+    />
 
     <FrameLayout
         android:id="@+id/home_container"
@@ -55,7 +55,7 @@
         android:layout_height="match_parent"
         android:background="@color/color_primary"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        />
+    />
 
   </android.support.design.widget.CoordinatorLayout>
 
