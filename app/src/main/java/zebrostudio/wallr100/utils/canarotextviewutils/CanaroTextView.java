@@ -17,6 +17,5 @@ public class CanaroTextView extends android.support.v7.widget.AppCompatTextView 
 
   public CanaroTextView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    setTypeface(WallrApplication.canaroExtraBold);
   }
 }
