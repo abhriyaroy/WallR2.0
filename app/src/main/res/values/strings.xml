@@ -34,4 +34,5 @@
     <string name="error_try_restoring">Unable to continue purchase. If you have already purchased the app, click on Restore.</string>
     <string name="error_invalid_purchase">Purchase is invalid</string>
     <string name="error_please_exit_selection">Please exit the selection mode to add a new colour</string>
+
 </resources>

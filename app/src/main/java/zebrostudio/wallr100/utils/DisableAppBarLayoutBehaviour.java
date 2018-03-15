@@ -7,26 +7,28 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class DisableAppBarLayoutBehaviour extends AppBarLayout.Behavior {
-    private boolean mEnabled = true;
+  private boolean enabled = true;
 
-    public DisableAppBarLayoutBehaviour() {
-        super();
-    }
+  public DisableAppBarLayoutBehaviour() {
+    super();
+  }
 
-    public DisableAppBarLayoutBehaviour(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+  public DisableAppBarLayoutBehaviour(Context context, AttributeSet attrs) {
+    super(context, attrs);
+  }
 
-    public void setEnabled(boolean enabled) {
-        mEnabled = enabled;
-    }
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
+  }
 
-    @Override
-    public boolean onStartNestedScroll(CoordinatorLayout parent, AppBarLayout child, View directTargetChild, View target, int nestedScrollAxes) {
-        return mEnabled && super.onStartNestedScroll(parent, child, directTargetChild, target, nestedScrollAxes);
-    }
+  @Override
+  public boolean onStartNestedScroll(CoordinatorLayout parent, AppBarLayout child,
+      View directTargetChild, View target, int nestedScrollAxes) {
+    return enabled && super.onStartNestedScroll(parent, child, directTargetChild, target,
+        nestedScrollAxes);
+  }
 
-    public boolean isEnabled() {
-        return mEnabled;
-    }
+  public boolean isEnabled() {
+    return enabled;
+  }
 }
