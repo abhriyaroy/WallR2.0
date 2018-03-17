@@ -1,9 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
   <!-- Base application theme. -->
-  <style name="wallr_theme" parent="Theme.Guillotine"/>
-
-  <style name="Theme.Guillotine" parent="Theme.AppCompat.NoActionBar">
+  <style name="BaseAppTheme" parent="Theme.AppCompat.NoActionBar">
     <item name="colorPrimaryDark">@color/color_primary_dark</item>
     <item name="colorPrimary">@color/color_primary</item>
     <item name="android:windowNoTitle">true</item>
@@ -17,7 +15,7 @@
 
   <style name="LinearLayout"/>
 
-  <style name="LinearLayout.GuillotineItem">
+  <style name="GuillotineItemLinearLayout" parent="LinearLayout">
     <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
@@ -28,14 +26,14 @@
 
   <style name="TextView"/>
 
-  <style name="TextView.ToolbarTitle">
+  <style name="ToolbarTitleTextView" parent="TextView">
     <item name="android:gravity">center</item>
     <item name="android:textSize">24sp</item>
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
   </style>
 
-  <style name="TextView.GuillotineItem">
+  <style name="GuillotineItemTextView" parent="TextView">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_marginLeft">@dimen/guillotine_small_margin</item>
@@ -44,7 +42,7 @@
     <item name="android:textColor">@android:color/white</item>
   </style>
 
-  <style name="TextView.GuillotineItem.Selected">
+  <style name="GuillotineItemSelectedImageView" parent="TextView">
     <item name="android:textColor">@color/color_accent</item>
   </style>
 
@@ -58,12 +56,19 @@
 
   <style name="ImageView"/>
 
-  <style name="ImageView.ContentItem">
+  <style name="ContentItemImageView" parent="ImageView">
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_width">match_parent</item>
   </style>
 
-  <style name="ImageView.Hamburger" parent="Widget.AppCompat.ActionButton">
+  <style name="GuillotineItemImageView" parent="ImageView">
+    <item name="android:layout_width">30dp</item>
+    <item name="android:layout_height">30dp</item>
+    <item name="android:layout_gravity">center_vertical</item>
+    <item name="android:layout_marginLeft">@dimen/guillotine_large_margin</item>
+  </style>
+
+  <style name="HamburgerImageButton" parent="Widget.AppCompat.ActionButton">
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_marginBottom" tools:ignore="PrivateResource">
@@ -71,21 +76,14 @@
     </item>
   </style>
 
-  <style name="ImageView.GuillotineItem">
-    <item name="android:layout_width">30dp</item>
-    <item name="android:layout_height">30dp</item>
-    <item name="android:layout_gravity">center_vertical</item>
-    <item name="android:layout_marginLeft">@dimen/guillotine_large_margin</item>
-  </style>
+  <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-  <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
-  <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+  <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 
-  <style name="overflow_menu" parent="Theme.AppCompat.NoActionBar">
+  <style name="OverflowMenu" parent="Theme.AppCompat.NoActionBar">
     <item name="android:layout_gravity">center</item>
-    <item name="android:textSize">13sp</item>
+    <item name="android:textSize">12sp</item>
     <item name="android:textColor">#fff</item>
     <item name="android:ellipsize">none</item>
   </style>

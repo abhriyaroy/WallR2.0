@@ -10,7 +10,7 @@
 
         <ImageView
             android:id="@+id/content_hamburger"
-            style="@style/ImageView.Hamburger"
+            style="@style/HamburgerImageButton"
             android:layout_centerVertical="true"
             android:clickable="true"
             android:src="@drawable/hamburger_90" />

@@ -39,6 +39,6 @@ dependencies {
   compile "com.ogaclejapan.smarttablayout:utils-v4:${SMARTTAB_LAYOUT_VERSION}"
   // Module dependencies
   implementation project(':libraryGuillotineMenu')
-  implementation project(':libraryCustomViews')
+  implementation project(':libraryCustoms')
 }
 

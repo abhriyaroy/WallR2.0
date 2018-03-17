@@ -26,14 +26,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        app:layout_behavior="com.zebrostudio.customview.DisableAppBarLayoutBehaviour"
+        app:layout_behavior="com.zebrostudio.customview.DisableAppBarBehaviour"
     >
 
       <android.support.v7.widget.Toolbar
           android:id="@+id/toolbar"
           app:contentInsetStart="0dp"
           app:layout_scrollFlags="scroll|enterAlways|snap"
-          app:popupTheme="@style/overflow_menu"
+          app:popupTheme="@style/OverflowMenu"
           style="@style/Toolbar"
       >
 
