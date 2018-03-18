@@ -8,7 +8,6 @@
     <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
     <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
     <item name="android:navigationBarColor">@color/color_primary</item>
-
   </style>
 
   <style name="Toolbar">
@@ -19,4 +18,5 @@
     <item name="android:background">@color/color_primary</item>
     <item name="android:popupTheme">@style/OverflowMenu</item>
   </style>
+
 </resources>

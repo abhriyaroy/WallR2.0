@@ -1,0 +1,31 @@
+apply plugin: 'com.android.library'
+apply from: "config.gradle"
+
+android {
+  compileSdkVersion 26
+
+
+
+  defaultConfig {
+    minSdkVersion 17
+    targetSdkVersion 26
+    versionCode 1
+    versionName "1.0"
+
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+}
+
+dependencies {
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+  // Android support libraries
+  compile "com.android.support:design:${SUPPORT_LIBRARY_VERSION}"
+  compile "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
+}

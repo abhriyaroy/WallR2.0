@@ -1,6 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
   <!-- Base application theme. -->
+  <style name="AppTheme" parent="BaseAppTheme"/>
+
   <style name="BaseAppTheme" parent="Theme.AppCompat.NoActionBar">
     <item name="colorPrimaryDark">@color/color_primary_dark</item>
     <item name="colorPrimary">@color/color_primary</item>
@@ -79,7 +81,6 @@
   <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
   <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
-
 
   <style name="OverflowMenu" parent="Theme.AppCompat.NoActionBar">
     <item name="android:layout_gravity">center</item>
