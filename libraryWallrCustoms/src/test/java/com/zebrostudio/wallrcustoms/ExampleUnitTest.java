@@ -1,4 +1,4 @@
-package com.zebrostudio.customs;
+package com.zebrostudio.wallrcustoms;
 
 import org.junit.Test;
 

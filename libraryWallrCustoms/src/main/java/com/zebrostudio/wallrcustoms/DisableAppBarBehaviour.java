@@ -1,4 +1,4 @@
-package com.zebrostudio.customs;
+package com.zebrostudio.wallrcustoms;
 
 import android.content.Context;
 import android.support.design.widget.AppBarLayout;
