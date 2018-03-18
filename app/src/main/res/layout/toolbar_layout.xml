@@ -25,25 +25,25 @@
 
     <ImageView
         android:id="@+id/toolbar_search_icon"
-        android:layout_width="42dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/toolbar_menu_imagebutton_width"
+        android:layout_height="@dimen/toolbar_menu_imagebutton_height"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
-        android:padding="6dp"
+        android:padding="@dimen/toolbar_menu_imagebutton_padding"
         android:src="@drawable/ic_search_white_48dp"
         android:transitionName="searchTransition"/>
 
     <ImageView
         android:id="@+id/toolbar_multi_select_icon"
-        android:layout_width="42dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/toolbar_menu_imagebutton_width"
+        android:layout_height="@dimen/toolbar_menu_imagebutton_height"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
-        android:padding="6dp"
+        android:padding="@dimen/toolbar_menu_imagebutton_padding"
         android:src="@drawable/ic_select_all_white_24dp"/>
   </RelativeLayout>
 

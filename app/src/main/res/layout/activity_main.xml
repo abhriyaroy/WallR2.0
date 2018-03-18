@@ -31,7 +31,7 @@
 
       <android.support.v7.widget.Toolbar
           android:id="@+id/toolbar"
-          app:contentInsetStart="0dp"
+          app:contentInsetStart="@dimen/toolbar_contentinset_start"
           app:layout_scrollFlags="scroll|enterAlways|snap"
           app:popupTheme="@style/OverflowMenu"
           style="@style/Toolbar"
