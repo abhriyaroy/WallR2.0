@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
-apply from: "config.gradle"
+apply from: "../config.gradle"
 
 android {
-  compileSdkVersion 27
+  compileSdkVersion COMPILE_SDK_VERSION
   defaultConfig {
     applicationId "zebrostudio.wallr100"
-    minSdkVersion 17
-    targetSdkVersion 27
+    minSdkVersion MINIMUM_SDK_VERSION
+    targetSdkVersion TARGET_SDK_VERSION
     versionCode 1
     versionName "2.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -27,16 +27,9 @@ android {
 dependencies {
   implementation fileTree(include: ['*.jar'], dir: 'libs')
   // Android support libraries
-  compile "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
-  compile "com.android.support:recyclerview-v7:${SUPPORT_LIBRARY_VERSION}"
-  compile "com.android.support:percent:${SUPPORT_LIBRARY_VERSION}"
-  compile "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
-  compile "com.android.support:support-v4:${SUPPORT_LIBRARY_VERSION}"
-  compile "com.android.support:design:${SUPPORT_LIBRARY_VERSION}"
-  compile "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
-  // UI component libraries
-  compile "com.ogaclejapan.smarttablayout:library:${SMARTTAB_LAYOUT_VERSION}"
-  compile "com.ogaclejapan.smarttablayout:utils-v4:${SMARTTAB_LAYOUT_VERSION}"
+  implementation "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
+  implementation "com.android.support:support-v4:${SUPPORT_LIBRARY_VERSION}"
+  implementation "com.android.support:design:${SUPPORT_LIBRARY_VERSION}"
   // Module dependencies
   implementation project(':libraryGuillotineMenu')
   implementation project(':libraryWallrCustoms')
