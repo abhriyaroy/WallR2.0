@@ -15,9 +15,7 @@
     <item name="windowActionBarOverlay">true</item>
   </style>
 
-  <style name="LinearLayout"/>
-
-  <style name="GuillotineItemLinearLayout" parent="LinearLayout">
+  <style name="GuillotineItemLinearLayout">
     <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
@@ -26,25 +24,23 @@
     <item name="android:paddingBottom">8dp</item>
   </style>
 
-  <style name="TextView"/>
-
-  <style name="ToolbarTitleTextView" parent="TextView">
+  <style name="ToolbarTitleTextView">
     <item name="android:gravity">center</item>
     <item name="android:textSize">24sp</item>
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
   </style>
 
-  <style name="GuillotineItemTextView" parent="TextView">
+  <style name="GuillotineItemTextView">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
-    <item name="android:layout_marginLeft">@dimen/guillotine_small_margin</item>
+    <item name="android:layout_marginLeft">@dimen/guillotine_margin_small</item>
     <item name="android:textSize">@dimen/guillotine_item_text_size</item>
     <item name="android:layout_gravity">center_vertical</item>
     <item name="android:textColor">@android:color/white</item>
   </style>
 
-  <style name="GuillotineItemSelectedImageView" parent="TextView">
+  <style name="GuillotineItemSelectedImageView">
     <item name="android:textColor">@color/color_accent</item>
   </style>
 
@@ -56,18 +52,16 @@
     <item name="android:background">@color/color_primary</item>
   </style>
 
-  <style name="ImageView"/>
-
-  <style name="ContentItemImageView" parent="ImageView">
+  <style name="ContentItemImageView">
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_width">match_parent</item>
   </style>
 
-  <style name="GuillotineItemImageView" parent="ImageView">
+  <style name="GuillotineItemImageView">
     <item name="android:layout_width">30dp</item>
     <item name="android:layout_height">30dp</item>
     <item name="android:layout_gravity">center_vertical</item>
-    <item name="android:layout_marginLeft">@dimen/guillotine_large_margin</item>
+    <item name="android:layout_marginLeft">@dimen/guillotine_margin_large</item>
   </style>
 
   <style name="HamburgerImageButton" parent="Widget.AppCompat.ActionButton">
