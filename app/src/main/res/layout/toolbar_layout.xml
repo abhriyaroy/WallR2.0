@@ -12,7 +12,7 @@
         style="@style/HamburgerImageButton"
         android:layout_centerVertical="true"
         android:clickable="true"
-        android:src="@drawable/hamburger_90"/>
+        android:src="@drawable/ic_hamburger_vertical"/>
 
     <com.zebrostudio.wallrcustoms.WallrCustomTextView
         android:id="@+id/toolbar_title"
@@ -32,7 +32,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:padding="@dimen/toolbar_menu_imagebutton_padding"
-        android:src="@drawable/ic_search_white_48dp"
+        android:src="@drawable/ic_search_white_big"
         android:transitionName="searchTransition"/>
 
     <ImageView
@@ -44,7 +44,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:padding="@dimen/toolbar_menu_imagebutton_padding"
-        android:src="@drawable/ic_select_all_white_24dp"/>
+        android:src="@drawable/ic_select_all_white_small"/>
   </RelativeLayout>
 
   <ViewStub

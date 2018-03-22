@@ -5,9 +5,8 @@
   <application
       android:name=".WallrApplication"
       android:allowBackup="true"
-      android:icon="@drawable/wallr_logo"
+      android:icon="@drawable/ic_wallr"
       android:label="@string/app_name"
-      android:roundIcon="@drawable/wallr_logo"
       android:supportsRtl="true"
       android:theme="@style/AppTheme">
     <activity android:name=".ui.main.MainActivity">
