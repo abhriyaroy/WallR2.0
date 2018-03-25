@@ -32,7 +32,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:padding="@dimen/toolbar_menu_imagebutton_padding"
-        android:src="@drawable/ic_search_white_big"
+        android:src="@drawable/ic_search_white"
         android:transitionName="searchTransition"/>
 
     <ImageView
@@ -44,7 +44,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:padding="@dimen/toolbar_menu_imagebutton_padding"
-        android:src="@drawable/ic_select_all_white_small"/>
+        android:src="@drawable/ic_select_all_white"/>
   </RelativeLayout>
 
   <ViewStub
