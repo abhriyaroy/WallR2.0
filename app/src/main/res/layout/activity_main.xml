@@ -30,7 +30,7 @@
           app:contentInsetStart="@dimen/toolbar_contentinset_start"
           app:layout_scrollFlags="scroll|enterAlways|snap"
           app:popupTheme="@style/OverflowMenuTheme"
-          style="@style/Toolbar">
+          style="@style/ToolbarTheme">
 
         <include layout="@layout/toolbar_layout"/>
 
