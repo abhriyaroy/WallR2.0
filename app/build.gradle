@@ -30,4 +30,3 @@ dependencies {
   implementation project(':libraryGuillotineMenu')
   implementation project(':libraryWallrCustoms')
 }
-
