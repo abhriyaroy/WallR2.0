@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_layout"
+    android:id="@+id/root_frame_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="zebrostudio.wallr100.ui.main.MainActivity">
@@ -29,7 +29,7 @@
           android:id="@+id/toolbar"
           app:contentInsetStart="@dimen/toolbar_contentinset_start"
           app:layout_scrollFlags="scroll|enterAlways|snap"
-          app:popupTheme="@style/OverflowMenu"
+          app:popupTheme="@style/OverflowMenuTheme"
           style="@style/Toolbar">
 
         <include layout="@layout/toolbar_layout"/>
@@ -44,7 +44,7 @@
         android:layout_height="?actionBarSize"/>
 
     <FrameLayout
-        android:id="@+id/home_container"
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/color_primary"

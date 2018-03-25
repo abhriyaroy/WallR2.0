@@ -16,7 +16,7 @@
     <item name="android:minHeight">?attr/actionBarSize</item>
     <item name="android:windowNoTitle">true</item>
     <item name="android:background">@color/color_primary</item>
-    <item name="android:popupTheme">@style/OverflowMenu</item>
+    <item name="android:popupTheme">@style/OverflowMenuTheme</item>
   </style>
 
 </resources>

@@ -26,7 +26,7 @@
     </item>
   </style>
 
-  <style name="OverflowMenu" parent="Theme.AppCompat.NoActionBar">
+  <style name="OverflowMenuTheme" parent="Theme.AppCompat.NoActionBar">
     <item name="android:layout_gravity">center</item>
     <item name="android:textSize">12sp</item>
     <item name="android:textColor">#fff</item>

@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 
 public class WallrCustomTextView extends android.support.v7.widget.AppCompatTextView {
 
-
   public WallrCustomTextView(Context context) {
     this(context, null);
   }
