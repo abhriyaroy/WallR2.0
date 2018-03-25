@@ -9,23 +9,19 @@ android {
     targetSdkVersion TARGET_SDK_VERSION
     versionCode 1
     versionName "2.0"
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
   buildTypes {
     release {
       minifyEnabled true
       debuggable false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
     debug {
       minifyEnabled false
-      proguardFiles 'proguard-rules.pro'
     }
   }
 }
 
 dependencies {
-  implementation fileTree(include: ['*.jar'], dir: 'libs')
   // Android support libraries
   implementation "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
   implementation "com.android.support:support-v4:${SUPPORT_LIBRARY_VERSION}"

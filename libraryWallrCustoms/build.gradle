@@ -22,8 +22,6 @@ android {
 }
 
 dependencies {
-  implementation fileTree(dir: 'libs', include: ['*.jar'])
-
   // Android support library
   implementation "com.android.support:design:${SUPPORT_LIBRARY_VERSION}"
 }
