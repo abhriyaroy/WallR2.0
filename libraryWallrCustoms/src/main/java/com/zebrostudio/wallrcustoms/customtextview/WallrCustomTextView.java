@@ -8,7 +8,11 @@ import android.util.AttributeSet;
 public class WallrCustomTextView extends AppCompatTextView {
 
   public WallrCustomTextView(Context context) {
-    this(context, null,1);
+    this(context, null);
+  }
+
+  public WallrCustomTextView(Context context, AttributeSet attrs){
+    this(context, attrs,1);
   }
 
   public WallrCustomTextView(Context context, AttributeSet attrs, int defStyleAttr) {
