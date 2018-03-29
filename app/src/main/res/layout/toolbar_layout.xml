@@ -14,7 +14,7 @@
         android:clickable="true"
         android:src="@drawable/ic_hamburger_vertical"/>
 
-    <com.zebrostudio.wallrcustoms.WallrCustomTextView
+    <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
         android:id="@+id/toolbar_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
