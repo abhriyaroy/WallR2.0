@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply from: '../config.gradle'
+apply from: '../versions.gradle'
 
 android {
   compileSdkVersion COMPILE_SDK_VERSION
@@ -8,7 +8,7 @@ android {
   defaultConfig {
     minSdkVersion MINIMUM_SDK_VERSION
     targetSdkVersion TARGET_SDK_VERSION
-    versionCode 2
+    versionCode LIBRARY_GUILLOTINEMENU_VERSION
     versionName "1.1"
   }
   buildTypes {
