@@ -8,7 +8,7 @@ android {
     minSdkVersion MINIMUM_SDK_VERSION
     targetSdkVersion TARGET_SDK_VERSION
     versionCode LIBRARY_WALLRCUSTOMS_VERSION
-    versionName "1.0"
+    versionName "$LIBRARY_WALLRCUSTOMS_VERSION_NAME"
   }
 
   buildTypes {

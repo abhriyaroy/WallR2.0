@@ -9,7 +9,7 @@ android {
     minSdkVersion MINIMUM_SDK_VERSION
     targetSdkVersion TARGET_SDK_VERSION
     versionCode LIBRARY_GUILLOTINEMENU_VERSION
-    versionName "1.1"
+    versionName "$LIBRARY_GUILLOTINEMENU_VERSION_NAME"
   }
   buildTypes {
     release {
