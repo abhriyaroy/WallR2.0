@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">WallR</string>
+  <string name="app_name">WallR</string>
+
+  <!-- Main activity strings -->
+  <string name="guillotine_explore_title">Explore</string>
+
 </resources>

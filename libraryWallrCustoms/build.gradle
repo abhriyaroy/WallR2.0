@@ -1,0 +1,27 @@
+apply plugin: 'com.android.library'
+apply from: "../versions.gradle"
+
+android {
+  compileSdkVersion COMPILE_SDK_VERSION
+
+  defaultConfig {
+    minSdkVersion MINIMUM_SDK_VERSION
+    targetSdkVersion TARGET_SDK_VERSION
+    versionCode LIBRARY_WALLRCUSTOMS_VERSION
+    versionName "$LIBRARY_WALLRCUSTOMS_VERSION_NAME"
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled true
+    }
+    debug {
+      minifyEnabled false
+    }
+  }
+}
+
+dependencies {
+  // Android support library
+  implementation "com.android.support:design:${SUPPORT_LIBRARY_VERSION}"
+}
