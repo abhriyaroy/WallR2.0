@@ -11,8 +11,8 @@ public class WallrCustomTextView extends AppCompatTextView {
     this(context, null);
   }
 
-  public WallrCustomTextView(Context context, AttributeSet attrs){
-    this(context, attrs,1);
+  public WallrCustomTextView(Context context, AttributeSet attrs) {
+    this(context, attrs, 1);
   }
 
   public WallrCustomTextView(Context context, AttributeSet attrs, int defStyleAttr) {
