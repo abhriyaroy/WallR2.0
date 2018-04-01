@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/guillotine_background"
+    android:orientation="vertical"
+    android:clickable="true">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    <android.support.v7.widget.Toolbar
+        style="@style/Toolbar"
+        app:contentInsetStart="0dp"
+        android:id="@+id/guillotine_toolbar">
+
+        <ImageView
+            android:id="@+id/guillotine_hamburger"
+            style="@style/ImageView.Hamburger"
+            android:src="@drawable/hamburger_icon"
+            android:paddingTop="4dp"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <library_textView.CanaroTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="WallR"
+                android:id="@+id/title_guillotine"
+                android:textColor="#fff"
+                android:textSize="35sp"/>
+            <library_textView.CanaroTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PRO"
+                android:textColor="#fff"
+                android:textSize="13sp"
+                android:layout_toRightOf="@id/title_guillotine"
+                android:id="@+id/pro_badge_text_view"
+                android:paddingLeft="6dp"
+                android:paddingTop="4dp"/>
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/explore_group"
+        style="@style/LinearLayout.GuillotineItem"
+        android:layout_marginTop="@dimen/guillotine_medium_margin"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            style="@style/ImageView.GuillotineItem"
+            android:src="@drawable/explore_icon_new"
+            android:tint="#fff"
+             />
+
+        <library_textView.CanaroTextView
+            style="@style/TextView.GuillotineItem"
+            android:text="@string/explore"
+            android:id="@+id/explore_textView"/>
+    </LinearLayout>
+
+    <!--
+    <LinearLayout
+        android:id="@+id/solidWallpaper_group"
+        style="@style/LinearLayout.GuillotineItem"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            style="@style/ImageView.GuillotineItem"
+            android:src="@drawable/ic_crop_portrait_white_48dp"
+            />
+
+        <library_textView.CanaroTextView
+            style="@style/TextView.GuillotineItem"
+            android:text="@string/solid_wallpaper"
+            android:id="@+id/solidWallpaper_textView"/>
+    </LinearLayout>
+       -->
+
+    <LinearLayout
+        android:id="@+id/collections_group"
+        style="@style/LinearLayout.GuillotineItem"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            style="@style/ImageView.GuillotineItem"
+            android:src="@drawable/collections_icon"
+            />
+
+        <library_textView.CanaroTextView
+            style="@style/TextView.GuillotineItem"
+            android:text="@string/collections"
+            android:id="@+id/collections_textView"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/Categories_group"
+        style="@style/LinearLayout.GuillotineItem"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            style="@style/ImageView.GuillotineItem"
+            android:src="@drawable/categories_icon"
+            android:padding="1dp"
+            />
+
+        <library_textView.CanaroTextView
+            style="@style/TextView.GuillotineItem"
+            android:text="@string/categories"
+            android:id="@+id/categories_textView"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/solid_wallpaper_group"
+        style="@style/LinearLayout.GuillotineItem"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            style="@style/ImageView.GuillotineItem"
+            android:src="@drawable/ic_pie_chart_24"
+            android:padding="1dp"
+            />
+
+        <library_textView.CanaroTextView
+            style="@style/TextView.GuillotineItem"
+            android:text="@string/solid_wallpaper"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:id="@+id/solid_wallpaper_textView"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/gallery_group"
+        style="@style/LinearLayout.GuillotineItem"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            style="@style/ImageView.GuillotineItem"
+            android:src="@drawable/gallery_icon"
+            />
+
+        <library_textView.CanaroTextView
+            style="@style/TextView.GuillotineItem"
+            android:text="@string/gallery"
+            android:id="@+id/gallery_textView"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/contactus_group"
+        style="@style/LinearLayout.GuillotineItem">
+
+        <ImageView
+            style="@style/ImageView.GuillotineItem"
+            android:src="@drawable/ic_account_us_48"
+            android:tint="@color/white"
+             />
+
+        <library_textView.CanaroTextView
+            style="@style/TextView.GuillotineItem"
+            android:text="@string/feedback"
+            android:id="@+id/contact_us"
+             />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/pro_group"
+        style="@style/LinearLayout.GuillotineItem"
+        android:background="#fff">
+
+        <ImageView
+            style="@style/ImageView.GuillotineItem"
+            android:src="@drawable/ic_crown_48"
+            />
+
+        <library_textView.CanaroTextView
+            style="@style/TextView.GuillotineItem"
+            android:text="@string/buy_pro"
+            android:textColor="#000"
+            android:id="@+id/buyPro"
+            />
+    </LinearLayout>
+</LinearLayout>
