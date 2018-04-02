@@ -33,4 +33,29 @@
     <item name="android:ellipsize">none</item>
   </style>
 
+  <style name="GuillotineItemTheme">
+    <item name="android:background">?attr/selectableItemBackground</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:orientation">horizontal</item>
+    <item name="android:paddingTop">8dp</item>
+    <item name="android:paddingBottom">8dp</item>
+  </style>
+
+  <style name="GuillotineItemImageViewTheme">
+    <item name="android:layout_width">30dp</item>
+    <item name="android:layout_height">30dp</item>
+    <item name="android:layout_gravity">center_vertical</item>
+    <item name="android:layout_marginLeft">@dimen/guillotine_margin_large</item>
+  </style>
+
+  <style name="GuillotineItemTextViewTheme">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginLeft">@dimen/guillotine_margin_small</item>
+    <item name="android:textSize">@dimen/guillotine_item_text_size</item>
+    <item name="android:layout_gravity">center_vertical</item>
+    <item name="android:textColor">@android:color/white</item>
+  </style>
+
 </resources>

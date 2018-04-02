@@ -2,9 +2,12 @@
 <resources>
 
   <dimen name="guillotine_margin_small">24dp</dimen>
+  <dimen name="guillotine_medium_margin">48dp</dimen>
   <dimen name="guillotine_margin_large">100dp</dimen>
   <dimen name="guillotine_item_text_size">24sp</dimen>
   <dimen name="guillotine_actionbar_background_view_height">36dp</dimen>
+  <dimen name="guillotine_hamburger_padding_top">4dp</dimen>
+  <dimen name="guillotinemenu_imageview_padding">1dp</dimen>
 
   <dimen name="toolbar_menu_imagebutton_width">40dp</dimen>
   <dimen name="toolbar_menu_imagebutton_height">40dp</dimen>

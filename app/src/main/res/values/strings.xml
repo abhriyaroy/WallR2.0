@@ -1,7 +1,14 @@
 <resources>
   <string name="app_name">WallR</string>
 
-  <!-- Main activity strings -->
+  <!-- Guillotine Menu -->
   <string name="guillotine_explore_title">Explore</string>
+  <string name="guillotine_toppicks_title">Top Picks</string>
+  <string name="guillotine_categories_title">Categories</string>
+  <string name="guillotine_minimal_title">Minimal</string>
+  <string name="guillotine_collection_title">Collection</string>
+  <string name="guillotine_feedback_title">Feedback</string>
+  <string name="guillotine_buypro_title">Buy Pro</string>
+  <string name="guillotine_pro_badge">PRO</string>
 
 </resources>
