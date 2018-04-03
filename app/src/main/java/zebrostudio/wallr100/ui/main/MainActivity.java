@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     unBinder = ButterKnife.bind(this);
     if (toolbar != null) {
       setSupportActionBar(toolbar);
-      //getSupportActionBar().setTitle(null);
     }
     guillotineListener = new GuillotineListener() {
       @Override
