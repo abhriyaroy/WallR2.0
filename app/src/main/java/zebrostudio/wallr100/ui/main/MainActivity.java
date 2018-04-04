@@ -68,4 +68,12 @@ public class MainActivity extends AppCompatActivity {
       unBinder.unbind();
     }
   }
+
+  @Override public void onBackPressed() {
+    if (guillotineMenuOpened) {
+      guillotineAnimation.close();
+    } else {
+      super.onBackPressed();
+    }
+  }
 }
