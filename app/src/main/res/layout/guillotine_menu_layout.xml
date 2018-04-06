@@ -51,7 +51,7 @@
 
   <LinearLayout
       android:id="@+id/explore_group_guillotine_menu"
-      style="@style/GuillotineItemTheme"
+      style="@style/GuillotineItemLayoutTheme"
       android:layout_marginTop="@dimen/guillotine_medium_margin"
       android:layout_centerHorizontal="true">
 
@@ -68,7 +68,7 @@
 
   <LinearLayout
       android:id="@+id/toppicks_group_guillotine_menu"
-      style="@style/GuillotineItemTheme"
+      style="@style/GuillotineItemLayoutTheme"
       android:layout_centerHorizontal="true">
 
     <ImageView
@@ -84,7 +84,7 @@
 
   <LinearLayout
       android:id="@+id/categories_group_guillotine_menu"
-      style="@style/GuillotineItemTheme"
+      style="@style/GuillotineItemLayoutTheme"
       android:layout_centerHorizontal="true">
 
     <ImageView
@@ -101,7 +101,7 @@
 
   <LinearLayout
       android:id="@+id/minimal_group_guillotine_menu"
-      style="@style/GuillotineItemTheme"
+      style="@style/GuillotineItemLayoutTheme"
       android:layout_centerHorizontal="true">
 
     <ImageView
@@ -118,7 +118,7 @@
 
   <LinearLayout
       android:id="@+id/gallery_group"
-      style="@style/GuillotineItemTheme"
+      style="@style/GuillotineItemLayoutTheme"
       android:layout_centerHorizontal="true">
 
     <ImageView
@@ -134,7 +134,7 @@
 
   <LinearLayout
       android:id="@+id/feedback_group_guillotine_menu"
-      style="@style/GuillotineItemTheme">
+      style="@style/GuillotineItemLayoutTheme">
 
     <ImageView
         style="@style/GuillotineItemImageViewTheme"
@@ -149,7 +149,7 @@
 
   <LinearLayout
       android:id="@+id/buypro_group_guillotine_menu"
-      style="@style/GuillotineItemTheme"
+      style="@style/GuillotineItemLayoutTheme"
       android:background="@color/color_white">
 
     <ImageView

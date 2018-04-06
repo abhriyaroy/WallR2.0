@@ -28,23 +28,23 @@
 
   <style name="OverflowMenuTheme" parent="Theme.AppCompat.NoActionBar">
     <item name="android:layout_gravity">center</item>
-    <item name="android:textSize">12sp</item>
+    <item name="android:textSize">@dimen/overflow_menu_text_size</item>
     <item name="android:textColor">@color/color_white</item>
     <item name="android:ellipsize">none</item>
   </style>
 
-  <style name="GuillotineItemTheme">
+  <style name="GuillotineItemLayoutTheme">
     <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:orientation">horizontal</item>
-    <item name="android:paddingTop">8dp</item>
-    <item name="android:paddingBottom">8dp</item>
+    <item name="android:paddingTop">@dimen/guillotineitem_layout_padding_top</item>
+    <item name="android:paddingBottom">@dimen/guillotineitem_layout_padding_bottom</item>
   </style>
 
   <style name="GuillotineItemImageViewTheme">
-    <item name="android:layout_width">30dp</item>
-    <item name="android:layout_height">30dp</item>
+    <item name="android:layout_width">@dimen/guillotineitem_imageview_width</item>
+    <item name="android:layout_height">@dimen/guillotineitem_imageview_height</item>
     <item name="android:layout_gravity">center_vertical</item>
     <item name="android:layout_marginLeft">@dimen/guillotine_margin_large</item>
   </style>
