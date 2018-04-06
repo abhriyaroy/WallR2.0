@@ -1,166 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:app="http://schemas.android.com/apk/res-auto"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:background="@color/color_guillotine_menu_background"
-		android:orientation="vertical"
-		android:clickable="true">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_guillotine_menu_background"
+    android:orientation="vertical"
+    android:clickable="true">
 
-	<RelativeLayout
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
+  <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content">
 
-		<android.support.v7.widget.Toolbar
-				android:id="@+id/toolbar_guillotine_menu"
-				style="@style/ToolbarTheme"
-				app:contentInsetStart="@dimen/toolbar_contentinset_start">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_guillotine_menu"
+        style="@style/ToolbarTheme"
+        app:contentInsetStart="@dimen/toolbar_contentinset_start">
 
-			<ImageView
-					android:id="@+id/hamburger_guillotine_menu"
-					style="@style/HamburgerImageButtonTheme"
-					android:paddingTop="@dimen/guillotine_hamburger_padding_top"
-					android:src="@drawable/ic_hamburger_horizontal"/>
+      <ImageView
+          android:id="@+id/hamburger_guillotine_menu"
+          style="@style/HamburgerImageButtonTheme"
+          android:paddingTop="@dimen/guillotine_hamburger_padding_top"
+          android:src="@drawable/ic_hamburger_horizontal"/>
 
-			<RelativeLayout
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content">
+      <RelativeLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content">
 
-				<com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-						android:id="@+id/app_title_guillotine_menu"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:text="@string/app_name"
-						android:textSize="36sp"/>
+        <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+            android:id="@+id/app_title_guillotine_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="36sp"/>
 
-				<com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-						android:id="@+id/pro_badge_guillotine_menu"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:paddingTop="4dp"
-						android:paddingLeft="6dp"
-						android:layout_toRightOf="@id/app_title_guillotine_menu"
-						android:text="@string/guillotine_pro_badge"
-						android:textSize="13sp"/>
+        <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+            android:id="@+id/pro_badge_guillotine_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:paddingLeft="6dp"
+            android:layout_toRightOf="@id/app_title_guillotine_menu"
+            android:text="@string/guillotine_pro_badge"
+            android:textSize="13sp"/>
 
-			</RelativeLayout>
+      </RelativeLayout>
 
-		</android.support.v7.widget.Toolbar>
+    </android.support.v7.widget.Toolbar>
 
-	</RelativeLayout>
+  </RelativeLayout>
 
-	<LinearLayout
-			android:id="@+id/explore_group_guillotine_menu"
-			style="@style/GuillotineItemTheme"
-			android:layout_marginTop="@dimen/guillotine_medium_margin"
-			android:layout_centerHorizontal="true">
+  <LinearLayout
+      android:id="@+id/explore_group_guillotine_menu"
+      style="@style/GuillotineItemTheme"
+      android:layout_marginTop="@dimen/guillotine_medium_margin"
+      android:layout_centerHorizontal="true">
 
-		<ImageView
-				style="@style/GuillotineItemImageViewTheme"
-				android:src="@drawable/ic_explore_white"/>
+    <ImageView
+        style="@style/GuillotineItemImageViewTheme"
+        android:src="@drawable/ic_explore_white"/>
 
-		<com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-				android:id="@+id/explore_textview_guillotine_menu"
-				style="@style/GuillotineItemTextViewTheme"
-				android:text="@string/guillotine_explore_title"/>
+    <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+        android:id="@+id/explore_textview_guillotine_menu"
+        style="@style/GuillotineItemTextViewTheme"
+        android:text="@string/guillotine_explore_title"/>
 
-	</LinearLayout>
+  </LinearLayout>
 
-	<LinearLayout
-			android:id="@+id/toppicks_group_guillotine_menu"
-			style="@style/GuillotineItemTheme"
-			android:layout_centerHorizontal="true">
+  <LinearLayout
+      android:id="@+id/toppicks_group_guillotine_menu"
+      style="@style/GuillotineItemTheme"
+      android:layout_centerHorizontal="true">
 
-		<ImageView
-				style="@style/GuillotineItemImageViewTheme"
-				android:src="@drawable/ic_toppicks_white"/>
+    <ImageView
+        style="@style/GuillotineItemImageViewTheme"
+        android:src="@drawable/ic_toppicks_white"/>
 
-		<com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-				android:id="@+id/toppicks_textview_guillotine_menu"
-				style="@style/GuillotineItemTextViewTheme"
-				android:text="@string/guillotine_toppicks_title"/>
+    <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+        android:id="@+id/toppicks_textview_guillotine_menu"
+        style="@style/GuillotineItemTextViewTheme"
+        android:text="@string/guillotine_toppicks_title"/>
 
-	</LinearLayout>
+  </LinearLayout>
 
-	<LinearLayout
-			android:id="@+id/categories_group_guillotine_menu"
-			style="@style/GuillotineItemTheme"
-			android:layout_centerHorizontal="true">
+  <LinearLayout
+      android:id="@+id/categories_group_guillotine_menu"
+      style="@style/GuillotineItemTheme"
+      android:layout_centerHorizontal="true">
 
-		<ImageView
-				style="@style/GuillotineItemImageViewTheme"
-				android:src="@drawable/ic_categories_white"
-				android:padding="@dimen/guillotinemenu_imageview_padding"/>
+    <ImageView
+        style="@style/GuillotineItemImageViewTheme"
+        android:src="@drawable/ic_categories_white"
+        android:padding="@dimen/guillotinemenu_imageview_padding"/>
 
-		<com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-				android:id="@+id/categories_textview_guillotine_menu"
-				style="@style/GuillotineItemTextViewTheme"
-				android:text="@string/guillotine_categories_title"/>
+    <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+        android:id="@+id/categories_textview_guillotine_menu"
+        style="@style/GuillotineItemTextViewTheme"
+        android:text="@string/guillotine_categories_title"/>
 
-	</LinearLayout>
+  </LinearLayout>
 
-	<LinearLayout
-			android:id="@+id/minimal_group_guillotine_menu"
-			style="@style/GuillotineItemTheme"
-			android:layout_centerHorizontal="true">
+  <LinearLayout
+      android:id="@+id/minimal_group_guillotine_menu"
+      style="@style/GuillotineItemTheme"
+      android:layout_centerHorizontal="true">
 
-		<ImageView
-				style="@style/GuillotineItemImageViewTheme"
-				android:padding="@dimen/guillotinemenu_imageview_padding"
-				android:src="@drawable/ic_minimal_white"/>
+    <ImageView
+        style="@style/GuillotineItemImageViewTheme"
+        android:padding="@dimen/guillotinemenu_imageview_padding"
+        android:src="@drawable/ic_minimal_white"/>
 
-		<com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-				android:id="@+id/solid_wallpaper_textview_guillotine_menu"
-				style="@style/GuillotineItemTextViewTheme"
-				android:text="@string/guillotine_minimal_title"/>
+    <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+        android:id="@+id/solid_wallpaper_textview_guillotine_menu"
+        style="@style/GuillotineItemTextViewTheme"
+        android:text="@string/guillotine_minimal_title"/>
 
-	</LinearLayout>
+  </LinearLayout>
 
-	<LinearLayout
-			android:id="@+id/gallery_group"
-			style="@style/GuillotineItemTheme"
-			android:layout_centerHorizontal="true">
+  <LinearLayout
+      android:id="@+id/gallery_group"
+      style="@style/GuillotineItemTheme"
+      android:layout_centerHorizontal="true">
 
-		<ImageView
-				style="@style/GuillotineItemImageViewTheme"
-				android:src="@drawable/ic_collection_white"/>
+    <ImageView
+        style="@style/GuillotineItemImageViewTheme"
+        android:src="@drawable/ic_collection_white"/>
 
-		<com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-				android:id="@+id/gallery_textView"
-				style="@style/GuillotineItemTextViewTheme"
-				android:text="@string/guillotine_collection_title"/>
+    <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+        android:id="@+id/gallery_textView"
+        style="@style/GuillotineItemTextViewTheme"
+        android:text="@string/guillotine_collection_title"/>
 
-	</LinearLayout>
+  </LinearLayout>
 
-	<LinearLayout
-			android:id="@+id/feedback_group_guillotine_menu"
-			style="@style/GuillotineItemTheme">
+  <LinearLayout
+      android:id="@+id/feedback_group_guillotine_menu"
+      style="@style/GuillotineItemTheme">
 
-		<ImageView
-				style="@style/GuillotineItemImageViewTheme"
-				android:src="@drawable/ic_feedback_white"/>
+    <ImageView
+        style="@style/GuillotineItemImageViewTheme"
+        android:src="@drawable/ic_feedback_white"/>
 
-		<com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-				android:id="@+id/feedback_texxtview_guillotine_menu"
-				style="@style/GuillotineItemTextViewTheme"
-				android:text="@string/guillotine_feedback_title"/>
+    <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+        android:id="@+id/feedback_texxtview_guillotine_menu"
+        style="@style/GuillotineItemTextViewTheme"
+        android:text="@string/guillotine_feedback_title"/>
 
-	</LinearLayout>
+  </LinearLayout>
 
-	<LinearLayout
-			android:id="@+id/buypro_group_guillotine_menu"
-			style="@style/GuillotineItemTheme"
-			android:background="@color/color_white">
+  <LinearLayout
+      android:id="@+id/buypro_group_guillotine_menu"
+      style="@style/GuillotineItemTheme"
+      android:background="@color/color_white">
 
-		<ImageView
-				style="@style/GuillotineItemImageViewTheme"
-				android:src="@drawable/ic_buypro_black"/>
+    <ImageView
+        style="@style/GuillotineItemImageViewTheme"
+        android:src="@drawable/ic_buypro_black"/>
 
-		<com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-				android:id="@+id/buypro_textview_guillotine_menu"
-				style="@style/GuillotineItemTextViewTheme"
-				android:text="@string/guillotine_buypro_title"/>
+    <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+        android:id="@+id/buypro_textview_guillotine_menu"
+        style="@style/GuillotineItemTextViewTheme"
+        android:text="@string/guillotine_buypro_title"/>
 
-	</LinearLayout>
+  </LinearLayout>
 
 </LinearLayout>

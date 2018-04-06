@@ -32,14 +32,22 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
     final View guillotineMenu = LayoutInflater.from(this)
         .inflate(R.layout.guillotine_menu_layout, null);
+    /**
+     * Add guillotine menu layout to the activity before binding Butterknife to the activity
+     * so that guillotine menu views can be referenced by Butterknife as well
+     */
     FrameLayout rootFrameLayout = findViewById(R.id.root_frame_layout);
     rootFrameLayout.addView(guillotineMenu);
+
     unBinder = ButterKnife.bind(this);
+
     if (toolbar != null) {
       setSupportActionBar(toolbar);
     }
+
     guillotineListener = new GuillotineListener() {
       @Override
       public void onGuillotineOpened() {
@@ -51,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         guillotineMenuOpened = false;
       }
     };
+
     guillotineAnimation = new GuillotineAnimation.GuillotineBuilder(
         guillotineMenu, guillotineMenu.findViewById(R.id.hamburger_guillotine_menu),
         hamburgerVerticalImageViewButton)
@@ -59,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         .setGuillotineListener(guillotineListener)
         .setClosedOnStart(true)
         .build();
+
     buyProTextView.setTextColor(getResources().getColor(R.color.color_black));
   }
 
