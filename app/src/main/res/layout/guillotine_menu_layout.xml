@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
-            android:textSize="36sp"/>
+            android:textSize="@dimen/guillotine_menu_apptitle_size"/>
 
         <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
             android:id="@+id/pro_badge_guillotine_menu"
@@ -41,7 +41,7 @@
             android:paddingLeft="6dp"
             android:layout_toRightOf="@id/app_title_guillotine_menu"
             android:text="@string/guillotine_pro_badge"
-            android:textSize="13sp"/>
+            android:textSize="@dimen/guillotine_menu_probadge_size"/>
 
       </RelativeLayout>
 
@@ -90,7 +90,7 @@
     <ImageView
         style="@style/GuillotineItemImageViewTheme"
         android:src="@drawable/ic_categories_white"
-        android:padding="@dimen/guillotinemenu_imageview_padding"/>
+        android:padding="@dimen/guillotine_menu_imageview_padding"/>
 
     <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
         android:id="@+id/categories_textview_guillotine_menu"
@@ -106,7 +106,7 @@
 
     <ImageView
         style="@style/GuillotineItemImageViewTheme"
-        android:padding="@dimen/guillotinemenu_imageview_padding"
+        android:padding="@dimen/guillotine_menu_imageview_padding"
         android:src="@drawable/ic_minimal_white"/>
 
     <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView

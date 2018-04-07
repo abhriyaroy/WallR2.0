@@ -38,13 +38,13 @@
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:orientation">horizontal</item>
-    <item name="android:paddingTop">@dimen/guillotineitem_layout_padding_top</item>
-    <item name="android:paddingBottom">@dimen/guillotineitem_layout_padding_bottom</item>
+    <item name="android:paddingTop">@dimen/guillotine_item_layout_padding_top</item>
+    <item name="android:paddingBottom">@dimen/guillotine_item_layout_padding_bottom</item>
   </style>
 
   <style name="GuillotineItemImageViewTheme">
-    <item name="android:layout_width">@dimen/guillotineitem_imageview_width</item>
-    <item name="android:layout_height">@dimen/guillotineitem_imageview_height</item>
+    <item name="android:layout_width">@dimen/guillotine_item_imageview_width</item>
+    <item name="android:layout_height">@dimen/guillotine_item_imageview_height</item>
     <item name="android:layout_gravity">center_vertical</item>
     <item name="android:layout_marginLeft">@dimen/guillotine_margin_large</item>
   </style>
