@@ -37,8 +37,8 @@
             android:id="@+id/pro_badge_guillotine_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="4dp"
-            android:paddingLeft="6dp"
+            android:paddingTop="@dimen/guillotine_menu_probadge_padding_top"
+            android:paddingLeft="@dimen/guillotine_menu_probadge_padding_left"
             android:layout_toRightOf="@id/app_title_guillotine_menu"
             android:text="@string/guillotine_pro_badge"
             android:textSize="@dimen/guillotine_menu_probadge_size"/>

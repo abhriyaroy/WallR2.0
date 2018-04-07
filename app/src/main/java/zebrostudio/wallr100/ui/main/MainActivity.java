@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.ui.main;
 
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -21,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
   private final int rippleDuration = 250;
   private Unbinder unBinder;
   private GuillotineAnimation guillotineAnimation;
-  private Boolean guillotineMenuOpened;
+  private Boolean isGuillotineMenuOpen;
   private GuillotineListener guillotineListener;
 
   @BindView(R.id.toolbar) Toolbar toolbar;
@@ -51,12 +50,12 @@ public class MainActivity extends AppCompatActivity {
     guillotineListener = new GuillotineListener() {
       @Override
       public void onGuillotineOpened() {
-        guillotineMenuOpened = true;
+        isGuillotineMenuOpen = true;
       }
 
       @Override
       public void onGuillotineClosed() {
-        guillotineMenuOpened = false;
+        isGuillotineMenuOpen = false;
       }
     };
 
@@ -80,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override public void onBackPressed() {
-    if (guillotineMenuOpened) {
+    if (isGuillotineMenuOpen) {
       guillotineAnimation.close();
     } else {
       super.onBackPressed();

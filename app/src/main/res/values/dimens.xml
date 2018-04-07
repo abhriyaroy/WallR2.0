@@ -10,6 +10,8 @@
   <dimen name="guillotine_menu_imageview_padding">1dp</dimen>
   <dimen name="guillotine_menu_apptitle_size">36sp</dimen>
   <dimen name="guillotine_menu_probadge_size">13sp</dimen>
+  <dimen name="guillotine_menu_probadge_padding_top">4dp</dimen>
+  <dimen name="guillotine_menu_probadge_padding_left">6dp</dimen>
   <dimen name="guillotine_item_layout_padding_top">8dp</dimen>
   <dimen name="guillotine_item_layout_padding_bottom">8dp</dimen>
   <dimen name="guillotine_item_imageview_width">32dp</dimen>
