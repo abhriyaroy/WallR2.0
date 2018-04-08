@@ -1,7 +1,7 @@
 <resources>
   <string name="app_name">WallR</string>
 
-  <!-- Guillotine Menu -->
+  <!-- Guillotine menu strings -->
   <string name="guillotine_explore_title">Explore</string>
   <string name="guillotine_toppicks_title">Top Picks</string>
   <string name="guillotine_categories_title">Categories</string>
