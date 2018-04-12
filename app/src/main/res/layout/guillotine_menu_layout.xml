@@ -141,7 +141,7 @@
         android:src="@drawable/ic_feedback_white"/>
 
     <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-        android:id="@+id/feedback_texxtview_guillotine_menu"
+        android:id="@+id/feedback_textview_guillotine_menu"
         style="@style/GuillotineItemTextViewTheme"
         android:text="@string/guillotine_feedback_title"/>
 
