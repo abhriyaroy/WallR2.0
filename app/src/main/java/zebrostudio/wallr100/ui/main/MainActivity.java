@@ -17,11 +17,9 @@ import zebrostudio.wallr100.R;
 
 public class MainActivity extends AppCompatActivity {
 
-  private final int rippleDuration = 250;
   private Unbinder unBinder;
-  private GuillotineAnimation guillotineAnimation;
+  private GuillotineAnimation guillotineMenuAnimation;
   private Boolean isGuillotineMenuOpen;
-  private GuillotineListener guillotineListener;
 
   @BindView(R.id.toolbar) Toolbar toolbar;
   @BindView(R.id.content_hamburger) View hamburgerVerticalImageViewButton;
@@ -47,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
       setSupportActionBar(toolbar);
     }
 
-    guillotineListener = new GuillotineListener() {
+    GuillotineListener guillotineListener = new GuillotineListener() {
       @Override
       public void onGuillotineOpened() {
         isGuillotineMenuOpen = true;
@@ -59,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
       }
     };
 
-    guillotineAnimation = new GuillotineAnimation.GuillotineBuilder(
+    final int rippleDuration = 250;
+    guillotineMenuAnimation = new GuillotineAnimation.GuillotineBuilder(
         guillotineMenu, guillotineMenu.findViewById(R.id.hamburger_guillotine_menu),
         hamburgerVerticalImageViewButton)
         .setStartDelay(rippleDuration)
@@ -68,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         .setClosedOnStart(true)
         .build();
 
+    // Change text color of buy pro option to black from the default white color
     buyProTextView.setTextColor(getResources().getColor(R.color.color_black));
   }
 
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override public void onBackPressed() {
     if (isGuillotineMenuOpen) {
-      guillotineAnimation.close();
+      guillotineMenuAnimation.close();
     } else {
       super.onBackPressed();
     }
