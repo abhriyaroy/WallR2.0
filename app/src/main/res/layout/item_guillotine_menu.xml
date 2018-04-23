@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/minimal_group_guillotine_menu"
+    style="@style/GuillotineItemLayoutTheme"
+    android:layout_centerHorizontal="true">
+
+  <ImageView
+      android:id="@+id/imageview_guillotine_menu_item"
+      style="@style/GuillotineItemImageViewTheme"
+      android:padding="@dimen/guillotine_menu_imageview_padding"/>
+
+  <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+      android:id="@+id/textview_guillotine_menu_item"
+      style="@style/GuillotineItemTextViewTheme"
+      android:text="@string/guillotine_minimal_title"/>
+
+</LinearLayout>

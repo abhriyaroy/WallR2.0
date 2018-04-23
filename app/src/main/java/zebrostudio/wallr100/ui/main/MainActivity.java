@@ -7,6 +7,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -23,13 +25,32 @@ public class MainActivity extends AppCompatActivity {
 
   @BindView(R.id.toolbar) Toolbar toolbar;
   @BindView(R.id.content_hamburger) View hamburgerVerticalImageViewButton;
-  @BindView(R.id.buypro_textview_guillotine_menu) WallrCustomTextView buyProTextView;
+  @BindView(R.id.root_linear_layout_guillotine_menu) LinearLayout guillotineMenuRootLinearLayout;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    initializeViews();
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    if (unBinder != null) {
+      unBinder.unbind();
+    }
+  }
+
+  @Override public void onBackPressed() {
+    if (isGuillotineMenuOpen) {
+      guillotineMenuAnimation.close();
+    } else {
+      super.onBackPressed();
+    }
+  }
+
+  private void initializeViews() {
     final View guillotineMenu = LayoutInflater.from(this)
         .inflate(R.layout.guillotine_menu_layout, null);
     /**
@@ -57,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
 
     final int rippleDuration = 250;
     guillotineMenuAnimation = new GuillotineAnimation.GuillotineBuilder(
-        guillotineMenu, guillotineMenu.findViewById(R.id.hamburger_guillotine_menu),
+        guillotineMenu,
+        guillotineMenu.findViewById(R.id.hamburger_guillotine_menu),
         hamburgerVerticalImageViewButton)
         .setStartDelay(rippleDuration)
         .setActionBarViewForAnimation(toolbar)
@@ -65,22 +87,37 @@ public class MainActivity extends AppCompatActivity {
         .setClosedOnStart(true)
         .build();
 
-    // Change text color of buy pro option to black from the default white color
-    buyProTextView.setTextColor(getResources().getColor(R.color.color_black));
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    if (unBinder != null) {
-      unBinder.unbind();
-    }
-  }
-
-  @Override public void onBackPressed() {
-    if (isGuillotineMenuOpen) {
-      guillotineMenuAnimation.close();
-    } else {
-      super.onBackPressed();
+    // Declare arrays containing names and icon resources of guillotine menu items
+    int menuItemNames[] = {R.string.guillotine_explore_title,
+        R.string.guillotine_toppicks_title,
+        R.string.guillotine_categories_title,
+        R.string.guillotine_minimal_title,
+        R.string.guillotine_collection_title,
+        R.string.guillotine_feedback_title,
+        R.string.guillotine_buypro_title};
+    int menuItemIconResources[] = {R.drawable.ic_explore_white,
+        R.drawable.ic_toppicks_white,
+        R.drawable.ic_categories_white,
+        R.drawable.ic_minimal_white,
+        R.drawable.ic_collections_white,
+        R.drawable.ic_feedback_white,
+        R.drawable.ic_buypro_black};
+    // Programmatically add guillotine menu items
+    for (int i = 0; i < 7; i++) {
+      View guillotineMenuItem = LayoutInflater.from(this)
+          .inflate(R.layout.item_guillotine_menu, null);
+      guillotineMenuRootLinearLayout.addView(guillotineMenuItem);
+      ImageView guillotineMenuItemImage =
+          guillotineMenuItem.findViewById(R.id.imageview_guillotine_menu_item);
+      WallrCustomTextView guillotineMenuItemText =
+          guillotineMenuItem.findViewById(R.id.textview_guillotine_menu_item);
+      guillotineMenuItemImage.setImageDrawable(
+          getResources().getDrawable(menuItemIconResources[i]));
+      guillotineMenuItemText.setText(getString(menuItemNames[i]));
+      if (i == 6) {
+        guillotineMenuItem.setBackgroundColor(getResources().getColor(R.color.color_white));
+        guillotineMenuItemText.setTextColor(getResources().getColor(R.color.color_black));
+      }
     }
   }
 }
