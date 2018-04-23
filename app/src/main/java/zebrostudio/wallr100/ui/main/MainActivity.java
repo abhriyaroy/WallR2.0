@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
       guillotineMenuItemImage.setImageDrawable(
           getResources().getDrawable(menuItemIconResources[i]));
       guillotineMenuItemText.setText(getString(menuItemNames[i]));
+      // Make the background white and text color black for the buy pro guillotine menu item
       if (i == 6) {
         guillotineMenuItem.setBackgroundColor(getResources().getColor(R.color.color_white));
         guillotineMenuItemText.setTextColor(getResources().getColor(R.color.color_black));

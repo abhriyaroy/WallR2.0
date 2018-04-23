@@ -8,11 +8,12 @@
   <ImageView
       android:id="@+id/imageview_guillotine_menu_item"
       style="@style/GuillotineItemImageViewTheme"
-      android:padding="@dimen/guillotine_menu_imageview_padding"/>
+      android:padding="@dimen/guillotine_menu_imageview_padding"
+      android:layout_gravity="center"/>
 
   <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
       android:id="@+id/textview_guillotine_menu_item"
       style="@style/GuillotineItemTextViewTheme"
-      android:text="@string/guillotine_minimal_title"/>
+      android:layout_gravity="center"/>
 
 </LinearLayout>
