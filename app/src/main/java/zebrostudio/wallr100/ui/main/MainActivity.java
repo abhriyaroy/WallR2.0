@@ -87,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
         .setClosedOnStart(true)
         .build();
 
+    setUpGuillotineMenuItems();
+  }
+
+  private void setUpGuillotineMenuItems() {
     // Declare arrays containing names and icon resources of guillotine menu items
     int menuItemNames[] = {R.string.guillotine_explore_title,
         R.string.guillotine_toppicks_title,
