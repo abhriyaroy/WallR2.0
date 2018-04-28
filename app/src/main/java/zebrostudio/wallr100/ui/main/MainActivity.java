@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -15,6 +16,7 @@ import butterknife.Unbinder;
 import com.yalantis.guillotine.animation.GuillotineAnimation;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
 import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView;
+import java.util.ArrayList;
 import zebrostudio.wallr100.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -91,21 +93,23 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void setUpGuillotineMenuItems() {
-    // Declare arrays containing names and icon resources of guillotine menu items
-    int menuItemNames[] = {R.string.guillotine_explore_title,
-        R.string.guillotine_toppicks_title,
-        R.string.guillotine_categories_title,
-        R.string.guillotine_minimal_title,
-        R.string.guillotine_collection_title,
-        R.string.guillotine_feedback_title,
-        R.string.guillotine_buypro_title};
-    int menuItemIconResources[] = {R.drawable.ic_explore_white,
-        R.drawable.ic_toppicks_white,
-        R.drawable.ic_categories_white,
-        R.drawable.ic_minimal_white,
-        R.drawable.ic_collections_white,
-        R.drawable.ic_feedback_white,
-        R.drawable.ic_buypro_black};
+    // Declare arraylists containing names and icon resources of guillotine menu items
+    ArrayList<Pair<Integer, Integer>> menuItemDetails = new ArrayList<>();
+    menuItemDetails.add(
+        Pair.create(R.string.guillotine_explore_title, R.drawable.ic_explore_white));
+    menuItemDetails.add(
+        Pair.create(R.string.guillotine_toppicks_title, R.drawable.ic_toppicks_white));
+    menuItemDetails.add(
+        Pair.create(R.string.guillotine_categories_title, R.drawable.ic_categories_white));
+    menuItemDetails.add(
+        Pair.create(R.string.guillotine_minimal_title, R.drawable.ic_minimal_white));
+    menuItemDetails.add(
+        Pair.create(R.string.guillotine_collection_title, R.drawable.ic_collections_white));
+    menuItemDetails.add(
+        Pair.create(R.string.guillotine_feedback_title, R.drawable.ic_feedback_white));
+    menuItemDetails.add(
+        Pair.create(R.string.guillotine_buypro_title, R.drawable.ic_buypro_black));
+
     // Programmatically add guillotine menu items
     for (int i = 0; i < 7; i++) {
       View guillotineMenuItem = LayoutInflater.from(this)
@@ -116,8 +120,8 @@ public class MainActivity extends AppCompatActivity {
       WallrCustomTextView guillotineMenuItemText =
           guillotineMenuItem.findViewById(R.id.textview_guillotine_menu_item);
       guillotineMenuItemImage.setImageDrawable(
-          getResources().getDrawable(menuItemIconResources[i]));
-      guillotineMenuItemText.setText(getString(menuItemNames[i]));
+          getResources().getDrawable(menuItemDetails.get(i).first));
+      guillotineMenuItemText.setText(getString(menuItemDetails.get(i).second));
       // Make the background white and text color black for the buy pro guillotine menu item
       if (i == 6) {
         guillotineMenuItem.setBackgroundColor(getResources().getColor(R.color.color_white));
