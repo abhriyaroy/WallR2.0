@@ -111,17 +111,19 @@ public class MainActivity extends AppCompatActivity {
         Pair.create(R.string.guillotine_buypro_title, R.drawable.ic_buypro_black));
 
     // Programmatically add guillotine menu items
+    LayoutInflater layoutInflater = LayoutInflater.from(this);
     for (int i = 0; i < 7; i++) {
-      View guillotineMenuItem = LayoutInflater.from(this)
+      View guillotineMenuItem = layoutInflater
           .inflate(R.layout.item_guillotine_menu, null);
       guillotineMenuRootLinearLayout.addView(guillotineMenuItem);
+      guillotineMenuItem.setId(menuItemDetails.get(i).first);
       ImageView guillotineMenuItemImage =
           guillotineMenuItem.findViewById(R.id.imageview_guillotine_menu_item);
       WallrCustomTextView guillotineMenuItemText =
           guillotineMenuItem.findViewById(R.id.textview_guillotine_menu_item);
+      guillotineMenuItemText.setText(getString(menuItemDetails.get(i).first));
       guillotineMenuItemImage.setImageDrawable(
-          getResources().getDrawable(menuItemDetails.get(i).first));
-      guillotineMenuItemText.setText(getString(menuItemDetails.get(i).second));
+          getResources().getDrawable(menuItemDetails.get(i).second));
       // Make the background white and text color black for the buy pro guillotine menu item
       if (i == 6) {
         guillotineMenuItem.setBackgroundColor(getResources().getColor(R.color.color_white));
