@@ -2,13 +2,26 @@
 <resources>
 
   <dimen name="guillotine_margin_small">24dp</dimen>
+  <dimen name="guillotine_medium_margin">48dp</dimen>
   <dimen name="guillotine_margin_large">100dp</dimen>
   <dimen name="guillotine_item_text_size">24sp</dimen>
   <dimen name="guillotine_actionbar_background_view_height">36dp</dimen>
+  <dimen name="guillotine_hamburger_padding_top">4dp</dimen>
+  <dimen name="guillotine_menu_imageview_padding">1dp</dimen>
+  <dimen name="guillotine_menu_apptitle_size">36sp</dimen>
+  <dimen name="guillotine_menu_probadge_size">13sp</dimen>
+  <dimen name="guillotine_menu_probadge_padding_top">4dp</dimen>
+  <dimen name="guillotine_menu_probadge_padding_left">6dp</dimen>
+  <dimen name="guillotine_item_layout_padding_top">8dp</dimen>
+  <dimen name="guillotine_item_layout_padding_bottom">8dp</dimen>
+  <dimen name="guillotine_item_imageview_width">32dp</dimen>
+  <dimen name="guillotine_item_imageview_height">32dp</dimen>
 
   <dimen name="toolbar_menu_imagebutton_width">40dp</dimen>
   <dimen name="toolbar_menu_imagebutton_height">40dp</dimen>
   <dimen name="toolbar_menu_imagebutton_padding">4dp</dimen>
   <dimen name="toolbar_contentinset_start">0dp</dimen>
+
+  <dimen name="overflow_menu_text_size">12sp</dimen>
 
 </resources>

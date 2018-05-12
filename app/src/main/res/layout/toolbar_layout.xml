@@ -30,8 +30,8 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
         android:padding="@dimen/toolbar_menu_imagebutton_padding"
+        android:clickable="true"
         android:src="@drawable/ic_search_white"/>
 
     <ImageView

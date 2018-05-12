@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_linear_layout_guillotine_menu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_guillotine_menu_background"
+    android:orientation="vertical"
+    android:clickable="true">
+
+  <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/guillotine_medium_margin">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_guillotine_menu"
+        style="@style/ToolbarTheme"
+        app:contentInsetStart="@dimen/toolbar_contentinset_start">
+
+      <ImageView
+          android:id="@+id/hamburger_guillotine_menu"
+          style="@style/HamburgerImageButtonTheme"
+          android:paddingTop="@dimen/guillotine_hamburger_padding_top"
+          android:src="@drawable/ic_hamburger_horizontal"/>
+
+      <RelativeLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content">
+
+        <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+            android:id="@+id/app_title_guillotine_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="@dimen/guillotine_menu_apptitle_size"/>
+
+        <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+            android:id="@+id/pro_badge_guillotine_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/guillotine_menu_probadge_padding_top"
+            android:paddingLeft="@dimen/guillotine_menu_probadge_padding_left"
+            android:layout_toRightOf="@id/app_title_guillotine_menu"
+            android:text="@string/guillotine_pro_badge"
+            android:textSize="@dimen/guillotine_menu_probadge_size"/>
+
+      </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+  </RelativeLayout>
+
+</LinearLayout>
