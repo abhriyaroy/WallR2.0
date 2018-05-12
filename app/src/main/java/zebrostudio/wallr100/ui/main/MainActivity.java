@@ -17,6 +17,7 @@ import com.yalantis.guillotine.animation.GuillotineAnimation;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
 import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView;
 import java.util.ArrayList;
+import java.util.List;
 import zebrostudio.wallr100.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -89,10 +90,10 @@ public class MainActivity extends AppCompatActivity {
         .setClosedOnStart(true)
         .build();
 
-    setUpGuillotineMenuItems();
+    setUpGuillotineMenuItems(buildGuillotineMenuItems());
   }
 
-  private void setUpGuillotineMenuItems() {
+  private List<Pair<Integer, Integer>> buildGuillotineMenuItems() {
     // Declare arraylists containing names and icon resources of guillotine menu items
     ArrayList<Pair<Integer, Integer>> menuItemDetails = new ArrayList<>();
     menuItemDetails.add(
@@ -109,24 +110,27 @@ public class MainActivity extends AppCompatActivity {
         Pair.create(R.string.guillotine_feedback_title, R.drawable.ic_feedback_white));
     menuItemDetails.add(
         Pair.create(R.string.guillotine_buypro_title, R.drawable.ic_buypro_black));
+    return menuItemDetails;
+  }
 
+  private void setUpGuillotineMenuItems(List<Pair<Integer, Integer>> guillotineMenuItems) {
     // Programmatically add guillotine menu items
     LayoutInflater layoutInflater = LayoutInflater.from(this);
-    for (int i = 0; i < 7; i++) {
-      View guillotineMenuItem = layoutInflater
+    for (int i = 0; i < guillotineMenuItems.size(); i++) {
+      View guillotineMenuItemView = layoutInflater
           .inflate(R.layout.item_guillotine_menu, null);
-      guillotineMenuRootLinearLayout.addView(guillotineMenuItem);
-      guillotineMenuItem.setId(menuItemDetails.get(i).first);
+      guillotineMenuRootLinearLayout.addView(guillotineMenuItemView);
+      guillotineMenuItemView.setId(guillotineMenuItems.get(i).first);
       ImageView guillotineMenuItemImage =
-          guillotineMenuItem.findViewById(R.id.imageview_guillotine_menu_item);
+          guillotineMenuItemView.findViewById(R.id.imageview_guillotine_menu_item);
       WallrCustomTextView guillotineMenuItemText =
-          guillotineMenuItem.findViewById(R.id.textview_guillotine_menu_item);
-      guillotineMenuItemText.setText(getString(menuItemDetails.get(i).first));
+          guillotineMenuItemView.findViewById(R.id.textview_guillotine_menu_item);
+      guillotineMenuItemText.setText(getString(guillotineMenuItems.get(i).first));
       guillotineMenuItemImage.setImageDrawable(
-          getResources().getDrawable(menuItemDetails.get(i).second));
+          getResources().getDrawable(guillotineMenuItems.get(i).second));
       // Make the background white and text color black for the buy pro guillotine menu item
-      if (i == 6) {
-        guillotineMenuItem.setBackgroundColor(getResources().getColor(R.color.color_white));
+      if (i == guillotineMenuItems.size() - 1) {
+        guillotineMenuItemView.setBackgroundColor(getResources().getColor(R.color.color_white));
         guillotineMenuItemText.setTextColor(getResources().getColor(R.color.color_black));
       }
     }
