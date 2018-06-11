@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Pair
 import android.view.LayoutInflater
-import android.widget.FrameLayout
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import com.yalantis.guillotine.interfaces.GuillotineListener
 import kotlinx.android.synthetic.main.activity_main.root_frame_layout
@@ -103,6 +102,18 @@ class MainActivity : AppCompatActivity() {
         guillotineMenuItemView.setBackgroundColor(resources.getColor(R.color.color_white))
         guillotineMenuItemView.textview_guillotine_menu_item
             .setTextColor(resources.getColor(R.color.color_black))
+      }
+      // Set on click listener
+      guillotineMenuItemView.setOnClickListener {
+        clickListener(it.id)
+      }
+    }
+  }
+
+  private fun clickListener(itemId : Int){
+    when (itemId){
+      R.string.guillotine_explore_title -> {
+
       }
     }
   }
