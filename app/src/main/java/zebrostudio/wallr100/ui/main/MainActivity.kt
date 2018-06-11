@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Pair
 import android.view.LayoutInflater
-import android.widget.FrameLayout
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import com.yalantis.guillotine.interfaces.GuillotineListener
 import kotlinx.android.synthetic.main.activity_main.root_frame_layout
