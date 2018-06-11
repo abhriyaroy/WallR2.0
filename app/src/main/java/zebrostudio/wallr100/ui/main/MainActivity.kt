@@ -37,10 +37,6 @@ class MainActivity : AppCompatActivity() {
   private fun initializeViews() {
     val guillotineMenu = LayoutInflater.from(this)
         .inflate(R.layout.guillotine_menu_layout, null)
-    /**
-     * Add guillotine menu layout to the activity before binding Butterknife to the activity
-     * so that guillotine menu views can be referenced by Butterknife as well
-     */
     val rootFrameLayout = findViewById<FrameLayout>(R.id.root_frame_layout)
     rootFrameLayout.addView(guillotineMenu)
 
