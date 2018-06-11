@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import com.yalantis.guillotine.interfaces.GuillotineListener
+import kotlinx.android.synthetic.main.activity_main.root_frame_layout
 import kotlinx.android.synthetic.main.activity_main.toolbar
 import kotlinx.android.synthetic.main.guillotine_menu_layout.root_linear_layout_guillotine_menu
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.imageview_guillotine_menu_item
@@ -37,8 +38,7 @@ class MainActivity : AppCompatActivity() {
   private fun initializeViews() {
     val guillotineMenu = LayoutInflater.from(this)
         .inflate(R.layout.guillotine_menu_layout, null)
-    val rootFrameLayout = findViewById<FrameLayout>(R.id.root_frame_layout)
-    rootFrameLayout.addView(guillotineMenu)
+    root_frame_layout.addView(guillotineMenu)
 
     setSupportActionBar(toolbar)
 
