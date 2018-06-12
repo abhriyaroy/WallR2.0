@@ -1,4 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply from: "../versions.gradle"
 
 android {
@@ -19,17 +22,21 @@ android {
       minifyEnabled false
     }
   }
+  dependencies {
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
+    // Android support libraries
+    implementation "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
+    implementation "com.android.support:support-v4:${SUPPORT_LIBRARY_VERSION}"
+    implementation "com.android.support:design:${SUPPORT_LIBRARY_VERSION}"
+    // Dagger
+    implementation "com.google.dagger:dagger:$DAGGER_VERSION"
+    implementation "com.google.dagger:dagger-android-support:$DAGGER_VERSION"
+    kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+    kapt "com.google.dagger:dagger-android-processor:$DAGGER_VERSION"
+    // Module dependencies
+    implementation project(':libraryGuillotineMenu')
+    implementation project(':libraryWallrCustoms')
+  }
 }
 
-dependencies {
-  // Android support libraries
-  implementation "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
-  implementation "com.android.support:support-v4:${SUPPORT_LIBRARY_VERSION}"
-  implementation "com.android.support:design:${SUPPORT_LIBRARY_VERSION}"
-  // Butterknife
-  implementation "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
-  annotationProcessor "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
-  // Module dependencies
-  implementation project(':libraryGuillotineMenu')
-  implementation project(':libraryWallrCustoms')
-}
