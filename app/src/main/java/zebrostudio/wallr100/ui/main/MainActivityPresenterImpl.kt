@@ -1,5 +1,7 @@
 package zebrostudio.wallr100.ui.main
 
-class MainActivityPresenterImpl : MainContract.MainPresenter{
+import javax.inject.Inject
+
+class MainActivityPresenterImpl @Inject constructor() : MainContract.MainPresenter{
 
 }

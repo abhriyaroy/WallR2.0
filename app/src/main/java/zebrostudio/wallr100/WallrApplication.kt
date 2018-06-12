@@ -2,8 +2,6 @@ package zebrostudio.wallr100
 
 import android.app.Activity
 import android.app.Application
-import dagger.android.DaggerApplication
-import zebrostudio.wallr100.di.AppComponent
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import zebrostudio.wallr100.di.DaggerAppComponent

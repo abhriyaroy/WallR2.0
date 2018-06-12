@@ -11,5 +11,7 @@ interface MainContract {
 
   interface MainPresenter : BasePresenter{
 
+    fun setView()
+
   }
 }
