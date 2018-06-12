@@ -1,11 +1,18 @@
 package zebrostudio.wallr100.ui.main
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Pair
 import android.view.LayoutInflater
+import android.widget.Toast
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import com.yalantis.guillotine.interfaces.GuillotineListener
+import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.root_frame_layout
 import kotlinx.android.synthetic.main.activity_main.toolbar
 import kotlinx.android.synthetic.main.guillotine_menu_layout.root_linear_layout_guillotine_menu
@@ -13,16 +20,24 @@ import kotlinx.android.synthetic.main.item_guillotine_menu.view.imageview_guillo
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.textview_guillotine_menu_item
 import kotlinx.android.synthetic.main.toolbar_layout.content_hamburger
 import zebrostudio.wallr100.R
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainContract.MainView {
+class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragmentInjector {
+  @Inject
+  internal lateinit var presenter: MainContract.MainPresenter
 
+  @Inject
+  internal lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
   private var isGuillotineMenuOpen = false
-  private var guillotineMenuAnimation: GuillotineAnimation? = null
 
+  override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
+
+  private var guillotineMenuAnimation: GuillotineAnimation? = null
   override fun onCreate(savedInstanceState: Bundle?) {
+    AndroidInjection.inject(this)
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-
+    presenter.attach(this)
     initializeViews()
   }
 
@@ -30,8 +45,25 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
     if (isGuillotineMenuOpen) {
       guillotineMenuAnimation?.close()
     } else {
-      super.onBackPressed()
+      presenter.handleBackPress()
     }
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    presenter.detach()
+  }
+
+  override fun exitApp() {
+    this.finish()
+  }
+
+  override fun showExitToast() {
+    Toasty.info(this, getString(R.string.exit_toast), Toast.LENGTH_LONG, true).show()
+  }
+
+  override fun showPreviousFragment() {
+    supportFragmentManager.popBackStack()
   }
 
   private fun initializeViews() {
@@ -110,8 +142,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
     }
   }
 
-  private fun clickListener(itemId : Int){
-    when (itemId){
+  private fun clickListener(itemId: Int) {
+    when (itemId) {
       R.string.guillotine_explore_title -> {
 
       }

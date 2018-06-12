@@ -5,13 +5,21 @@ import zebrostudio.wallr100.BaseView
 
 interface MainContract {
 
-  interface MainView : BaseView<MainPresenter>{
+  interface MainView : BaseView<MainPresenter> {
+    fun showExitToast()
 
+    fun exitApp()
+
+    fun showPreviousFragment()
   }
 
-  interface MainPresenter : BasePresenter{
+  interface MainPresenter : BasePresenter {
 
-    fun setView()
+    fun attach(view: MainView)
+
+    fun detach()
+
+    fun handleBackPress()
 
   }
 }
