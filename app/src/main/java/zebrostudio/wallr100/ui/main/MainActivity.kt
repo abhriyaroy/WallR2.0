@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.item_guillotine_menu.view.textview_guillot
 import kotlinx.android.synthetic.main.toolbar_layout.content_hamburger
 import zebrostudio.wallr100.R
 
-class MainActivity : AppCompatActivity(), MainContract.MainView {
+class MainActivity : AppCompatActivity() {
 
   private var isGuillotineMenuOpen = false
   private var guillotineMenuAnimation: GuillotineAnimation? = null
