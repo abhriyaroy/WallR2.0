@@ -8,14 +8,14 @@
       android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/content_hamburger"
+        android:id="@+id/contentHamburger"
         style="@style/HamburgerImageButtonTheme"
         android:layout_centerVertical="true"
         android:clickable="true"
         android:src="@drawable/ic_hamburger_vertical"/>
 
     <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-        android:id="@+id/toolbar_title"
+        android:id="@+id/toolbarTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -24,7 +24,7 @@
         android:textSize="@dimen/guillotine_item_text_size"/>
 
     <ImageView
-        android:id="@+id/toolbar_search_icon"
+        android:id="@+id/toolbarSearchIcon"
         android:layout_width="@dimen/toolbar_menu_imagebutton_width"
         android:layout_height="@dimen/toolbar_menu_imagebutton_height"
         android:layout_alignParentRight="true"
@@ -35,7 +35,7 @@
         android:src="@drawable/ic_search_white"/>
 
     <ImageView
-        android:id="@+id/toolbar_multi_select_icon"
+        android:id="@+id/toolbarMultiSelectIcon"
         android:layout_width="@dimen/toolbar_menu_imagebutton_width"
         android:layout_height="@dimen/toolbar_menu_imagebutton_height"
         android:layout_alignParentRight="true"
@@ -48,7 +48,7 @@
   </RelativeLayout>
 
   <ViewStub
-      android:id="@+id/cab_stub"
+      android:id="@+id/cabStub"
       android:layout_width="match_parent"
       android:layout_height="?actionBarSize"/>
 
