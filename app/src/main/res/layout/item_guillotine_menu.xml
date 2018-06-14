@@ -6,13 +6,13 @@
     android:layout_centerHorizontal="true">
 
   <ImageView
-      android:id="@+id/imageview_guillotine_menu_item"
+      android:id="@+id/imageviewGuillotineMenuItem"
       style="@style/GuillotineItemImageViewTheme"
       android:padding="@dimen/guillotine_menu_imageview_padding"
       android:layout_gravity="center"/>
 
   <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-      android:id="@+id/textview_guillotine_menu_item"
+      android:id="@+id/textviewGuillotineMenuItem"
       style="@style/GuillotineItemTextViewTheme"
       android:layout_gravity="center"/>
 
