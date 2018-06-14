@@ -8,6 +8,7 @@ import com.yalantis.guillotine.interfaces.GuillotineListener
 import kotlinx.android.synthetic.main.activity_main.rootFrameLayout
 import kotlinx.android.synthetic.main.activity_main.toolbar
 import kotlinx.android.synthetic.main.guillotine_menu_layout.rootLinearLayoutGuillotineMenu
+import kotlinx.android.synthetic.main.guillotine_menu_layout.view.hamburgerGuillotineMenu
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.imageviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.textviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
@@ -56,7 +57,7 @@ class MainActivity : AppCompatActivity() {
     val rippleDuration = 250
     guillotineMenuAnimation = GuillotineAnimation.GuillotineBuilder(
         guillotineMenu,
-        guillotineMenu.findViewById(R.id.hamburgerGuillotineMenu),
+        guillotineMenu.hamburgerGuillotineMenu,
         contentHamburger)
         .setStartDelay(rippleDuration.toLong())
         .setActionBarViewForAnimation(toolbar)
