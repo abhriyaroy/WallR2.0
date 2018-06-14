@@ -91,14 +91,14 @@ class MainActivity : AppCompatActivity() {
       rootLinearLayoutGuillotineMenu?.addView(guillotineMenuItemView)
       guillotineMenuItemView.id = it.first
       guillotineMenuItemView.textviewGuillotineMenuItem.text =
-          this.stringRes(it.first)
+          stringRes(it.first)
       guillotineMenuItemView.imageviewGuillotineMenuItem.setImageDrawable(
-          this.drawableRes(it.second))
+          drawableRes(it.second))
       // Make the background white and text color black for the buy pro guillotine menu item
       if (!itemIterator.hasNext()) {
-        guillotineMenuItemView.setBackgroundColor(this.colorRes(R.color.color_white))
+        guillotineMenuItemView.setBackgroundColor(colorRes(R.color.color_white))
         guillotineMenuItemView.textviewGuillotineMenuItem
-            .setTextColor(this.colorRes(R.color.color_black))
+            .setTextColor(colorRes(R.color.color_black))
       }
     }
   }
