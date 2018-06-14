@@ -135,12 +135,4 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     }
   }
 
-  private fun clickListener(itemId: Int) {
-    when (itemId) {
-      R.string.guillotine_explore_title -> {
-
-      }
-    }
-  }
-
 }
