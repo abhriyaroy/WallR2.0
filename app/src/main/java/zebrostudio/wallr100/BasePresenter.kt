@@ -1,3 +1,8 @@
 package zebrostudio.wallr100
 
-interface BasePresenter
+interface BasePresenter<T> {
+
+  fun attachView(view: T)
+
+  fun detachView()
+}

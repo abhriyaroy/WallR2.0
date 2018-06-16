@@ -8,11 +8,11 @@ class MainActivityPresenterImpl : MainContract.MainPresenter {
   private var mainView: MainContract.MainView? = null
   private var isGuillotineMenuOpen = false
 
-  override fun attach(view: MainContract.MainView) {
+  override fun attachView(view: MainContract.MainView) {
     mainView = view
   }
 
-  override fun detach() {
+  override fun detachView() {
     mainView = null
   }
 

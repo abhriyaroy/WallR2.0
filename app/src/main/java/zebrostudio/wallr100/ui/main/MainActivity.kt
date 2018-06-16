@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   @Inject
   internal lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
-  private var guillotineMenuAnimation: GuillotineAnimation? = null
+  private lateinit var guillotineMenuAnimation: GuillotineAnimation
 
   override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
 
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     AndroidInjection.inject(this)
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    presenter.attach(this)
+    presenter.attachView(this)
     initializeViews()
   }
 
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
 
   override fun onDestroy() {
     super.onDestroy()
-    presenter.detach()
+    presenter.detachView()
   }
 
   override fun exitApp() {
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   }
 
   override fun closeGuillotineMenu() {
-    guillotineMenuAnimation?.close()
+    guillotineMenuAnimation.close()
   }
 
   private fun initializeViews() {
