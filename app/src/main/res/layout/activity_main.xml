@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_frame_layout"
+    android:id="@+id/rootFrameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="zebrostudio.wallr100.ui.main.MainActivity">
@@ -39,12 +39,12 @@
     </android.support.design.widget.AppBarLayout>
 
     <ViewStub
-        android:id="@+id/cab_stub"
+        android:id="@+id/cabStub"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"/>
 
     <FrameLayout
-        android:id="@+id/fragment_container"
+        android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/color_primary"
