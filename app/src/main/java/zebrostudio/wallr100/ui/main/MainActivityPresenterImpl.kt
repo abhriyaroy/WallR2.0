@@ -6,6 +6,7 @@ class MainActivityPresenterImpl : MainContract.MainPresenter {
 
   var backPressedOnce: Boolean = false
   private var mainView: MainContract.MainView? = null
+  private var isGuillotineMenuOpen = false
 
   override fun attach(view: MainContract.MainView) {
     mainView = view
@@ -16,13 +17,25 @@ class MainActivityPresenterImpl : MainContract.MainPresenter {
   }
 
   override fun handleBackPress() {
-    if (backPressedOnce) {
-      mainView?.exitApp()
+    if (isGuillotineMenuOpen) {
+      mainView?.closeGuillotineMenu()
     } else {
-      backPressedOnce = true
-      mainView?.showExitToast()
-      Handler().postDelayed({ backPressedOnce = false }, 2000)
+      if (backPressedOnce) {
+        mainView?.exitApp()
+      } else {
+        backPressedOnce = true
+        mainView?.showExitToast()
+        Handler().postDelayed({ backPressedOnce = false }, 2000)
+      }
     }
+  }
+
+  override fun notifyGuillotineMenuOpened() {
+    isGuillotineMenuOpen = true
+  }
+
+  override fun notifyGuillotineMenuClosed() {
+    isGuillotineMenuOpen = false
   }
 
 }

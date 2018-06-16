@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
-import android.widget.Toast
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import com.yalantis.guillotine.interfaces.GuillotineListener
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.rootFrameLayout
 import kotlinx.android.synthetic.main.activity_main.toolbar
 import kotlinx.android.synthetic.main.guillotine_menu_layout.rootLinearLayoutGuillotineMenu
@@ -22,20 +20,20 @@ import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.utils.colorRes
 import zebrostudio.wallr100.utils.drawableRes
+import zebrostudio.wallr100.utils.infoToast
 import zebrostudio.wallr100.utils.stringRes
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragmentInjector {
   @Inject
   internal lateinit var presenter: MainContract.MainPresenter
-
   @Inject
   internal lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
-  private var isGuillotineMenuOpen = false
+
+  private var guillotineMenuAnimation: GuillotineAnimation? = null
 
   override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
 
-  private var guillotineMenuAnimation: GuillotineAnimation? = null
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)
     super.onCreate(savedInstanceState)
@@ -45,11 +43,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   }
 
   override fun onBackPressed() {
-    if (isGuillotineMenuOpen) {
-      guillotineMenuAnimation?.close()
-    } else {
-      presenter.handleBackPress()
-    }
+    presenter.handleBackPress()
   }
 
   override fun onDestroy() {
@@ -62,11 +56,15 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   }
 
   override fun showExitToast() {
-    Toasty.info(this, getString(R.string.exit_toast), Toast.LENGTH_LONG, true).show()
+    infoToast(stringRes(R.string.exit_toast))
   }
 
   override fun showPreviousFragment() {
     supportFragmentManager.popBackStack()
+  }
+
+  override fun closeGuillotineMenu() {
+    guillotineMenuAnimation?.close()
   }
 
   private fun initializeViews() {
@@ -78,11 +76,11 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
 
     val guillotineListener = object : GuillotineListener {
       override fun onGuillotineOpened() {
-        isGuillotineMenuOpen = true
+        presenter.notifyGuillotineMenuOpened()
       }
 
       override fun onGuillotineClosed() {
-        isGuillotineMenuOpen = false
+        presenter.notifyGuillotineMenuClosed()
       }
     }
 

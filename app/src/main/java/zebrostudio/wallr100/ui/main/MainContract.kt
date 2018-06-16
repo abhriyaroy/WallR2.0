@@ -11,6 +11,8 @@ interface MainContract {
     fun exitApp()
 
     fun showPreviousFragment()
+
+    fun closeGuillotineMenu()
   }
 
   interface MainPresenter : BasePresenter {
@@ -20,6 +22,10 @@ interface MainContract {
     fun detach()
 
     fun handleBackPress()
+
+    fun notifyGuillotineMenuOpened()
+
+    fun notifyGuillotineMenuClosed()
 
   }
 }
