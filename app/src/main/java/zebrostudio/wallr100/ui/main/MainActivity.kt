@@ -1,15 +1,11 @@
 package zebrostudio.wallr100.ui.main
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import com.yalantis.guillotine.interfaces.GuillotineListener
 import dagger.android.AndroidInjection
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.rootFrameLayout
 import kotlinx.android.synthetic.main.activity_main.toolbar
 import kotlinx.android.synthetic.main.guillotine_menu_layout.rootLinearLayoutGuillotineMenu
@@ -24,15 +20,11 @@ import zebrostudio.wallr100.utils.infoToast
 import zebrostudio.wallr100.utils.stringRes
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragmentInjector {
+class MainActivity : AppCompatActivity(), MainContract.MainView {
   @Inject
   internal lateinit var presenter: MainContract.MainPresenter
-  @Inject
-  internal lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
   private lateinit var guillotineMenuAnimation: GuillotineAnimation
-
-  override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
 
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)

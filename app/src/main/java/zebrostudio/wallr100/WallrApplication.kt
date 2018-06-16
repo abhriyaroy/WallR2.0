@@ -10,7 +10,7 @@ import javax.inject.Inject
 class WallrApplication : Application(), HasActivityInjector {
 
   @Inject
-  lateinit internal var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
+  internal lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
 
   override fun activityInjector() = activityDispatchingAndroidInjector
 
