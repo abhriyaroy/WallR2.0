@@ -39,15 +39,15 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
   }
 
   override fun onDestroy() {
-    super.onDestroy()
     presenter.detachView()
+    super.onDestroy()
   }
 
   override fun exitApp() {
     this.finish()
   }
 
-  override fun showExitToast() {
+  override fun showExitConfirmation() {
     infoToast(stringRes(R.string.exit_toast))
   }
 
@@ -64,11 +64,11 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
 
     val guillotineListener = object : GuillotineListener {
       override fun onGuillotineOpened() {
-        presenter.notifyGuillotineMenuOpened()
+        presenter.notifyNavigationMenuOpened()
       }
 
       override fun onGuillotineClosed() {
-        presenter.notifyGuillotineMenuClosed()
+        presenter.notifyNavigationMenuClosed()
       }
     }
 

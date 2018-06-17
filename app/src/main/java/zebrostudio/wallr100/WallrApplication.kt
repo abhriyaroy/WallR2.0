@@ -12,8 +12,6 @@ class WallrApplication : Application(), HasActivityInjector {
   @Inject
   internal lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
 
-  override fun activityInjector() = activityDispatchingAndroidInjector
-
   override fun onCreate() {
     super.onCreate()
     DaggerAppComponent.builder()
@@ -21,5 +19,7 @@ class WallrApplication : Application(), HasActivityInjector {
         .build()
         .inject(this)
   }
+
+  override fun activityInjector() = activityDispatchingAndroidInjector
 
 }

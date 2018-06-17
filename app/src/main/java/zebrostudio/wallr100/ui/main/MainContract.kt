@@ -5,20 +5,18 @@ import zebrostudio.wallr100.BasePresenter
 interface MainContract {
 
   interface MainView {
-    fun showExitToast()
 
+    fun showExitConfirmation()
     fun exitApp()
-
     fun closeGuillotineMenu()
+
   }
 
   interface MainPresenter : BasePresenter<MainView> {
 
     fun handleBackPress()
-
-    fun notifyGuillotineMenuOpened()
-
-    fun notifyGuillotineMenuClosed()
+    fun notifyNavigationMenuOpened()
+    fun notifyNavigationMenuClosed()
 
   }
 }

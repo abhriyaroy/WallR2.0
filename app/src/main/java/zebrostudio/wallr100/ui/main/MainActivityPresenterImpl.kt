@@ -24,17 +24,17 @@ class MainActivityPresenterImpl : MainContract.MainPresenter {
         mainView?.exitApp()
       } else {
         backPressedOnce = true
-        mainView?.showExitToast()
+        mainView?.showExitConfirmation()
         Handler().postDelayed({ backPressedOnce = false }, 2000)
       }
     }
   }
 
-  override fun notifyGuillotineMenuOpened() {
+  override fun notifyNavigationMenuOpened() {
     isGuillotineMenuOpen = true
   }
 
-  override fun notifyGuillotineMenuClosed() {
+  override fun notifyNavigationMenuClosed() {
     isGuillotineMenuOpen = false
   }
 
