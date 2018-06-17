@@ -9,8 +9,6 @@ interface MainContract {
 
     fun exitApp()
 
-    fun showPreviousFragment()
-
     fun closeGuillotineMenu()
   }
 

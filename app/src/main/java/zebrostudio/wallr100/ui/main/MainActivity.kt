@@ -51,10 +51,6 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
     infoToast(stringRes(R.string.exit_toast))
   }
 
-  override fun showPreviousFragment() {
-    supportFragmentManager.popBackStack()
-  }
-
   override fun closeGuillotineMenu() {
     guillotineMenuAnimation.close()
   }
