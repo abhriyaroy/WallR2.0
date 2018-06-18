@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import com.yalantis.guillotine.interfaces.GuillotineListener
 import dagger.android.AndroidInjection
+import kotlinx.android.synthetic.main.activity_main.fragmentContainer
 import kotlinx.android.synthetic.main.activity_main.rootFrameLayout
 import kotlinx.android.synthetic.main.activity_main.toolbar
 import kotlinx.android.synthetic.main.guillotine_menu_layout.rootLinearLayoutGuillotineMenu
@@ -14,6 +15,7 @@ import kotlinx.android.synthetic.main.item_guillotine_menu.view.imageviewGuillot
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.textviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.ui.explore.ExploreFragment
 import zebrostudio.wallr100.utils.colorRes
 import zebrostudio.wallr100.utils.drawableRes
 import zebrostudio.wallr100.utils.infoToast
@@ -32,6 +34,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
     setContentView(R.layout.activity_main)
     presenter.attachView(this)
     initializeViews()
+    showExploreFragment()
   }
 
   override fun onBackPressed() {
@@ -123,6 +126,12 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
             .setTextColor(colorRes(R.color.color_black))
       }
     }
+  }
+
+  private fun showExploreFragment(){
+    supportFragmentManager
+        .beginTransaction()
+        .replace(fragmentContainer.id, ExploreFragment.newInstance(), ExploreFragment.EXPLORE_FRAGMENT_TAG)
   }
 
 }

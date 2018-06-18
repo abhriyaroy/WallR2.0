@@ -1,19 +1,31 @@
 package zebrostudio.wallr100.ui.explore
 
-import zebrostudio.wallr100.R
+import android.os.Bundle
+import dagger.android.support.AndroidSupportInjection
 import zebrostudio.wallr100.ui.basefragment.BaseFragment
-import zebrostudio.wallr100.utils.stringRes
 import javax.inject.Inject
 
-class ExploreFragment : BaseFragment(){
+class ExploreFragment : BaseFragment() {
 
   @Inject
   internal lateinit var presenter: ExplorePresenterImpl
 
-  val FRAGMENTNAME = activity?.stringRes(R.string.guillotine_explore_title)
+  companion object {
+    val EXPLORE_FRAGMENT_TAG = "Explore"
+
+    fun newInstance(): ExploreFragment {
+      return ExploreFragment()
+    }
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    AndroidSupportInjection.inject(this)
+  }
 
   override fun onResume() {
     super.onResume()
     presenter.updateFragmentName()
   }
+
 }
