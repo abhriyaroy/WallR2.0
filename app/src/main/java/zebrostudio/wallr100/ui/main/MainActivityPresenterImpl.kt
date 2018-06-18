@@ -1,10 +1,13 @@
 package zebrostudio.wallr100.ui.main
 
 import android.os.Handler
+import zebrostudio.wallr100.data.DataRepository
 
-class MainActivityPresenterImpl : MainContract.MainPresenter {
+class MainActivityPresenterImpl
+constructor(dataRepository: DataRepository) : MainContract.MainPresenter {
 
-  var backPressedOnce: Boolean = false
+  private var dataRepository: DataRepository = dataRepository
+  private var backPressedOnce: Boolean = false
   private var mainView: MainContract.MainView? = null
   private var isGuillotineMenuOpen = false
 
