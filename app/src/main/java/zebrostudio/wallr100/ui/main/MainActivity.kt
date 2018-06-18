@@ -55,6 +55,10 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
     guillotineMenuAnimation.close()
   }
 
+  override fun showPreviousFragment() {
+    supportFragmentManager.popBackStack()
+  }
+
   private fun initializeViews() {
     val guillotineMenu = LayoutInflater.from(this)
         .inflate(R.layout.guillotine_menu_layout, null)
