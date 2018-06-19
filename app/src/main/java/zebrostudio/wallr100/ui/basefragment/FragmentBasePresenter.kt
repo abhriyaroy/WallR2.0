@@ -4,6 +4,6 @@ import zebrostudio.wallr100.BasePresenter
 
 interface FragmentBasePresenter<T> : BasePresenter<T> {
 
-  fun updateFragmentName()
+  fun updateFragmentName(name : String)
 
 }

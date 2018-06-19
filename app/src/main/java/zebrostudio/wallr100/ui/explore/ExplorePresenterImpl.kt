@@ -5,7 +5,6 @@ import zebrostudio.wallr100.data.DataRepository
 class ExplorePresenterImpl
 constructor(dataRepository: DataRepository) : ExploreContract.ExplorePresenter {
 
-  private val EXPLORE_FRAGMENT_TAG = "Explore"
   private var dataRepository = dataRepository
   private var exploreView: ExploreContract.ExploreView? = null
 
@@ -17,8 +16,8 @@ constructor(dataRepository: DataRepository) : ExploreContract.ExplorePresenter {
     exploreView = null
   }
 
-  override fun updateFragmentName() {
-    dataRepository.updateCurrentFragmentName(EXPLORE_FRAGMENT_TAG)
+  override fun updateFragmentName(name : String) {
+    dataRepository.updateCurrentFragmentName(name)
   }
 
 }

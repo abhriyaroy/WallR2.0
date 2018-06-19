@@ -19,7 +19,7 @@ class ToppicksFragment : BaseFragment(), ToppicksContract.TopicksView {
   override fun onResume() {
     super.onResume()
     presenter.attachView(this)
-    presenter.updateFragmentName()
+    presenter.updateFragmentName(TOPPICKS_FRAGMENT_TAG)
   }
 
   override fun onDestroy() {
