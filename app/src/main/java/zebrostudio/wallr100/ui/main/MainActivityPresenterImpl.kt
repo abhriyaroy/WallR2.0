@@ -24,7 +24,6 @@ constructor(private var dataRepository: DataRepository) : MainContract.MainPrese
     if (isGuillotineMenuOpen) {
       mainView?.closeGuillotineMenu()
     } else {
-      Log.d("fragmenttag",dataRepository.retrieveCurrentFragmentName())
       if (dataRepository.retrieveCurrentFragmentName() == EXPLORE_FRAGMENT_TAG) {
         if (backPressedOnce) {
           mainView?.exitApp()

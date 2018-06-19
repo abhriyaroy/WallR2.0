@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.item_guillotine_menu.view.textviewGuilloti
 import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.ui.categories.CategoriesFragment
+import zebrostudio.wallr100.ui.collection.CollectionFragment
 import zebrostudio.wallr100.ui.explore.ExploreFragment
 import zebrostudio.wallr100.ui.minimal.MinimalFragment
 import zebrostudio.wallr100.ui.toppicks.ToppicksFragment
@@ -114,7 +115,12 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   }
 
   override fun showCollectionFragment() {
-
+    supportFragmentManager
+        .beginTransaction()
+        .replace(fragmentContainer.id, CollectionFragment.newInstance(),
+            CollectionFragment.COLLECTION_FRAGMENT_TAG)
+        .addToBackStack(null)
+        .commit()
   }
 
   private fun initializeViews() {

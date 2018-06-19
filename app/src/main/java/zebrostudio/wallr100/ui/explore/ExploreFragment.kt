@@ -32,7 +32,6 @@ class ExploreFragment : BaseFragment(), ExploreContract.ExploreView {
 
   override fun onResume() {
     super.onResume()
-    Log.d(EXPLORE_FRAGMENT_TAG, "resume called")
     presenter.attachView(this)
     presenter.updateFragmentName(EXPLORE_FRAGMENT_TAG)
   }
