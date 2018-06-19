@@ -16,7 +16,7 @@ constructor(dataRepository: DataRepository) : CategoriesContract.CategoriesPrese
     categoriesView = null
   }
 
-  override fun updateFragmentName(name : String) {
+  override fun updateFragmentName(name: String) {
     dataRepository.updateCurrentFragmentName(name)
   }
 

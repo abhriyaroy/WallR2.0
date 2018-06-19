@@ -16,7 +16,7 @@ constructor(dataRepository: DataRepository) : ToppicksContract.ToppicksPresenter
     toppicksView = null
   }
 
-  override fun updateFragmentName(name : String) {
+  override fun updateFragmentName(name: String) {
     dataRepository.updateCurrentFragmentName(name)
   }
 
