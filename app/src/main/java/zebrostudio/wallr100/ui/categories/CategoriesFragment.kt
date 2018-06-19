@@ -1,5 +1,10 @@
 package zebrostudio.wallr100.ui.categories
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import zebrostudio.wallr100.R
 import zebrostudio.wallr100.ui.basefragment.BaseFragment
 import javax.inject.Inject
 
@@ -14,6 +19,15 @@ class CategoriesFragment : BaseFragment(), CategoriesContract.CaategoriesView {
     fun newInstance(): CategoriesFragment {
       return CategoriesFragment()
     }
+  }
+
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
+    val rootView = inflater.inflate(R.layout.fragment_layout, container, false)
+    return rootView
   }
 
   override fun onResume() {

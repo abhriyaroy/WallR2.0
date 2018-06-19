@@ -1,5 +1,13 @@
 package zebrostudio.wallr100.ui.explore
 
+import android.content.Context
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import dagger.android.support.AndroidSupportInjection
+import zebrostudio.wallr100.R
 import zebrostudio.wallr100.ui.basefragment.BaseFragment
 import javax.inject.Inject
 
@@ -16,8 +24,18 @@ class ExploreFragment : BaseFragment(), ExploreContract.ExploreView {
     }
   }
 
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
+    val rootView = inflater.inflate(R.layout.fragment_layout, container, false)
+    return rootView
+  }
+
   override fun onResume() {
     super.onResume()
+    Log.d(EXPLORE_FRAGMENT_TAG, "resume called")
     presenter.attachView(this)
     presenter.updateFragmentName(EXPLORE_FRAGMENT_TAG)
   }

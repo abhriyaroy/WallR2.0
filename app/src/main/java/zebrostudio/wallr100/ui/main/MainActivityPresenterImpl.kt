@@ -1,13 +1,13 @@
 package zebrostudio.wallr100.ui.main
 
 import android.os.Handler
+import android.util.Log
 import zebrostudio.wallr100.data.DataRepository
 
 class MainActivityPresenterImpl
-constructor(dataRepository: DataRepository) : MainContract.MainPresenter {
+constructor(private var dataRepository: DataRepository) : MainContract.MainPresenter {
 
   private val EXPLORE_FRAGMENT_TAG = "Explore"
-  private var dataRepository: DataRepository = dataRepository
   private var backPressedOnce: Boolean = false
   private var mainView: MainContract.MainView? = null
   private var isGuillotineMenuOpen = false
@@ -24,6 +24,7 @@ constructor(dataRepository: DataRepository) : MainContract.MainPresenter {
     if (isGuillotineMenuOpen) {
       mainView?.closeGuillotineMenu()
     } else {
+      Log.d("fragmenttag",dataRepository.retrieveCurrentFragmentName())
       if (dataRepository.retrieveCurrentFragmentName() == EXPLORE_FRAGMENT_TAG) {
         if (backPressedOnce) {
           mainView?.exitApp()

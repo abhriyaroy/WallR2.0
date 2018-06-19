@@ -1,11 +1,11 @@
 package zebrostudio.wallr100.ui.categories
 
 import zebrostudio.wallr100.data.DataRepository
+import javax.inject.Inject
 
 class CategoriesPresenterImpl
-constructor(dataRepository: DataRepository) : CategoriesContract.CategoriesPresenter {
+@Inject constructor(private var dataRepository: DataRepository) : CategoriesContract.CategoriesPresenter {
 
-  private var dataRepository = dataRepository
   private var categoriesView: CategoriesContract.CaategoriesView? = null
 
   override fun attachView(view: CategoriesContract.CaategoriesView) {

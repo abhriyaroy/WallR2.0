@@ -1,11 +1,14 @@
 package zebrostudio.wallr100.ui.main
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import com.yalantis.guillotine.interfaces.GuillotineListener
 import dagger.android.AndroidInjection
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.fragmentContainer
 import kotlinx.android.synthetic.main.activity_main.rootFrameLayout
 import kotlinx.android.synthetic.main.activity_main.toolbar
@@ -15,14 +18,20 @@ import kotlinx.android.synthetic.main.item_guillotine_menu.view.imageviewGuillot
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.textviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.ui.categories.CategoriesFragment
 import zebrostudio.wallr100.ui.explore.ExploreFragment
+import zebrostudio.wallr100.ui.minimal.MinimalFragment
+import zebrostudio.wallr100.ui.toppicks.ToppicksFragment
 import zebrostudio.wallr100.utils.colorRes
 import zebrostudio.wallr100.utils.drawableRes
 import zebrostudio.wallr100.utils.infoToast
 import zebrostudio.wallr100.utils.stringRes
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainContract.MainView {
+class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragmentInjector {
+
+  @Inject
+  internal lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
   @Inject
   internal lateinit var presenter: MainContract.MainPresenter
 
@@ -50,6 +59,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
     super.onDestroy()
   }
 
+  override fun supportFragmentInjector() = fragmentDispatchingAndroidInjector
+
   override fun exitApp() {
     this.finish()
   }
@@ -66,22 +77,36 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
     supportFragmentManager.popBackStack()
   }
 
-  override fun showExploreFragment(){
+  override fun showExploreFragment() {
     supportFragmentManager
         .beginTransaction()
-        .replace(fragmentContainer.id, ExploreFragment.newInstance(), ExploreFragment.EXPLORE_FRAGMENT_TAG)
+        .replace(fragmentContainer.id, ExploreFragment.newInstance(),
+            ExploreFragment.EXPLORE_FRAGMENT_TAG)
+        .commit()
   }
 
   override fun showTopPicksFragment() {
-
+    supportFragmentManager
+        .beginTransaction()
+        .replace(fragmentContainer.id, ToppicksFragment.newInstance(),
+            ToppicksFragment.TOPPICKS_FRAGMENT_TAG)
+        .commit()
   }
 
   override fun showCategorisFragment() {
-
+    supportFragmentManager
+        .beginTransaction()
+        .replace(fragmentContainer.id, CategoriesFragment.newInstance(),
+            CategoriesFragment.CATEGORIES_FRAGMENT_TAG)
+        .commit()
   }
 
   override fun showMinimalFragment() {
-
+    supportFragmentManager
+        .beginTransaction()
+        .replace(fragmentContainer.id, MinimalFragment.newInstance(),
+            MinimalFragment.MINIMAL_FRAGMENT_TAG)
+        .commit()
   }
 
   override fun showCollectionFragment() {
@@ -151,14 +176,19 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
         guillotineMenuItemView.textviewGuillotineMenuItem
             .setTextColor(colorRes(R.color.color_black))
       }
-      guillotineMenuItemView.setOnClickListener{
+      guillotineMenuItemView.setOnClickListener {
         clickListener(guillotineMenuItemView.id)
       }
     }
   }
 
-  private fun clickListener(id : Int){
-    when(id){
+  private fun clickListener(id: Int) {
+    when (id) {
+      R.string.guillotine_explore_title -> showExploreFragment()
+      R.string.guillotine_toppicks_title -> showTopPicksFragment()
+      R.string.guillotine_categories_title -> showCategorisFragment()
+      R.string.guillotine_minimal_title -> showMinimalFragment()
+      R.string.guillotine_collection_title -> showCollectionFragment()
 
     }
   }
