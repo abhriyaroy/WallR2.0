@@ -4,4 +4,5 @@ interface DataRepositoryContract {
 
   fun updateCurrentFragmentName(name: String)
   fun retrieveCurrentFragmentName(): String
+
 }

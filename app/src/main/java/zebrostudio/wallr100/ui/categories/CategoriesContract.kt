@@ -4,8 +4,8 @@ import zebrostudio.wallr100.ui.basefragment.FragmentBasePresenter
 
 interface CategoriesContract {
 
-  interface CaategoriesView
+  interface CategoriesView
 
-  interface CategoriesPresenter : FragmentBasePresenter<CaategoriesView>
+  interface CategoriesPresenter : FragmentBasePresenter<CategoriesView>
 
 }

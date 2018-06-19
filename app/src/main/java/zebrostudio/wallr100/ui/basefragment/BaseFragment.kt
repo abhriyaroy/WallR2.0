@@ -10,4 +10,5 @@ abstract class BaseFragment : Fragment(){
     super.onCreate(savedInstanceState)
     AndroidSupportInjection.inject(this)
   }
+  
 }

@@ -6,9 +6,9 @@ import javax.inject.Inject
 class CategoriesPresenterImpl
 @Inject constructor(private var dataRepository: DataRepository) : CategoriesContract.CategoriesPresenter {
 
-  private var categoriesView: CategoriesContract.CaategoriesView? = null
+  private var categoriesView: CategoriesContract.CategoriesView? = null
 
-  override fun attachView(view: CategoriesContract.CaategoriesView) {
+  override fun attachView(view: CategoriesContract.CategoriesView) {
     categoriesView = view
   }
 

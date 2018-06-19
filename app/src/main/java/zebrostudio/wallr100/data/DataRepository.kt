@@ -7,7 +7,6 @@ class DataRepository : DataRepositoryContract {
   private var currentFragmentName = "Explore"
 
   override fun updateCurrentFragmentName(name: String) {
-    Log.d("updatefragment name",this.currentFragmentName)
     currentFragmentName = name
   }
 

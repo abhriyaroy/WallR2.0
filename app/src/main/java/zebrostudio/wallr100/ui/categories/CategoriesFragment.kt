@@ -8,7 +8,7 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.ui.basefragment.BaseFragment
 import javax.inject.Inject
 
-class CategoriesFragment : BaseFragment(), CategoriesContract.CaategoriesView {
+class CategoriesFragment : BaseFragment(), CategoriesContract.CategoriesView {
 
   @Inject
   internal lateinit var presenter: CategoriesPresenterImpl
