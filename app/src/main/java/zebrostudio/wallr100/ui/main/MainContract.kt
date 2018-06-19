@@ -8,12 +8,12 @@ interface MainContract {
 
     fun showExitConfirmation()
     fun exitApp()
-    fun closeGuillotineMenu()
+    fun closeNavigationMenu()
     fun showPreviousFragment()
 
     fun showExploreFragment()
     fun showTopPicksFragment()
-    fun showCategorisFragment()
+    fun showCategoriesFragment()
     fun showMinimalFragment()
     fun showCollectionFragment()
 
@@ -24,6 +24,12 @@ interface MainContract {
     fun handleBackPress()
     fun notifyNavigationMenuOpened()
     fun notifyNavigationMenuClosed()
+
+    fun exploreMenuItemClicked()
+    fun toppicksMenuItemClicked()
+    fun categoriesMenuItemClicked()
+    fun minimalMenuItemClicked()
+    fun collectionMenuItemClicked()
 
   }
 }

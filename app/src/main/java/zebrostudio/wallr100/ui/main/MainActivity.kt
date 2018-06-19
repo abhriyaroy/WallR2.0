@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     infoToast(stringRes(R.string.exit_toast))
   }
 
-  override fun closeGuillotineMenu() {
+  override fun closeNavigationMenu() {
     guillotineMenuAnimation.close()
   }
 
@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         .commit()
   }
 
-  override fun showCategorisFragment() {
+  override fun showCategoriesFragment() {
     supportFragmentManager
         .beginTransaction()
         .replace(fragmentContainer.id, CategoriesFragment.newInstance(),
@@ -194,12 +194,11 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
 
   private fun clickListener(id: Int) {
     when (id) {
-      R.string.guillotine_explore_title -> showExploreFragment()
-      R.string.guillotine_toppicks_title -> showTopPicksFragment()
-      R.string.guillotine_categories_title -> showCategorisFragment()
-      R.string.guillotine_minimal_title -> showMinimalFragment()
-      R.string.guillotine_collection_title -> showCollectionFragment()
-
+      R.string.guillotine_explore_title -> presenter.exploreMenuItemClicked()
+      R.string.guillotine_toppicks_title -> presenter.toppicksMenuItemClicked()
+      R.string.guillotine_categories_title -> presenter.categoriesMenuItemClicked()
+      R.string.guillotine_minimal_title -> presenter.minimalMenuItemClicked()
+      R.string.guillotine_collection_title -> presenter.collectionMenuItemClicked()
     }
   }
 
