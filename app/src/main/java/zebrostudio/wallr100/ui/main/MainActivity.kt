@@ -32,9 +32,13 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
     AndroidInjection.inject(this)
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    presenter.attachView(this)
     initializeViews()
     showExploreFragment()
+  }
+
+  override fun onResume() {
+    super.onResume()
+    presenter.attachView(this)
   }
 
   override fun onBackPressed() {
@@ -60,6 +64,28 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
 
   override fun showPreviousFragment() {
     supportFragmentManager.popBackStack()
+  }
+
+  override fun showExploreFragment(){
+    supportFragmentManager
+        .beginTransaction()
+        .replace(fragmentContainer.id, ExploreFragment.newInstance(), ExploreFragment.EXPLORE_FRAGMENT_TAG)
+  }
+
+  override fun showTopPicksFragment() {
+
+  }
+
+  override fun showCategorisFragment() {
+
+  }
+
+  override fun showMinimalFragment() {
+
+  }
+
+  override fun showCollectionFragment() {
+
   }
 
   private fun initializeViews() {
@@ -125,13 +151,16 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
         guillotineMenuItemView.textviewGuillotineMenuItem
             .setTextColor(colorRes(R.color.color_black))
       }
+      guillotineMenuItemView.setOnClickListener{
+        clickListener(guillotineMenuItemView.id)
+      }
     }
   }
 
-  private fun showExploreFragment(){
-    supportFragmentManager
-        .beginTransaction()
-        .replace(fragmentContainer.id, ExploreFragment.newInstance(), ExploreFragment.EXPLORE_FRAGMENT_TAG)
+  private fun clickListener(id : Int){
+    when(id){
+
+    }
   }
 
 }

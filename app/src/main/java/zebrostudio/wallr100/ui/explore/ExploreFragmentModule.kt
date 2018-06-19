@@ -5,7 +5,7 @@ import dagger.Provides
 import zebrostudio.wallr100.data.DataRepository
 
 @Module
-class ExploreFragmentModule{
+class ExploreFragmentModule {
 
   @Provides
   internal fun provideExplorePresenter(dataRepository: DataRepository)

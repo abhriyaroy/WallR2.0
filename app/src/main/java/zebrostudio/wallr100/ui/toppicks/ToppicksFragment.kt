@@ -1,18 +1,18 @@
-package zebrostudio.wallr100.ui.explore
+package zebrostudio.wallr100.ui.toppicks
 
 import zebrostudio.wallr100.ui.basefragment.BaseFragment
 import javax.inject.Inject
 
-class ExploreFragment : BaseFragment(), ExploreContract.ExploreView {
+class ToppicksFragment : BaseFragment(), ToppicksContract.TopicksView {
 
   @Inject
-  internal lateinit var presenter: ExplorePresenterImpl
+  internal lateinit var presenter: ToppicksPresenterImpl
 
   companion object {
-    val EXPLORE_FRAGMENT_TAG = "Explore"
+    val TOPPICKS_FRAGMENT_TAG = "Top Picks"
 
-    fun newInstance(): ExploreFragment {
-      return ExploreFragment()
+    fun newInstance(): ToppicksFragment {
+      return ToppicksFragment()
     }
   }
 

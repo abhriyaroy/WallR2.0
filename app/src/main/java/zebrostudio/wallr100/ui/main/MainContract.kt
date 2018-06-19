@@ -11,6 +11,12 @@ interface MainContract {
     fun closeGuillotineMenu()
     fun showPreviousFragment()
 
+    fun showExploreFragment()
+    fun showTopPicksFragment()
+    fun showCategorisFragment()
+    fun showMinimalFragment()
+    fun showCollectionFragment()
+
   }
 
   interface MainPresenter : BasePresenter<MainView> {
