@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.ui.categories
+package zebrostudio.wallr100.ui.collection
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,16 +8,16 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.ui.basefragment.BaseFragment
 import javax.inject.Inject
 
-class CategoriesFragment : BaseFragment(), CategoriesContract.CaategoriesView {
+class CollectionFragment : BaseFragment(), CollectionContract.CollectionView {
 
   @Inject
-  internal lateinit var presenter: CategoriesPresenterImpl
+  internal lateinit var presenter: CollectionPresenterImpl
 
   companion object {
-    val CATEGORIES_FRAGMENT_TAG = "Categories"
+    val COLLECTION_FRAGMENT_TAG = "Collection"
 
-    fun newInstance(): CategoriesFragment {
-      return CategoriesFragment()
+    fun newInstance(): CollectionFragment {
+      return CollectionFragment()
     }
   }
 
@@ -32,7 +32,7 @@ class CategoriesFragment : BaseFragment(), CategoriesContract.CaategoriesView {
   override fun onResume() {
     super.onResume()
     presenter.attachView(this)
-    presenter.updateFragmentName(CATEGORIES_FRAGMENT_TAG)
+    presenter.updateFragmentName(COLLECTION_FRAGMENT_TAG)
   }
 
   override fun onDestroy() {

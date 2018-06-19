@@ -1,9 +1,10 @@
 package zebrostudio.wallr100.ui.minimal
 
 import zebrostudio.wallr100.data.DataRepository
+import javax.inject.Inject
 
 class MinimalPresenterImpl
-constructor(private var dataRepository: DataRepository) : MinimalContract.MinimalPresenter {
+@Inject constructor(private var dataRepository: DataRepository) : MinimalContract.MinimalPresenter {
 
   private var minimalView: MinimalContract.MinimalView? = null
 

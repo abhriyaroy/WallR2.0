@@ -26,8 +26,7 @@ class ToppicksFragment : BaseFragment(), ToppicksContract.TopicksView {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    val rootView = inflater.inflate(R.layout.fragment_layout, container, false)
-    return rootView
+    return inflater.inflate(R.layout.fragment_layout, container, false)
   }
 
   override fun onResume() {

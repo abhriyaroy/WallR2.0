@@ -82,6 +82,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         .beginTransaction()
         .replace(fragmentContainer.id, ExploreFragment.newInstance(),
             ExploreFragment.EXPLORE_FRAGMENT_TAG)
+        .addToBackStack(null)
         .commit()
   }
 
@@ -90,6 +91,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         .beginTransaction()
         .replace(fragmentContainer.id, ToppicksFragment.newInstance(),
             ToppicksFragment.TOPPICKS_FRAGMENT_TAG)
+        .addToBackStack(null)
         .commit()
   }
 
@@ -98,6 +100,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         .beginTransaction()
         .replace(fragmentContainer.id, CategoriesFragment.newInstance(),
             CategoriesFragment.CATEGORIES_FRAGMENT_TAG)
+        .addToBackStack(null)
         .commit()
   }
 
@@ -106,6 +109,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         .beginTransaction()
         .replace(fragmentContainer.id, MinimalFragment.newInstance(),
             MinimalFragment.MINIMAL_FRAGMENT_TAG)
+        .addToBackStack(null)
         .commit()
   }
 
