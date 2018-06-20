@@ -4,8 +4,8 @@ import zebrostudio.wallr100.ui.basefragment.FragmentBasePresenter
 
 interface ToppicksContract {
 
-  interface TopicksView
+  interface ToppicksView
 
-  interface ToppicksPresenter : FragmentBasePresenter<TopicksView>
+  interface ToppicksPresenter : FragmentBasePresenter<ToppicksView>
 
 }

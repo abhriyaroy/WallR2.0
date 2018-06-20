@@ -6,9 +6,9 @@ import javax.inject.Inject
 class ToppicksPresenterImpl
 @Inject constructor(private var dataRepository: DataRepository) : ToppicksContract.ToppicksPresenter {
 
-  private var toppicksView: ToppicksContract.TopicksView? = null
+  private var toppicksView: ToppicksContract.ToppicksView? = null
 
-  override fun attachView(view: ToppicksContract.TopicksView) {
+  override fun attachView(view: ToppicksContract.ToppicksView) {
     toppicksView = view
   }
 

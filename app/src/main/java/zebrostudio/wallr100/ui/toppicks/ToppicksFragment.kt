@@ -8,7 +8,7 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.ui.basefragment.BaseFragment
 import javax.inject.Inject
 
-class ToppicksFragment : BaseFragment(), ToppicksContract.TopicksView {
+class ToppicksFragment : BaseFragment(), ToppicksContract.ToppicksView {
 
   @Inject
   internal lateinit var presenter: ToppicksPresenterImpl
