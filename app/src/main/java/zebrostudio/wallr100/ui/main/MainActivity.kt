@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   }
 
   override fun showExitConfirmation() {
-    infoToast(stringRes(R.string.exit_toast))
+    infoToast(stringRes(R.string.exit_confirmation_message))
   }
 
   override fun closeNavigationMenu() {

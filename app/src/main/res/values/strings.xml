@@ -10,6 +10,7 @@
   <string name="guillotine_feedback_title">Feedback</string>
   <string name="guillotine_buypro_title">Buy Pro</string>
   <string name="guillotine_pro_badge">PRO</string>
-  <string name="exit_toast">Press back again to exit</string>
+  
+  <string name="exit_confirmation_message">Press back again to exit</string>
 
 </resources>
