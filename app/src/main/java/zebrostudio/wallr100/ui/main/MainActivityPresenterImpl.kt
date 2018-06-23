@@ -1,7 +1,6 @@
 package zebrostudio.wallr100.ui.main
 
 import android.os.Handler
-import zebrostudio.wallr100.data.DataRepository
 import zebrostudio.wallr100.ui.categories.CategoriesFragment
 import zebrostudio.wallr100.ui.collection.CollectionFragment
 import zebrostudio.wallr100.ui.explore.ExploreFragment

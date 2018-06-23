@@ -13,14 +13,6 @@ class CollectionFragment : BaseFragment(), CollectionContract.CollectionView {
   @Inject
   internal lateinit var presenter: CollectionPresenterImpl
 
-  companion object {
-    val COLLECTION_FRAGMENT_TAG = "Collection"
-
-    fun newInstance(): CollectionFragment {
-      return CollectionFragment()
-    }
-  }
-
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
@@ -32,12 +24,19 @@ class CollectionFragment : BaseFragment(), CollectionContract.CollectionView {
   override fun onResume() {
     super.onResume()
     presenter.attachView(this)
-    presenter.updateFragmentName(COLLECTION_FRAGMENT_TAG)
   }
 
   override fun onDestroy() {
     presenter.detachView()
     super.onDestroy()
+  }
+
+  companion object {
+    val COLLECTION_FRAGMENT_TAG = "Collection"
+
+    fun newInstance(): CollectionFragment {
+      return CollectionFragment()
+    }
   }
 
 }

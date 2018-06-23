@@ -33,7 +33,6 @@ class ExploreFragment : BaseFragment(), ExploreContract.ExploreView {
   override fun onResume() {
     super.onResume()
     presenter.attachView(this)
-    presenter.updateFragmentName(EXPLORE_FRAGMENT_TAG)
   }
 
   override fun onDestroy() {
