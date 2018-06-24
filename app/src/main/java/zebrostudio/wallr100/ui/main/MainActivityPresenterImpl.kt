@@ -1,18 +1,15 @@
 package zebrostudio.wallr100.ui.main
 
 import android.os.Handler
-import zebrostudio.wallr100.ui.categories.CategoriesFragment
-import zebrostudio.wallr100.ui.collection.CollectionFragment
-import zebrostudio.wallr100.ui.explore.ExploreFragment
-import zebrostudio.wallr100.ui.minimal.MinimalFragment
-import zebrostudio.wallr100.ui.toppicks.ToppicksFragment
+import javax.inject.Inject
 
-class MainActivityPresenterImpl
-constructor(private var dataRepository: DataRepository) : MainContract.MainPresenter {
+class MainActivityPresenterImpl @Inject constructor() : MainContract.MainPresenter {
 
-  private var backPressedOnce: Boolean = false
-  private var mainView: MainContract.MainView? = null
+  private var backPressedOnce = false
   private var isGuillotineMenuOpen = false
+
+  private var mainView: MainContract.MainView? = null
+
   override fun attachView(view: MainContract.MainView) {
     mainView = view
   }
@@ -25,7 +22,7 @@ constructor(private var dataRepository: DataRepository) : MainContract.MainPrese
     if (isGuillotineMenuOpen) {
       mainView?.closeNavigationMenu()
     } else {
-      if (dataRepository.retrieveCurrentFragmentName() == ExploreFragment.EXPLORE_FRAGMENT_TAG) {
+      if (true) {
         if (backPressedOnce) {
           mainView?.exitApp()
         } else {
@@ -45,41 +42,6 @@ constructor(private var dataRepository: DataRepository) : MainContract.MainPrese
 
   override fun notifyNavigationMenuClosed() {
     isGuillotineMenuOpen = false
-  }
-
-  override fun exploreMenuItemClicked() {
-    if (dataRepository.retrieveCurrentFragmentName() != ExploreFragment.EXPLORE_FRAGMENT_TAG){
-      mainView?.showExploreFragment()
-      mainView?.closeNavigationMenu()
-    }
-  }
-
-  override fun toppicksMenuItemClicked() {
-    if (dataRepository.retrieveCurrentFragmentName() != ToppicksFragment.TOPPICKS_FRAGMENT_TAG){
-      mainView?.showTopPicksFragment()
-      mainView?.closeNavigationMenu()
-    }
-  }
-
-  override fun categoriesMenuItemClicked() {
-    if (dataRepository.retrieveCurrentFragmentName() != CategoriesFragment.CATEGORIES_FRAGMENT_TAG){
-      mainView?.showCategoriesFragment()
-      mainView?.closeNavigationMenu()
-    }
-  }
-
-  override fun minimalMenuItemClicked() {
-    if (dataRepository.retrieveCurrentFragmentName() != MinimalFragment.MINIMAL_FRAGMENT_TAG){
-      mainView?.showMinimalFragment()
-      mainView?.closeNavigationMenu()
-    }
-  }
-
-  override fun collectionMenuItemClicked() {
-    if (dataRepository.retrieveCurrentFragmentName() != CollectionFragment.COLLECTION_FRAGMENT_TAG){
-      mainView?.showCollectionFragment()
-      mainView?.closeNavigationMenu()
-    }
   }
 
 }

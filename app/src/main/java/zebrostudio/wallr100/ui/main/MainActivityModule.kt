@@ -7,7 +7,6 @@ import dagger.Provides
 class MainActivityModule {
 
   @Provides
-  internal fun provideMainPresenter(dataRepository: DataRepository)
-      : MainContract.MainPresenter = MainActivityPresenterImpl(dataRepository)
+  internal fun provideMainPresenter() : MainActivityPresenterImpl = MainActivityPresenterImpl()
 
 }

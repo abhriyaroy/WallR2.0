@@ -15,7 +15,9 @@ class ExploreFragment : BaseFragment(), ExploreContract.ExploreView {
   internal lateinit var presenter: ExplorePresenterImpl
 
   companion object {
-    val EXPLORE_FRAGMENT_TAG = "Explore"
+    val EXPLORE_TAG = "Explore"
+    val TOPPICKS_TAG = "Top Picks"
+    val CATEGORIES_TAG = "Categories"
 
     fun newInstance(): ExploreFragment {
       return ExploreFragment()

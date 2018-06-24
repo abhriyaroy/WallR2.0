@@ -7,6 +7,6 @@ import dagger.Provides
 class CollectionFragmentModule {
 
   @Provides
-  internal fun provideCollectionPresenter() = CollectionFragment()
+  internal fun provideCollectionPresenter() = CollectionPresenterImpl()
 
 }

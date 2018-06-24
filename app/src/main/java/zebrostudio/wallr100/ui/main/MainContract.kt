@@ -11,12 +11,6 @@ interface MainContract {
     fun closeNavigationMenu()
     fun showPreviousFragment()
 
-    fun showExploreFragment()
-    fun showTopPicksFragment()
-    fun showCategoriesFragment()
-    fun showMinimalFragment()
-    fun showCollectionFragment()
-
   }
 
   interface MainPresenter : BasePresenter<MainView> {
@@ -24,12 +18,6 @@ interface MainContract {
     fun handleBackPress()
     fun notifyNavigationMenuOpened()
     fun notifyNavigationMenuClosed()
-
-    fun exploreMenuItemClicked()
-    fun toppicksMenuItemClicked()
-    fun categoriesMenuItemClicked()
-    fun minimalMenuItemClicked()
-    fun collectionMenuItemClicked()
 
   }
 }

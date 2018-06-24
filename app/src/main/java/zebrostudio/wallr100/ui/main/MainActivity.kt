@@ -18,11 +18,9 @@ import kotlinx.android.synthetic.main.item_guillotine_menu.view.imageviewGuillot
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.textviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.ui.categories.CategoriesFragment
 import zebrostudio.wallr100.ui.collection.CollectionFragment
 import zebrostudio.wallr100.ui.explore.ExploreFragment
 import zebrostudio.wallr100.ui.minimal.MinimalFragment
-import zebrostudio.wallr100.ui.toppicks.ToppicksFragment
 import zebrostudio.wallr100.utils.colorRes
 import zebrostudio.wallr100.utils.drawableRes
 import zebrostudio.wallr100.utils.infoToast
@@ -43,7 +41,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
     initializeViews()
-    showExploreFragment()
+    addFragment(fragmentContainer.id, ExploreFragment.newInstance(), ExploreFragment.EXPLORE_TAG)
   }
 
   override fun onResume() {
@@ -78,49 +76,25 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     supportFragmentManager.popBackStack()
   }
 
-  override fun showExploreFragment() {
-    supportFragmentManager
-        .beginTransaction()
-        .replace(fragmentContainer.id, ExploreFragment.newInstance(),
-            ExploreFragment.EXPLORE_FRAGMENT_TAG)
-        .addToBackStack(null)
-        .commit()
+  inline fun <reified T : Fragment> addFragment(id: Int, fragment: T, fragmentTag: String) {
+    if (!fragmentExistsOnStackTop(fragmentTag)) {
+      if (fragmentTag == ExploreFragment.EXPLORE_TAG) {
+        clearStack()
+      }
+
+      supportFragmentManager
+          .beginTransaction()
+          .replace(id, fragment, fragmentTag)
+          .commitAllowingStateLoss()
+
+    }
   }
 
-  override fun showTopPicksFragment() {
-    supportFragmentManager
-        .beginTransaction()
-        .replace(fragmentContainer.id, ToppicksFragment.newInstance(),
-            ToppicksFragment.TOPPICKS_FRAGMENT_TAG)
-        .addToBackStack(null)
-        .commit()
-  }
+  fun fragmentExistsOnStackTop(fragmentTag: String) = findFragmentAtStackTop() == fragmentTag
 
-  override fun showCategoriesFragment() {
-    supportFragmentManager
-        .beginTransaction()
-        .replace(fragmentContainer.id, CategoriesFragment.newInstance(),
-            CategoriesFragment.CATEGORIES_FRAGMENT_TAG)
-        .addToBackStack(null)
-        .commit()
-  }
-
-  override fun showMinimalFragment() {
-    supportFragmentManager
-        .beginTransaction()
-        .replace(fragmentContainer.id, MinimalFragment.newInstance(),
-            MinimalFragment.MINIMAL_FRAGMENT_TAG)
-        .addToBackStack(null)
-        .commit()
-  }
-
-  override fun showCollectionFragment() {
-    supportFragmentManager
-        .beginTransaction()
-        .replace(fragmentContainer.id, CollectionFragment.newInstance(),
-            CollectionFragment.COLLECTION_FRAGMENT_TAG)
-        .addToBackStack(null)
-        .commit()
+  private fun findFragmentAtStackTop(): String {
+    return supportFragmentManager
+        .getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name
   }
 
   private fun initializeViews() {
@@ -154,20 +128,28 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     setUpGuillotineMenuItems(buildGuillotineMenuItems())
   }
 
-  private fun buildGuillotineMenuItems(): List<Pair<Int, Int>> {
+  private fun buildGuillotineMenuItems(): List<Triple<Int, Int, MenuItem>> {
     // Declare mutable list containing names and icon resources of guillotine menu items
-    val menuItemDetails = mutableListOf<Pair<Int, Int>>()
-    menuItemDetails.add(R.string.guillotine_explore_title to R.drawable.ic_explore_white)
-    menuItemDetails.add(R.string.guillotine_toppicks_title to R.drawable.ic_toppicks_white)
-    menuItemDetails.add(R.string.guillotine_categories_title to R.drawable.ic_categories_white)
-    menuItemDetails.add(R.string.guillotine_minimal_title to R.drawable.ic_minimal_white)
-    menuItemDetails.add(R.string.guillotine_collection_title to R.drawable.ic_collections_white)
-    menuItemDetails.add(R.string.guillotine_feedback_title to R.drawable.ic_feedback_white)
-    menuItemDetails.add(R.string.guillotine_buypro_title to R.drawable.ic_buypro_black)
+    val menuItemDetails = mutableListOf<Triple<Int, Int, MenuItem>>()
+    menuItemDetails.add(Triple(R.string.guillotine_explore_title, R.drawable.ic_explore_white,
+        MenuItem.EXPLORE))
+    menuItemDetails.add(Triple(R.string.guillotine_toppicks_title, R.drawable.ic_toppicks_white,
+        MenuItem.TOP_PICKS))
+    menuItemDetails.add(Triple(R.string.guillotine_categories_title, R.drawable.ic_categories_white,
+        MenuItem.CATEGORIES))
+    menuItemDetails.add(Triple(R.string.guillotine_minimal_title, R.drawable.ic_minimal_white,
+        MenuItem.MINIMAL))
+    menuItemDetails.add(
+        Triple(R.string.guillotine_collection_title, R.drawable.ic_collections_white,
+            MenuItem.MINIMAL))
+    menuItemDetails.add(Triple(R.string.guillotine_feedback_title, R.drawable.ic_feedback_white,
+        MenuItem.COLLECTION))
+    menuItemDetails.add(Triple(R.string.guillotine_buypro_title, R.drawable.ic_buypro_black,
+        MenuItem.BUY_PRO))
     return menuItemDetails
   }
 
-  private fun setUpGuillotineMenuItems(guillotineMenuItems: List<Pair<Int, Int>>) {
+  private fun setUpGuillotineMenuItems(guillotineMenuItems: List<Triple<Int, Int, MenuItem>>) {
     // Programmatically add guillotine menu items
     val layoutInflater = LayoutInflater.from(this)
     val itemIterator = guillotineMenuItems.iterator()
@@ -186,20 +168,48 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         guillotineMenuItemView.textviewGuillotineMenuItem
             .setTextColor(colorRes(R.color.color_black))
       }
+      val item = it.third
       guillotineMenuItemView.setOnClickListener {
-        clickListener(guillotineMenuItemView.id)
+        clickListener(item)
       }
     }
   }
 
-  private fun clickListener(id: Int) {
-    when (id) {
-      R.string.guillotine_explore_title -> presenter.exploreMenuItemClicked()
-      R.string.guillotine_toppicks_title -> presenter.toppicksMenuItemClicked()
-      R.string.guillotine_categories_title -> presenter.categoriesMenuItemClicked()
-      R.string.guillotine_minimal_title -> presenter.minimalMenuItemClicked()
-      R.string.guillotine_collection_title -> presenter.collectionMenuItemClicked()
+  private fun clickListener(item: MenuItem) {
+    when (item) {
+      MenuItem.EXPLORE -> addFragment(fragmentContainer.id,
+          ExploreFragment.newInstance(), ExploreFragment.EXPLORE_TAG)
+      MenuItem.TOP_PICKS -> addFragment(fragmentContainer.id, ExploreFragment.newInstance(),
+          ExploreFragment.TOPPICKS_TAG)
+      MenuItem.CATEGORIES -> addFragment(fragmentContainer.id, ExploreFragment.newInstance(),
+          ExploreFragment.CATEGORIES_TAG)
+      MenuItem.MINIMAL -> addFragment(fragmentContainer.id,
+          MinimalFragment.newInstance(), MinimalFragment.MINIMAL_FRAGMENT_TAG)
+      MenuItem.COLLECTION -> addFragment(fragmentContainer.id,
+          CollectionFragment.newInstance(), CollectionFragment.COLLECTION_FRAGMENT_TAG)
+      MenuItem.BUY_PRO -> {
+        // Add buy pro fragment later on
+      }
     }
+  }
+
+  inline fun clearStack() {
+    var backStackEntry = supportFragmentManager.backStackEntryCount
+    if (backStackEntry > 0) {
+      while (backStackEntry > 0) {
+        supportFragmentManager.popBackStackImmediate()
+        backStackEntry -= 1
+      }
+    }
+  }
+
+  private enum class MenuItem {
+    EXPLORE,
+    TOP_PICKS,
+    CATEGORIES,
+    MINIMAL,
+    COLLECTION,
+    BUY_PRO
   }
 
 }
