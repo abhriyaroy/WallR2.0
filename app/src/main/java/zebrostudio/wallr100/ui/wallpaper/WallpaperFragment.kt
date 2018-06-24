@@ -8,20 +8,11 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.ui.basefragment.BaseFragment
 import javax.inject.Inject
 
+@Suppress("NOTHING_TO_INLINE")
 class WallpaperFragment : BaseFragment(), WallpaperContract.WallpaperView {
 
   @Inject
   internal lateinit var presenter: WallpaperContract.WallpaperPresenter
-
-  companion object {
-    val EXPLORE_TAG = "Explore"
-    val TOPPICKS_TAG = "Top Picks"
-    val CATEGORIES_TAG = "Categories"
-
-    fun newInstance(): WallpaperFragment {
-      return WallpaperFragment()
-    }
-  }
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -39,6 +30,16 @@ class WallpaperFragment : BaseFragment(), WallpaperContract.WallpaperView {
   override fun onDestroy() {
     presenter.detachView()
     super.onDestroy()
+  }
+
+  companion object {
+    const val EXPLORE_TAG = "Explore"
+    const val TOP_PICKS_TAG = "Top Picks"
+    const val CATEGORIES_TAG = "Categories"
+
+    inline fun newInstance(): WallpaperFragment {
+      return WallpaperFragment()
+    }
   }
 
 }

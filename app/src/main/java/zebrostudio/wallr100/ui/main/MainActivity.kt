@@ -28,6 +28,7 @@ import zebrostudio.wallr100.utils.infoToast
 import zebrostudio.wallr100.utils.stringRes
 import javax.inject.Inject
 
+@Suppress("NOTHING_TO_INLINE")
 class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragmentInjector {
 
   @Inject
@@ -104,13 +105,13 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     }
   }
 
-  private fun fragmentExistsOnStackTop(fragmentTag: String): Boolean {
+  private inline fun fragmentExistsOnStackTop(fragmentTag: String): Boolean {
     if (supportFragmentManager.backStackEntryCount == 0)
       return false
     return getFragmentAtStackTop() == fragmentTag
   }
 
-  private fun initializeViews() {
+  private inline fun initializeViews() {
     val guillotineMenu = LayoutInflater.from(this)
         .inflate(R.layout.guillotine_menu_layout, null)
     rootFrameLayout.addView(guillotineMenu)
@@ -141,7 +142,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     setUpGuillotineMenuItems(buildGuillotineMenuItems())
   }
 
-  private fun buildGuillotineMenuItems(): List<Triple<Int, Int, MenuItem>> {
+  private inline fun buildGuillotineMenuItems(): List<Triple<Int, Int, MenuItem>> {
     // Declare mutable list containing names and icon resources of guillotine menu items
     val menuItemDetails = mutableListOf<Triple<Int, Int, MenuItem>>()
     menuItemDetails.add(Triple(R.string.guillotine_explore_title, R.drawable.ic_explore_white,
@@ -162,7 +163,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     return menuItemDetails
   }
 
-  private fun setUpGuillotineMenuItems(guillotineMenuItems: List<Triple<Int, Int, MenuItem>>) {
+  private inline fun setUpGuillotineMenuItems(guillotineMenuItems: List<Triple<Int, Int, MenuItem>>) {
     // Programmatically add guillotine menu items
     val layoutInflater = LayoutInflater.from(this)
     val itemIterator = guillotineMenuItems.iterator()
@@ -188,12 +189,12 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     }
   }
 
-  private fun clickListener(item: MenuItem) {
+  private inline fun clickListener(item: MenuItem) {
     when (item) {
       MenuItem.EXPLORE -> addFragment(fragmentContainer.id,
           WallpaperFragment.newInstance(), WallpaperFragment.EXPLORE_TAG)
       MenuItem.TOP_PICKS -> addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
-          WallpaperFragment.TOPPICKS_TAG)
+          WallpaperFragment.TOP_PICKS_TAG)
       MenuItem.CATEGORIES -> addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
           WallpaperFragment.CATEGORIES_TAG)
       MenuItem.MINIMAL -> addFragment(fragmentContainer.id,
@@ -206,7 +207,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     }
   }
 
-  inline fun clearStack() {
+  private inline fun clearStack() {
     var backStackEntry = supportFragmentManager.backStackEntryCount
     if (backStackEntry > 0) {
       while (backStackEntry > 0) {

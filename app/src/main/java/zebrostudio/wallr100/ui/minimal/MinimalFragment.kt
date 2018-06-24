@@ -8,18 +8,11 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.ui.basefragment.BaseFragment
 import javax.inject.Inject
 
+@Suppress("NOTHING_TO_INLINE")
 class MinimalFragment : BaseFragment(), MinimalContract.MinimalView {
 
   @Inject
   internal lateinit var presenter: MinimalContract.MinimalPresenter
-
-  companion object {
-    val MINIMAL_FRAGMENT_TAG = "Minimal"
-
-    fun newInstance(): MinimalFragment {
-      return MinimalFragment()
-    }
-  }
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -37,6 +30,14 @@ class MinimalFragment : BaseFragment(), MinimalContract.MinimalView {
   override fun onDestroy() {
     presenter.detachView()
     super.onDestroy()
+  }
+
+  companion object {
+    const val MINIMAL_FRAGMENT_TAG = "Minimal"
+
+    inline fun newInstance(): MinimalFragment {
+      return MinimalFragment()
+    }
   }
 
 }

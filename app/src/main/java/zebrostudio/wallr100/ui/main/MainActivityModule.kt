@@ -3,10 +3,11 @@ package zebrostudio.wallr100.ui.main
 import dagger.Module
 import dagger.Provides
 
+@Suppress("NOTHING_TO_INLINE")
 @Module
 class MainActivityModule {
 
   @Provides
-  internal fun provideMainPresenter(): MainContract.MainPresenter = MainActivityPresenterImpl()
+  internal inline fun provideMainPresenter(): MainContract.MainPresenter = MainActivityPresenterImpl()
 
 }
