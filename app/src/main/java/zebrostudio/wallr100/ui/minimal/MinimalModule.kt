@@ -7,6 +7,6 @@ import dagger.Provides
 class MinimalModule {
 
   @Provides
-  internal fun provideMinimalPresenter() : MinimalContract.MinimalPresenter = MinimalPresenterImpl()
+  internal fun provideMinimalPresenter(): MinimalContract.MinimalPresenter = MinimalPresenterImpl()
 
 }

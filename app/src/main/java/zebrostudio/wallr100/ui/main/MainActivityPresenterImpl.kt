@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.ui.main
 
 import android.os.Handler
+import zebrostudio.wallr100.ui.wallpaper.WallpaperFragment
 
 class MainActivityPresenterImpl : MainContract.MainPresenter {
 
@@ -21,7 +22,7 @@ class MainActivityPresenterImpl : MainContract.MainPresenter {
     if (isGuillotineMenuOpen) {
       mainView?.closeNavigationMenu()
     } else {
-      if (true) {
+      if (mainView?.getFragmentAtStackTop() == WallpaperFragment.EXPLORE_TAG) {
         if (backPressedOnce) {
           mainView?.exitApp()
         } else {

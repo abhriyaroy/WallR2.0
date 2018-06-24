@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.item_guillotine_menu.view.imageviewGuillot
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.textviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.ui.basefragment.BaseFragment
 import zebrostudio.wallr100.ui.collection.CollectionFragment
 import zebrostudio.wallr100.ui.wallpaper.WallpaperFragment
 import zebrostudio.wallr100.ui.minimal.MinimalFragment
@@ -41,7 +42,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
     initializeViews()
-    addFragment(fragmentContainer.id, WallpaperFragment.newInstance(), WallpaperFragment.EXPLORE_TAG)
+    addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
+        WallpaperFragment.EXPLORE_TAG)
   }
 
   override fun onResume() {
@@ -76,7 +78,16 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     supportFragmentManager.popBackStack()
   }
 
-  private inline fun <reified T : Fragment> addFragment(id: Int, fragment: T, fragmentTag: String) {
+  override fun getFragmentAtStackTop(): String {
+    return supportFragmentManager
+        .getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name
+  }
+
+  private inline fun <reified T : BaseFragment> addFragment(
+    id: Int,
+    fragment: T,
+    fragmentTag: String
+  ) {
     if (!fragmentExistsOnStackTop(fragmentTag)) {
       if (fragmentTag == WallpaperFragment.EXPLORE_TAG) {
         clearStack()
@@ -85,7 +96,9 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
       supportFragmentManager
           .beginTransaction()
           .replace(id, fragment, fragmentTag)
+          .addToBackStack(fragmentTag)
           .commitAllowingStateLoss()
+      fragment.fragmentTag = fragmentTag
 
       closeNavigationMenu()
     }
@@ -94,12 +107,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   private fun fragmentExistsOnStackTop(fragmentTag: String): Boolean {
     if (supportFragmentManager.backStackEntryCount == 0)
       return false
-    return findFragmentAtStackTop() == fragmentTag
-  }
-
-  private fun findFragmentAtStackTop(): String {
-    return supportFragmentManager
-        .getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name
+    return getFragmentAtStackTop() == fragmentTag
   }
 
   private fun initializeViews() {

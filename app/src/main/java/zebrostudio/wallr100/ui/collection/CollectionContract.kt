@@ -2,7 +2,7 @@ package zebrostudio.wallr100.ui.collection
 
 import zebrostudio.wallr100.BasePresenter
 
-interface CollectionContract{
+interface CollectionContract {
 
   interface CollectionView
 
