@@ -11,7 +11,7 @@ import javax.inject.Inject
 class CollectionFragment : BaseFragment(), CollectionContract.CollectionView {
 
   @Inject
-  internal lateinit var presenter: CollectionPresenterImpl
+  internal lateinit var presenter: CollectionContract.CollectionPresenter
 
   override fun onCreateView(
     inflater: LayoutInflater,

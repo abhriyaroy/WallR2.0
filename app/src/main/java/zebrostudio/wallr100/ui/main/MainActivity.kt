@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.item_guillotine_menu.view.textviewGuilloti
 import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.ui.collection.CollectionFragment
-import zebrostudio.wallr100.ui.explore.ExploreFragment
+import zebrostudio.wallr100.ui.wallpaper.WallpaperFragment
 import zebrostudio.wallr100.ui.minimal.MinimalFragment
 import zebrostudio.wallr100.utils.colorRes
 import zebrostudio.wallr100.utils.drawableRes
@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
     initializeViews()
-    addFragment(fragmentContainer.id, ExploreFragment.newInstance(), ExploreFragment.EXPLORE_TAG)
+    addFragment(fragmentContainer.id, WallpaperFragment.newInstance(), WallpaperFragment.EXPLORE_TAG)
   }
 
   override fun onResume() {
@@ -76,9 +76,9 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     supportFragmentManager.popBackStack()
   }
 
-  inline fun <reified T : Fragment> addFragment(id: Int, fragment: T, fragmentTag: String) {
+  private inline fun <reified T : Fragment> addFragment(id: Int, fragment: T, fragmentTag: String) {
     if (!fragmentExistsOnStackTop(fragmentTag)) {
-      if (fragmentTag == ExploreFragment.EXPLORE_TAG) {
+      if (fragmentTag == WallpaperFragment.EXPLORE_TAG) {
         clearStack()
       }
 
@@ -87,10 +87,15 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
           .replace(id, fragment, fragmentTag)
           .commitAllowingStateLoss()
 
+      closeNavigationMenu()
     }
   }
 
-  fun fragmentExistsOnStackTop(fragmentTag: String) = findFragmentAtStackTop() == fragmentTag
+  private fun fragmentExistsOnStackTop(fragmentTag: String): Boolean {
+    if (supportFragmentManager.backStackEntryCount == 0)
+      return false
+    return findFragmentAtStackTop() == fragmentTag
+  }
 
   private fun findFragmentAtStackTop(): String {
     return supportFragmentManager
@@ -178,11 +183,11 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   private fun clickListener(item: MenuItem) {
     when (item) {
       MenuItem.EXPLORE -> addFragment(fragmentContainer.id,
-          ExploreFragment.newInstance(), ExploreFragment.EXPLORE_TAG)
-      MenuItem.TOP_PICKS -> addFragment(fragmentContainer.id, ExploreFragment.newInstance(),
-          ExploreFragment.TOPPICKS_TAG)
-      MenuItem.CATEGORIES -> addFragment(fragmentContainer.id, ExploreFragment.newInstance(),
-          ExploreFragment.CATEGORIES_TAG)
+          WallpaperFragment.newInstance(), WallpaperFragment.EXPLORE_TAG)
+      MenuItem.TOP_PICKS -> addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
+          WallpaperFragment.TOPPICKS_TAG)
+      MenuItem.CATEGORIES -> addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
+          WallpaperFragment.CATEGORIES_TAG)
       MenuItem.MINIMAL -> addFragment(fragmentContainer.id,
           MinimalFragment.newInstance(), MinimalFragment.MINIMAL_FRAGMENT_TAG)
       MenuItem.COLLECTION -> addFragment(fragmentContainer.id,

@@ -1,9 +1,8 @@
 package zebrostudio.wallr100.ui.main
 
 import android.os.Handler
-import javax.inject.Inject
 
-class MainActivityPresenterImpl @Inject constructor() : MainContract.MainPresenter {
+class MainActivityPresenterImpl : MainContract.MainPresenter {
 
   private var backPressedOnce = false
   private var isGuillotineMenuOpen = false

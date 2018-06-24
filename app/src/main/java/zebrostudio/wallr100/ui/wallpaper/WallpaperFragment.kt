@@ -1,7 +1,6 @@
-package zebrostudio.wallr100.ui.explore
+package zebrostudio.wallr100.ui.wallpaper
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,18 +8,18 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.ui.basefragment.BaseFragment
 import javax.inject.Inject
 
-class ExploreFragment : BaseFragment(), ExploreContract.ExploreView {
+class WallpaperFragment : BaseFragment(), WallpaperContract.WallpaperView {
 
   @Inject
-  internal lateinit var presenter: ExplorePresenterImpl
+  internal lateinit var presenter: WallpaperContract.WallpaperPresenter
 
   companion object {
     val EXPLORE_TAG = "Explore"
     val TOPPICKS_TAG = "Top Picks"
     val CATEGORIES_TAG = "Categories"
 
-    fun newInstance(): ExploreFragment {
-      return ExploreFragment()
+    fun newInstance(): WallpaperFragment {
+      return WallpaperFragment()
     }
   }
 

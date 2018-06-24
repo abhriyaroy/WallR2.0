@@ -11,7 +11,7 @@ import javax.inject.Inject
 class MinimalFragment : BaseFragment(), MinimalContract.MinimalView {
 
   @Inject
-  internal lateinit var presenter: MinimalPresenterImpl
+  internal lateinit var presenter: MinimalContract.MinimalPresenter
 
   companion object {
     val MINIMAL_FRAGMENT_TAG = "Minimal"
@@ -32,7 +32,6 @@ class MinimalFragment : BaseFragment(), MinimalContract.MinimalView {
   override fun onResume() {
     super.onResume()
     presenter.attachView(this)
-    presenter.updateFragmentName(MINIMAL_FRAGMENT_TAG)
   }
 
   override fun onDestroy() {
