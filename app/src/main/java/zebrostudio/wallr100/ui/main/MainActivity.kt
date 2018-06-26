@@ -1,8 +1,10 @@
 package zebrostudio.wallr100.ui.main
 
 import android.os.Bundle
+import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.LayoutInflater
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import com.yalantis.guillotine.interfaces.GuillotineListener
@@ -25,6 +27,7 @@ import zebrostudio.wallr100.ui.minimal.MinimalFragment
 import zebrostudio.wallr100.utils.colorRes
 import zebrostudio.wallr100.utils.drawableRes
 import zebrostudio.wallr100.utils.infoToast
+import zebrostudio.wallr100.utils.setOnDebouncedClickListener
 import zebrostudio.wallr100.utils.stringRes
 import javax.inject.Inject
 
@@ -85,7 +88,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   }
 
   private inline fun <reified T : BaseFragment> addFragment(
-    id: Int,
+    @IdRes id: Int,
     fragment: T,
     fragmentTag: String
   ) {
@@ -99,9 +102,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
           .replace(id, fragment, fragmentTag)
           .addToBackStack(fragmentTag)
           .commitAllowingStateLoss()
-      fragment.fragmentTag = fragmentTag
 
-      closeNavigationMenu()
+      fragment.fragmentTag = fragmentTag
     }
   }
 
@@ -155,9 +157,9 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         MenuItem.MINIMAL))
     menuItemDetails.add(
         Triple(R.string.guillotine_collection_title, R.drawable.ic_collections_white,
-            MenuItem.MINIMAL))
+            MenuItem.COLLECTION))
     menuItemDetails.add(Triple(R.string.guillotine_feedback_title, R.drawable.ic_feedback_white,
-        MenuItem.COLLECTION))
+        MenuItem.FEEDBACK))
     menuItemDetails.add(Triple(R.string.guillotine_buypro_title, R.drawable.ic_buypro_black,
         MenuItem.BUY_PRO))
     return menuItemDetails
@@ -182,9 +184,9 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         guillotineMenuItemView.textviewGuillotineMenuItem
             .setTextColor(colorRes(R.color.color_black))
       }
-      val item = it.third
-      guillotineMenuItemView.setOnClickListener {
-        clickListener(item)
+      val menuItem = it.third
+      guillotineMenuItemView.setOnDebouncedClickListener {
+        clickListener(menuItem)
       }
     }
   }
@@ -201,17 +203,21 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
           MinimalFragment.newInstance(), MinimalFragment.MINIMAL_FRAGMENT_TAG)
       MenuItem.COLLECTION -> addFragment(fragmentContainer.id,
           CollectionFragment.newInstance(), CollectionFragment.COLLECTION_FRAGMENT_TAG)
+      MenuItem.FEEDBACK -> {
+        // TODO : Add feedback implementation
+      }
       MenuItem.BUY_PRO -> {
-        // Add buy pro fragment later on
+        // TODO : Add buy pro section
       }
     }
+    closeNavigationMenu()
   }
 
   private inline fun clearStack() {
     var backStackEntry = supportFragmentManager.backStackEntryCount
     if (backStackEntry > 0) {
       while (backStackEntry > 0) {
-        supportFragmentManager.popBackStackImmediate()
+        supportFragmentManager.popBackStack()
         backStackEntry -= 1
       }
     }
@@ -223,6 +229,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     CATEGORIES,
     MINIMAL,
     COLLECTION,
+    FEEDBACK,
     BUY_PRO
   }
 

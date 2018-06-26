@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.ui.basefragment.BaseFragment
+import zebrostudio.wallr100.utils.inflate
 import javax.inject.Inject
 
 @Suppress("NOTHING_TO_INLINE")
@@ -19,7 +20,7 @@ class CollectionFragment : BaseFragment(), CollectionContract.CollectionView {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    return inflater.inflate(R.layout.fragment_layout, container, false)
+    return container?.inflate(inflater, R.layout.fragment_collection)
   }
 
   override fun onResume() {
