@@ -19,7 +19,7 @@ abstract class DebouncedOnClickListener(private val minimumInterval: Long = 1000
     val previousClickTimestamp = lastClickMap[clickedView]
     val currentTimestamp = SystemClock.uptimeMillis()
 
-    lastClickMap.put(clickedView, currentTimestamp)
+    lastClickMap[clickedView] = currentTimestamp
     if (previousClickTimestamp == null ||
         currentTimestamp - previousClickTimestamp.toLong() > minimumInterval) {
       onDebouncedClick(clickedView)

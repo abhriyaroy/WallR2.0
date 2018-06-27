@@ -7,9 +7,7 @@ import android.view.ViewGroup
 
 fun View.setOnDebouncedClickListener(onClick: (v: View) -> Unit) {
   setOnClickListener(object : DebouncedOnClickListener() {
-    override fun onDebouncedClick(v: View) {
-      onClick(v)
-    }
+    override fun onDebouncedClick(v: View) = onClick(v)
   })
 }
 

@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.ui.wallpaper
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,6 @@ import zebrostudio.wallr100.ui.basefragment.BaseFragment
 import zebrostudio.wallr100.utils.inflate
 import javax.inject.Inject
 
-@Suppress("NOTHING_TO_INLINE")
 class WallpaperFragment : BaseFragment(), WallpaperContract.WallpaperView {
 
   @Inject
@@ -38,9 +38,7 @@ class WallpaperFragment : BaseFragment(), WallpaperContract.WallpaperView {
     const val TOP_PICKS_TAG = "Top Picks"
     const val CATEGORIES_TAG = "Categories"
 
-    inline fun newInstance(): WallpaperFragment {
-      return WallpaperFragment()
-    }
+    fun newInstance() = WallpaperFragment()
   }
 
 }

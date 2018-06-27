@@ -9,7 +9,6 @@ import zebrostudio.wallr100.ui.basefragment.BaseFragment
 import zebrostudio.wallr100.utils.inflate
 import javax.inject.Inject
 
-@Suppress("NOTHING_TO_INLINE")
 class CollectionFragment : BaseFragment(), CollectionContract.CollectionView {
 
   @Inject
@@ -36,9 +35,7 @@ class CollectionFragment : BaseFragment(), CollectionContract.CollectionView {
   companion object {
     const val COLLECTION_FRAGMENT_TAG = "Collection"
 
-    inline fun newInstance(): CollectionFragment {
-      return CollectionFragment()
-    }
+    fun newInstance() = CollectionFragment()
   }
 
 }

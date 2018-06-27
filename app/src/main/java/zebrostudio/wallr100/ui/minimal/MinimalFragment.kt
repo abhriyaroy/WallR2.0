@@ -9,7 +9,6 @@ import zebrostudio.wallr100.ui.basefragment.BaseFragment
 import zebrostudio.wallr100.utils.inflate
 import javax.inject.Inject
 
-@Suppress("NOTHING_TO_INLINE")
 class MinimalFragment : BaseFragment(), MinimalContract.MinimalView {
 
   @Inject
@@ -36,9 +35,7 @@ class MinimalFragment : BaseFragment(), MinimalContract.MinimalView {
   companion object {
     const val MINIMAL_FRAGMENT_TAG = "Minimal"
 
-    inline fun newInstance(): MinimalFragment {
-      return MinimalFragment()
-    }
+    fun newInstance() = MinimalFragment()
   }
 
 }
