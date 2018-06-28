@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.LayoutInflater
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import com.yalantis.guillotine.interfaces.GuillotineListener
@@ -31,7 +30,6 @@ import zebrostudio.wallr100.utils.setOnDebouncedClickListener
 import zebrostudio.wallr100.utils.stringRes
 import javax.inject.Inject
 
-@Suppress("NOTHING_TO_INLINE")
 class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragmentInjector {
 
   @Inject
@@ -107,13 +105,13 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     }
   }
 
-  private inline fun fragmentExistsOnStackTop(fragmentTag: String): Boolean {
+  private fun fragmentExistsOnStackTop(fragmentTag: String): Boolean {
     if (supportFragmentManager.backStackEntryCount == 0)
       return false
     return getFragmentAtStackTop() == fragmentTag
   }
 
-  private inline fun initializeViews() {
+  private fun initializeViews() {
     val guillotineMenu = LayoutInflater.from(this)
         .inflate(R.layout.guillotine_menu_layout, null)
     rootFrameLayout.addView(guillotineMenu)
@@ -144,7 +142,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     setUpGuillotineMenuItems(buildGuillotineMenuItems())
   }
 
-  private inline fun buildGuillotineMenuItems(): List<Triple<Int, Int, MenuItem>> {
+  private fun buildGuillotineMenuItems(): List<Triple<Int, Int, MenuItem>> {
     // Declare mutable list containing names and icon resources of guillotine menu items
     val menuItemDetails = mutableListOf<Triple<Int, Int, MenuItem>>()
     menuItemDetails.add(Triple(R.string.guillotine_explore_title, R.drawable.ic_explore_white,
@@ -165,7 +163,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     return menuItemDetails
   }
 
-  private inline fun setUpGuillotineMenuItems(guillotineMenuItems: List<Triple<Int, Int, MenuItem>>) {
+  private fun setUpGuillotineMenuItems(guillotineMenuItems: List<Triple<Int, Int, MenuItem>>) {
     // Programmatically add guillotine menu items
     val layoutInflater = LayoutInflater.from(this)
     val itemIterator = guillotineMenuItems.iterator()
@@ -191,7 +189,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     }
   }
 
-  private inline fun clickListener(item: MenuItem) {
+  private fun clickListener(item: MenuItem) {
     when (item) {
       MenuItem.EXPLORE -> addFragment(fragmentContainer.id,
           WallpaperFragment.newInstance(), WallpaperFragment.EXPLORE_TAG)
@@ -213,7 +211,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     closeNavigationMenu()
   }
 
-  private inline fun clearStack() {
+  private fun clearStack() {
     var backStackEntry = supportFragmentManager.backStackEntryCount
     if (backStackEntry > 0) {
       while (backStackEntry > 0) {
