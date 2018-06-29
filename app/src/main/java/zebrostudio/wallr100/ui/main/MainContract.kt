@@ -10,7 +10,7 @@ interface MainContract {
     fun exitApp()
     fun closeNavigationMenu()
     fun showPreviousFragment()
-    fun getFragmentAtStackTop(): String
+    fun getFragmentTagAtStackTop(): String
   }
 
   interface MainPresenter : BasePresenter<MainView> {

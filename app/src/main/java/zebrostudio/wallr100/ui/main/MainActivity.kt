@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     supportFragmentManager.popBackStack()
   }
 
-  override fun getFragmentAtStackTop(): String {
+  override fun getFragmentTagAtStackTop(): String {
     return supportFragmentManager
         .getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name
   }
@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   private fun fragmentExistsOnStackTop(fragmentTag: String): Boolean {
     if (supportFragmentManager.backStackEntryCount == 0)
       return false
-    return getFragmentAtStackTop() == fragmentTag
+    return getFragmentTagAtStackTop() == fragmentTag
   }
 
   private fun initializeViews() {
@@ -142,28 +142,28 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     setUpGuillotineMenuItems(buildGuillotineMenuItems())
   }
 
-  private fun buildGuillotineMenuItems(): List<Triple<Int, Int, MenuItem>> {
+  private fun buildGuillotineMenuItems(): List<Triple<Int, Int, MenuItems>> {
     // Declare mutable list containing names and icon resources of guillotine menu items
-    val menuItemDetails = mutableListOf<Triple<Int, Int, MenuItem>>()
+    val menuItemDetails = mutableListOf<Triple<Int, Int, MenuItems>>()
     menuItemDetails.add(Triple(R.string.guillotine_explore_title, R.drawable.ic_explore_white,
-        MenuItem.EXPLORE))
+        MenuItems.EXPLORE))
     menuItemDetails.add(Triple(R.string.guillotine_toppicks_title, R.drawable.ic_toppicks_white,
-        MenuItem.TOP_PICKS))
+        MenuItems.TOP_PICKS))
     menuItemDetails.add(Triple(R.string.guillotine_categories_title, R.drawable.ic_categories_white,
-        MenuItem.CATEGORIES))
+        MenuItems.CATEGORIES))
     menuItemDetails.add(Triple(R.string.guillotine_minimal_title, R.drawable.ic_minimal_white,
-        MenuItem.MINIMAL))
+        MenuItems.MINIMAL))
     menuItemDetails.add(
         Triple(R.string.guillotine_collection_title, R.drawable.ic_collections_white,
-            MenuItem.COLLECTION))
+            MenuItems.COLLECTION))
     menuItemDetails.add(Triple(R.string.guillotine_feedback_title, R.drawable.ic_feedback_white,
-        MenuItem.FEEDBACK))
+        MenuItems.FEEDBACK))
     menuItemDetails.add(Triple(R.string.guillotine_buypro_title, R.drawable.ic_buypro_black,
-        MenuItem.BUY_PRO))
+        MenuItems.BUY_PRO))
     return menuItemDetails
   }
 
-  private fun setUpGuillotineMenuItems(guillotineMenuItems: List<Triple<Int, Int, MenuItem>>) {
+  private fun setUpGuillotineMenuItems(guillotineMenuItems: List<Triple<Int, Int, MenuItems>>) {
     // Programmatically add guillotine menu items
     val layoutInflater = LayoutInflater.from(this)
     val itemIterator = guillotineMenuItems.iterator()
@@ -189,22 +189,22 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     }
   }
 
-  private fun clickListener(item: MenuItem) {
+  private fun clickListener(item: MenuItems) {
     when (item) {
-      MenuItem.EXPLORE -> addFragment(fragmentContainer.id,
+      MenuItems.EXPLORE -> addFragment(fragmentContainer.id,
           WallpaperFragment.newInstance(), WallpaperFragment.EXPLORE_FRAGMENT_TAG)
-      MenuItem.TOP_PICKS -> addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
+      MenuItems.TOP_PICKS -> addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
           WallpaperFragment.TOP_PICKS_FRAGMENT_TAG)
-      MenuItem.CATEGORIES -> addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
+      MenuItems.CATEGORIES -> addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
           WallpaperFragment.CATEGORIES_FRAGMENT_TAG)
-      MenuItem.MINIMAL -> addFragment(fragmentContainer.id,
+      MenuItems.MINIMAL -> addFragment(fragmentContainer.id,
           MinimalFragment.newInstance(), MinimalFragment.MINIMAL_FRAGMENT_TAG)
-      MenuItem.COLLECTION -> addFragment(fragmentContainer.id,
+      MenuItems.COLLECTION -> addFragment(fragmentContainer.id,
           CollectionFragment.newInstance(), CollectionFragment.COLLECTION_FRAGMENT_TAG)
-      MenuItem.FEEDBACK -> {
+      MenuItems.FEEDBACK -> {
         // TODO : Add feedback implementation
       }
-      MenuItem.BUY_PRO -> {
+      MenuItems.BUY_PRO -> {
         // TODO : Add buy pro section
       }
     }
@@ -221,7 +221,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     }
   }
 
-  private enum class MenuItem {
+  private enum class MenuItems {
     EXPLORE,
     TOP_PICKS,
     CATEGORIES,

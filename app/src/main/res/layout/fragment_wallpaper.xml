@@ -10,87 +10,87 @@
       android:layout_gravity="center">
 
     <RelativeLayout
+        android:id="@+id/failedLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         android:visibility="visible"
         android:clickable="true"
-        android:id="@+id/failedLayout"
         android:layout_centerInParent="true">
 
       <ImageView
+          android:id="@+id/failedImage"
           android:layout_width="50dp"
           android:layout_height="50dp"
+          android:layout_centerHorizontal="true"
           android:src="@drawable/ic_error_exclamation"
-          android:visibility="visible"
-          android:id="@+id/failedImage"
-          android:layout_centerHorizontal="true"/>
+          android:visibility="visible"/>
 
       <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+          android:id="@+id/failedText1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_below="@id/failedImage"
+          android:layout_centerHorizontal="true"
           android:paddingTop="8dp"
           android:textColor="#fff"
-          android:text="@string/oops_unable_to_load_wallpapers"
-          android:id="@+id/failedText1"
-          android:layout_centerHorizontal="true"/>
+          android:text="@string/oops_unable_to_load_wallpapers"/>
 
       <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+          android:id="@+id/failedText2"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_below="@id/failedText1"
+          android:layout_centerHorizontal="true"
           android:text="@string/please_ensure_you_have_a_working_internet_connection"
           android:paddingTop="2dp"
-          android:textColor="#fff"
-          android:id="@+id/failedText2"
-          android:layout_centerHorizontal="true"/>
+          android:textColor="#fff"/>
 
       <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+          android:id="@+id/failedText3"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_below="@id/failedText2"
+          android:layout_centerHorizontal="true"
           android:text="@string/swipe_down_to_retry"
           android:paddingTop="2dp"
-          android:textColor="#fff"
-          android:id="@+id/failedText3"
-          android:layout_centerHorizontal="true"/>
+          android:textColor="#fff"/>
+
     </RelativeLayout>
 
     <com.github.ybq.android.spinkit.SpinKitView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/spin_kitPhotos"
-        style="@style/SpinKitView.Large.FoldingCube"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:padding="10dp"
         android:layout_gravity="center"
         app:SpinKit_Color="#fff"
+        style="@style/SpinKitView.Large.FoldingCube"
         android:visibility="gone"/>
+
   </RelativeLayout>
 
   <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
+      android:id="@+id/main_swipe"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:id="@+id/main_swipe">
+      android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_exploreImages"
-        android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:scrollbars="vertical"/>
+
   </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
 
   <com.github.ybq.android.spinkit.SpinKitView
-      xmlns:app="http://schemas.android.com/apk/res-auto"
       android:id="@+id/spin_kitPhotosLoadMore"
-      style="@style/SpinKitView.Large.ThreeBounce"
       android:layout_width="wrap_content"
       android:layout_height="30dp"
       android:layout_marginBottom="6dp"
       android:layout_gravity="bottom|center_horizontal"
       app:SpinKit_Color="#fff"
+      style="@style/SpinKitView.Large.ThreeBounce"
       android:visibility="gone"/>
 
   <View

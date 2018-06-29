@@ -22,7 +22,7 @@ class MainActivityPresenterImpl : MainContract.MainPresenter {
     if (isGuillotineMenuOpen) {
       mainView?.closeNavigationMenu()
     } else {
-      if (mainView?.getFragmentAtStackTop() == WallpaperFragment.EXPLORE_FRAGMENT_TAG) {
+      if (mainView?.getFragmentTagAtStackTop() == WallpaperFragment.EXPLORE_FRAGMENT_TAG) {
         if (backPressedOnce) {
           mainView?.exitApp()
         } else {
