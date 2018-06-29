@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     setContentView(R.layout.activity_main)
     initializeViews()
     addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
-        WallpaperFragment.EXPLORE_TAG)
+        WallpaperFragment.EXPLORE_FRAGMENT_TAG)
   }
 
   override fun onResume() {
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     fragmentTag: String
   ) {
     if (!fragmentExistsOnStackTop(fragmentTag)) {
-      if (fragmentTag == WallpaperFragment.EXPLORE_TAG) {
+      if (fragmentTag == WallpaperFragment.EXPLORE_FRAGMENT_TAG) {
         clearStack()
       }
 
@@ -192,11 +192,11 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   private fun clickListener(item: MenuItem) {
     when (item) {
       MenuItem.EXPLORE -> addFragment(fragmentContainer.id,
-          WallpaperFragment.newInstance(), WallpaperFragment.EXPLORE_TAG)
+          WallpaperFragment.newInstance(), WallpaperFragment.EXPLORE_FRAGMENT_TAG)
       MenuItem.TOP_PICKS -> addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
-          WallpaperFragment.TOP_PICKS_TAG)
+          WallpaperFragment.TOP_PICKS_FRAGMENT_TAG)
       MenuItem.CATEGORIES -> addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
-          WallpaperFragment.CATEGORIES_TAG)
+          WallpaperFragment.CATEGORIES_FRAGMENT_TAG)
       MenuItem.MINIMAL -> addFragment(fragmentContainer.id,
           MinimalFragment.newInstance(), MinimalFragment.MINIMAL_FRAGMENT_TAG)
       MenuItem.COLLECTION -> addFragment(fragmentContainer.id,

@@ -34,9 +34,9 @@ class WallpaperFragment : BaseFragment(), WallpaperContract.WallpaperView {
   }
 
   companion object {
-    const val EXPLORE_TAG = "Explore"
-    const val TOP_PICKS_TAG = "Top Picks"
-    const val CATEGORIES_TAG = "Categories"
+    const val EXPLORE_FRAGMENT_TAG = "Explore"
+    const val TOP_PICKS_FRAGMENT_TAG = "Top Picks"
+    const val CATEGORIES_FRAGMENT_TAG = "Categories"
 
     fun newInstance() = WallpaperFragment()
   }
