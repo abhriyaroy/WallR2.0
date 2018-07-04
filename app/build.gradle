@@ -36,6 +36,8 @@ android {
     kapt "com.google.dagger:dagger-android-processor:$DAGGER_VERSION"
     // Toasty
     implementation "com.github.GrenderG:Toasty:$TOASTY_VERSION"
+    implementation 'com.github.ybq:Android-SpinKit:1.1.0'
+    implementation 'com.github.recruit-lifestyle:WaveSwipeRefreshLayout:1.6'
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
     implementation project(':libraryWallrCustoms')

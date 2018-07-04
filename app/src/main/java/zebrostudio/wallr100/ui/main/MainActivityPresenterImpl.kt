@@ -1,12 +1,14 @@
 package zebrostudio.wallr100.ui.main
 
 import android.os.Handler
+import zebrostudio.wallr100.ui.wallpaper.WallpaperFragment
 
 class MainActivityPresenterImpl : MainContract.MainPresenter {
 
-  var backPressedOnce: Boolean = false
-  private var mainView: MainContract.MainView? = null
+  private var backPressedOnce = false
   private var isGuillotineMenuOpen = false
+
+  private var mainView: MainContract.MainView? = null
 
   override fun attachView(view: MainContract.MainView) {
     mainView = view
@@ -18,14 +20,18 @@ class MainActivityPresenterImpl : MainContract.MainPresenter {
 
   override fun handleBackPress() {
     if (isGuillotineMenuOpen) {
-      mainView?.closeGuillotineMenu()
+      mainView?.closeNavigationMenu()
     } else {
-      if (backPressedOnce) {
-        mainView?.exitApp()
+      if (mainView?.getFragmentTagAtStackTop() == WallpaperFragment.EXPLORE_FRAGMENT_TAG) {
+        if (backPressedOnce) {
+          mainView?.exitApp()
+        } else {
+          backPressedOnce = true
+          mainView?.showExitConfirmation()
+          Handler().postDelayed({ backPressedOnce = false }, 2000)
+        }
       } else {
-        backPressedOnce = true
-        mainView?.showExitConfirmation()
-        Handler().postDelayed({ backPressedOnce = false }, 2000)
+        mainView?.showPreviousFragment()
       }
     }
   }

@@ -10,6 +10,12 @@
   <string name="guillotine_feedback_title">Feedback</string>
   <string name="guillotine_buypro_title">Buy Pro</string>
   <string name="guillotine_pro_badge">PRO</string>
-  <string name="exit_toast">Press back again to exit</string>
+
+  <string name="exit_confirmation_message">Press back again to exit</string>
+
+  <!-- Fragment strings -->
+  <string name="oops_unable_to_load_wallpapers">Oops. Unable to load wallpapers</string>
+  <string name="please_ensure_you_have_a_working_internet_connection">Please ensure you have a working internet connection</string>
+  <string name="swipe_down_to_retry">Swipe down to retry</string>
 
 </resources>

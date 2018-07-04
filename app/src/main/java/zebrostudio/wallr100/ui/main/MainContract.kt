@@ -8,8 +8,9 @@ interface MainContract {
 
     fun showExitConfirmation()
     fun exitApp()
-    fun closeGuillotineMenu()
-
+    fun closeNavigationMenu()
+    fun showPreviousFragment()
+    fun getFragmentTagAtStackTop(): String
   }
 
   interface MainPresenter : BasePresenter<MainView> {

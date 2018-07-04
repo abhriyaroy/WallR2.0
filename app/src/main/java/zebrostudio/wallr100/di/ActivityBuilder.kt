@@ -8,7 +8,7 @@ import zebrostudio.wallr100.ui.main.MainActivityModule
 @Module
 abstract class ActivityBuilder {
 
-  @ContributesAndroidInjector(modules = [(MainActivityModule::class)])
+  @ContributesAndroidInjector(modules = [(MainActivityModule::class), (FragmentProvider::class)])
   abstract fun mainActivity(): MainActivity
 
 }
