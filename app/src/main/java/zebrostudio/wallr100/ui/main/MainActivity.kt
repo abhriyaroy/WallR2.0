@@ -153,8 +153,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         MenuItems.CATEGORIES))
     menuItemDetails.add(Triple(R.string.guillotine_minimal_title, R.drawable.ic_minimal_white,
         MenuItems.MINIMAL))
-    menuItemDetails.add(
-        Triple(R.string.guillotine_collection_title, R.drawable.ic_collections_white,
+    menuItemDetails.add(Triple(R.string.guillotine_collection_title, R.drawable.ic_collections_white,
             MenuItems.COLLECTION))
     menuItemDetails.add(Triple(R.string.guillotine_feedback_title, R.drawable.ic_feedback_white,
         MenuItems.FEEDBACK))
