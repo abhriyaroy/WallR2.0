@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
 import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
 import dagger.android.support.AndroidSupportInjection
@@ -43,6 +44,16 @@ abstract class BaseFragment : Fragment() {
       if (getString(menuItem) == fragmentTag) {
         activity?.findViewById<LinearLayout>(menuItem)?.setMenuItemColorRed()
       }
+    }
+
+    activity?.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.visibility = View.GONE
+    activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visibility = View.GONE
+    when (fragmentTag) {
+      getString(R.string.guillotine_minimal_title) ->
+        activity?.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.visibility = View.VISIBLE
+      getString(R.string.guillotine_collection_title) -> {  // Do nothing
+      }
+      else -> activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visibility = View.VISIBLE
     }
 
   }
