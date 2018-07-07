@@ -1,10 +1,8 @@
 package zebrostudio.wallr100.ui.basefragment
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout

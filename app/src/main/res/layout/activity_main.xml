@@ -52,4 +52,45 @@
 
   </android.support.design.widget.CoordinatorLayout>
 
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="54dp"
+      android:layout_gravity="bottom"
+      android:id="@+id/solid_fragment_bottom_layout">
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/shadow_top"
+        android:layout_alignParentTop="true"
+        android:id="@+id/shadow_spinner"/>
+
+
+    <android.support.percent.PercentRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/shadow_spinner"
+        android:background="@color/color_primary_dark">
+
+      <com.jaredrummler.materialspinner.MaterialSpinner
+          android:id="@+id/spinner"
+          app:ms_dropdown_max_height="350dp"
+          app:ms_dropdown_height="wrap_content"
+          app:layout_widthPercent="35%"
+          app:ms_background_color="@color/color_primary_dark"
+          android:layout_height="wrap_content"/>
+
+      <RelativeLayout
+          app:ms_dropdown_height="wrap_content"
+          app:layout_widthPercent="25%"
+          android:clickable="false"
+          android:id="@+id/spinner_view_stub"/>
+
+
+    </android.support.percent.PercentRelativeLayout>
+
+  </RelativeLayout>
+
 </FrameLayout>
