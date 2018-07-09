@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootFrameLayout"
     android:layout_width="match_parent"
@@ -53,18 +54,18 @@
   </android.support.design.widget.CoordinatorLayout>
 
   <RelativeLayout
+      android:id="@+id/solid_fragment_bottom_layout"
       android:layout_width="match_parent"
       android:layout_height="54dp"
-      android:layout_gravity="bottom"
-      android:id="@+id/solid_fragment_bottom_layout">
+      android:layout_gravity="bottom">
 
 
     <View
+        android:id="@+id/shadow_spinner"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@drawable/shadow_top"
         android:layout_alignParentTop="true"
-        android:id="@+id/shadow_spinner"/>
+        android:background="@drawable/shadow_top"/>
 
 
     <android.support.percent.PercentRelativeLayout
@@ -83,14 +84,29 @@
           android:layout_height="wrap_content"/>
 
       <RelativeLayout
+          android:id="@+id/spinner_view_stub"
           app:ms_dropdown_height="wrap_content"
           app:layout_widthPercent="25%"
-          android:clickable="false"
-          android:id="@+id/spinner_view_stub"/>
+          android:clickable="false"/>
 
 
     </android.support.percent.PercentRelativeLayout>
 
   </RelativeLayout>
+
+  <com.getbase.floatingactionbutton.FloatingActionButton
+      android:id="@+id/select_solid_bitmap_fab"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:layout_marginEnd="11dp"
+      fab:fab_colorNormal="@color/color_accent"
+      fab:fab_colorPressed="@color/color_ripple_fab"
+      fab:fab_icon="@drawable/ic_forward_arrow_white"
+      android:layout_gravity="bottom|end"
+      android:layout_marginRight="24dp"
+      android:layout_marginBottom="15dp"
+      android:elevation="8dp"
+      android:visibility="visible"/>
 
 </FrameLayout>

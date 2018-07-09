@@ -3,7 +3,7 @@ apply from: '../versions.gradle'
 
 android {
   compileSdkVersion COMPILE_SDK_VERSION
-  buildToolsVersion "$BUILD_TOOLS_VERSION"
+  buildToolsVersion BUILD_TOOLS_VERSION
 
   defaultConfig {
     minSdkVersion MINIMUM_SDK_VERSION

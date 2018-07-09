@@ -18,7 +18,7 @@ abstract class BaseFragment : Fragment() {
 
   private val menuItemIdList: List<Int> = listOf(
       R.string.guillotine_explore_title,
-      R.string.guillotine_toppicks_title,
+      R.string.guillotine_top_picks_title,
       R.string.guillotine_categories_title,
       R.string.guillotine_minimal_title,
       R.string.guillotine_collection_title

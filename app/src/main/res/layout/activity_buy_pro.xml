@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fbutton="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/color_buy_pro_background"
+      android:scrollbars="none"
+      android:overScrollMode="never">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+      <RelativeLayout
+          android:id="@+id/topHalf"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="#37474F"
+          android:paddingBottom="8dp"
+          android:layout_alignParentTop="true"
+          android:layout_alignParentStart="true">
+
+        <ImageView
+            android:id="@+id/backButtonPro"
+            android:layout_marginTop="10dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentStart="true"
+            android:layout_margin="8dp"
+            android:elevation="4dp"
+            android:src="@drawable/ic_back_arrow_white"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <ImageView
+            android:id="@+id/proLogo"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_below="@+id/backButtonPro"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="8dp"
+            />
+
+        <com.zebrostudio.wallrcustoms.flatbutton.FButton
+            android:id="@+id/purchaseButton"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/proLogo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:text="@string/buy_pro_button"
+            android:textAlignment="center"
+            fbutton:buttonColor="@color/color_white"
+            android:textColor="@color/color_black"
+            app:cornerRadius="4dp"
+            app:shadowEnabled="false"
+            app:shadowHeight="0dp"
+            />
+
+        <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+            android:id="@+id/restoreButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/purchaseButton"
+            android:layout_centerHorizontal="true"
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
+            android:padding="10dp"
+            android:text="@string/restore_button"
+            android:textColor="@color/color_white"
+            android:textSize="13sp"/>
+
+      </RelativeLayout>
+
+      <FrameLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:id="@+id/titlePanel"
+          android:layout_below="@id/topHalf">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="20dp"
+            >
+
+          <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+              android:id="@+id/buy_pro_title"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="10dp"
+              android:text="@string/pro_features_title"
+              android:textColor="@color/color_white"
+              android:textSize="20sp"
+              />
+
+          <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_below="@id/buy_pro_title"
+              android:text="@string/buy_pro_description"
+              android:textColor="@color/color_white"
+              android:textSize="16sp"
+              />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@drawable/shadow_bottom"
+            android:layout_gravity="top"/>
+
+      </FrameLayout>
+
+
+     <LinearLayout
+         android:id="@+id/buyProFeatures"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/titlePanel"
+         android:orientation="vertical"/>
+
+    </RelativeLayout>
+
+  </ScrollView>
+
+</FrameLayout>
+

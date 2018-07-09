@@ -45,7 +45,10 @@ android {
     implementation "com.ogaclejapan.smarttablayout:library:$SMART_TAB_VERSION"
     implementation "com.ogaclejapan.smarttablayout:utils-v4:$SMART_TAB_VERSION"
     // FAB
-    implementation "com.getbase:floatingactionbutton:1.10.1"
+    implementation "com.getbase:floatingactionbutton:$FAB_VERSION"
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$GLIDE_VERSION"
+    annotationProcessor "com.github.bumptech.glide:compiler:$GLIDE_VERSION"
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
     implementation project(':libraryMaterialSpinner')
@@ -53,3 +56,6 @@ android {
   }
 }
 
+dependencies {
+  implementation 'com.android.support.constraint:constraint-layout:+'
+}

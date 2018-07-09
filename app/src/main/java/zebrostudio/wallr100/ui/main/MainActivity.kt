@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
@@ -20,6 +21,7 @@ import kotlinx.android.synthetic.main.item_guillotine_menu.view.textviewGuilloti
 import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.ui.basefragment.BaseFragment
+import zebrostudio.wallr100.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.ui.collection.CollectionFragment
 import zebrostudio.wallr100.ui.wallpaper.WallpaperFragment
 import zebrostudio.wallr100.ui.minimal.MinimalFragment
@@ -147,7 +149,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     val menuItemDetails = mutableListOf<Triple<Int, Int, MenuItems>>()
     menuItemDetails.add(Triple(R.string.guillotine_explore_title, R.drawable.ic_explore_white,
         MenuItems.EXPLORE))
-    menuItemDetails.add(Triple(R.string.guillotine_toppicks_title, R.drawable.ic_toppicks_white,
+    menuItemDetails.add(Triple(R.string.guillotine_top_picks_title, R.drawable.ic_toppicks_white,
         MenuItems.TOP_PICKS))
     menuItemDetails.add(Triple(R.string.guillotine_categories_title, R.drawable.ic_categories_white,
         MenuItems.CATEGORIES))
@@ -157,7 +159,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
             MenuItems.COLLECTION))
     menuItemDetails.add(Triple(R.string.guillotine_feedback_title, R.drawable.ic_feedback_white,
         MenuItems.FEEDBACK))
-    menuItemDetails.add(Triple(R.string.guillotine_buypro_title, R.drawable.ic_buypro_black,
+    menuItemDetails.add(Triple(R.string.guillotine_buy_pro_title, R.drawable.ic_buypro_black,
         MenuItems.BUY_PRO))
     return menuItemDetails
   }
@@ -204,7 +206,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         // TODO : Add feedback implementation
       }
       MenuItems.BUY_PRO -> {
-        // TODO : Add buy pro section
+        startActivity(Intent(this, BuyProActivity::class.java))
       }
     }
     closeNavigationMenu()

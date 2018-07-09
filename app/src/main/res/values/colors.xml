@@ -7,5 +7,7 @@
   <color name="color_guillotine_menu_background">#212121</color>
   <color name="color_white">#ffffff</color>
   <color name="color_black">#000000</color>
+  <color name="color_ripple_fab">#ec6065</color>
+  <color name="color_buy_pro_background">#1a1a1a</color>
 
 </resources>

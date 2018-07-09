@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
+    android:layout_centerHorizontal="true"
+    android:id="@+id/recycler11"
+    android:paddingBottom="15dp"
+    android:paddingTop="15dp"
+    android:layout_below="@id/titlePanel"
+    android:clickable="true"
+    android:background="?android:selectableItemBackground">
+
+  <ImageView
+      android:layout_width="28dp"
+      android:layout_height="28dp"
+      android:paddingTop="4dp"
+      android:id="@+id/imageView"
+      android:layout_marginRight="20dp"/>
+
+  <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignTop="@id/imageView"
+      android:textSize="15sp"
+      android:layout_toRightOf="@id/imageView"
+      android:textColor="@color/color_white"
+      android:id="@+id/headerTextView"/>
+
+  <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+      android:id="@+id/descriptionTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignLeft="@id/headerTextView"
+      android:layout_below="@id/headerTextView"
+      android:paddingTop="4dp"
+      android:paddingBottom="4dp"
+      android:textSize="12sp"
+      android:textColor="#dbd4cf"/>
+
+</RelativeLayout>
