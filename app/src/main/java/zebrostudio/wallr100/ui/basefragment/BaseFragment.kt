@@ -35,12 +35,12 @@ abstract class BaseFragment : Fragment() {
     activity?.findViewById<WallrCustomTextView>(R.id.toolbarTitle)?.text = fragmentTag
 
     for (menuItem in menuItemIdList) {
-      activity?.findViewById<LinearLayout>(menuItem)?.setMenuItemColorWhite()
+      activity?.findViewById<LinearLayout>(menuItem)?.setMenuItemColorWhite(this.context!!)
     }
 
     for (menuItem in menuItemIdList) {
       if (getString(menuItem) == fragmentTag) {
-        activity?.findViewById<LinearLayout>(menuItem)?.setMenuItemColorRed()
+        activity?.findViewById<LinearLayout>(menuItem)?.setMenuItemColorRed(this.context!!)
       }
     }
 
