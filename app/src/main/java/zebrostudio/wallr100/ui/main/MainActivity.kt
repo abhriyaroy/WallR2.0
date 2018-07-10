@@ -2,6 +2,7 @@ package zebrostudio.wallr100.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -155,7 +156,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         MenuItems.CATEGORIES))
     menuItemDetails.add(Triple(R.string.guillotine_minimal_title, R.drawable.ic_minimal_white,
         MenuItems.MINIMAL))
-    menuItemDetails.add(Triple(R.string.guillotine_collection_title, R.drawable.ic_collections_white,
+    menuItemDetails.add(
+        Triple(R.string.guillotine_collection_title, R.drawable.ic_collections_white,
             MenuItems.COLLECTION))
     menuItemDetails.add(Triple(R.string.guillotine_feedback_title, R.drawable.ic_feedback_white,
         MenuItems.FEEDBACK))
@@ -206,7 +208,9 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         // TODO : Add feedback implementation
       }
       MenuItems.BUY_PRO -> {
-        startActivity(Intent(this, BuyProActivity::class.java))
+        Handler().postDelayed(Runnable {
+          startActivity(Intent(this, BuyProActivity::class.java))
+        }, 550)
       }
     }
     closeNavigationMenu()

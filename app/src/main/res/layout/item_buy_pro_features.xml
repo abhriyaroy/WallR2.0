@@ -3,31 +3,29 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="24dp"
-    android:paddingRight="24dp"
+    android:padding="@dimen/item_buy_pro_relative_layout_padding"
+    android:paddingBottom="@dimen/item_buy_pro_relative_layout_padding_bottom"
+    android:paddingTop="@dimen/item_buy_pro_relative_layout_padding_top"
     android:layout_centerHorizontal="true"
-    android:id="@+id/recycler11"
-    android:paddingBottom="15dp"
-    android:paddingTop="15dp"
-    android:layout_below="@id/titlePanel"
+    android:background="?android:selectableItemBackground"
     android:clickable="true"
-    android:background="?android:selectableItemBackground">
+    android:focusable="true">
 
   <ImageView
-      android:layout_width="28dp"
-      android:layout_height="28dp"
-      android:paddingTop="4dp"
       android:id="@+id/imageView"
-      android:layout_marginRight="20dp"/>
+      android:layout_width="@dimen/item_buy_pro_imageview_width"
+      android:layout_height="@dimen/item_buy_pro_imageview_height"
+      android:paddingTop="@dimen/item_buy_pro_imageview_padding_top"
+      android:layout_marginRight="@dimen/item_buy_pro_imageview_margin_right"/>
 
   <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+      android:id="@+id/headerTextView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignTop="@id/imageView"
-      android:textSize="15sp"
       android:layout_toRightOf="@id/imageView"
-      android:textColor="@color/color_white"
-      android:id="@+id/headerTextView"/>
+      android:textSize="@dimen/item_buy_pro_header_text_size"
+      android:textColor="@color/color_white"/>
 
   <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
       android:id="@+id/descriptionTextView"
@@ -35,9 +33,9 @@
       android:layout_height="wrap_content"
       android:layout_alignLeft="@id/headerTextView"
       android:layout_below="@id/headerTextView"
-      android:paddingTop="4dp"
-      android:paddingBottom="4dp"
-      android:textSize="12sp"
-      android:textColor="#dbd4cf"/>
+      android:paddingTop="@dimen/item_buy_pro_description_padding_top"
+      android:paddingBottom="@dimen/item_buy_pro_description_padding_bottom"
+      android:textSize="@dimen/item_buy_pro_description_text_size"
+      android:textColor="@color/color_item_buy_pro_description_text"/>
 
 </RelativeLayout>
