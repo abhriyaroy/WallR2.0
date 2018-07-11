@@ -34,16 +34,22 @@ abstract class BaseFragment : Fragment() {
     super.onResume()
     activity?.findViewById<WallrCustomTextView>(R.id.toolbarTitle)?.text = fragmentTag
 
+    highlightCurrentMenuItem()
+
+    showAppropriateToolbarMenuIcon()
+
+  }
+
+  private fun highlightCurrentMenuItem() {
     for (menuItem in menuItemIdList) {
       activity?.findViewById<LinearLayout>(menuItem)?.setMenuItemColorWhite(this.context!!)
-    }
-
-    for (menuItem in menuItemIdList) {
       if (getString(menuItem) == fragmentTag) {
         activity?.findViewById<LinearLayout>(menuItem)?.setMenuItemColorRed(this.context!!)
       }
     }
+  }
 
+  private fun showAppropriateToolbarMenuIcon() {
     activity?.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.visibility = View.GONE
     activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visibility = View.GONE
     when (fragmentTag) {
@@ -53,6 +59,6 @@ abstract class BaseFragment : Fragment() {
       }
       else -> activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visibility = View.VISIBLE
     }
-
   }
+
 }

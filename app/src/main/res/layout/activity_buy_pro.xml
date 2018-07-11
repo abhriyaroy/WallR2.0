@@ -47,7 +47,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/buy_pro_logo_margin_bottom"/>
 
-        <com.zebrostudio.wallrcustoms.flatbutton.FButton
+        <com.zebrostudio.wallrcustoms.flatbutton.FlatButton
             android:id="@+id/purchaseButton"
             android:layout_width="@dimen/buy_pro_fbutton_width"
             android:layout_height="wrap_content"

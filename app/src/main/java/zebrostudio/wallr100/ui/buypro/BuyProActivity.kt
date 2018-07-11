@@ -32,30 +32,27 @@ class BuyProActivity : AppCompatActivity() {
     val layoutInflater = LayoutInflater.from(this)
     itemIterator.forEach {
       val proFeatureView = layoutInflater.inflate(R.layout.item_buy_pro_features, null)
-      proFeatureView.imageView.setImageResource(it.first)
-      proFeatureView.headerTextView.setText(it.second)
-      proFeatureView.descriptionTextView.setText(it.third)
+      with(proFeatureView) {
+        imageView.setImageResource(it.first)
+        headerTextView.setText(it.second)
+        descriptionTextView.setText(it.third)
+      }
       buyProFeatures.addView(proFeatureView)
     }
   }
 
   private fun buildProFeaturesList(): List<Triple<Int, Int, Int>> {
-    val buyProFeatures = mutableListOf<Triple<Int, Int, Int>>()
-    buyProFeatures.add(
-        Triple(R.drawable.ic_remove_ads_white, R.string.adsHeader, R.string.adsSubHeader))
-    buyProFeatures.add(
-        Triple(R.drawable.ic_high_definition, R.string.downloadsHeader,
-            R.string.downloadsSubHeader))
-    buyProFeatures.add(
-        Triple(R.drawable.ic_automatic_wallpaper_changer, R.string.automaticChangerHeader,
-            R.string.automaticChangerSubHeader))
-    buyProFeatures.add(
-        Triple(R.drawable.ic_crystallize_white, R.string.crystallizeHeader,
-            R.string.crystallizeSubHeader))
-    buyProFeatures.add(
-        Triple(R.drawable.ic_share_white, R.string.shareHeader, R.string.shareSubHeader))
+    return mutableListOf<Triple<Int, Int, Int>>().apply {
+      add(Triple(R.drawable.ic_remove_ads_white, R.string.adsHeader, R.string.adsSubHeader))
+      add(Triple(R.drawable.ic_high_definition, R.string.downloadsHeader,
+          R.string.downloadsSubHeader))
+      add(Triple(R.drawable.ic_automatic_wallpaper_changer, R.string.automaticChangerHeader,
+          R.string.automaticChangerSubHeader))
+      add(Triple(R.drawable.ic_crystallize_white, R.string.crystallizeHeader,
+          R.string.crystallizeSubHeader))
+      add(Triple(R.drawable.ic_share_white, R.string.shareHeader, R.string.shareSubHeader))
+    }
 
-    return buyProFeatures
   }
 
 }

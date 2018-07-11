@@ -31,6 +31,7 @@ import zebrostudio.wallr100.utils.drawableRes
 import zebrostudio.wallr100.utils.infoToast
 import zebrostudio.wallr100.utils.setOnDebouncedClickListener
 import zebrostudio.wallr100.utils.stringRes
+import zebrostudio.wallr100.utils.withDelayOnMain
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragmentInjector {
@@ -147,22 +148,22 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
 
   private fun buildGuillotineMenuItems(): List<Triple<Int, Int, MenuItems>> {
     // Declare mutable list containing names and icon resources of guillotine menu items
-    val menuItemDetails = mutableListOf<Triple<Int, Int, MenuItems>>()
-    menuItemDetails.add(Triple(R.string.guillotine_explore_title, R.drawable.ic_explore_white,
-        MenuItems.EXPLORE))
-    menuItemDetails.add(Triple(R.string.guillotine_top_picks_title, R.drawable.ic_toppicks_white,
-        MenuItems.TOP_PICKS))
-    menuItemDetails.add(Triple(R.string.guillotine_categories_title, R.drawable.ic_categories_white,
-        MenuItems.CATEGORIES))
-    menuItemDetails.add(Triple(R.string.guillotine_minimal_title, R.drawable.ic_minimal_white,
-        MenuItems.MINIMAL))
-    menuItemDetails.add(
-        Triple(R.string.guillotine_collection_title, R.drawable.ic_collections_white,
-            MenuItems.COLLECTION))
-    menuItemDetails.add(Triple(R.string.guillotine_feedback_title, R.drawable.ic_feedback_white,
-        MenuItems.FEEDBACK))
-    menuItemDetails.add(Triple(R.string.guillotine_buy_pro_title, R.drawable.ic_buypro_black,
-        MenuItems.BUY_PRO))
+    val menuItemDetails = mutableListOf<Triple<Int, Int, MenuItems>>().apply {
+      add(Triple(R.string.guillotine_explore_title, R.drawable.ic_explore_white,
+          MenuItems.EXPLORE))
+      add(Triple(R.string.guillotine_top_picks_title, R.drawable.ic_toppicks_white,
+          MenuItems.TOP_PICKS))
+      add(Triple(R.string.guillotine_categories_title, R.drawable.ic_categories_white,
+          MenuItems.CATEGORIES))
+      add(Triple(R.string.guillotine_minimal_title, R.drawable.ic_minimal_white,
+          MenuItems.MINIMAL))
+      add(Triple(R.string.guillotine_collection_title, R.drawable.ic_collections_white,
+          MenuItems.COLLECTION))
+      add(Triple(R.string.guillotine_feedback_title, R.drawable.ic_feedback_white,
+          MenuItems.FEEDBACK))
+      add(Triple(R.string.guillotine_buy_pro_title, R.drawable.ic_buypro_black,
+          MenuItems.BUY_PRO))
+    }
     return menuItemDetails
   }
 
@@ -174,11 +175,13 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
       val guillotineMenuItemView = layoutInflater
           .inflate(R.layout.item_guillotine_menu, null)
       rootLinearLayoutGuillotineMenu?.addView(guillotineMenuItemView)
-      guillotineMenuItemView.id = it.first
-      guillotineMenuItemView.textviewGuillotineMenuItem.text =
-          stringRes(it.first)
-      guillotineMenuItemView.imageviewGuillotineMenuItem.setImageDrawable(
-          drawableRes(it.second))
+      with(guillotineMenuItemView) {
+        id = it.first
+        textviewGuillotineMenuItem.text =
+            stringRes(it.first)
+        imageviewGuillotineMenuItem.setImageDrawable(
+            drawableRes(it.second))
+      }
       // Make the background white and text color black for the buy pro guillotine menu item
       if (!itemIterator.hasNext()) {
         guillotineMenuItemView.setBackgroundColor(colorRes(R.color.color_white))
@@ -208,9 +211,10 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         // TODO : Add feedback implementation
       }
       MenuItems.BUY_PRO -> {
-        Handler().postDelayed(Runnable {
+        withDelayOnMain(550, block = {
           startActivity(Intent(this, BuyProActivity::class.java))
-        }, 550)
+        }
+        )
       }
     }
     closeNavigationMenu()
