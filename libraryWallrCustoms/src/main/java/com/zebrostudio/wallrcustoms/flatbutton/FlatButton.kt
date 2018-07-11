@@ -22,16 +22,18 @@ class FlatButton : Button, View.OnTouchListener {
   private var mShadowColor: Int = 0
   private var mShadowHeight: Int = 0
   private var mCornerRadius: Int = 0
+
   //Native values
   private var mPaddingLeft: Int = 0
   private var mPaddingRight: Int = 0
   private var mPaddingTop: Int = 0
   private var mPaddingBottom: Int = 0
+
   //Background drawable
   private var pressedDrawable: Drawable? = null
   private var unpressedDrawable: Drawable? = null
 
-  internal var isShadowColorDefined = false
+  private var isShadowColorDefined = false
 
   constructor(context: Context) : super(context) {
     init()
@@ -58,7 +60,7 @@ class FlatButton : Button, View.OnTouchListener {
   }
 
   override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
-    when (motionEvent.getAction()) {
+    when (motionEvent.action) {
       MotionEvent.ACTION_DOWN -> {
         updateBackground(pressedDrawable)
         this.setPadding(mPaddingLeft, mPaddingTop + mShadowHeight, mPaddingRight, mPaddingBottom)
@@ -66,9 +68,9 @@ class FlatButton : Button, View.OnTouchListener {
       MotionEvent.ACTION_MOVE -> {
         val r = Rect()
         view.getLocalVisibleRect(r)
-        if (!r.contains(motionEvent.getX().toInt(),
-                motionEvent.getY().toInt() + 3 * mShadowHeight) && !r.contains(
-                motionEvent.getX().toInt(), motionEvent.getY().toInt() - 3 * mShadowHeight)) {
+        if (!r.contains(motionEvent.x.toInt(),
+                motionEvent.y.toInt() + 3 * mShadowHeight) && !r.contains(
+                motionEvent.x.toInt(), motionEvent.y.toInt() - 3 * mShadowHeight)) {
           updateBackground(unpressedDrawable)
           this.setPadding(mPaddingLeft, mPaddingTop + mShadowHeight, mPaddingRight,
               mPaddingBottom + mShadowHeight)
@@ -93,11 +95,11 @@ class FlatButton : Button, View.OnTouchListener {
     mCornerRadius = resources.getDimensionPixelSize(R.dimen.fbutton_default_conner_radius)
   }
 
-  @SuppressLint("ResourceAsColor", "ResourceType")
+  @SuppressLint("ResourceAsColor", "ResourceType", "CustomViewStyleable")
   private fun parseAttrs(context: Context, attrs: AttributeSet) {
     //Load from custom attributes
     val typedArray = context.obtainStyledAttributes(attrs, R.styleable.FButton) ?: return
-    for (i in 0 until typedArray.getIndexCount()) {
+    for (i in 0 until typedArray.indexCount) {
       val attr = typedArray.getIndex(i)
       if (attr == R.styleable.FButton_shadowEnabled) {
         isShadowEnabled = typedArray.getBoolean(attr, true) //Default is true
@@ -133,7 +135,7 @@ class FlatButton : Button, View.OnTouchListener {
     ta1.recycle()
   }
 
-  fun refresh() {
+  private fun refresh() {
     val alpha = Color.alpha(mButtonColor)
     val hsv = FloatArray(3)
     Color.colorToHSV(mButtonColor, hsv)
@@ -171,7 +173,7 @@ class FlatButton : Button, View.OnTouchListener {
   private fun updateBackground(background: Drawable?) {
     if (background == null) return
     //Set button background
-    if (Build.VERSION.SDK_INT >= 16) {
+    if (Build.VERSION.SDK_INT >= 18) {
       this.background = background
     } else {
       this.setBackgroundDrawable(background)
@@ -187,11 +189,11 @@ class FlatButton : Button, View.OnTouchListener {
     //Top
     val topRoundRect = RoundRectShape(outerRadius, null, null)
     val topShapeDrawable = ShapeDrawable(topRoundRect)
-    topShapeDrawable.getPaint().setColor(topColor)
+    with(topShapeDrawable) { paint.color = topColor }
     //Bottom
     val roundRectShape = RoundRectShape(outerRadius, null, null)
     val bottomShapeDrawable = ShapeDrawable(roundRectShape)
-    bottomShapeDrawable.getPaint().setColor(bottomColor)
+    with(bottomShapeDrawable) { paint.color = bottomColor }
     //Create array
     val drawArray = arrayOf<Drawable>(bottomShapeDrawable, topShapeDrawable)
     val layerDrawable = LayerDrawable(drawArray)
