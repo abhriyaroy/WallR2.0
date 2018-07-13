@@ -41,9 +41,10 @@ abstract class BaseFragment : Fragment() {
 
   private fun highlightCurrentMenuItem() {
     for (menuItem in menuItemIdList) {
-      activity?.findViewById<LinearLayout>(menuItem)?.setMenuItemColorWhite(this.context!!)
       if (getString(menuItem) == fragmentTag) {
         activity?.findViewById<LinearLayout>(menuItem)?.setMenuItemColorRed(this.context!!)
+      } else {
+        activity?.findViewById<LinearLayout>(menuItem)?.setMenuItemColorWhite(this.context!!)
       }
     }
   }
