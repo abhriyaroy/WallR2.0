@@ -1,4 +1,4 @@
-package com.zebrostudio.wallrcustoms.flatbutton
+package com.zebrostudio.wallrcustoms.customflatbutton
 
 import android.annotation.SuppressLint
 import android.content.Context

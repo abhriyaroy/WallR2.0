@@ -35,7 +35,6 @@ abstract class BaseFragment : Fragment() {
     activity?.findViewById<WallrCustomTextView>(R.id.toolbarTitle)?.text = fragmentTag
 
     highlightCurrentMenuItem()
-
     showAppropriateToolbarMenuIcon()
 
   }
