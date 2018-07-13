@@ -1,5 +1,4 @@
 <resources>
-  <!-- Default screen margins, per the Android Design guidelines. -->
   <dimen name="fbutton_default_conner_radius">8dp</dimen>
   <dimen name="fbutton_default_padding_left">10dp</dimen>
   <dimen name="fbutton_default_padding_right">10dp</dimen>
