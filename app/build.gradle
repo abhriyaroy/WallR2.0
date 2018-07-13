@@ -52,7 +52,3 @@ android {
     implementation project(':libraryWallrCustoms')
   }
 }
-
-dependencies {
-  implementation 'com.android.support.constraint:constraint-layout:+'
-}
