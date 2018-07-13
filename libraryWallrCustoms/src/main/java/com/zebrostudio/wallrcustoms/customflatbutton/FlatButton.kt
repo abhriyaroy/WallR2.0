@@ -18,16 +18,16 @@ import com.zebrostudio.wallrcustoms.R
 class FlatButton : Button, View.OnTouchListener {
   //Custom values
   private var isShadowEnabled = true
-  private var mButtonColor: Int = 0
-  private var mShadowColor: Int = 0
-  private var mShadowHeight: Int = 0
-  private var mCornerRadius: Int = 0
+  private var buttonColor: Int = 0
+  private var shadowColor: Int = 0
+  private var shadowHeight: Int = 0
+  private var cornerRadius: Int = 0
 
   //Native values
-  private var mPaddingLeft: Int = 0
-  private var mPaddingRight: Int = 0
-  private var mPaddingTop: Int = 0
-  private var mPaddingBottom: Int = 0
+  private var paddingLeftValue: Int = 0
+  private var paddingRightValue: Int = 0
+  private var paddingTopValue: Int = 0
+  private var paddingBottomValue: Int = 0
 
   //Background drawable
   private var pressedDrawable: Drawable? = null
@@ -63,23 +63,23 @@ class FlatButton : Button, View.OnTouchListener {
     when (motionEvent.action) {
       MotionEvent.ACTION_DOWN -> {
         updateBackground(pressedDrawable)
-        this.setPadding(mPaddingLeft, mPaddingTop + mShadowHeight, mPaddingRight, mPaddingBottom)
+        this.setPadding(paddingLeftValue, paddingTopValue + shadowHeight, paddingRightValue, paddingBottomValue)
       }
       MotionEvent.ACTION_MOVE -> {
         val r = Rect()
         view.getLocalVisibleRect(r)
         if (!r.contains(motionEvent.x.toInt(),
-                motionEvent.y.toInt() + 3 * mShadowHeight) && !r.contains(
-                motionEvent.x.toInt(), motionEvent.y.toInt() - 3 * mShadowHeight)) {
+                motionEvent.y.toInt() + 3 * shadowHeight) && !r.contains(
+                motionEvent.x.toInt(), motionEvent.y.toInt() - 3 * shadowHeight)) {
           updateBackground(unpressedDrawable)
-          this.setPadding(mPaddingLeft, mPaddingTop + mShadowHeight, mPaddingRight,
-              mPaddingBottom + mShadowHeight)
+          this.setPadding(paddingLeftValue, paddingTopValue + shadowHeight, paddingRightValue,
+              paddingBottomValue + shadowHeight)
         }
       }
       MotionEvent.ACTION_OUTSIDE, MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
         updateBackground(unpressedDrawable)
-        this.setPadding(mPaddingLeft, mPaddingTop + mShadowHeight, mPaddingRight,
-            mPaddingBottom + mShadowHeight)
+        this.setPadding(paddingLeftValue, paddingTopValue + shadowHeight, paddingRightValue,
+            paddingBottomValue + shadowHeight)
       }
     }
     return false
@@ -89,10 +89,10 @@ class FlatButton : Button, View.OnTouchListener {
     //Init default values
     isShadowEnabled = true
     val resources = resources ?: return
-    mButtonColor = resources.getColor(R.color.fbutton_default_color)
-    mShadowColor = resources.getColor(R.color.fbutton_default_shadow_color)
-    mShadowHeight = resources.getDimensionPixelSize(R.dimen.fbutton_default_shadow_height)
-    mCornerRadius = resources.getDimensionPixelSize(R.dimen.fbutton_default_conner_radius)
+    buttonColor = resources.getColor(R.color.fbutton_default_color)
+    shadowColor = resources.getColor(R.color.fbutton_default_shadow_color)
+    shadowHeight = resources.getDimensionPixelSize(R.dimen.fbutton_default_shadow_height)
+    cornerRadius = resources.getDimensionPixelSize(R.dimen.fbutton_default_conner_radius)
   }
 
   @SuppressLint("ResourceAsColor", "ResourceType", "CustomViewStyleable")
@@ -104,15 +104,15 @@ class FlatButton : Button, View.OnTouchListener {
       if (attr == R.styleable.FButton_shadowEnabled) {
         isShadowEnabled = typedArray.getBoolean(attr, true) //Default is true
       } else if (attr == R.styleable.FButton_buttonColor) {
-        mButtonColor = typedArray.getColor(attr, R.color.fbutton_default_color)
+        buttonColor = typedArray.getColor(attr, R.color.fbutton_default_color)
       } else if (attr == R.styleable.FButton_shadowColor) {
-        mShadowColor = typedArray.getColor(attr, R.color.fbutton_default_shadow_color)
+        shadowColor = typedArray.getColor(attr, R.color.fbutton_default_shadow_color)
         isShadowColorDefined = true
       } else if (attr == R.styleable.FButton_shadowHeight) {
-        mShadowHeight =
+        shadowHeight =
             typedArray.getDimensionPixelSize(attr, R.dimen.fbutton_default_shadow_height)
       } else if (attr == R.styleable.FButton_cornerRadius) {
-        mCornerRadius =
+        cornerRadius =
             typedArray.getDimensionPixelSize(attr, R.dimen.fbutton_default_conner_radius)
       }
     }
@@ -122,52 +122,52 @@ class FlatButton : Button, View.OnTouchListener {
     val attrsArray = intArrayOf(android.R.attr.paddingLeft, // 0
         android.R.attr.paddingRight)// 1
     val ta = context.obtainStyledAttributes(attrs, attrsArray) ?: return
-    mPaddingLeft = ta.getDimensionPixelSize(0, 0)
-    mPaddingRight = ta.getDimensionPixelSize(1, 0)
+    paddingLeftValue = ta.getDimensionPixelSize(0, 0)
+    paddingRightValue = ta.getDimensionPixelSize(1, 0)
     ta.recycle()
 
     //Get paddingTop, paddingBottom
     val attrsArray2 = intArrayOf(android.R.attr.paddingTop, // 0
         android.R.attr.paddingBottom)// 1
     val ta1 = context.obtainStyledAttributes(attrs, attrsArray2) ?: return
-    mPaddingTop = ta1.getDimensionPixelSize(0, 0)
-    mPaddingBottom = ta1.getDimensionPixelSize(1, 0)
+    paddingTopValue = ta1.getDimensionPixelSize(0, 0)
+    paddingBottomValue = ta1.getDimensionPixelSize(1, 0)
     ta1.recycle()
   }
 
   private fun refresh() {
-    val alpha = Color.alpha(mButtonColor)
+    val alpha = Color.alpha(buttonColor)
     val hsv = FloatArray(3)
-    Color.colorToHSV(mButtonColor, hsv)
+    Color.colorToHSV(buttonColor, hsv)
     hsv[2] *= 0.8f // value component
     //if shadow color was not defined, generate shadow color = 80% brightness
     if (!isShadowColorDefined) {
-      mShadowColor = Color.HSVToColor(alpha, hsv)
+      shadowColor = Color.HSVToColor(alpha, hsv)
     }
     //Create pressed background and unpressed background drawables
 
     if (this.isEnabled) {
       if (isShadowEnabled) {
-        pressedDrawable = createDrawable(mCornerRadius, Color.TRANSPARENT, mButtonColor)
-        unpressedDrawable = createDrawable(mCornerRadius, mButtonColor, mShadowColor)
+        pressedDrawable = createDrawable(cornerRadius, Color.TRANSPARENT, buttonColor)
+        unpressedDrawable = createDrawable(cornerRadius, buttonColor, shadowColor)
       } else {
-        mShadowHeight = 0
-        pressedDrawable = createDrawable(mCornerRadius, mShadowColor, Color.TRANSPARENT)
-        unpressedDrawable = createDrawable(mCornerRadius, mButtonColor, Color.TRANSPARENT)
+        shadowHeight = 0
+        pressedDrawable = createDrawable(cornerRadius, shadowColor, Color.TRANSPARENT)
+        unpressedDrawable = createDrawable(cornerRadius, buttonColor, Color.TRANSPARENT)
       }
     } else {
-      Color.colorToHSV(mButtonColor, hsv)
+      Color.colorToHSV(buttonColor, hsv)
       hsv[1] *= 0.25f // saturation component
-      mShadowColor = Color.HSVToColor(alpha, hsv)
-      val disabledColor = mShadowColor
+      shadowColor = Color.HSVToColor(alpha, hsv)
+      val disabledColor = shadowColor
       // Disabled button does not have shadow
-      pressedDrawable = createDrawable(mCornerRadius, disabledColor, Color.TRANSPARENT)
-      unpressedDrawable = createDrawable(mCornerRadius, disabledColor, Color.TRANSPARENT)
+      pressedDrawable = createDrawable(cornerRadius, disabledColor, Color.TRANSPARENT)
+      unpressedDrawable = createDrawable(cornerRadius, disabledColor, Color.TRANSPARENT)
     }
     updateBackground(unpressedDrawable)
     //Set padding
-    this.setPadding(mPaddingLeft, mPaddingTop + mShadowHeight, mPaddingRight,
-        mPaddingBottom + mShadowHeight)
+    this.setPadding(paddingLeftValue, paddingTopValue + shadowHeight, paddingRightValue,
+        paddingBottomValue + shadowHeight)
   }
 
   private fun updateBackground(background: Drawable?) {
@@ -204,9 +204,9 @@ class FlatButton : Button, View.OnTouchListener {
       layerDrawable.setLayerInset(0, 0, 0, 0, 0)  /*index, left, top, right, bottom*/
     } else {
       //pressed drawable
-      layerDrawable.setLayerInset(0, 0, mShadowHeight, 0, 0)  /*index, left, top, right, bottom*/
+      layerDrawable.setLayerInset(0, 0, shadowHeight, 0, 0)  /*index, left, top, right, bottom*/
     }
-    layerDrawable.setLayerInset(1, 0, 0, 0, mShadowHeight)  /*index, left, top, right, bottom*/
+    layerDrawable.setLayerInset(1, 0, 0, 0, shadowHeight)  /*index, left, top, right, bottom*/
 
     return layerDrawable
   }
@@ -219,31 +219,31 @@ class FlatButton : Button, View.OnTouchListener {
   }
 
   fun setButtonColor(buttonColor: Int) {
-    this.mButtonColor = buttonColor
+    this.buttonColor = buttonColor
     refresh()
   }
 
   fun setShadowColor(shadowColor: Int) {
-    this.mShadowColor = shadowColor
+    this.shadowColor = shadowColor
     isShadowColorDefined = true
     refresh()
   }
 
   fun setShadowHeight(shadowHeight: Int) {
-    this.mShadowHeight = shadowHeight
+    this.shadowHeight = shadowHeight
     refresh()
   }
 
   fun setCornerRadius(cornerRadius: Int) {
-    this.mCornerRadius = cornerRadius
+    this.cornerRadius = cornerRadius
     refresh()
   }
 
   fun setFButtonPadding(left: Int, top: Int, right: Int, bottom: Int) {
-    mPaddingLeft = left
-    mPaddingRight = right
-    mPaddingTop = top
-    mPaddingBottom = bottom
+    paddingLeftValue = left
+    paddingRightValue = right
+    paddingTopValue = top
+    paddingBottomValue = bottom
     refresh()
   }
 
@@ -258,19 +258,19 @@ class FlatButton : Button, View.OnTouchListener {
   }
 
   fun getButtonColor(): Int {
-    return mButtonColor
+    return buttonColor
   }
 
   override fun getShadowColor(): Int {
-    return mShadowColor
+    return shadowColor
   }
 
   fun getShadowHeight(): Int {
-    return mShadowHeight
+    return shadowHeight
   }
 
   fun getCornerRadius(): Int {
-    return mCornerRadius
+    return cornerRadius
   }
 
 }
