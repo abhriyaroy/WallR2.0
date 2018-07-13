@@ -177,10 +177,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
       rootLinearLayoutGuillotineMenu?.addView(guillotineMenuItemView)
       with(guillotineMenuItemView) {
         id = it.first
-        textviewGuillotineMenuItem.text =
-            stringRes(it.first)
-        imageviewGuillotineMenuItem.setImageDrawable(
-            drawableRes(it.second))
+        textviewGuillotineMenuItem.text = stringRes(it.first)
+        imageviewGuillotineMenuItem.setImageDrawable(drawableRes(it.second))
       }
       // Make the background white and text color black for the buy pro guillotine menu item
       if (!itemIterator.hasNext()) {

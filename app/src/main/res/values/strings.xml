@@ -15,23 +15,35 @@
 
   <!-- Fragment strings -->
   <string name="oops_unable_to_load_wallpapers">Oops. Unable to load wallpapers</string>
-  <string name="please_ensure_you_have_a_working_internet_connection">Please ensure you have a working internet connection</string>
+  <string name="please_ensure_you_have_a_working_internet_connection">
+    Please ensure you have a working internet connection</string>
   <string name="swipe_down_to_retry">Swipe down to retry</string>
 
   <!-- Buy pro strings -->
   <string name="buy_pro_button">BUY PRO</string>
   <string name="restore_button">Already purchased? <b>Restore</b></string>
   <string name="pro_features_title">PRO Features</string>
-  <string name="buy_pro_description">Buy the PRO version of the app to unlock new and amazing features and enjoy the app fully!</string>
-  <string name="adsHeader">Ads Free Experience</string>
-  <string name="adsSubHeader">We don\'t like ads, just like you don\'t. Enjoy a complete ads free experience</string>
-  <string name="downloadsHeader">Ultra HD Wallpaper Downloads</string>
-  <string name="downloadsSubHeader">You can now download ultra HD versions of any wallpaper of your choice and keep it in your device</string>
-  <string name="automaticChangerHeader">Automatic Wallpaper Changer</string>
-  <string name="automaticChangerSubHeader">Changes your homescreen with new and fresh wallpapers automatically after a chosen period of time</string>
-  <string name="crystallizeHeader">Crystallized Wallpapers</string>
-  <string name="crystallizeSubHeader">Generates a crystallized version of the current wallpaper and gives your homescreen an unique look and feel</string>
-  <string name="shareHeader">Share Wallpapers</string>
-  <string name="shareSubHeader">Share your favourite wallpapers with anyone you want in just one click</string>
+  <string name="buy_pro_description">
+    Buy the PRO version of the app to unlock new and amazing features and enjoy the app fully!
+  </string>
+  <string name="buy_pro_features_ads_header">Ads Free Experience</string>
+  <string name="buy_pro_features_ads_sub_header">
+    We don\'t like ads, just like you don\'t. Enjoy a complete ads free experience</string>
+  <string name="buy_pro_features_downloads_header">Ultra HD Wallpaper Downloads</string>
+  <string name="buy_pro_features_downloads_sub_header">
+    You can now download ultra HD versions of any wallpaper of your choice and keep it in your device
+  </string>
+  <string name="buy_pro_features_automatic_wallpaper_changer_header">
+    Automatic Wallpaper Changer</string>
+  <string name="buy_pro_features_automatic_wallpaper_changer_sub_header">
+    Changes your homescreen with new and fresh wallpapers automatically after a chosen period of time
+  </string>
+  <string name="buy_pro_features_crystallize_header">Crystallized Wallpapers</string>
+  <string name="buy_pro_features_crystallize_sub_header">
+    Generates a crystallized version of the current wallpaper and gives your homescreen
+    an unique look and feel</string>
+  <string name="buy_pro_features_share_header">Share Wallpapers</string>
+  <string name="buy_pro_features_share_sub_header">
+    Share your favourite wallpapers with anyone you want in just one click</string>
 
 </resources>

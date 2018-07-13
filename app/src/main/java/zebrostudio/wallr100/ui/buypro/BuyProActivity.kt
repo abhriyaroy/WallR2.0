@@ -43,14 +43,14 @@ class BuyProActivity : AppCompatActivity() {
 
   private fun buildProFeaturesList(): List<Triple<Int, Int, Int>> {
     return mutableListOf<Triple<Int, Int, Int>>().apply {
-      add(Triple(R.drawable.ic_remove_ads_white, R.string.adsHeader, R.string.adsSubHeader))
-      add(Triple(R.drawable.ic_high_definition, R.string.downloadsHeader,
-          R.string.downloadsSubHeader))
-      add(Triple(R.drawable.ic_automatic_wallpaper_changer, R.string.automaticChangerHeader,
-          R.string.automaticChangerSubHeader))
-      add(Triple(R.drawable.ic_crystallize_white, R.string.crystallizeHeader,
-          R.string.crystallizeSubHeader))
-      add(Triple(R.drawable.ic_share_white, R.string.shareHeader, R.string.shareSubHeader))
+      add(Triple(R.drawable.ic_remove_ads_white, R.string.buy_pro_features_ads_header, R.string.buy_pro_features_ads_sub_header))
+      add(Triple(R.drawable.ic_high_definition, R.string.buy_pro_features_downloads_header,
+          R.string.buy_pro_features_downloads_sub_header))
+      add(Triple(R.drawable.ic_automatic_wallpaper_changer, R.string.buy_pro_features_automatic_wallpaper_changer_header,
+          R.string.buy_pro_features_automatic_wallpaper_changer_sub_header))
+      add(Triple(R.drawable.ic_crystallize_white, R.string.buy_pro_features_crystallize_header,
+          R.string.buy_pro_features_crystallize_sub_header))
+      add(Triple(R.drawable.ic_share_white, R.string.buy_pro_features_share_header, R.string.buy_pro_features_share_sub_header))
     }
 
   }
