@@ -35,7 +35,7 @@ abstract class BaseFragment : Fragment() {
     activity?.findViewById<WallrCustomTextView>(R.id.toolbarTitle)?.text = fragmentTag
 
     highlightCurrentMenuItem()
-    showAppropriateToolbarMenuIcon()
+    showToolbarMenuIcon()
 
   }
 
@@ -49,7 +49,7 @@ abstract class BaseFragment : Fragment() {
     }
   }
 
-  private fun showAppropriateToolbarMenuIcon() {
+  private fun showToolbarMenuIcon() {
     activity?.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.visibility = View.GONE
     activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visibility = View.GONE
     when (fragmentTag) {
