@@ -26,9 +26,10 @@ android {
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
     // Android support libraries
-    implementation "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
-    implementation "com.android.support:support-v4:${SUPPORT_LIBRARY_VERSION}"
-    implementation "com.android.support:design:${SUPPORT_LIBRARY_VERSION}"
+    implementation "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support:percent:$SUPPORT_LIBRARY_VERSION"
     // Dagger
     implementation "com.google.dagger:dagger:$DAGGER_VERSION"
     implementation "com.google.dagger:dagger-android-support:$DAGGER_VERSION"
@@ -36,11 +37,18 @@ android {
     kapt "com.google.dagger:dagger-android-processor:$DAGGER_VERSION"
     // Toasty
     implementation "com.github.GrenderG:Toasty:$TOASTY_VERSION"
-    implementation 'com.github.ybq:Android-SpinKit:1.1.0'
-    implementation 'com.github.recruit-lifestyle:WaveSwipeRefreshLayout:1.6'
+    // Spinkit
+    implementation "com.github.ybq:Android-SpinKit:$SPINKIT_VERSION"
+    // Swipe Refresh
+    implementation "com.github.recruit-lifestyle:WaveSwipeRefreshLayout:$WAVE_SWIPE_REFRESH_VERSION"
+    // Smart tab
+    implementation "com.ogaclejapan.smarttablayout:library:$SMART_TAB_VERSION"
+    implementation "com.ogaclejapan.smarttablayout:utils-v4:$SMART_TAB_VERSION"
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$GLIDE_VERSION"
+    annotationProcessor "com.github.bumptech.glide:compiler:$GLIDE_VERSION"
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
     implementation project(':libraryWallrCustoms')
   }
 }
-

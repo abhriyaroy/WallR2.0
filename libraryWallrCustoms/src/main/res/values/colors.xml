@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="fbutton_default_color">#3eadeb</color>
+  <color name="fbutton_default_shadow_color">#ff3493c8</color>
+  <color name="fbutton_color_transparent">@android:color/transparent</color>
+</resources>

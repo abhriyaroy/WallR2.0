@@ -24,4 +24,37 @@
 
   <dimen name="overflow_menu_text_size">12sp</dimen>
 
+  <dimen name="buy_pro_top_half_bottom_padding">8dp</dimen>
+  <dimen name="buy_pro_back_button_margin_top">10dp</dimen>
+  <dimen name="buy_pro_back_button_width">30dp</dimen>
+  <dimen name="buy_pro_back_button_height">30dp</dimen>
+  <dimen name="buy_pro_back_button_margin">8dp</dimen>
+  <dimen name="buy_pro_back_button_elevation">4dp</dimen>
+  <dimen name="buy_pro_logo_width">110dp</dimen>
+  <dimen name="buy_pro_logo_height">110dp</dimen>
+  <dimen name="buy_pro_logo_margin_bottom">8dp</dimen>
+  <dimen name="buy_pro_fbutton_width">250dp</dimen>
+  <dimen name="buy_pro_fbutton_margin_top">8dp</dimen>
+  <dimen name="buy_pro_fbutton_radius_corner">4dp</dimen>
+  <dimen name="buy_pro_fbutton_shadow_height">0dp</dimen>
+  <dimen name="buy_pro_purchase_button_padding">10dp</dimen>
+  <dimen name="buy_pro_purchase_button_text_size">13sp</dimen>
+  <dimen name="buy_pro_title_relative_layout_margin">24dp</dimen>
+  <dimen name="buy_pro_title_relative_layout_margin_bottom">20dp</dimen>
+  <dimen name="buy_pro_title_text_view_margin_bottom">10dp</dimen>
+  <dimen name="buy_pro_title_text_size">20sp</dimen>
+  <dimen name="buy_pro_subtext_text_size">16sp</dimen>
+  <dimen name="buy_pro_top_half_shadow_bottom_height">8dp</dimen>
+  <dimen name="item_buy_pro_relative_layout_padding">24dp</dimen>
+  <dimen name="item_buy_pro_relative_layout_padding_bottom">15dp</dimen>
+  <dimen name="item_buy_pro_relative_layout_padding_top">15dp</dimen>
+  <dimen name="item_buy_pro_imageview_width">28dp</dimen>
+  <dimen name="item_buy_pro_imageview_height">28dp</dimen>
+  <dimen name="item_buy_pro_imageview_padding_top">4dp</dimen>
+  <dimen name="item_buy_pro_imageview_margin_right">20dp</dimen>
+  <dimen name="item_buy_pro_header_text_size">15sp</dimen>
+  <dimen name="item_buy_pro_description_padding_top">4dp</dimen>
+  <dimen name="item_buy_pro_description_padding_bottom">4dp</dimen>
+  <dimen name="item_buy_pro_description_text_size">12sp</dimen>
+
 </resources>
