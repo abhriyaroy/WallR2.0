@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
 apply from: "../versions.gradle"
 
 android {
@@ -53,6 +54,10 @@ android {
     implementation project(':libraryGuillotineMenu')
     implementation project(':libraryWallrCustoms')
   }
+}
+
+realm {
+  syncEnabled = true;
 }
 
 apply plugin: 'com.google.gms.google-services'
