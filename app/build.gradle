@@ -53,6 +53,7 @@ android {
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
     implementation project(':libraryWallrCustoms')
+    implementation project(':libraryPurchaseFlow')
   }
 }
 

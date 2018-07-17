@@ -1,1 +1,1 @@
-include ':app', ':libraryGuillotineMenu', ':libraryWallrCustoms'
+include ':app', ':libraryGuillotineMenu', ':libraryWallrCustoms', ':libraryPurchaseFlow'
