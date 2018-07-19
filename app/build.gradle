@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'realm-android'
 apply from: "../versions.gradle"
 
 android {
@@ -26,6 +25,7 @@ android {
   dependencies {
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$KOTLIN_VERSION"
     // Android support libraries
     implementation "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
     implementation "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
@@ -55,10 +55,6 @@ android {
     implementation project(':libraryWallrCustoms')
     implementation project(':libraryPurchaseFlow')
   }
-}
-
-realm {
-  syncEnabled = true;
 }
 
 apply plugin: 'com.google.gms.google-services'

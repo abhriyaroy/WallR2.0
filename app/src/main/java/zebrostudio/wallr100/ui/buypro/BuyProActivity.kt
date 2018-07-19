@@ -1,12 +1,17 @@
 package zebrostudio.wallr100.ui.buypro
 
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import com.bumptech.glide.Glide
 import dagger.android.AndroidInjection
+import kotlinx.android.synthetic.main.activity_buy_pro.backButtonPro
 import kotlinx.android.synthetic.main.activity_buy_pro.buyProFeatures
 import kotlinx.android.synthetic.main.activity_buy_pro.proLogo
+import kotlinx.android.synthetic.main.activity_buy_pro.purchaseButton
+import kotlinx.android.synthetic.main.activity_buy_pro.restoreButton
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.descriptionTextView
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.headerTextView
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.imageView
@@ -24,10 +29,12 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
     setContentView(R.layout.activity_buy_pro)
     overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
 
+    setStatusBarColor()
     loadWallrLogo()
     showProFeatures(buildProFeaturesList())
     buyProClickListener()
     restoreProClickListener()
+    backButtonClickListener()
   }
 
   override fun onResume() {
@@ -43,6 +50,15 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
   override fun onBackPressed() {
     super.onBackPressed()
     overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right)
+  }
+
+  private fun setStatusBarColor() {
+    window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      window.statusBarColor = resources.getColor(R.color.color_buy_pro_status_bar)
+    }
+
   }
 
   private fun loadWallrLogo() {
@@ -81,12 +97,22 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
     }
   }
 
-  private fun buyProClickListener(){
-
+  private fun buyProClickListener() {
+    purchaseButton.setOnClickListener(View.OnClickListener {
+      presenter.notifyBuyProClicked()
+    })
   }
 
-  private fun restoreProClickListener(){
+  private fun restoreProClickListener() {
+    restoreButton.setOnClickListener(View.OnClickListener {
+      presenter.notifyRestoreProClicked()
+    })
+  }
 
+  private fun backButtonClickListener() {
+    backButtonPro.setOnClickListener {
+      onBackPressed()
+    }
   }
 
 }
