@@ -12,7 +12,7 @@ interface MainContract {
     fun showPreviousFragment()
     fun getFragmentTagAtStackTop(): String
     fun getExploreFragmentTag(): String
-    fun startBackPressTimer()
+    fun startBackPressesFlagResetTimer()
 
   }
 

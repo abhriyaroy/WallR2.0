@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     guillotineMenuAnimation.close()
   }
 
-  override fun startBackPressTimer() {
+  override fun startBackPressesFlagResetTimer() {
     Handler().postDelayed({ presenter?.setBackPressedOnceToFalse() }, 2000)
   }
 
