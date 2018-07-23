@@ -13,5 +13,6 @@
   <color name="color_buy_pro_background">#1a1a1a</color>
   <color name="color_buy_pro_top_half">#37474F</color>
   <color name="color_item_buy_pro_description_text">#dbd4cf</color>
+  <color name="color_buy_pro_status_bar">#102027</color>
 
 </resources>
