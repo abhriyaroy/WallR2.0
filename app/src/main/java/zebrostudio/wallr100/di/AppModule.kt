@@ -5,7 +5,7 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import zebrostudio.wallr100.data.DataRepository
-import zebrostudio.wallr100.data.network.NetworkUtils
+import zebrostudio.wallr100.data.network.NetworkManager
 import zebrostudio.wallr100.data.purchase.PurchaseHelper
 import javax.inject.Singleton
 
@@ -18,8 +18,8 @@ class AppModule {
 
   @Singleton
   @Provides
-  internal fun provideDataRepository(purchaseHelper: PurchaseHelper)
-      : DataRepository = DataRepository(purchaseHelper)
+  internal fun provideDataRepository(purchaseHelper: PurchaseHelper, networkManager: NetworkManager)
+      : DataRepository = DataRepository(purchaseHelper, networkManager)
 
   @Singleton
   @Provides
@@ -27,6 +27,6 @@ class AppModule {
 
   @Singleton
   @Provides
-  internal fun provideNetworkUtils(context: Context): NetworkUtils = NetworkUtils(context)
+  internal fun provideNetworkUtils(context: Context): NetworkManager = NetworkManager(context)
 
 }
