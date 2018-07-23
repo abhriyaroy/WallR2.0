@@ -2,6 +2,7 @@ package zebrostudio.wallr100.android.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -80,6 +81,10 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     guillotineMenuAnimation.close()
   }
 
+  override fun startBackPressTimer() {
+    Handler().postDelayed({ presenter?.setBackPressedOnceToFalse() }, 2000)
+  }
+
   override fun showPreviousFragment() {
     supportFragmentManager.popBackStack()
   }
@@ -87,6 +92,10 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   override fun getFragmentTagAtStackTop(): String {
     return supportFragmentManager
         .getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name
+  }
+
+  override fun getExploreFragmentTag(): String {
+    return WallpaperFragment.EXPLORE_FRAGMENT_TAG
   }
 
   private inline fun <reified T : BaseFragment> addFragment(

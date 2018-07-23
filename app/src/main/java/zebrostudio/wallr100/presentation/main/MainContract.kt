@@ -11,6 +11,8 @@ interface MainContract {
     fun closeNavigationMenu()
     fun showPreviousFragment()
     fun getFragmentTagAtStackTop(): String
+    fun getExploreFragmentTag(): String
+    fun startBackPressTimer()
 
   }
 
@@ -19,6 +21,7 @@ interface MainContract {
     fun handleBackPress()
     fun notifyNavigationMenuOpened()
     fun notifyNavigationMenuClosed()
+    fun setBackPressedOnceToFalse()
 
   }
 }
