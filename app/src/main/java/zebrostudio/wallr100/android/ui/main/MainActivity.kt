@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   }
 
   override fun startBackPressedFlagResetTimer() {
-    Handler().postDelayed({ presenter?.setBackPressedOnceToFalse() }, 2000)
+    Handler().postDelayed({ presenter?.setBackPressedFlagToFalse() }, 2000)
   }
 
   override fun showPreviousFragment() {

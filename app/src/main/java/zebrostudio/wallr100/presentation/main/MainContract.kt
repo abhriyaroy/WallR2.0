@@ -21,7 +21,7 @@ interface MainContract {
     fun handleBackPress()
     fun notifyNavigationMenuOpened()
     fun notifyNavigationMenuClosed()
-    fun setBackPressedOnceToFalse()
+    fun setBackPressedFlagToFalse()
 
   }
 }

@@ -40,7 +40,7 @@ class MainActivityPresenterImpl : MainContract.MainPresenter {
     isGuillotineMenuOpen = false
   }
 
-  override fun setBackPressedOnceToFalse() {
+  override fun setBackPressedFlagToFalse() {
     backPressedOnce = false
   }
 
