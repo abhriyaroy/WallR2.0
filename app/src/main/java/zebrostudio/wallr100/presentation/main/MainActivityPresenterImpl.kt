@@ -24,7 +24,7 @@ class MainActivityPresenterImpl : MainContract.MainPresenter {
         } else {
           backPressedOnce = true
           mainView?.showExitConfirmation()
-          mainView?.startBackPressesFlagResetTimer()
+          mainView?.startBackPressedFlagResetTimer()
         }
       } else {
         mainView?.showPreviousFragment()
