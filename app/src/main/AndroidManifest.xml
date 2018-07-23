@@ -3,19 +3,19 @@
     package="zebrostudio.wallr100">
 
   <application
-      android:name=".WallrApplication"
+      android:name=".android.WallrApplication"
       android:allowBackup="true"
       android:icon="@drawable/ic_wallr"
       android:label="@string/app_name"
       android:theme="@style/AppTheme">
-    <activity android:name=".ui.main.MainActivity">
+    <activity android:name=".android.ui.main.MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
-    <activity android:name=".ui.buypro.BuyProActivity"/>
+    <activity android:name=".android.ui.buypro.BuyProActivity"/>
   </application>
 
 </manifest>
