@@ -9,9 +9,4 @@ class PurchaseAuthResponseMapper : Mapper<PurchaseAuthResponseEntity, PurchaseAu
     return PurchaseAuthResponse(type.status, type.message, type.errorCode)
   }
 
-  override fun mapToEntity(type: PurchaseAuthResponse): PurchaseAuthResponseEntity {
-    return PurchaseAuthResponseEntity(type.status, type.message,
-        type.errorCode)
-  }
-
 }

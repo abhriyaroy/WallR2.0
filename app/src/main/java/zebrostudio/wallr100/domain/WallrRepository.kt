@@ -1,12 +1,14 @@
 package zebrostudio.wallr100.domain
 
-import io.reactivex.Completable
+import io.reactivex.Single
 import zebrostudio.wallr100.domain.model.PurchaseAuthResponse
 
 interface WallrRepository {
 
-  fun authenticatePurchase(purchaseAuthResponse: PurchaseAuthResponse): Completable
-
-  fun authenticateRestorePurchase(purchaseAuthResponse: PurchaseAuthResponse): Completable
+  fun authenticatePurchase(
+    packageName: String,
+    skuId: String,
+    purchaseToken: String
+  ): Single<PurchaseAuthResponse>?
 
 }
