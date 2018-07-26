@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.ui.basefragment.BaseFragment
+import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.presentation.minimal.MinimalContract
 import javax.inject.Inject

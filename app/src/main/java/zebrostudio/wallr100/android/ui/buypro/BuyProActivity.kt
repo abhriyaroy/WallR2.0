@@ -4,21 +4,38 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import com.bumptech.glide.Glide
+import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_buy_pro.buyProFeatures
 import kotlinx.android.synthetic.main.activity_buy_pro.proLogo
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.descriptionTextView
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.headerTextView
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.imageView
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.presentation.buypro.BuyProContract
+import javax.inject.Inject
 
-class BuyProActivity : AppCompatActivity() {
+class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
+
+  @Inject
+  lateinit var buyProPresenter: BuyProContract.BuyProPresenter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_buy_pro)
+    AndroidInjection.inject(this)
 
     loadWallrLogo()
     showProFeatures(buildProFeaturesList())
+  }
+
+  override fun onResume() {
+    super.onResume()
+    buyProPresenter.attachView(this)
+  }
+
+  override fun onDestroy() {
+    buyProPresenter.detachView()
+    super.onDestroy()
   }
 
   private fun loadWallrLogo() {

@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.data.mapper
 
-import zebrostudio.wallr100.data.PurchaseAuthResponseEntity
+import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 import zebrostudio.wallr100.domain.model.PurchaseAuthResponse
 
 class PurchaseAuthResponseMapper : Mapper<PurchaseAuthResponseEntity, PurchaseAuthResponse> {
@@ -10,7 +10,8 @@ class PurchaseAuthResponseMapper : Mapper<PurchaseAuthResponseEntity, PurchaseAu
   }
 
   override fun mapToEntity(type: PurchaseAuthResponse): PurchaseAuthResponseEntity {
-    return PurchaseAuthResponseEntity(type.status, type.message, type.errorCode)
+    return PurchaseAuthResponseEntity(type.status, type.message,
+        type.errorCode)
   }
 
 }

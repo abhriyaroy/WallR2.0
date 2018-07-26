@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.android.ui.basefragment
+package zebrostudio.wallr100.android.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
