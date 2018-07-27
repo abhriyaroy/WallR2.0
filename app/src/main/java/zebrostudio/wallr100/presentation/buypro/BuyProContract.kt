@@ -4,7 +4,7 @@ import zebrostudio.wallr100.android.BasePresenter
 
 interface BuyProContract {
 
-  interface BuyProView{
+  interface BuyProView {
 
     fun showInvalidPurchaseError()
     fun showUnableToVerifyPurchaseError()

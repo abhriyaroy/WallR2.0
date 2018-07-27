@@ -15,8 +15,7 @@ class WallrDataRepository(
     packageName: String,
     skuId: String,
     purchaseToken: String
-  )
-      : Single<PurchaseAuthResponse>? {
+  ): Single<PurchaseAuthResponse>? {
 
     val urlEndpoint =
         "purchaseVerification?packageName=$packageName&skuId=$skuId&purchaseToken=$purchaseToken"

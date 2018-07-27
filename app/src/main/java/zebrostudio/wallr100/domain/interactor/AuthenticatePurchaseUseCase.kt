@@ -2,7 +2,7 @@ package zebrostudio.wallr100.domain.interactor
 
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import org.buffer.android.boilerplate.domain.executor.PostExecutionThread
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.model.PurchaseAuthResponse
 
