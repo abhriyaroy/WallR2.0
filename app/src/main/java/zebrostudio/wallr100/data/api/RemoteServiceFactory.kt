@@ -6,12 +6,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RemoteServiceFactory {
 
-  private var retrofit: Retrofit = Retrofit.Builder()
-      .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-      .addConverterFactory(GsonConverterFactory.create())
-      .build()
-
-  fun verifyPurchaseService(): FirebaseAuthService? =
-      retrofit.create(FirebaseAuthService::class.java)
+  fun verifyPurchaseService(): FirebaseAuthService? {
+    return Retrofit.Builder()
+        .baseUrl("https://us-central1-wallrproduction.cloudfunctions.net/")
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(FirebaseAuthService::class.java)
+  }
 
 }

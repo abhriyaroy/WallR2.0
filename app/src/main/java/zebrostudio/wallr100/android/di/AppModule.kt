@@ -9,9 +9,10 @@ import zebrostudio.wallr100.android.AndroidMainThread
 import zebrostudio.wallr100.android.di.scopes.PerApplication
 import zebrostudio.wallr100.data.WallrDataRepository
 import zebrostudio.wallr100.data.api.RemoteServiceFactory
-import zebrostudio.wallr100.data.mapper.PurchaseAuthResponseMapper
+import zebrostudio.wallr100.data.mapper.ProAuthMapperImpl
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
+import zebrostudio.wallr100.presentation.mapper.ProAuthPresentationMapperImpl
 
 @Module
 class AppModule {
@@ -32,14 +33,18 @@ class AppModule {
 
   @Provides
   @PerApplication
-  fun provideAuthResponseMapper(): PurchaseAuthResponseMapper = PurchaseAuthResponseMapper()
+  fun provideAuthResponseMapper(): ProAuthMapperImpl = ProAuthMapperImpl()
+
+  @Provides
+  @PerApplication
+  fun provideProAuthPresentationMapper(): ProAuthPresentationMapperImpl = ProAuthPresentationMapperImpl()
 
   @Provides
   @PerApplication
   fun provideWallrRepository(
     remoteServiceFactory: RemoteServiceFactory,
-    purchaseAuthResponseMapper: PurchaseAuthResponseMapper
-  ): WallrRepository = WallrDataRepository(remoteServiceFactory, purchaseAuthResponseMapper)
+    mapperImpl: ProAuthMapperImpl
+  ): WallrRepository = WallrDataRepository(remoteServiceFactory, mapperImpl)
 
   @Provides
   @PerApplication

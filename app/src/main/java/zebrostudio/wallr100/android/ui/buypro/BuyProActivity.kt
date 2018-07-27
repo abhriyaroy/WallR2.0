@@ -38,6 +38,18 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
     super.onDestroy()
   }
 
+  override fun showInvalidPurchaseError() {
+
+  }
+
+  override fun showUnableToVerifyPurchaseError() {
+
+  }
+
+  override fun showGenericPurchaseVerificationError() {
+
+  }
+
   private fun loadWallrLogo() {
     Glide.with(this)
         .load(R.drawable.ic_wallr)
