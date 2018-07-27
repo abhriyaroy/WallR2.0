@@ -16,3 +16,11 @@ fun Context.colorRes(@ColorRes id: Int) = resources.getColor(id)
 fun Context.infoToast(message: String, length: Int = Toast.LENGTH_SHORT) {
   Toasty.info(this, message, length, true).show()
 }
+
+fun Context.successToast(message: String, length: Int = Toast.LENGTH_SHORT) {
+  Toasty.success(this, message, length, true).show()
+}
+
+fun Context.errorToast(message: String, length: Int = Toast.LENGTH_SHORT) {
+  Toasty.error(this, message, length, true).show()
+}

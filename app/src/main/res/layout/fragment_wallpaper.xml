@@ -34,7 +34,7 @@
           android:layout_centerHorizontal="true"
           android:paddingTop="8dp"
           android:textColor="#fff"
-          android:text="@string/oops_unable_to_load_wallpapers"/>
+          android:text="@string/fragment_unable_to_load_wallpapers_message"/>
 
       <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
           android:id="@+id/failedText2"
@@ -42,7 +42,7 @@
           android:layout_height="wrap_content"
           android:layout_below="@id/failedText1"
           android:layout_centerHorizontal="true"
-          android:text="@string/please_ensure_you_have_a_working_internet_connection"
+          android:text="@string/fragment_ensure_working_internet_connection_message"
           android:paddingTop="2dp"
           android:textColor="#fff"/>
 
@@ -52,7 +52,7 @@
           android:layout_height="wrap_content"
           android:layout_below="@id/failedText2"
           android:layout_centerHorizontal="true"
-          android:text="@string/swipe_down_to_retry"
+          android:text="@string/fragment_swipe_down_retry_message"
           android:paddingTop="2dp"
           android:textColor="#fff"/>
 

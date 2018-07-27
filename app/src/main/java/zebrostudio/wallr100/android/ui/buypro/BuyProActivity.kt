@@ -11,6 +11,8 @@ import kotlinx.android.synthetic.main.item_buy_pro_features.view.descriptionText
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.headerTextView
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.imageView
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.utils.errorToast
+import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.presentation.buypro.BuyProContract
 import javax.inject.Inject
 
@@ -39,15 +41,15 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
   }
 
   override fun showInvalidPurchaseError() {
-
+    errorToast(stringRes(R.string.buy_pro_invalid_purchase_message))
   }
 
   override fun showUnableToVerifyPurchaseError() {
-
+    errorToast(stringRes(R.string.buy_pro_unable_to_verify_purchase_message))
   }
 
   override fun showGenericPurchaseVerificationError() {
-
+    errorToast(stringRes(R.string.buy_pro_generic_error_message))
   }
 
   private fun loadWallrLogo() {
