@@ -32,11 +32,9 @@ class AppModule {
   fun provideRemoteServiceFactory(): RemoteServiceFactory = RemoteServiceFactory()
 
   @Provides
-  @PerApplication
   fun provideAuthResponseMapper(): ProAuthMapperImpl = ProAuthMapperImpl()
 
   @Provides
-  @PerApplication
   fun provideProAuthPresentationMapper(): ProAuthPresentationMapperImpl = ProAuthPresentationMapperImpl()
 
   @Provides
