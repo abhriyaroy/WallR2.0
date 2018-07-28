@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RemoteServiceFactory {
 
-  fun verifyPurchaseService(): FirebaseAuthService? {
+  fun verifyPurchaseService(): FirebaseAuthService {
     return Retrofit.Builder()
         .baseUrl("https://us-central1-wallrproduction.cloudfunctions.net/")
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

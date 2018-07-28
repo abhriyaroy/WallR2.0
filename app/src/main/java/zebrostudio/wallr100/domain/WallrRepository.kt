@@ -9,6 +9,6 @@ interface WallrRepository {
     packageName: String,
     skuId: String,
     purchaseToken: String
-  ): Single<PurchaseAuthResponse>?
+  ): Single<PurchaseAuthResponse>
 
 }

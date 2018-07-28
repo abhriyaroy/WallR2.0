@@ -15,13 +15,13 @@ class WallrDataRepository(
     packageName: String,
     skuId: String,
     purchaseToken: String
-  ): Single<PurchaseAuthResponse>? {
+  ): Single<PurchaseAuthResponse> {
 
     val urlEndpoint =
         "purchaseVerification?packageName=$packageName&skuId=$skuId&purchaseToken=$purchaseToken"
     // Return after mapping
-    return remoteServiceFactory.verifyPurchaseService()?.verifyPurchase(urlEndpoint)
-        ?.map { it ->
+    return remoteServiceFactory.verifyPurchaseService().verifyPurchase(urlEndpoint)
+        .map { it ->
           mapperImpl.mapFromEntity(it)
         }
 
