@@ -4,7 +4,7 @@ import io.reactivex.Single
 import zebrostudio.wallr100.data.api.RemoteServiceFactory
 import zebrostudio.wallr100.data.mapper.ProAuthMapperImpl
 import zebrostudio.wallr100.domain.WallrRepository
-import zebrostudio.wallr100.domain.model.PurchaseAuthResponse
+import zebrostudio.wallr100.domain.model.PurchaseAuthModel
 
 class WallrDataRepository(
   private var remoteServiceFactory: RemoteServiceFactory,
@@ -15,13 +15,12 @@ class WallrDataRepository(
     packageName: String,
     skuId: String,
     purchaseToken: String
-  ): Single<PurchaseAuthResponse> {
+  ): Single<PurchaseAuthModel> {
 
     val urlEndpoint =
         "purchaseVerification?packageName=$packageName&skuId=$skuId&purchaseToken=$purchaseToken"
-    // Return after mapping
     return remoteServiceFactory.verifyPurchaseService().verifyPurchase(urlEndpoint)
-        .map { it ->
+        .map {
           mapperImpl.mapFromEntity(it)
         }
 

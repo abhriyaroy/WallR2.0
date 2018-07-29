@@ -1,17 +1,17 @@
 package zebrostudio.wallr100.presentation.mapper
 
-import zebrostudio.wallr100.domain.model.PurchaseAuthResponse
+import zebrostudio.wallr100.domain.model.PurchaseAuthModel
 import zebrostudio.wallr100.presentation.entity.PurchaseAuthResponsePresentationEntity
 
 class ProAuthPresentationMapperImpl : ProAuthPresentationMapper<PurchaseAuthResponsePresentationEntity,
-    PurchaseAuthResponse> {
+    PurchaseAuthModel> {
 
   override fun mapFromPresentationEntity(type: PurchaseAuthResponsePresentationEntity)
-      : PurchaseAuthResponse {
-    return PurchaseAuthResponse(type.status, type.message, type.errorCode)
+      : PurchaseAuthModel {
+    return PurchaseAuthModel(type.status, type.message, type.errorCode)
   }
 
-  override fun mapToPresentationEntity(type: PurchaseAuthResponse)
+  override fun mapToPresentationEntity(type: PurchaseAuthModel)
       : PurchaseAuthResponsePresentationEntity {
     return PurchaseAuthResponsePresentationEntity(type.status, type.message, type.errorCode)
   }

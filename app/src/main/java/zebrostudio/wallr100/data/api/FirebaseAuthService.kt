@@ -7,7 +7,7 @@ import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 
 interface FirebaseAuthService {
 
-  @GET()
+  @GET
   fun verifyPurchase(@Url url: String): Single<PurchaseAuthResponseEntity>
 
 }

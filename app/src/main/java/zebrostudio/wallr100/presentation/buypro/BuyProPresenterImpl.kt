@@ -23,8 +23,8 @@ class BuyProPresenterImpl(
   }
 
   override fun verifyPurchase(packageName: String, skuId: String, purchaseToken: String) {
-    authenticatePurchaseUseCase.buildUseCaseObservable(packageName, skuId, purchaseToken)
-        .map { it ->
+    authenticatePurchaseUseCase.buildUseCaseSingle(packageName, skuId, purchaseToken)
+        .map {
           presentationMapper.mapToPresentationEntity(it)
         }
         .subscribe({ response: PurchaseAuthResponsePresentationEntity? ->
@@ -37,7 +37,7 @@ class BuyProPresenterImpl(
           } else {
             buyProView?.showUnableToVerifyPurchaseError()
           }
-        }, { _: Throwable? ->
+        }, { _: Throwable ->
           buyProView?.showGenericPurchaseVerificationError()
         })
         .let { disposable ->
