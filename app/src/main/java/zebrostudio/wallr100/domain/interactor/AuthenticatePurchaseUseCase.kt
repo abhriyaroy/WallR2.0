@@ -15,11 +15,11 @@ class AuthenticatePurchaseUseCase(
     packageName: String,
     skuId: String,
     purchaseToken: String
-  ): Single<PurchaseAuthResponse>? {
+  ): Single<PurchaseAuthResponse> {
 
     return wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)
-        ?.subscribeOn(Schedulers.io())
-        ?.observeOn(postExecutionThread.scheduler)
+        .subscribeOn(Schedulers.io())
+        .observeOn(postExecutionThread.scheduler)
   }
 
 }

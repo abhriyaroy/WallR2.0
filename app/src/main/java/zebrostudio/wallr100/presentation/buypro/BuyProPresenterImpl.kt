@@ -24,10 +24,10 @@ class BuyProPresenterImpl(
 
   override fun verifyPurchase(packageName: String, skuId: String, purchaseToken: String) {
     authenticatePurchaseUseCase.buildUseCaseObservable(packageName, skuId, purchaseToken)
-        ?.map { it ->
+        .map { it ->
           presentationMapper.mapToPresentationEntity(it)
         }
-        ?.subscribe({ response: PurchaseAuthResponsePresentationEntity? ->
+        .subscribe({ response: PurchaseAuthResponsePresentationEntity? ->
           if (response?.status == "error"
               && response.message == "something went wrong"
               && (response.errorCode == 4004 || response.errorCode == 4010)) {
@@ -40,7 +40,7 @@ class BuyProPresenterImpl(
         }, { _: Throwable? ->
           buyProView?.showGenericPurchaseVerificationError()
         })
-        ?.let { disposable ->
+        .let { disposable ->
           compositeDisposable.add(
               disposable
           )
