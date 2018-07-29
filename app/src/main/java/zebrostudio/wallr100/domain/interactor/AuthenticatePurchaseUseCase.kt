@@ -16,7 +16,6 @@ class AuthenticatePurchaseUseCase(
     skuId: String,
     purchaseToken: String
   ): Single<PurchaseAuthModel> {
-
     return wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)
         .subscribeOn(Schedulers.io())
         .observeOn(postExecutionThread.scheduler)

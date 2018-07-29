@@ -2,7 +2,7 @@ package zebrostudio.wallr100.domain
 
 import zebrostudio.wallr100.domain.model.PurchaseAuthModel
 
-class PurchaseAuthResponseFactory {
+class PurchaseAuthModelFactory {
 
   companion object {
 

@@ -58,5 +58,11 @@ android {
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
     implementation project(':libraryWallrCustoms')
+
+    // Test runners
+    testImplementation "junit:junit:$JUNIT_VERSION"
+    testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_VERSION"
+
   }
 }
