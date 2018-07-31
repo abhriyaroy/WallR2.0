@@ -2,7 +2,7 @@ package zebrostudio.wallr100.presentation.buypro
 
 import io.reactivex.disposables.CompositeDisposable
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
-import zebrostudio.wallr100.presentation.entity.PurchaseAuthResponsePresentationEntity
+import zebrostudio.wallr100.presentation.entity.PurchaseAuthPresentationEntity
 import zebrostudio.wallr100.presentation.mapper.ProAuthPresentationMapperImpl
 
 class BuyProPresenterImpl(
@@ -27,7 +27,7 @@ class BuyProPresenterImpl(
         .map {
           presentationMapper.mapToPresentationEntity(it)
         }
-        .subscribe({ response: PurchaseAuthResponsePresentationEntity? ->
+        .subscribe({ response: PurchaseAuthPresentationEntity? ->
           if (response?.status == "error"
               && response.message == "something went wrong"
               && (response.errorCode == 4004 || response.errorCode == 4010)) {

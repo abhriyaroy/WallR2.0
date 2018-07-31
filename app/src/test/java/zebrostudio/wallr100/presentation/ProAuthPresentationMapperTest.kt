@@ -4,7 +4,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import zebrostudio.wallr100.domain.model.PurchaseAuthModel
-import zebrostudio.wallr100.presentation.entity.PurchaseAuthResponsePresentationEntity
+import zebrostudio.wallr100.presentation.entity.PurchaseAuthPresentationEntity
 import zebrostudio.wallr100.presentation.factory.PurchaseAuthModelFactory
 import zebrostudio.wallr100.presentation.mapper.ProAuthPresentationMapperImpl
 
@@ -28,7 +28,7 @@ class ProAuthPresentationMapperTest {
   }
 
   private fun assertDataEquality(
-    purchaseAuthResponsePresentationEntity: PurchaseAuthResponsePresentationEntity,
+    purchaseAuthResponsePresentationEntity: PurchaseAuthPresentationEntity,
     purchaseAuthModel: PurchaseAuthModel
   ) {
     Assert.assertEquals(purchaseAuthResponsePresentationEntity.message, purchaseAuthModel.message)
