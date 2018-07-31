@@ -8,6 +8,7 @@ import io.reactivex.schedulers.Schedulers
 import org.junit.Before
 import org.junit.Test
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
+import zebrostudio.wallr100.domain.factory.DataFactory
 import zebrostudio.wallr100.domain.factory.PurchaseAuthModelFactory
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.domain.model.PurchaseAuthModel
@@ -18,7 +19,7 @@ class AuthenticatePurchaseUseCaseTest {
   private lateinit var mockWallrRepository: WallrRepository
   private lateinit var mockPostExecutionThread: PostExecutionThread
   private lateinit var purchaseAuthModel: PurchaseAuthModel
-  private var dummyString = "dummy"
+  private var dummyString = DataFactory.randomString()
 
   @Before
   fun setUp() {

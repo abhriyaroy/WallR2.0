@@ -27,12 +27,12 @@ class BuyProPresenterImpl(
         .map {
           presentationMapper.mapToPresentationEntity(it)
         }
-        .subscribe({ response: PurchaseAuthPresentationEntity? ->
-          if (response?.status == "error"
+        .subscribe({ response: PurchaseAuthPresentationEntity ->
+          if (response.status == "error"
               && response.message == "something went wrong"
               && (response.errorCode == 4004 || response.errorCode == 4010)) {
             buyProView?.showInvalidPurchaseError()
-          } else if (response?.status == "success") {
+          } else if (response.status == "success") {
             handleSuccessfulPurchase()
           } else {
             buyProView?.showUnableToVerifyPurchaseError()
