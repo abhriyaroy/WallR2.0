@@ -1,8 +1,6 @@
 package zebrostudio.wallr100.presentation.mapper
 
-interface ProAuthPresentationMapper<P, D> {
-
-  fun mapFromPresentationEntity(type: P): D
+interface ProAuthPresentationMapper<out P, in D> {
 
   fun mapToPresentationEntity(type: D): P
 

@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.domain
+package zebrostudio.wallr100.domain.factory
 
 class DataFactory {
 
