@@ -35,6 +35,14 @@ android {
     implementation "com.google.dagger:dagger-android-support:$DAGGER_VERSION"
     kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
     kapt "com.google.dagger:dagger-android-processor:$DAGGER_VERSION"
+    // Rx java
+    implementation "io.reactivex.rxjava2:rxjava:$RX_JAVA_VERSION"
+    // Rx android
+    implementation "io.reactivex.rxjava2:rxandroid:$RX_ANDROID_VERSION"
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+    implementation "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$RETROFIT_VERSION"
     // Toasty
     implementation "com.github.GrenderG:Toasty:$TOASTY_VERSION"
     // Spinkit
@@ -50,5 +58,11 @@ android {
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
     implementation project(':libraryWallrCustoms')
+
+    // Test runners
+    testImplementation "junit:junit:$JUNIT_VERSION"
+    testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_VERSION"
+
   }
 }

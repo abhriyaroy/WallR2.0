@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.item_guillotine_menu.view.imageviewGuillot
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.textviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.ui.basefragment.BaseFragment
+import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.ui.collection.CollectionFragment
 import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment
