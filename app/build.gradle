@@ -58,6 +58,7 @@ android {
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
     implementation project(':libraryWallrCustoms')
+    implementation project(':libraryPurchaseFlow')
 
     // Test runners
     testImplementation "junit:junit:$JUNIT_VERSION"
