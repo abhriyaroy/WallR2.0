@@ -30,6 +30,7 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_buy_pro)
     AndroidInjection.inject(this)
+    overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
 
     loadWallrLogo()
     showProFeatures(buildProFeaturesList())
@@ -44,6 +45,11 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
   override fun onDestroy() {
     buyProPresenter.detachView()
     super.onDestroy()
+  }
+
+  override fun onBackPressed() {
+    overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right)
+    super.onBackPressed()
   }
 
   override fun showWaitLoader(materialLoaderType: MaterialLoaderType) {
