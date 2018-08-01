@@ -7,6 +7,7 @@ import dagger.Provides
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.android.AndroidMainThread
 import zebrostudio.wallr100.android.di.scopes.PerApplication
+import zebrostudio.wallr100.data.SharedPrefsHelper
 import zebrostudio.wallr100.data.WallrDataRepository
 import zebrostudio.wallr100.data.api.RemoteServiceFactory
 import zebrostudio.wallr100.data.mapper.ProAuthMapperImpl
@@ -22,6 +23,10 @@ class AppModule {
   fun provideContext(application: Application): Context {
     return application
   }
+
+  @Provides
+  @PerApplication
+  fun provideSharedPrefsHelper(context: Context): SharedPrefsHelper = SharedPrefsHelper(context)
 
   @Provides
   @PerApplication

@@ -52,5 +52,7 @@
     Your purchase has been restored successfully</string>
   <string name="buy_pro_unable_to_verify_purchase_message">Unable to verify purchase</string>
   <string name="buy_pro_generic_error_message">Something went wrong. Please try again</string>
+  <string name="buy_pro_verifying_purchase_message">Verifying your purchase, please wait...</string>
+  <string name="buy_pro_verifying_restore_message">Restoring your purchase, please wait...</string>
 
 </resources>

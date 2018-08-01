@@ -22,6 +22,14 @@ class BuyProPresenterImpl(
     buyProView = null
   }
 
+  override fun purchaseButtonClicked() {
+
+  }
+
+  override fun restoreButtonClicked() {
+
+  }
+
   override fun verifyPurchase(packageName: String, skuId: String, purchaseToken: String) {
     authenticatePurchaseUseCase.buildUseCaseSingle(packageName, skuId, purchaseToken)
         .map {

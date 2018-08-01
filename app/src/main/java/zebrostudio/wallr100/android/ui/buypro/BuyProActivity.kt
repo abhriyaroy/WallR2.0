@@ -3,14 +3,18 @@ package zebrostudio.wallr100.android.ui.buypro
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
+import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_buy_pro.buyProFeatures
 import kotlinx.android.synthetic.main.activity_buy_pro.proLogo
+import kotlinx.android.synthetic.main.activity_buy_pro.purchaseButton
+import kotlinx.android.synthetic.main.activity_buy_pro.restoreButton
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.descriptionTextView
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.headerTextView
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.imageView
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.presentation.buypro.BuyProContract
@@ -19,7 +23,8 @@ import javax.inject.Inject
 class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
 
   @Inject
-  lateinit var buyProPresenter: BuyProContract.BuyProPresenter
+  internal lateinit var buyProPresenter: BuyProContract.BuyProPresenter
+  private lateinit var materialDialog: MaterialDialog
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -28,6 +33,7 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
 
     loadWallrLogo()
     showProFeatures(buildProFeaturesList())
+    setClickListeners()
   }
 
   override fun onResume() {
@@ -40,6 +46,30 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
     super.onDestroy()
   }
 
+  override fun showWaitLoader(materialLoaderType: MaterialLoaderType) {
+    val contentStringId: String = when (materialLoaderType) {
+      MaterialLoaderType.PURCHASE -> {
+        stringRes(R.string.buy_pro_verifying_purchase_message)
+      }
+      MaterialLoaderType.RESTORE -> {
+        stringRes(R.string.buy_pro_verifying_purchase_message)
+      }
+    }
+    materialDialog = MaterialDialog.Builder(this)
+        .widgetColor(colorRes(R.color.color_accent))
+        .contentColor(colorRes(R.color.color_white))
+        .content(contentStringId)
+        .backgroundColor(colorRes(R.color.primary_dark_material_dark))
+        .progress(true, 0)
+        .cancelable(false)
+        .progressIndeterminateStyle(false)
+        .build()
+  }
+
+  override fun showNoInternetErrorMessage() {
+
+  }
+
   override fun showInvalidPurchaseError() {
     errorToast(stringRes(R.string.buy_pro_invalid_purchase_message))
   }
@@ -50,6 +80,10 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
 
   override fun showGenericPurchaseVerificationError() {
     errorToast(stringRes(R.string.buy_pro_generic_error_message))
+  }
+
+  override fun dismissWaitLoader() {
+    materialDialog.dismiss()
   }
 
   private fun loadWallrLogo() {
@@ -86,7 +120,23 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
       add(Triple(R.drawable.ic_share_white, R.string.buy_pro_features_share_header,
           R.string.buy_pro_features_share_sub_header))
     }
+  }
 
+  private fun setClickListeners() {
+    purchaseButton?.setOnClickListener {
+      buyProPresenter.purchaseButtonClicked()
+    }
+
+    restoreButton?.setOnClickListener {
+      buyProPresenter.restoreButtonClicked()
+    }
+  }
+
+  companion object {
+    enum class MaterialLoaderType {
+      PURCHASE,
+      RESTORE
+    }
   }
 
 }
