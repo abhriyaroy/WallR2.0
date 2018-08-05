@@ -60,6 +60,7 @@ class BuyProPresenterImpl(
   ) {
     if (authenticatePurchaseUseCase.saveUserAsPro()) {
       buyProView?.showSuccessfulTransactionMessage(proTransactionType)
+      buyProView?.finishWithResult()
     }
   }
 

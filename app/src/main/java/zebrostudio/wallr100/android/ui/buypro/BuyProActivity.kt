@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.android.ui.buypro
 
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -74,7 +75,7 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
     super.onResume()
     buyProPresenter.attachView(this)
     if (iabHelper == null || iabHelper?.isSetupDone == false) {
-      iabHelper = IabHelper(this, PurchaseTransactionDetails.base64EncodedPublicKey)
+      iabHelper = IabHelper(this, PurchaseTransactionDetails.BASE64_ENCODED_PUBLIC_KEY)
       iabHelper?.startSetup {}
     }
   }
@@ -135,6 +136,15 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
     materialDialog.dismiss()
   }
 
+  override fun finishWithResult() {
+    val intent = Intent()
+    intent.putExtra(PurchaseTransactionDetails.PURCHASE_TAG,
+        PurchaseTransactionDetails.PURCHASE_REQUEST_CODE)
+    setResult(PurchaseTransactionDetails.PURCHASE_SUCCESSFUL_RESULT_CODE, intent)
+    overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right)
+    finish()
+  }
+
   private fun loadWallrLogo() {
     Glide.with(this)
         .load(R.drawable.ic_wallr)
@@ -177,7 +187,7 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
         if (isInternetAvailable()) {
           showWaitLoader(ProTransactionType.PURCHASE)
           iabHelper?.launchPurchaseFlow(this, PurchaseTransactionDetails.ITEM_SKU,
-              PurchaseTransactionDetails.requestCode,
+              PurchaseTransactionDetails.VERIFICATION_REQUEST_CODE,
               purchaseFinishedListener)
         } else {
           showNoInternetErrorMessage(ProTransactionType.PURCHASE)
