@@ -13,6 +13,8 @@ class WallrDataRepository(
   private var sharedPrefsHelper: SharedPrefsHelper
 ) : WallrRepository {
 
+  val premiumUserTag = "premium_user"
+
   override fun authenticatePurchase(
     packageName: String,
     skuId: String,
@@ -24,7 +26,10 @@ class WallrDataRepository(
         .map {
           mapperImpl.mapFromEntity(it)
         }
+  }
 
+  override fun saveUserAsPro(): Boolean {
+    return sharedPrefsHelper.setBoolean(premiumUserTag, true)
   }
 
 }

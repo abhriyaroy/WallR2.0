@@ -60,5 +60,9 @@
     Unable to continue purchase. Please ensure you have a working internet connection</string>
   <string name="buy_pro_restore_ensure_working_internet_connection_message">
     Unable to continue restore. Please ensure you have a working internet connection</string>
+  <string name="buy_pro_purchase_successful_message">
+    Purchase successful! Thank you for purchasing the pro version of the app</string>
+  <string name="buy_pro_restore_successful_message">
+    Your purchase has been restored successfully</string>
 
 </resources>

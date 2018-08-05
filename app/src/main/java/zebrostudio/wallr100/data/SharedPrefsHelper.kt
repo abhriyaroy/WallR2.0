@@ -18,8 +18,8 @@ class SharedPrefsHelper(context: Context) {
     return sharedPrefs.getBoolean(key, defaultValue)
   }
 
-  fun setBoolean(key: String, defaultValue: Boolean): Boolean {
-    return editorSharedPrefsHelper.putBoolean(key, defaultValue).commit()
+  fun setBoolean(key: String, value: Boolean): Boolean {
+    return editorSharedPrefsHelper.putBoolean(key, value).commit()
   }
 
 }

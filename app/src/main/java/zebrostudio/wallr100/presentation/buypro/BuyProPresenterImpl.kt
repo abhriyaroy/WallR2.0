@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.presentation.buypro
 
 import io.reactivex.disposables.CompositeDisposable
+import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.presentation.entity.PurchaseAuthPresentationEntity
 import zebrostudio.wallr100.presentation.mapper.ProAuthPresentationMapperImpl
@@ -25,7 +26,8 @@ class BuyProPresenterImpl(
   override fun verifyPurchaseIfSuccessful(
     packageName: String,
     skuId: String,
-    purchaseToken: String
+    purchaseToken: String,
+    proTransactionType: BuyProActivity.Companion.ProTransactionType
   ) {
     authenticatePurchaseUseCase.buildUseCaseSingle(packageName, skuId, purchaseToken)
         .map {
@@ -37,7 +39,7 @@ class BuyProPresenterImpl(
               && (response.errorCode == 4004 || response.errorCode == 4010)) {
             buyProView?.showInvalidPurchaseError()
           } else if (response.status == "success") {
-            handleSuccessfulPurchaseVerification()
+            handleSuccessfulVerification(proTransactionType)
           } else {
             buyProView?.showUnableToVerifyPurchaseError()
           }
@@ -53,9 +55,12 @@ class BuyProPresenterImpl(
         }
   }
 
-  private fun handleSuccessfulPurchaseVerification() {
-    // ToDo : Handle successful purchase
-
+  private fun handleSuccessfulVerification(
+    proTransactionType: BuyProActivity.Companion.ProTransactionType
+  ) {
+    if (authenticatePurchaseUseCase.saveUserAsPro()) {
+      buyProView?.showSuccessfulTransactionMessage(proTransactionType)
+    }
   }
 
 }
