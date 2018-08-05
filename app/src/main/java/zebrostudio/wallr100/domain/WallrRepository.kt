@@ -11,6 +11,4 @@ interface WallrRepository {
     purchaseToken: String
   ): Single<PurchaseAuthModel>
 
-  fun isInternetAvailable() : Boolean
-
 }

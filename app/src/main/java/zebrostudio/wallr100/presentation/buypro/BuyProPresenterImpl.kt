@@ -22,15 +22,11 @@ class BuyProPresenterImpl(
     buyProView = null
   }
 
-  override fun purchaseButtonClicked() {
-
-  }
-
-  override fun restoreButtonClicked() {
-
-  }
-
-  override fun verifyPurchase(packageName: String, skuId: String, purchaseToken: String) {
+  override fun verifyPurchaseIfSuccessful(
+    packageName: String,
+    skuId: String,
+    purchaseToken: String
+  ) {
     authenticatePurchaseUseCase.buildUseCaseSingle(packageName, skuId, purchaseToken)
         .map {
           presentationMapper.mapToPresentationEntity(it)
@@ -41,12 +37,14 @@ class BuyProPresenterImpl(
               && (response.errorCode == 4004 || response.errorCode == 4010)) {
             buyProView?.showInvalidPurchaseError()
           } else if (response.status == "success") {
-            handleSuccessfulPurchase()
+            handleSuccessfulPurchaseVerification()
           } else {
             buyProView?.showUnableToVerifyPurchaseError()
           }
+          buyProView?.dismissWaitLoader()
         }, { _: Throwable ->
-          buyProView?.showGenericPurchaseVerificationError()
+          buyProView?.showGenericVerificationError()
+          buyProView?.dismissWaitLoader()
         })
         .let { disposable ->
           compositeDisposable.add(
@@ -55,8 +53,9 @@ class BuyProPresenterImpl(
         }
   }
 
-  private fun handleSuccessfulPurchase() {
+  private fun handleSuccessfulPurchaseVerification() {
     // ToDo : Handle successful purchase
+
   }
 
 }

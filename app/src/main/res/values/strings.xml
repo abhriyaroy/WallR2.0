@@ -51,8 +51,14 @@
   <string name="buy_pro_successful_restore_message">
     Your purchase has been restored successfully</string>
   <string name="buy_pro_unable_to_verify_purchase_message">Unable to verify purchase</string>
+  <string name="buy_pro_try_restoring_message">
+    Unable to continue purchase. If you have already purchased the app, click on Restore.</string>
   <string name="buy_pro_generic_error_message">Something went wrong. Please try again</string>
   <string name="buy_pro_verifying_purchase_message">Verifying your purchase, please wait...</string>
   <string name="buy_pro_verifying_restore_message">Restoring your purchase, please wait...</string>
+  <string name="buy_pro_purchase_ensure_working_internet_connection_message">
+    Unable to continue purchase. Please ensure you have a working internet connection</string>
+  <string name="buy_pro_restore_ensure_working_internet_connection_message">
+    Unable to continue restore. Please ensure you have a working internet connection</string>
 
 </resources>

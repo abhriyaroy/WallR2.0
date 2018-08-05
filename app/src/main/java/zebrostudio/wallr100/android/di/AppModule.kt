@@ -46,8 +46,10 @@ class AppModule {
   @PerApplication
   fun provideWallrRepository(
     remoteServiceFactory: RemoteServiceFactory,
-    mapperImpl: ProAuthMapperImpl
-  ): WallrRepository = WallrDataRepository(remoteServiceFactory, mapperImpl)
+    mapperImpl: ProAuthMapperImpl,
+    sharedPrefsHelper: SharedPrefsHelper
+  ): WallrRepository = WallrDataRepository(remoteServiceFactory, mapperImpl,
+      sharedPrefsHelper)
 
   @Provides
   @PerApplication

@@ -13,14 +13,14 @@ fun Context.drawableRes(@DrawableRes id: Int) = resources.getDrawable(id)!!
 
 fun Context.colorRes(@ColorRes id: Int) = resources.getColor(id)
 
-fun Context.infoToast(message: String, length: Int = Toast.LENGTH_SHORT) {
+fun Context.infoToast(message: String, length: Int = Toast.LENGTH_LONG) {
   Toasty.info(this, message, length, true).show()
 }
 
-fun Context.successToast(message: String, length: Int = Toast.LENGTH_SHORT) {
+fun Context.successToast(message: String, length: Int = Toast.LENGTH_LONG) {
   Toasty.success(this, message, length, true).show()
 }
 
-fun Context.errorToast(message: String, length: Int = Toast.LENGTH_SHORT) {
+fun Context.errorToast(message: String, length: Int = Toast.LENGTH_LONG) {
   Toasty.error(this, message, length, true).show()
 }

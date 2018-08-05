@@ -1,10 +1,13 @@
 package zebrostudio.wallr100.android.ui.buypro
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
+import com.zebrostudio.librarypurchaseflow.IabHelper
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_buy_pro.buyProFeatures
 import kotlinx.android.synthetic.main.activity_buy_pro.proLogo
@@ -16,6 +19,7 @@ import kotlinx.android.synthetic.main.item_buy_pro_features.view.imageView
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
+import zebrostudio.wallr100.android.utils.infoToast
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.presentation.buypro.BuyProContract
 import javax.inject.Inject
@@ -25,6 +29,8 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
   @Inject
   internal lateinit var buyProPresenter: BuyProContract.BuyProPresenter
   private lateinit var materialDialog: MaterialDialog
+
+  private var iabHelper: IabHelper? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -40,6 +46,10 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
   override fun onResume() {
     super.onResume()
     buyProPresenter.attachView(this)
+    if (iabHelper == null || iabHelper?.isSetupDone == false) {
+      iabHelper = IabHelper(this, PurchaseDetails.base64EncodedPublicKey)
+      iabHelper?.startSetup {}
+    }
   }
 
   override fun onDestroy() {
@@ -52,14 +62,10 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
     super.onBackPressed()
   }
 
-  override fun showWaitLoader(materialLoaderType: MaterialLoaderType) {
-    val contentStringId: String = when (materialLoaderType) {
-      MaterialLoaderType.PURCHASE -> {
-        stringRes(R.string.buy_pro_verifying_purchase_message)
-      }
-      MaterialLoaderType.RESTORE -> {
-        stringRes(R.string.buy_pro_verifying_purchase_message)
-      }
+  override fun showWaitLoader(premiumOperationType: PremiumOperationType) {
+    val contentStringId = when (premiumOperationType) {
+      PremiumOperationType.PURCHASE -> stringRes(R.string.buy_pro_verifying_purchase_message)
+      PremiumOperationType.RESTORE -> stringRes(R.string.buy_pro_verifying_restore_message)
     }
     materialDialog = MaterialDialog.Builder(this)
         .widgetColor(colorRes(R.color.color_accent))
@@ -70,21 +76,22 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
         .cancelable(false)
         .progressIndeterminateStyle(false)
         .build()
-  }
-
-  override fun showNoInternetErrorMessage() {
-
+    materialDialog.show()
   }
 
   override fun showInvalidPurchaseError() {
     errorToast(stringRes(R.string.buy_pro_invalid_purchase_message))
   }
 
+  override fun showTryRestoringInfo() {
+    infoToast(stringRes(R.string.buy_pro_try_restoring_message))
+  }
+
   override fun showUnableToVerifyPurchaseError() {
     errorToast(stringRes(R.string.buy_pro_unable_to_verify_purchase_message))
   }
 
-  override fun showGenericPurchaseVerificationError() {
+  override fun showGenericVerificationError() {
     errorToast(stringRes(R.string.buy_pro_generic_error_message))
   }
 
@@ -130,16 +137,77 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
 
   private fun setClickListeners() {
     purchaseButton?.setOnClickListener {
-      buyProPresenter.purchaseButtonClicked()
+      if (iabHelper?.isSetupDone == true && iabHelper?.isAsyncInProgress != true) {
+        if (isInternetAvailable()) {
+          showWaitLoader(PremiumOperationType.PURCHASE)
+          iabHelper?.launchPurchaseFlow(this, PurchaseDetails.ITEM_SKU,
+              PurchaseDetails.requestCode,
+              purchaseFinishedListener)
+        } else {
+          showNoInternetErrorMessage(PremiumOperationType.PURCHASE)
+        }
+      } else {
+        showGenericVerificationError()
+      }
     }
 
     restoreButton?.setOnClickListener {
-      buyProPresenter.restoreButtonClicked()
+      if (iabHelper?.isSetupDone == true && iabHelper?.isAsyncInProgress != true) {
+        if (isInternetAvailable()) {
+          showWaitLoader(PremiumOperationType.RESTORE)
+          iabHelper?.queryInventoryAsync(queryInventoryFinishedListener)
+        } else {
+          showNoInternetErrorMessage(PremiumOperationType.RESTORE)
+        }
+      } else {
+        showGenericVerificationError()
+      }
+    }
+  }
+
+  private val purchaseFinishedListener =
+      IabHelper.OnIabPurchaseFinishedListener { result, purchase ->
+        if (result.isFailure) {
+          showTryRestoringInfo()
+          dismissWaitLoader()
+        } else {
+          buyProPresenter.verifyPurchaseIfSuccessful(purchase.packageName,
+              purchase.sku,
+              purchase.token)
+        }
+      }
+
+  private val queryInventoryFinishedListener =
+      IabHelper.QueryInventoryFinishedListener { result, inv ->
+        if (result.isFailure) {
+          showGenericVerificationError()
+          dismissWaitLoader()
+        } else {
+          buyProPresenter.verifyPurchaseIfSuccessful(
+              inv.getPurchase(PurchaseDetails.ITEM_SKU).packageName,
+              inv.getPurchase(PurchaseDetails.ITEM_SKU).sku,
+              inv.getPurchase(PurchaseDetails.ITEM_SKU).token)
+        }
+      }
+
+  private fun isInternetAvailable(): Boolean {
+    val connectivityManager =
+        getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+    val activeNetworkInfo = connectivityManager?.activeNetworkInfo
+    return activeNetworkInfo != null && activeNetworkInfo.isConnected
+  }
+
+  private fun showNoInternetErrorMessage(premiumOperationType: PremiumOperationType) {
+    when (premiumOperationType) {
+      PremiumOperationType.PURCHASE -> errorToast(
+          stringRes(R.string.buy_pro_purchase_ensure_working_internet_connection_message))
+      PremiumOperationType.RESTORE -> errorToast(
+          stringRes(R.string.buy_pro_restore_ensure_working_internet_connection_message))
     }
   }
 
   companion object {
-    enum class MaterialLoaderType {
+    enum class PremiumOperationType {
       PURCHASE,
       RESTORE
     }

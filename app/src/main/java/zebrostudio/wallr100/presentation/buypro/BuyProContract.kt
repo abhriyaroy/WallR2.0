@@ -6,19 +6,21 @@ import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 interface BuyProContract {
 
   interface BuyProView {
-    fun showWaitLoader(materialLoaderType: BuyProActivity.Companion.MaterialLoaderType)
-    fun showNoInternetErrorMessage()
+    fun showWaitLoader(premiumOperationType: BuyProActivity.Companion.PremiumOperationType)
+    fun showTryRestoringInfo()
     fun showInvalidPurchaseError()
     fun showUnableToVerifyPurchaseError()
-    fun showGenericPurchaseVerificationError()
+    fun showGenericVerificationError()
 
     fun dismissWaitLoader()
   }
 
   interface BuyProPresenter : BasePresenter<BuyProView> {
-    fun purchaseButtonClicked()
-    fun restoreButtonClicked()
-    fun verifyPurchase(packageName: String, skuId: String, purchaseToken: String)
+    fun verifyPurchaseIfSuccessful(
+      packageName: String,
+      skuId: String,
+      purchaseToken: String
+    )
   }
 
 }

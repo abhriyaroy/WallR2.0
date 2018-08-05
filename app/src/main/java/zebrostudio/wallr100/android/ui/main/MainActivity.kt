@@ -6,6 +6,7 @@ import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
+import android.widget.Toast
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import com.yalantis.guillotine.interfaces.GuillotineListener
 import dagger.android.AndroidInjection
@@ -73,7 +74,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   }
 
   override fun showExitConfirmation() {
-    infoToast(stringRes(R.string.exit_confirmation_message))
+    infoToast(stringRes(R.string.exit_confirmation_message), Toast.LENGTH_SHORT)
   }
 
   override fun closeNavigationMenu() {
