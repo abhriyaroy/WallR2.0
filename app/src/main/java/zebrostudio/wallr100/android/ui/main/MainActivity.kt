@@ -1,11 +1,13 @@
 package zebrostudio.wallr100.android.ui.main
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Toast
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import com.yalantis.guillotine.interfaces.GuillotineListener
@@ -23,11 +25,13 @@ import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
+import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionDetails
 import zebrostudio.wallr100.android.ui.collection.CollectionFragment
 import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment
 import zebrostudio.wallr100.android.ui.minimal.MinimalFragment
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.drawableRes
+import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.infoToast
 import zebrostudio.wallr100.android.utils.setOnDebouncedClickListener
 import zebrostudio.wallr100.android.utils.stringRes
@@ -43,6 +47,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   internal lateinit var presenter: MainContract.MainPresenter
 
   private lateinit var guillotineMenuAnimation: GuillotineAnimation
+
+  private var buyProMenuItem: View? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)
@@ -65,6 +71,13 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   override fun onDestroy() {
     presenter.detachView()
     super.onDestroy()
+  }
+
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    if (requestCode == PurchaseTransactionDetails.PURCHASE_REQUEST_CODE &&
+        resultCode == PurchaseTransactionDetails.PURCHASE_SUCCESSFUL_RESULT_CODE) {
+      buyProMenuItem?.visibility = View.GONE
+    }
   }
 
   override fun supportFragmentInjector() = fragmentDispatchingAndroidInjector
@@ -195,6 +208,10 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         guillotineMenuItemView.setBackgroundColor(colorRes(R.color.color_white))
         guillotineMenuItemView.textviewGuillotineMenuItem
             .setTextColor(colorRes(R.color.color_black))
+        if (!presenter.shouldShowPurchaseOption()) {
+          guillotineMenuItemView.visibility = View.GONE
+        }
+        buyProMenuItem = guillotineMenuItemView
       }
       val menuItem = it.third
       guillotineMenuItemView.setOnDebouncedClickListener {
@@ -216,11 +233,12 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
       MenuItems.COLLECTION -> addFragment(fragmentContainer.id,
           CollectionFragment.newInstance(), CollectionFragment.COLLECTION_FRAGMENT_TAG)
       MenuItems.FEEDBACK -> {
-        // TODO : Add feedback implementation
+        handleFeedbackClick()
       }
       MenuItems.BUY_PRO -> {
         withDelayOnMain(550, block = {
-          startActivity(Intent(this, BuyProActivity::class.java))
+          startActivityForResult(Intent(this, BuyProActivity::class.java),
+              PurchaseTransactionDetails.PURCHASE_REQUEST_CODE)
         }
         )
       }
@@ -236,6 +254,30 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         backStackEntry -= 1
       }
     }
+  }
+
+  private fun handleFeedbackClick() {
+    closeNavigationMenu()
+    withDelayOnMain(100, block = {
+      var emailSubject = "Debug-infos:"
+      emailSubject += "\n OS Version: " + System.getProperty(
+          "os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")"
+      emailSubject += "\n OS API Level: " + android.os.Build.VERSION.SDK_INT
+      emailSubject += "\n Device: " + android.os.Build.DEVICE
+      emailSubject += "\n Model (and Product): " + android.os.Build.MODEL +
+          " (" + android.os.Build.PRODUCT + ")"
+      val emailIntent = Intent(Intent.ACTION_SEND)
+      emailIntent.type = "plain/text"
+      val emailAddress = arrayOf("studio.zebro@gmail.com")
+      emailIntent.putExtra(Intent.EXTRA_EMAIL, emailAddress)
+      emailIntent.putExtra(Intent.EXTRA_SUBJECT,
+          "Feedback/Report about WallR  $emailSubject")
+      try {
+        startActivityForResult(Intent.createChooser(emailIntent, "Contact using"), 0)
+      } catch (e: ActivityNotFoundException) {
+        errorToast(stringRes(R.string.main_activity_no_email_client_error))
+      }
+    })
   }
 
   private enum class MenuItems {

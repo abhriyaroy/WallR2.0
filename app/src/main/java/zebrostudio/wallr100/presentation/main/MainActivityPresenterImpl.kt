@@ -1,8 +1,12 @@
 package zebrostudio.wallr100.presentation.main
 
-class MainActivityPresenterImpl : MainContract.MainPresenter {
-  private var backPressedOnce = false
+import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 
+class MainActivityPresenterImpl(
+  private var userPremiumStatusUseCase: UserPremiumStatusUseCase
+) : MainContract.MainPresenter {
+
+  private var backPressedOnce = false
   private var isGuillotineMenuOpen = false
   private var mainView: MainContract.MainView? = null
 
@@ -42,6 +46,10 @@ class MainActivityPresenterImpl : MainContract.MainPresenter {
 
   override fun setBackPressedFlagToFalse() {
     backPressedOnce = false
+  }
+
+  override fun shouldShowPurchaseOption(): Boolean {
+    return userPremiumStatusUseCase.checkIfUserIsPro()
   }
 
 }

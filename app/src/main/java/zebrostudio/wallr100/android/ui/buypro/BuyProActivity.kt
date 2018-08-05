@@ -85,6 +85,16 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
     super.onDestroy()
   }
 
+  override fun onActivityResult(
+    requestCode: Int, resultCode: Int,
+    data: Intent
+  ) {
+    if (iabHelper?.handleActivityResult(requestCode,
+            resultCode, data) == false) {
+      super.onActivityResult(requestCode, resultCode, data)
+    }
+  }
+
   override fun onBackPressed() {
     overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right)
     super.onBackPressed()

@@ -3,11 +3,13 @@ package zebrostudio.wallr100.presentation.buypro
 import io.reactivex.disposables.CompositeDisposable
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
+import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.presentation.entity.PurchaseAuthPresentationEntity
 import zebrostudio.wallr100.presentation.mapper.ProAuthPresentationMapperImpl
 
 class BuyProPresenterImpl(
   private var authenticatePurchaseUseCase: AuthenticatePurchaseUseCase,
+  private var userPremiumStatusUseCase: UserPremiumStatusUseCase,
   private var presentationMapper: ProAuthPresentationMapperImpl
 ) : BuyProContract.BuyProPresenter {
 
@@ -58,7 +60,7 @@ class BuyProPresenterImpl(
   private fun handleSuccessfulVerification(
     proTransactionType: BuyProActivity.Companion.ProTransactionType
   ) {
-    if (authenticatePurchaseUseCase.saveUserAsPro()) {
+    if (userPremiumStatusUseCase.saveUserAsPro()) {
       buyProView?.showSuccessfulTransactionMessage(proTransactionType)
       buyProView?.finishWithResult()
     }

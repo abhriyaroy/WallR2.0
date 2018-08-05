@@ -12,5 +12,6 @@ interface WallrRepository {
   ): Single<PurchaseAuthModel>
 
   fun saveUserAsPro(): Boolean
+  fun getUserProStatus(): Boolean
 
 }

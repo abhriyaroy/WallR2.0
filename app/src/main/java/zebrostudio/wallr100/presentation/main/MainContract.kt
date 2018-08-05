@@ -22,6 +22,7 @@ interface MainContract {
     fun notifyNavigationMenuOpened()
     fun notifyNavigationMenuClosed()
     fun setBackPressedFlagToFalse()
+    fun shouldShowPurchaseOption(): Boolean
 
   }
 }

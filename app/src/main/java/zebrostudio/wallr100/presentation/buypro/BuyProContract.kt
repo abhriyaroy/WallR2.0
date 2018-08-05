@@ -14,12 +14,14 @@ interface BuyProContract {
     fun showSuccessfulTransactionMessage(
       proTransactionType: BuyProActivity.Companion.ProTransactionType
     )
+
     fun dismissWaitLoader()
 
     fun finishWithResult()
   }
 
   interface BuyProPresenter : BasePresenter<BuyProView> {
+
     fun verifyPurchaseIfSuccessful(
       packageName: String,
       skuId: String,

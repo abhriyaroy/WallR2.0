@@ -21,6 +21,4 @@ class AuthenticatePurchaseUseCase(
         .observeOn(postExecutionThread.scheduler)
   }
 
-  fun saveUserAsPro() = wallrRepository.saveUserAsPro()
-
 }

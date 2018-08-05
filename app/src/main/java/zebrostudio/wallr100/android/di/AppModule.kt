@@ -13,6 +13,7 @@ import zebrostudio.wallr100.data.api.RemoteServiceFactory
 import zebrostudio.wallr100.data.mapper.ProAuthMapperImpl
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
+import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.presentation.mapper.ProAuthPresentationMapperImpl
 
 @Module
@@ -57,5 +58,11 @@ class AppModule {
     wallrRepository: WallrRepository,
     postExecutionThread: PostExecutionThread
   ): AuthenticatePurchaseUseCase = AuthenticatePurchaseUseCase(wallrRepository, postExecutionThread)
+
+  @Provides
+  @PerApplication
+  fun provideUserPremiumStatusUseCase(
+    wallrRepository: WallrRepository
+  ): UserPremiumStatusUseCase = UserPremiumStatusUseCase(wallrRepository)
 
 }
