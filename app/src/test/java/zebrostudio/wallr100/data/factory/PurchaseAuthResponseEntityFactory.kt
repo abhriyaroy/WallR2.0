@@ -7,10 +7,8 @@ class PurchaseAuthResponseEntityFactory {
   companion object {
     fun makePurchaseAuthResponse(): PurchaseAuthResponseEntity {
       return PurchaseAuthResponseEntity(DataFactory.randomString(),
-          DataFactory.randomString(),
-          DataFactory.randomInteger())
+          DataFactory.randomInteger(),
+          DataFactory.randomString())
     }
-
   }
-
 }

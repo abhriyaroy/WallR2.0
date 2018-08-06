@@ -86,7 +86,8 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
   }
 
   override fun onActivityResult(
-    requestCode: Int, resultCode: Int,
+    requestCode: Int,
+    resultCode: Int,
     data: Intent
   ) {
     if (iabHelper?.handleActivityResult(requestCode,
@@ -100,29 +101,8 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
     super.onBackPressed()
   }
 
-  override fun showWaitLoader(premiumOperationType: ProTransactionType) {
-    val contentStringId = when (premiumOperationType) {
-      ProTransactionType.PURCHASE -> stringRes(R.string.buy_pro_verifying_purchase_message)
-      ProTransactionType.RESTORE -> stringRes(R.string.buy_pro_verifying_restore_message)
-    }
-    materialDialog = MaterialDialog.Builder(this)
-        .widgetColor(colorRes(R.color.color_accent))
-        .contentColor(colorRes(R.color.color_white))
-        .content(contentStringId)
-        .backgroundColor(colorRes(R.color.primary_dark_material_dark))
-        .progress(true, 0)
-        .cancelable(false)
-        .progressIndeterminateStyle(false)
-        .build()
-    materialDialog.show()
-  }
-
   override fun showInvalidPurchaseError() {
     errorToast(stringRes(R.string.buy_pro_invalid_purchase_message))
-  }
-
-  override fun showTryRestoringInfo() {
-    infoToast(stringRes(R.string.buy_pro_try_restoring_message))
   }
 
   override fun showUnableToVerifyPurchaseError() {
@@ -235,6 +215,27 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
       ProTransactionType.RESTORE -> errorToast(
           stringRes(R.string.buy_pro_restore_ensure_working_internet_connection_message))
     }
+  }
+
+  private fun showWaitLoader(proTransactionType: ProTransactionType) {
+    val contentStringId = when (proTransactionType) {
+      ProTransactionType.PURCHASE -> stringRes(R.string.buy_pro_verifying_purchase_message)
+      ProTransactionType.RESTORE -> stringRes(R.string.buy_pro_verifying_restore_message)
+    }
+    materialDialog = MaterialDialog.Builder(this)
+        .widgetColor(colorRes(R.color.color_accent))
+        .contentColor(colorRes(R.color.color_white))
+        .content(contentStringId)
+        .backgroundColor(colorRes(R.color.primary_dark_material_dark))
+        .progress(true, 0)
+        .cancelable(false)
+        .progressIndeterminateStyle(false)
+        .build()
+    materialDialog.show()
+  }
+
+  private fun showTryRestoringInfo() {
+    infoToast(stringRes(R.string.buy_pro_try_restoring_message))
   }
 
   companion object {

@@ -10,7 +10,5 @@ class PurchaseAuthModelFactory {
           DataFactory.randomString(),
           DataFactory.randomInteger())
     }
-
   }
-
 }

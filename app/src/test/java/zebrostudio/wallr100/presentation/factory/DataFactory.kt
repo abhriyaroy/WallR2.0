@@ -11,7 +11,5 @@ class DataFactory {
     fun randomInteger(): Int {
       return Math.random().toInt()
     }
-
   }
-
 }
