@@ -7,7 +7,7 @@ package com.zebrostudio.librarypurchaseflow;
  * call {@link #getResult()}.
  */
 public class IabException extends Exception {
-  IabResult mResult;
+  IabResult result;
 
   public IabException(IabResult r) {
     this(r, null);
@@ -19,7 +19,7 @@ public class IabException extends Exception {
 
   public IabException(IabResult r, Exception cause) {
     super(r.getMessage(), cause);
-    mResult = r;
+    result = r;
   }
 
   public IabException(int response, String message, Exception cause) {
@@ -28,6 +28,6 @@ public class IabException extends Exception {
 
   /** Returns the IAB result (error) that this exception signals. */
   public IabResult getResult() {
-    return mResult;
+    return result;
   }
 }

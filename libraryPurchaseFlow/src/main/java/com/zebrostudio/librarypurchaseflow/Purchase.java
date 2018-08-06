@@ -7,73 +7,73 @@ import org.json.JSONObject;
  * Represents an in-app billing purchase.
  */
 public class Purchase {
-  String mItemType;  // ITEM_TYPE_INAPP or ITEM_TYPE_SUBS
-  String mOrderId;
-  String mPackageName;
-  String mSku;
-  long mPurchaseTime;
-  int mPurchaseState;
-  String mDeveloperPayload;
-  String mToken;
-  String mOriginalJson;
-  String mSignature;
+  String itemType;  // ITEM_TYPE_INAPP or ITEM_TYPE_SUBS
+  String orderId;
+  String packageName;
+  String sku;
+  long purchaseTime;
+  int purchaseState;
+  String developerPayLoad;
+  String token;
+  String originalJson;
+  String signature;
 
   public Purchase(String itemType, String jsonPurchaseInfo, String signature) throws JSONException {
-    mItemType = itemType;
-    mOriginalJson = jsonPurchaseInfo;
-    JSONObject o = new JSONObject(mOriginalJson);
-    mOrderId = o.optString("orderId");
-    mPackageName = o.optString("packageName");
-    mSku = o.optString("productId");
-    mPurchaseTime = o.optLong("purchaseTime");
-    mPurchaseState = o.optInt("purchaseState");
-    mDeveloperPayload = o.optString("developerPayload");
-    mToken = o.optString("token", o.optString("purchaseToken"));
-    mSignature = signature;
+    this.itemType = itemType;
+    originalJson = jsonPurchaseInfo;
+    JSONObject o = new JSONObject(originalJson);
+    orderId = o.optString("orderId");
+    packageName = o.optString("packageName");
+    sku = o.optString("productId");
+    purchaseTime = o.optLong("purchaseTime");
+    purchaseState = o.optInt("purchaseState");
+    developerPayLoad = o.optString("developerPayload");
+    token = o.optString("token", o.optString("purchaseToken"));
+    this.signature = signature;
   }
 
   public String getItemType() {
-    return mItemType;
+    return itemType;
   }
 
   public String getOrderId() {
-    return mOrderId;
+    return orderId;
   }
 
   public String getPackageName() {
-    return mPackageName;
+    return packageName;
   }
 
   public String getSku() {
-    return mSku;
+    return sku;
   }
 
   public long getPurchaseTime() {
-    return mPurchaseTime;
+    return purchaseTime;
   }
 
   public int getPurchaseState() {
-    return mPurchaseState;
+    return purchaseState;
   }
 
   public String getDeveloperPayload() {
-    return mDeveloperPayload;
+    return developerPayLoad;
   }
 
   public String getToken() {
-    return mToken;
+    return token;
   }
 
   public String getOriginalJson() {
-    return mOriginalJson;
+    return originalJson;
   }
 
   public String getSignature() {
-    return mSignature;
+    return signature;
   }
 
   @Override
   public String toString() {
-    return "PurchaseInfo(type:" + mItemType + "):" + mOriginalJson;
+    return "PurchaseInfo(type:" + itemType + "):" + originalJson;
   }
 }
