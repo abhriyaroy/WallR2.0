@@ -3,7 +3,7 @@ package zebrostudio.wallr100.data.api
 class UrlMap {
 
   companion object {
-    const val firebasePurchaseAuthUrl = "https://us-central1-wallrproduction.cloudfunctions.net/"
+    const val FIREBASE_PURCHASE_AUTH_URL = "https://us-central1-wallrproduction.cloudfunctions.net/"
 
     fun getFirebasePurchaseAuthEndpoint(
       packageName: String,

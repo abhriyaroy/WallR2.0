@@ -8,7 +8,7 @@ class RemoteServiceFactory {
 
   fun verifyPurchaseService(): FirebaseAuthService {
     return Retrofit.Builder()
-        .baseUrl(UrlMap.firebasePurchaseAuthUrl)
+        .baseUrl(UrlMap.FIREBASE_PURCHASE_AUTH_URL)
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .build()
