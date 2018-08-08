@@ -2,6 +2,8 @@ package zebrostudio.wallr100.presentation.buypro
 
 import io.reactivex.disposables.CompositeDisposable
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
+import zebrostudio.wallr100.data.customexceptions.InvalidPurchaseException
+import zebrostudio.wallr100.data.customexceptions.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.presentation.entity.PurchaseAuthPresentationEntity
@@ -35,20 +37,14 @@ class BuyProPresenterImpl(
         .map {
           presentationMapper.mapToPresentationEntity(it)
         }
-        .subscribe({ response: PurchaseAuthPresentationEntity ->
-          if (response.status == "error"
-              && response.message == "something went wrong"
-              && (response.errorCode == 4004 || response.errorCode == 4010)) {
-            buyProView?.showInvalidPurchaseError()
-          } else if (response.status == "success") {
-            handleSuccessfulVerification(proTransactionType)
-          } else {
-            buyProView?.showUnableToVerifyPurchaseError()
+        .subscribe({
+          handleSuccessfulVerification(proTransactionType)
+        }, {
+          when (it) {
+            is InvalidPurchaseException -> buyProView?.showInvalidPurchaseError()
+            is UnableToVerifyPurchaseException -> buyProView?.showUnableToVerifyPurchaseError()
+            else -> buyProView?.showGenericVerificationError()
           }
-          buyProView?.dismissWaitLoader()
-        }, { _: Throwable ->
-          buyProView?.showGenericVerificationError()
-          buyProView?.dismissWaitLoader()
         })
         .let { disposable ->
           compositeDisposable.add(

@@ -53,15 +53,11 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)
     super.onCreate(savedInstanceState)
+    presenter.attachView(this)
     setContentView(R.layout.activity_main)
     initializeViews()
     addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
         WallpaperFragment.EXPLORE_FRAGMENT_TAG)
-  }
-
-  override fun onResume() {
-    super.onResume()
-    presenter.attachView(this)
   }
 
   override fun onBackPressed() {
@@ -87,7 +83,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   }
 
   override fun showExitConfirmation() {
-    infoToast(stringRes(R.string.exit_confirmation_message), Toast.LENGTH_SHORT)
+    infoToast(stringRes(R.string.main_activity_exit_confirmation_message), Toast.LENGTH_SHORT)
   }
 
   override fun closeNavigationMenu() {

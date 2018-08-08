@@ -61,9 +61,10 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
       }
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_buy_pro)
     AndroidInjection.inject(this)
+    super.onCreate(savedInstanceState)
+    buyProPresenter.attachView(this)
+    setContentView(R.layout.activity_buy_pro)
     overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
 
     loadWallrLogo()
@@ -73,7 +74,6 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
 
   override fun onResume() {
     super.onResume()
-    buyProPresenter.attachView(this)
     if (iabHelper == null || iabHelper?.isSetupDone == false) {
       iabHelper = IabHelper(this, PurchaseTransactionDetails.BASE64_ENCODED_PUBLIC_KEY)
       iabHelper?.startSetup {}
