@@ -1,7 +1,6 @@
 package zebrostudio.wallr100.domain
 
 import io.reactivex.Single
-import zebrostudio.wallr100.domain.model.PurchaseAuthModel
 
 interface WallrRepository {
 
@@ -9,7 +8,7 @@ interface WallrRepository {
     packageName: String,
     skuId: String,
     purchaseToken: String
-  ): Single<PurchaseAuthModel>
+  ): Single<Boolean>
 
   fun saveUserAsPro(): Boolean
   fun getUserProStatus(): Boolean

@@ -6,7 +6,6 @@ import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.presentation.buypro.BuyProContract
 import zebrostudio.wallr100.presentation.buypro.BuyProPresenterImpl
-import zebrostudio.wallr100.presentation.mapper.ProAuthPresentationMapperImpl
 
 @Module
 class BuyProModule {
@@ -14,10 +13,8 @@ class BuyProModule {
   @Provides
   internal fun provideBuyProPresenter(
     authenticatePurchaseUseCase: AuthenticatePurchaseUseCase,
-    userPremiumStatusUseCase: UserPremiumStatusUseCase,
-    proAuthPresentationMapperImpl: ProAuthPresentationMapperImpl
+    userPremiumStatusUseCase: UserPremiumStatusUseCase
   ): BuyProContract.BuyProPresenter = BuyProPresenterImpl(authenticatePurchaseUseCase,
-      userPremiumStatusUseCase,
-      proAuthPresentationMapperImpl)
+      userPremiumStatusUseCase)
 
 }

@@ -10,11 +10,9 @@ import zebrostudio.wallr100.android.di.scopes.PerApplication
 import zebrostudio.wallr100.data.SharedPrefsHelper
 import zebrostudio.wallr100.data.WallrDataRepository
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
-import zebrostudio.wallr100.data.mapper.ProAuthMapperImpl
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
-import zebrostudio.wallr100.presentation.mapper.ProAuthPresentationMapperImpl
 
 @Module
 class AppModule {
@@ -38,18 +36,11 @@ class AppModule {
   fun provideRemoteAuthServiceFactory(): RemoteAuthServiceFactory = RemoteAuthServiceFactory()
 
   @Provides
-  fun provideAuthResponseMapper(): ProAuthMapperImpl = ProAuthMapperImpl()
-
-  @Provides
-  fun provideProAuthPresentationMapper(): ProAuthPresentationMapperImpl = ProAuthPresentationMapperImpl()
-
-  @Provides
   @PerApplication
   fun provideWallrRepository(
     retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
-    mapperImpl: ProAuthMapperImpl,
     sharedPrefsHelper: SharedPrefsHelper
-  ): WallrRepository = WallrDataRepository(retrofitFirebaseAuthFactory, mapperImpl,
+  ): WallrRepository = WallrDataRepository(retrofitFirebaseAuthFactory,
       sharedPrefsHelper)
 
   @Provides

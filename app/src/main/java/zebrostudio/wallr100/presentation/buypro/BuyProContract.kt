@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.presentation.buypro
 
+import com.uber.autodispose.ScopeProvider
 import zebrostudio.wallr100.android.BasePresenter
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 
@@ -13,6 +14,8 @@ interface BuyProContract {
       proTransactionType: BuyProActivity.Companion.ProTransactionType
     )
     fun dismissWaitLoader()
+
+    fun getScope() : ScopeProvider
 
     fun finishWithResult()
   }

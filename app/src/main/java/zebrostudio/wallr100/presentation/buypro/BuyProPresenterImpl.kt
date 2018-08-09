@@ -1,29 +1,24 @@
 package zebrostudio.wallr100.presentation.buypro
 
-import io.reactivex.disposables.CompositeDisposable
+import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.data.customexceptions.InvalidPurchaseException
 import zebrostudio.wallr100.data.customexceptions.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
-import zebrostudio.wallr100.presentation.entity.PurchaseAuthPresentationEntity
-import zebrostudio.wallr100.presentation.mapper.ProAuthPresentationMapperImpl
 
 class BuyProPresenterImpl(
   private var authenticatePurchaseUseCase: AuthenticatePurchaseUseCase,
-  private var userPremiumStatusUseCase: UserPremiumStatusUseCase,
-  private var presentationMapper: ProAuthPresentationMapperImpl
+  private var userPremiumStatusUseCase: UserPremiumStatusUseCase
 ) : BuyProContract.BuyProPresenter {
 
   private var buyProView: BuyProContract.BuyProView? = null
-  private var compositeDisposable = CompositeDisposable()
 
   override fun attachView(view: BuyProContract.BuyProView) {
     buyProView = view
   }
 
   override fun detachView() {
-    compositeDisposable.dispose()
     buyProView = null
   }
 
@@ -34,9 +29,7 @@ class BuyProPresenterImpl(
     proTransactionType: BuyProActivity.Companion.ProTransactionType
   ) {
     authenticatePurchaseUseCase.buildUseCaseSingle(packageName, skuId, purchaseToken)
-        .map {
-          presentationMapper.mapToPresentationEntity(it)
-        }
+        .autoDisposable(buyProView?.getScope()!!)
         .subscribe({
           handleSuccessfulVerification(proTransactionType)
         }, {
@@ -46,11 +39,6 @@ class BuyProPresenterImpl(
             else -> buyProView?.showGenericVerificationError()
           }
         })
-        .let { disposable ->
-          compositeDisposable.add(
-              disposable
-          )
-        }
   }
 
   private fun handleSuccessfulVerification(

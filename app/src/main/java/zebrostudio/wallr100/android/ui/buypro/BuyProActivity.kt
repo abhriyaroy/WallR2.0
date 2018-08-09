@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.android.ui.buypro
 
+import android.arch.lifecycle.Lifecycle
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -8,6 +9,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
+import com.uber.autodispose.ScopeProvider
+import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.zebrostudio.librarypurchaseflow.IabHelper
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_buy_pro.buyProFeatures
@@ -124,6 +127,10 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
 
   override fun dismissWaitLoader() {
     materialDialog.dismiss()
+  }
+
+  override fun getScope() : ScopeProvider{
+    return AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)
   }
 
   override fun finishWithResult() {
