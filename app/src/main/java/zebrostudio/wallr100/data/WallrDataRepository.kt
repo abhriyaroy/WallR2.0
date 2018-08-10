@@ -18,13 +18,13 @@ class WallrDataRepository(
     packageName: String,
     skuId: String,
     purchaseToken: String
-  ): Single<Boolean> {
+  ): Single<Any> {
 
     return retrofitFirebaseAuthFactory.verifyPurchaseService()
         .verifyPurchase(UrlMap.getFirebasePurchaseAuthEndpoint(packageName, skuId, purchaseToken))
         .flatMap {
           if (it.status == "success") {
-            Single.just(true)
+            Single.just(it)
           } else if (it.status == "error" && (it.errorCode == 4004 || it.errorCode == 4010)) {
             Single.error(InvalidPurchaseException())
           } else {

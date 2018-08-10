@@ -32,12 +32,14 @@ class BuyProPresenterImpl(
         .autoDisposable(buyProView?.getScope()!!)
         .subscribe({
           handleSuccessfulVerification(proTransactionType)
+          buyProView?.dismissWaitLoader()
         }, {
           when (it) {
             is InvalidPurchaseException -> buyProView?.showInvalidPurchaseError()
             is UnableToVerifyPurchaseException -> buyProView?.showUnableToVerifyPurchaseError()
             else -> buyProView?.showGenericVerificationError()
           }
+          buyProView?.dismissWaitLoader()
         })
   }
 

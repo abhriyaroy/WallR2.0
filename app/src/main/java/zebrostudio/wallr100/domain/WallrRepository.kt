@@ -8,7 +8,7 @@ interface WallrRepository {
     packageName: String,
     skuId: String,
     purchaseToken: String
-  ): Single<Boolean>
+  ): Single<Any>
 
   fun saveUserAsPro(): Boolean
   fun getUserProStatus(): Boolean

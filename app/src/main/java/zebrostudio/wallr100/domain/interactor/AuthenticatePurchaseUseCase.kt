@@ -14,7 +14,7 @@ class AuthenticatePurchaseUseCase(
     packageName: String,
     skuId: String,
     purchaseToken: String
-  ): Single<Boolean> {
+  ): Single<Any> {
     return wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)
         .subscribeOn(Schedulers.io())
         .observeOn(postExecutionThread.scheduler)
