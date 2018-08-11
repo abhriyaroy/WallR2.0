@@ -14,9 +14,7 @@ interface BuyProContract {
       proTransactionType: BuyProActivity.Companion.ProTransactionType
     )
     fun dismissWaitLoader()
-
     fun getScope() : ScopeProvider
-
     fun finishWithResult()
   }
 
