@@ -1,14 +1,13 @@
 apply plugin: 'com.android.library'
+apply from: "../versions.gradle"
 
 android {
-  compileSdkVersion 27
+  compileSdkVersion COMPILE_SDK_VERSION
   defaultConfig {
-    minSdkVersion 17
-    targetSdkVersion 27
+    minSdkVersion MINIMUM_SDK_VERSION
+    targetSdkVersion TARGET_SDK_VERSION
     versionCode 1
     versionName "1.0"
-
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
   buildTypes {

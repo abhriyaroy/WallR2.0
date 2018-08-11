@@ -49,7 +49,7 @@ class MainActivityPresenterImpl(
   }
 
   override fun shouldShowPurchaseOption(): Boolean {
-    return userPremiumStatusUseCase.checkIfUserIsPro()
+    return !userPremiumStatusUseCase.checkIfUserIsPro()
   }
 
 }
