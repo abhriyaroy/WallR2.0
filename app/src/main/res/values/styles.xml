@@ -58,4 +58,16 @@
     <item name="android:textColor">@android:color/white</item>
   </style>
 
+  <style name="MaterialSearchViewStyle">
+    <item name="searchBackground">@color/color_primary</item>
+    <item name="searchVoiceIcon">@drawable/ic_action_voice_search_inverted</item>
+    <item name="searchCloseIcon">@drawable/ic_action_navigation_close_inverted</item>
+    <item name="searchBackIcon">@drawable/ic_action_navigation_arrow_back_inverted</item>
+    <item name="searchSuggestionIcon">@drawable/ic_suggestion</item>
+    <item name="searchSuggestionBackground">@android:color/white</item>
+    <item name="android:textColor">@android:color/white</item>
+    <item name="android:textColorHint">@android:color/darker_gray</item>
+    <item name="android:hint">@string/search_hint</item>
+  </style>
+
 </resources>

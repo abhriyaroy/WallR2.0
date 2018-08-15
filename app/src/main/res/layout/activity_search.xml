@@ -61,7 +61,7 @@
       <ImageView
           android:layout_width="55dp"
           android:layout_height="55dp"
-          android:src="@drawable/ic_sad"
+          android:src="@drawable/ic_no_result_gray"
           android:id="@+id/noResultImage"
           android:visibility="gone"
           android:layout_centerHorizontal="true"/>
@@ -115,7 +115,7 @@
       <ImageView
           android:layout_width="55dp"
           android:layout_height="55dp"
-          android:src="@drawable/ic_black_keyboard_with_white_keys"
+          android:src="@drawable/ic_no_input_gray"
           android:id="@+id/noInputImage"
           android:layout_centerHorizontal="true"
           android:layout_marginBottom="-8dp"/>
@@ -145,7 +145,7 @@
 
 
     <View
-        android:background="@drawable/drop_shadow_tab"
+        android:background="@drawable/shadow_bottom"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_below="@id/search_view"/>

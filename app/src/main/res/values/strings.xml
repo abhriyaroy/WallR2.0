@@ -67,4 +67,7 @@
   <string name="buy_pro_restore_successful_message">
     Your purchase has been restored successfully</string>
 
+  <!-- Search activity strings -->
+  <string name="type_in_a_search_query">Type in a search query</string>
+
 </resources>
