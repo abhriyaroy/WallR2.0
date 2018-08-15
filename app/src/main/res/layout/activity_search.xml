@@ -1,0 +1,157 @@
+<android.support.design.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@color/color_primary">
+
+
+  <android.support.design.widget.AppBarLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:fitsSystemWindows="true"
+      android:id="@+id/search_app_bar">
+
+    <com.miguelcatalan.materialsearchview.MaterialSearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:transitionName="searchTransition"
+        style="@style/MaterialSearchViewStyle"
+        app:layout_scrollFlags="scroll|enterAlways|snap"
+        />
+
+  </android.support.design.widget.AppBarLayout>
+
+
+  <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_height="match_parent"
+      android:layout_width="match_parent"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical">
+
+      <com.github.ybq.android.spinkit.SpinKitView
+          xmlns:app="http://schemas.android.com/apk/res-auto"
+          android:id="@+id/spin_kitSearch"
+          style="@style/SpinKitView.Large.FoldingCube"
+          android:layout_width="wrap_content"
+          android:layout_height="45dp"
+          android:padding="10dp"
+          android:layout_gravity="center"
+          app:SpinKit_Color="#fff"/>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_search"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:paddingBottom="56dp">
+
+      <ImageView
+          android:layout_width="55dp"
+          android:layout_height="55dp"
+          android:src="@drawable/ic_sad"
+          android:id="@+id/noResultImage"
+          android:visibility="gone"
+          android:layout_centerHorizontal="true"/>
+
+      <library_textView.CanaroTextView
+          android:paddingTop="8dp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/woah_there_we_found_nothing"
+          android:id="@+id/no_result"
+          android:visibility="gone"
+          android:layout_below="@id/noResultImage"
+          android:textColor="#fff"
+          android:layout_centerHorizontal="true"/>
+
+      <library_textView.CanaroTextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/woah_there_we_found_nothing"
+          android:id="@+id/no_result2"
+          android:visibility="gone"
+          android:layout_below="@id/no_result"
+          android:textColor="#fff"
+          android:layout_centerHorizontal="true"/>
+
+
+      <library_textView.CanaroTextView
+          android:layout_height="wrap_content"
+          android:layout_width="wrap_content"
+          android:padding="8dp"
+          android:text="@string/retry"
+          android:textColor="#fff"
+          android:id="@+id/retryButton"
+          android:textAlignment="center"
+          android:textStyle="bold"
+          android:layout_centerVertical="true"
+          android:layout_centerHorizontal="true"
+          android:layout_below="@id/no_result2"
+          android:clickable="true"
+          android:background="?android:selectableItemBackground"
+          android:visibility="gone"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/noInput"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:paddingBottom="56dp">
+
+      <ImageView
+          android:layout_width="55dp"
+          android:layout_height="55dp"
+          android:src="@drawable/ic_black_keyboard_with_white_keys"
+          android:id="@+id/noInputImage"
+          android:layout_centerHorizontal="true"
+          android:layout_marginBottom="-8dp"/>
+
+      <library_textView.CanaroTextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/type_in_a_search_query"
+          android:id="@+id/no_input"
+          android:paddingTop="8dp"
+          android:textColor="#fff"
+          android:layout_below="@id/noInputImage"
+          android:layout_centerHorizontal="true"
+          />
+    </RelativeLayout>
+
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/spin_kitPhotosLoadMoreSearch"
+        style="@style/SpinKitView.Large.ThreeBounce"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginBottom="6dp"
+        android:layout_gravity="bottom|center_horizontal"
+        app:SpinKit_Color="#fff"/>
+
+
+    <View
+        android:background="@drawable/drop_shadow_tab"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@id/search_view"/>
+
+
+  </FrameLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

@@ -64,6 +64,7 @@ android {
     implementation "com.afollestad.material-dialogs:core:$MATERIAL_DIALOG_VERSION"
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
+    implementation project(':librarySearch')
     implementation project(':libraryWallrCustoms')
     implementation project(':libraryPurchaseFlow')
 
@@ -71,6 +72,9 @@ android {
     testImplementation "junit:junit:$JUNIT_VERSION"
     testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_VERSION"
-
   }
+}
+
+dependencies {
+  implementation 'com.android.support.constraint:constraint-layout:+'
 }
