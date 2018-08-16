@@ -2,8 +2,10 @@ package zebrostudio.wallr100.android.ui.main
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.annotation.IdRes
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
@@ -22,6 +24,7 @@ import kotlinx.android.synthetic.main.guillotine_menu_layout.view.hamburgerGuill
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.imageviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.textviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
+import kotlinx.android.synthetic.main.toolbar_layout.toolbarSearchIcon
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
@@ -29,6 +32,7 @@ import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionDetails
 import zebrostudio.wallr100.android.ui.collection.CollectionFragment
 import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment
 import zebrostudio.wallr100.android.ui.minimal.MinimalFragment
+import zebrostudio.wallr100.android.ui.search.SearchActivity
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.drawableRes
 import zebrostudio.wallr100.android.utils.errorToast
@@ -58,6 +62,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     initializeViews()
     addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
         WallpaperFragment.EXPLORE_FRAGMENT_TAG)
+
+    setClickListeners()
   }
 
   override fun onBackPressed() {
@@ -274,6 +280,19 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         errorToast(stringRes(R.string.main_activity_no_email_client_error))
       }
     })
+  }
+
+  private fun setClickListeners() {
+    toolbarSearchIcon.setOnClickListener {
+      val i = Intent(this@MainActivity, SearchActivity::class.java)
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this@MainActivity, it,
+            "searchTransition")
+        startActivity(i, options.toBundle())
+      } else {
+        startActivity(i)
+      }
+    }
   }
 
   private enum class MenuItems {

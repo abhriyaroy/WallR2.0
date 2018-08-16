@@ -68,6 +68,8 @@
     Your purchase has been restored successfully</string>
 
   <!-- Search activity strings -->
-  <string name="type_in_a_search_query">Type in a search query</string>
+  <string name="search_type_in_a_query_message">Type in a search query</string>
+  <string name="search_no_result_message">Woah there! We found nothing</string>
+  <string name="search_retry_message">Retry</string>
 
 </resources>
