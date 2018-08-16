@@ -4,26 +4,23 @@
     android:layout_width="match_parent"
     android:background="@color/color_primary">
 
-
   <android.support.design.widget.AppBarLayout
+      android:id="@+id/searchAppBar"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:fitsSystemWindows="true"
-      android:id="@+id/search_app_bar">
+      android:fitsSystemWindows="true">
 
     <com.miguelcatalan.materialsearchview.MaterialSearchView
-        android:id="@+id/search_view"
+        android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:transitionName="searchTransition"
-        style="@style/MaterialSearchViewStyle"
         app:layout_scrollFlags="scroll|enterAlways|snap"
-        />
+        android:transitionName="@string/search_view_transition_name"
+        style="@style/MaterialSearchViewStyle"/>
 
   </android.support.design.widget.AppBarLayout>
 
-
-  <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  <FrameLayout
       android:layout_height="match_parent"
       android:layout_width="match_parent"
       app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -34,124 +31,119 @@
         android:layout_gravity="center_horizontal|center_vertical">
 
       <com.github.ybq.android.spinkit.SpinKitView
-          xmlns:app="http://schemas.android.com/apk/res-auto"
-          android:id="@+id/spin_kitSearch"
-          style="@style/SpinKitView.Large.FoldingCube"
+          android:id="@+id/SearchActivitySpinkitView"
           android:layout_width="wrap_content"
-          android:layout_height="45dp"
-          android:padding="10dp"
+          android:layout_height="@dimen/search_activity_spinkit_view_height"
           android:layout_gravity="center"
-          app:SpinKit_Color="#fff"/>
+          android:padding="@dimen/search_activity_spinkit_view_padding"
+          style="@style/SpinKitView.Large.FoldingCube"
+          app:SpinKit_Color="@color/color_white"/>
 
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_search"
-        android:scrollbars="vertical"
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        android:scrollbars="vertical"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
-        android:paddingBottom="56dp">
+        android:paddingBottom="@dimen/search_activity_relative_layout_no_result_padding_top">
 
       <ImageView
-          android:layout_width="55dp"
-          android:layout_height="55dp"
+          android:id="@+id/noResultImageView"
+          android:layout_width="@dimen/search_activity_no_result_imageview_width"
+          android:layout_height="@dimen/search_activity_no_result_imageview_height"
+          android:layout_centerHorizontal="true"
           android:src="@drawable/ic_no_result_gray"
-          android:id="@+id/noResultImage"
-          android:visibility="gone"
-          android:layout_centerHorizontal="true"/>
+          android:visibility="gone"/>
 
-      <library_textView.CanaroTextView
-          android:paddingTop="8dp"
+      <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+          android:id="@+id/noResultTextFirstLine"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_below="@id/noResultImageView"
+          android:paddingTop="@dimen/search_activity_no_result_textview_padding_top"
+          android:layout_centerHorizontal="true"
           android:text="@string/search_no_result_message"
-          android:id="@+id/no_result"
-          android:visibility="gone"
-          android:layout_below="@id/noResultImage"
-          android:textColor="#fff"
-          android:layout_centerHorizontal="true"/>
+          android:textColor="@color/color_white"
+          android:visibility="gone"/>
 
-      <library_textView.CanaroTextView
+      <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+          android:id="@+id/noResultTextSecondLine"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_below="@id/noResultTextFirstLine"
+          android:layout_centerHorizontal="true"
           android:text="@string/search_no_result_message"
-          android:id="@+id/no_result2"
-          android:visibility="gone"
-          android:layout_below="@id/no_result"
-          android:textColor="#fff"
-          android:layout_centerHorizontal="true"/>
+          android:textColor="@color/color_white"
+          android:visibility="gone"/>
 
 
-      <library_textView.CanaroTextView
-          android:layout_height="wrap_content"
-          android:layout_width="wrap_content"
-          android:padding="8dp"
-          android:text="@string/search_retry_message"
-          android:textColor="#fff"
+      <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
           android:id="@+id/retryButton"
-          android:textAlignment="center"
-          android:textStyle="bold"
+          android:layout_height="wrap_content"
+          android:layout_width="wrap_content"
+          android:layout_below="@id/noResultTextSecondLine"
           android:layout_centerVertical="true"
           android:layout_centerHorizontal="true"
-          android:layout_below="@id/no_result2"
-          android:clickable="true"
+          android:padding="@dimen/search_activity_retry_button_padding"
           android:background="?android:selectableItemBackground"
+          android:text="@string/search_retry_message"
+          android:textColor="@color/color_white"
+          android:textAlignment="center"
+          android:textStyle="bold"
+          android:clickable="true"
           android:visibility="gone"/>
+
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/noInputRelativeLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/noInput"
         android:layout_gravity="center_horizontal|center_vertical"
-        android:paddingBottom="56dp">
+        android:paddingBottom="@dimen/Search_activity_no_input_relative_layout_padding_bottom">
 
       <ImageView
-          android:layout_width="55dp"
-          android:layout_height="55dp"
-          android:src="@drawable/ic_no_input_gray"
-          android:id="@+id/noInputImage"
+          android:id="@+id/noInputImageView"
+          android:layout_width="@dimen/search_activity_no_input_imageview_width"
+          android:layout_height="@dimen/search_activity_no_input_imageview_height"
           android:layout_centerHorizontal="true"
-          android:layout_marginBottom="-8dp"/>
+          android:layout_marginBottom="@dimen/search_activity_no_input_imageview_margin_bottom"
+          android:src="@drawable/ic_no_input_gray"/>
 
-      <library_textView.CanaroTextView
+      <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+          android:id="@+id/noInputTextView"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/search_type_in_a_query_message"
-          android:id="@+id/no_input"
-          android:paddingTop="8dp"
-          android:textColor="#fff"
-          android:layout_below="@id/noInputImage"
+          android:layout_below="@id/noInputImageView"
           android:layout_centerHorizontal="true"
-          />
+          android:paddingTop="@dimen/seaarch_activity_no_input_textview_padding_top"
+          android:text="@string/search_type_in_a_query_message"
+          android:textColor="@color/color_white"/>
+
     </RelativeLayout>
 
-
     <com.github.ybq.android.spinkit.SpinKitView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/spin_kitPhotosLoadMoreSearch"
-        style="@style/SpinKitView.Large.ThreeBounce"
+        android:id="@+id/bottomSpinkitView"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_marginBottom="6dp"
+        android:layout_height="@dimen/search_activity_bottom_spinkit_height"
+        android:layout_marginBottom="@dimen/search_activity_bottom_spinkit_margin_bottom"
         android:layout_gravity="bottom|center_horizontal"
-        app:SpinKit_Color="#fff"/>
+        style="@style/SpinKitView.Large.ThreeBounce"
+        app:SpinKit_Color="@color/color_white"/>
 
 
     <View
-        android:background="@drawable/shadow_bottom"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@id/search_view"/>
-
+        android:layout_height="@dimen/search_view_shadow_bottom_height"
+        android:layout_below="@id/searchView"
+        android:background="@drawable/shadow_bottom"/>
 
   </FrameLayout>
-
 
 </android.support.design.widget.CoordinatorLayout>

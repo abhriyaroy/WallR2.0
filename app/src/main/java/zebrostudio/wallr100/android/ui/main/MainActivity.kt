@@ -284,10 +284,10 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
 
   private fun setClickListeners() {
     toolbarSearchIcon.setOnClickListener {
-      val i = Intent(this@MainActivity, SearchActivity::class.java)
+      val i = Intent(this, SearchActivity::class.java)
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this@MainActivity, it,
-            "searchTransition")
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, it,
+            stringRes(R.string.search_view_transition_name))
         startActivity(i, options.toBundle())
       } else {
         startActivity(i)

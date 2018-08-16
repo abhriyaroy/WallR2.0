@@ -57,4 +57,20 @@
   <dimen name="item_buy_pro_description_padding_bottom">4dp</dimen>
   <dimen name="item_buy_pro_description_text_size">12sp</dimen>
 
+  <dimen name="search_activity_spinkit_view_height">45dp</dimen>
+  <dimen name="search_activity_spinkit_view_padding">10dp</dimen>
+  <dimen name="search_activity_relative_layout_no_result_padding_top">56dp</dimen>
+  <dimen name="Search_activity_no_input_relative_layout_padding_bottom">56dp</dimen>
+  <dimen name="search_view_shadow_bottom_height">2dp</dimen>
+  <dimen name="search_activity_bottom_spinkit_height">30dp</dimen>
+  <dimen name="search_activity_bottom_spinkit_margin_bottom">6dp</dimen>
+  <dimen name="seaarch_activity_no_input_textview_padding_top">8dp</dimen>
+  <dimen name="search_activity_no_input_imageview_margin_bottom">8dp</dimen>
+  <dimen name="search_activity_no_input_imageview_width">55dp</dimen>
+  <dimen name="search_activity_no_input_imageview_height">55dp</dimen>
+  <dimen name="search_activity_retry_button_padding">8dp</dimen>
+  <dimen name="search_activity_no_result_textview_padding_top">8dp</dimen>
+  <dimen name="search_activity_no_result_imageview_width">55dp</dimen>
+  <dimen name="search_activity_no_result_imageview_height">55dp</dimen>
+
 </resources>
