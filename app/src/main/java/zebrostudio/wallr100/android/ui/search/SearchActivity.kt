@@ -11,7 +11,9 @@ import android.text.TextUtils
 import android.view.View
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import dagger.android.AndroidInjection
+import kotlinx.android.synthetic.main.activity_search.SearchActivitySpinkitView
 import kotlinx.android.synthetic.main.activity_search.noInputRelativeLayout
+import kotlinx.android.synthetic.main.activity_search.noResultRelativeLayout
 import kotlinx.android.synthetic.main.activity_search.searchAppBar
 import kotlinx.android.synthetic.main.activity_search.searchView
 import zebrostudio.wallr100.R
@@ -36,6 +38,8 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     }
     initAppbar()
     initSearchView()
+    hideLoader()
+    hideNoResultView()
   }
 
   override fun onDestroy() {
@@ -78,6 +82,30 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
       }
       else -> super.onBackPressed()
     }
+  }
+
+  override fun showLoader() {
+    SearchActivitySpinkitView.visibility = View.VISIBLE
+  }
+
+  override fun hideLoader() {
+    SearchActivitySpinkitView.visibility = View.GONE
+  }
+
+  override fun showNoInputView() {
+    noInputRelativeLayout.visibility = View.VISIBLE
+  }
+
+  override fun hideNoInputView() {
+    noInputRelativeLayout.visibility = View.GONE
+  }
+
+  override fun showNoResultView() {
+    noResultRelativeLayout.visibility = View.VISIBLE
+  }
+
+  override fun hideNoResultView() {
+    noResultRelativeLayout.visibility = View.VISIBLE
   }
 
   private fun initAppbar() {

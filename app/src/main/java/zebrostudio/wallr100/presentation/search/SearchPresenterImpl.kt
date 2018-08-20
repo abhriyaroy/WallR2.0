@@ -13,7 +13,7 @@ class SearchPresenterImpl : SearchContract.SearchPresenter {
   }
 
   override fun notifyQuerySubmitted(query: String?) {
-
+    searchView?.showLoader()
   }
 
 }
