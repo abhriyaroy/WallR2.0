@@ -6,6 +6,10 @@ interface SearchContract{
 
   interface SearchView
 
-  interface SearchPresenter : BasePresenter<SearchView>
+  interface SearchPresenter : BasePresenter<SearchView>{
+
+    fun notifyQuerySubmitted(query: String?)
+
+  }
 
 }

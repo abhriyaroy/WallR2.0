@@ -12,4 +12,8 @@ class SearchPresenterImpl : SearchContract.SearchPresenter {
     searchView = null
   }
 
+  override fun notifyQuerySubmitted(query: String?) {
+
+  }
+
 }

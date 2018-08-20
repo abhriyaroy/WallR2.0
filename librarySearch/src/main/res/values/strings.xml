@@ -1,4 +1,4 @@
 <resources>
     <string name="search_hint">Search wallpapers...</string>
-  <string name="exception_toast">Oops something went wrong. Please try again</string>
+    <string name="exception_toast">Oops something went wrong. Please try again</string>
 </resources>
