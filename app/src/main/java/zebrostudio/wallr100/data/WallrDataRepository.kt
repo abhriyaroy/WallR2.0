@@ -1,16 +1,21 @@
 package zebrostudio.wallr100.data
 
-import android.util.Log
+import io.reactivex.Observable
 import io.reactivex.Single
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
+import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
 import zebrostudio.wallr100.data.customexceptions.InvalidPurchaseException
 import zebrostudio.wallr100.data.customexceptions.UnableToVerifyPurchaseException
+import zebrostudio.wallr100.data.mapper.PictureEntityMapper
 import zebrostudio.wallr100.domain.WallrRepository
+import zebrostudio.wallr100.domain.model.PicturesModel
 
 class WallrDataRepository(
   private var retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
-  private var sharedPrefsHelper: SharedPrefsHelper
+  private var unsplashClientFactory: UnsplashClientFactory,
+  private var sharedPrefsHelper: SharedPrefsHelper,
+  private var pictureEntityMapper: PictureEntityMapper
 ) : WallrRepository {
 
   private val premiumUserTag = "premium_user"
@@ -20,7 +25,6 @@ class WallrDataRepository(
     skuId: String,
     purchaseToken: String
   ): Single<Any> {
-
     return retrofitFirebaseAuthFactory.verifyPurchaseService()
         .verifyPurchase(UrlMap.getFirebasePurchaseAuthEndpoint(packageName, skuId, purchaseToken))
         .flatMap {
@@ -39,8 +43,14 @@ class WallrDataRepository(
   }
 
   override fun getUserProStatus(): Boolean {
-    Log.d("userprostatus", sharedPrefsHelper.getBoolean(premiumUserTag, false).toString())
     return sharedPrefsHelper.getBoolean(premiumUserTag, false)
+  }
+
+  override fun getPictures(query: String): Observable<PicturesModel> {
+    return unsplashClientFactory.getRemote().getPictures(query)
+        .map {
+          pictureEntityMapper.mapFromEntity(it)
+        }
   }
 
 }

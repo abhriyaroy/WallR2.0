@@ -5,6 +5,8 @@ class UrlMap {
   companion object {
     const val FIREBASE_PURCHASE_AUTH_URL = "https://us-central1-wallrproduction.cloudfunctions.net/"
 
+    const val UNSPLASH_BASE_URL = "https://api.unsplash.com/"
+
     fun getFirebasePurchaseAuthEndpoint(
       packageName: String,
       skuId: String,
