@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.data
 
-import android.util.Log
 import io.reactivex.Single
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UrlMap
@@ -39,7 +38,6 @@ class WallrDataRepository(
   }
 
   override fun getUserProStatus(): Boolean {
-    Log.d("userprostatus", sharedPrefsHelper.getBoolean(premiumUserTag, false).toString())
     return sharedPrefsHelper.getBoolean(premiumUserTag, false)
   }
 

@@ -6,7 +6,7 @@ import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.WallrRepository
 
 class AuthenticatePurchaseUseCase(
-  private var wallrRepository: WallrRepository,
+  private val wallrRepository: WallrRepository,
   private val postExecutionThread: PostExecutionThread
 ) {
 
