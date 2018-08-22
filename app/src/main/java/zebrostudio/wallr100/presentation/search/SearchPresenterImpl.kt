@@ -1,8 +1,16 @@
 package zebrostudio.wallr100.presentation.search
 
-class SearchPresenterImpl : SearchContract.SearchPresenter {
+import android.util.Log
+import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 
-  private var searchView : SearchContract.SearchView? = null
+class SearchPresenterImpl(
+  private var retrievePicturesUseCase: SearchPicturesUseCase,
+  private var searchPicturesPresenterEntityMapper: SearchPicturesPresenterEntityMapper
+) :
+    SearchContract.SearchPresenter {
+
+  private var searchView: SearchContract.SearchView? = null
+  private var queryPage = 1
 
   override fun attachView(view: SearchContract.SearchView) {
     searchView = view
@@ -13,7 +21,18 @@ class SearchPresenterImpl : SearchContract.SearchPresenter {
   }
 
   override fun notifyQuerySubmitted(query: String?) {
+    queryPage = 1
     searchView?.showLoader()
+    retrievePicturesUseCase.buildRetrievePicturesObservable(
+        "photos/search?query=$query&per_page=30&page=$queryPage")
+        .subscribe({
+          if (it.isEmpty())
+            Log.d("listimage", "empty")
+          else
+            Log.d("listimage", "notempty")
+        }, {
+          Log.d("listimage", it.message)
+        })
   }
 
 }

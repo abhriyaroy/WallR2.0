@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.data
 
-import io.reactivex.Observable
 import io.reactivex.Single
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
@@ -9,7 +8,7 @@ import zebrostudio.wallr100.data.customexceptions.InvalidPurchaseException
 import zebrostudio.wallr100.data.customexceptions.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.data.mapper.PictureEntityMapper
 import zebrostudio.wallr100.domain.WallrRepository
-import zebrostudio.wallr100.domain.model.PicturesModel
+import zebrostudio.wallr100.domain.model.SearchPicturesModel
 
 class WallrDataRepository(
   private var retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
@@ -29,7 +28,7 @@ class WallrDataRepository(
         .verifyPurchase(UrlMap.getFirebasePurchaseAuthEndpoint(packageName, skuId, purchaseToken))
         .flatMap {
           if (it.status == "success") {
-            Single.just(it)
+            Single.just(true)
           } else if (it.status == "error" && (it.errorCode == 4004 || it.errorCode == 4010)) {
             Single.error(InvalidPurchaseException())
           } else {
@@ -46,7 +45,7 @@ class WallrDataRepository(
     return sharedPrefsHelper.getBoolean(premiumUserTag, false)
   }
 
-  override fun getPictures(query: String): Observable<PicturesModel> {
+  override fun getPictures(query: String): Single<List<SearchPicturesModel>> {
     return unsplashClientFactory.getRemote().getPictures(query)
         .map {
           pictureEntityMapper.mapFromEntity(it)

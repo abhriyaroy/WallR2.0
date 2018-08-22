@@ -14,6 +14,7 @@ import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.mapper.PictureEntityMapper
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
+import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 
 @Module
@@ -21,32 +22,32 @@ class AppModule {
 
   @Provides
   @PerApplication
-  fun provideContext(application: Application): Context {
+  internal fun provideContext(application: Application): Context {
     return application
   }
 
   @Provides
   @PerApplication
-  fun provideSharedPrefsHelper(context: Context): SharedPrefsHelper = SharedPrefsHelper(context)
+  internal fun provideSharedPrefsHelper(context: Context): SharedPrefsHelper = SharedPrefsHelper(context)
 
   @Provides
   @PerApplication
-  fun provideAndroidMainThread(): PostExecutionThread = AndroidMainThread()
+  internal fun provideAndroidMainThread(): PostExecutionThread = AndroidMainThread()
 
   @Provides
   @PerApplication
-  fun provideRemoteAuthServiceFactory(): RemoteAuthServiceFactory = RemoteAuthServiceFactory()
+  internal fun provideRemoteAuthServiceFactory(): RemoteAuthServiceFactory = RemoteAuthServiceFactory()
 
   @Provides
   @PerApplication
-  fun provideUnsplashClientFactory(): UnsplashClientFactory = UnsplashClientFactory()
+  internal fun provideUnsplashClientFactory(): UnsplashClientFactory = UnsplashClientFactory()
 
   @Provides
-  fun providePictureEntityMapper(): PictureEntityMapper = PictureEntityMapper()
+  internal fun providePictureEntityMapper(): PictureEntityMapper = PictureEntityMapper()
 
   @Provides
   @PerApplication
-  fun provideWallrRepository(
+  internal fun provideWallrRepository(
     retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
     unsplashClientFactory: UnsplashClientFactory,
     sharedPrefsHelper: SharedPrefsHelper,
@@ -58,15 +59,22 @@ class AppModule {
 
   @Provides
   @PerApplication
-  fun provideAuthenticatePurchaseUseCase(
+  internal fun provideAuthenticatePurchaseUseCase(
     wallrRepository: WallrRepository,
     postExecutionThread: PostExecutionThread
   ): AuthenticatePurchaseUseCase = AuthenticatePurchaseUseCase(wallrRepository, postExecutionThread)
 
   @Provides
   @PerApplication
-  fun provideUserPremiumStatusUseCase(
+  internal fun provideUserPremiumStatusUseCase(
     wallrRepository: WallrRepository
   ): UserPremiumStatusUseCase = UserPremiumStatusUseCase(wallrRepository)
+
+  @Provides
+  @PerApplication
+  fun provideSearchPicturesUseCase(
+    wallrRepository: WallrRepository,
+    postExecutionThread: PostExecutionThread
+  ): SearchPicturesUseCase = SearchPicturesUseCase(wallrRepository, postExecutionThread)
 
 }

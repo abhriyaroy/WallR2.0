@@ -1,8 +1,6 @@
-package zebrostudio.wallr100.domain.model
+package zebrostudio.wallr100.presentation.search.model
 
-import java.util.ArrayList
-
-class PicturesModel(
+class SearchPicturesPresenterEntity(
   val id: String,
   val createdAt: String,
   val imageWidth: Int,

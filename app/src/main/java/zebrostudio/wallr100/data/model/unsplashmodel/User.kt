@@ -1,7 +1,7 @@
 package zebrostudio.wallr100.data.model.unsplashmodel
 
 import com.google.gson.annotations.SerializedName
-import zebrostudio.wallr100.domain.model.ProfileImage
+import zebrostudio.wallr100.presentation.search.model.ProfileImage
 
 class User(
   val name: String,

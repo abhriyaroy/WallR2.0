@@ -1,14 +1,14 @@
 package zebrostudio.wallr100.data.model.unsplashmodel
 
 import com.google.gson.annotations.SerializedName
-import zebrostudio.wallr100.domain.model.Urls
-import zebrostudio.wallr100.domain.model.User
+import zebrostudio.wallr100.presentation.search.model.Urls
+import zebrostudio.wallr100.presentation.search.model.User
 import java.util.ArrayList
 
 class UnsplashPicturesEntity(
   @SerializedName("id")
   val id: String,
-  @SerializedName("createdAt")
+  @SerializedName("created_at")
   val createdAt: String,
   @SerializedName("width")
   val imageWidth: Int,
@@ -20,7 +20,7 @@ class UnsplashPicturesEntity(
   val user: User,
   @SerializedName("likes")
   val likes: Int,
-  @SerializedName("likedByUser")
+  @SerializedName("liked_by_user")
   val likedByUser: Boolean,
   @SerializedName("urls")
   val imageQualityUrls: Urls,
