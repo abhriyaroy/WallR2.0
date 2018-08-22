@@ -85,6 +85,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   }
 
   override fun showLoader() {
+    hideAll()
     SearchActivitySpinkitView.visibility = View.VISIBLE
   }
 
@@ -93,6 +94,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   }
 
   override fun showNoInputView() {
+    hideAll()
     noInputRelativeLayout.visibility = View.VISIBLE
   }
 
@@ -101,11 +103,26 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   }
 
   override fun showNoResultView() {
+    hideAll()
     noResultRelativeLayout.visibility = View.VISIBLE
   }
 
   override fun hideNoResultView() {
     noResultRelativeLayout.visibility = View.VISIBLE
+  }
+
+  override fun showNointernetMessage() {
+
+  }
+
+  override fun showGenericErrorMeesage() {
+
+  }
+
+  override fun hideAll() {
+    hideNoInputView()
+    hideNoResultView()
+    hideLoader()
   }
 
   private fun initAppbar() {

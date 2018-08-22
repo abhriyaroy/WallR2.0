@@ -11,6 +11,9 @@ interface SearchContract{
     fun hideNoInputView()
     fun showNoResultView()
     fun hideNoResultView()
+    fun hideAll()
+    fun showNointernetMessage()
+    fun showGenericErrorMeesage()
   }
 
   interface SearchPresenter : BasePresenter<SearchView>{

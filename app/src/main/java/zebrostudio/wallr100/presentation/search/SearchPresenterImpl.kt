@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.presentation.search
 
 import android.util.Log
+import zebrostudio.wallr100.data.customexceptions.NoResultFoundException
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 
 class SearchPresenterImpl(
@@ -25,13 +26,16 @@ class SearchPresenterImpl(
     searchView?.showLoader()
     retrievePicturesUseCase.buildRetrievePicturesObservable(
         "photos/search?query=$query&per_page=30&page=$queryPage")
+        .map {
+          searchPicturesPresenterEntityMapper.mapTOPresenterEntity(it)
+        }
         .subscribe({
-          if (it.isEmpty())
-            Log.d("listimage", "empty")
-          else
-            Log.d("listimage", "notempty")
+
         }, {
-          Log.d("listimage", it.message)
+          when(it){
+            is NoResultFoundException -> searchView?.showNoResultView()
+            else -> searchView?.showGenericErrorMeesage()
+          }
         })
   }
 

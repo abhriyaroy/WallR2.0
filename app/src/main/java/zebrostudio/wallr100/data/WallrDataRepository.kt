@@ -5,6 +5,7 @@ import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
 import zebrostudio.wallr100.data.customexceptions.InvalidPurchaseException
+import zebrostudio.wallr100.data.customexceptions.NoResultFoundException
 import zebrostudio.wallr100.data.customexceptions.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.data.mapper.PictureEntityMapper
 import zebrostudio.wallr100.domain.WallrRepository
@@ -47,8 +48,12 @@ class WallrDataRepository(
 
   override fun getPictures(query: String): Single<List<SearchPicturesModel>> {
     return unsplashClientFactory.getRemote().getPictures(query)
-        .map {
-          pictureEntityMapper.mapFromEntity(it)
+        .flatMap {
+          if (it.isEmpty()) {
+            Single.error(NoResultFoundException())
+          } else {
+            Single.just(pictureEntityMapper.mapFromEntity(it))
+          }
         }
   }
 

@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.data.api
 
-import android.util.Log
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -28,7 +27,6 @@ class UnsplashClientFactory {
     }
 
     if (retrofit == null) {
-      Log.d("retrofit", "null")
       retrofit = Retrofit.Builder()
           .baseUrl(UNSPLASH_BASE_URL)
           .client(okHttpClient!!)
