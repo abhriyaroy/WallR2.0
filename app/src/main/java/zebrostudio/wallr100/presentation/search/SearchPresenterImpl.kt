@@ -30,11 +30,18 @@ class SearchPresenterImpl(
           searchPicturesPresenterEntityMapper.mapTOPresenterEntity(it)
         }
         .subscribe({
-
+          searchView?.hideLoader()
         }, {
-          when(it){
-            is NoResultFoundException -> searchView?.showNoResultView()
-            else -> searchView?.showGenericErrorMeesage()
+          when (it) {
+            is NoResultFoundException -> searchView?.showNoResultView(query)
+            else -> {
+              if (it.message != null && it.message == "Unable to resolve host \"api.unsplash.com\"" +
+                  ": No address associated with hostname") {
+                searchView?.showNoInternetView()
+              } else {
+                searchView?.showGenericErrorMessage()
+              }
+            }
           }
         })
   }

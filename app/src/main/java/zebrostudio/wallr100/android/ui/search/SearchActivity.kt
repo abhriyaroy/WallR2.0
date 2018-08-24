@@ -12,8 +12,10 @@ import android.view.View
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_search.SearchActivitySpinkitView
-import kotlinx.android.synthetic.main.activity_search.noInputRelativeLayout
-import kotlinx.android.synthetic.main.activity_search.noResultRelativeLayout
+import kotlinx.android.synthetic.main.activity_search.infoImageView
+import kotlinx.android.synthetic.main.activity_search.infoTextFirstLine
+import kotlinx.android.synthetic.main.activity_search.infoTextSecondLine
+import kotlinx.android.synthetic.main.activity_search.retryButton
 import kotlinx.android.synthetic.main.activity_search.searchAppBar
 import kotlinx.android.synthetic.main.activity_search.searchView
 import zebrostudio.wallr100.R
@@ -38,8 +40,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     }
     initAppbar()
     initSearchView()
-    hideLoader()
-    hideNoResultView()
+    showNoInputView()
   }
 
   override fun onDestroy() {
@@ -95,33 +96,46 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
 
   override fun showNoInputView() {
     hideAll()
-    noInputRelativeLayout.visibility = View.VISIBLE
+    infoImageView.setImageResource(R.drawable.ic_no_input_gray)
+    infoImageView.visibility = View.VISIBLE
+    infoTextFirstLine.text = getText(R.string.search_type_in_a_query_message)
+    infoTextFirstLine.visibility = View.VISIBLE
   }
 
-  override fun hideNoInputView() {
-    noInputRelativeLayout.visibility = View.GONE
-  }
-
-  override fun showNoResultView() {
+  override fun showNoResultView(query: String?) {
     hideAll()
-    noResultRelativeLayout.visibility = View.VISIBLE
+    infoImageView.setImageResource(R.drawable.ic_no_result_gray)
+    infoImageView.visibility = View.VISIBLE
+    val noResultText = "${getText(R.string.search_no_result_message)} '$query'"
+    infoTextFirstLine.text = noResultText
+    infoTextFirstLine.visibility = View.VISIBLE
   }
 
-  override fun hideNoResultView() {
-    noResultRelativeLayout.visibility = View.VISIBLE
+  override fun showNoInternetView() {
+    hideAll()
+    infoImageView.setImageResource(R.drawable.ic_no_result_gray)
+    infoImageView.visibility = View.VISIBLE
+    infoTextFirstLine.text = getText(R.string.search_unable_to_search_message)
+    infoTextFirstLine.visibility = View.VISIBLE
+    infoTextSecondLine.text = getText(R.string.search_no_internet_message)
+    infoTextSecondLine.visibility = View.VISIBLE
+    retryButton.visibility = View.VISIBLE
   }
 
-  override fun showNointernetMessage() {
-
-  }
-
-  override fun showGenericErrorMeesage() {
-
+  override fun showGenericErrorMessage() {
+    hideAll()
+    infoImageView.setImageResource(R.drawable.ic_no_result_gray)
+    infoImageView.visibility = View.VISIBLE
+    infoTextFirstLine.text = getText(R.string.search_something_went_wrong_message)
+    infoTextFirstLine.visibility = View.VISIBLE
+    retryButton.visibility = View.VISIBLE
   }
 
   override fun hideAll() {
-    hideNoInputView()
-    hideNoResultView()
+    infoTextFirstLine.visibility = View.GONE
+    infoTextSecondLine.visibility = View.GONE
+    infoImageView.visibility = View.GONE
+    retryButton.visibility = View.GONE
     hideLoader()
   }
 
@@ -150,7 +164,6 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   private fun setSearchListener() {
     searchView.setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener {
       override fun onQueryTextSubmit(query: String?): Boolean {
-        noInputRelativeLayout.visibility = View.GONE
         searchView.hideKeyboard(currentFocus)
         presenter.notifyQuerySubmitted(query)
         return true

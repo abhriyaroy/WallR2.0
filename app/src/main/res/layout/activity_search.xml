@@ -48,36 +48,36 @@
         android:scrollbars="vertical"/>
 
     <RelativeLayout
-        android:id="@+id/noResultRelativeLayout"
+        android:id="@+id/infoRelativeLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
         android:paddingBottom="@dimen/search_activity_relative_layout_no_result_padding_top">
 
       <ImageView
-          android:id="@+id/noResultImageView"
+          android:id="@+id/infoImageView"
           android:layout_width="@dimen/search_activity_no_result_imageview_width"
           android:layout_height="@dimen/search_activity_no_result_imageview_height"
           android:layout_centerHorizontal="true"
+          android:layout_marginBottom="@dimen/search_info_imageview_margin_bottom"
           android:src="@drawable/ic_no_result_gray"
           android:visibility="gone"/>
 
       <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-          android:id="@+id/noResultTextFirstLine"
+          android:id="@+id/infoTextFirstLine"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_below="@id/noResultImageView"
-          android:paddingTop="@dimen/search_activity_no_result_textview_padding_top"
+          android:layout_below="@id/infoImageView"
           android:layout_centerHorizontal="true"
           android:text="@string/search_no_result_message"
           android:textColor="@color/color_white"
           android:visibility="gone"/>
 
       <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-          android:id="@+id/noResultTextSecondLine"
+          android:id="@+id/infoTextSecondLine"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_below="@id/noResultTextFirstLine"
+          android:layout_below="@id/infoTextFirstLine"
           android:layout_centerHorizontal="true"
           android:text="@string/search_no_result_message"
           android:textColor="@color/color_white"
@@ -88,7 +88,7 @@
           android:id="@+id/retryButton"
           android:layout_height="wrap_content"
           android:layout_width="wrap_content"
-          android:layout_below="@id/noResultTextSecondLine"
+          android:layout_below="@id/infoTextSecondLine"
           android:layout_centerVertical="true"
           android:layout_centerHorizontal="true"
           android:padding="@dimen/search_activity_retry_button_padding"
@@ -99,33 +99,6 @@
           android:textStyle="bold"
           android:clickable="true"
           android:visibility="gone"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/noInputRelativeLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|center_vertical"
-        android:paddingBottom="@dimen/Search_activity_no_input_relative_layout_padding_bottom">
-
-      <ImageView
-          android:id="@+id/noInputImageView"
-          android:layout_width="@dimen/search_activity_no_input_imageview_width"
-          android:layout_height="@dimen/search_activity_no_input_imageview_height"
-          android:layout_centerHorizontal="true"
-          android:layout_marginBottom="@dimen/search_activity_no_input_imageview_margin_bottom"
-          android:src="@drawable/ic_no_input_gray"/>
-
-      <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-          android:id="@+id/noInputTextView"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_below="@id/noInputImageView"
-          android:layout_centerHorizontal="true"
-          android:paddingTop="@dimen/seaarch_activity_no_input_textview_padding_top"
-          android:text="@string/search_type_in_a_query_message"
-          android:textColor="@color/color_white"/>
 
     </RelativeLayout>
 
