@@ -1,3 +1,3 @@
-package zebrostudio.wallr100.data.customexceptions
+package zebrostudio.wallr100.data.exception
 
 class UnableToVerifyPurchaseException : Exception()

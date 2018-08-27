@@ -10,7 +10,7 @@ interface WallrRepository {
     purchaseToken: String
   ): Single<Any>
 
-  fun saveUserAsPro(): Boolean
-  fun getUserProStatus(): Boolean
+  fun updateUserPurchaseStatus(): Boolean
+  fun isUserPremium(): Boolean
 
 }

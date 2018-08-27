@@ -3,8 +3,8 @@ package zebrostudio.wallr100.data
 import io.reactivex.Single
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UrlMap
-import zebrostudio.wallr100.data.customexceptions.InvalidPurchaseException
-import zebrostudio.wallr100.data.customexceptions.UnableToVerifyPurchaseException
+import zebrostudio.wallr100.data.exception.InvalidPurchaseException
+import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.domain.WallrRepository
 
 class WallrDataRepository(
@@ -33,11 +33,11 @@ class WallrDataRepository(
         }
   }
 
-  override fun saveUserAsPro(): Boolean {
+  override fun updateUserPurchaseStatus(): Boolean {
     return sharedPrefsHelper.setBoolean(premiumUserTag, true)
   }
 
-  override fun getUserProStatus(): Boolean {
+  override fun isUserPremium(): Boolean {
     return sharedPrefsHelper.getBoolean(premiumUserTag, false)
   }
 

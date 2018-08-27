@@ -1,15 +1,12 @@
 package zebrostudio.wallr100.data.api
 
-class UrlMap {
+object UrlMap {
+  const val FIREBASE_PURCHASE_AUTH_URL = "https://us-central1-wallrproduction.cloudfunctions.net/"
 
-  companion object {
-    const val FIREBASE_PURCHASE_AUTH_URL = "https://us-central1-wallrproduction.cloudfunctions.net/"
-
-    fun getFirebasePurchaseAuthEndpoint(
-      packageName: String,
-      skuId: String,
-      purchaseToken: String
-    ) = "purchaseVerification?packageName=$packageName&skuId=$skuId&purchaseToken=$purchaseToken"
-  }
-
+  fun getFirebasePurchaseAuthEndpoint(
+    packageName: String,
+    skuId: String,
+    purchaseToken: String
+  ) = "purchaseVerification?packageName=$packageName&skuId=$skuId&purchaseToken=$purchaseToken"
 }
+

@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.android.ui.buypro
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
@@ -14,7 +15,8 @@ class BuyProModule {
   internal fun provideBuyProPresenter(
     authenticatePurchaseUseCase: AuthenticatePurchaseUseCase,
     userPremiumStatusUseCase: UserPremiumStatusUseCase
-  ): BuyProContract.BuyProPresenter = BuyProPresenterImpl(authenticatePurchaseUseCase,
+  ): BuyProContract.BuyProPresenter = BuyProPresenterImpl(
+      authenticatePurchaseUseCase,
       userPremiumStatusUseCase)
 
 }

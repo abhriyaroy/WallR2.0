@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
-import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionDetails
+import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.android.ui.collection.CollectionFragment
 import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment
 import zebrostudio.wallr100.android.ui.minimal.MinimalFragment
@@ -70,8 +70,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    if (requestCode == PurchaseTransactionDetails.PURCHASE_REQUEST_CODE &&
-        resultCode == PurchaseTransactionDetails.PURCHASE_SUCCESSFUL_RESULT_CODE) {
+    if (requestCode == PurchaseTransactionConfig.PURCHASE_REQUEST_CODE &&
+        resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
       buyProMenuItem?.visibility = View.GONE
     }
   }
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   }
 
   override fun startBackPressedFlagResetTimer() {
-    withDelayOnMain(2000, block = { presenter.setBackPressedFlagToFalse() })
+    withDelayOnMain(2000) { presenter.setBackPressedFlagToFalse() }
   }
 
   override fun showPreviousFragment() {
@@ -234,7 +234,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
       MenuItems.BUY_PRO -> {
         withDelayOnMain(550, block = {
           startActivityForResult(Intent(this, BuyProActivity::class.java),
-              PurchaseTransactionDetails.PURCHASE_REQUEST_CODE)
+              PurchaseTransactionConfig.PURCHASE_REQUEST_CODE)
         }
         )
       }

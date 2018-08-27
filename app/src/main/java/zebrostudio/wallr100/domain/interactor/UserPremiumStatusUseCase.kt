@@ -4,7 +4,7 @@ import zebrostudio.wallr100.domain.WallrRepository
 
 class UserPremiumStatusUseCase(private var wallrRepository: WallrRepository) {
 
-  fun saveUserAsPro() = wallrRepository.saveUserAsPro()
-  fun checkIfUserIsPro() = wallrRepository.getUserProStatus()
+  fun updateUserPurchaseStatus() = wallrRepository.updateUserPurchaseStatus()
+  fun isUserPremium() = wallrRepository.isUserPremium()
 
 }
