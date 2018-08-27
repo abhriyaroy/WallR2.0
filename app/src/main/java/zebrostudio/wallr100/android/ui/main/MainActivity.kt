@@ -254,7 +254,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
 
   private fun handleFeedbackClick() {
     closeNavigationMenu()
-    withDelayOnMain(100, block = {
+    withDelayOnMain(100) {
       var emailSubject = "Debug-infos:"
       emailSubject += "\n OS Version: " + System.getProperty(
           "os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")"
@@ -273,7 +273,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
       } catch (e: ActivityNotFoundException) {
         errorToast(stringRes(R.string.main_activity_no_email_client_error))
       }
-    })
+    }
   }
 
   private enum class MenuItems {

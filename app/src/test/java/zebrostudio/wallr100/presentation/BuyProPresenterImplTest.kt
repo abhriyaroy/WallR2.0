@@ -3,12 +3,10 @@ package zebrostudio.wallr100.presentation
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.schedulers.Schedulers
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity.PremiumTransactionType.*
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
