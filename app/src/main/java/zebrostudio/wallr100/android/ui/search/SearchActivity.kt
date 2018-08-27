@@ -143,11 +143,9 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     searchAppBar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
       when {
         Math.abs(verticalOffset) == appBarLayout.totalScrollRange -> {
-          // Collapsed
           appBarCollapsed = true
         }
         verticalOffset == 0 -> {
-          // Expanded
           appBarCollapsed = false
         }
       }
