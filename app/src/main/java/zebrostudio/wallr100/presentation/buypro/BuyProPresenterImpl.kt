@@ -1,7 +1,7 @@
 package zebrostudio.wallr100.presentation.buypro
 
 import com.uber.autodispose.autoDisposable
-import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
+import zebrostudio.wallr100.android.ui.buypro.BuyProActivity.PremiumTransactionType
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity.PremiumTransactionType.*
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
@@ -53,7 +53,7 @@ class BuyProPresenterImpl(
     packageName: String,
     skuId: String,
     purchaseToken: String,
-    proTransactionType: BuyProActivity.PremiumTransactionType
+    proTransactionType: PremiumTransactionType
   ) {
     authenticatePurchaseUseCase.buildUseCaseSingle(packageName, skuId, purchaseToken)
         .autoDisposable(buyProView?.getScope()!!)
@@ -70,12 +70,15 @@ class BuyProPresenterImpl(
         })
   }
 
-  private fun handleSuccessfulVerification(
-    proTransactionType: BuyProActivity.PremiumTransactionType
+  fun handleSuccessfulVerification(
+    premiumTransactionType: PremiumTransactionType
   ) {
     if (userPremiumStatusUseCase.updateUserPurchaseStatus()) {
-      buyProView?.showSuccessfulTransactionMessage(proTransactionType)
+      buyProView?.showSuccessfulTransactionMessage(premiumTransactionType)
       buyProView?.finishWithResult()
+    }
+    else{
+      buyProView?.showGenericVerificationError()
     }
   }
 
