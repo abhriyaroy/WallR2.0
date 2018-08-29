@@ -25,7 +25,7 @@ class WallrDataRepository(
         .flatMap {
           if (it.status == "success") {
             Single.just(it)
-          } else if (it.status == "error" && (it.errorCode == 4004 || it.errorCode == 4010)) {
+          } else if (it.status == "error" && (it.errorCode == 404 || it.errorCode == 403)) {
             Single.error(InvalidPurchaseException())
           } else {
             Single.error(UnableToVerifyPurchaseException())
