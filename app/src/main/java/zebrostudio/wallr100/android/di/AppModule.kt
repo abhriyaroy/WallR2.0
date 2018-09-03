@@ -8,8 +8,10 @@ import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.android.AndroidMainThread
 import zebrostudio.wallr100.android.di.scopes.PerApplication
 import zebrostudio.wallr100.data.SharedPrefsHelper
+import zebrostudio.wallr100.data.SharedPrefsHelperImpl
 import zebrostudio.wallr100.data.WallrDataRepository
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
+import zebrostudio.wallr100.data.api.RemoteAuthServiceFactoryImpl
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.mapper.PictureEntityMapper
 import zebrostudio.wallr100.domain.WallrRepository
@@ -28,7 +30,8 @@ class AppModule {
 
   @Provides
   @PerApplication
-  internal fun provideSharedPrefsHelper(context: Context): SharedPrefsHelper = SharedPrefsHelper(context)
+  internal fun provideSharedPrefsHelper(context: Context): SharedPrefsHelper =
+      SharedPrefsHelperImpl(context)
 
   @Provides
   @PerApplication
@@ -36,7 +39,8 @@ class AppModule {
 
   @Provides
   @PerApplication
-  internal fun provideRemoteAuthServiceFactory(): RemoteAuthServiceFactory = RemoteAuthServiceFactory()
+  internal fun provideRemoteAuthServiceFactory(): RemoteAuthServiceFactory =
+      RemoteAuthServiceFactoryImpl()
 
   @Provides
   @PerApplication

@@ -43,7 +43,7 @@ class BuyProPresenterImpl(
         })
   }
 
-  private fun handleSuccessfulVerification(
+  fun handleSuccessfulVerification(
     proTransactionType: BuyProActivity.Companion.ProTransactionType
   ) {
     if (userPremiumStatusUseCase.saveUserAsPro()) {
