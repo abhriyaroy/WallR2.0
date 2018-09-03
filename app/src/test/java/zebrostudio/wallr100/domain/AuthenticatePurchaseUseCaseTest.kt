@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -13,9 +14,12 @@ import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
+import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 
 @RunWith(MockitoJUnitRunner::class)
 class AuthenticatePurchaseUseCaseTest {
+
+  @get:Rule var mTrampolineSchedulerRule = TrampolineSchedulerRule()
 
   @Mock private lateinit var postExecutionThread: PostExecutionThread
   @Mock private lateinit var wallrRepository: WallrRepository
@@ -38,11 +42,9 @@ class AuthenticatePurchaseUseCaseTest {
 
   @Test fun `should complete when successful purchase verification`() {
     stubAuthenticatePurchaseReturnsSingle()
-    val testObservable =
-        authenticatePurchaseUseCase.buildUseCaseSingle(packageName, skuId, purchaseToken).test()
-    testObservable.await()
 
-    testObservable.assertComplete()
+    authenticatePurchaseUseCase.buildUseCaseSingle(packageName, skuId, purchaseToken).test()
+        .assertComplete()
   }
 
   @Test fun `should return invalidPurchaseException when unsuccessful purchase verification`() {
@@ -56,11 +58,9 @@ class AuthenticatePurchaseUseCaseTest {
 
   @Test fun `should return unableToVerifyPurchaseException when unable to verify purchase`() {
     stubAuthenticatePurchaseReturnsUnableToVerifyPurchaseException()
-    val testObservable =
-        authenticatePurchaseUseCase.buildUseCaseSingle(packageName, skuId, purchaseToken).test()
-    testObservable.await()
 
-    testObservable.assertError(UnableToVerifyPurchaseException::class.java)
+    authenticatePurchaseUseCase.buildUseCaseSingle(packageName, skuId, purchaseToken).test()
+        .assertError(UnableToVerifyPurchaseException::class.java)
   }
 
   private fun stubPostExecutionThreadReturnsIoScheduler() {

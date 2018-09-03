@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.presentation
 
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Before
@@ -39,6 +40,7 @@ class BuyProPresenterImplTest {
 
     verify(buyProView).isIabReady()
     verify(buyProView).showGenericVerificationError()
+    verifyNoMoreInteractions(buyProView)
   }
 
   @Test
@@ -50,6 +52,7 @@ class BuyProPresenterImplTest {
     verify(buyProView).isIabReady()
     verify(buyProView).isInternetAvailable()
     verify(buyProView).showNoInternetErrorMessage(PURCHASE)
+    verifyNoMoreInteractions(buyProView)
   }
 
   @Test
@@ -62,6 +65,7 @@ class BuyProPresenterImplTest {
     verify(buyProView).isInternetAvailable()
     verify(buyProView).showWaitLoader(PURCHASE)
     verify(buyProView).launchPurchase()
+    verifyNoMoreInteractions(buyProView)
   }
 
   @Test fun `should showGenericVerificationError if iab not ready and restore clicked`() {
@@ -70,6 +74,7 @@ class BuyProPresenterImplTest {
 
     verify(buyProView).isIabReady()
     verify(buyProView).showGenericVerificationError()
+    verifyNoMoreInteractions(buyProView)
   }
 
   @Test fun `should showNoInternetErrorMessage if iab ready and restore clicked but no internet`() {
@@ -80,6 +85,7 @@ class BuyProPresenterImplTest {
     verify(buyProView).isIabReady()
     verify(buyProView).isInternetAvailable()
     verify(buyProView).showNoInternetErrorMessage(RESTORE)
+    verifyNoMoreInteractions(buyProView)
   }
 
   @Test
@@ -92,6 +98,7 @@ class BuyProPresenterImplTest {
     verify(buyProView).isInternetAvailable()
     verify(buyProView).showWaitLoader(RESTORE)
     verify(buyProView).launchRestore()
+    verifyNoMoreInteractions(buyProView)
   }
 
   @Test
@@ -109,6 +116,7 @@ class BuyProPresenterImplTest {
     buyProPresenterImpl.handleSuccessfulVerification(PURCHASE)
 
     verify(buyProView).showGenericVerificationError()
+    verifyNoMoreInteractions(buyProView)
   }
 
   @Test
@@ -118,6 +126,7 @@ class BuyProPresenterImplTest {
 
     verify(buyProView).showSuccessfulTransactionMessage(RESTORE)
     verify(buyProView).finishWithResult()
+    verifyNoMoreInteractions(buyProView)
   }
 
   @Test fun `should showGenericVerificationError on unsuccessful restore verification`() {
@@ -125,6 +134,7 @@ class BuyProPresenterImplTest {
     buyProPresenterImpl.handleSuccessfulVerification(RESTORE)
 
     verify(buyProView).showGenericVerificationError()
+    verifyNoMoreInteractions(buyProView)
   }
 
   @After fun tearDown() {

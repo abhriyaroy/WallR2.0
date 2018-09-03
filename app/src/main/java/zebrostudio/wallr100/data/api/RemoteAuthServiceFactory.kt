@@ -1,14 +1,20 @@
 package zebrostudio.wallr100.data.api
 
+import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 
-class RemoteAuthServiceFactory {
+interface RemoteAuthServiceFactory {
+  fun verifyPurchaseService(url: String): Single<PurchaseAuthResponseEntity>
+}
+
+class RemoteAuthServiceFactoryImpl : RemoteAuthServiceFactory {
 
   private var retrofit: Retrofit? = null
 
-  fun verifyPurchaseService(): FirebaseAuthService {
+  override fun verifyPurchaseService(url: String): Single<PurchaseAuthResponseEntity> {
     if (retrofit == null) {
       retrofit = Retrofit.Builder()
           .baseUrl(UrlMap.FIREBASE_PURCHASE_AUTH_URL)
@@ -16,7 +22,7 @@ class RemoteAuthServiceFactory {
           .addConverterFactory(GsonConverterFactory.create())
           .build()
     }
-    return retrofit!!.create(FirebaseAuthService::class.java)
+    return retrofit!!.create(FirebaseAuthService::class.java).verifyPurchase(url)
   }
 
 }

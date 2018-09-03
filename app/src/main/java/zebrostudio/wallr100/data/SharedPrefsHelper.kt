@@ -4,22 +4,28 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 
-class SharedPrefsHelper(context: Context) {
+interface SharedPrefsHelper {
 
-  private var sharedPrefs: SharedPreferences =
-      context.getSharedPreferences("Preferences", Activity.MODE_PRIVATE)
-  private var editorSharedPrefsHelper: SharedPreferences.Editor
+  fun getBoolean(preferenceName: String, key: String, defaultValue: Boolean = false): Boolean
+  fun setBoolean(preferenceName: String, key: String, value: Boolean = false): Boolean
+}
 
-  init {
-    editorSharedPrefsHelper = sharedPrefs.edit()
+class SharedPrefsHelperImpl(private var context: Context) : SharedPrefsHelper {
+
+  override fun getBoolean(preferenceName: String, key: String, defaultValue: Boolean): Boolean {
+    return getPreference(preferenceName).getBoolean(key, defaultValue)
   }
 
-  fun getBoolean(key: String, defaultValue: Boolean = false): Boolean {
-    return sharedPrefs.getBoolean(key, defaultValue)
+  override fun setBoolean(preferenceName: String, key: String, value: Boolean): Boolean {
+    return getPreferenceEditor(preferenceName).putBoolean(key, value).commit()
   }
 
-  fun setBoolean(key: String, value: Boolean): Boolean {
-    return editorSharedPrefsHelper.putBoolean(key, value).commit()
+  private fun getPreference(preferenceName: String): SharedPreferences {
+    return context.applicationContext.getSharedPreferences(preferenceName, Activity.MODE_PRIVATE)
+  }
+
+  private fun getPreferenceEditor(preferenceName: String): SharedPreferences.Editor {
+    return getPreference(preferenceName).edit()
   }
 
 }

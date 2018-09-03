@@ -12,7 +12,8 @@ class WallrDataRepository(
   private var sharedPrefsHelper: SharedPrefsHelper
 ) : WallrRepository {
 
-  private val premiumUserTag = "premium_user"
+  val purchasePreferenceName = "PURCHASE_PREF"
+  val premiumUserTag = "premium_user"
 
   override fun authenticatePurchase(
     packageName: String,
@@ -20,8 +21,8 @@ class WallrDataRepository(
     purchaseToken: String
   ): Single<Any> {
 
-    return retrofitFirebaseAuthFactory.verifyPurchaseService()
-        .verifyPurchase(UrlMap.getFirebasePurchaseAuthEndpoint(packageName, skuId, purchaseToken))
+    return retrofitFirebaseAuthFactory.verifyPurchaseService(
+        UrlMap.getFirebasePurchaseAuthEndpoint(packageName, skuId, purchaseToken))
         .flatMap {
           if (it.status == "success") {
             Single.just(it)
@@ -34,11 +35,11 @@ class WallrDataRepository(
   }
 
   override fun updateUserPurchaseStatus(): Boolean {
-    return sharedPrefsHelper.setBoolean(premiumUserTag, true)
+    return sharedPrefsHelper.setBoolean(purchasePreferenceName, premiumUserTag, true)
   }
 
   override fun isUserPremium(): Boolean {
-    return sharedPrefsHelper.getBoolean(premiumUserTag, false)
+    return sharedPrefsHelper.getBoolean(purchasePreferenceName, premiumUserTag, false)
   }
 
 }

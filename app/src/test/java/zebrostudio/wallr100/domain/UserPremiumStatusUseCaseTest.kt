@@ -2,6 +2,7 @@ package zebrostudio.wallr100.domain
 
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,17 +27,15 @@ class UserPremiumStatusUseCaseTest {
   }
 
   @Test fun `should return true on successful updateUserPurchaseStatus`() {
-    stubUpdateUserPurchaseStatusReturnsTrue()
-    userPremiumStatusUseCase.updateUserPurchaseStatus()
+    whenever(wallrRepository.updateUserPurchaseStatus()).thenReturn(true)
 
-    assert(true)
+    assertEquals(true, userPremiumStatusUseCase.updateUserPurchaseStatus())
   }
 
   @Test fun `should return false on unsuccessful updateUserPurchaseStatus`() {
-    stubUpdateUserPurchaseStatusReturnsFalse()
-    userPremiumStatusUseCase.updateUserPurchaseStatus()
+    whenever(wallrRepository.updateUserPurchaseStatus()).thenReturn(false)
 
-    assert(false)
+    assertEquals(false, userPremiumStatusUseCase.updateUserPurchaseStatus())
   }
 
   @Test fun `should call isUserPremium to check user status`() {
@@ -46,33 +45,15 @@ class UserPremiumStatusUseCaseTest {
   }
 
   @Test fun `should return true if user is premium`() {
-    stubIsUserPremiumReturnsTrue()
-    userPremiumStatusUseCase.isUserPremium()
+    whenever(wallrRepository.isUserPremium()).thenReturn(true)
 
-    assert(true)
+    assertEquals(true, userPremiumStatusUseCase.isUserPremium())
   }
 
   @Test fun `should return false if user not premium`() {
-    stubIsUserPremiumReturnsFalse()
-    userPremiumStatusUseCase.isUserPremium()
-
-    assert(false)
-  }
-
-  private fun stubUpdateUserPurchaseStatusReturnsTrue() {
-    whenever(wallrRepository.updateUserPurchaseStatus()).thenReturn(true)
-  }
-
-  private fun stubUpdateUserPurchaseStatusReturnsFalse() {
-    whenever(wallrRepository.updateUserPurchaseStatus()).thenReturn(false)
-  }
-
-  private fun stubIsUserPremiumReturnsTrue() {
-    whenever(wallrRepository.isUserPremium()).thenReturn(true)
-  }
-
-  private fun stubIsUserPremiumReturnsFalse() {
     whenever(wallrRepository.isUserPremium()).thenReturn(false)
+
+    assertEquals(false, userPremiumStatusUseCase.isUserPremium())
   }
 
 }
