@@ -1,7 +1,6 @@
 package zebrostudio.wallr100.presentation.search
 
-import android.util.Log
-import zebrostudio.wallr100.data.customexceptions.NoResultFoundException
+import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 
 class SearchPresenterImpl(

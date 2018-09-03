@@ -4,9 +4,9 @@ import io.reactivex.Single
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
-import zebrostudio.wallr100.data.customexceptions.InvalidPurchaseException
-import zebrostudio.wallr100.data.customexceptions.NoResultFoundException
-import zebrostudio.wallr100.data.customexceptions.UnableToVerifyPurchaseException
+import zebrostudio.wallr100.data.exception.InvalidPurchaseException
+import zebrostudio.wallr100.data.exception.NoResultFoundException
+import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.data.mapper.PictureEntityMapper
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.model.SearchPicturesModel
@@ -39,11 +39,11 @@ class WallrDataRepository(
         }
   }
 
-  override fun saveUserAsPro(): Boolean {
+  override fun updateUserPurchaseStatus(): Boolean {
     return sharedPrefsHelper.setBoolean(purchasePreferenceName, premiumUserTag, true)
   }
 
-  override fun getUserProStatus(): Boolean {
+  override fun isUserPremium(): Boolean {
     return sharedPrefsHelper.getBoolean(purchasePreferenceName, premiumUserTag, false)
   }
 

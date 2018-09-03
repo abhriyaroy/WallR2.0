@@ -13,6 +13,7 @@ import zebrostudio.wallr100.data.WallrDataRepository
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactoryImpl
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
+import zebrostudio.wallr100.data.api.UnsplashClientFactoryImpl
 import zebrostudio.wallr100.data.mapper.PictureEntityMapper
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
@@ -44,7 +45,7 @@ class AppModule {
 
   @Provides
   @PerApplication
-  internal fun provideUnsplashClientFactory(): UnsplashClientFactory = UnsplashClientFactory()
+  internal fun provideUnsplashClientFactory(): UnsplashClientFactory = UnsplashClientFactoryImpl()
 
   @Provides
   internal fun providePictureEntityMapper(): PictureEntityMapper = PictureEntityMapper()

@@ -6,7 +6,11 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import zebrostudio.wallr100.data.api.UrlMap.Companion.UNSPLASH_BASE_URL
 
-class UnsplashClientFactory {
+interface UnsplashClientFactory {
+  fun getRemote(): UnsplashClient
+}
+
+class UnsplashClientFactoryImpl : UnsplashClientFactory {
 
   private val headerName = "Authorization"
   private val headerValue =
@@ -14,7 +18,7 @@ class UnsplashClientFactory {
   private var retrofit: Retrofit? = null
   private var okHttpClient: OkHttpClient? = null
 
-  fun getRemote(): UnsplashClient {
+  override fun getRemote(): UnsplashClient {
     if (okHttpClient == null) {
       val builder = OkHttpClient().newBuilder()
       builder.addInterceptor { chain ->

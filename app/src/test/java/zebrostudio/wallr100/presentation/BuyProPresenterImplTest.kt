@@ -9,8 +9,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
-import zebrostudio.wallr100.android.ui.buypro.BuyProActivity.Companion.ProTransactionType.*
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity.PremiumTransactionType.*
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.PostExecutionThread

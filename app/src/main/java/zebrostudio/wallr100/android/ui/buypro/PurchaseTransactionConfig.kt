@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.android.ui.buypro
 
-class PurchaseTransactionDetails {
+class PurchaseTransactionConfig {
 
   companion object {
     const val ITEM_SKU = "zebrostudio_wallr_product_id"

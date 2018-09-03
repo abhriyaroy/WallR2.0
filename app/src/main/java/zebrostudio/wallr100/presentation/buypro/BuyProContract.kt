@@ -9,22 +9,32 @@ interface BuyProContract {
   interface BuyProView {
     fun showInvalidPurchaseError()
     fun showUnableToVerifyPurchaseError()
+    fun showNoInternetErrorMessage(premiumOperationType: BuyProActivity.PremiumTransactionType)
     fun showGenericVerificationError()
     fun showSuccessfulTransactionMessage(
-      proTransactionType: BuyProActivity.Companion.ProTransactionType
+      proTransactionType: BuyProActivity.PremiumTransactionType
     )
+    fun showWaitLoader(proTransactionType: BuyProActivity.PremiumTransactionType)
     fun dismissWaitLoader()
-    fun getScope() : ScopeProvider
+    fun getScope(): ScopeProvider
     fun finishWithResult()
+
+    fun isIabReady(): Boolean
+    fun isInternetAvailable(): Boolean
+    fun launchPurchase()
+    fun launchRestore()
+
   }
 
   interface BuyProPresenter : BasePresenter<BuyProView> {
 
-    fun verifyPurchaseIfSuccessful(
+    fun notifyPurchaseClicked()
+    fun notifyRestoreClicked()
+    fun verifyPurchase(
       packageName: String,
       skuId: String,
       purchaseToken: String,
-      proTransactionType: BuyProActivity.Companion.ProTransactionType
+      proTransactionType: BuyProActivity.PremiumTransactionType
     )
   }
 

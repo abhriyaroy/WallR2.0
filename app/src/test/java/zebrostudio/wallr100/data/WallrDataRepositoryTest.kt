@@ -10,9 +10,11 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import org.mockito.Mock
+import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
+import zebrostudio.wallr100.data.mapper.PictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.util.Random
@@ -24,12 +26,16 @@ class WallrDataRepositoryTest {
 
   @Mock lateinit var sharedPrefs: SharedPrefsHelper
   @Mock lateinit var remoteAuthServiceFactory: RemoteAuthServiceFactory
+  @Mock lateinit var unsplashClientFactory: UnsplashClientFactory
+  @Mock lateinit var pictureEntityMapper: PictureEntityMapper
   private lateinit var wallrDataRepository: WallrDataRepository
   private val dummyString = java.util.UUID.randomUUID().toString()
   private val dummyInt = Random().nextInt() + 500
 
   @Before fun setup() {
-    wallrDataRepository = WallrDataRepository(remoteAuthServiceFactory, sharedPrefs)
+    wallrDataRepository =
+        WallrDataRepository(remoteAuthServiceFactory, unsplashClientFactory, sharedPrefs,
+            pictureEntityMapper)
   }
 
   @Test fun `should return single on server success response`() {
