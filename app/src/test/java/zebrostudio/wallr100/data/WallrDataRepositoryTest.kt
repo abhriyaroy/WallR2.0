@@ -26,7 +26,7 @@ class WallrDataRepositoryTest {
   @Mock lateinit var remoteAuthServiceFactory: RemoteAuthServiceFactory
   private lateinit var wallrDataRepository: WallrDataRepository
   private val dummyString = java.util.UUID.randomUUID().toString()
-  private val dummyInt = Random().nextInt() + 500
+  private val dummyInt = Random().nextInt() + 500 // to force some error other than 403 or 404
 
   @Before fun setup() {
     wallrDataRepository = WallrDataRepository(remoteAuthServiceFactory, sharedPrefs)

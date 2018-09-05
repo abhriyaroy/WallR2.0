@@ -64,7 +64,7 @@ class AuthenticatePurchaseUseCaseTest {
   }
 
   private fun stubPostExecutionThreadReturnsIoScheduler() {
-    whenever(postExecutionThread.scheduler).thenReturn(Schedulers.io())
+    whenever(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 
   private fun stubAuthenticatePurchaseReturnsSingle() {
