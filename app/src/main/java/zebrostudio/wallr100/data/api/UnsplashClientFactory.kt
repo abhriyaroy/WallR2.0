@@ -1,13 +1,15 @@
 package zebrostudio.wallr100.data.api
 
+import io.reactivex.Single
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import zebrostudio.wallr100.data.api.UrlMap.Companion.UNSPLASH_BASE_URL
+import zebrostudio.wallr100.data.model.unsplashmodel.UnsplashPicturesEntity
 
 interface UnsplashClientFactory {
-  fun getRemote(): UnsplashClient
+  fun getPicturesService(url: String): Single<List<UnsplashPicturesEntity>>
 }
 
 class UnsplashClientFactoryImpl : UnsplashClientFactory {
@@ -18,7 +20,7 @@ class UnsplashClientFactoryImpl : UnsplashClientFactory {
   private var retrofit: Retrofit? = null
   private var okHttpClient: OkHttpClient? = null
 
-  override fun getRemote(): UnsplashClient {
+  override fun getPicturesService(url: String): Single<List<UnsplashPicturesEntity>> {
     if (okHttpClient == null) {
       val builder = OkHttpClient().newBuilder()
       builder.addInterceptor { chain ->
@@ -38,7 +40,7 @@ class UnsplashClientFactoryImpl : UnsplashClientFactory {
           .addConverterFactory(GsonConverterFactory.create())
           .build()
     }
-    return retrofit!!.create(UnsplashClient::class.java)
+    return retrofit!!.create(UnsplashClient::class.java).getPictures(url)
 
   }
 }

@@ -1,8 +1,12 @@
 package zebrostudio.wallr100.data
 
+import android.util.Log
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.not
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -12,11 +16,16 @@ import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import org.mockito.Mock
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
+import zebrostudio.wallr100.data.datafactory.UnsplashPictureEntityModelFactory
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
+import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.data.mapper.PictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
+import zebrostudio.wallr100.data.model.unsplashmodel.UnsplashPicturesEntity
+import zebrostudio.wallr100.domain.model.SearchPicturesModel
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
+import java.util.Arrays
 import java.util.Random
 
 @RunWith(MockitoJUnitRunner::class)
@@ -27,12 +36,13 @@ class WallrDataRepositoryTest {
   @Mock lateinit var sharedPrefs: SharedPrefsHelper
   @Mock lateinit var remoteAuthServiceFactory: RemoteAuthServiceFactory
   @Mock lateinit var unsplashClientFactory: UnsplashClientFactory
-  @Mock lateinit var pictureEntityMapper: PictureEntityMapper
+  private lateinit var pictureEntityMapper: PictureEntityMapper
   private lateinit var wallrDataRepository: WallrDataRepository
   private val dummyString = java.util.UUID.randomUUID().toString()
   private val dummyInt = Random().nextInt() + 500
 
   @Before fun setup() {
+    pictureEntityMapper = PictureEntityMapper()
     wallrDataRepository =
         WallrDataRepository(remoteAuthServiceFactory, unsplashClientFactory, sharedPrefs,
             pictureEntityMapper)
@@ -104,6 +114,45 @@ class WallrDataRepositoryTest {
         wallrDataRepository.premiumUserTag, false)).thenReturn(false)
 
     assertEquals(false, wallrDataRepository.isUserPremium())
+  }
+
+  @Test fun `should return no result found exception on get pictures call`() {
+    whenever(unsplashClientFactory.getPicturesService(dummyString)).thenReturn(
+        Single.just(emptyList()))
+
+    wallrDataRepository.getPictures(dummyString)
+        .test()
+        .assertError(NoResultFoundException::class.java)
+  }
+
+  @Test fun `should return mapped search pictures model list on get pictures call`() {
+    val unsplashPicturesEntityList = mutableListOf<UnsplashPicturesEntity>()
+    unsplashPicturesEntityList.add(
+        UnsplashPictureEntityModelFactory.getUnsplashPictureEntityModel())
+
+    val searchPicturesModelList = pictureEntityMapper
+        .mapFromEntity(unsplashPicturesEntityList)
+
+    whenever(unsplashClientFactory.getPicturesService(dummyString)).thenReturn(
+        Single.just(unsplashPicturesEntityList))
+
+    wallrDataRepository.getPictures(dummyString)
+        .test()
+        .assertValues(searchPicturesModelList)
+  }
+
+  @Test
+  fun test_array_pass() {
+    val unsplashPicturesEntityList = mutableListOf<UnsplashPicturesEntity>()
+    unsplashPicturesEntityList.add(
+        UnsplashPictureEntityModelFactory.getUnsplashPictureEntityModel())
+
+    val searchPicturesModelList = pictureEntityMapper
+        .mapFromEntity(unsplashPicturesEntityList)
+    val searchPicturesModelList1 = pictureEntityMapper
+        .mapFromEntity(unsplashPicturesEntityList)
+
+    assertThat(searchPicturesModelList, `is`(searchPicturesModelList1))
   }
 
 }

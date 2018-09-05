@@ -31,7 +31,7 @@ class WallrDataRepository(
         .flatMap {
           if (it.status == "success") {
             Single.just(true)
-          } else if (it.status == "error" && (it.errorCode == 4004 || it.errorCode == 4010)) {
+          } else if (it.status == "error" && (it.errorCode == 404 || it.errorCode == 403)) {
             Single.error(InvalidPurchaseException())
           } else {
             Single.error(UnableToVerifyPurchaseException())
@@ -48,7 +48,7 @@ class WallrDataRepository(
   }
 
   override fun getPictures(query: String): Single<List<SearchPicturesModel>> {
-    return unsplashClientFactory.getRemote().getPictures(query)
+    return unsplashClientFactory.getPicturesService(query)
         .flatMap {
           if (it.isEmpty()) {
             Single.error(NoResultFoundException())
