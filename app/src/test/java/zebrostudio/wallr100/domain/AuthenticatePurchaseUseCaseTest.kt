@@ -19,7 +19,7 @@ import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 @RunWith(MockitoJUnitRunner::class)
 class AuthenticatePurchaseUseCaseTest {
 
-  @get:Rule var mTrampolineSchedulerRule = TrampolineSchedulerRule()
+  @get:Rule var trampolineSchedulerRule = TrampolineSchedulerRule()
 
   @Mock private lateinit var postExecutionThread: PostExecutionThread
   @Mock private lateinit var wallrRepository: WallrRepository
