@@ -34,7 +34,7 @@ class SearchPicturesUseCaseTest {
   @Test fun `should return list of search pictures model on buildRetrievePicturesObservable`() {
     whenever(wallrRepository.getPictures(dummyString)).thenReturn(
         Single.just(listOf(SearchPicturesModelFactory.getSearchPicturesModel())))
-    
+
 
   }
 }
