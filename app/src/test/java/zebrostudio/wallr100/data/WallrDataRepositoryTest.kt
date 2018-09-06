@@ -3,6 +3,7 @@ package zebrostudio.wallr100.data
 import android.util.Log
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
+import io.reactivex.functions.Consumer
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import org.junit.Assert.assertEquals
@@ -39,7 +40,7 @@ class WallrDataRepositoryTest {
   private lateinit var pictureEntityMapper: PictureEntityMapper
   private lateinit var wallrDataRepository: WallrDataRepository
   private val dummyString = java.util.UUID.randomUUID().toString()
-  private val dummyInt = Random().nextInt() + 500
+  private val dummyInt = Random().nextInt() + 500 // to force some error other than 403 or 404
 
   @Before fun setup() {
     pictureEntityMapper = PictureEntityMapper()
@@ -136,23 +137,21 @@ class WallrDataRepositoryTest {
     whenever(unsplashClientFactory.getPicturesService(dummyString)).thenReturn(
         Single.just(unsplashPicturesEntityList))
 
-    wallrDataRepository.getPictures(dummyString)
+    val picturesList = wallrDataRepository.getPictures(dummyString)
         .test()
-        .assertValues(searchPicturesModelList)
-  }
+        .values()
+    val picture = picturesList[0][0]
 
-  @Test
-  fun test_array_pass() {
-    val unsplashPicturesEntityList = mutableListOf<UnsplashPicturesEntity>()
-    unsplashPicturesEntityList.add(
-        UnsplashPictureEntityModelFactory.getUnsplashPictureEntityModel())
-
-    val searchPicturesModelList = pictureEntityMapper
-        .mapFromEntity(unsplashPicturesEntityList)
-    val searchPicturesModelList1 = pictureEntityMapper
-        .mapFromEntity(unsplashPicturesEntityList)
-
-    assertThat(searchPicturesModelList, `is`(searchPicturesModelList1))
+    assertEquals(searchPicturesModelList[0].id, picture.id)
+    assertEquals(searchPicturesModelList[0].createdAt, picture.createdAt)
+    assertEquals(searchPicturesModelList[0].imageWidth, picture.imageWidth)
+    assertEquals(searchPicturesModelList[0].imageHeight, picture.imageHeight)
+    assertEquals(searchPicturesModelList[0].paletteColor, picture.paletteColor)
+    assertEquals(searchPicturesModelList[0].user, picture.user)
+    assertEquals(searchPicturesModelList[0].likes, picture.likes)
+    assertEquals(searchPicturesModelList[0].likedByUser, picture.likedByUser)
+    assertEquals(searchPicturesModelList[0].imageQualityUrls, picture.imageQualityUrls)
+    assertEquals(searchPicturesModelList[0].categories, picture.categories)
   }
 
 }
