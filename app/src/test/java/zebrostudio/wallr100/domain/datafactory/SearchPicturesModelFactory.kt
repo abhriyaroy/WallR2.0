@@ -1,16 +1,16 @@
-package zebrostudio.wallr100.data.datafactory
+package zebrostudio.wallr100.domain.datafactory
 
-import zebrostudio.wallr100.data.model.unsplashmodel.UnsplashPicturesEntity
+import zebrostudio.wallr100.domain.model.SearchPicturesModel
 import zebrostudio.wallr100.presentation.search.model.ProfileImage
 import zebrostudio.wallr100.presentation.search.model.Urls
 import zebrostudio.wallr100.presentation.search.model.User
 import java.util.Random
 import java.util.UUID
 
-object UnsplashPictureEntityModelFactory {
+object SearchPicturesModelFactory {
 
-  fun getUnsplashPictureEntityModel(): UnsplashPicturesEntity {
-    return UnsplashPicturesEntity(
+  fun getSearchPicturesModel(): SearchPicturesModel {
+    return SearchPicturesModel(
         UUID.randomUUID().toString(),
         UUID.randomUUID().toString(),
         Random().nextInt(),
@@ -31,5 +31,4 @@ object UnsplashPictureEntityModelFactory {
             UUID.randomUUID().toString()))
     )
   }
-
 }
