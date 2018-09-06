@@ -11,7 +11,7 @@ class SearchPicturesUseCase(
   private val postExecutionThread: PostExecutionThread
 ) {
 
-  fun buildRetrievePicturesObservable(query: String): Single<List<SearchPicturesModel>> {
+  fun buildRetrievePicturesSingle(query: String): Single<List<SearchPicturesModel>> {
     return wallrRepository.getPictures(query)
         .subscribeOn(Schedulers.io())
         .observeOn(postExecutionThread.scheduler)

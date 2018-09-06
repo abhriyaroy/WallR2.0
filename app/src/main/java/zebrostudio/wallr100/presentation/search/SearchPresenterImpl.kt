@@ -23,7 +23,7 @@ class SearchPresenterImpl(
   override fun notifyQuerySubmitted(query: String?) {
     queryPage = 1
     searchView?.showLoader()
-    retrievePicturesUseCase.buildRetrievePicturesObservable(
+    retrievePicturesUseCase.buildRetrievePicturesSingle(
         "photos/search?query=$query&per_page=30&page=$queryPage")
         .map {
           searchPicturesPresenterEntityMapper.mapTOPresenterEntity(it)

@@ -127,8 +127,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should return mapped search pictures model list on get pictures call`() {
-    val unsplashPicturesEntityList = mutableListOf<UnsplashPicturesEntity>()
-    unsplashPicturesEntityList.add(
+    val unsplashPicturesEntityList = mutableListOf(
         UnsplashPictureEntityModelFactory.getUnsplashPictureEntityModel())
 
     val searchPicturesModelList = pictureEntityMapper
@@ -137,10 +136,9 @@ class WallrDataRepositoryTest {
     whenever(unsplashClientFactory.getPicturesService(dummyString)).thenReturn(
         Single.just(unsplashPicturesEntityList))
 
-    val picturesList = wallrDataRepository.getPictures(dummyString)
+    val picture = wallrDataRepository.getPictures(dummyString)
         .test()
-        .values()
-    val picture = picturesList[0][0]
+        .values()[0][0]
 
     assertEquals(searchPicturesModelList[0].id, picture.id)
     assertEquals(searchPicturesModelList[0].createdAt, picture.createdAt)
@@ -153,5 +151,7 @@ class WallrDataRepositoryTest {
     assertEquals(searchPicturesModelList[0].imageQualityUrls, picture.imageQualityUrls)
     assertEquals(searchPicturesModelList[0].categories, picture.categories)
   }
+
+
 
 }
