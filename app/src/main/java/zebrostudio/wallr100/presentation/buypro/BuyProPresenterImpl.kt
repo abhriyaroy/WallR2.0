@@ -76,8 +76,7 @@ class BuyProPresenterImpl(
     if (userPremiumStatusUseCase.updateUserPurchaseStatus()) {
       buyProView?.showSuccessfulTransactionMessage(premiumTransactionType)
       buyProView?.finishWithResult()
-    }
-    else{
+    } else {
       buyProView?.showGenericVerificationError()
     }
   }

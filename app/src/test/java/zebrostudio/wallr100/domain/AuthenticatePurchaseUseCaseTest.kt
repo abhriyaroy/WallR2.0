@@ -2,6 +2,7 @@ package zebrostudio.wallr100.domain
 
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.Before
@@ -69,17 +70,17 @@ class AuthenticatePurchaseUseCaseTest {
 
   private fun stubAuthenticatePurchaseReturnsSingle() {
     whenever(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
-        Single.just(true))
+        Completable.complete())
   }
 
   private fun stubAuthenticatePurchaseReturnsInvalidPurchaseException() {
     whenever(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
-        Single.error(InvalidPurchaseException()))
+        Completable.error(InvalidPurchaseException()))
   }
 
   private fun stubAuthenticatePurchaseReturnsUnableToVerifyPurchaseException() {
     whenever(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
-        Single.error(UnableToVerifyPurchaseException()))
+        Completable.error(UnableToVerifyPurchaseException()))
   }
 
 }

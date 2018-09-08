@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.domain.interactor
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
@@ -14,7 +15,7 @@ class AuthenticatePurchaseUseCase(
     packageName: String,
     skuId: String,
     purchaseToken: String
-  ): Single<Any> {
+  ): Completable {
     return wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)
         .subscribeOn(Schedulers.io())
         .observeOn(postExecutionThread.scheduler)

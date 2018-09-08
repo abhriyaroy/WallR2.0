@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.domain
 
-import io.reactivex.Observable
+import io.reactivex.Completable
 import io.reactivex.Single
 import zebrostudio.wallr100.domain.model.SearchPicturesModel
 
@@ -10,7 +10,7 @@ interface WallrRepository {
     packageName: String,
     skuId: String,
     purchaseToken: String
-  ): Single<Any>
+  ): Completable
 
   fun updateUserPurchaseStatus(): Boolean
   fun isUserPremium(): Boolean
