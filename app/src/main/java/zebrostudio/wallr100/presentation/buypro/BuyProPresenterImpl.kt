@@ -55,7 +55,7 @@ class BuyProPresenterImpl(
     purchaseToken: String,
     proTransactionType: PremiumTransactionType
   ) {
-    authenticatePurchaseUseCase.buildUseCaseSingle(packageName, skuId, purchaseToken)
+    authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId, purchaseToken)
         .autoDisposable(buyProView?.getScope()!!)
         .subscribe({
           handleSuccessfulVerification(proTransactionType)

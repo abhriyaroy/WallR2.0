@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.data
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UrlMap
@@ -19,7 +20,7 @@ class WallrDataRepository(
     packageName: String,
     skuId: String,
     purchaseToken: String
-  ): Single<Any> {
+  ): Completable {
 
     return retrofitFirebaseAuthFactory.verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(packageName, skuId, purchaseToken))
@@ -31,7 +32,7 @@ class WallrDataRepository(
           } else {
             Single.error(UnableToVerifyPurchaseException())
           }
-        }
+        }.toCompletable()
   }
 
   override fun updateUserPurchaseStatus(): Boolean {

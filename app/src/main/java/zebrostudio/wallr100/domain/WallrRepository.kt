@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.domain
 
-import io.reactivex.Single
+import io.reactivex.Completable
 
 interface WallrRepository {
 
@@ -8,7 +8,7 @@ interface WallrRepository {
     packageName: String,
     skuId: String,
     purchaseToken: String
-  ): Single<Any>
+  ): Completable
 
   fun updateUserPurchaseStatus(): Boolean
   fun isUserPremium(): Boolean

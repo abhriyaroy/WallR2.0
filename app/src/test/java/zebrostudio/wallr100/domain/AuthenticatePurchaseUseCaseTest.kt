@@ -2,6 +2,7 @@ package zebrostudio.wallr100.domain
 
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.Before
@@ -35,7 +36,7 @@ class AuthenticatePurchaseUseCaseTest {
 
   @Test fun `should call authenticatePurchase to verify purchase`() {
     stubAuthenticatePurchaseReturnsSingle()
-    authenticatePurchaseUseCase.buildUseCaseSingle(packageName, skuId, purchaseToken)
+    authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId, purchaseToken)
 
     verify(wallrRepository).authenticatePurchase(packageName, skuId, purchaseToken)
   }
@@ -43,14 +44,15 @@ class AuthenticatePurchaseUseCaseTest {
   @Test fun `should complete when successful purchase verification`() {
     stubAuthenticatePurchaseReturnsSingle()
 
-    authenticatePurchaseUseCase.buildUseCaseSingle(packageName, skuId, purchaseToken).test()
+    authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId, purchaseToken).test()
         .assertComplete()
   }
 
   @Test fun `should return invalidPurchaseException when unsuccessful purchase verification`() {
     stubAuthenticatePurchaseReturnsInvalidPurchaseException()
     val testObservable =
-        authenticatePurchaseUseCase.buildUseCaseSingle(packageName, skuId, purchaseToken).test()
+        authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId, purchaseToken)
+            .test()
     testObservable.await()
 
     testObservable.assertError(InvalidPurchaseException::class.java)
@@ -59,7 +61,7 @@ class AuthenticatePurchaseUseCaseTest {
   @Test fun `should return unableToVerifyPurchaseException when unable to verify purchase`() {
     stubAuthenticatePurchaseReturnsUnableToVerifyPurchaseException()
 
-    authenticatePurchaseUseCase.buildUseCaseSingle(packageName, skuId, purchaseToken).test()
+    authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId, purchaseToken).test()
         .assertError(UnableToVerifyPurchaseException::class.java)
   }
 
@@ -69,17 +71,17 @@ class AuthenticatePurchaseUseCaseTest {
 
   private fun stubAuthenticatePurchaseReturnsSingle() {
     whenever(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
-        Single.just(true))
+        Completable.complete())
   }
 
   private fun stubAuthenticatePurchaseReturnsInvalidPurchaseException() {
     whenever(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
-        Single.error(InvalidPurchaseException()))
+        Completable.error(InvalidPurchaseException()))
   }
 
   private fun stubAuthenticatePurchaseReturnsUnableToVerifyPurchaseException() {
     whenever(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
-        Single.error(UnableToVerifyPurchaseException()))
+        Completable.error(UnableToVerifyPurchaseException()))
   }
 
 }
