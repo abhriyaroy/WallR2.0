@@ -7,28 +7,38 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.support.design.widget.AppBarLayout
+import android.support.v7.widget.GridLayoutManager
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import dagger.android.AndroidInjection
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import kotlinx.android.synthetic.main.activity_search.SearchActivitySpinkitView
 import kotlinx.android.synthetic.main.activity_search.infoImageView
 import kotlinx.android.synthetic.main.activity_search.infoTextFirstLine
 import kotlinx.android.synthetic.main.activity_search.infoTextSecondLine
+import kotlinx.android.synthetic.main.activity_search.recyclerView
 import kotlinx.android.synthetic.main.activity_search.retryButton
 import kotlinx.android.synthetic.main.activity_search.searchAppBar
 import kotlinx.android.synthetic.main.activity_search.searchView
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.ui.adapters.ImageRecyclerviewAdapter
 import zebrostudio.wallr100.android.utils.withDelayOnMain
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 import zebrostudio.wallr100.presentation.search.SearchContract
+import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import javax.inject.Inject
 
 class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
 
   @Inject
   internal lateinit var presenter: SearchContract.SearchPresenter
+  @Inject
+  internal lateinit var imageRecyclerviewPresenter: ImageRecyclerItemContract.ImageRecyclerviewPresenter
 
   private var appBarCollapsed = false
+  private lateinit var recyclerviewAdapter: ImageRecyclerviewAdapter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)
@@ -41,6 +51,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     initAppbar()
     initSearchView()
     showNoInputView()
+    initRecyclerView()
   }
 
   override fun onDestroy() {
@@ -111,6 +122,14 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     infoTextFirstLine.visibility = View.VISIBLE
   }
 
+  override fun hideAll() {
+    infoTextFirstLine.visibility = View.GONE
+    infoTextSecondLine.visibility = View.GONE
+    infoImageView.visibility = View.GONE
+    retryButton.visibility = View.GONE
+    hideLoader()
+  }
+
   override fun showNoInternetView() {
     hideAll()
     infoImageView.setImageResource(R.drawable.ic_no_result_gray)
@@ -131,12 +150,13 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     retryButton.visibility = View.VISIBLE
   }
 
-  override fun hideAll() {
-    infoTextFirstLine.visibility = View.GONE
-    infoTextSecondLine.visibility = View.GONE
-    infoImageView.visibility = View.GONE
-    retryButton.visibility = View.GONE
-    hideLoader()
+  override fun showSearchResults(list: List<SearchPicturesPresenterEntity>) {
+    imageRecyclerviewPresenter.setSearchResultList(list)
+    recyclerviewAdapter.notifyDataSetChanged()
+  }
+
+  override fun appendSearchResults(list: List<SearchPicturesPresenterEntity>) {
+    imageRecyclerviewPresenter.setSearchResultList(list)
   }
 
   private fun initAppbar() {
@@ -170,8 +190,16 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
       override fun onQueryTextChange(newText: String?): Boolean {
         return false
       }
-
     })
+  }
 
+  private fun initRecyclerView() {
+    val layoutManager = GridLayoutManager(this.baseContext, 2)
+    recyclerView.layoutManager = layoutManager
+    recyclerviewAdapter = ImageRecyclerviewAdapter(imageRecyclerviewPresenter)
+    val scaleInAdapter = ScaleInAnimationAdapter(recyclerviewAdapter)
+    scaleInAdapter.setDuration(500)
+    recyclerView.adapter = scaleInAdapter
+    imageRecyclerviewPresenter.setTypeAsSearch()
   }
 }

@@ -19,6 +19,8 @@ import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerviewPresenterImpl
 
 @Module
 class AppModule {
@@ -81,5 +83,9 @@ class AppModule {
     wallrRepository: WallrRepository,
     postExecutionThread: PostExecutionThread
   ): SearchPicturesUseCase = SearchPicturesUseCase(wallrRepository, postExecutionThread)
+
+  @Provides
+  fun provideImageRecyclerViewPresenter()
+      : ImageRecyclerItemContract.ImageRecyclerviewPresenter = ImageRecyclerviewPresenterImpl()
 
 }

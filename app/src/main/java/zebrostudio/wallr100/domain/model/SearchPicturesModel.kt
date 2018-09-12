@@ -1,7 +1,5 @@
 package zebrostudio.wallr100.domain.model
 
-import zebrostudio.wallr100.presentation.search.model.Urls
-import zebrostudio.wallr100.presentation.search.model.User
 import java.util.ArrayList
 
 class SearchPicturesModel(

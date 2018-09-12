@@ -1,8 +1,6 @@
 package zebrostudio.wallr100.data.model.unsplashmodel
 
 import com.google.gson.annotations.SerializedName
-import zebrostudio.wallr100.presentation.search.model.Urls
-import zebrostudio.wallr100.presentation.search.model.User
 import java.util.ArrayList
 
 class UnsplashPicturesEntity(

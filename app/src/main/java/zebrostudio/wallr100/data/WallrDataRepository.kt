@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.data
 
+import android.util.Log
 import io.reactivex.Completable
 import io.reactivex.Single
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
@@ -54,7 +55,11 @@ class WallrDataRepository(
           if (it.isEmpty()) {
             Single.error(NoResultFoundException())
           } else {
-            Single.just(pictureEntityMapper.mapFromEntity(it))
+            System.out.println(it[0].user.name)
+            System.out.println(it[0].user.profileImage.mediumImageUrl)
+            val map = pictureEntityMapper.mapFromEntity(it)
+            System.out.println(map[0].imageQualityUrls.largeImageLink+"abababababa")
+            Single.just(map)
           }
         }
   }

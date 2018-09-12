@@ -9,6 +9,7 @@ import android.support.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
 import zebrostudio.wallr100.R
@@ -35,6 +36,10 @@ fun LinearLayout.setMenuItemColorRed(context: Context) {
 fun LinearLayout.setMenuItemColorWhite(context: Context) {
   this.findViewById<WallrCustomTextView>(R.id.textviewGuillotineMenuItem)
       .setTextColor(Color.parseColor(context.getString(R.color.color_white)))
+}
+
+fun ImageView.setPlaceholderColor(colorHexCode: String) {
+  this.setBackgroundColor(Color.parseColor(colorHexCode))
 }
 
 fun withDelayOnMain(delay: Long, block: () -> Unit) {

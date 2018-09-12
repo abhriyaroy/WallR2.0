@@ -1,11 +1,13 @@
-package zebrostudio.wallr100.presentation.search
+package zebrostudio.wallr100.presentation.search.mapper
 
 import zebrostudio.wallr100.domain.model.SearchPicturesModel
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
+import zebrostudio.wallr100.presentation.search.model.Urls
+import zebrostudio.wallr100.presentation.search.model.User
 
 class SearchPicturesPresenterEntityMapper {
 
-  fun mapTOPresenterEntity(searchPicturesModel: List<SearchPicturesModel>)
+  fun mapToPresenterEntity(searchPicturesModel: List<SearchPicturesModel>)
       : List<SearchPicturesPresenterEntity> {
     val list = mutableListOf<SearchPicturesPresenterEntity>()
     for (it in searchPicturesModel) {
@@ -15,10 +17,15 @@ class SearchPicturesPresenterEntityMapper {
           it.imageWidth,
           it.imageHeight,
           it.paletteColor,
-          it.user,
+          User(it.user.name,
+              it.user.profileImage),
           it.likes,
           it.likedByUser,
-          it.imageQualityUrls,
+          Urls(it.imageQualityUrls.rawImageLink,
+              it.imageQualityUrls.largeImageLink,
+              it.imageQualityUrls.regularImageLink,
+              it.imageQualityUrls.smallImageLink,
+              it.imageQualityUrls.thumbImageLink),
           it.categories))
     }
     return list
