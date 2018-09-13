@@ -15,5 +15,6 @@ interface ImageRecyclerItemContract {
     fun addToSearchResultList(list: List<SearchPicturesPresenterEntity>)
     fun onBindRepositoryRowViewAtPosition(position: Int, rowView: ImageRecyclerItemView)
     fun getItemCount(): Int
+    fun clearAll()
   }
 }

@@ -8,18 +8,22 @@ interface SearchContract {
   interface SearchView {
     fun showLoader()
     fun hideLoader()
+    fun showBottomLoader()
+    fun hideBottomLoader()
     fun showNoInputView()
     fun showNoResultView(query: String?)
     fun hideAll()
     fun showNoInternetView()
-    fun showGenericErrorMessage()
+    fun showNoInternetToast()
+    fun showGenericErrorView()
+    fun showGenericErrorToast()
     fun showSearchResults(list: List<SearchPicturesPresenterEntity>)
-    fun appendSearchResults(list: List<SearchPicturesPresenterEntity>)
+    fun appendSearchResults(startPosition: Int, list: List<SearchPicturesPresenterEntity>)
   }
 
   interface SearchPresenter : BasePresenter<SearchView> {
     fun notifyQuerySubmitted(query: String?)
-    fun fetchMoreImages(query: String?)
+    fun fetchMoreImages()
   }
 
 }

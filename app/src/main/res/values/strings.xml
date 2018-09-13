@@ -76,5 +76,6 @@
   <string name="search_something_went_wrong_message">Snap! Something went wrong</string>
   <string name="search_please_try_again">Please try again</string>
   <string name="search_view_transition_name">searchTransition</string>
+  <string name="search_generic_error_message">Something went wrong. Please try again</string>
 
 </resources>

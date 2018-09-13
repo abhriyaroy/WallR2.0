@@ -40,6 +40,10 @@ class ImageRecyclerviewPresenterImpl : ImageRecyclerItemContract.ImageRecyclervi
     return searchResultList.size
   }
 
+  override fun clearAll() {
+    searchResultList.clear()
+  }
+
   private enum class ListType {
     SEARCH,
     WALLPAPERS

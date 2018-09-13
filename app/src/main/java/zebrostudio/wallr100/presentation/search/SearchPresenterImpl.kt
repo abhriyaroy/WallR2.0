@@ -12,6 +12,7 @@ class SearchPresenterImpl(
 
   private var searchView: SearchContract.SearchView? = null
   private var queryPage = 1
+  private var keyword: String? = null
 
   override fun attachView(view: SearchContract.SearchView) {
     searchView = view
@@ -23,55 +24,59 @@ class SearchPresenterImpl(
 
   override fun notifyQuerySubmitted(query: String?) {
     queryPage = 1
+    searchView?.hideAll()
     searchView?.showLoader()
-    retrievePicturesUseCase.buildRetrievePicturesSingle(
-        "photos/search?query=$query&per_page=30&page=$queryPage")
+    keyword = query
+    retrievePicturesUseCase.buildRetrievePicturesSingle(getQueryString(keyword))
         .map {
           searchPicturesPresenterEntityMapper.mapToPresenterEntity(it)
         }
         .subscribe({
           searchView?.hideLoader()
-          queryPage++
           searchView?.showSearchResults(it)
+          queryPage++
         }, {
           when (it) {
-            is NoResultFoundException -> searchView?.showNoResultView(query)
+            is NoResultFoundException -> searchView?.showNoResultView(keyword)
             else -> {
               if (it.message != null && it.message == "Unable to resolve host \"api.unsplash.com\"" +
                   ": No address associated with hostname") {
                 searchView?.showNoInternetView()
               } else {
-                searchView?.showGenericErrorMessage()
+                searchView?.showGenericErrorView()
               }
             }
           }
         })
   }
 
-  override fun fetchMoreImages(query: String?) {
-    //showbottomloader
-    retrievePicturesUseCase.buildRetrievePicturesSingle(
-        "photos/search?query=$query&per_page=30&page=$queryPage")
+  override fun fetchMoreImages() {
+    searchView?.showBottomLoader()
+    retrievePicturesUseCase.buildRetrievePicturesSingle(getQueryString(keyword))
         .map {
           searchPicturesPresenterEntityMapper.mapToPresenterEntity(it)
         }
         .subscribe({
-          //hide bottom loader
+          searchView?.hideBottomLoader()
+          searchView?.appendSearchResults(((queryPage - 1) * 30), it) // 30 results per page
           queryPage++
-          searchView?.appendSearchResults(it)
         }, {
           when (it) {
-            is NoResultFoundException -> searchView?.showNoResultView(query)
+            is NoResultFoundException -> searchView?.showNoResultView(keyword)
             else -> {
               if (it.message != null && it.message == "Unable to resolve host \"api.unsplash.com\"" +
                   ": No address associated with hostname") {
-                // show no internet toast
+                searchView?.showNoInternetToast()
               } else {
-                // show generic error toast
+                searchView?.showGenericErrorToast()
               }
             }
           }
         })
+  }
+
+  private fun getQueryString(keyword: String?): String {
+    return "photos/search?query=$keyword&per_page=30&page=$queryPage"
   }
 
 }

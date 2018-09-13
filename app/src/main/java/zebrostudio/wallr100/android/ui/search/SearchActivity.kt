@@ -9,12 +9,12 @@ import android.speech.RecognizerIntent
 import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.GridLayoutManager
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import dagger.android.AndroidInjection
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import kotlinx.android.synthetic.main.activity_search.SearchActivitySpinkitView
+import kotlinx.android.synthetic.main.activity_search.bottomSpinkitView
 import kotlinx.android.synthetic.main.activity_search.infoImageView
 import kotlinx.android.synthetic.main.activity_search.infoTextFirstLine
 import kotlinx.android.synthetic.main.activity_search.infoTextSecondLine
@@ -24,6 +24,9 @@ import kotlinx.android.synthetic.main.activity_search.searchAppBar
 import kotlinx.android.synthetic.main.activity_search.searchView
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.adapters.ImageRecyclerviewAdapter
+import zebrostudio.wallr100.android.utils.EndlessScrollListener
+import zebrostudio.wallr100.android.utils.errorToast
+import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.withDelayOnMain
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 import zebrostudio.wallr100.presentation.search.SearchContract
@@ -38,7 +41,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   internal lateinit var imageRecyclerviewPresenter: ImageRecyclerItemContract.ImageRecyclerviewPresenter
 
   private var appBarCollapsed = false
-  private lateinit var recyclerviewAdapter: ImageRecyclerviewAdapter
+  private var recyclerviewAdapter: ImageRecyclerviewAdapter? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)
@@ -105,6 +108,14 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     SearchActivitySpinkitView.visibility = View.GONE
   }
 
+  override fun showBottomLoader() {
+    bottomSpinkitView.visibility = View.VISIBLE
+  }
+
+  override fun hideBottomLoader() {
+    bottomSpinkitView.visibility = View.GONE
+  }
+
   override fun showNoInputView() {
     hideAll()
     infoImageView.setImageResource(R.drawable.ic_no_input_gray)
@@ -127,7 +138,10 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     infoTextSecondLine.visibility = View.GONE
     infoImageView.visibility = View.GONE
     retryButton.visibility = View.GONE
+    imageRecyclerviewPresenter.clearAll()
+    recyclerviewAdapter?.notifyDataSetChanged()
     hideLoader()
+    hideBottomLoader()
   }
 
   override fun showNoInternetView() {
@@ -141,7 +155,11 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     retryButton.visibility = View.VISIBLE
   }
 
-  override fun showGenericErrorMessage() {
+  override fun showNoInternetToast() {
+    errorToast(getString(R.string.search_no_internet_message))
+  }
+
+  override fun showGenericErrorView() {
     hideAll()
     infoImageView.setImageResource(R.drawable.ic_no_result_gray)
     infoImageView.visibility = View.VISIBLE
@@ -150,13 +168,18 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     retryButton.visibility = View.VISIBLE
   }
 
-  override fun showSearchResults(list: List<SearchPicturesPresenterEntity>) {
-    imageRecyclerviewPresenter.setSearchResultList(list)
-    recyclerviewAdapter.notifyDataSetChanged()
+  override fun showGenericErrorToast() {
+    errorToast(stringRes(R.string.search_generic_error_message))
   }
 
-  override fun appendSearchResults(list: List<SearchPicturesPresenterEntity>) {
+  override fun showSearchResults(list: List<SearchPicturesPresenterEntity>) {
     imageRecyclerviewPresenter.setSearchResultList(list)
+    recyclerviewAdapter?.notifyDataSetChanged()
+  }
+
+  override fun appendSearchResults(startPosition: Int, list: List<SearchPicturesPresenterEntity>) {
+    imageRecyclerviewPresenter.addToSearchResultList(list)
+    recyclerviewAdapter?.notifyItemRangeInserted(startPosition, (list.size - 1))
   }
 
   private fun initAppbar() {
@@ -201,5 +224,10 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     scaleInAdapter.setDuration(500)
     recyclerView.adapter = scaleInAdapter
     imageRecyclerviewPresenter.setTypeAsSearch()
+    recyclerView.addOnScrollListener(object : EndlessScrollListener(layoutManager) {
+      override fun onLoadMore() {
+        presenter.fetchMoreImages()
+      }
+    })
   }
 }
