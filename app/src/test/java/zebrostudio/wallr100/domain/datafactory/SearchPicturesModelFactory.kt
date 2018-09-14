@@ -1,9 +1,9 @@
 package zebrostudio.wallr100.domain.datafactory
 
 import zebrostudio.wallr100.domain.model.SearchPicturesModel
-import zebrostudio.wallr100.presentation.search.model.ProfileImage
-import zebrostudio.wallr100.presentation.search.model.Urls
-import zebrostudio.wallr100.presentation.search.model.User
+import zebrostudio.wallr100.domain.model.ProfileImage
+import zebrostudio.wallr100.domain.model.Urls
+import zebrostudio.wallr100.domain.model.User
 import java.util.Random
 import java.util.UUID
 

@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.presentation.search.mapper
 
 import zebrostudio.wallr100.domain.model.SearchPicturesModel
+import zebrostudio.wallr100.presentation.search.model.ProfileImage
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.search.model.Urls
 import zebrostudio.wallr100.presentation.search.model.User
@@ -18,7 +19,7 @@ class SearchPicturesPresenterEntityMapper {
           it.imageHeight,
           it.paletteColor,
           User(it.user.name,
-              it.user.profileImage),
+              ProfileImage(it.user.profileImage.mediumImageUrl)),
           it.likes,
           it.likedByUser,
           Urls(it.imageQualityUrls.rawImageLink,

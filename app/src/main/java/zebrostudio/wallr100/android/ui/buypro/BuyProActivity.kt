@@ -21,8 +21,7 @@ import kotlinx.android.synthetic.main.item_buy_pro_features.view.descriptionText
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.headerTextView
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.imageView
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.ui.buypro.BuyProActivity.PremiumTransactionType.PURCHASE
-import zebrostudio.wallr100.android.ui.buypro.BuyProActivity.PremiumTransactionType.RESTORE
+import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.*
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.infoToast
@@ -243,9 +242,9 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
     infoToast(stringRes(R.string.buy_pro_try_restoring_message))
   }
 
-  enum class PremiumTransactionType {
-    PURCHASE,
-    RESTORE
-  }
+}
 
+enum class PremiumTransactionType {
+  PURCHASE,
+  RESTORE
 }

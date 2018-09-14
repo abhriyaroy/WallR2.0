@@ -1,13 +1,8 @@
 package zebrostudio.wallr100.data
 
-import android.util.Log
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
-import io.reactivex.functions.Consumer
-import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.CoreMatchers.not
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -23,10 +18,7 @@ import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.data.mapper.PictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
-import zebrostudio.wallr100.data.model.unsplashmodel.UnsplashPicturesEntity
-import zebrostudio.wallr100.domain.model.SearchPicturesModel
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
-import java.util.Arrays
 import java.util.Random
 
 @RunWith(MockitoJUnitRunner::class)
@@ -145,13 +137,22 @@ class WallrDataRepositoryTest {
     assertEquals(searchPicturesModelList[0].imageWidth, picture.imageWidth)
     assertEquals(searchPicturesModelList[0].imageHeight, picture.imageHeight)
     assertEquals(searchPicturesModelList[0].paletteColor, picture.paletteColor)
-    assertEquals(searchPicturesModelList[0].user, picture.user)
+    assertEquals(searchPicturesModelList[0].user.name, picture.user.name)
+    assertEquals(searchPicturesModelList[0].user.profileImage.mediumImageUrl,
+        picture.user.profileImage.mediumImageUrl)
     assertEquals(searchPicturesModelList[0].likes, picture.likes)
     assertEquals(searchPicturesModelList[0].likedByUser, picture.likedByUser)
-    assertEquals(searchPicturesModelList[0].imageQualityUrls, picture.imageQualityUrls)
+    assertEquals(searchPicturesModelList[0].imageQualityUrls.largeImageLink,
+        picture.imageQualityUrls.largeImageLink)
+    assertEquals(searchPicturesModelList[0].imageQualityUrls.rawImageLink,
+        picture.imageQualityUrls.rawImageLink)
+    assertEquals(searchPicturesModelList[0].imageQualityUrls.regularImageLink,
+        picture.imageQualityUrls.regularImageLink)
+    assertEquals(searchPicturesModelList[0].imageQualityUrls.smallImageLink,
+        picture.imageQualityUrls.smallImageLink)
+    assertEquals(searchPicturesModelList[0].imageQualityUrls.thumbImageLink,
+        picture.imageQualityUrls.thumbImageLink)
     assertEquals(searchPicturesModelList[0].categories, picture.categories)
   }
-
-
 
 }

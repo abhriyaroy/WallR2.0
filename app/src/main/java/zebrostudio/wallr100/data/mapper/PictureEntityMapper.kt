@@ -4,7 +4,7 @@ import zebrostudio.wallr100.data.model.unsplashmodel.UnsplashPicturesEntity
 import zebrostudio.wallr100.domain.model.SearchPicturesModel
 import zebrostudio.wallr100.domain.model.Urls
 import zebrostudio.wallr100.domain.model.User
-import zebrostudio.wallr100.presentation.search.model.ProfileImage
+import zebrostudio.wallr100.domain.model.ProfileImage
 
 class PictureEntityMapper {
 

@@ -9,7 +9,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import zebrostudio.wallr100.android.ui.buypro.BuyProActivity.PremiumTransactionType.*
+import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.*
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
@@ -20,9 +20,9 @@ import zebrostudio.wallr100.presentation.buypro.BuyProPresenterImpl
 @RunWith(MockitoJUnitRunner::class)
 class BuyProPresenterImplTest {
 
-  @Mock private lateinit var buyProView: BuyProContract.BuyProView
-  @Mock private lateinit var wallrRepository: WallrRepository
-  @Mock private lateinit var postExecutionThread: PostExecutionThread
+  @Mock lateinit var buyProView: BuyProContract.BuyProView
+  @Mock lateinit var wallrRepository: WallrRepository
+  @Mock lateinit var postExecutionThread: PostExecutionThread
   private lateinit var authenticatePurchaseUseCase: AuthenticatePurchaseUseCase
   private lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
   private lateinit var buyProPresenterImpl: BuyProPresenterImpl
@@ -164,5 +164,4 @@ class BuyProPresenterImplTest {
   private fun stubUnsuccessfulUpdateUserPurchaseStatus() {
     whenever(userPremiumStatusUseCase.updateUserPurchaseStatus()).thenReturn(false)
   }
-
 }

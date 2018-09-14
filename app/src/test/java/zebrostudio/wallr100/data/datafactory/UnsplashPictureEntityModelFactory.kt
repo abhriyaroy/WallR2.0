@@ -1,9 +1,9 @@
 package zebrostudio.wallr100.data.datafactory
 
 import zebrostudio.wallr100.data.model.unsplashmodel.UnsplashPicturesEntity
-import zebrostudio.wallr100.presentation.search.model.ProfileImage
-import zebrostudio.wallr100.presentation.search.model.Urls
-import zebrostudio.wallr100.presentation.search.model.User
+import zebrostudio.wallr100.data.model.unsplashmodel.ProfileImage
+import zebrostudio.wallr100.data.model.unsplashmodel.Urls
+import zebrostudio.wallr100.data.model.unsplashmodel.User
 import java.util.Random
 import java.util.UUID
 
