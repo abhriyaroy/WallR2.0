@@ -12,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.*
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
+import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseInteractor
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.presentation.buypro.BuyProContract
@@ -21,15 +22,11 @@ import zebrostudio.wallr100.presentation.buypro.BuyProPresenterImpl
 class BuyProPresenterImplTest {
 
   @Mock lateinit var buyProView: BuyProContract.BuyProView
-  @Mock lateinit var wallrRepository: WallrRepository
-  @Mock lateinit var postExecutionThread: PostExecutionThread
-  private lateinit var authenticatePurchaseUseCase: AuthenticatePurchaseUseCase
-  private lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
+  @Mock lateinit var authenticatePurchaseUseCase: AuthenticatePurchaseUseCase
+  @Mock lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
   private lateinit var buyProPresenterImpl: BuyProPresenterImpl
 
   @Before fun setup() {
-    authenticatePurchaseUseCase = AuthenticatePurchaseUseCase(wallrRepository, postExecutionThread)
-    userPremiumStatusUseCase = UserPremiumStatusUseCase(wallrRepository)
     buyProPresenterImpl = BuyProPresenterImpl(authenticatePurchaseUseCase, userPremiumStatusUseCase)
     buyProPresenterImpl.attachView(buyProView)
   }

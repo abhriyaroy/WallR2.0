@@ -16,8 +16,11 @@ import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactoryImpl
 import zebrostudio.wallr100.data.mapper.PictureEntityMapper
 import zebrostudio.wallr100.domain.WallrRepository
+import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseInteractor
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
+import zebrostudio.wallr100.domain.interactor.SearchPicturesInteractor
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
+import zebrostudio.wallr100.domain.interactor.UserPremiumStatusInteractor
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerviewPresenterImpl
@@ -69,20 +72,21 @@ class AppModule {
   internal fun provideAuthenticatePurchaseUseCase(
     wallrRepository: WallrRepository,
     postExecutionThread: PostExecutionThread
-  ): AuthenticatePurchaseUseCase = AuthenticatePurchaseUseCase(wallrRepository, postExecutionThread)
+  ): AuthenticatePurchaseUseCase = AuthenticatePurchaseInteractor(wallrRepository,
+      postExecutionThread)
 
   @Provides
   @PerApplication
   internal fun provideUserPremiumStatusUseCase(
     wallrRepository: WallrRepository
-  ): UserPremiumStatusUseCase = UserPremiumStatusUseCase(wallrRepository)
+  ): UserPremiumStatusUseCase = UserPremiumStatusInteractor(wallrRepository)
 
   @Provides
   @PerApplication
   fun provideSearchPicturesUseCase(
     wallrRepository: WallrRepository,
     postExecutionThread: PostExecutionThread
-  ): SearchPicturesUseCase = SearchPicturesUseCase(wallrRepository, postExecutionThread)
+  ): SearchPicturesUseCase = SearchPicturesInteractor(wallrRepository, postExecutionThread)
 
   @Provides
   fun provideImageRecyclerViewPresenter()

@@ -1,11 +1,12 @@
 package zebrostudio.wallr100.presentation.search
 
+import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.presentation.search.mapper.SearchPicturesPresenterEntityMapper
 
 class SearchPresenterImpl(
-  private var retrievePicturesUseCase: SearchPicturesUseCase,
+  private var searchPicturesUseCase: SearchPicturesUseCase,
   private var searchPicturesPresenterEntityMapper: SearchPicturesPresenterEntityMapper
 ) :
     SearchContract.SearchPresenter {
@@ -27,7 +28,7 @@ class SearchPresenterImpl(
     searchView?.hideAll()
     searchView?.showLoader()
     keyword = query
-    retrievePicturesUseCase.buildRetrievePicturesSingle(getQueryString(keyword))
+    searchPicturesUseCase.buildUseCaseSingle(getQueryString(keyword))
         .map {
           searchPicturesPresenterEntityMapper.mapToPresenterEntity(it)
         }
@@ -52,7 +53,7 @@ class SearchPresenterImpl(
 
   override fun fetchMoreImages() {
     searchView?.showBottomLoader()
-    retrievePicturesUseCase.buildRetrievePicturesSingle(getQueryString(keyword))
+    searchPicturesUseCase.buildUseCaseSingle(getQueryString(keyword))
         .map {
           searchPicturesPresenterEntityMapper.mapToPresenterEntity(it)
         }
@@ -75,7 +76,7 @@ class SearchPresenterImpl(
         })
   }
 
-  private fun getQueryString(keyword: String?): String {
+  fun getQueryString(keyword: String?): String {
     return "photos/search?query=$keyword&per_page=30&page=$queryPage"
   }
 

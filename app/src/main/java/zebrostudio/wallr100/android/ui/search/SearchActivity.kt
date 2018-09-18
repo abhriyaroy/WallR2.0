@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.android.ui.search
 
 import android.app.Activity
+import android.arch.lifecycle.Lifecycle
 import android.content.Intent
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
@@ -11,6 +12,8 @@ import android.support.v7.widget.GridLayoutManager
 import android.text.TextUtils
 import android.view.View
 import com.miguelcatalan.materialsearchview.MaterialSearchView
+import com.uber.autodispose.ScopeProvider
+import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import dagger.android.AndroidInjection
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import kotlinx.android.synthetic.main.activity_search.SearchActivitySpinkitView
@@ -180,6 +183,10 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   override fun appendSearchResults(startPosition: Int, list: List<SearchPicturesPresenterEntity>) {
     imageRecyclerviewPresenter.addToSearchResultList(list)
     recyclerviewAdapter?.notifyItemRangeInserted(startPosition, (list.size - 1))
+  }
+
+  override fun getScope(): ScopeProvider {
+    return AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)
   }
 
   private fun initAppbar() {

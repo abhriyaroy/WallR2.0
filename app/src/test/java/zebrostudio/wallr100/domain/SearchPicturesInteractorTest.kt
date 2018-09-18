@@ -13,12 +13,13 @@ import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.domain.datafactory.SearchPicturesModelFactory
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
+import zebrostudio.wallr100.domain.interactor.SearchPicturesInteractor
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.util.UUID
 
 @RunWith(MockitoJUnitRunner::class)
-class SearchPicturesUseCaseTest {
+class SearchPicturesInteractorTest {
 
   @get:Rule var trampolineSchedulerRule = TrampolineSchedulerRule()
 
@@ -28,7 +29,7 @@ class SearchPicturesUseCaseTest {
   private val dummyString = UUID.randomUUID().toString()
 
   @Before fun setup() {
-    searchPicturesUseCase = SearchPicturesUseCase(wallrRepository, postExecutionThread)
+    searchPicturesUseCase = SearchPicturesInteractor(wallrRepository, postExecutionThread)
 
     whenever(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
@@ -38,7 +39,7 @@ class SearchPicturesUseCaseTest {
     whenever(wallrRepository.getPictures(dummyString)).thenReturn(
         Single.just(searchPicturesModelList))
 
-    val picture = searchPicturesUseCase.buildRetrievePicturesSingle(dummyString)
+    val picture = searchPicturesUseCase.buildUseCaseSingle(dummyString)
         .test()
         .values()[0][0]
 
@@ -59,7 +60,7 @@ class SearchPicturesUseCaseTest {
     whenever(wallrRepository.getPictures(dummyString)).thenReturn(
         Single.error(NoResultFoundException()))
 
-    searchPicturesUseCase.buildRetrievePicturesSingle(dummyString)
+    searchPicturesUseCase.buildUseCaseSingle(dummyString)
         .test()
         .assertError(NoResultFoundException::class.java)
   }
