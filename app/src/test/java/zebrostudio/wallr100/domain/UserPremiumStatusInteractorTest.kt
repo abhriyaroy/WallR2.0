@@ -7,6 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusInteractor
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
@@ -28,13 +29,13 @@ class UserPremiumStatusInteractorTest {
   }
 
   @Test fun `should return true on successful updateUserPurchaseStatus`() {
-    whenever(wallrRepository.updateUserPurchaseStatus()).thenReturn(true)
+    `when`(wallrRepository.updateUserPurchaseStatus()).thenReturn(true)
 
     assertEquals(true, userPremiumStatusUseCase.updateUserPurchaseStatus())
   }
 
   @Test fun `should return false on unsuccessful updateUserPurchaseStatus`() {
-    whenever(wallrRepository.updateUserPurchaseStatus()).thenReturn(false)
+    `when`(wallrRepository.updateUserPurchaseStatus()).thenReturn(false)
 
     assertEquals(false, userPremiumStatusUseCase.updateUserPurchaseStatus())
   }
@@ -46,13 +47,13 @@ class UserPremiumStatusInteractorTest {
   }
 
   @Test fun `should return true if user is premium`() {
-    whenever(wallrRepository.isUserPremium()).thenReturn(true)
+    `when`(wallrRepository.isUserPremium()).thenReturn(true)
 
     assertEquals(true, userPremiumStatusUseCase.isUserPremium())
   }
 
   @Test fun `should return false if user not premium`() {
-    whenever(wallrRepository.isUserPremium()).thenReturn(false)
+    `when`(wallrRepository.isUserPremium()).thenReturn(false)
 
     assertEquals(false, userPremiumStatusUseCase.isUserPremium())
   }

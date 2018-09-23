@@ -26,8 +26,8 @@ class SearchPicturesPresenterEntityMapper {
               it.imageQualityUrls.largeImageLink,
               it.imageQualityUrls.regularImageLink,
               it.imageQualityUrls.smallImageLink,
-              it.imageQualityUrls.thumbImageLink),
-          it.categories))
+              it.imageQualityUrls.thumbImageLink))
+      )
     }
     return list
   }

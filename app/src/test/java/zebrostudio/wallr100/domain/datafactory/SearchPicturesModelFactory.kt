@@ -26,9 +26,7 @@ object SearchPicturesModelFactory {
             UUID.randomUUID().toString(),
             UUID.randomUUID().toString(),
             UUID.randomUUID().toString()
-        ),
-        ArrayList(listOf(UUID.randomUUID().toString(),
-            UUID.randomUUID().toString()))
+        )
     )
   }
 }

@@ -32,6 +32,7 @@ class SearchPresenterImpl(
         .map {
           searchPicturesPresenterEntityMapper.mapToPresenterEntity(it)
         }
+        .autoDisposable(searchView?.getScope()!!)
         .subscribe({
           searchView?.hideLoader()
           searchView?.showSearchResults(it)
@@ -52,28 +53,32 @@ class SearchPresenterImpl(
   }
 
   override fun fetchMoreImages() {
-    searchView?.showBottomLoader()
-    searchPicturesUseCase.buildUseCaseSingle(getQueryString(keyword))
-        .map {
-          searchPicturesPresenterEntityMapper.mapToPresenterEntity(it)
-        }
-        .subscribe({
-          searchView?.hideBottomLoader()
-          searchView?.appendSearchResults(((queryPage - 1) * 30), it) // 30 results per page
-          queryPage++
-        }, {
-          when (it) {
-            is NoResultFoundException -> searchView?.showNoResultView(keyword)
-            else -> {
-              if (it.message != null && it.message == "Unable to resolve host \"api.unsplash.com\"" +
-                  ": No address associated with hostname") {
-                searchView?.showNoInternetToast()
-              } else {
-                searchView?.showGenericErrorToast()
+    if (queryPage != 0) {
+      searchView?.showBottomLoader()
+      searchPicturesUseCase.buildUseCaseSingle(getQueryString(keyword))
+          .map {
+            searchPicturesPresenterEntityMapper.mapToPresenterEntity(it)
+          }
+          .autoDisposable(searchView?.getScope()!!)
+          .subscribe({
+            searchView?.hideBottomLoader()
+            searchView?.appendSearchResults(((queryPage - 1) * 30), it) // 30 results per page
+            queryPage++
+          }, {
+            searchView?.hideBottomLoader()
+            when (it) {
+              is NoResultFoundException -> queryPage = 0
+              else -> {
+                if (it.message != null && it.message == "Unable to resolve host \"api.unsplash.com\"" +
+                    ": No address associated with hostname") {
+                  searchView?.showNoInternetToast()
+                } else {
+                  searchView?.showGenericErrorToast()
+                }
               }
             }
-          }
-        })
+          })
+    }
   }
 
   fun getQueryString(keyword: String?): String {

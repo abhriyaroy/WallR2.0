@@ -9,6 +9,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
@@ -63,21 +64,21 @@ class AuthenticatePurchaseInteractorTest {
   }
 
   private fun stubPostExecutionThreadReturnsIoScheduler() {
-    whenever(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
+    `when`(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 
   private fun stubAuthenticatePurchaseReturnsSingle() {
-    whenever(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
+    `when`(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
         Completable.complete())
   }
 
   private fun stubAuthenticatePurchaseReturnsInvalidPurchaseException() {
-    whenever(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
+    `when`(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
         Completable.error(InvalidPurchaseException()))
   }
 
   private fun stubAuthenticatePurchaseReturnsUnableToVerifyPurchaseException() {
-    whenever(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
+    `when`(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
         Completable.error(UnableToVerifyPurchaseException()))
   }
 

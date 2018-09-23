@@ -11,6 +11,5 @@ class SearchPicturesModel(
   val user: User,
   val likes: Int,
   val likedByUser: Boolean,
-  val imageQualityUrls: Urls,
-  var categories: List<Any> = ArrayList()
+  val imageQualityUrls: Urls
 )

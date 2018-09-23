@@ -173,7 +173,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
 
   private fun buildGuillotineMenuItems(): List<Triple<Int, Int, MenuItems>> {
     // Declare mutable list containing names and icon resources of guillotine menu items
-    val menuItemDetails = mutableListOf<Triple<Int, Int, MenuItems>>().apply {
+    return mutableListOf<Triple<Int, Int, MenuItems>>().apply {
       add(Triple(R.string.guillotine_explore_title, R.drawable.ic_explore_white,
           MenuItems.EXPLORE))
       add(Triple(R.string.guillotine_top_picks_title, R.drawable.ic_toppicks_white,
@@ -189,7 +189,6 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
       add(Triple(R.string.guillotine_buy_pro_title, R.drawable.ic_buypro_black,
           MenuItems.BUY_PRO))
     }
-    return menuItemDetails
   }
 
   private fun setUpGuillotineMenuItems(guillotineMenuItems: List<Triple<Int, Int, MenuItems>>) {

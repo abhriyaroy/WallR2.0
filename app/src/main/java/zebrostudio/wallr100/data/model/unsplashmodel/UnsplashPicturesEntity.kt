@@ -21,7 +21,5 @@ class UnsplashPicturesEntity(
   @SerializedName("liked_by_user")
   val likedByUser: Boolean,
   @SerializedName("urls")
-  val imageQualityUrls: Urls,
-  @SerializedName("categories")
-  var categories: List<Any> = ArrayList()
+  val imageQualityUrls: Urls
 )

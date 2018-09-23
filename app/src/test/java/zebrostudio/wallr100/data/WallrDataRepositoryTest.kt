@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.data
 
-import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -10,6 +9,7 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
 import zebrostudio.wallr100.data.datafactory.UnsplashPictureEntityModelFactory
@@ -42,7 +42,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should return single on server success response`() {
-    whenever(remoteAuthServiceFactory.verifyPurchaseService(
+    `when`(remoteAuthServiceFactory.verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(dummyString, dummyString, dummyString)))
         .thenReturn(Single.just(PurchaseAuthResponseEntity("success", dummyInt, dummyString)))
 
@@ -52,7 +52,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should return invalid purchase exception on server 403 error response`() {
-    whenever(remoteAuthServiceFactory.verifyPurchaseService(
+    `when`(remoteAuthServiceFactory.verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(dummyString, dummyString, dummyString)))
         .thenReturn(Single.just(PurchaseAuthResponseEntity("error", 403, dummyString)))
 
@@ -62,7 +62,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should return invalid purchase exception on server 404 error response`() {
-    whenever(remoteAuthServiceFactory.verifyPurchaseService(
+    `when`(remoteAuthServiceFactory.verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(dummyString, dummyString, dummyString)))
         .thenReturn(Single.just(PurchaseAuthResponseEntity("error", 404, dummyString)))
 
@@ -72,7 +72,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should return unable to verify purchase exception on some error during call`() {
-    whenever(remoteAuthServiceFactory.verifyPurchaseService(
+    `when`(remoteAuthServiceFactory.verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(dummyString, dummyString, dummyString)))
         .thenReturn(Single.just(PurchaseAuthResponseEntity(dummyString, dummyInt, dummyString)))
 
@@ -82,35 +82,35 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should return true after successful updating purchase operation`() {
-    whenever(sharedPrefs.setBoolean(wallrDataRepository.purchasePreferenceName,
+    `when`(sharedPrefs.setBoolean(wallrDataRepository.purchasePreferenceName,
         wallrDataRepository.premiumUserTag, true)).thenReturn(true)
 
     assertEquals(true, wallrDataRepository.updateUserPurchaseStatus())
   }
 
   @Test fun `should return false after unsuccessful updating purchase operation`() {
-    whenever(sharedPrefs.setBoolean(wallrDataRepository.purchasePreferenceName,
+    `when`(sharedPrefs.setBoolean(wallrDataRepository.purchasePreferenceName,
         wallrDataRepository.premiumUserTag, true)).thenReturn(false)
 
     assertEquals(false, wallrDataRepository.updateUserPurchaseStatus())
   }
 
   @Test fun `should return true after checking if user is premium user`() {
-    whenever(sharedPrefs.getBoolean(wallrDataRepository.purchasePreferenceName,
+    `when`(sharedPrefs.getBoolean(wallrDataRepository.purchasePreferenceName,
         wallrDataRepository.premiumUserTag, false)).thenReturn(true)
 
     assertEquals(true, wallrDataRepository.isUserPremium())
   }
 
   @Test fun `should return false after checking if user is premium user`() {
-    whenever(sharedPrefs.getBoolean(wallrDataRepository.purchasePreferenceName,
+    `when`(sharedPrefs.getBoolean(wallrDataRepository.purchasePreferenceName,
         wallrDataRepository.premiumUserTag, false)).thenReturn(false)
 
     assertEquals(false, wallrDataRepository.isUserPremium())
   }
 
   @Test fun `should return no result found exception on get pictures call`() {
-    whenever(unsplashClientFactory.getPicturesService(dummyString)).thenReturn(
+    `when`(unsplashClientFactory.getPicturesService(dummyString)).thenReturn(
         Single.just(emptyList()))
 
     wallrDataRepository.getPictures(dummyString)
@@ -125,7 +125,7 @@ class WallrDataRepositoryTest {
     val searchPicturesModelList = pictureEntityMapper
         .mapFromEntity(unsplashPicturesEntityList)
 
-    whenever(unsplashClientFactory.getPicturesService(dummyString)).thenReturn(
+    `when`(unsplashClientFactory.getPicturesService(dummyString)).thenReturn(
         Single.just(unsplashPicturesEntityList))
 
     val picture = wallrDataRepository.getPictures(dummyString)
@@ -152,7 +152,6 @@ class WallrDataRepositoryTest {
         picture.imageQualityUrls.smallImageLink)
     assertEquals(searchPicturesModelList[0].imageQualityUrls.thumbImageLink,
         picture.imageQualityUrls.thumbImageLink)
-    assertEquals(searchPicturesModelList[0].categories, picture.categories)
   }
 
 }

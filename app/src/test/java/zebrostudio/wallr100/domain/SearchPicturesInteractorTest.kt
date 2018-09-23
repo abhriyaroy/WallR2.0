@@ -9,6 +9,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.domain.datafactory.SearchPicturesModelFactory
@@ -31,12 +32,12 @@ class SearchPicturesInteractorTest {
   @Before fun setup() {
     searchPicturesUseCase = SearchPicturesInteractor(wallrRepository, postExecutionThread)
 
-    whenever(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
+    `when`(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 
   @Test fun `should return list of search pictures model on buildRetrievePicturesObservable`() {
     val searchPicturesModelList = listOf(SearchPicturesModelFactory.getSearchPicturesModel())
-    whenever(wallrRepository.getPictures(dummyString)).thenReturn(
+    `when`(wallrRepository.getPictures(dummyString)).thenReturn(
         Single.just(searchPicturesModelList))
 
     val picture = searchPicturesUseCase.buildUseCaseSingle(dummyString)
@@ -52,12 +53,11 @@ class SearchPicturesInteractorTest {
     Assert.assertEquals(searchPicturesModelList[0].likes, picture.likes)
     Assert.assertEquals(searchPicturesModelList[0].likedByUser, picture.likedByUser)
     Assert.assertEquals(searchPicturesModelList[0].imageQualityUrls, picture.imageQualityUrls)
-    Assert.assertEquals(searchPicturesModelList[0].categories, picture.categories)
   }
 
   @Test
   fun `should return no result found exception of search pictures model on buildRetrievePicturesObservable`() {
-    whenever(wallrRepository.getPictures(dummyString)).thenReturn(
+    `when`(wallrRepository.getPictures(dummyString)).thenReturn(
         Single.error(NoResultFoundException()))
 
     searchPicturesUseCase.buildUseCaseSingle(dummyString)
