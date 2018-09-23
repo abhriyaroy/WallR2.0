@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.domain
 
-import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.Assert

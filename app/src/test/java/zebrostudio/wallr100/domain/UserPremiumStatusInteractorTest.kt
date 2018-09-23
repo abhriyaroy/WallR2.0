@@ -1,7 +1,6 @@
 package zebrostudio.wallr100.domain
 
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
