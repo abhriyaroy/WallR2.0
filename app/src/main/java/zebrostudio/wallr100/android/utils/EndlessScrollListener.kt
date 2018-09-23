@@ -10,7 +10,6 @@ abstract class EndlessScrollListener(layoutManager: GridLayoutManager) : Recycle
   private var visibleThreshold = 5
   private var currentPage = 0
   private var previousTotalItemCount = 0
-  private var loading = true
   private val startingPageIndex = 0
 
   private var mLayoutManager: RecyclerView.LayoutManager = layoutManager
@@ -51,7 +50,7 @@ abstract class EndlessScrollListener(layoutManager: GridLayoutManager) : Recycle
       this.currentPage = this.startingPageIndex
       this.previousTotalItemCount = totalItemCount
       if (totalItemCount == 0) {
-        this.loading = true
+        loading = true
       }
     }
 
@@ -68,5 +67,9 @@ abstract class EndlessScrollListener(layoutManager: GridLayoutManager) : Recycle
   }
 
   abstract fun onLoadMore()
+
+  companion object {
+    var loading = true
+  }
 
 }

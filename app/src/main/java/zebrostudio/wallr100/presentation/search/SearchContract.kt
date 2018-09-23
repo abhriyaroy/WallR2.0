@@ -21,6 +21,7 @@ interface SearchContract {
     fun showSearchResults(list: List<SearchPicturesPresenterEntity>)
     fun appendSearchResults(startPosition: Int, list: List<SearchPicturesPresenterEntity>)
     fun getScope(): ScopeProvider
+    fun setEndlessLoadingToFalse()
   }
 
   interface SearchPresenter : BasePresenter<SearchView> {

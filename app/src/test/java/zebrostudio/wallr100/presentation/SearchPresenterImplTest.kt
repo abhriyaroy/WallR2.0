@@ -154,6 +154,7 @@ class SearchPresenterImplTest {
 
     verify(searchView).showBottomLoader()
     verify(searchView).getScope()
+    verify(searchView).setEndlessLoadingToFalse()
     verify(searchView).showNoInternetToast()
     verify(searchView).hideBottomLoader()
     verifyNoMoreInteractions(searchView)
@@ -168,6 +169,7 @@ class SearchPresenterImplTest {
 
     verify(searchView).showBottomLoader()
     verify(searchView).getScope()
+    verify(searchView).setEndlessLoadingToFalse()
     verify(searchView).showGenericErrorToast()
     verify(searchView).hideBottomLoader()
     verifyNoMoreInteractions(searchView)

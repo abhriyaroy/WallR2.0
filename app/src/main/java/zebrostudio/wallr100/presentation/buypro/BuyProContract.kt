@@ -25,7 +25,6 @@ interface BuyProContract {
     fun isInternetAvailable(): Boolean
     fun launchPurchase()
     fun launchRestore()
-
   }
 
   interface BuyProPresenter : BasePresenter<BuyProView> {

@@ -69,6 +69,7 @@ class SearchPresenterImpl(
             when (it) {
               is NoResultFoundException -> queryPage = 0
               else -> {
+                searchView?.setEndlessLoadingToFalse()
                 if (it.message != null && it.message == "Unable to resolve host \"api.unsplash.com\"" +
                     ": No address associated with hostname") {
                   searchView?.showNoInternetToast()

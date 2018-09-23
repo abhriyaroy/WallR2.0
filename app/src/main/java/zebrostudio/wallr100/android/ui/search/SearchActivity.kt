@@ -189,6 +189,10 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     return AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)
   }
 
+  override fun setEndlessLoadingToFalse() {
+    EndlessScrollListener.loading = false
+  }
+
   private fun initAppbar() {
     searchAppBar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
       when {
