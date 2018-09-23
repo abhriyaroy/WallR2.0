@@ -1,7 +1,6 @@
 package zebrostudio.wallr100.data.model.unsplashmodel
 
 import com.google.gson.annotations.SerializedName
-import java.util.ArrayList
 
 class UnsplashPicturesEntity(
   @SerializedName("id")

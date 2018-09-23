@@ -5,7 +5,6 @@ import zebrostudio.wallr100.domain.model.SearchPicturesModel
 import zebrostudio.wallr100.domain.model.Urls
 import zebrostudio.wallr100.domain.model.User
 import java.util.Random
-import java.util.UUID
 import java.util.UUID.*
 
 object SearchPicturesModelFactory {

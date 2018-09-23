@@ -83,13 +83,13 @@ class AppModule {
 
   @Provides
   @PerApplication
-  fun provideSearchPicturesUseCase(
+  internal fun provideSearchPicturesUseCase(
     wallrRepository: WallrRepository,
     postExecutionThread: PostExecutionThread
   ): SearchPicturesUseCase = SearchPicturesInteractor(wallrRepository, postExecutionThread)
 
   @Provides
-  fun provideImageRecyclerViewPresenter()
+  internal fun provideImageRecyclerViewPresenter()
       : ImageRecyclerItemContract.ImageRecyclerviewPresenter = ImageRecyclerviewPresenterImpl()
 
 }

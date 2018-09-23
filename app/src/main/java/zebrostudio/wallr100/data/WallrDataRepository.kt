@@ -58,7 +58,7 @@ class WallrDataRepository(
             System.out.println(it[0].user.name)
             System.out.println(it[0].user.profileImage.mediumImageUrl)
             val map = pictureEntityMapper.mapFromEntity(it)
-            System.out.println(map[0].imageQualityUrls.largeImageLink+"abababababa")
+            System.out.println(map[0].imageQualityUrls.largeImageLink + "abababababa")
             Single.just(map)
           }
         }

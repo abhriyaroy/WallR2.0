@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.presentation
 
-import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider
