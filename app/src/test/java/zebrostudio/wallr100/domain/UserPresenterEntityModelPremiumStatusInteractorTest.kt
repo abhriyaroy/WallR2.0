@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.domain
 
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -25,6 +26,7 @@ class UserPresenterEntityModelPremiumStatusInteractorTest {
     userPremiumStatusUseCase.updateUserPurchaseStatus()
 
     verify(wallrRepository).updateUserPurchaseStatus()
+    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return true on successful updateUserPurchaseStatus`() {
@@ -43,6 +45,7 @@ class UserPresenterEntityModelPremiumStatusInteractorTest {
     userPremiumStatusUseCase.isUserPremium()
 
     verify(wallrRepository).isUserPremium()
+    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return true if user is premium`() {

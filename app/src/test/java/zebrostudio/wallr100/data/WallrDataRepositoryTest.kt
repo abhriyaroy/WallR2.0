@@ -19,7 +19,6 @@ import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.data.mapper.PictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
-import java.util.Random
 import java.util.UUID.*
 
 @RunWith(MockitoJUnitRunner::class)
@@ -82,14 +81,14 @@ class WallrDataRepositoryTest {
         .assertError(UnableToVerifyPurchaseException::class.java)
   }
 
-  @Test fun `should return true after successfully updating purchase operation`() {
+  @Test fun `should return true after successfully updating purchase status`() {
     `when`(sharedPrefs.setBoolean(wallrDataRepository.purchasePreferenceName,
         wallrDataRepository.premiumUserTag, true)).thenReturn(true)
 
     assertEquals(true, wallrDataRepository.updateUserPurchaseStatus())
   }
 
-  @Test fun `should return false after unsuccessful updating purchase operation`() {
+  @Test fun `should return false after unsuccessful update of purchase status`() {
     `when`(sharedPrefs.setBoolean(wallrDataRepository.purchasePreferenceName,
         wallrDataRepository.premiumUserTag, true)).thenReturn(false)
 

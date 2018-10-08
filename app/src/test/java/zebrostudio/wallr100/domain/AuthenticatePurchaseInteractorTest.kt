@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.domain
 
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
 import org.junit.Before
@@ -41,6 +42,7 @@ class AuthenticatePurchaseInteractorTest {
     authenticatePuchaseInteractor.buildUseCaseCompletable(packageName, skuId, purchaseToken)
 
     verify(wallrRepository).authenticatePurchase(packageName, skuId, purchaseToken)
+    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should complete when successful purchase verification`() {

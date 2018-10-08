@@ -34,7 +34,6 @@ import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.withDelayOnMain
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerviewPresenterImpl
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerviewPresenterImpl.ImageListType.*
 import zebrostudio.wallr100.presentation.search.SearchContract
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
@@ -83,27 +82,23 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   }
 
   override fun onBackPressed() {
-    when {
-      appBarCollapsed -> {
-        searchAppBar.setExpanded(true, true)
-        withDelayOnMain(300, block = {
-          if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            finish()
-            overridePendingTransition(0, R.anim.slide_out_down)
-          } else {
-            appBarCollapsed = false
-            val params = searchView?.layoutParams as AppBarLayout.LayoutParams
-            params.scrollFlags = 0
-            onBackPressed()
-          }
-        })
-      }
-      Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP -> {
-        overridePendingTransition(0, R.anim.slide_out_down)
-        finish()
-      }
-      else -> super.onBackPressed()
-    }
+    if (appBarCollapsed) {
+      searchAppBar.setExpanded(true, true)
+      withDelayOnMain(300, block = {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+          finish()
+          overridePendingTransition(0, R.anim.slide_out_down)
+        } else {
+          appBarCollapsed = false
+          val params = searchView?.layoutParams as AppBarLayout.LayoutParams
+          params.scrollFlags = 0
+          onBackPressed()
+        }
+      })
+    } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+      overridePendingTransition(0, R.anim.slide_out_down)
+      finish()
+    } else super.onBackPressed()
   }
 
   override fun showLoader() {
@@ -212,10 +207,6 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     searchView.backButton.setOnClickListener { onBackPressed() }
     searchView.setVoiceSearch(true)
     searchView.showSearch()
-    setSearchListener()
-  }
-
-  private fun setSearchListener() {
     searchView.setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener {
       override fun onQueryTextSubmit(query: String?): Boolean {
         searchView.hideKeyboard(currentFocus)
@@ -236,7 +227,9 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     recyclerviewAdapter = ImageRecyclerviewAdapter(imageRecyclerviewPresenter)
     val scaleInAdapter = ScaleInAnimationAdapter(recyclerviewAdapter)
     scaleInAdapter.setDuration(TimeUnit.MILLISECONDS.toMillis(500).toInt())
-    recyclerView.addItemDecoration(GridItemDecorator(5, 2))
+    recyclerView.addItemDecoration(
+        GridItemDecorator(dimenRes(R.dimen.recycler_view_grid_spacing_px),
+            dimenRes(R.dimen.recycler_view_grid_size)))
     recyclerView.adapter = scaleInAdapter
     imageRecyclerviewPresenter.setListType(SEARCH)
     recyclerView.addOnScrollListener(object : EndlessScrollListener(layoutManager) {

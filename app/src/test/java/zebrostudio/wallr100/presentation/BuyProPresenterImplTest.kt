@@ -10,7 +10,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.*
@@ -40,7 +39,7 @@ class BuyProPresenterImplTest {
     buyProPresenterImpl.attachView(buyProView)
     testScopeProvider = TestLifecycleScopeProvider.createInitial(STARTED)
 
-    Mockito.`when`(buyProView.getScope()).thenReturn(testScopeProvider)
+    `when`(buyProView.getScope()).thenReturn(testScopeProvider)
   }
 
   @Test fun `should showGenericVerificationError if iab not ready and purchase clicked`() {
@@ -117,6 +116,7 @@ class BuyProPresenterImplTest {
 
     verify(buyProView).showSuccessfulTransactionMessage(PURCHASE)
     verify(buyProView).finishWithResult()
+    verifyNoMoreInteractions(buyProView)
   }
 
   @Test

@@ -77,5 +77,7 @@
   <dimen name="recycler_view_adapter_image_height">180</dimen>
   <dimen name="recycler_view_adapter_image_width">250</dimen>
   <dimen name="recycler_view_span_count">2</dimen>
+  <dimen name="recycler_view_grid_spacing_px">5</dimen>
+  <dimen name="recycler_view_grid_size">2</dimen>
 
 </resources>
