@@ -29,12 +29,16 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.adapters.ImageRecyclerviewAdapter
 import zebrostudio.wallr100.android.utils.EndlessScrollListener
 import zebrostudio.wallr100.android.utils.GridItemDecorator
+import zebrostudio.wallr100.android.utils.dimenRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.withDelayOnMain
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerviewPresenterImpl
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerviewPresenterImpl.ImageListType.*
 import zebrostudio.wallr100.presentation.search.SearchContract
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
@@ -56,7 +60,6 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
       overridePendingTransition(R.anim.slide_in_up, 0)
     }
     initAppbar()
-    initSearchView()
     showNoInputView()
     initRecyclerView()
   }
@@ -104,7 +107,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   }
 
   override fun showLoader() {
-    hideAll()
+    hideAllLoadersAndMessageViews()
     SearchActivitySpinkitView.visibility = View.VISIBLE
   }
 
@@ -121,7 +124,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   }
 
   override fun showNoInputView() {
-    hideAll()
+    hideAllLoadersAndMessageViews()
     infoImageView.setImageResource(R.drawable.ic_no_input_gray)
     infoImageView.visibility = View.VISIBLE
     infoTextFirstLine.text = getText(R.string.search_type_in_a_query_message)
@@ -129,15 +132,19 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   }
 
   override fun showNoResultView(query: String?) {
-    hideAll()
+    hideAllLoadersAndMessageViews()
     infoImageView.setImageResource(R.drawable.ic_no_result_gray)
     infoImageView.visibility = View.VISIBLE
-    val noResultText = "${getText(R.string.search_no_result_message)} '$query'"
+    val noResultText = if (query == null) {
+      "${getText(R.string.search_no_result_message_null_query)}"
+    } else {
+      "${getText(R.string.search_no_result_message)} '$query'"
+    }
     infoTextFirstLine.text = noResultText
     infoTextFirstLine.visibility = View.VISIBLE
   }
 
-  override fun hideAll() {
+  override fun hideAllLoadersAndMessageViews() {
     infoTextFirstLine.visibility = View.GONE
     infoTextSecondLine.visibility = View.GONE
     infoImageView.visibility = View.GONE
@@ -149,7 +156,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   }
 
   override fun showNoInternetView() {
-    hideAll()
+    hideAllLoadersAndMessageViews()
     infoImageView.setImageResource(R.drawable.ic_no_result_gray)
     infoImageView.visibility = View.VISIBLE
     infoTextFirstLine.text = getText(R.string.search_unable_to_search_message)
@@ -164,7 +171,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   }
 
   override fun showGenericErrorView() {
-    hideAll()
+    hideAllLoadersAndMessageViews()
     infoImageView.setImageResource(R.drawable.ic_no_result_gray)
     infoImageView.visibility = View.VISIBLE
     infoTextFirstLine.text = getText(R.string.search_something_went_wrong_message)
@@ -196,18 +203,12 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
 
   private fun initAppbar() {
     searchAppBar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-      when {
-        Math.abs(verticalOffset) == appBarLayout.totalScrollRange -> {
-          appBarCollapsed = true
-        }
-        verticalOffset == 0 -> {
-          appBarCollapsed = false
-        }
+      if (Math.abs(verticalOffset) == appBarLayout.totalScrollRange) {
+        appBarCollapsed = true
+      } else if (verticalOffset == 0) {
+        appBarCollapsed = false
       }
     }
-  }
-
-  private fun initSearchView() {
     searchView.backButton.setOnClickListener { onBackPressed() }
     searchView.setVoiceSearch(true)
     searchView.showSearch()
@@ -229,14 +230,15 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   }
 
   private fun initRecyclerView() {
-    val layoutManager = GridLayoutManager(this.baseContext, 2)
+    val layoutManager =
+        GridLayoutManager(this.baseContext, dimenRes(R.dimen.recycler_view_span_count))
     recyclerView.layoutManager = layoutManager
     recyclerviewAdapter = ImageRecyclerviewAdapter(imageRecyclerviewPresenter)
     val scaleInAdapter = ScaleInAnimationAdapter(recyclerviewAdapter)
-    scaleInAdapter.setDuration(500)
+    scaleInAdapter.setDuration(TimeUnit.MILLISECONDS.toMillis(500).toInt())
     recyclerView.addItemDecoration(GridItemDecorator(5, 2))
     recyclerView.adapter = scaleInAdapter
-    imageRecyclerviewPresenter.setTypeAsSearch()
+    imageRecyclerviewPresenter.setListType(SEARCH)
     recyclerView.addOnScrollListener(object : EndlessScrollListener(layoutManager) {
       override fun onLoadMore() {
         presenter.fetchMoreImages()

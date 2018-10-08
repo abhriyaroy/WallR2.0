@@ -1,6 +1,6 @@
-package zebrostudio.wallr100.presentation.search.model
+package zebrostudio.wallr100.domain.model
 
-class Urls(
+class UrlModel(
   val rawImageLink: String,
   val largeImageLink: String,
   val regularImageLink: String,

@@ -13,7 +13,7 @@ interface SearchContract {
     fun hideBottomLoader()
     fun showNoInputView()
     fun showNoResultView(query: String?)
-    fun hideAll()
+    fun hideAllLoadersAndMessageViews()
     fun showNoInternetView()
     fun showNoInternetToast()
     fun showGenericErrorView()

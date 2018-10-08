@@ -9,7 +9,7 @@ import zebrostudio.wallr100.presentation.collection.CollectionPresenterImpl
 class CollectionModule {
 
   @Provides
-  internal fun provideCollectionPresenter():
+  fun provideCollectionPresenter():
       CollectionContract.CollectionPresenter = CollectionPresenterImpl()
 
 }

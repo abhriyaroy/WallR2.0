@@ -2,8 +2,7 @@ package zebrostudio.wallr100.data.model.unsplashmodel
 
 import com.google.gson.annotations.SerializedName
 
-class User(
+class UserEntity(
   val name: String,
-  @SerializedName("profile_image")
-  val profileImage: ProfileImage
+  @SerializedName("profile_image") val profileImage: ProfileImage
 )

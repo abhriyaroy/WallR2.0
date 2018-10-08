@@ -38,10 +38,6 @@ fun LinearLayout.setMenuItemColorWhite(context: Context) {
       .setTextColor(Color.parseColor(context.getString(R.color.color_white)))
 }
 
-fun ImageView.setPlaceholderColor(colorHexCode: String) {
-  this.setBackgroundColor(Color.parseColor(colorHexCode))
-}
-
 fun withDelayOnMain(delay: Long, block: () -> Unit) {
   Handler(Looper.getMainLooper()).postDelayed(Runnable(block), delay)
 }

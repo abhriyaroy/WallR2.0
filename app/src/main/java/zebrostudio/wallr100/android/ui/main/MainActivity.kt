@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
         WallpaperFragment.EXPLORE_FRAGMENT_TAG)
 
-    setClickListeners()
+    toolbarItemClickListeners()
   }
 
   override fun onBackPressed() {
@@ -281,7 +281,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     })
   }
 
-  private fun setClickListeners() {
+  private fun toolbarItemClickListeners() {
     toolbarSearchIcon.setOnClickListener {
       val i = Intent(this, SearchActivity::class.java)
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

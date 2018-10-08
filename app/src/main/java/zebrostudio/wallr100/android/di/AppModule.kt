@@ -30,34 +30,34 @@ class AppModule {
 
   @Provides
   @PerApplication
-  internal fun provideContext(application: Application): Context {
+  fun provideContext(application: Application): Context {
     return application
   }
 
   @Provides
   @PerApplication
-  internal fun provideSharedPrefsHelper(context: Context): SharedPrefsHelper =
+  fun provideSharedPrefsHelper(context: Context): SharedPrefsHelper =
       SharedPrefsHelperImpl(context)
 
   @Provides
   @PerApplication
-  internal fun provideAndroidMainThread(): PostExecutionThread = AndroidMainThread()
+  fun provideAndroidMainThread(): PostExecutionThread = AndroidMainThread()
 
   @Provides
   @PerApplication
-  internal fun provideRemoteAuthServiceFactory(): RemoteAuthServiceFactory =
+  fun provideRemoteAuthServiceFactory(): RemoteAuthServiceFactory =
       RemoteAuthServiceFactoryImpl()
 
   @Provides
   @PerApplication
-  internal fun provideUnsplashClientFactory(): UnsplashClientFactory = UnsplashClientFactoryImpl()
+  fun provideUnsplashClientFactory(): UnsplashClientFactory = UnsplashClientFactoryImpl()
 
   @Provides
-  internal fun providePictureEntityMapper(): PictureEntityMapper = PictureEntityMapper()
+  fun providePictureEntityMapper(): PictureEntityMapper = PictureEntityMapper()
 
   @Provides
   @PerApplication
-  internal fun provideWallrRepository(
+  fun provideWallrRepository(
     retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
     unsplashClientFactory: UnsplashClientFactory,
     sharedPrefsHelper: SharedPrefsHelper,
@@ -69,7 +69,7 @@ class AppModule {
 
   @Provides
   @PerApplication
-  internal fun provideAuthenticatePurchaseUseCase(
+  fun provideAuthenticatePurchaseUseCase(
     wallrRepository: WallrRepository,
     postExecutionThread: PostExecutionThread
   ): AuthenticatePurchaseUseCase = AuthenticatePurchaseInteractor(wallrRepository,
@@ -77,19 +77,19 @@ class AppModule {
 
   @Provides
   @PerApplication
-  internal fun provideUserPremiumStatusUseCase(
+  fun provideUserPremiumStatusUseCase(
     wallrRepository: WallrRepository
   ): UserPremiumStatusUseCase = UserPremiumStatusInteractor(wallrRepository)
 
   @Provides
   @PerApplication
-  internal fun provideSearchPicturesUseCase(
+  fun provideSearchPicturesUseCase(
     wallrRepository: WallrRepository,
     postExecutionThread: PostExecutionThread
   ): SearchPicturesUseCase = SearchPicturesInteractor(wallrRepository, postExecutionThread)
 
   @Provides
-  internal fun provideImageRecyclerViewPresenter()
+  fun provideImageRecyclerViewPresenter()
       : ImageRecyclerItemContract.ImageRecyclerviewPresenter = ImageRecyclerviewPresenterImpl()
 
 }

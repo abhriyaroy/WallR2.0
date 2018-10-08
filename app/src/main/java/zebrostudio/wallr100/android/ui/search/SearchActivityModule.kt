@@ -11,11 +11,11 @@ import zebrostudio.wallr100.presentation.search.SearchPresenterImpl
 class SearchActivityModule {
 
   @Provides
-  internal fun providesSearchPicturePresentationEntityMapper()
+  fun providesSearchPicturePresentationEntityMapper()
       : SearchPicturesPresenterEntityMapper = SearchPicturesPresenterEntityMapper()
 
   @Provides
-  internal fun providesSearchPresenterImpl(
+  fun providesSearchPresenterImpl(
     searchPicturesUseCase: SearchPicturesUseCase,
     searchPicturesPresenterEntityMapper: SearchPicturesPresenterEntityMapper
   ): SearchContract.SearchPresenter = SearchPresenterImpl(searchPicturesUseCase,

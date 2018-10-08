@@ -24,12 +24,12 @@ import zebrostudio.wallr100.presentation.search.mapper.SearchPicturesPresenterEn
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.lang.Exception
-import java.util.UUID
+import java.util.UUID.*
 
 @RunWith(MockitoJUnitRunner::class)
 class SearchPresenterImplTest {
 
-  @get:Rule var trampolineSchedulerRule = TrampolineSchedulerRule()
+  @get:Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
 
   @Mock lateinit var searchView: SearchContract.SearchView
   @Mock lateinit var searchPicturesUseCase: SearchPicturesUseCase
@@ -37,7 +37,7 @@ class SearchPresenterImplTest {
   private lateinit var searchPresenterImpl: SearchPresenterImpl
   private lateinit var testLifecycleScopeProvider: TestLifecycleScopeProvider
 
-  private val randomString = UUID.randomUUID().toString()
+  private val randomString = randomUUID().toString()
 
   @Before fun setup() {
     searchPicturesPresenterEntityMapper = SearchPicturesPresenterEntityMapper()
@@ -61,7 +61,7 @@ class SearchPresenterImplTest {
 
     searchPresenterImpl.notifyQuerySubmitted(randomString)
 
-    verify(searchView).hideAll()
+    verify(searchView).hideAllLoadersAndMessageViews()
     verify(searchView).showLoader()
     verify(searchView).getScope()
     verify(searchView).showNoResultView(randomString)
@@ -76,7 +76,7 @@ class SearchPresenterImplTest {
 
     searchPresenterImpl.notifyQuerySubmitted(randomString)
 
-    verify(searchView).hideAll()
+    verify(searchView).hideAllLoadersAndMessageViews()
     verify(searchView).showLoader()
     verify(searchView).getScope()
     verify(searchView).showNoInternetView()
@@ -90,7 +90,7 @@ class SearchPresenterImplTest {
 
     searchPresenterImpl.notifyQuerySubmitted(randomString)
 
-    verify(searchView).hideAll()
+    verify(searchView).hideAllLoadersAndMessageViews()
     verify(searchView).showLoader()
     verify(searchView).getScope()
     verify(searchView).showGenericErrorView()
@@ -110,37 +110,12 @@ class SearchPresenterImplTest {
     searchPresenterImpl.notifyQuerySubmitted(randomString)
 
     val argCaptor = argumentCaptor<List<SearchPicturesPresenterEntity>>()
-    verify(searchView).hideAll()
+    verify(searchView).hideAllLoadersAndMessageViews()
     verify(searchView).showLoader()
     verify(searchView).hideLoader()
     verify(searchView).getScope()
     verify(searchView).showSearchResults(argCaptor.capture())
-    assertEquals(argCaptor.firstValue[0].id, searchPicturesPresenterEntity[0].id)
-    assertEquals(argCaptor.firstValue[0].createdAt,
-        searchPicturesPresenterEntity[0].createdAt)
-    assertEquals(argCaptor.firstValue[0].imageWidth,
-        searchPicturesPresenterEntity[0].imageWidth)
-    assertEquals(argCaptor.firstValue[0].imageHeight,
-        searchPicturesPresenterEntity[0].imageHeight)
-    assertEquals(argCaptor.firstValue[0].paletteColor,
-        searchPicturesPresenterEntity[0].paletteColor)
-    assertEquals(argCaptor.firstValue[0].user.name,
-        searchPicturesPresenterEntity[0].user.name)
-    assertEquals(argCaptor.firstValue[0].user.profileImage.mediumImageUrl,
-        searchPicturesPresenterEntity[0].user.profileImage.mediumImageUrl)
-    assertEquals(argCaptor.firstValue[0].likes, searchPicturesPresenterEntity[0].likes)
-    assertEquals(argCaptor.firstValue[0].likedByUser,
-        searchPicturesPresenterEntity[0].likedByUser)
-    assertEquals(argCaptor.firstValue[0].imageQualityUrls.rawImageLink,
-        searchPicturesPresenterEntity[0].imageQualityUrls.rawImageLink)
-    assertEquals(argCaptor.firstValue[0].imageQualityUrls.largeImageLink,
-        searchPicturesPresenterEntity[0].imageQualityUrls.largeImageLink)
-    assertEquals(argCaptor.firstValue[0].imageQualityUrls.regularImageLink,
-        searchPicturesPresenterEntity[0].imageQualityUrls.regularImageLink)
-    assertEquals(argCaptor.firstValue[0].imageQualityUrls.smallImageLink,
-        searchPicturesPresenterEntity[0].imageQualityUrls.smallImageLink)
-    assertEquals(argCaptor.firstValue[0].imageQualityUrls.thumbImageLink,
-        searchPicturesPresenterEntity[0].imageQualityUrls.thumbImageLink)
+    verifyEntityEquality(argCaptor.firstValue, searchPicturesPresenterEntity)
     verifyNoMoreInteractions(searchView)
   }
 
@@ -193,37 +168,51 @@ class SearchPresenterImplTest {
     verify(searchView).getScope()
     verify(searchView).appendSearchResults(firstArgCaptor.capture(), secondArgCaptor.capture())
     assertEquals(firstArgCaptor.firstValue, 0)
-    assertEquals(secondArgCaptor.firstValue[0].id, searchPicturesPresenterEntity[0].id)
-    assertEquals(secondArgCaptor.firstValue[0].createdAt,
-        searchPicturesPresenterEntity[0].createdAt)
-    assertEquals(secondArgCaptor.firstValue[0].imageWidth,
-        searchPicturesPresenterEntity[0].imageWidth)
-    assertEquals(secondArgCaptor.firstValue[0].imageHeight,
-        searchPicturesPresenterEntity[0].imageHeight)
-    assertEquals(secondArgCaptor.firstValue[0].paletteColor,
-        searchPicturesPresenterEntity[0].paletteColor)
-    assertEquals(secondArgCaptor.firstValue[0].user.name,
-        searchPicturesPresenterEntity[0].user.name)
-    assertEquals(secondArgCaptor.firstValue[0].user.profileImage.mediumImageUrl,
-        searchPicturesPresenterEntity[0].user.profileImage.mediumImageUrl)
-    assertEquals(secondArgCaptor.firstValue[0].likes, searchPicturesPresenterEntity[0].likes)
-    assertEquals(secondArgCaptor.firstValue[0].likedByUser,
-        searchPicturesPresenterEntity[0].likedByUser)
-    assertEquals(secondArgCaptor.firstValue[0].imageQualityUrls.rawImageLink,
-        searchPicturesPresenterEntity[0].imageQualityUrls.rawImageLink)
-    assertEquals(secondArgCaptor.firstValue[0].imageQualityUrls.largeImageLink,
-        searchPicturesPresenterEntity[0].imageQualityUrls.largeImageLink)
-    assertEquals(secondArgCaptor.firstValue[0].imageQualityUrls.regularImageLink,
-        searchPicturesPresenterEntity[0].imageQualityUrls.regularImageLink)
-    assertEquals(secondArgCaptor.firstValue[0].imageQualityUrls.smallImageLink,
-        searchPicturesPresenterEntity[0].imageQualityUrls.smallImageLink)
-    assertEquals(secondArgCaptor.firstValue[0].imageQualityUrls.thumbImageLink,
-        searchPicturesPresenterEntity[0].imageQualityUrls.thumbImageLink)
+    verifyEntityEquality(secondArgCaptor.firstValue, searchPicturesPresenterEntity)
     verifyNoMoreInteractions(searchView)
   }
 
   @After fun tearDown() {
     searchPresenterImpl.detachView()
+  }
+
+  private fun verifyEntityEquality(
+    searchPicturesPresenterEntityFirstList: List<SearchPicturesPresenterEntity>,
+    searchPicturesPresenterEntitySecondList: List<SearchPicturesPresenterEntity>
+  ) {
+    assertEquals(searchPicturesPresenterEntityFirstList[0].id,
+        searchPicturesPresenterEntitySecondList[0].id)
+    assertEquals(searchPicturesPresenterEntityFirstList[0].createdAt,
+        searchPicturesPresenterEntitySecondList[0].createdAt)
+    assertEquals(searchPicturesPresenterEntityFirstList[0].imageWidth,
+        searchPicturesPresenterEntitySecondList[0].imageWidth)
+    assertEquals(searchPicturesPresenterEntityFirstList[0].imageHeight,
+        searchPicturesPresenterEntitySecondList[0].imageHeight)
+    assertEquals(searchPicturesPresenterEntityFirstList[0].paletteColor,
+        searchPicturesPresenterEntitySecondList[0].paletteColor)
+    assertEquals(searchPicturesPresenterEntityFirstList[0].userPresenterEntity.name,
+        searchPicturesPresenterEntitySecondList[0].userPresenterEntity.name)
+    assertEquals(searchPicturesPresenterEntityFirstList[0].userPresenterEntity.profileImageLink,
+        searchPicturesPresenterEntitySecondList[0].userPresenterEntity.profileImageLink)
+    assertEquals(searchPicturesPresenterEntityFirstList[0].likes,
+        searchPicturesPresenterEntitySecondList[0].likes)
+    assertEquals(searchPicturesPresenterEntityFirstList[0].likedByUser,
+        searchPicturesPresenterEntitySecondList[0].likedByUser)
+    assertEquals(
+        searchPicturesPresenterEntityFirstList[0].imageQualityUrlPresenterEntity.rawImageLink,
+        searchPicturesPresenterEntitySecondList[0].imageQualityUrlPresenterEntity.rawImageLink)
+    assertEquals(
+        searchPicturesPresenterEntityFirstList[0].imageQualityUrlPresenterEntity.largeImageLink,
+        searchPicturesPresenterEntitySecondList[0].imageQualityUrlPresenterEntity.largeImageLink)
+    assertEquals(
+        searchPicturesPresenterEntityFirstList[0].imageQualityUrlPresenterEntity.regularImageLink,
+        searchPicturesPresenterEntitySecondList[0].imageQualityUrlPresenterEntity.regularImageLink)
+    assertEquals(
+        searchPicturesPresenterEntityFirstList[0].imageQualityUrlPresenterEntity.smallImageLink,
+        searchPicturesPresenterEntitySecondList[0].imageQualityUrlPresenterEntity.smallImageLink)
+    assertEquals(
+        searchPicturesPresenterEntityFirstList[0].imageQualityUrlPresenterEntity.thumbImageLink,
+        searchPicturesPresenterEntitySecondList[0].imageQualityUrlPresenterEntity.thumbImageLink)
   }
 
 }

@@ -19,8 +19,7 @@
       </intent-filter>
     </activity>
     <activity android:name=".android.ui.buypro.BuyProActivity"/>
-    <activity android:name=".android.ui.search.SearchActivity">
-    </activity>
+    <activity android:name=".android.ui.search.SearchActivity"/>
   </application>
 
 </manifest>

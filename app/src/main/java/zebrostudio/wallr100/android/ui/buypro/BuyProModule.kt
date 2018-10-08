@@ -11,7 +11,7 @@ import zebrostudio.wallr100.presentation.buypro.BuyProPresenterImpl
 class BuyProModule {
 
   @Provides
-  internal fun provideBuyProPresenter(
+  fun provideBuyProPresenter(
     authenticatePurchaseUseCase: AuthenticatePurchaseUseCase,
     userPremiumStatusUseCase: UserPremiumStatusUseCase
   ): BuyProContract.BuyProPresenter = BuyProPresenterImpl(authenticatePurchaseUseCase,

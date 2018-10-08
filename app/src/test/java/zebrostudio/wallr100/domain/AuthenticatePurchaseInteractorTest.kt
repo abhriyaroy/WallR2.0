@@ -16,18 +16,19 @@ import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseInteractor
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
+import java.util.UUID.*
 
 @RunWith(MockitoJUnitRunner::class)
 class AuthenticatePurchaseInteractorTest {
 
-  @get:Rule var trampolineSchedulerRule = TrampolineSchedulerRule()
+  @get:Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
 
   @Mock private lateinit var postExecutionThread: PostExecutionThread
   @Mock private lateinit var wallrRepository: WallrRepository
   private lateinit var authenticatePuchaseInteractor: AuthenticatePurchaseUseCase
-  private val packageName = java.util.UUID.randomUUID().toString()
-  private val purchaseToken = java.util.UUID.randomUUID().toString()
-  private val skuId = java.util.UUID.randomUUID().toString()
+  private val packageName = randomUUID().toString()
+  private val purchaseToken = randomUUID().toString()
+  private val skuId = randomUUID().toString()
 
   @Before fun setup() {
     authenticatePuchaseInteractor =

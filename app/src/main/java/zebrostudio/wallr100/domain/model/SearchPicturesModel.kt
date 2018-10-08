@@ -6,8 +6,8 @@ class SearchPicturesModel(
   val imageWidth: Int,
   val imageHeight: Int,
   val paletteColor: String,
-  val user: User,
+  val userModel: UserModel,
   val likes: Int,
   val likedByUser: Boolean,
-  val imageQualityUrls: Urls
+  val imageQualityUrlModel: UrlModel
 )

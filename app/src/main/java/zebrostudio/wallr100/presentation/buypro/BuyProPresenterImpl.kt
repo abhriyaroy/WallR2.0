@@ -61,7 +61,6 @@ class BuyProPresenterImpl(
           handleSuccessfulVerification(proTransactionType)
           buyProView?.dismissWaitLoader()
         }, {
-          System.out.println(it.toString())
           when (it) {
             is InvalidPurchaseException -> buyProView?.showInvalidPurchaseError()
             is UnableToVerifyPurchaseException -> buyProView?.showUnableToVerifyPurchaseError()

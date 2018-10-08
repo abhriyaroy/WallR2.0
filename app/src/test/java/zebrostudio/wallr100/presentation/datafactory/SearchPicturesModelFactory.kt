@@ -2,8 +2,8 @@ package zebrostudio.wallr100.presentation.datafactory
 
 import zebrostudio.wallr100.domain.model.ProfileImage
 import zebrostudio.wallr100.domain.model.SearchPicturesModel
-import zebrostudio.wallr100.domain.model.Urls
-import zebrostudio.wallr100.domain.model.User
+import zebrostudio.wallr100.domain.model.UrlModel
+import zebrostudio.wallr100.domain.model.UserModel
 import java.util.Random
 import java.util.UUID.*
 
@@ -15,11 +15,11 @@ object SearchPicturesModelFactory {
         Random().nextInt(),
         Random().nextInt(),
         randomUUID().toString(),
-        User(randomUUID().toString(),
+        UserModel(randomUUID().toString(),
             ProfileImage(randomUUID().toString())),
         Random().nextInt(),
         true,
-        Urls(randomUUID().toString(),
+        UrlModel(randomUUID().toString(),
             randomUUID().toString(),
             randomUUID().toString(),
             randomUUID().toString(),

@@ -8,13 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.image_recyclerview_item.view.imageView
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.utils.dimenRes
 import zebrostudio.wallr100.android.utils.inflate
-import zebrostudio.wallr100.android.utils.setPlaceholderColor
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 
 class ImageRecyclerviewAdapter(private val presenter: ImageRecyclerItemContract.ImageRecyclerviewPresenter) :
@@ -42,17 +41,15 @@ class RecyclerviewHolder(
 ) : RecyclerView.ViewHolder(itemView),
     ImageRecyclerItemContract.ImageRecyclerItemView {
 
-  private val imageHeight = 180
-  private val imageWidth = 250
-
   override fun setImageviewBackground(colorHexCode: String) {
-    itemView.imageView.setPlaceholderColor(colorHexCode)
+    itemView.imageView.setBackgroundColor(Color.parseColor(colorHexCode))
   }
 
   override fun setImage(link: String) {
     val options = RequestOptions()
         .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .override(imageHeight, imageWidth)
+        .override(context.dimenRes(R.dimen.recycler_view_adapter_image_height),
+            context.dimenRes(R.dimen.recycler_view_adapter_image_height))
         .centerCrop()
 
     Glide.with(context)

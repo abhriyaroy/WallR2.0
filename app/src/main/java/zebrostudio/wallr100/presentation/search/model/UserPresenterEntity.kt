@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.presentation.search.model
 
-class User(
+class UserPresenterEntity(
   val name: String,
-  val profileImage: ProfileImage
+  val profileImageLink : String
 )

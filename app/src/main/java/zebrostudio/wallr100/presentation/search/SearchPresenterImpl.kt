@@ -25,7 +25,7 @@ class SearchPresenterImpl(
 
   override fun notifyQuerySubmitted(query: String?) {
     queryPage = 1
-    searchView?.hideAll()
+    searchView?.hideAllLoadersAndMessageViews()
     searchView?.showLoader()
     keyword = query
     searchPicturesUseCase.buildUseCaseSingle(getQueryString(keyword))

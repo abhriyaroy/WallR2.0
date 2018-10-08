@@ -2,7 +2,7 @@ package zebrostudio.wallr100.domain
 
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import org.junit.Assert
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -16,17 +16,17 @@ import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.SearchPicturesInteractor
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
-import java.util.UUID
+import java.util.UUID.*
 
 @RunWith(MockitoJUnitRunner::class)
 class SearchPicturesInteractorTest {
 
-  @get:Rule var trampolineSchedulerRule = TrampolineSchedulerRule()
+  @get:Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
 
   @Mock lateinit var wallrRepository: WallrRepository
   @Mock lateinit var postExecutionThread: PostExecutionThread
-  lateinit var searchPicturesUseCase: SearchPicturesUseCase
-  private val dummyString = UUID.randomUUID().toString()
+  private lateinit var searchPicturesUseCase: SearchPicturesUseCase
+  private val dummyString = randomUUID().toString()
 
   @Before fun setup() {
     searchPicturesUseCase = SearchPicturesInteractor(wallrRepository, postExecutionThread)
@@ -43,15 +43,7 @@ class SearchPicturesInteractorTest {
         .test()
         .values()[0][0]
 
-    Assert.assertEquals(searchPicturesModelList[0].id, picture.id)
-    Assert.assertEquals(searchPicturesModelList[0].createdAt, picture.createdAt)
-    Assert.assertEquals(searchPicturesModelList[0].imageWidth, picture.imageWidth)
-    Assert.assertEquals(searchPicturesModelList[0].imageHeight, picture.imageHeight)
-    Assert.assertEquals(searchPicturesModelList[0].paletteColor, picture.paletteColor)
-    Assert.assertEquals(searchPicturesModelList[0].user, picture.user)
-    Assert.assertEquals(searchPicturesModelList[0].likes, picture.likes)
-    Assert.assertEquals(searchPicturesModelList[0].likedByUser, picture.likedByUser)
-    Assert.assertEquals(searchPicturesModelList[0].imageQualityUrls, picture.imageQualityUrls)
+    assertEquals(picture, searchPicturesModelList[0])
   }
 
   @Test

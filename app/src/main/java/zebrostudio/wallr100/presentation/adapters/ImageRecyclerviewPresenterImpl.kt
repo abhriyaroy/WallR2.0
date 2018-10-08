@@ -1,19 +1,19 @@
 package zebrostudio.wallr100.presentation.adapters
 
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerviewPresenterImpl.ListType.*
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerviewPresenterImpl.ImageListType.*
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 
 class ImageRecyclerviewPresenterImpl : ImageRecyclerItemContract.ImageRecyclerviewPresenter {
 
-  private lateinit var imageType: ListType
-  private var searchResultList = mutableListOf<SearchPicturesPresenterEntity>()
+  private lateinit var imageType: ImageListType
+  private val searchResultList = mutableListOf<SearchPicturesPresenterEntity>()
 
-  override fun setTypeAsSearch() {
-    imageType = SEARCH
+  override fun setListType(imageListType: ImageListType) {
+    imageType = imageListType
   }
 
   override fun setSearchResultList(list: List<SearchPicturesPresenterEntity>) {
-    searchResultList = list as MutableList<SearchPicturesPresenterEntity>
+    searchResultList.addAll(list)
   }
 
   override fun addToSearchResultList(list: List<SearchPicturesPresenterEntity>) {
@@ -29,7 +29,7 @@ class ImageRecyclerviewPresenterImpl : ImageRecyclerItemContract.ImageRecyclervi
     rowView.setImageviewBackground(searchResultList[position].paletteColor)
     when (imageType) {
       SEARCH ->
-        rowView.setImage(searchResultList[position].imageQualityUrls.smallImageLink)
+        rowView.setImage(searchResultList[position].imageQualityUrlPresenterEntity.smallImageLink)
       WALLPAPERS -> {
         // Do something
       }
@@ -44,7 +44,7 @@ class ImageRecyclerviewPresenterImpl : ImageRecyclerItemContract.ImageRecyclervi
     searchResultList.clear()
   }
 
-  private enum class ListType {
+  enum class ImageListType {
     SEARCH,
     WALLPAPERS
   }

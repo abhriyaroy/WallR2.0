@@ -6,8 +6,8 @@ class SearchPicturesPresenterEntity(
   val imageWidth: Int,
   val imageHeight: Int,
   val paletteColor: String,
-  val user: User,
+  val userPresenterEntity: UserPresenterEntity,
   val likes: Int,
   val likedByUser: Boolean,
-  val imageQualityUrls: Urls
+  val imageQualityUrlPresenterEntity: UrlPresenterEntity
 )

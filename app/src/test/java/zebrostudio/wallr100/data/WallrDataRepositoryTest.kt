@@ -20,19 +20,20 @@ import zebrostudio.wallr100.data.mapper.PictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.util.Random
+import java.util.UUID.*
 
 @RunWith(MockitoJUnitRunner::class)
 class WallrDataRepositoryTest {
 
-  @get:Rule var mTrampolineSchedulerRule = TrampolineSchedulerRule()
+  @get:Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
 
   @Mock lateinit var sharedPrefs: SharedPrefsHelper
   @Mock lateinit var remoteAuthServiceFactory: RemoteAuthServiceFactory
   @Mock lateinit var unsplashClientFactory: UnsplashClientFactory
   private lateinit var pictureEntityMapper: PictureEntityMapper
   private lateinit var wallrDataRepository: WallrDataRepository
-  private val dummyString = java.util.UUID.randomUUID().toString()
-  private val dummyInt = Random().nextInt() + 500 // to force some error other than 403 or 404
+  private val dummyString = randomUUID().toString()
+  private val dummyInt = 500 // to force some error other than 403 or 404
 
   @Before fun setup() {
     pictureEntityMapper = PictureEntityMapper()
@@ -81,7 +82,7 @@ class WallrDataRepositoryTest {
         .assertError(UnableToVerifyPurchaseException::class.java)
   }
 
-  @Test fun `should return true after successful updating purchase operation`() {
+  @Test fun `should return true after successfully updating purchase operation`() {
     `when`(sharedPrefs.setBoolean(wallrDataRepository.purchasePreferenceName,
         wallrDataRepository.premiumUserTag, true)).thenReturn(true)
 
@@ -137,21 +138,21 @@ class WallrDataRepositoryTest {
     assertEquals(searchPicturesModelList[0].imageWidth, picture.imageWidth)
     assertEquals(searchPicturesModelList[0].imageHeight, picture.imageHeight)
     assertEquals(searchPicturesModelList[0].paletteColor, picture.paletteColor)
-    assertEquals(searchPicturesModelList[0].user.name, picture.user.name)
-    assertEquals(searchPicturesModelList[0].user.profileImage.mediumImageUrl,
-        picture.user.profileImage.mediumImageUrl)
+    assertEquals(searchPicturesModelList[0].userModel.name, picture.userModel.name)
+    assertEquals(searchPicturesModelList[0].userModel.profileImage.mediumImageUrl,
+        picture.userModel.profileImage.mediumImageUrl)
     assertEquals(searchPicturesModelList[0].likes, picture.likes)
     assertEquals(searchPicturesModelList[0].likedByUser, picture.likedByUser)
-    assertEquals(searchPicturesModelList[0].imageQualityUrls.largeImageLink,
-        picture.imageQualityUrls.largeImageLink)
-    assertEquals(searchPicturesModelList[0].imageQualityUrls.rawImageLink,
-        picture.imageQualityUrls.rawImageLink)
-    assertEquals(searchPicturesModelList[0].imageQualityUrls.regularImageLink,
-        picture.imageQualityUrls.regularImageLink)
-    assertEquals(searchPicturesModelList[0].imageQualityUrls.smallImageLink,
-        picture.imageQualityUrls.smallImageLink)
-    assertEquals(searchPicturesModelList[0].imageQualityUrls.thumbImageLink,
-        picture.imageQualityUrls.thumbImageLink)
+    assertEquals(searchPicturesModelList[0].imageQualityUrlModel.largeImageLink,
+        picture.imageQualityUrlModel.largeImageLink)
+    assertEquals(searchPicturesModelList[0].imageQualityUrlModel.rawImageLink,
+        picture.imageQualityUrlModel.rawImageLink)
+    assertEquals(searchPicturesModelList[0].imageQualityUrlModel.regularImageLink,
+        picture.imageQualityUrlModel.regularImageLink)
+    assertEquals(searchPicturesModelList[0].imageQualityUrlModel.smallImageLink,
+        picture.imageQualityUrlModel.smallImageLink)
+    assertEquals(searchPicturesModelList[0].imageQualityUrlModel.thumbImageLink,
+        picture.imageQualityUrlModel.thumbImageLink)
   }
 
 }

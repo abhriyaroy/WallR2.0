@@ -12,7 +12,7 @@ import zebrostudio.wallr100.domain.interactor.UserPremiumStatusInteractor
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 
 @RunWith(MockitoJUnitRunner::class)
-class UserPremiumStatusInteractorTest {
+class UserPresenterEntityModelPremiumStatusInteractorTest {
 
   @Mock private lateinit var wallrRepository: WallrRepository
   private lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase

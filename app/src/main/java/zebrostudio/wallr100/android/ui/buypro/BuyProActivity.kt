@@ -1,9 +1,7 @@
 package zebrostudio.wallr100.android.ui.buypro
 
 import android.arch.lifecycle.Lifecycle
-import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,6 +23,7 @@ import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.*
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.infoToast
+import zebrostudio.wallr100.android.utils.internetAvailability
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.presentation.buypro.BuyProContract
@@ -176,10 +175,7 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
   }
 
   override fun isInternetAvailable(): Boolean {
-    val connectivityManager =
-        getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
-    val activeNetworkInfo = connectivityManager?.activeNetworkInfo
-    return activeNetworkInfo != null && activeNetworkInfo.isConnected
+    return this.internetAvailability()
   }
 
   override fun launchPurchase() {

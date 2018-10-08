@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.domain.model
 
-class User(
+class UserModel(
   val name: String,
   val profileImage: ProfileImage
 )

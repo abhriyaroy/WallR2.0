@@ -21,7 +21,7 @@ import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.presentation.buypro.BuyProContract
 import zebrostudio.wallr100.presentation.buypro.BuyProPresenterImpl
 import java.lang.Exception
-import java.util.UUID
+import java.util.UUID.*
 
 @RunWith(MockitoJUnitRunner::class)
 class BuyProPresenterImplTest {
@@ -31,9 +31,9 @@ class BuyProPresenterImplTest {
   @Mock lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
   private lateinit var buyProPresenterImpl: BuyProPresenterImpl
   private lateinit var testScopeProvider: TestLifecycleScopeProvider
-  private val packageName = UUID.randomUUID().toString()
-  private val skuId = UUID.randomUUID().toString()
-  private val purchaseToken = UUID.randomUUID().toString()
+  private val packageName = randomUUID().toString()
+  private val skuId = randomUUID().toString()
+  private val purchaseToken = randomUUID().toString()
 
   @Before fun setup() {
     buyProPresenterImpl = BuyProPresenterImpl(authenticatePurchaseUseCase, userPremiumStatusUseCase)

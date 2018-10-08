@@ -74,4 +74,8 @@
   <dimen name="search_activity_no_result_imageview_height">55dp</dimen>
   <dimen name="search_info_imageview_margin_bottom">8dp</dimen>
 
+  <dimen name="recycler_view_adapter_image_height">180</dimen>
+  <dimen name="recycler_view_adapter_image_width">250</dimen>
+  <dimen name="recycler_view_span_count">2</dimen>
+
 </resources>

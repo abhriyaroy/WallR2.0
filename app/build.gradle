@@ -78,7 +78,3 @@ android {
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_VERSION"
   }
 }
-
-dependencies {
-  implementation 'com.android.support.constraint:constraint-layout:+'
-}
