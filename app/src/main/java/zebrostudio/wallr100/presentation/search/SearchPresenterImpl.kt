@@ -46,7 +46,6 @@ class SearchPresenterImpl(
                   ": No address associated with hostname") {
                 searchView?.showNoInternetView()
               } else {
-                Log.d("search error", it.message)
                 searchView?.showGenericErrorView()
               }
             }
