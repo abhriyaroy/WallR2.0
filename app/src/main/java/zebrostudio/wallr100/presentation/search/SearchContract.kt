@@ -18,6 +18,7 @@ interface SearchContract {
     fun showNoInternetToast()
     fun showGenericErrorView()
     fun showGenericErrorToast()
+    fun showInputASearchQueryMessageView()
     fun showSearchResults(list: List<SearchPicturesPresenterEntity>)
     fun appendSearchResults(startPosition: Int, list: List<SearchPicturesPresenterEntity>)
     fun getScope(): ScopeProvider
@@ -27,6 +28,7 @@ interface SearchContract {
   interface SearchPresenter : BasePresenter<SearchView> {
     fun notifyQuerySubmitted(query: String?)
     fun fetchMoreImages()
+    fun notifyRetryButtonClicked()
   }
 
 }

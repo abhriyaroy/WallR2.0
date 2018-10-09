@@ -74,10 +74,10 @@
   <dimen name="search_activity_no_result_imageview_height">55dp</dimen>
   <dimen name="search_info_imageview_margin_bottom">8dp</dimen>
 
-  <dimen name="recycler_view_adapter_image_height">180</dimen>
-  <dimen name="recycler_view_adapter_image_width">250</dimen>
-  <dimen name="recycler_view_span_count">2</dimen>
-  <dimen name="recycler_view_grid_spacing_px">5</dimen>
-  <dimen name="recycler_view_grid_size">2</dimen>
+  <item name="recycler_view_adapter_image_height" type="integer">180</item>
+  <item name="recycler_view_adapter_image_width" type="integer">250</item>
+  <item name="recycler_view_span_count" type="integer">2</item>
+  <item name="recycler_view_grid_spacing_px" type="integer">5</item>
+  <item name="recycler_view_grid_size" type="integer">2</item>
 
 </resources>

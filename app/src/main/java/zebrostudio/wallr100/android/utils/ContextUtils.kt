@@ -1,19 +1,17 @@
 package zebrostudio.wallr100.android.utils
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.support.annotation.ColorRes
-import android.support.annotation.DimenRes
 import android.support.annotation.DrawableRes
+import android.support.annotation.IntegerRes
 import android.support.annotation.StringRes
 import android.widget.Toast
 import es.dmoral.toasty.Toasty
 
 fun Context.stringRes(@StringRes id: Int) = getString(id)!!
 
-@SuppressLint("ResourceType")
-fun Context.dimenRes(@DimenRes id: Int) = resources.getInteger(id)
+fun Context.integerRes(@IntegerRes id: Int) = resources.getInteger(id)
 
 fun Context.drawableRes(@DrawableRes id: Int) = resources.getDrawable(id)!!
 

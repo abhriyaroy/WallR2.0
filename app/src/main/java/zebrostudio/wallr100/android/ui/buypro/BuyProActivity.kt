@@ -10,6 +10,8 @@ import com.bumptech.glide.Glide
 import com.uber.autodispose.ScopeProvider
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.zebrostudio.librarypurchaseflow.IabHelper
+import com.zebrostudio.librarypurchaseflow.IabHelper.OnIabPurchaseFinishedListener
+import com.zebrostudio.librarypurchaseflow.IabHelper.QueryInventoryFinishedListener
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_buy_pro.buyProFeatures
 import kotlinx.android.synthetic.main.activity_buy_pro.proLogo
@@ -36,31 +38,29 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
   private lateinit var materialDialog: MaterialDialog
   private var iabHelper: IabHelper? = null
 
-  private val purchaseFinishedListener =
-      IabHelper.OnIabPurchaseFinishedListener { result, purchase ->
-        if (result.isFailure) {
-          showTryRestoringInfo()
-          dismissWaitLoader()
-        } else {
-          buyProPresenter.verifyPurchase(purchase.packageName,
-              purchase.sku,
-              purchase.token,
-              PURCHASE)
-        }
-      }
-  private val queryInventoryFinishedListener =
-      IabHelper.QueryInventoryFinishedListener { result, inv ->
-        if (result.isFailure) {
-          showGenericVerificationError()
-          dismissWaitLoader()
-        } else {
-          buyProPresenter.verifyPurchase(
-              inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).packageName,
-              inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).sku,
-              inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).token,
-              RESTORE)
-        }
-      }
+  private val purchaseFinishedListener = OnIabPurchaseFinishedListener { result, purchase ->
+    if (result.isFailure) {
+      showTryRestoringInfo()
+      dismissWaitLoader()
+    } else {
+      buyProPresenter.verifyPurchase(purchase.packageName,
+          purchase.sku,
+          purchase.token,
+          PURCHASE)
+    }
+  }
+  private val queryInventoryFinishedListener = QueryInventoryFinishedListener { result, inv ->
+    if (result.isFailure) {
+      showGenericVerificationError()
+      dismissWaitLoader()
+    } else {
+      buyProPresenter.verifyPurchase(
+          inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).packageName,
+          inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).sku,
+          inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).token,
+          RESTORE)
+    }
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)

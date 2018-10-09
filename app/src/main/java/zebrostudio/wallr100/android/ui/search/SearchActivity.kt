@@ -29,7 +29,7 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.adapters.ImageRecyclerviewAdapter
 import zebrostudio.wallr100.android.utils.EndlessScrollListener
 import zebrostudio.wallr100.android.utils.GridItemDecorator
-import zebrostudio.wallr100.android.utils.dimenRes
+import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.withDelayOnMain
@@ -61,6 +61,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     initAppbar()
     showNoInputView()
     initRecyclerView()
+    initRetryClickListener()
   }
 
   override fun onDestroy() {
@@ -77,7 +78,6 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
           searchView.setQuery(searchWrd, false)
         }
       }
-      return
     }
   }
 
@@ -178,6 +178,15 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     errorToast(stringRes(R.string.search_generic_error_message))
   }
 
+  override fun showInputASearchQueryMessageView() {
+    hideAllLoadersAndMessageViews()
+    infoImageView.setImageResource(R.drawable.ic_no_result_gray)
+    infoImageView.visibility = View.VISIBLE
+    infoTextFirstLine.text = getText(R.string.search_input_a_query_and_please_try_again)
+    infoTextFirstLine.visibility = View.VISIBLE
+    searchView.setQuery("", false)
+  }
+
   override fun showSearchResults(list: List<SearchPicturesPresenterEntity>) {
     imageRecyclerviewPresenter.setSearchResultList(list)
     recyclerviewAdapter?.notifyDataSetChanged()
@@ -222,14 +231,14 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
 
   private fun initRecyclerView() {
     val layoutManager =
-        GridLayoutManager(this.baseContext, dimenRes(R.dimen.recycler_view_span_count))
+        GridLayoutManager(this.baseContext, integerRes(R.integer.recycler_view_span_count))
     recyclerView.layoutManager = layoutManager
     recyclerviewAdapter = ImageRecyclerviewAdapter(imageRecyclerviewPresenter)
     val scaleInAdapter = ScaleInAnimationAdapter(recyclerviewAdapter)
     scaleInAdapter.setDuration(TimeUnit.MILLISECONDS.toMillis(500).toInt())
     recyclerView.addItemDecoration(
-        GridItemDecorator(dimenRes(R.dimen.recycler_view_grid_spacing_px),
-            dimenRes(R.dimen.recycler_view_grid_size)))
+        GridItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
+            integerRes(R.integer.recycler_view_grid_size)))
     recyclerView.adapter = scaleInAdapter
     imageRecyclerviewPresenter.setListType(SEARCH)
     recyclerView.addOnScrollListener(object : EndlessScrollListener(layoutManager) {
@@ -237,5 +246,11 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
         presenter.fetchMoreImages()
       }
     })
+  }
+
+  private fun initRetryClickListener() {
+    retryButton.setOnClickListener {
+      presenter.notifyRetryButtonClicked()
+    }
   }
 }

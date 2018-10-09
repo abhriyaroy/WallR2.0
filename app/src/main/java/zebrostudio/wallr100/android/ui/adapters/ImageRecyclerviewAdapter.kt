@@ -12,7 +12,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.image_recyclerview_item.view.imageView
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.utils.dimenRes
+import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 
@@ -48,8 +48,8 @@ class RecyclerviewHolder(
   override fun setImage(link: String) {
     val options = RequestOptions()
         .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .override(context.dimenRes(R.dimen.recycler_view_adapter_image_height),
-            context.dimenRes(R.dimen.recycler_view_adapter_image_height))
+        .override(context.integerRes(R.integer.recycler_view_adapter_image_height),
+            context.integerRes(R.integer.recycler_view_adapter_image_height))
         .centerCrop()
 
     Glide.with(context)

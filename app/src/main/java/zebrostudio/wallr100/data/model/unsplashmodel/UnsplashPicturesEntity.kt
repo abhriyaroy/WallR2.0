@@ -8,7 +8,7 @@ class UnsplashPicturesEntity(
   @SerializedName("width") val imageWidth: Int,
   @SerializedName("height") val imageHeight: Int,
   @SerializedName("color") val paletteColor: String,
-  @SerializedName("userEntity") val userEntity: UserEntity,
+  @SerializedName("user") val userEntity: UserEntity,
   @SerializedName("likes") val likes: Int,
   @SerializedName("liked_by_user") val likedByUser: Boolean,
   @SerializedName("urls") val imageQualityUrlEntity: UrlEntity

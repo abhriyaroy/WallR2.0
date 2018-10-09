@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.presentation.search
 
+import android.util.Log
 import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
@@ -45,6 +46,7 @@ class SearchPresenterImpl(
                   ": No address associated with hostname") {
                 searchView?.showNoInternetView()
               } else {
+                Log.d("search error", it.message)
                 searchView?.showGenericErrorView()
               }
             }
@@ -79,6 +81,14 @@ class SearchPresenterImpl(
               }
             }
           })
+    }
+  }
+
+  override fun notifyRetryButtonClicked() {
+    if (keyword != null) {
+      notifyQuerySubmitted(keyword)
+    } else {
+      searchView?.showInputASearchQueryMessageView()
     }
   }
 
