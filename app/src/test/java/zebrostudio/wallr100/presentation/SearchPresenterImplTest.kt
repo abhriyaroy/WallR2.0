@@ -8,6 +8,7 @@ import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider.createInitial
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -15,7 +16,9 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
+import zebrostudio.wallr100.data.api.UrlMap.Companion.getQueryString
 import zebrostudio.wallr100.data.exception.NoResultFoundException
+import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.presentation.datafactory.SearchPicturesModelFactory
 import zebrostudio.wallr100.presentation.search.SearchContract
@@ -38,6 +41,9 @@ class SearchPresenterImplTest {
   private lateinit var testLifecycleScopeProvider: TestLifecycleScopeProvider
 
   private val randomString = randomUUID().toString()
+  private val queryPage = 1
+  private val unableToResolveHostExceptionMessage = "Unable to resolve host " +
+      "\"api.unsplash.com\": No address associated with hostname"
 
   @Before fun setup() {
     searchPicturesPresenterEntityMapper = SearchPicturesPresenterEntityMapper()
@@ -50,13 +56,13 @@ class SearchPresenterImplTest {
   }
 
   @Test fun `should return query string`() {
-    assertEquals(searchPresenterImpl.getQueryString(randomString),
+    assertEquals(getQueryString(randomString, queryPage),
         "photos/search?query=$randomString&per_page=30&page=1")
   }
 
   @Test fun `should show no result view on notifyQuerySubmitted call`() {
     `when`(searchPicturesUseCase.buildUseCaseSingle(
-        searchPresenterImpl.getQueryString(randomString))).thenReturn(
+        getQueryString(randomString, queryPage))).thenReturn(
         Single.error(NoResultFoundException()))
 
     searchPresenterImpl.notifyQuerySubmitted(randomString)
@@ -70,9 +76,8 @@ class SearchPresenterImplTest {
 
   @Test fun `should show no internet view on notifyQuerySubmitted call`() {
     `when`(searchPicturesUseCase.buildUseCaseSingle(
-        searchPresenterImpl.getQueryString(randomString))).thenReturn(
-        Single.error(Exception("Unable to resolve host \"api.unsplash.com\"" +
-            ": No address associated with hostname")))
+        getQueryString(randomString, queryPage))).thenReturn(
+        Single.error(UnableToResolveHostException()))
 
     searchPresenterImpl.notifyQuerySubmitted(randomString)
 
@@ -85,7 +90,7 @@ class SearchPresenterImplTest {
 
   @Test fun `should show generic error view on notifyQuerySubmitted call`() {
     `when`(searchPicturesUseCase.buildUseCaseSingle(
-        searchPresenterImpl.getQueryString(randomString))).thenReturn(
+        getQueryString(randomString, queryPage))).thenReturn(
         Single.error(Exception()))
 
     searchPresenterImpl.notifyQuerySubmitted(randomString)
@@ -104,7 +109,7 @@ class SearchPresenterImplTest {
     val searchPicturesPresenterEntity =
         searchPicturesPresenterEntityMapper.mapToPresenterEntity(searchPicturesModelList)
     `when`(searchPicturesUseCase.buildUseCaseSingle(
-        searchPresenterImpl.getQueryString(randomString))).thenReturn(
+        getQueryString(randomString, queryPage))).thenReturn(
         Single.just(searchPicturesModelList))
 
     searchPresenterImpl.notifyQuerySubmitted(randomString)
@@ -115,21 +120,19 @@ class SearchPresenterImplTest {
     verify(searchView).hideLoader()
     verify(searchView).getScope()
     verify(searchView).showSearchResults(argCaptor.capture())
-    verifyEntityEquality(argCaptor.firstValue, searchPicturesPresenterEntity)
+    assertTrue(argCaptor.firstValue == searchPicturesPresenterEntity)
     verifyNoMoreInteractions(searchView)
   }
 
   @Test fun `should show no internet toast on fetchMoreImages call`() {
     `when`(searchPicturesUseCase.buildUseCaseSingle(
-        searchPresenterImpl.getQueryString(null))).thenReturn(
-        Single.error(Exception("Unable to resolve host \"api.unsplash.com\"" +
-            ": No address associated with hostname")))
+        getQueryString("", queryPage))).thenReturn(
+        Single.error(UnableToResolveHostException()))
 
     searchPresenterImpl.fetchMoreImages()
 
     verify(searchView).showBottomLoader()
     verify(searchView).getScope()
-    verify(searchView).setEndlessLoadingToFalse()
     verify(searchView).showNoInternetToast()
     verify(searchView).hideBottomLoader()
     verifyNoMoreInteractions(searchView)
@@ -137,7 +140,7 @@ class SearchPresenterImplTest {
 
   @Test fun `should show generic error toast on fetchMoreImages call`() {
     `when`(searchPicturesUseCase.buildUseCaseSingle(
-        searchPresenterImpl.getQueryString(null))).thenReturn(
+        getQueryString("", queryPage))).thenReturn(
         Single.error(Exception()))
 
     searchPresenterImpl.fetchMoreImages()
@@ -156,7 +159,7 @@ class SearchPresenterImplTest {
     val searchPicturesPresenterEntity =
         searchPicturesPresenterEntityMapper.mapToPresenterEntity(searchPicturesModelList)
     `when`(searchPicturesUseCase.buildUseCaseSingle(
-        searchPresenterImpl.getQueryString(null))).thenReturn(
+        getQueryString("", queryPage))).thenReturn(
         Single.just(searchPicturesModelList))
 
     searchPresenterImpl.fetchMoreImages()
@@ -168,51 +171,12 @@ class SearchPresenterImplTest {
     verify(searchView).getScope()
     verify(searchView).appendSearchResults(firstArgCaptor.capture(), secondArgCaptor.capture())
     assertEquals(firstArgCaptor.firstValue, 0)
-    verifyEntityEquality(secondArgCaptor.firstValue, searchPicturesPresenterEntity)
+    assertTrue(secondArgCaptor.firstValue == searchPicturesPresenterEntity)
     verifyNoMoreInteractions(searchView)
   }
 
   @After fun tearDown() {
     searchPresenterImpl.detachView()
-  }
-
-  private fun verifyEntityEquality(
-    searchPicturesPresenterEntityFirstList: List<SearchPicturesPresenterEntity>,
-    searchPicturesPresenterEntitySecondList: List<SearchPicturesPresenterEntity>
-  ) {
-    assertEquals(searchPicturesPresenterEntityFirstList[0].id,
-        searchPicturesPresenterEntitySecondList[0].id)
-    assertEquals(searchPicturesPresenterEntityFirstList[0].createdAt,
-        searchPicturesPresenterEntitySecondList[0].createdAt)
-    assertEquals(searchPicturesPresenterEntityFirstList[0].imageWidth,
-        searchPicturesPresenterEntitySecondList[0].imageWidth)
-    assertEquals(searchPicturesPresenterEntityFirstList[0].imageHeight,
-        searchPicturesPresenterEntitySecondList[0].imageHeight)
-    assertEquals(searchPicturesPresenterEntityFirstList[0].paletteColor,
-        searchPicturesPresenterEntitySecondList[0].paletteColor)
-    assertEquals(searchPicturesPresenterEntityFirstList[0].userPresenterEntity.name,
-        searchPicturesPresenterEntitySecondList[0].userPresenterEntity.name)
-    assertEquals(searchPicturesPresenterEntityFirstList[0].userPresenterEntity.profileImageLink,
-        searchPicturesPresenterEntitySecondList[0].userPresenterEntity.profileImageLink)
-    assertEquals(searchPicturesPresenterEntityFirstList[0].likes,
-        searchPicturesPresenterEntitySecondList[0].likes)
-    assertEquals(searchPicturesPresenterEntityFirstList[0].likedByUser,
-        searchPicturesPresenterEntitySecondList[0].likedByUser)
-    assertEquals(
-        searchPicturesPresenterEntityFirstList[0].imageQualityUrlPresenterEntity.rawImageLink,
-        searchPicturesPresenterEntitySecondList[0].imageQualityUrlPresenterEntity.rawImageLink)
-    assertEquals(
-        searchPicturesPresenterEntityFirstList[0].imageQualityUrlPresenterEntity.largeImageLink,
-        searchPicturesPresenterEntitySecondList[0].imageQualityUrlPresenterEntity.largeImageLink)
-    assertEquals(
-        searchPicturesPresenterEntityFirstList[0].imageQualityUrlPresenterEntity.regularImageLink,
-        searchPicturesPresenterEntitySecondList[0].imageQualityUrlPresenterEntity.regularImageLink)
-    assertEquals(
-        searchPicturesPresenterEntityFirstList[0].imageQualityUrlPresenterEntity.smallImageLink,
-        searchPicturesPresenterEntitySecondList[0].imageQualityUrlPresenterEntity.smallImageLink)
-    assertEquals(
-        searchPicturesPresenterEntityFirstList[0].imageQualityUrlPresenterEntity.thumbImageLink,
-        searchPicturesPresenterEntitySecondList[0].imageQualityUrlPresenterEntity.thumbImageLink)
   }
 
 }

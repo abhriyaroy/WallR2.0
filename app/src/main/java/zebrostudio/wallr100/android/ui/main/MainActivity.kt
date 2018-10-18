@@ -36,6 +36,7 @@ import zebrostudio.wallr100.android.ui.search.SearchActivity
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.drawableRes
 import zebrostudio.wallr100.android.utils.errorToast
+import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.infoToast
 import zebrostudio.wallr100.android.utils.setOnDebouncedClickListener
 import zebrostudio.wallr100.android.utils.stringRes
@@ -63,7 +64,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
         WallpaperFragment.EXPLORE_FRAGMENT_TAG)
 
-    toolbarItemClickListeners()
+    attachToolbarItemClickListeners()
   }
 
   override fun onBackPressed() {
@@ -78,7 +79,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     if (requestCode == PurchaseTransactionConfig.PURCHASE_REQUEST_CODE &&
         resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
-      buyProMenuItem?.visibility = View.GONE
+      buyProMenuItem?.gone()
     }
   }
 
@@ -210,7 +211,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         guillotineMenuItemView.textviewGuillotineMenuItem
             .setTextColor(colorRes(R.color.color_black))
         if (!presenter.shouldShowPurchaseOption()) {
-          guillotineMenuItemView.visibility = View.GONE
+          guillotineMenuItemView.gone()
         }
         buyProMenuItem = guillotineMenuItemView
       }
@@ -281,7 +282,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     })
   }
 
-  private fun toolbarItemClickListeners() {
+  private fun attachToolbarItemClickListeners() {
     toolbarSearchIcon.setOnClickListener {
       val i = Intent(this, SearchActivity::class.java)
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

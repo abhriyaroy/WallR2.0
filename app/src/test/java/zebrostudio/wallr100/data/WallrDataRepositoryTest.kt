@@ -2,6 +2,7 @@ package zebrostudio.wallr100.data
 
 import io.reactivex.Single
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -15,10 +16,12 @@ import zebrostudio.wallr100.data.api.UrlMap
 import zebrostudio.wallr100.data.datafactory.UnsplashPictureEntityModelFactory
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.NoResultFoundException
+import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.data.mapper.PictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
+import java.lang.Exception
 import java.util.UUID.*
 
 @RunWith(MockitoJUnitRunner::class)
@@ -33,6 +36,10 @@ class WallrDataRepositoryTest {
   private lateinit var wallrDataRepository: WallrDataRepository
   private val dummyString = randomUUID().toString()
   private val dummyInt = 500 // to force some error other than 403 or 404
+  private val unableToResolveHostExceptionMessage = "Unable to resolve host " +
+      "\"api.unsplash.com\": No address associated with hostname"
+  private val purchasePreferenceName = "PURCHASE_PREF"
+  private val premiumUserTag = "premium_user"
 
   @Before fun setup() {
     pictureEntityMapper = PictureEntityMapper()
@@ -82,29 +89,29 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should return true after successfully updating purchase status`() {
-    `when`(sharedPrefs.setBoolean(wallrDataRepository.purchasePreferenceName,
-        wallrDataRepository.premiumUserTag, true)).thenReturn(true)
+    `when`(sharedPrefs.setBoolean(purchasePreferenceName,
+        premiumUserTag, true)).thenReturn(true)
 
     assertEquals(true, wallrDataRepository.updateUserPurchaseStatus())
   }
 
   @Test fun `should return false after unsuccessful update of purchase status`() {
-    `when`(sharedPrefs.setBoolean(wallrDataRepository.purchasePreferenceName,
-        wallrDataRepository.premiumUserTag, true)).thenReturn(false)
+    `when`(sharedPrefs.setBoolean(purchasePreferenceName,
+        premiumUserTag, true)).thenReturn(false)
 
     assertEquals(false, wallrDataRepository.updateUserPurchaseStatus())
   }
 
   @Test fun `should return true after checking if user is premium user`() {
-    `when`(sharedPrefs.getBoolean(wallrDataRepository.purchasePreferenceName,
-        wallrDataRepository.premiumUserTag, false)).thenReturn(true)
+    `when`(sharedPrefs.getBoolean(purchasePreferenceName,
+        premiumUserTag, false)).thenReturn(true)
 
     assertEquals(true, wallrDataRepository.isUserPremium())
   }
 
   @Test fun `should return false after checking if user is premium user`() {
-    `when`(sharedPrefs.getBoolean(wallrDataRepository.purchasePreferenceName,
-        wallrDataRepository.premiumUserTag, false)).thenReturn(false)
+    `when`(sharedPrefs.getBoolean(purchasePreferenceName,
+        premiumUserTag, false)).thenReturn(false)
 
     assertEquals(false, wallrDataRepository.isUserPremium())
   }
@@ -116,6 +123,15 @@ class WallrDataRepositoryTest {
     wallrDataRepository.getPictures(dummyString)
         .test()
         .assertError(NoResultFoundException::class.java)
+  }
+
+  @Test fun `should return unable to resolve host exception on get pictures call`() {
+    `when`(unsplashClientFactory.getPicturesService(dummyString)).thenReturn(
+        Single.error(Exception(unableToResolveHostExceptionMessage)))
+
+    wallrDataRepository.getPictures(dummyString)
+        .test()
+        .assertError(UnableToResolveHostException::class.java)
   }
 
   @Test fun `should return mapped search pictures model list on get pictures call`() {
@@ -132,26 +148,7 @@ class WallrDataRepositoryTest {
         .test()
         .values()[0][0]
 
-    assertEquals(searchPicturesModelList[0].id, picture.id)
-    assertEquals(searchPicturesModelList[0].createdAt, picture.createdAt)
-    assertEquals(searchPicturesModelList[0].imageWidth, picture.imageWidth)
-    assertEquals(searchPicturesModelList[0].imageHeight, picture.imageHeight)
-    assertEquals(searchPicturesModelList[0].paletteColor, picture.paletteColor)
-    assertEquals(searchPicturesModelList[0].userModel.name, picture.userModel.name)
-    assertEquals(searchPicturesModelList[0].userModel.profileImage.mediumImageUrl,
-        picture.userModel.profileImage.mediumImageUrl)
-    assertEquals(searchPicturesModelList[0].likes, picture.likes)
-    assertEquals(searchPicturesModelList[0].likedByUser, picture.likedByUser)
-    assertEquals(searchPicturesModelList[0].imageQualityUrlModel.largeImageLink,
-        picture.imageQualityUrlModel.largeImageLink)
-    assertEquals(searchPicturesModelList[0].imageQualityUrlModel.rawImageLink,
-        picture.imageQualityUrlModel.rawImageLink)
-    assertEquals(searchPicturesModelList[0].imageQualityUrlModel.regularImageLink,
-        picture.imageQualityUrlModel.regularImageLink)
-    assertEquals(searchPicturesModelList[0].imageQualityUrlModel.smallImageLink,
-        picture.imageQualityUrlModel.smallImageLink)
-    assertEquals(searchPicturesModelList[0].imageQualityUrlModel.thumbImageLink,
-        picture.imageQualityUrlModel.thumbImageLink)
+    assertTrue(searchPicturesModelList[0].id == picture.id)
   }
 
 }

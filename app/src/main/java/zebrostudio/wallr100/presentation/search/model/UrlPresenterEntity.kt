@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.presentation.search.model
 
-class UrlPresenterEntity(
+data class UrlPresenterEntity(
   val rawImageLink: String,
   val largeImageLink: String,
   val regularImageLink: String,

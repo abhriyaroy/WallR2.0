@@ -12,7 +12,7 @@ interface SearchContract {
     fun showBottomLoader()
     fun hideBottomLoader()
     fun showNoInputView()
-    fun showNoResultView(query: String?)
+    fun showNoResultView(query: String)
     fun hideAllLoadersAndMessageViews()
     fun showNoInternetView()
     fun showNoInternetToast()
@@ -26,7 +26,7 @@ interface SearchContract {
   }
 
   interface SearchPresenter : BasePresenter<SearchView> {
-    fun notifyQuerySubmitted(query: String?)
+    fun notifyQuerySubmitted(query: String)
     fun fetchMoreImages()
     fun notifyRetryButtonClicked()
   }

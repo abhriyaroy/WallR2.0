@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.domain.model
 
-class SearchPicturesModel(
+data class SearchPicturesModel(
   val id: String,
   val createdAt: String,
   val imageWidth: Int,

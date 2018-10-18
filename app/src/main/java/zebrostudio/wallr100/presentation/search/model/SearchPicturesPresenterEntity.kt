@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.presentation.search.model
 
-class SearchPicturesPresenterEntity(
+data class SearchPicturesPresenterEntity(
   val id: String,
   val createdAt: String,
   val imageWidth: Int,

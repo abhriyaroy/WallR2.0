@@ -23,7 +23,7 @@ import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusInteractor
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerviewPresenterImpl
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
 
 @Module
 class AppModule {
@@ -90,6 +90,6 @@ class AppModule {
 
   @Provides
   fun provideImageRecyclerViewPresenter()
-      : ImageRecyclerItemContract.ImageRecyclerviewPresenter = ImageRecyclerviewPresenterImpl()
+      : ImageRecyclerItemContract.ImageRecyclerViewPresenter = ImageRecyclerViewPresenterImpl()
 
 }

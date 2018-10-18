@@ -16,11 +16,11 @@ import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 
-class ImageRecyclerviewAdapter(private val presenter: ImageRecyclerItemContract.ImageRecyclerviewPresenter) :
-    RecyclerView.Adapter<RecyclerviewHolder>() {
+class ImageAdapter(private val presenter: ImageRecyclerItemContract.ImageRecyclerViewPresenter) :
+    RecyclerView.Adapter<ViewHolder>() {
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerviewHolder {
-    return RecyclerviewHolder(
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    return ViewHolder(
         parent.inflate(LayoutInflater.from(parent.context), R.layout.image_recyclerview_item),
         parent.context)
   }
@@ -29,19 +29,19 @@ class ImageRecyclerviewAdapter(private val presenter: ImageRecyclerItemContract.
     return presenter.getItemCount()
   }
 
-  override fun onBindViewHolder(holder: RecyclerviewHolder, position: Int) {
+  override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     presenter.onBindRepositoryRowViewAtPosition(position, holder)
   }
 
 }
 
-class RecyclerviewHolder(
+class ViewHolder(
   itemView: View,
   private val context: Context
 ) : RecyclerView.ViewHolder(itemView),
     ImageRecyclerItemContract.ImageRecyclerItemView {
 
-  override fun setImageviewBackground(colorHexCode: String) {
+  override fun setImageViewBackground(colorHexCode: String) {
     itemView.imageView.setBackgroundColor(Color.parseColor(colorHexCode))
   }
 

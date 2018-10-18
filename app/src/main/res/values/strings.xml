@@ -70,7 +70,6 @@
   <!-- Search activity strings -->
   <string name="search_type_in_a_query_message">Type in a search query</string>
   <string name="search_no_result_message">Woah there! We found nothing for </string>
-  <string name="search_no_result_message_null_query">Woah there! We found nothing for your search term</string>
   <string name="search_retry_message">Retry</string>
   <string name="search_no_internet_message">Please ensure you have a working internet connection</string>
   <string name="search_unable_to_search_message">Unable to search right now</string>

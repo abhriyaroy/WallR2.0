@@ -10,9 +10,11 @@ import java.util.UUID.*
 @RunWith(MockitoJUnitRunner::class)
 class UrlMapTest {
 
-  private var packageName = randomUUID().toString()
-  private var skuId = randomUUID().toString()
-  private var purchaseToken = randomUUID().toString()
+  private val packageName = randomUUID().toString()
+  private val skuId = randomUUID().toString()
+  private val purchaseToken = randomUUID().toString()
+  private val keyword = randomUUID().toString()
+  private val queryPage = 1
 
   @Test fun `should return valid firebase purchase auth base url`() {
     assertEquals("https://us-central1-wallrproduction.cloudfunctions.net/",
@@ -23,6 +25,12 @@ class UrlMapTest {
     assertEquals(
         "purchaseVerification?packageName=$packageName&skuId=$skuId&purchaseToken=$purchaseToken",
         UrlMap.getFirebasePurchaseAuthEndpoint(packageName, skuId, purchaseToken))
+  }
+
+  @Test fun `should return valid search query string`() {
+    assertEquals(
+        "photos/search?query=$keyword&per_page=30&page=$queryPage",
+        UrlMap.getQueryString(keyword, queryPage))
   }
 
 }

@@ -7,6 +7,7 @@ import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.NoResultFoundException
+import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.data.mapper.PictureEntityMapper
 import zebrostudio.wallr100.domain.WallrRepository
@@ -19,8 +20,10 @@ class WallrDataRepository(
   private var pictureEntityMapper: PictureEntityMapper
 ) : WallrRepository {
 
-  internal val purchasePreferenceName = "PURCHASE_PREF"
-  internal val premiumUserTag = "premium_user"
+  private val purchasePreferenceName = "PURCHASE_PREF"
+  private val premiumUserTag = "premium_user"
+  private val unableToResolveHostExceptionMessage = "Unable to resolve host " +
+      "\"api.unsplash.com\": No address associated with hostname"
 
   override fun authenticatePurchase(
     packageName: String,
@@ -56,6 +59,13 @@ class WallrDataRepository(
           } else {
             val map = pictureEntityMapper.mapFromEntity(it)
             Single.just(map)
+          }
+        }
+        .onErrorResumeNext {
+          if (it.message != null && it.message == unableToResolveHostExceptionMessage) {
+            Single.error(UnableToResolveHostException())
+          } else {
+            Single.error(it)
           }
         }
   }

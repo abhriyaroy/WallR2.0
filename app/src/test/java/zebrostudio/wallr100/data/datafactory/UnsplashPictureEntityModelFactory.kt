@@ -5,27 +5,27 @@ import zebrostudio.wallr100.data.model.unsplashmodel.ProfileImage
 import zebrostudio.wallr100.data.model.unsplashmodel.UrlEntity
 import zebrostudio.wallr100.data.model.unsplashmodel.UserEntity
 import java.util.Random
-import java.util.UUID
+import java.util.UUID.*
 
 object UnsplashPictureEntityModelFactory {
 
   fun getUnsplashPictureEntityModel(): UnsplashPicturesEntity {
     return UnsplashPicturesEntity(
-        UUID.randomUUID().toString(),
-        UUID.randomUUID().toString(),
+        randomUUID().toString(),
+        randomUUID().toString(),
         Random().nextInt(),
         Random().nextInt(),
-        UUID.randomUUID().toString(),
-        UserEntity(UUID.randomUUID().toString(),
-            ProfileImage(UUID.randomUUID().toString())),
+        randomUUID().toString(),
+        UserEntity(randomUUID().toString(),
+            ProfileImage(randomUUID().toString())),
         Random().nextInt(),
         true,
         UrlEntity(
-            UUID.randomUUID().toString(),
-            UUID.randomUUID().toString(),
-            UUID.randomUUID().toString(),
-            UUID.randomUUID().toString(),
-            UUID.randomUUID().toString()
+            randomUUID().toString(),
+            randomUUID().toString(),
+            randomUUID().toString(),
+            randomUUID().toString(),
+            randomUUID().toString()
         )
     )
   }

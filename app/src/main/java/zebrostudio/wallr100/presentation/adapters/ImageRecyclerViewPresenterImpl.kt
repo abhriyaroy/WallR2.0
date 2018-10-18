@@ -1,9 +1,9 @@
 package zebrostudio.wallr100.presentation.adapters
 
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerviewPresenterImpl.ImageListType.*
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 
-class ImageRecyclerviewPresenterImpl : ImageRecyclerItemContract.ImageRecyclerviewPresenter {
+class ImageRecyclerViewPresenterImpl : ImageRecyclerItemContract.ImageRecyclerViewPresenter {
 
   private lateinit var imageType: ImageListType
   private val searchResultList = mutableListOf<SearchPicturesPresenterEntity>()
@@ -26,7 +26,7 @@ class ImageRecyclerviewPresenterImpl : ImageRecyclerItemContract.ImageRecyclervi
     position: Int,
     rowView: ImageRecyclerItemContract.ImageRecyclerItemView
   ) {
-    rowView.setImageviewBackground(searchResultList[position].paletteColor)
+    rowView.setImageViewBackground(searchResultList[position].paletteColor)
     when (imageType) {
       SEARCH ->
         rowView.setImage(searchResultList[position].imageQualityUrlPresenterEntity.smallImageLink)

@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.presentation.datafactory
 
-import zebrostudio.wallr100.domain.model.ProfileImage
 import zebrostudio.wallr100.domain.model.SearchPicturesModel
 import zebrostudio.wallr100.domain.model.UrlModel
 import zebrostudio.wallr100.domain.model.UserModel
@@ -16,7 +15,7 @@ object SearchPicturesModelFactory {
         Random().nextInt(),
         randomUUID().toString(),
         UserModel(randomUUID().toString(),
-            ProfileImage(randomUUID().toString())),
+            randomUUID().toString()),
         Random().nextInt(),
         true,
         UrlModel(randomUUID().toString(),

@@ -16,7 +16,7 @@ class SearchPicturesPresenterEntityMapper {
             it.imageHeight,
             it.paletteColor,
             UserPresenterEntity(it.userModel.name,
-                it.userModel.profileImage.mediumImageUrl),
+                it.userModel.profileImageLink),
             it.likes,
             it.likedByUser,
             UrlPresenterEntity(it.imageQualityUrlModel.rawImageLink,
