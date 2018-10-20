@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.presentation.search
 
-import android.util.Log
 import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.data.api.UrlMap.Companion.getQueryString
 import zebrostudio.wallr100.data.exception.NoResultFoundException
@@ -16,7 +15,7 @@ class SearchPresenterImpl(
 
   private var searchView: SearchContract.SearchView? = null
   private var queryPage = 1
-  private var keyword: String = ""
+  internal var keyword: String = ""
 
   override fun attachView(view: SearchContract.SearchView) {
     searchView = view
@@ -69,7 +68,10 @@ class SearchPresenterImpl(
             searchView?.hideBottomLoader()
             when (it) {
               is NoResultFoundException -> queryPage = 0
-              is UnableToResolveHostException -> searchView?.showNoInternetToast()
+              is UnableToResolveHostException -> {
+                searchView?.setEndlessLoadingToFalse()
+                searchView?.showNoInternetToast()
+              }
               else -> {
                 searchView?.setEndlessLoadingToFalse()
                 searchView?.showGenericErrorToast()
@@ -80,7 +82,7 @@ class SearchPresenterImpl(
   }
 
   override fun notifyRetryButtonClicked() {
-    if (keyword != null) {
+    if (keyword != "") {
       notifyQuerySubmitted(keyword)
     } else {
       searchView?.showInputASearchQueryMessageView()

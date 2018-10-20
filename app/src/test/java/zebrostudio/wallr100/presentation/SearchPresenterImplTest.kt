@@ -135,6 +135,7 @@ class SearchPresenterImplTest {
     verify(searchView).showBottomLoader()
     verify(searchView).getScope()
     verify(searchView).showNoInternetToast()
+    verify(searchView).setEndlessLoadingToFalse()
     verify(searchView).hideBottomLoader()
     verifyNoMoreInteractions(searchView)
   }
@@ -174,6 +175,37 @@ class SearchPresenterImplTest {
     verify(searchView).appendSearchResults(firstArgCaptor.capture(), secondArgCaptor.capture())
     assertEquals(firstArgCaptor.firstValue, 0)
     assertTrue(secondArgCaptor.firstValue == searchPicturesPresenterEntity)
+    verifyNoMoreInteractions(searchView)
+  }
+
+  @Test
+  fun `should call showInputASearchQueryMessageView when retry button is pressed and keyword is not empty`() {
+    searchPresenterImpl.notifyRetryButtonClicked()
+
+    verify(searchView).showInputASearchQueryMessageView()
+    verifyNoMoreInteractions(searchView)
+  }
+
+  @Test
+  fun `should return list of searchPicturesPresenterEntity when retry button is pressed and keyword is not empty and notifyQuerySubmitted call succeeds`() {
+    val searchPicturesModelList =
+        SearchPicturesModelFactory.getSearchPicturesModelList()
+    val searchPicturesPresenterEntity =
+        searchPicturesPresenterEntityMapper.mapToPresenterEntity(searchPicturesModelList)
+    `when`(searchPicturesUseCase.buildUseCaseSingle(
+        getQueryString(randomString, queryPage))).thenReturn(
+        Single.just(searchPicturesModelList))
+    searchPresenterImpl.keyword = randomString
+
+    searchPresenterImpl.notifyRetryButtonClicked()
+
+    val argCaptor = argumentCaptor<List<SearchPicturesPresenterEntity>>()
+    verify(searchView).hideAllLoadersAndMessageViews()
+    verify(searchView).showLoader()
+    verify(searchView).hideLoader()
+    verify(searchView).getScope()
+    verify(searchView).showSearchResults(argCaptor.capture())
+    assertTrue(argCaptor.firstValue == searchPicturesPresenterEntity)
     verifyNoMoreInteractions(searchView)
   }
 
