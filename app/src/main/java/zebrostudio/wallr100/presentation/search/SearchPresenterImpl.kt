@@ -1,5 +1,9 @@
 package zebrostudio.wallr100.presentation.search
 
+import android.app.Activity
+import android.content.Intent
+import android.speech.RecognizerIntent
+import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.data.api.UrlMap.Companion.getQueryString
 import zebrostudio.wallr100.data.exception.NoResultFoundException
@@ -40,7 +44,6 @@ class SearchPresenterImpl(
           searchView?.showSearchResults(it)
           queryPage++
         }, {
-          System.out.println(it.message)
           when (it) {
             is NoResultFoundException -> searchView?.showNoResultView(keyword)
             is UnableToResolveHostException -> searchView?.showNoInternetView()
@@ -52,7 +55,6 @@ class SearchPresenterImpl(
   }
 
   override fun fetchMoreImages() {
-    System.out.println("keyword $keyword")
     if (queryPage != 0) {
       searchView?.showBottomLoader()
       searchPicturesUseCase.buildUseCaseSingle(getQueryString(keyword, queryPage))
@@ -86,6 +88,22 @@ class SearchPresenterImpl(
       notifyQuerySubmitted(keyword)
     } else {
       searchView?.showInputASearchQueryMessageView()
+    }
+  }
+
+  override fun notifyActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == Activity.RESULT_OK) {
+      System.out.println("true1")
+      val matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+      System.out.println(matches)
+      if (matches != null && matches.size > 0) {
+        System.out.println("true2")
+        val searchWord = matches[0]
+        if (!searchWord.isEmpty()) {
+          System.out.println("true3")
+          searchView?.setSearchQueryWithoutSubmitting(searchWord)
+        }
+      }
     }
   }
 

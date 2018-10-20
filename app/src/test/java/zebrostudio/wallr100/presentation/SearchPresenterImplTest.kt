@@ -1,5 +1,9 @@
 package zebrostudio.wallr100.presentation
 
+import android.app.Activity
+import android.content.Intent
+import android.speech.RecognizerIntent
+import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -36,6 +40,7 @@ class SearchPresenterImplTest {
 
   @Mock lateinit var searchView: SearchContract.SearchView
   @Mock lateinit var searchPicturesUseCase: SearchPicturesUseCase
+  @Mock lateinit var intent: Intent
   private lateinit var searchPicturesPresenterEntityMapper: SearchPicturesPresenterEntityMapper
   private lateinit var searchPresenterImpl: SearchPresenterImpl
   private lateinit var testLifecycleScopeProvider: TestLifecycleScopeProvider
@@ -187,7 +192,7 @@ class SearchPresenterImplTest {
   }
 
   @Test
-  fun `should return list of searchPicturesPresenterEntity when retry button is pressed and keyword is not empty and notifyQuerySubmitted call succeeds`() {
+  fun `should return list of searchPicturesPresenterEntity when retry button is pressed and search keyword is valid and notifyQuerySubmitted call succeeds`() {
     val searchPicturesModelList =
         SearchPicturesModelFactory.getSearchPicturesModelList()
     val searchPicturesPresenterEntity =
@@ -207,6 +212,20 @@ class SearchPresenterImplTest {
     verify(searchView).showSearchResults(argCaptor.capture())
     assertTrue(argCaptor.firstValue == searchPicturesPresenterEntity)
     verifyNoMoreInteractions(searchView)
+  }
+
+  @Test
+  fun `should call setSearchQueryWithoutSubmitting when notifyActivityResult is called with valid requestCode, resultCode and data`() {
+    val wordsArrayList = arrayListOf(randomString)
+    `when`(intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)).thenReturn(
+        wordsArrayList)
+
+    searchPresenterImpl.notifyActivityResult(
+        MaterialSearchView.REQUEST_VOICE, Activity.RESULT_OK, intent)
+
+    verify(searchView).setSearchQueryWithoutSubmitting(randomString)
+    verifyNoMoreInteractions(searchView)
+
   }
 
   @After fun tearDown() {

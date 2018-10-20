@@ -70,15 +70,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-    if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == Activity.RESULT_OK) {
-      val matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-      if (matches != null && matches.size > 0) {
-        val searchWord = matches[0]
-        if (searchWord.isEmpty()) {
-          searchView.setQuery(searchWord, false)
-        }
-      }
-    }
+    presenter.notifyActivityResult(requestCode, resultCode, data)
   }
 
   override fun onBackPressed() {
@@ -199,6 +191,10 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
 
   override fun setEndlessLoadingToFalse() {
     EndlessScrollListener.loading = false
+  }
+
+  override fun setSearchQueryWithoutSubmitting(searchWord: String) {
+    searchView.setQuery(searchWord, false)
   }
 
   private fun initAppbar() {
