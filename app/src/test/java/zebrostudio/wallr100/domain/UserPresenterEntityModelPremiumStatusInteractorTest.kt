@@ -22,20 +22,20 @@ class UserPresenterEntityModelPremiumStatusInteractorTest {
     userPremiumStatusUseCase = UserPremiumStatusInteractor(wallrRepository)
   }
 
-  @Test fun `should call updateUserPurchaseStatus to updateUserPurchaseStatus`() {
+  @Test fun `should call updateUserPurchaseStatus to update user purchase status`() {
     userPremiumStatusUseCase.updateUserPurchaseStatus()
 
     verify(wallrRepository).updateUserPurchaseStatus()
     verifyNoMoreInteractions(wallrRepository)
   }
 
-  @Test fun `should return true on successful updateUserPurchaseStatus`() {
+  @Test fun `should return true on updateUserPurchaseStatus call success`() {
     `when`(wallrRepository.updateUserPurchaseStatus()).thenReturn(true)
 
     assertEquals(true, userPremiumStatusUseCase.updateUserPurchaseStatus())
   }
 
-  @Test fun `should return false on unsuccessful updateUserPurchaseStatus`() {
+  @Test fun `should return false on updateUserPurchaseStatus call failure`() {
     `when`(wallrRepository.updateUserPurchaseStatus()).thenReturn(false)
 
     assertEquals(false, userPremiumStatusUseCase.updateUserPurchaseStatus())

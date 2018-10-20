@@ -11,11 +11,13 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.data.exception.NoResultFoundException
+import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.domain.datafactory.SearchPicturesModelFactory
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.SearchPicturesInteractor
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
+import java.lang.Exception
 import java.util.UUID.*
 
 @RunWith(MockitoJUnitRunner::class)
@@ -34,7 +36,8 @@ class SearchPicturesInteractorTest {
     `when`(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 
-  @Test fun `should return list of search pictures model on buildRetrievePicturesObservable`() {
+  @Test
+  fun `should return list of search pictures model on buildRetrievePicturesObservable call success`() {
     val searchPicturesModelList = listOf(SearchPicturesModelFactory.getSearchPicturesModel())
     `when`(wallrRepository.getPictures(dummyString)).thenReturn(
         Single.just(searchPicturesModelList))
@@ -47,12 +50,22 @@ class SearchPicturesInteractorTest {
   }
 
   @Test
-  fun `should return no result found exception of search pictures model on buildRetrievePicturesObservable`() {
+  fun `should return no result found exception of search pictures model on buildRetrievePicturesObservable call success but with no result`() {
     `when`(wallrRepository.getPictures(dummyString)).thenReturn(
         Single.error(NoResultFoundException()))
 
     searchPicturesUseCase.buildUseCaseSingle(dummyString)
         .test()
         .assertError(NoResultFoundException::class.java)
+  }
+
+  @Test
+  fun `should return unable to resolve host exception of search pictures model on buildRetrievePicturesObservable call failure`() {
+    `when`(wallrRepository.getPictures(dummyString)).thenReturn(
+        Single.error(UnableToResolveHostException()))
+
+    searchPicturesUseCase.buildUseCaseSingle(dummyString)
+        .test()
+        .assertError(UnableToResolveHostException::class.java)
   }
 }

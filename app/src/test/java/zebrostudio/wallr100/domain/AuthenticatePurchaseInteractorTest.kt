@@ -37,7 +37,7 @@ class AuthenticatePurchaseInteractorTest {
     stubPostExecutionThreadReturnsIoScheduler()
   }
 
-  @Test fun `should call authenticatePurchase to verify purchase`() {
+  @Test fun `should call authenticatePurchase in order to verify purchase`() {
     stubAuthenticatePurchaseReturnsSingle()
     authenticatePuchaseInteractor.buildUseCaseCompletable(packageName, skuId, purchaseToken)
 
@@ -45,21 +45,24 @@ class AuthenticatePurchaseInteractorTest {
     verifyNoMoreInteractions(wallrRepository)
   }
 
-  @Test fun `should complete when successful purchase verification`() {
+  @Test fun `should complete due to successful purchase verification`() {
     stubAuthenticatePurchaseReturnsSingle()
 
     authenticatePuchaseInteractor.buildUseCaseCompletable(packageName, skuId, purchaseToken).test()
         .assertComplete()
   }
 
-  @Test fun `should return invalidPurchaseException when unsuccessful purchase verification`() {
-    stubAuthenticatePurchaseReturnsInvalidPurchaseException()
+  @Test fun `should return invalidPurchaseException due to unsuccessful purchase verification`() {
+    `when`(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
+        Completable.error(InvalidPurchaseException()))
+
     authenticatePuchaseInteractor.buildUseCaseCompletable(packageName, skuId, purchaseToken).test()
         .assertError(InvalidPurchaseException::class.java)
   }
 
   @Test fun `should return unableToVerifyPurchaseException when unable to verify purchase`() {
-    stubAuthenticatePurchaseReturnsUnableToVerifyPurchaseException()
+    `when`(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
+        Completable.error(UnableToVerifyPurchaseException()))
 
     authenticatePuchaseInteractor.buildUseCaseCompletable(packageName, skuId, purchaseToken).test()
         .assertError(UnableToVerifyPurchaseException::class.java)
@@ -72,16 +75,6 @@ class AuthenticatePurchaseInteractorTest {
   private fun stubAuthenticatePurchaseReturnsSingle() {
     `when`(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
         Completable.complete())
-  }
-
-  private fun stubAuthenticatePurchaseReturnsInvalidPurchaseException() {
-    `when`(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
-        Completable.error(InvalidPurchaseException()))
-  }
-
-  private fun stubAuthenticatePurchaseReturnsUnableToVerifyPurchaseException() {
-    `when`(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
-        Completable.error(UnableToVerifyPurchaseException()))
   }
 
 }

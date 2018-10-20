@@ -58,7 +58,8 @@ class WallrDataRepositoryTest {
         .assertComplete()
   }
 
-  @Test fun `should return invalid purchase exception on server 403 error response`() {
+  @Test
+  fun `should return invalid purchase exception on authenticatePurchase 403 error response`() {
     `when`(remoteAuthServiceFactory.verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(dummyString, dummyString, dummyString)))
         .thenReturn(Single.just(PurchaseAuthResponseEntity("error", 403, dummyString)))
@@ -68,7 +69,8 @@ class WallrDataRepositoryTest {
         .assertError(InvalidPurchaseException::class.java)
   }
 
-  @Test fun `should return invalid purchase exception on server 404 error response`() {
+  @Test
+  fun `should return invalid purchase exception on authenticatePurchase 404 error response`() {
     `when`(remoteAuthServiceFactory.verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(dummyString, dummyString, dummyString)))
         .thenReturn(Single.just(PurchaseAuthResponseEntity("error", 404, dummyString)))
@@ -78,7 +80,8 @@ class WallrDataRepositoryTest {
         .assertError(InvalidPurchaseException::class.java)
   }
 
-  @Test fun `should return unable to verify purchase exception on some error during call`() {
+  @Test
+  fun `should return unable to verify purchase exception on some error during authenticatePurchase call`() {
     `when`(remoteAuthServiceFactory.verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(dummyString, dummyString, dummyString)))
         .thenReturn(Single.just(PurchaseAuthResponseEntity(dummyString, dummyInt, dummyString)))
@@ -102,21 +105,21 @@ class WallrDataRepositoryTest {
     assertEquals(false, wallrDataRepository.updateUserPurchaseStatus())
   }
 
-  @Test fun `should return true after checking if user is premium user`() {
+  @Test fun `should return true after checking if user is a premium user`() {
     `when`(sharedPrefs.getBoolean(purchasePreferenceName,
         premiumUserTag, false)).thenReturn(true)
 
     assertEquals(true, wallrDataRepository.isUserPremium())
   }
 
-  @Test fun `should return false after checking if user is premium user`() {
+  @Test fun `should return false after checking if user is a premium user`() {
     `when`(sharedPrefs.getBoolean(purchasePreferenceName,
         premiumUserTag, false)).thenReturn(false)
 
     assertEquals(false, wallrDataRepository.isUserPremium())
   }
 
-  @Test fun `should return no result found exception on get pictures call`() {
+  @Test fun `should return no result found exception on getPictures call success`() {
     `when`(unsplashClientFactory.getPicturesService(dummyString)).thenReturn(
         Single.just(emptyList()))
 
@@ -125,7 +128,7 @@ class WallrDataRepositoryTest {
         .assertError(NoResultFoundException::class.java)
   }
 
-  @Test fun `should return unable to resolve host exception on get pictures call`() {
+  @Test fun `should return unable to resolve host exception on getPictures call failure`() {
     `when`(unsplashClientFactory.getPicturesService(dummyString)).thenReturn(
         Single.error(Exception(unableToResolveHostExceptionMessage)))
 
@@ -134,7 +137,7 @@ class WallrDataRepositoryTest {
         .assertError(UnableToResolveHostException::class.java)
   }
 
-  @Test fun `should return mapped search pictures model list on get pictures call`() {
+  @Test fun `should return mapped search pictures model list on getPictures call failure`() {
     val unsplashPicturesEntityList = mutableListOf(
         UnsplashPictureEntityModelFactory.getUnsplashPictureEntityModel())
 

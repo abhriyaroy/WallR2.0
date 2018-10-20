@@ -146,7 +146,8 @@ class BuyProPresenterImplTest {
     verifyNoMoreInteractions(buyProView)
   }
 
-  @Test fun `should show invalid purchase exception on verifying purchase`() {
+  @Test
+  fun `should show invalid purchase exception when verifyPurchase call succeeds but purchase is invalid`() {
     `when`(authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId,
         purchaseToken)).thenReturn(Completable.error(InvalidPurchaseException()))
 
@@ -158,7 +159,8 @@ class BuyProPresenterImplTest {
     verifyNoMoreInteractions(buyProView)
   }
 
-  @Test fun `should show unable to verify purchase exception on verifying purchase`() {
+  @Test
+  fun `should show unable to verify purchase error on verifyPurchase call failure with UnableToVerifyPurchaseException`() {
     `when`(authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId,
         purchaseToken)).thenReturn(Completable.error(UnableToVerifyPurchaseException()))
 
@@ -170,7 +172,8 @@ class BuyProPresenterImplTest {
     verifyNoMoreInteractions(buyProView)
   }
 
-  @Test fun `should show generic purchase exception on verifying purchase`() {
+  @Test
+  fun `should show generic purchase error on verifyPurchase call failure with generic exception`() {
     `when`(authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId,
         purchaseToken)).thenReturn(Completable.error(Exception()))
 
@@ -182,7 +185,7 @@ class BuyProPresenterImplTest {
     verifyNoMoreInteractions(buyProView)
   }
 
-  @Test fun `should call handle successful verification on successfully verifying purchase`() {
+  @Test fun `should call handle successful verification on successful verification of purchase`() {
     `when`(authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId,
         purchaseToken)).thenReturn(Completable.complete())
     `when`(userPremiumStatusUseCase.updateUserPurchaseStatus()).thenReturn(true)
@@ -196,7 +199,8 @@ class BuyProPresenterImplTest {
     verifyNoMoreInteractions(buyProView)
   }
 
-  @Test fun `should call handle successful verification on successfully verifying restore`() {
+  @Test
+  fun `should call handle successful verification on successfully verification of purchase restoration`() {
     `when`(authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId,
         purchaseToken)).thenReturn(Completable.complete())
     `when`(userPremiumStatusUseCase.updateUserPurchaseStatus()).thenReturn(true)

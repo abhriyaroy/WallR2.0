@@ -42,8 +42,6 @@ class SearchPresenterImplTest {
 
   private val randomString = randomUUID().toString()
   private val queryPage = 1
-  private val unableToResolveHostExceptionMessage = "Unable to resolve host " +
-      "\"api.unsplash.com\": No address associated with hostname"
 
   @Before fun setup() {
     searchPicturesPresenterEntityMapper = SearchPicturesPresenterEntityMapper()
@@ -60,7 +58,8 @@ class SearchPresenterImplTest {
         "photos/search?query=$randomString&per_page=30&page=1")
   }
 
-  @Test fun `should show no result view on notifyQuerySubmitted call`() {
+  @Test
+  fun `should show no result view when notifyQuerySubmitted call succeeds but no result is found`() {
     `when`(searchPicturesUseCase.buildUseCaseSingle(
         getQueryString(randomString, queryPage))).thenReturn(
         Single.error(NoResultFoundException()))
@@ -74,7 +73,8 @@ class SearchPresenterImplTest {
     verifyNoMoreInteractions(searchView)
   }
 
-  @Test fun `should show no internet view on notifyQuerySubmitted call`() {
+  @Test
+  fun `should show no internet view on notifyQuerySubmitted call failure due to no internet connection`() {
     `when`(searchPicturesUseCase.buildUseCaseSingle(
         getQueryString(randomString, queryPage))).thenReturn(
         Single.error(UnableToResolveHostException()))
@@ -88,7 +88,7 @@ class SearchPresenterImplTest {
     verifyNoMoreInteractions(searchView)
   }
 
-  @Test fun `should show generic error view on notifyQuerySubmitted call`() {
+  @Test fun `should show generic error view on notifyQuerySubmitted call failure`() {
     `when`(searchPicturesUseCase.buildUseCaseSingle(
         getQueryString(randomString, queryPage))).thenReturn(
         Single.error(Exception()))
@@ -103,7 +103,7 @@ class SearchPresenterImplTest {
   }
 
   @Test
-  fun `should return list of search pictures presenter entity on notifyQuerySubmitted call`() {
+  fun `should return list of searchPicturesPresenterEntity on notifyQuerySubmitted call success`() {
     val searchPicturesModelList =
         SearchPicturesModelFactory.getSearchPicturesModelList()
     val searchPicturesPresenterEntity =
@@ -124,7 +124,8 @@ class SearchPresenterImplTest {
     verifyNoMoreInteractions(searchView)
   }
 
-  @Test fun `should show no internet toast on fetchMoreImages call`() {
+  @Test
+  fun `should show no internet toast on fetchMoreImages call failure due to no internet connection`() {
     `when`(searchPicturesUseCase.buildUseCaseSingle(
         getQueryString("", queryPage))).thenReturn(
         Single.error(UnableToResolveHostException()))
@@ -138,7 +139,7 @@ class SearchPresenterImplTest {
     verifyNoMoreInteractions(searchView)
   }
 
-  @Test fun `should show generic error toast on fetchMoreImages call`() {
+  @Test fun `should show generic error toast on fetchMoreImages call failure`() {
     `when`(searchPicturesUseCase.buildUseCaseSingle(
         getQueryString("", queryPage))).thenReturn(
         Single.error(Exception()))
@@ -153,7 +154,8 @@ class SearchPresenterImplTest {
     verifyNoMoreInteractions(searchView)
   }
 
-  @Test fun `should return list of search pictures presenter entity on fetchMoreImages call`() {
+  @Test
+  fun `should return list of search pictures presenter entity on fetchMoreImages call success`() {
     val searchPicturesModelList =
         SearchPicturesModelFactory.getSearchPicturesModelList()
     val searchPicturesPresenterEntity =
