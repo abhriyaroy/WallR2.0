@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.android
+package zebrostudio.wallr100.presentation
 
 interface BasePresenter<T> {
 

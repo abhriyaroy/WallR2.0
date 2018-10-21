@@ -33,12 +33,18 @@ class UserPresenterEntityModelPremiumStatusInteractorTest {
     `when`(wallrRepository.updateUserPurchaseStatus()).thenReturn(true)
 
     assertEquals(true, userPremiumStatusUseCase.updateUserPurchaseStatus())
+
+    verify(wallrRepository).updateUserPurchaseStatus()
+    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return false on updateUserPurchaseStatus call failure`() {
     `when`(wallrRepository.updateUserPurchaseStatus()).thenReturn(false)
 
     assertEquals(false, userPremiumStatusUseCase.updateUserPurchaseStatus())
+
+    verify(wallrRepository).updateUserPurchaseStatus()
+    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should call isUserPremium to check user status`() {
@@ -52,12 +58,18 @@ class UserPresenterEntityModelPremiumStatusInteractorTest {
     `when`(wallrRepository.isUserPremium()).thenReturn(true)
 
     assertEquals(true, userPremiumStatusUseCase.isUserPremium())
+
+    verify(wallrRepository).isUserPremium()
+    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return false if user not premium`() {
     `when`(wallrRepository.isUserPremium()).thenReturn(false)
 
     assertEquals(false, userPremiumStatusUseCase.isUserPremium())
+
+    verify(wallrRepository).isUserPremium()
+    verifyNoMoreInteractions(wallrRepository)
   }
 
 }

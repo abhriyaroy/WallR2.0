@@ -43,13 +43,11 @@ class WallrDataRepository(
         })
   }
 
-  override fun updateUserPurchaseStatus(): Boolean {
-    return sharedPrefsHelper.setBoolean(purchasePreferenceName, premiumUserTag, true)
-  }
+  override fun updateUserPurchaseStatus() = sharedPrefsHelper.setBoolean(purchasePreferenceName,
+      premiumUserTag, true)
 
-  override fun isUserPremium(): Boolean {
-    return sharedPrefsHelper.getBoolean(purchasePreferenceName, premiumUserTag, false)
-  }
+  override fun isUserPremium() = sharedPrefsHelper.getBoolean(purchasePreferenceName,
+      premiumUserTag, false)
 
   override fun getPictures(query: String): Single<List<SearchPicturesModel>> {
     return unsplashClientFactory.getPicturesService(query)

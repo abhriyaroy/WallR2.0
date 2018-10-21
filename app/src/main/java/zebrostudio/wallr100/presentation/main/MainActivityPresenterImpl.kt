@@ -48,8 +48,6 @@ class MainActivityPresenterImpl(
     backPressedOnce = false
   }
 
-  override fun shouldShowPurchaseOption(): Boolean {
-    return !userPremiumStatusUseCase.isUserPremium()
-  }
+  override fun shouldShowPurchaseOption() = !userPremiumStatusUseCase.isUserPremium()
 
 }

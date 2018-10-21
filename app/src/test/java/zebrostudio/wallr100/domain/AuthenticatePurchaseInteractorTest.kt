@@ -50,6 +50,9 @@ class AuthenticatePurchaseInteractorTest {
 
     authenticatePuchaseInteractor.buildUseCaseCompletable(packageName, skuId, purchaseToken).test()
         .assertComplete()
+
+    verify(wallrRepository).authenticatePurchase(packageName, skuId, purchaseToken)
+    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return invalidPurchaseException due to unsuccessful purchase verification`() {
@@ -58,6 +61,9 @@ class AuthenticatePurchaseInteractorTest {
 
     authenticatePuchaseInteractor.buildUseCaseCompletable(packageName, skuId, purchaseToken).test()
         .assertError(InvalidPurchaseException::class.java)
+
+    verify(wallrRepository).authenticatePurchase(packageName, skuId, purchaseToken)
+    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return unableToVerifyPurchaseException when unable to verify purchase`() {
@@ -66,6 +72,9 @@ class AuthenticatePurchaseInteractorTest {
 
     authenticatePuchaseInteractor.buildUseCaseCompletable(packageName, skuId, purchaseToken).test()
         .assertError(UnableToVerifyPurchaseException::class.java)
+
+    verify(wallrRepository).authenticatePurchase(packageName, skuId, purchaseToken)
+    verifyNoMoreInteractions(wallrRepository)
   }
 
   private fun stubPostExecutionThreadReturnsIoScheduler() {

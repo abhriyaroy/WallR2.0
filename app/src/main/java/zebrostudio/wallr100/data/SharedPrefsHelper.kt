@@ -12,20 +12,21 @@ interface SharedPrefsHelper {
 
 class SharedPrefsHelperImpl(private var context: Context) : SharedPrefsHelper {
 
-  override fun getBoolean(preferenceName: String, key: String, defaultValue: Boolean): Boolean {
-    return getPreference(preferenceName).getBoolean(key, defaultValue)
-  }
+  override fun getBoolean(
+    preferenceName: String,
+    key: String,
+    defaultValue: Boolean
+  ) = getPreference(preferenceName).getBoolean(key, defaultValue)
 
-  override fun setBoolean(preferenceName: String, key: String, value: Boolean): Boolean {
-    return getPreferenceEditor(preferenceName).putBoolean(key, value).commit()
-  }
+  override fun setBoolean(
+    preferenceName: String,
+    key: String,
+    value: Boolean
+  ) = getPreferenceEditor(preferenceName).putBoolean(key, value).commit()
 
-  private fun getPreference(preferenceName: String): SharedPreferences {
-    return context.applicationContext.getSharedPreferences(preferenceName, Activity.MODE_PRIVATE)
-  }
+  private fun getPreference(preferenceName: String) = context.applicationContext.getSharedPreferences(
+      preferenceName, Activity.MODE_PRIVATE)
 
-  private fun getPreferenceEditor(preferenceName: String): SharedPreferences.Editor {
-    return getPreference(preferenceName).edit()
-  }
+  private fun getPreferenceEditor(preferenceName: String) = getPreference(preferenceName).edit()
 
 }

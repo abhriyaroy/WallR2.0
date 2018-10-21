@@ -71,7 +71,7 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
 
     loadWallrLogo()
     showProFeatures(buildProFeaturesList())
-    setClickListeners()
+    attachClickListeners()
   }
 
   override fun onResume() {
@@ -224,7 +224,7 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
     }
   }
 
-  private fun setClickListeners() {
+  private fun attachClickListeners() {
     purchaseButton.setOnClickListener {
       buyProPresenter.notifyPurchaseClicked()
     }

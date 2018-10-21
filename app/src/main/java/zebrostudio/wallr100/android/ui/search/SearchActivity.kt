@@ -1,12 +1,10 @@
 package zebrostudio.wallr100.android.ui.search
 
-import android.app.Activity
 import android.arch.lifecycle.Lifecycle
 import android.content.Intent
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.speech.RecognizerIntent
 import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.GridLayoutManager
 import com.miguelcatalan.materialsearchview.MaterialSearchView
@@ -37,7 +35,7 @@ import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
 import zebrostudio.wallr100.presentation.search.SearchContract
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.*
 import javax.inject.Inject
 
 class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
@@ -47,7 +45,10 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   @Inject
   internal lateinit var imageRecyclerViewPresenter: ImageRecyclerItemContract.ImageRecyclerViewPresenter
 
-  private var appBarCollapsed = false
+  private val activityFinishDelay = 300
+  private val emptyPendingTransitionAnimation = 0
+  private val disableScrollFlag = 0
+  private var appBarIsCollapsed = false
   private var recyclerviewAdapter: ImageAdapter? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,12 +57,12 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     setContentView(R.layout.activity_search)
     presenter.attachView(this)
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      overridePendingTransition(R.anim.slide_in_up, 0)
+      overridePendingTransition(R.anim.slide_in_up, emptyPendingTransitionAnimation)
     }
     initAppbar()
     showNoInputView()
     initRecyclerView()
-    initRetryClickListener()
+    attachRetryClickListener()
   }
 
   override fun onDestroy() {
@@ -74,21 +75,21 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   }
 
   override fun onBackPressed() {
-    if (appBarCollapsed) {
+    if (appBarIsCollapsed) {
       searchAppBar.setExpanded(true, true)
-      withDelayOnMain(300, block = {
+      withDelayOnMain(activityFinishDelay.toLong(), block = {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
           finish()
-          overridePendingTransition(0, R.anim.slide_out_down)
+          overridePendingTransition(emptyPendingTransitionAnimation, R.anim.slide_out_down)
         } else {
-          appBarCollapsed = false
+          appBarIsCollapsed = false
           val params = searchView?.layoutParams as AppBarLayout.LayoutParams
-          params.scrollFlags = 0
+          params.scrollFlags = disableScrollFlag
           onBackPressed()
         }
       })
     } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-      overridePendingTransition(0, R.anim.slide_out_down)
+      overridePendingTransition(emptyPendingTransitionAnimation, R.anim.slide_out_down)
       finish()
     } else super.onBackPressed()
   }
@@ -200,9 +201,9 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   private fun initAppbar() {
     searchAppBar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
       if (Math.abs(verticalOffset) == appBarLayout.totalScrollRange) {
-        appBarCollapsed = true
+        appBarIsCollapsed = true
       } else if (verticalOffset == 0) {
-        appBarCollapsed = false
+        appBarIsCollapsed = false
       }
     }
     searchView.backButton.setOnClickListener { onBackPressed() }
@@ -227,7 +228,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     recyclerView.layoutManager = layoutManager
     recyclerviewAdapter = ImageAdapter(imageRecyclerViewPresenter)
     val scaleInAdapter = ScaleInAnimationAdapter(recyclerviewAdapter)
-    scaleInAdapter.setDuration(TimeUnit.MILLISECONDS.toMillis(500).toInt())
+    scaleInAdapter.setDuration(MILLISECONDS.toMillis(500).toInt())
     recyclerView.addItemDecoration(
         GridItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
             integerRes(R.integer.recycler_view_grid_size)))
@@ -240,7 +241,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     })
   }
 
-  private fun initRetryClickListener() {
+  private fun attachRetryClickListener() {
     retryButton.setOnClickListener {
       presenter.notifyRetryButtonClicked()
     }

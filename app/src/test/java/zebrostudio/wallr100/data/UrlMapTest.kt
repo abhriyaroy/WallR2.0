@@ -15,24 +15,24 @@ class UrlMapTest {
   private val purchaseToken = randomUUID().toString()
   private val keyword = randomUUID().toString()
   private val queryPage = 1
+  private val firebasePurchaseAuthUrl = "https://us-central1-wallrproduction.cloudfunctions.net/"
+  private val firebasePurchaseAuthEndpoint =
+      "purchaseVerification?packageName=$packageName&skuId=$skuId&purchaseToken=$purchaseToken"
+  private val queryString = "photos/search?query=$keyword&per_page=30&page=$queryPage"
 
   @Test
   fun `should return valid firebase purchase auth base url on firebase_puchase_auth_url call`() {
-    assertEquals("https://us-central1-wallrproduction.cloudfunctions.net/",
-        UrlMap.FIREBASE_PURCHASE_AUTH_URL)
+    assertEquals(firebasePurchaseAuthUrl, UrlMap.FIREBASE_PURCHASE_AUTH_URL)
   }
 
   @Test
   fun `should return valid firebase purchase auth endpoint on getFirebasePurchaseAuthEndpoint call`() {
-    assertEquals(
-        "purchaseVerification?packageName=$packageName&skuId=$skuId&purchaseToken=$purchaseToken",
+    assertEquals(firebasePurchaseAuthEndpoint,
         UrlMap.getFirebasePurchaseAuthEndpoint(packageName, skuId, purchaseToken))
   }
 
   @Test fun `should return valid search query string on getQueryString call`() {
-    assertEquals(
-        "photos/search?query=$keyword&per_page=30&page=$queryPage",
-        UrlMap.getQueryString(keyword, queryPage))
+    assertEquals(queryString, UrlMap.getQueryString(keyword, queryPage))
   }
 
 }

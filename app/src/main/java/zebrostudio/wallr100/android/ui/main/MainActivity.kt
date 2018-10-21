@@ -284,13 +284,13 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
 
   private fun attachToolbarItemClickListeners() {
     toolbarSearchIcon.setOnClickListener {
-      val i = Intent(this, SearchActivity::class.java)
+      val searchActivityIntent = Intent(this, SearchActivity::class.java)
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, it,
             stringRes(R.string.search_view_transition_name))
-        startActivity(i, options.toBundle())
+        startActivity(searchActivityIntent, options.toBundle())
       } else {
-        startActivity(i)
+        startActivity(searchActivityIntent)
       }
     }
   }

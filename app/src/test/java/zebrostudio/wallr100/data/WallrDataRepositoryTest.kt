@@ -34,7 +34,7 @@ class WallrDataRepositoryTest {
   @Mock lateinit var unsplashClientFactory: UnsplashClientFactory
   private lateinit var pictureEntityMapper: PictureEntityMapper
   private lateinit var wallrDataRepository: WallrDataRepository
-  private val dummyString = randomUUID().toString()
+  private val randomString = randomUUID().toString()
   private val dummyInt = 500 // to force some error other than 403 or 404
   private val unableToResolveHostExceptionMessage = "Unable to resolve host " +
       "\"api.unsplash.com\": No address associated with hostname"
@@ -50,10 +50,10 @@ class WallrDataRepositoryTest {
 
   @Test fun `should return single on server success response`() {
     `when`(remoteAuthServiceFactory.verifyPurchaseService(
-        UrlMap.getFirebasePurchaseAuthEndpoint(dummyString, dummyString, dummyString)))
-        .thenReturn(Single.just(PurchaseAuthResponseEntity("success", dummyInt, dummyString)))
+        UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString)))
+        .thenReturn(Single.just(PurchaseAuthResponseEntity("success", dummyInt, randomString)))
 
-    wallrDataRepository.authenticatePurchase(dummyString, dummyString, dummyString)
+    wallrDataRepository.authenticatePurchase(randomString, randomString, randomString)
         .test()
         .assertComplete()
   }
@@ -61,10 +61,10 @@ class WallrDataRepositoryTest {
   @Test
   fun `should return invalid purchase exception on authenticatePurchase 403 error response`() {
     `when`(remoteAuthServiceFactory.verifyPurchaseService(
-        UrlMap.getFirebasePurchaseAuthEndpoint(dummyString, dummyString, dummyString)))
-        .thenReturn(Single.just(PurchaseAuthResponseEntity("error", 403, dummyString)))
+        UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString)))
+        .thenReturn(Single.just(PurchaseAuthResponseEntity("error", 403, randomString)))
 
-    wallrDataRepository.authenticatePurchase(dummyString, dummyString, dummyString)
+    wallrDataRepository.authenticatePurchase(randomString, randomString, randomString)
         .test()
         .assertError(InvalidPurchaseException::class.java)
   }
@@ -72,10 +72,10 @@ class WallrDataRepositoryTest {
   @Test
   fun `should return invalid purchase exception on authenticatePurchase 404 error response`() {
     `when`(remoteAuthServiceFactory.verifyPurchaseService(
-        UrlMap.getFirebasePurchaseAuthEndpoint(dummyString, dummyString, dummyString)))
-        .thenReturn(Single.just(PurchaseAuthResponseEntity("error", 404, dummyString)))
+        UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString)))
+        .thenReturn(Single.just(PurchaseAuthResponseEntity("error", 404, randomString)))
 
-    wallrDataRepository.authenticatePurchase(dummyString, dummyString, dummyString)
+    wallrDataRepository.authenticatePurchase(randomString, randomString, randomString)
         .test()
         .assertError(InvalidPurchaseException::class.java)
   }
@@ -83,10 +83,10 @@ class WallrDataRepositoryTest {
   @Test
   fun `should return unable to verify purchase exception on some error during authenticatePurchase call`() {
     `when`(remoteAuthServiceFactory.verifyPurchaseService(
-        UrlMap.getFirebasePurchaseAuthEndpoint(dummyString, dummyString, dummyString)))
-        .thenReturn(Single.just(PurchaseAuthResponseEntity(dummyString, dummyInt, dummyString)))
+        UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString)))
+        .thenReturn(Single.just(PurchaseAuthResponseEntity(randomString, dummyInt, randomString)))
 
-    wallrDataRepository.authenticatePurchase(dummyString, dummyString, dummyString)
+    wallrDataRepository.authenticatePurchase(randomString, randomString, randomString)
         .test()
         .assertError(UnableToVerifyPurchaseException::class.java)
   }
@@ -120,19 +120,19 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should return no result found exception on getPictures call success`() {
-    `when`(unsplashClientFactory.getPicturesService(dummyString)).thenReturn(
+    `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
         Single.just(emptyList()))
 
-    wallrDataRepository.getPictures(dummyString)
+    wallrDataRepository.getPictures(randomString)
         .test()
         .assertError(NoResultFoundException::class.java)
   }
 
   @Test fun `should return unable to resolve host exception on getPictures call failure`() {
-    `when`(unsplashClientFactory.getPicturesService(dummyString)).thenReturn(
+    `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
         Single.error(Exception(unableToResolveHostExceptionMessage)))
 
-    wallrDataRepository.getPictures(dummyString)
+    wallrDataRepository.getPictures(randomString)
         .test()
         .assertError(UnableToResolveHostException::class.java)
   }
@@ -144,10 +144,10 @@ class WallrDataRepositoryTest {
     val searchPicturesModelList = pictureEntityMapper
         .mapFromEntity(unsplashPicturesEntityList)
 
-    `when`(unsplashClientFactory.getPicturesService(dummyString)).thenReturn(
+    `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
         Single.just(unsplashPicturesEntityList))
 
-    val picture = wallrDataRepository.getPictures(dummyString)
+    val picture = wallrDataRepository.getPictures(randomString)
         .test()
         .values()[0][0]
 

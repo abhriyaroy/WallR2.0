@@ -1,21 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+
+<ImageView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/imageView"
     android:layout_width="match_parent"
-    android:layout_height="230dp">
+    android:layout_height="230dp"
+    android:scaleType="centerCrop"/>
 
-  <com.balysv.materialripple.MaterialRippleLayout
-      android:id="@+id/materialRippleLayout"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent">
-
-    <ImageView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
-
-  </com.balysv.materialripple.MaterialRippleLayout>
-
-</FrameLayout>

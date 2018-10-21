@@ -4,7 +4,7 @@ import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
 import android.view.View
 
-class RecyclerviewItemDecorator(private val sizeGridSpacingPx: Int, private val gridSize: Int) :
+class RecyclerViewItemDecorator(private val sizeGridSpacingPx: Int, private val gridSize: Int) :
     RecyclerView.ItemDecoration() {
 
   private var needLeftSpacing = false

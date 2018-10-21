@@ -1,5 +1,7 @@
 package zebrostudio.wallr100.domain
 
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.Assert.*
@@ -47,6 +49,9 @@ class SearchPicturesInteractorTest {
         .values()[0][0]
 
     assertEquals(picture, searchPicturesModelList[0])
+
+    verify(wallrRepository).getPictures(dummyString)
+    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test
@@ -57,6 +62,9 @@ class SearchPicturesInteractorTest {
     searchPicturesUseCase.buildUseCaseSingle(dummyString)
         .test()
         .assertError(NoResultFoundException::class.java)
+
+    verify(wallrRepository).getPictures(dummyString)
+    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test
@@ -67,5 +75,8 @@ class SearchPicturesInteractorTest {
     searchPicturesUseCase.buildUseCaseSingle(dummyString)
         .test()
         .assertError(UnableToResolveHostException::class.java)
+
+    verify(wallrRepository).getPictures(dummyString)
+    verifyNoMoreInteractions(wallrRepository)
   }
 }
