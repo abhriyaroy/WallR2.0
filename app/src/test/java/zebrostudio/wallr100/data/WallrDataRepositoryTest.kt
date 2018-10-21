@@ -1,5 +1,7 @@
 package zebrostudio.wallr100.data
 
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.Single
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -78,6 +80,10 @@ class WallrDataRepositoryTest {
     wallrDataRepository.authenticatePurchase(randomString, randomString, randomString)
         .test()
         .assertError(InvalidPurchaseException::class.java)
+
+    verify(remoteAuthServiceFactory).verifyPurchaseService(
+        UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
+    verifyNoMoreInteractions(remoteAuthServiceFactory)
   }
 
   @Test
@@ -89,6 +95,10 @@ class WallrDataRepositoryTest {
     wallrDataRepository.authenticatePurchase(randomString, randomString, randomString)
         .test()
         .assertError(UnableToVerifyPurchaseException::class.java)
+
+    verify(remoteAuthServiceFactory).verifyPurchaseService(
+        UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
+    verifyNoMoreInteractions(remoteAuthServiceFactory)
   }
 
   @Test fun `should return true after successfully updating purchase status`() {
@@ -103,6 +113,9 @@ class WallrDataRepositoryTest {
         premiumUserTag, true)).thenReturn(false)
 
     assertEquals(false, wallrDataRepository.updateUserPurchaseStatus())
+
+    verify(sharedPrefs).setBoolean(purchasePreferenceName, premiumUserTag, true)
+    verifyNoMoreInteractions(sharedPrefs)
   }
 
   @Test fun `should return true after checking if user is a premium user`() {
@@ -110,6 +123,9 @@ class WallrDataRepositoryTest {
         premiumUserTag, false)).thenReturn(true)
 
     assertEquals(true, wallrDataRepository.isUserPremium())
+
+    verify(sharedPrefs).getBoolean(purchasePreferenceName, premiumUserTag, false)
+    verifyNoMoreInteractions(sharedPrefs)
   }
 
   @Test fun `should return false after checking if user is a premium user`() {
@@ -117,6 +133,9 @@ class WallrDataRepositoryTest {
         premiumUserTag, false)).thenReturn(false)
 
     assertEquals(false, wallrDataRepository.isUserPremium())
+
+    verify(sharedPrefs).getBoolean(purchasePreferenceName, premiumUserTag, false)
+    verifyNoMoreInteractions(sharedPrefs)
   }
 
   @Test fun `should return no result found exception on getPictures call success`() {
@@ -126,6 +145,9 @@ class WallrDataRepositoryTest {
     wallrDataRepository.getPictures(randomString)
         .test()
         .assertError(NoResultFoundException::class.java)
+
+    verify(unsplashClientFactory).getPicturesService(randomString)
+    verifyNoMoreInteractions(unsplashClientFactory)
   }
 
   @Test fun `should return unable to resolve host exception on getPictures call failure`() {
@@ -135,6 +157,9 @@ class WallrDataRepositoryTest {
     wallrDataRepository.getPictures(randomString)
         .test()
         .assertError(UnableToResolveHostException::class.java)
+
+    verify(unsplashClientFactory).getPicturesService(randomString)
+    verifyNoMoreInteractions(unsplashClientFactory)
   }
 
   @Test fun `should return mapped search pictures model list on getPictures call failure`() {
@@ -152,6 +177,8 @@ class WallrDataRepositoryTest {
         .values()[0][0]
 
     assertTrue(searchPicturesModelList[0].id == picture.id)
+    verify(unsplashClientFactory).getPicturesService(randomString)
+    verifyNoMoreInteractions(unsplashClientFactory)
   }
 
 }
