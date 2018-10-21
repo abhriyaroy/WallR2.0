@@ -10,9 +10,6 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 
-/**
- * @author Miguel Catalan Bañuls
- */
 public class AnimationUtil {
 
   public static int ANIMATION_DURATION_SHORT = 150;

@@ -19,7 +19,6 @@ import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.SearchPicturesInteractor
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
-import java.lang.Exception
 import java.util.UUID.*
 
 @RunWith(MockitoJUnitRunner::class)

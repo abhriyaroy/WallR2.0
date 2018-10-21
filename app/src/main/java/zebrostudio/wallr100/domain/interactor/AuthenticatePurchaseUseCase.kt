@@ -1,7 +1,6 @@
 package zebrostudio.wallr100.domain.interactor
 
 import io.reactivex.Completable
-import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.WallrRepository
