@@ -67,4 +67,16 @@
   <string name="buy_pro_restore_successful_message">
     Your purchase has been restored successfully</string>
 
+  <!-- Search activity strings -->
+  <string name="search_type_in_a_query_message">Type in a search query</string>
+  <string name="search_no_result_message">Woah there! We found nothing for </string>
+  <string name="search_retry_message">Retry</string>
+  <string name="search_no_internet_message">Please ensure you have a working internet connection</string>
+  <string name="search_unable_to_search_message">Unable to search right now</string>
+  <string name="search_something_went_wrong_message">Snap! Something went wrong</string>
+  <string name="search_please_try_again">Please try again</string>
+  <string name="search_input_a_query_and_please_try_again">Please input a search query and try again</string>
+  <string name="search_view_transition_name">searchTransition</string>
+  <string name="search_generic_error_message">Something went wrong. Please try again</string>
+
 </resources>

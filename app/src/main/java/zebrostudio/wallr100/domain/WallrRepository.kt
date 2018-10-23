@@ -1,6 +1,8 @@
 package zebrostudio.wallr100.domain
 
 import io.reactivex.Completable
+import io.reactivex.Single
+import zebrostudio.wallr100.domain.model.SearchPicturesModel
 
 interface WallrRepository {
 
@@ -12,5 +14,7 @@ interface WallrRepository {
 
   fun updateUserPurchaseStatus(): Boolean
   fun isUserPremium(): Boolean
+
+  fun getPictures(query: String): Single<List<SearchPicturesModel>>
 
 }

@@ -65,8 +65,13 @@ android {
     annotationProcessor "com.github.bumptech.glide:compiler:$GLIDE_VERSION"
     // Material Dialog
     implementation "com.afollestad.material-dialogs:core:$MATERIAL_DIALOG_VERSION"
+    // Ripple View
+    implementation "com.balysv:material-ripple:$RIPPLE_LAYOUT_VERSION"
+    // Recyclerview Animator
+    implementation "jp.wasabeef:recyclerview-animators:$RECYCLER_VIEW_ANIMATOR_VERSION"
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
+    implementation project(':librarySearch')
     implementation project(':libraryWallrCustoms')
     implementation project(':libraryPurchaseFlow')
 
@@ -74,6 +79,5 @@ android {
     testImplementation "junit:junit:$JUNIT_VERSION"
     testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_VERSION"
-
   }
 }

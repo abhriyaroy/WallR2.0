@@ -1,9 +1,7 @@
 package zebrostudio.wallr100.android.ui.buypro
 
 import android.arch.lifecycle.Lifecycle
-import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +10,8 @@ import com.bumptech.glide.Glide
 import com.uber.autodispose.ScopeProvider
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.zebrostudio.librarypurchaseflow.IabHelper
+import com.zebrostudio.librarypurchaseflow.IabHelper.OnIabPurchaseFinishedListener
+import com.zebrostudio.librarypurchaseflow.IabHelper.QueryInventoryFinishedListener
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_buy_pro.buyProFeatures
 import kotlinx.android.synthetic.main.activity_buy_pro.proLogo
@@ -21,11 +21,11 @@ import kotlinx.android.synthetic.main.item_buy_pro_features.view.descriptionText
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.headerTextView
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.imageView
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.ui.buypro.BuyProActivity.PremiumTransactionType.PURCHASE
-import zebrostudio.wallr100.android.ui.buypro.BuyProActivity.PremiumTransactionType.RESTORE
+import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.*
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.infoToast
+import zebrostudio.wallr100.android.utils.internetAvailability
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.presentation.buypro.BuyProContract
@@ -38,31 +38,29 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
   private lateinit var materialDialog: MaterialDialog
   private var iabHelper: IabHelper? = null
 
-  private val purchaseFinishedListener =
-      IabHelper.OnIabPurchaseFinishedListener { result, purchase ->
-        if (result.isFailure) {
-          showTryRestoringInfo()
-          dismissWaitLoader()
-        } else {
-          buyProPresenter.verifyPurchase(purchase.packageName,
-              purchase.sku,
-              purchase.token,
-              PURCHASE)
-        }
-      }
-  private val queryInventoryFinishedListener =
-      IabHelper.QueryInventoryFinishedListener { result, inv ->
-        if (result.isFailure) {
-          showGenericVerificationError()
-          dismissWaitLoader()
-        } else {
-          buyProPresenter.verifyPurchase(
-              inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).packageName,
-              inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).sku,
-              inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).token,
-              RESTORE)
-        }
-      }
+  private val purchaseFinishedListener = OnIabPurchaseFinishedListener { result, purchase ->
+    if (result.isFailure) {
+      showTryRestoringInfo()
+      dismissWaitLoader()
+    } else {
+      buyProPresenter.verifyPurchase(purchase.packageName,
+          purchase.sku,
+          purchase.token,
+          PURCHASE)
+    }
+  }
+  private val queryInventoryFinishedListener = QueryInventoryFinishedListener { result, inv ->
+    if (result.isFailure) {
+      showGenericVerificationError()
+      dismissWaitLoader()
+    } else {
+      buyProPresenter.verifyPurchase(
+          inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).packageName,
+          inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).sku,
+          inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).token,
+          RESTORE)
+    }
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)
@@ -73,7 +71,7 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
 
     loadWallrLogo()
     showProFeatures(buildProFeaturesList())
-    setClickListeners()
+    attachClickListeners()
   }
 
   override fun onResume() {
@@ -177,10 +175,7 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
   }
 
   override fun isInternetAvailable(): Boolean {
-    val connectivityManager =
-        getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
-    val activeNetworkInfo = connectivityManager?.activeNetworkInfo
-    return activeNetworkInfo != null && activeNetworkInfo.isConnected
+    return this.internetAvailability()
   }
 
   override fun launchPurchase() {
@@ -229,7 +224,7 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
     }
   }
 
-  private fun setClickListeners() {
+  private fun attachClickListeners() {
     purchaseButton.setOnClickListener {
       buyProPresenter.notifyPurchaseClicked()
     }
@@ -243,9 +238,9 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
     infoToast(stringRes(R.string.buy_pro_try_restoring_message))
   }
 
-  enum class PremiumTransactionType {
-    PURCHASE,
-    RESTORE
-  }
+}
 
+enum class PremiumTransactionType {
+  PURCHASE,
+  RESTORE
 }

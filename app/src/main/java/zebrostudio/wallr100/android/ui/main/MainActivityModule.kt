@@ -10,7 +10,7 @@ import zebrostudio.wallr100.presentation.main.MainContract
 class MainActivityModule {
 
   @Provides
-  internal fun provideMainPresenter(userPremiumStatusUseCase: UserPremiumStatusUseCase)
+  fun provideMainPresenter(userPremiumStatusUseCase: UserPremiumStatusUseCase)
       : MainContract.MainPresenter = MainActivityPresenterImpl(userPremiumStatusUseCase)
 
 }

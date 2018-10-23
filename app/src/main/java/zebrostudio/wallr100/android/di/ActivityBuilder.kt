@@ -7,6 +7,8 @@ import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProModule
 import zebrostudio.wallr100.android.ui.main.MainActivityModule
+import zebrostudio.wallr100.android.ui.search.SearchActivity
+import zebrostudio.wallr100.android.ui.search.SearchActivityModule
 
 @Module
 abstract class ActivityBuilder {
@@ -18,5 +20,9 @@ abstract class ActivityBuilder {
   @PerActivity
   @ContributesAndroidInjector(modules = [(BuyProModule::class)])
   abstract fun buyProActivity(): BuyProActivity
+
+  @PerActivity
+  @ContributesAndroidInjector(modules = [(SearchActivityModule::class)])
+  abstract fun searchActivity(): SearchActivity
 
 }

@@ -9,7 +9,7 @@ import zebrostudio.wallr100.presentation.wallpaper.WallpaperPresenterImpl
 class WallpaperModule {
 
   @Provides
-  internal fun provideWallpaperPresenter():
+  fun provideWallpaperPresenter():
       WallpaperContract.WallpaperPresenter = WallpaperPresenterImpl()
 
 }

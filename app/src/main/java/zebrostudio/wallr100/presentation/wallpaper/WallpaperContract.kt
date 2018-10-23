@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.presentation.wallpaper
 
-import zebrostudio.wallr100.android.BasePresenter
+import zebrostudio.wallr100.presentation.BasePresenter
 
 interface WallpaperContract {
 

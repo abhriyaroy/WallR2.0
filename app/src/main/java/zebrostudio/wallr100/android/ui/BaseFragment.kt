@@ -3,14 +3,15 @@ package zebrostudio.wallr100.android.ui
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
 import dagger.android.support.AndroidSupportInjection
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.setMenuItemColorRed
 import zebrostudio.wallr100.android.utils.setMenuItemColorWhite
+import zebrostudio.wallr100.android.utils.visible
 
 abstract class BaseFragment : Fragment() {
 
@@ -50,14 +51,14 @@ abstract class BaseFragment : Fragment() {
   }
 
   private fun showToolbarMenuIcon() {
-    activity?.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.visibility = View.GONE
-    activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visibility = View.GONE
+    activity?.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.gone()
+    activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.gone()
     when (fragmentTag) {
       getString(R.string.guillotine_minimal_title) ->
-        activity?.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.visibility = View.VISIBLE
+        activity?.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.visible()
       getString(R.string.guillotine_collection_title) -> {  // Do nothing
       }
-      else -> activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visibility = View.VISIBLE
+      else -> activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visible()
     }
   }
 

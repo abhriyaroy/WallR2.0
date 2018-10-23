@@ -8,6 +8,7 @@ import android.os.Looper
 import android.support.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.*
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
@@ -17,6 +18,14 @@ fun View.setOnDebouncedClickListener(onClick: (v: View) -> Unit) {
   setOnClickListener(object : DebouncedOnClickListener() {
     override fun onDebouncedClick(v: View) = onClick(v)
   })
+}
+
+fun View.gone() {
+  this.visibility = GONE
+}
+
+fun View.visible() {
+  this.visibility = VISIBLE
 }
 
 fun ViewGroup.inflate(

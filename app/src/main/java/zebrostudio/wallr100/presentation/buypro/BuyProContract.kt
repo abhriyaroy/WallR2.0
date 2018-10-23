@@ -1,22 +1,22 @@
 package zebrostudio.wallr100.presentation.buypro
 
-import com.uber.autodispose.ScopeProvider
-import zebrostudio.wallr100.android.BasePresenter
-import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
+import zebrostudio.wallr100.presentation.BasePresenter
+import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType
+import zebrostudio.wallr100.presentation.BaseView
 
 interface BuyProContract {
 
-  interface BuyProView {
+  interface BuyProView : BaseView {
     fun showInvalidPurchaseError()
     fun showUnableToVerifyPurchaseError()
-    fun showNoInternetErrorMessage(premiumOperationType: BuyProActivity.PremiumTransactionType)
+    fun showNoInternetErrorMessage(premiumOperationType: PremiumTransactionType)
     fun showGenericVerificationError()
     fun showSuccessfulTransactionMessage(
-      proTransactionType: BuyProActivity.PremiumTransactionType
+      proTransactionType: PremiumTransactionType
     )
-    fun showWaitLoader(proTransactionType: BuyProActivity.PremiumTransactionType)
+
+    fun showWaitLoader(proTransactionType: PremiumTransactionType)
     fun dismissWaitLoader()
-    fun getScope(): ScopeProvider
     fun finishWithResult()
 
     fun isIabReady(): Boolean
@@ -34,7 +34,7 @@ interface BuyProContract {
       packageName: String,
       skuId: String,
       purchaseToken: String,
-      proTransactionType: BuyProActivity.PremiumTransactionType
+      proTransactionType: PremiumTransactionType
     )
   }
 

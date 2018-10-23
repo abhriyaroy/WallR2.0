@@ -2,8 +2,10 @@ package zebrostudio.wallr100.android.ui.main
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.annotation.IdRes
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
@@ -22,6 +24,7 @@ import kotlinx.android.synthetic.main.guillotine_menu_layout.view.hamburgerGuill
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.imageviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.textviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
+import kotlinx.android.synthetic.main.toolbar_layout.toolbarSearchIcon
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
@@ -29,9 +32,11 @@ import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.android.ui.collection.CollectionFragment
 import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment
 import zebrostudio.wallr100.android.ui.minimal.MinimalFragment
+import zebrostudio.wallr100.android.ui.search.SearchActivity
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.drawableRes
 import zebrostudio.wallr100.android.utils.errorToast
+import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.infoToast
 import zebrostudio.wallr100.android.utils.setOnDebouncedClickListener
 import zebrostudio.wallr100.android.utils.stringRes
@@ -58,6 +63,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     initializeViews()
     addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
         WallpaperFragment.EXPLORE_FRAGMENT_TAG)
+
+    attachToolbarItemClickListeners()
   }
 
   override fun onBackPressed() {
@@ -72,7 +79,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     if (requestCode == PurchaseTransactionConfig.PURCHASE_REQUEST_CODE &&
         resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
-      buyProMenuItem?.visibility = View.GONE
+      buyProMenuItem?.gone()
     }
   }
 
@@ -167,7 +174,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
 
   private fun buildGuillotineMenuItems(): List<Triple<Int, Int, MenuItems>> {
     // Declare mutable list containing names and icon resources of guillotine menu items
-    val menuItemDetails = mutableListOf<Triple<Int, Int, MenuItems>>().apply {
+    return mutableListOf<Triple<Int, Int, MenuItems>>().apply {
       add(Triple(R.string.guillotine_explore_title, R.drawable.ic_explore_white,
           MenuItems.EXPLORE))
       add(Triple(R.string.guillotine_top_picks_title, R.drawable.ic_toppicks_white,
@@ -183,7 +190,6 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
       add(Triple(R.string.guillotine_buy_pro_title, R.drawable.ic_buypro_black,
           MenuItems.BUY_PRO))
     }
-    return menuItemDetails
   }
 
   private fun setUpGuillotineMenuItems(guillotineMenuItems: List<Triple<Int, Int, MenuItems>>) {
@@ -205,7 +211,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         guillotineMenuItemView.textviewGuillotineMenuItem
             .setTextColor(colorRes(R.color.color_black))
         if (!presenter.shouldShowPurchaseOption()) {
-          guillotineMenuItemView.visibility = View.GONE
+          guillotineMenuItemView.gone()
         }
         buyProMenuItem = guillotineMenuItemView
       }
@@ -272,6 +278,19 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         startActivityForResult(Intent.createChooser(emailIntent, "Contact using"), 0)
       } catch (e: ActivityNotFoundException) {
         errorToast(stringRes(R.string.main_activity_no_email_client_error))
+      }
+    }
+  }
+
+  private fun attachToolbarItemClickListeners() {
+    toolbarSearchIcon.setOnClickListener {
+      val searchActivityIntent = Intent(this, SearchActivity::class.java)
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, it,
+            stringRes(R.string.search_view_transition_name))
+        startActivity(searchActivityIntent, options.toBundle())
+      } else {
+        startActivity(searchActivityIntent)
       }
     }
   }

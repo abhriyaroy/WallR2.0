@@ -48,8 +48,6 @@ import org.json.JSONException;
  * Also, notice that you can only call one asynchronous operation at a time;
  * attempting to start a second asynchronous operation while the first one
  * has not yet completed will result in an exception being thrown.
- *
- * @author Bruno Oliveira (Google)
  */
 public class IabHelper {
   // Is debug logging enabled?
