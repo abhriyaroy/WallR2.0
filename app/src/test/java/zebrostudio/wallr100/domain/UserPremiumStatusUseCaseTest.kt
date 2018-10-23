@@ -8,6 +8,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import zebrostudio.wallr100.domain.interactor.UserPremiumStatusInteractor
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 
 @RunWith(MockitoJUnitRunner::class)
@@ -17,7 +18,7 @@ class UserPremiumStatusUseCaseTest {
   private lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
 
   @Before fun setup() {
-    userPremiumStatusUseCase = UserPremiumStatusUseCase(wallrRepository)
+    userPremiumStatusUseCase = UserPremiumStatusInteractor(wallrRepository)
   }
 
   @Test fun `should call updateUserPurchaseStatus to updateUserPurchaseStatus`() {

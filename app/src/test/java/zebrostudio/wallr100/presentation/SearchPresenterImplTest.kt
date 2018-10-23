@@ -20,7 +20,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
-import zebrostudio.wallr100.data.api.UrlMap.Companion.getQueryString
+import zebrostudio.wallr100.data.api.UrlMap.getQueryString
 import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase

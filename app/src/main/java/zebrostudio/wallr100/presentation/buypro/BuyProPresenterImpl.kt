@@ -79,9 +79,6 @@ class BuyProPresenterImpl(
     } else {
       buyProView?.showGenericVerificationError()
     }
-    else{
-      buyProView?.showGenericVerificationError()
-    }
   }
 
 }

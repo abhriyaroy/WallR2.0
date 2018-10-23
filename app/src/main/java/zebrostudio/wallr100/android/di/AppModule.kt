@@ -37,8 +37,6 @@ class AppModule {
   @Provides
   @PerApplication
   fun provideSharedPrefsHelper(context: Context): SharedPrefsHelper = SharedPrefsHelperImpl(context)
-  fun provideSharedPrefsHelper(context: Context): SharedPrefsHelper =
-      SharedPrefsHelperImpl(context)
 
   @Provides
   @PerApplication

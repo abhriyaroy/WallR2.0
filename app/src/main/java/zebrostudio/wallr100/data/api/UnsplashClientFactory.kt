@@ -5,7 +5,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import zebrostudio.wallr100.data.api.UrlMap.Companion.UNSPLASH_BASE_URL
+import zebrostudio.wallr100.data.api.UrlMap.UNSPLASH_BASE_URL
 import zebrostudio.wallr100.data.model.unsplashmodel.UnsplashPicturesEntity
 
 interface UnsplashClientFactory {

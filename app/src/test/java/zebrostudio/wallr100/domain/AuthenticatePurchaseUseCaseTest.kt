@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
+import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseInteractor
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 
@@ -30,7 +31,8 @@ class AuthenticatePurchaseUseCaseTest {
   private val skuId = java.util.UUID.randomUUID().toString()
 
   @Before fun setup() {
-    authenticatePurchaseUseCase = AuthenticatePurchaseUseCase(wallrRepository, postExecutionThread)
+    authenticatePurchaseUseCase =
+        AuthenticatePurchaseInteractor(wallrRepository, postExecutionThread)
     stubPostExecutionThreadReturnsIoScheduler()
   }
 

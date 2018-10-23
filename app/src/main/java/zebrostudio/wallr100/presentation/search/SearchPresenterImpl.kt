@@ -5,7 +5,7 @@ import android.content.Intent
 import android.speech.RecognizerIntent
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.uber.autodispose.autoDisposable
-import zebrostudio.wallr100.data.api.UrlMap.Companion.getQueryString
+import zebrostudio.wallr100.data.api.UrlMap.getQueryString
 import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
@@ -93,14 +93,10 @@ class SearchPresenterImpl(
 
   override fun notifyActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
     if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == Activity.RESULT_OK) {
-      System.out.println("true1")
       val matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-      System.out.println(matches)
       if (matches != null && matches.size > 0) {
-        System.out.println("true2")
         val searchWord = matches[0]
         if (!searchWord.isEmpty()) {
-          System.out.println("true3")
           searchView?.setSearchQueryWithoutSubmitting(searchWord)
         }
       }
