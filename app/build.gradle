@@ -69,6 +69,8 @@ android {
     implementation "com.balysv:material-ripple:$RIPPLE_LAYOUT_VERSION"
     // Recyclerview Animator
     implementation "jp.wasabeef:recyclerview-animators:$RECYCLER_VIEW_ANIMATOR_VERSION"
+    // Firebase
+    implementation "com.google.firebase:firebase-database:$FIREBASE_DATABASE_VERSION"
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
     implementation project(':librarySearch')
@@ -81,3 +83,4 @@ android {
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_VERSION"
   }
 }
+apply plugin: 'com.google.gms.google-services'
