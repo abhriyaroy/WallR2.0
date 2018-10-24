@@ -10,6 +10,7 @@ import zebrostudio.wallr100.android.di.scopes.PerApplication
 import zebrostudio.wallr100.data.SharedPrefsHelper
 import zebrostudio.wallr100.data.SharedPrefsHelperImpl
 import zebrostudio.wallr100.data.WallrDataRepository
+import zebrostudio.wallr100.data.api.FirebaseDatabaseHelper
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactoryImpl
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
@@ -40,6 +41,10 @@ class AppModule {
 
   @Provides
   @PerApplication
+  fun provideFirebaseDatabaseHelper(): FirebaseDatabaseHelper = FirebaseDatabaseHelper()
+
+  @Provides
+  @PerApplication
   fun provideAndroidMainThread(): PostExecutionThread = AndroidMainThread()
 
   @Provides
@@ -60,11 +65,13 @@ class AppModule {
     retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
     unsplashClientFactory: UnsplashClientFactory,
     sharedPrefsHelper: SharedPrefsHelper,
-    pictureEntityMapper: PictureEntityMapper
+    pictureEntityMapper: PictureEntityMapper,
+    firebaseDatabaseHelper: FirebaseDatabaseHelper
   ): WallrRepository = WallrDataRepository(retrofitFirebaseAuthFactory,
       unsplashClientFactory,
       sharedPrefsHelper,
-      pictureEntityMapper)
+      pictureEntityMapper,
+      firebaseDatabaseHelper)
 
   @Provides
   @PerApplication
