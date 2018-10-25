@@ -2,7 +2,6 @@ package zebrostudio.wallr100.data
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import zebrostudio.wallr100.data.api.FirebaseDatabaseHelper
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
@@ -10,17 +9,19 @@ import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
-import zebrostudio.wallr100.data.mapper.PictureEntityMapper
-import zebrostudio.wallr100.data.model.firebasedatabase.FirebasePicturesEntity
+import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
+import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.domain.WallrRepository
+import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
 
 class WallrDataRepository(
   private var retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
   private var unsplashClientFactory: UnsplashClientFactory,
   private var sharedPrefsHelper: SharedPrefsHelper,
-  private var pictureEntityMapper: PictureEntityMapper,
-  private var firebaseDatabaseHelper: FirebaseDatabaseHelper
+  private var unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
+  private var firebaseDatabaseHelper: FirebaseDatabaseHelper,
+  private var firebasePictureEntityMapper: FirebasePictureEntityMapper
 ) : WallrRepository {
 
   private val purchasePreferenceName = "PURCHASE_PREF"
@@ -60,7 +61,7 @@ class WallrDataRepository(
           if (it.isEmpty()) {
             Single.error(NoResultFoundException())
           } else {
-            val map = pictureEntityMapper.mapFromEntity(it)
+            val map = unsplashPictureEntityMapper.mapFromEntity(it)
             Single.just(map)
           }
         }
@@ -73,12 +74,15 @@ class WallrDataRepository(
         }
   }
 
-  override fun getExplorePictures(): Single<List<FirebasePicturesEntity>> {
+  override fun getExplorePictures(): Single<List<ImageModel>> {
     return firebaseDatabaseHelper.fetch(
         firebaseDatabaseHelper
             .getDatabase()
             .getReference(firebaseDatabasePath)
             .child(childPathExplore))
+        .flatMap {
+          Single.just(firebasePictureEntityMapper.mapFromEntity(it))
+        }
   }
 
 }

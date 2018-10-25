@@ -10,12 +10,13 @@ import zebrostudio.wallr100.android.di.scopes.PerApplication
 import zebrostudio.wallr100.data.SharedPrefsHelper
 import zebrostudio.wallr100.data.SharedPrefsHelperImpl
 import zebrostudio.wallr100.data.WallrDataRepository
-import zebrostudio.wallr100.data.api.FirebaseDatabaseHelper
+import zebrostudio.wallr100.data.FirebaseDatabaseHelper
+import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactoryImpl
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactoryImpl
-import zebrostudio.wallr100.data.mapper.PictureEntityMapper
+import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseInteractor
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
@@ -41,7 +42,7 @@ class AppModule {
 
   @Provides
   @PerApplication
-  fun provideFirebaseDatabaseHelper(): FirebaseDatabaseHelper = FirebaseDatabaseHelper()
+  fun provideFirebaseDatabaseHelper(): FirebaseDatabaseHelper = FirebaseDatabaseHelperImpl()
 
   @Provides
   @PerApplication
@@ -57,7 +58,7 @@ class AppModule {
   fun provideUnsplashClientFactory(): UnsplashClientFactory = UnsplashClientFactoryImpl()
 
   @Provides
-  fun providePictureEntityMapper(): PictureEntityMapper = PictureEntityMapper()
+  fun providePictureEntityMapper(): UnsplashPictureEntityMapper = UnsplashPictureEntityMapper()
 
   @Provides
   @PerApplication
@@ -65,12 +66,12 @@ class AppModule {
     retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
     unsplashClientFactory: UnsplashClientFactory,
     sharedPrefsHelper: SharedPrefsHelper,
-    pictureEntityMapper: PictureEntityMapper,
+    unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
     firebaseDatabaseHelper: FirebaseDatabaseHelper
   ): WallrRepository = WallrDataRepository(retrofitFirebaseAuthFactory,
       unsplashClientFactory,
       sharedPrefsHelper,
-      pictureEntityMapper,
+      unsplashPictureEntityMapper,
       firebaseDatabaseHelper)
 
   @Provides

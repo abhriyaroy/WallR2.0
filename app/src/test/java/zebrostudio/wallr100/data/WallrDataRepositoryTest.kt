@@ -20,7 +20,7 @@ import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
-import zebrostudio.wallr100.data.mapper.PictureEntityMapper
+import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.lang.Exception
@@ -34,7 +34,8 @@ class WallrDataRepositoryTest {
   @Mock lateinit var sharedPrefs: SharedPrefsHelper
   @Mock lateinit var remoteAuthServiceFactory: RemoteAuthServiceFactory
   @Mock lateinit var unsplashClientFactory: UnsplashClientFactory
-  private lateinit var pictureEntityMapper: PictureEntityMapper
+  @Mock lateinit var firebaseDatabaseHelper: FirebaseDatabaseHelper
+  private lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
   private lateinit var wallrDataRepository: WallrDataRepository
   private val randomString = randomUUID().toString()
   private val dummyInt = 500 // to force some error other than 403 or 404
@@ -44,10 +45,10 @@ class WallrDataRepositoryTest {
   private val premiumUserTag = "premium_user"
 
   @Before fun setup() {
-    pictureEntityMapper = PictureEntityMapper()
+    unsplashPictureEntityMapper = UnsplashPictureEntityMapper()
     wallrDataRepository =
         WallrDataRepository(remoteAuthServiceFactory, unsplashClientFactory, sharedPrefs,
-            pictureEntityMapper)
+            unsplashPictureEntityMapper, firebaseDatabaseHelper)
   }
 
   @Test fun `should return single on server success response`() {
@@ -166,7 +167,7 @@ class WallrDataRepositoryTest {
     val unsplashPicturesEntityList = mutableListOf(
         UnsplashPictureEntityModelFactory.getUnsplashPictureEntityModel())
 
-    val searchPicturesModelList = pictureEntityMapper
+    val searchPicturesModelList = unsplashPictureEntityMapper
         .mapFromEntity(unsplashPicturesEntityList)
 
     `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
