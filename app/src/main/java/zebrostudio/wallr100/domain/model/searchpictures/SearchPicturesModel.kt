@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.domain.model
+package zebrostudio.wallr100.domain.model.searchpictures
 
 data class SearchPicturesModel(
   val id: String,

@@ -1,15 +1,16 @@
 package zebrostudio.wallr100.presentation.datafactory
 
-import zebrostudio.wallr100.domain.model.SearchPicturesModel
-import zebrostudio.wallr100.domain.model.UrlModel
-import zebrostudio.wallr100.domain.model.UserModel
+import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
+import zebrostudio.wallr100.domain.model.searchpictures.UrlModel
+import zebrostudio.wallr100.domain.model.searchpictures.UserModel
 import java.util.Random
 import java.util.UUID.*
 
 object SearchPicturesModelFactory {
 
   fun getSearchPicturesModelList(): List<SearchPicturesModel> {
-    var searchPicturesModel = SearchPicturesModel(randomUUID().toString(),
+    var searchPicturesModel = SearchPicturesModel(
+        randomUUID().toString(),
         randomUUID().toString(),
         Random().nextInt(),
         Random().nextInt(),

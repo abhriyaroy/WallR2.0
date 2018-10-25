@@ -13,7 +13,7 @@ import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.data.mapper.PictureEntityMapper
 import zebrostudio.wallr100.data.model.firebasedatabase.FirebasePicturesEntity
 import zebrostudio.wallr100.domain.WallrRepository
-import zebrostudio.wallr100.domain.model.SearchPicturesModel
+import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
 
 class WallrDataRepository(
   private var retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,

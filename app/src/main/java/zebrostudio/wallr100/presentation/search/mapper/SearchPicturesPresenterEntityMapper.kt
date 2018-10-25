@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.presentation.search.mapper
 
-import zebrostudio.wallr100.domain.model.SearchPicturesModel
+import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.search.model.UrlPresenterEntity
 import zebrostudio.wallr100.presentation.search.model.UserPresenterEntity

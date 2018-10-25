@@ -1,9 +1,9 @@
 package zebrostudio.wallr100.data.mapper
 
 import zebrostudio.wallr100.data.model.unsplashmodel.UnsplashPicturesEntity
-import zebrostudio.wallr100.domain.model.SearchPicturesModel
-import zebrostudio.wallr100.domain.model.UrlModel
-import zebrostudio.wallr100.domain.model.UserModel
+import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
+import zebrostudio.wallr100.domain.model.searchpictures.UrlModel
+import zebrostudio.wallr100.domain.model.searchpictures.UserModel
 
 class PictureEntityMapper {
 
@@ -19,7 +19,8 @@ class PictureEntityMapper {
                 it.userEntity.profileImage.mediumImageUrl),
             it.likes,
             it.likedByUser,
-            UrlModel(it.imageQualityUrlEntity.rawImageLink,
+            UrlModel(
+                it.imageQualityUrlEntity.rawImageLink,
                 it.imageQualityUrlEntity.largeImageLink,
                 it.imageQualityUrlEntity.regularImageLink,
                 it.imageQualityUrlEntity.smallImageLink,

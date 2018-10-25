@@ -3,7 +3,7 @@ package zebrostudio.wallr100.domain
 import io.reactivex.Completable
 import io.reactivex.Single
 import zebrostudio.wallr100.data.model.firebasedatabase.FirebasePicturesEntity
-import zebrostudio.wallr100.domain.model.SearchPicturesModel
+import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
 
 interface WallrRepository {
 

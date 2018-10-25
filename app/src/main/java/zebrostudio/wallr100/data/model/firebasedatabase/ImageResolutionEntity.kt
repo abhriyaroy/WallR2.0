@@ -2,7 +2,7 @@ package zebrostudio.wallr100.data.model.firebasedatabase
 
 import com.google.gson.annotations.SerializedName
 
-data class ImageResolution(
+data class ImageResolutionEntity(
   @SerializedName("thumbSmallRes") val small: String,
   @SerializedName("thumbRes") val thumb: String,
   @SerializedName("mediumRes") val medium: String,

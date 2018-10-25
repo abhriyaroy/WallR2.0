@@ -4,7 +4,7 @@ import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
-import zebrostudio.wallr100.domain.model.SearchPicturesModel
+import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
 
 interface SearchPicturesUseCase {
   fun buildUseCaseSingle(query: String): Single<List<SearchPicturesModel>>
