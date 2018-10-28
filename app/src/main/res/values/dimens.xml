@@ -80,4 +80,15 @@
   <item name="recycler_view_grid_spacing_px" type="integer">5</item>
   <item name="recycler_view_grid_size" type="integer">2</item>
 
+  <dimen name="wallpaper_fragment_info_imageview_width">50dp</dimen>
+  <dimen name="wallpaper_fragment_info_imageview_height">50dp</dimen>
+  <dimen name="wallpaper_fragment_info_text_first_line_padding_top">8dp</dimen>
+  <dimen name="wallpaper_fragment_info_text_second_line_padding_top">2dp</dimen>
+  <dimen name="wallpaper_fragment_info_text_third_line_padding_top">2dp</dimen>
+  <dimen name="wallpaper_fragment_center_spinkit_height">45dp</dimen>
+  <dimen name="wallpaper_fragment_center_spinkit_padding">10dp</dimen>
+  <dimen name="wallpaper_fragment_bottom_spinkit_height">30dp</dimen>
+  <dimen name="wallpaper_fragment_bottom_spinkit_marin_bottom">6dp</dimen>
+  <dimen name="wallpaper_fragment_shadow_tab_height">2dp</dimen>
+
 </resources>

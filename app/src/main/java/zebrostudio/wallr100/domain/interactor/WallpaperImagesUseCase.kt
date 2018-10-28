@@ -12,5 +12,5 @@ class WallpaperImagesInteractor(private var wallrDataRepository: WallrDataReposi
     WallpaperImagesUseCase {
 
   override fun getExploreImages(): Single<List<ImageModel>> = wallrDataRepository.getExplorePictures()
-  
+
 }

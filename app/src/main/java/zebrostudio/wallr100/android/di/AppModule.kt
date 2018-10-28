@@ -16,6 +16,7 @@ import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactoryImpl
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactoryImpl
+import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseInteractor
@@ -61,18 +62,23 @@ class AppModule {
   fun providePictureEntityMapper(): UnsplashPictureEntityMapper = UnsplashPictureEntityMapper()
 
   @Provides
+  fun provideFirebasePictureEntityMapper(): FirebasePictureEntityMapper = FirebasePictureEntityMapper()
+
+  @Provides
   @PerApplication
   fun provideWallrRepository(
     retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
     unsplashClientFactory: UnsplashClientFactory,
     sharedPrefsHelper: SharedPrefsHelper,
     unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
-    firebaseDatabaseHelper: FirebaseDatabaseHelper
+    firebaseDatabaseHelper: FirebaseDatabaseHelper,
+    firebasePictureEntityMapper: FirebasePictureEntityMapper
   ): WallrRepository = WallrDataRepository(retrofitFirebaseAuthFactory,
       unsplashClientFactory,
       sharedPrefsHelper,
       unsplashPictureEntityMapper,
-      firebaseDatabaseHelper)
+      firebaseDatabaseHelper,
+      firebasePictureEntityMapper)
 
   @Provides
   @PerApplication
