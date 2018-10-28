@@ -1,10 +1,13 @@
 package zebrostudio.wallr100.android.ui
 
 import android.annotation.SuppressLint
+import android.arch.lifecycle.Lifecycle
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.widget.ImageView
 import android.widget.LinearLayout
+import com.uber.autodispose.ScopeProvider
+import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
 import dagger.android.support.AndroidSupportInjection
 import zebrostudio.wallr100.R
@@ -12,8 +15,9 @@ import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.setMenuItemColorRed
 import zebrostudio.wallr100.android.utils.setMenuItemColorWhite
 import zebrostudio.wallr100.android.utils.visible
+import zebrostudio.wallr100.presentation.BaseView
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment : Fragment(), BaseView {
 
   internal lateinit var fragmentTag: String
 
@@ -60,6 +64,10 @@ abstract class BaseFragment : Fragment() {
       }
       else -> activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visible()
     }
+  }
+
+  override fun getScope(): ScopeProvider {
+    return AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)
   }
 
 }

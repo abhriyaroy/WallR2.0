@@ -25,6 +25,8 @@ import zebrostudio.wallr100.domain.interactor.SearchPicturesInteractor
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusInteractor
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
+import zebrostudio.wallr100.domain.interactor.WallpaperImagesInteractor
+import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
 
@@ -100,6 +102,12 @@ class AppModule {
     wallrRepository: WallrRepository,
     postExecutionThread: PostExecutionThread
   ): SearchPicturesUseCase = SearchPicturesInteractor(wallrRepository, postExecutionThread)
+
+  @Provides
+  fun providesWallpaperUseCase(
+    wallrRepository: WallrRepository,
+    postExecutionThread: PostExecutionThread
+  ): WallpaperImagesUseCase = WallpaperImagesInteractor(wallrRepository, postExecutionThread)
 
   @Provides
   fun provideImageRecyclerViewPresenter()
