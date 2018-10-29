@@ -1,11 +1,11 @@
 package zebrostudio.wallr100.data.model.firebasedatabase
 
-import com.google.gson.annotations.SerializedName
-
 data class ImageResolutionEntity(
-  @SerializedName("thumbSmallRes") val small: String,
-  @SerializedName("thumbRes") val thumb: String,
-  @SerializedName("mediumRes") val medium: String,
-  @SerializedName("largeRes") val large: String,
-  @SerializedName("rawRes") val raw: String
-)
+  val thumbSmallRes: String,
+  val thumbRes: String,
+  val mediumRes: String,
+  val largeRes: String,
+  val rawRes: String
+) {
+  constructor() : this("", "", "", "", "")
+}

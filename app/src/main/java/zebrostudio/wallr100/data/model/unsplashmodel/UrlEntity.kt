@@ -6,6 +6,6 @@ data class UrlEntity(
   @SerializedName("raw") val rawImageLink: String,
   @SerializedName("full") val largeImageLink: String,
   @SerializedName("regular") val regularImageLink: String,
-  @SerializedName("small") val smallImageLink: String,
-  @SerializedName("thumb") val thumbImageLink: String
+  @SerializedName("thumbSmall") val smallImageLink: String,
+  @SerializedName("thumbRes") val thumbImageLink: String
 )
