@@ -2,11 +2,13 @@ package zebrostudio.wallr100.presentation.adapters
 
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
+import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 
 class ImageRecyclerViewPresenterImpl : ImageRecyclerItemContract.ImageRecyclerViewPresenter {
 
   private lateinit var imageType: ImageListType
   private val searchResultList = mutableListOf<SearchPicturesPresenterEntity>()
+  private val wallpaperImageList = mutableListOf<ImagePresenterEntity>()
 
   override fun setListType(imageListType: ImageListType) {
     imageType = imageListType
@@ -14,6 +16,10 @@ class ImageRecyclerViewPresenterImpl : ImageRecyclerItemContract.ImageRecyclerVi
 
   override fun setSearchResultList(list: List<SearchPicturesPresenterEntity>) {
     searchResultList.addAll(list)
+  }
+
+  override fun setWallpaperImageList(list: List<ImagePresenterEntity>) {
+    wallpaperImageList.addAll(list)
   }
 
   override fun addToSearchResultList(list: List<SearchPicturesPresenterEntity>) {
@@ -26,18 +32,24 @@ class ImageRecyclerViewPresenterImpl : ImageRecyclerItemContract.ImageRecyclerVi
     position: Int,
     rowView: ImageRecyclerItemContract.ImageRecyclerItemView
   ) {
-    rowView.setImageViewBackground(searchResultList[position].paletteColor)
     when (imageType) {
-      SEARCH ->
+      SEARCH -> {
+        rowView.setImageViewBackground(searchResultList[position].paletteColor)
         rowView.setImage(searchResultList[position].imageQualityUrlPresenterEntity.smallImageLink)
+      }
       WALLPAPERS -> {
-        // Do something
+        System.out.println("bindviewrow")
+        rowView.setImageViewBackground(wallpaperImageList[position].color)
+        rowView.setImage(wallpaperImageList[position].imageLink.thumb)
       }
     }
   }
 
   override fun getItemCount(): Int {
-    return searchResultList.size
+    return when (imageType) {
+      SEARCH -> searchResultList.size
+      WALLPAPERS -> wallpaperImageList.size
+    }
   }
 
   override fun clearAll() {

@@ -84,3 +84,7 @@ android {
   }
 }
 apply plugin: 'com.google.gms.google-services'
+
+dependencies {
+  implementation 'com.android.support:support-v4:27.+'
+}

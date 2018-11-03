@@ -1,35 +1,36 @@
-package zebrostudio.wallr100.presentation.wallpaper
+package zebrostudio.wallr100.presentation.wallpaper.explore
 
 import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.presentation.wallpaper.mapper.ImagePresenterEntityMapper
 
-class WallpaperPresenterImpl(
+class ExplorePresenterImpl(
   private val wallpaperImagesUseCase: WallpaperImagesUseCase,
   private val imagePresenterEntityMapper: ImagePresenterEntityMapper
-) : WallpaperContract.WallpaperPresenter {
+) : ExploreContract.ExplorePresenter {
 
-  private var wallpaperView: WallpaperContract.WallpaperView? = null
+  private var exploreView: ExploreContract.ExploreView? = null
 
-  override fun attachView(view: WallpaperContract.WallpaperView) {
-    wallpaperView = view
-    getImages()
+  override fun attachView(view: ExploreContract.ExploreView) {
+    exploreView = view
+    fetchImages()
   }
 
   override fun detachView() {
-    wallpaperView = null
+    exploreView = null
   }
 
-  private fun getImages() {
+  private fun fetchImages() {
     wallpaperImagesUseCase.getExploreImages()
         .map {
           imagePresenterEntityMapper.mapToPresenterEntity(it)
         }
-        .autoDisposable(wallpaperView?.getScope()!!)
+        .autoDisposable(exploreView?.getScope()!!)
         .subscribe({
-          wallpaperView?.showImages(it)
+          exploreView?.showImageList(it)
         }, {
-          wallpaperView?.showGenericErrorMessageView()
+
         })
   }
+
 }

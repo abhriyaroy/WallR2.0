@@ -37,6 +37,37 @@
 
       </android.support.v7.widget.Toolbar>
 
+      <com.ogaclejapan.smarttablayout.SmartTabLayout
+          android:id="@+id/tabLayout"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/main_activity_tab_layout_height"
+          android:textAlignment="center"
+          app:stl_indicatorAlwaysInCenter="true"
+          app:stl_indicatorWithoutPadding="false"
+          app:stl_indicatorInFront="false"
+          app:stl_indicatorInterpolation="smart"
+          app:stl_indicatorGravity="bottom"
+          app:stl_indicatorColor="#e51c23"
+          app:stl_indicatorThickness="@dimen/main_activity_tab_layout_indicator_thickness"
+          app:stl_indicatorWidth="auto"
+          app:stl_indicatorCornerRadius="@dimen/main_activity_tab_layout_corner_radius"
+          app:stl_overlineColor="#4D000000"
+          app:stl_overlineThickness="@dimen/main_activity_tab_layout_overline_thickness"
+          app:stl_underlineColor="#4D000000"
+          app:stl_underlineThickness="@dimen/main_activity_tab_layout_underline_thickness"
+          app:stl_dividerColor="#4D000000"
+          app:stl_dividerThickness="@dimen/main_activity_tab_layout_divider_thickness"
+          app:stl_defaultTabBackground="?attr/selectableItemBackground"
+          app:stl_defaultTabTextAllCaps="true"
+          app:stl_defaultTabTextColor="#fff"
+          app:stl_defaultTabTextSize="@dimen/main_activity_tab_layout_text_size"
+          app:stl_defaultTabTextHorizontalPadding="@dimen/main_activity_tab_layout_text_horizontal_padding"
+          app:stl_defaultTabTextMinWidth="@dimen/main_activity_tab_layout_text_min_width"
+          app:stl_distributeEvenly="false"
+          app:stl_clickable="true"
+          app:stl_titleOffset="@dimen/main_activity_tab_layout_title_offset"
+          app:stl_drawDecorationAfterTab="true"/>
+
     </android.support.design.widget.AppBarLayout>
 
     <ViewStub

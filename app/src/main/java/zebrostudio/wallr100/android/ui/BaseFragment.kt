@@ -41,7 +41,6 @@ abstract class BaseFragment : Fragment(), BaseView {
 
     highlightCurrentMenuItem()
     showToolbarMenuIcon()
-
   }
 
   private fun highlightCurrentMenuItem() {

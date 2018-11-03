@@ -1,0 +1,92 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+  <LinearLayout
+      android:id="@+id/infoRelativeLayout"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="?attr/selectableItemBackground"
+      android:orientation="vertical"
+      android:visibility="visible"
+      android:clickable="true"
+      android:layout_gravity="center">
+
+    <ImageView
+        android:id="@+id/infoImageView"
+        android:layout_width="@dimen/wallpaper_fragment_info_imageview_width"
+        android:layout_height="@dimen/wallpaper_fragment_info_imageview_height"
+        android:src="@drawable/ic_error_exclamation"
+        android:visibility="visible"
+        android:layout_gravity="center"/>
+
+    <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+        android:id="@+id/infoTextFirstLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/wallpaper_fragment_info_text_first_line_padding_top"
+        android:textColor="@color/color_white"
+        android:text="@string/fragment_unable_to_load_wallpapers_message"
+        android:layout_gravity="center"/>
+
+    <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+        android:id="@+id/infoTextSecondLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_ensure_working_internet_connection_message"
+        android:paddingTop="@dimen/wallpaper_fragment_info_text_second_line_padding_top"
+        android:textColor="@color/color_white"
+        android:layout_gravity="center"/>
+
+    <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+        android:id="@+id/infoTextThirdLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_swipe_down_retry_message"
+        android:paddingTop="@dimen/wallpaper_fragment_info_text_third_line_padding_top"
+        android:textColor="@color/color_white"
+        android:layout_gravity="center"/>
+
+  </LinearLayout>
+
+  <com.github.ybq.android.spinkit.SpinKitView
+      android:id="@+id/centerSpinkit"
+      android:layout_width="wrap_content"
+      android:layout_height="@dimen/wallpaper_fragment_center_spinkit_height"
+      android:padding="@dimen/wallpaper_fragment_center_spinkit_padding"
+      android:layout_gravity="center"
+      app:SpinKit_Color="@color/color_white"
+      style="@style/SpinKitView.Large.FoldingCube"
+      android:visibility="gone"/>
+
+  <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
+      android:id="@+id/swipeRefreshLayout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"/>
+
+  </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
+
+  <com.github.ybq.android.spinkit.SpinKitView
+      android:id="@+id/bottomSpinkit"
+      android:layout_width="wrap_content"
+      android:layout_height="@dimen/wallpaper_fragment_bottom_spinkit_height"
+      android:layout_marginBottom="@dimen/wallpaper_fragment_bottom_spinkit_marin_bottom"
+      android:layout_gravity="bottom|center_horizontal"
+      app:SpinKit_Color="@color/color_white"
+      style="@style/SpinKitView.Large.ThreeBounce"
+      android:visibility="gone"/>
+
+  <View
+      android:background="@drawable/shadow_bottom"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/wallpaper_fragment_shadow_tab_height"
+      android:layout_gravity="top"/>
+
+</FrameLayout>

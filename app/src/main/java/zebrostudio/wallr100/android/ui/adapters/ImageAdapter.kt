@@ -26,6 +26,7 @@ class ImageAdapter(private val presenter: ImageRecyclerItemContract.ImageRecycle
   }
 
   override fun getItemCount(): Int {
+    System.out.println("itemcountadapter "+presenter.getItemCount())
     return presenter.getItemCount()
   }
 

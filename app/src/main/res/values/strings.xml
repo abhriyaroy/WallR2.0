@@ -79,4 +79,7 @@
   <string name="search_view_transition_name">searchTransition</string>
   <string name="search_generic_error_message">Something went wrong. Please try again</string>
 
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
