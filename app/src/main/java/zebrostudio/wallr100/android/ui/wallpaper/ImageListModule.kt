@@ -1,14 +1,14 @@
-package zebrostudio.wallr100.android.ui.wallpaper.explore
+package zebrostudio.wallr100.android.ui.wallpaper
 
 import dagger.Module
 import dagger.Provides
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
-import zebrostudio.wallr100.presentation.wallpaper.explore.ExploreContract
-import zebrostudio.wallr100.presentation.wallpaper.explore.ExplorePresenterImpl
+import zebrostudio.wallr100.presentation.wallpaper.explore.ImageListContract
+import zebrostudio.wallr100.presentation.wallpaper.explore.ImageListPresenterImpl
 import zebrostudio.wallr100.presentation.wallpaper.mapper.ImagePresenterEntityMapper
 
 @Module
-class ExploreModule {
+class ImageListModule {
 
   @Provides
   fun provideImagePresenterEntityMapper(): ImagePresenterEntityMapper = ImagePresenterEntityMapper()
@@ -16,6 +16,6 @@ class ExploreModule {
   @Provides fun provideExplorePresenter(
     wallpaperImagesUseCase: WallpaperImagesUseCase,
     imagePresenterEntityMapper: ImagePresenterEntityMapper
-  ): ExploreContract.ExplorePresenter = ExplorePresenterImpl(wallpaperImagesUseCase,
+  ): ImageListContract.ImageListPresenter = ImageListPresenterImpl(wallpaperImagesUseCase,
       imagePresenterEntityMapper)
 }

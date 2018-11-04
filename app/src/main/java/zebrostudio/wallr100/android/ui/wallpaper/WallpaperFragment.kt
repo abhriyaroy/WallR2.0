@@ -10,10 +10,12 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems
 import kotlinx.android.synthetic.main.fragment_wallpaper.wallpaperFragmentViewPager
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
-import zebrostudio.wallr100.android.ui.wallpaper.explore.ExploreImageListFragment
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.visible
+import com.ogaclejapan.smarttablayout.utils.v4.Bundler
+
+
 
 class WallpaperFragment : BaseFragment() {
 
@@ -28,22 +30,24 @@ class WallpaperFragment : BaseFragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     val tabLayout = activity?.findViewById<SmartTabLayout>(R.id.tabLayout)
     tabLayout?.gone()
+    val imageListFragmentClass = ImageListFragment().javaClass
     if (fragmentTag == EXPLORE_FRAGMENT_TAG) {
       val viewPagerItemAdapter =
           FragmentPagerItemAdapter(childFragmentManager, FragmentPagerItems.with(context)
-              .add("Explore", ExploreImageListFragment::class.java).create())
+              .add("Explore", imageListFragmentClass, Bundler().putString("key", "value").get()).create())
       wallpaperFragmentViewPager.adapter = viewPagerItemAdapter
     } else if (fragmentTag == TOP_PICKS_FRAGMENT_TAG) {
       val viewPagerItemAdapter =
           FragmentPagerItemAdapter(childFragmentManager, FragmentPagerItems.with(context)
-              .add("Explore", ExploreImageListFragment::class.java).create())
+              .add("Explore", imageListFragmentClass)
+              .add("Explore1", imageListFragmentClass).create())
       wallpaperFragmentViewPager.adapter = viewPagerItemAdapter
       tabLayout?.setViewPager(wallpaperFragmentViewPager)
       tabLayout?.visible()
     } else {
       val viewPagerItemAdapter =
           FragmentPagerItemAdapter(childFragmentManager, FragmentPagerItems.with(context)
-              .add("Explore", ExploreImageListFragment::class.java).create())
+              .add("Explore", imageListFragmentClass).create())
       wallpaperFragmentViewPager.adapter = viewPagerItemAdapter
       tabLayout?.setViewPager(wallpaperFragmentViewPager)
       tabLayout?.visible()

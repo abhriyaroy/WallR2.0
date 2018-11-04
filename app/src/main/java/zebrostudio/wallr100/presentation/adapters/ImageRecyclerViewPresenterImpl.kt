@@ -38,7 +38,6 @@ class ImageRecyclerViewPresenterImpl : ImageRecyclerItemContract.ImageRecyclerVi
         rowView.setImage(searchResultList[position].imageQualityUrlPresenterEntity.smallImageLink)
       }
       WALLPAPERS -> {
-        System.out.println("bindviewrow")
         rowView.setImageViewBackground(wallpaperImageList[position].color)
         rowView.setImage(wallpaperImageList[position].imageLink.thumb)
       }

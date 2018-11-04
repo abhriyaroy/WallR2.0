@@ -26,14 +26,12 @@ class ImageAdapter(private val presenter: ImageRecyclerItemContract.ImageRecycle
   }
 
   override fun getItemCount(): Int {
-    System.out.println("itemcountadapter "+presenter.getItemCount())
     return presenter.getItemCount()
   }
 
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     presenter.onBindRepositoryRowViewAtPosition(position, holder)
   }
-
 }
 
 class ViewHolder(

@@ -7,8 +7,8 @@ import zebrostudio.wallr100.android.ui.collection.CollectionModule
 import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment
 import zebrostudio.wallr100.android.ui.minimal.MinimalFragment
 import zebrostudio.wallr100.android.ui.minimal.MinimalModule
-import zebrostudio.wallr100.android.ui.wallpaper.explore.ExploreImageListFragment
-import zebrostudio.wallr100.android.ui.wallpaper.explore.ExploreModule
+import zebrostudio.wallr100.android.ui.wallpaper.ImageListFragment
+import zebrostudio.wallr100.android.ui.wallpaper.ImageListModule
 
 @Module
 abstract class FragmentProvider {
@@ -22,7 +22,7 @@ abstract class FragmentProvider {
   @ContributesAndroidInjector(modules = [(CollectionModule::class)])
   abstract fun collectionFragment(): CollectionFragment
 
-  @ContributesAndroidInjector(modules = [(ExploreModule::class)])
-  abstract fun exploreImageListFragment(): ExploreImageListFragment
+  @ContributesAndroidInjector(modules = [(ImageListModule::class)])
+  abstract fun imageListFragment(): ImageListFragment
 
 }

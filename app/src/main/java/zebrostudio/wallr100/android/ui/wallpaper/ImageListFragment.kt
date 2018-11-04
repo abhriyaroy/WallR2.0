@@ -7,6 +7,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem
 import com.uber.autodispose.ScopeProvider
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import dagger.android.support.AndroidSupportInjection
@@ -22,21 +23,21 @@ import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.visible
-import zebrostudio.wallr100.presentation.BasePresenter
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
-import zebrostudio.wallr100.presentation.wallpaper.BaseImageListView
+import zebrostudio.wallr100.presentation.wallpaper.explore.ImageListContract.ImageListPresenter
+import zebrostudio.wallr100.presentation.wallpaper.explore.ImageListContract.ImageListView
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 import java.util.concurrent.TimeUnit.*
 import javax.inject.Inject
 
-abstract class BaseImageListFragment : Fragment(), BaseImageListView {
+class ImageListFragment : Fragment(), ImageListView {
 
   @Inject
   internal lateinit var imageRecyclerViewPresenter: ImageRecyclerItemContract.ImageRecyclerViewPresenter
+  @Inject internal lateinit var presenter: ImageListPresenter
 
   private var recyclerviewAdapter: ImageAdapter? = null
-  protected lateinit var basePresenter: BasePresenter<BaseImageListView>
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -47,13 +48,15 @@ abstract class BaseImageListFragment : Fragment(), BaseImageListView {
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
+    System.out.println("Arguments "+arguments.toString())
+    FragmentPagerItem.getPosition(arguments)
     return container?.inflate(inflater, R.layout.fragment_wallpaper_list)
   }
 
-  /*override fun onResume() {
+  override fun onResume() {
     super.onResume()
-    basePresenter.attachView(this)
-  }*/
+    presenter.attachView(this)
+  }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -62,7 +65,7 @@ abstract class BaseImageListFragment : Fragment(), BaseImageListView {
 
   override fun onDestroy() {
     super.onDestroy()
-    //basePresenter.detachView()
+    presenter.detachView()
   }
 
   override fun showLoader() {
@@ -97,8 +100,6 @@ abstract class BaseImageListFragment : Fragment(), BaseImageListView {
   override fun getScope(): ScopeProvider {
     return AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)
   }
-
-  abstract fun initializePresenter()
 
   private fun initRecyclerView() {
     val layoutManager =
