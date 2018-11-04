@@ -11,13 +11,18 @@ import com.uber.autodispose.ScopeProvider
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import dagger.android.support.AndroidSupportInjection
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
+import kotlinx.android.synthetic.main.fragment_wallpaper_list.errorInfoRelativeLayout
 import kotlinx.android.synthetic.main.fragment_wallpaper_list.recyclerView
+import kotlinx.android.synthetic.main.fragment_wallpaper_list.spinkitView
+import kotlinx.android.synthetic.main.fragment_wallpaper_list.swipeRefreshLayout
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter
 import zebrostudio.wallr100.android.utils.GridItemDecorator
+import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.visible
+import zebrostudio.wallr100.presentation.BasePresenter
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
 import zebrostudio.wallr100.presentation.wallpaper.BaseImageListView
@@ -31,6 +36,7 @@ abstract class BaseImageListFragment : Fragment(), BaseImageListView {
   internal lateinit var imageRecyclerViewPresenter: ImageRecyclerItemContract.ImageRecyclerViewPresenter
 
   private var recyclerviewAdapter: ImageAdapter? = null
+  protected lateinit var basePresenter: BasePresenter<BaseImageListView>
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -44,46 +50,55 @@ abstract class BaseImageListFragment : Fragment(), BaseImageListView {
     return container?.inflate(inflater, R.layout.fragment_wallpaper_list)
   }
 
+  /*override fun onResume() {
+    super.onResume()
+    basePresenter.attachView(this)
+  }*/
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     initRecyclerView()
   }
 
+  override fun onDestroy() {
+    super.onDestroy()
+    //basePresenter.detachView()
+  }
+
   override fun showLoader() {
-    TODO(
-        "not implemented") //To change body of created functions use File | Settings | File Templates.
+    spinkitView.visible()
   }
 
   override fun hideLoader() {
-    TODO(
-        "not implemented") //To change body of created functions use File | Settings | File Templates.
+    spinkitView.gone()
   }
 
-  override fun showGenericErrorMessageView() {
-    TODO(
-        "not implemented") //To change body of created functions use File | Settings | File Templates.
-  }
-
-  override fun hideGenericErrorMessageView() {
-    TODO(
-        "not implemented") //To change body of created functions use File | Settings | File Templates.
+  override fun showNoInternetMessageView() {
+    errorInfoRelativeLayout.visible()
   }
 
   override fun showImageList(list: List<ImagePresenterEntity>) {
-    System.out.println("displayimagelist" + "size" + list.size)
     imageRecyclerViewPresenter.setWallpaperImageList(list)
     recyclerviewAdapter?.notifyDataSetChanged()
     recyclerView.visible()
   }
 
   override fun hideRefreshing() {
-    TODO(
-        "not implemented") //To change body of created functions use File | Settings | File Templates.
+    swipeRefreshLayout.isRefreshing = false
+  }
+
+  override fun hideAllLoadersAndMessageViews() {
+    hideLoader()
+    hideRefreshing()
+    errorInfoRelativeLayout.gone()
+    recyclerView.gone()
   }
 
   override fun getScope(): ScopeProvider {
     return AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)
   }
+
+  abstract fun initializePresenter()
 
   private fun initRecyclerView() {
     val layoutManager =

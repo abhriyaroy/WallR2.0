@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
   <LinearLayout
-      android:id="@+id/infoRelativeLayout"
+      android:id="@+id/errorInfoRelativeLayout"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:background="?attr/selectableItemBackground"
@@ -51,7 +51,7 @@
   </LinearLayout>
 
   <com.github.ybq.android.spinkit.SpinKitView
-      android:id="@+id/centerSpinkit"
+      android:id="@+id/spinkitView"
       android:layout_width="wrap_content"
       android:layout_height="@dimen/wallpaper_fragment_center_spinkit_height"
       android:padding="@dimen/wallpaper_fragment_center_spinkit_padding"
@@ -72,16 +72,6 @@
         android:scrollbars="vertical"/>
 
   </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
-
-  <com.github.ybq.android.spinkit.SpinKitView
-      android:id="@+id/bottomSpinkit"
-      android:layout_width="wrap_content"
-      android:layout_height="@dimen/wallpaper_fragment_bottom_spinkit_height"
-      android:layout_marginBottom="@dimen/wallpaper_fragment_bottom_spinkit_marin_bottom"
-      android:layout_gravity="bottom|center_horizontal"
-      app:SpinKit_Color="@color/color_white"
-      style="@style/SpinKitView.Large.ThreeBounce"
-      android:visibility="gone"/>
 
   <View
       android:background="@drawable/shadow_bottom"

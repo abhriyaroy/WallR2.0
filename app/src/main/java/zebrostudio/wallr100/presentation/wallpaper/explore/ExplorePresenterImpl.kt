@@ -21,15 +21,19 @@ class ExplorePresenterImpl(
   }
 
   private fun fetchImages() {
+    exploreView?.hideAllLoadersAndMessageViews()
+    exploreView?.showLoader()
     wallpaperImagesUseCase.getExploreImages()
         .map {
           imagePresenterEntityMapper.mapToPresenterEntity(it)
         }
         .autoDisposable(exploreView?.getScope()!!)
         .subscribe({
+          exploreView?.hideLoader()
           exploreView?.showImageList(it)
         }, {
-
+          exploreView?.hideLoader()
+          exploreView?.showNoInternetMessageView()
         })
   }
 

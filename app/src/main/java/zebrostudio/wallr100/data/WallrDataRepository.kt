@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.data
 
+import com.google.firebase.database.DatabaseReference
 import io.reactivex.Completable
 import io.reactivex.Single
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
@@ -14,6 +15,7 @@ import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
+import java.util.concurrent.TimeUnit.*
 
 class WallrDataRepository(
   private var retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
@@ -30,6 +32,7 @@ class WallrDataRepository(
       "\"api.unsplash.com\": No address associated with hostname"
   private val firebaseDatabasePath = "wallr"
   private val childPathExplore = "explore"
+  private val firebaseTimeoutDuration = 15
 
   override fun authenticatePurchase(
     packageName: String,
@@ -75,14 +78,17 @@ class WallrDataRepository(
   }
 
   override fun getExplorePictures(): Single<List<ImageModel>> {
-    return firebaseDatabaseHelper.fetch(
-        firebaseDatabaseHelper
-            .getDatabase()
-            .getReference(firebaseDatabasePath)
-            .child(childPathExplore))
-        .flatMap {
-          Single.just(firebasePictureEntityMapper.mapFromEntity(it))
-        }
+    return getPictures(firebaseDatabaseHelper
+        .getDatabase()
+        .getReference(firebaseDatabasePath)
+        .child(childPathExplore))
   }
+
+  private fun getPictures(firebaseDatabaseReference: DatabaseReference) = firebaseDatabaseHelper
+      .fetch(firebaseDatabaseReference)
+      .flatMap {
+        Single.just(firebasePictureEntityMapper.mapFromEntity(it))
+      }
+      .timeout(firebaseTimeoutDuration.toLong(), SECONDS)
 
 }
