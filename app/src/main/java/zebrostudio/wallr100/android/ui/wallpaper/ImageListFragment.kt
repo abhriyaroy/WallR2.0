@@ -52,11 +52,6 @@ class ImageListFragment : Fragment(), ImageListView {
     return container?.inflate(inflater, R.layout.fragment_wallpaper_list)
   }
 
-  override fun onResume() {
-    super.onResume()
-
-  }
-
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     initRecyclerView()
@@ -65,7 +60,7 @@ class ImageListFragment : Fragment(), ImageListView {
     val parentFragment = this.parentFragment as WallpaperFragment
     presenter.setImageListType(parentFragment.fragmentTag,
         FragmentPagerItem.getPosition(arguments))
-    presenter.fetchImages()
+    presenter.fetchImages(false)
   }
 
   override fun onDestroy() {
@@ -74,11 +69,11 @@ class ImageListFragment : Fragment(), ImageListView {
   }
 
   override fun showLoader() {
-    spinkitView.visible()
+    spinkitView?.visible()
   }
 
   override fun hideLoader() {
-    spinkitView.gone()
+    spinkitView?.gone()
   }
 
   override fun showNoInternetMessageView() {
@@ -88,7 +83,7 @@ class ImageListFragment : Fragment(), ImageListView {
   override fun showImageList(list: List<ImagePresenterEntity>) {
     imageRecyclerViewPresenter.setWallpaperImageList(list)
     recyclerviewAdapter?.notifyDataSetChanged()
-    recyclerView.visible()
+    recyclerView?.visible()
   }
 
   override fun hideRefreshing() {
@@ -98,8 +93,8 @@ class ImageListFragment : Fragment(), ImageListView {
   override fun hideAllLoadersAndMessageViews() {
     hideLoader()
     hideRefreshing()
-    errorInfoRelativeLayout.gone()
-    recyclerView.gone()
+    errorInfoRelativeLayout?.gone()
+    recyclerView?.gone()
   }
 
   override fun getScope(): ScopeProvider {
@@ -125,8 +120,12 @@ class ImageListFragment : Fragment(), ImageListView {
     swipeRefreshLayout.setWaveRGBColor(context!!.integerRes(R.integer.swipe_refresh_rgb_wave),
         context!!.integerRes(R.integer.swipe_refresh_rgb_wave),
         context!!.integerRes(R.integer.swipe_refresh_rgb_wave))
-    swipeRefreshLayout.setOnRefreshListener {
-      presenter.fetchImages()
+    if (!swipeRefreshLayout.isRefreshing) {
+      swipeRefreshLayout.setOnRefreshListener {
+        if (!swipeRefreshLayout.isRefreshing) {
+          presenter.fetchImages(true)
+        }
+      }
     }
   }
 

@@ -17,6 +17,6 @@ interface ImageListContract {
 
   interface ImageListPresenter : BasePresenter<ImageListView> {
     fun setImageListType(fragmentTag: String, position: Int)
-    fun fetchImages()
+    fun fetchImages(refresh: Boolean)
   }
 }

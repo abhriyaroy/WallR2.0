@@ -52,15 +52,20 @@ class ImageListPresenterImpl(
     }
   }
 
-  override fun fetchImages() {
+  override fun fetchImages(refresh: Boolean) {
     imageListView?.hideAllLoadersAndMessageViews()
-    imageListView?.showLoader()
+    if (!refresh) {
+      imageListView?.showLoader()
+    }
     getImageList()
         .map {
           imagePresenterEntityMapper.mapToPresenterEntity(it)
         }
         .autoDisposable(imageListView?.getScope()!!)
         .subscribe({
+          if (refresh) {
+            imageListView?.hideRefreshing()
+          }
           imageListView?.hideLoader()
           imageListView?.showImageList(it)
         }, {
@@ -80,8 +85,7 @@ class ImageListPresenterImpl(
       imageListTypes[6] -> wallpaperImagesUseCase.getNatureImages()
       imageListTypes[7] -> wallpaperImagesUseCase.getObjectsImages()
       imageListTypes[8] -> wallpaperImagesUseCase.getPeopleImages()
-      imageListTypes[9] -> wallpaperImagesUseCase.getTechnologyImages()
-      else -> wallpaperImagesUseCase.getExploreImages()
+      else -> wallpaperImagesUseCase.getTechnologyImages()
     }
   }
 
