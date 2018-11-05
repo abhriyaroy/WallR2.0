@@ -143,7 +143,7 @@ class WallrDataRepositoryTest {
     `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
         Single.just(emptyList()))
 
-    wallrDataRepository.getPictures(randomString)
+    wallrDataRepository.getPicturesFromFirebase(randomString)
         .test()
         .assertError(NoResultFoundException::class.java)
 
@@ -155,7 +155,7 @@ class WallrDataRepositoryTest {
     `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
         Single.error(Exception(unableToResolveHostExceptionMessage)))
 
-    wallrDataRepository.getPictures(randomString)
+    wallrDataRepository.getPicturesFromFirebase(randomString)
         .test()
         .assertError(UnableToResolveHostException::class.java)
 
@@ -173,7 +173,7 @@ class WallrDataRepositoryTest {
     `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
         Single.just(unsplashPicturesEntityList))
 
-    val picture = wallrDataRepository.getPictures(randomString)
+    val picture = wallrDataRepository.getPicturesFromFirebase(randomString)
         .test()
         .values()[0][0]
 

@@ -90,6 +90,7 @@
   <item name="recycler_view_span_count" type="integer">2</item>
   <item name="recycler_view_grid_spacing_px" type="integer">5</item>
   <item name="recycler_view_grid_size" type="integer">2</item>
+  <item name="swipe_refresh_rgb_wave" type="integer">33</item>
 
   <dimen name="wallpaper_fragment_info_imageview_width">50dp</dimen>
   <dimen name="wallpaper_fragment_info_imageview_height">50dp</dimen>

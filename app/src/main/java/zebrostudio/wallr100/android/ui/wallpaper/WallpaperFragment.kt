@@ -13,9 +13,6 @@ import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.visible
-import com.ogaclejapan.smarttablayout.utils.v4.Bundler
-
-
 
 class WallpaperFragment : BaseFragment() {
 
@@ -34,13 +31,14 @@ class WallpaperFragment : BaseFragment() {
     if (fragmentTag == EXPLORE_FRAGMENT_TAG) {
       val viewPagerItemAdapter =
           FragmentPagerItemAdapter(childFragmentManager, FragmentPagerItems.with(context)
-              .add("Explore", imageListFragmentClass, Bundler().putString("key", "value").get()).create())
+              .add("Explore", imageListFragmentClass).create())
       wallpaperFragmentViewPager.adapter = viewPagerItemAdapter
     } else if (fragmentTag == TOP_PICKS_FRAGMENT_TAG) {
       val viewPagerItemAdapter =
           FragmentPagerItemAdapter(childFragmentManager, FragmentPagerItems.with(context)
-              .add("Explore", imageListFragmentClass)
-              .add("Explore1", imageListFragmentClass).create())
+              .add("RECENT", imageListFragmentClass)
+              .add("POPULAR", imageListFragmentClass)
+              .add("STANDOUT", imageListFragmentClass).create())
       wallpaperFragmentViewPager.adapter = viewPagerItemAdapter
       tabLayout?.setViewPager(wallpaperFragmentViewPager)
       tabLayout?.visible()

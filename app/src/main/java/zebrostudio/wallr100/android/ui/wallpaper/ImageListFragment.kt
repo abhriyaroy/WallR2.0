@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.android.ui.wallpaper
 
 import android.arch.lifecycle.Lifecycle
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
@@ -48,19 +49,23 @@ class ImageListFragment : Fragment(), ImageListView {
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    System.out.println("Arguments "+arguments.toString())
-    FragmentPagerItem.getPosition(arguments)
     return container?.inflate(inflater, R.layout.fragment_wallpaper_list)
   }
 
   override fun onResume() {
     super.onResume()
-    presenter.attachView(this)
+
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     initRecyclerView()
+    configureSwipeRefreshLayout()
+    presenter.attachView(this)
+    val parentFragment = this.parentFragment as WallpaperFragment
+    presenter.setImageListType(parentFragment.fragmentTag,
+        FragmentPagerItem.getPosition(arguments))
+    presenter.fetchImages()
   }
 
   override fun onDestroy() {
@@ -113,6 +118,16 @@ class ImageListFragment : Fragment(), ImageListView {
             context!!.integerRes(R.integer.recycler_view_grid_size)))
     recyclerView.adapter = scaleInAdapter
     imageRecyclerViewPresenter.setListType(WALLPAPERS)
+  }
+
+  private fun configureSwipeRefreshLayout() {
+    swipeRefreshLayout.setColorSchemeColors(Color.WHITE, Color.WHITE)
+    swipeRefreshLayout.setWaveRGBColor(context!!.integerRes(R.integer.swipe_refresh_rgb_wave),
+        context!!.integerRes(R.integer.swipe_refresh_rgb_wave),
+        context!!.integerRes(R.integer.swipe_refresh_rgb_wave))
+    swipeRefreshLayout.setOnRefreshListener {
+      presenter.fetchImages()
+    }
   }
 
 }
