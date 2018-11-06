@@ -20,6 +20,7 @@ import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
+import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
@@ -36,6 +37,7 @@ class WallrDataRepositoryTest {
   @Mock lateinit var unsplashClientFactory: UnsplashClientFactory
   @Mock lateinit var firebaseDatabaseHelper: FirebaseDatabaseHelper
   private lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
+  private lateinit var firebasePictureEntityMapper: FirebasePictureEntityMapper
   private lateinit var wallrDataRepository: WallrDataRepository
   private val randomString = randomUUID().toString()
   private val dummyInt = 500 // to force some error other than 403 or 404
@@ -46,9 +48,10 @@ class WallrDataRepositoryTest {
 
   @Before fun setup() {
     unsplashPictureEntityMapper = UnsplashPictureEntityMapper()
+    firebasePictureEntityMapper = FirebasePictureEntityMapper()
     wallrDataRepository =
         WallrDataRepository(remoteAuthServiceFactory, unsplashClientFactory, sharedPrefs,
-            unsplashPictureEntityMapper, firebaseDatabaseHelper)
+            unsplashPictureEntityMapper, firebaseDatabaseHelper, firebasePictureEntityMapper)
   }
 
   @Test fun `should return single on server success response`() {
@@ -143,7 +146,7 @@ class WallrDataRepositoryTest {
     `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
         Single.just(emptyList()))
 
-    wallrDataRepository.getPicturesFromFirebase(randomString)
+    wallrDataRepository.getSearchPictures(randomString)
         .test()
         .assertError(NoResultFoundException::class.java)
 
@@ -155,7 +158,7 @@ class WallrDataRepositoryTest {
     `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
         Single.error(Exception(unableToResolveHostExceptionMessage)))
 
-    wallrDataRepository.getPicturesFromFirebase(randomString)
+    wallrDataRepository.getSearchPictures(randomString)
         .test()
         .assertError(UnableToResolveHostException::class.java)
 
@@ -173,7 +176,7 @@ class WallrDataRepositoryTest {
     `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
         Single.just(unsplashPicturesEntityList))
 
-    val picture = wallrDataRepository.getPicturesFromFirebase(randomString)
+    val picture = wallrDataRepository.getSearchPictures(randomString)
         .test()
         .values()[0][0]
 

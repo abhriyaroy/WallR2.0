@@ -44,13 +44,25 @@ class ViewHolder(
     itemView.imageView.setBackgroundColor(Color.parseColor(colorHexCode))
   }
 
-  override fun setImage(link: String) {
+  override fun setSearchImage(link: String) {
     val options = RequestOptions()
         .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .override(context.integerRes(R.integer.recycler_view_adapter_image_height),
-            context.integerRes(R.integer.recycler_view_adapter_image_height))
+        .override(context.integerRes(R.integer.recycler_view_adapter_search_image_width),
+            context.integerRes(R.integer.recycler_view_adapter_search_image_height))
         .centerCrop()
+    showImageGlide(link, options)
+  }
 
+  override fun setWallpaperImage(link: String) {
+    val options = RequestOptions()
+        .diskCacheStrategy(DiskCacheStrategy.ALL)
+        .override(context.integerRes(R.integer.recycler_view_adapter_wallpaper_image_width),
+            context.integerRes(R.integer.recycler_view_adapter_wallpaper_image_height))
+        .centerCrop()
+    showImageGlide(link, options)
+  }
+
+  private fun showImageGlide(link: String, options: RequestOptions) {
     Glide.with(context)
         .load(link)
         .transition(withCrossFade())

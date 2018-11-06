@@ -8,7 +8,8 @@ interface ImageRecyclerItemContract {
 
   interface ImageRecyclerItemView {
     fun setImageViewBackground(colorHexCode: String)
-    fun setImage(link: String)
+    fun setSearchImage(link: String)
+    fun setWallpaperImage(link: String)
   }
 
   interface ImageRecyclerViewPresenter {

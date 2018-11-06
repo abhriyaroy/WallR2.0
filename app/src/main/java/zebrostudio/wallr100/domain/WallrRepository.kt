@@ -16,7 +16,7 @@ interface WallrRepository {
   fun updateUserPurchaseStatus(): Boolean
   fun isUserPremium(): Boolean
 
-  fun getPictures(query: String): Single<List<SearchPicturesModel>>
+  fun getSearchPictures(query: String): Single<List<SearchPicturesModel>>
 
   fun getExplorePictures(): Single<List<ImageModel>>
   fun getRecentPictures(): Single<List<ImageModel>>

@@ -35,11 +35,12 @@ class ImageRecyclerViewPresenterImpl : ImageRecyclerItemContract.ImageRecyclerVi
     when (imageType) {
       SEARCH -> {
         rowView.setImageViewBackground(searchResultList[position].paletteColor)
-        rowView.setImage(searchResultList[position].imageQualityUrlPresenterEntity.smallImageLink)
+        rowView.setSearchImage(
+            searchResultList[position].imageQualityUrlPresenterEntity.smallImageLink)
       }
       WALLPAPERS -> {
         rowView.setImageViewBackground(wallpaperImageList[position].color)
-        rowView.setImage(wallpaperImageList[position].imageLink.thumb)
+        rowView.setWallpaperImage(wallpaperImageList[position].imageLink.thumb)
       }
     }
   }

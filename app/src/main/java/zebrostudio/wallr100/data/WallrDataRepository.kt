@@ -68,20 +68,25 @@ class WallrDataRepository(
   override fun isUserPremium() = sharedPrefsHelper.getBoolean(purchasePreferenceName,
       premiumUserTag, false)
 
-  override fun getPictures(query: String): Single<List<SearchPicturesModel>> {
+  override fun getSearchPictures(query: String): Single<List<SearchPicturesModel>> {
+    System.out.println("query "+query)
     return unsplashClientFactory.getPicturesService(query)
         .flatMap {
           if (it.isEmpty()) {
+            System.out.println("search is empty")
             Single.error(NoResultFoundException())
           } else {
             val map = unsplashPictureEntityMapper.mapFromEntity(it)
+            System.out.println("map item "+map[0].userModel.name)
             Single.just(map)
           }
         }
         .onErrorResumeNext {
           if (it.message != null && it.message == unableToResolveHostExceptionMessage) {
+            System.out.println("unresolved host exception")
             Single.error(UnableToResolveHostException())
           } else {
+            System.out.println("error "+it.printStackTrace())
             Single.error(it)
           }
         }

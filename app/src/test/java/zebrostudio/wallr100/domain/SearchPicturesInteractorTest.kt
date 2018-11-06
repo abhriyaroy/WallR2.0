@@ -40,7 +40,7 @@ class SearchPicturesInteractorTest {
   @Test
   fun `should return list of search pictures model on buildRetrievePicturesObservable call success`() {
     val searchPicturesModelList = listOf(SearchPicturesModelFactory.getSearchPicturesModel())
-    `when`(wallrRepository.getPictures(dummyString)).thenReturn(
+    `when`(wallrRepository.getSearchPictures(dummyString)).thenReturn(
         Single.just(searchPicturesModelList))
 
     val picture = searchPicturesUseCase.buildUseCaseSingle(dummyString)
@@ -49,33 +49,33 @@ class SearchPicturesInteractorTest {
 
     assertEquals(picture, searchPicturesModelList[0])
 
-    verify(wallrRepository).getPictures(dummyString)
+    verify(wallrRepository).getSearchPictures(dummyString)
     verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test
   fun `should return no result found exception of search pictures model on buildRetrievePicturesObservable call success but with no result`() {
-    `when`(wallrRepository.getPictures(dummyString)).thenReturn(
+    `when`(wallrRepository.getSearchPictures(dummyString)).thenReturn(
         Single.error(NoResultFoundException()))
 
     searchPicturesUseCase.buildUseCaseSingle(dummyString)
         .test()
         .assertError(NoResultFoundException::class.java)
 
-    verify(wallrRepository).getPictures(dummyString)
+    verify(wallrRepository).getSearchPictures(dummyString)
     verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test
   fun `should return unable to resolve host exception of search pictures model on buildRetrievePicturesObservable call failure`() {
-    `when`(wallrRepository.getPictures(dummyString)).thenReturn(
+    `when`(wallrRepository.getSearchPictures(dummyString)).thenReturn(
         Single.error(UnableToResolveHostException()))
 
     searchPicturesUseCase.buildUseCaseSingle(dummyString)
         .test()
         .assertError(UnableToResolveHostException::class.java)
 
-    verify(wallrRepository).getPictures(dummyString)
+    verify(wallrRepository).getSearchPictures(dummyString)
     verifyNoMoreInteractions(wallrRepository)
   }
 }
