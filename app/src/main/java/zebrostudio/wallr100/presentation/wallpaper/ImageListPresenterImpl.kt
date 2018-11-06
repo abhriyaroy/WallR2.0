@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.presentation.wallpaper.explore
+package zebrostudio.wallr100.presentation.wallpaper
 
 import com.uber.autodispose.autoDisposable
 import io.reactivex.Single
@@ -7,7 +7,8 @@ import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment.Companion.TOP
 import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment.Companion.CATEGORIES_FRAGMENT_TAG
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.domain.model.images.ImageModel
-import zebrostudio.wallr100.presentation.wallpaper.explore.ImageListContract.ImageListView
+import zebrostudio.wallr100.presentation.wallpaper.ImageListContract
+import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListView
 import zebrostudio.wallr100.presentation.wallpaper.mapper.ImagePresenterEntityMapper
 
 class ImageListPresenterImpl(

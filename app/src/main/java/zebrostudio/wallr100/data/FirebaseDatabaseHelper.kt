@@ -30,6 +30,7 @@ class FirebaseDatabaseHelperImpl : FirebaseDatabaseHelper {
   }
 
   override fun fetch(databaseReference: DatabaseReference): Single<List<FirebaseImageEntity>> {
+    System.out.println("database called")
     return Single.create { singleSubscriber ->
       val imageList = arrayListOf<FirebaseImageEntity>()
       databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {

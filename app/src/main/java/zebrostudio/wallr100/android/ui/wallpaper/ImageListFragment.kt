@@ -26,8 +26,8 @@ import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
-import zebrostudio.wallr100.presentation.wallpaper.explore.ImageListContract.ImageListPresenter
-import zebrostudio.wallr100.presentation.wallpaper.explore.ImageListContract.ImageListView
+import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListPresenter
+import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListView
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 import java.util.concurrent.TimeUnit.*
 import javax.inject.Inject
@@ -81,9 +81,9 @@ class ImageListFragment : Fragment(), ImageListView {
   }
 
   override fun showImageList(list: List<ImagePresenterEntity>) {
+    recyclerView?.visible()
     imageRecyclerViewPresenter.setWallpaperImageList(list)
     recyclerviewAdapter?.notifyDataSetChanged()
-    recyclerView?.visible()
   }
 
   override fun hideRefreshing() {
@@ -92,7 +92,6 @@ class ImageListFragment : Fragment(), ImageListView {
 
   override fun hideAllLoadersAndMessageViews() {
     hideLoader()
-    hideRefreshing()
     errorInfoRelativeLayout?.gone()
     recyclerView?.gone()
   }
@@ -122,9 +121,7 @@ class ImageListFragment : Fragment(), ImageListView {
         context!!.integerRes(R.integer.swipe_refresh_rgb_wave))
     if (!swipeRefreshLayout.isRefreshing) {
       swipeRefreshLayout.setOnRefreshListener {
-        if (!swipeRefreshLayout.isRefreshing) {
-          presenter.fetchImages(true)
-        }
+        presenter.fetchImages(true)
       }
     }
   }
