@@ -52,12 +52,8 @@ class AuthenticatePurchaseUseCaseTest {
 
   @Test fun `should return invalidPurchaseException when unsuccessful purchase verification`() {
     stubAuthenticatePurchaseReturnsInvalidPurchaseException()
-    val testObservable =
-        authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId, purchaseToken)
-            .test()
-    testObservable.await()
-
-    testObservable.assertError(InvalidPurchaseException::class.java)
+    authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId, purchaseToken)
+        .test().assertError(InvalidPurchaseException::class.java)
   }
 
   @Test fun `should return unableToVerifyPurchaseException when unable to verify purchase`() {

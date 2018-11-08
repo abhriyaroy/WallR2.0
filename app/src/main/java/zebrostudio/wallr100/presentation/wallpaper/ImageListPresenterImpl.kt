@@ -7,7 +7,6 @@ import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment.Companion.TOP
 import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment.Companion.CATEGORIES_FRAGMENT_TAG
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.domain.model.images.ImageModel
-import zebrostudio.wallr100.presentation.wallpaper.ImageListContract
 import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListView
 import zebrostudio.wallr100.presentation.wallpaper.mapper.ImagePresenterEntityMapper
 
@@ -17,7 +16,7 @@ class ImageListPresenterImpl(
 ) : ImageListContract.ImageListPresenter {
 
   private var imageListView: ImageListView? = null
-  private lateinit var imageListType: String
+  internal lateinit var imageListType: String
   private val imageListTypes = listOf(
       "EXPLORE",
       "RECENT",
@@ -72,6 +71,9 @@ class ImageListPresenterImpl(
         }, {
           imageListView?.hideLoader()
           imageListView?.showNoInternetMessageView()
+          if (refresh) {
+            imageListView?.hideRefreshing()
+          }
         })
   }
 
