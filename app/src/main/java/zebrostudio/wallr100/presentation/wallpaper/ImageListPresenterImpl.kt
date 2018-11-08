@@ -79,16 +79,16 @@ class ImageListPresenterImpl(
 
   private fun getImageList(): Single<List<ImageModel>> {
     return when (imageListType) {
-      imageListTypes[0] -> wallpaperImagesUseCase.getExploreImages()
-      imageListTypes[1] -> wallpaperImagesUseCase.getRecentImages()
-      imageListTypes[2] -> wallpaperImagesUseCase.getPopularImages()
-      imageListTypes[3] -> wallpaperImagesUseCase.getStandoutImages()
-      imageListTypes[4] -> wallpaperImagesUseCase.getBuildingsImages()
-      imageListTypes[5] -> wallpaperImagesUseCase.getFoodImages()
-      imageListTypes[6] -> wallpaperImagesUseCase.getNatureImages()
-      imageListTypes[7] -> wallpaperImagesUseCase.getObjectsImages()
-      imageListTypes[8] -> wallpaperImagesUseCase.getPeopleImages()
-      else -> wallpaperImagesUseCase.getTechnologyImages()
+      imageListTypes[0] -> wallpaperImagesUseCase.exploreImagesSingle()
+      imageListTypes[1] -> wallpaperImagesUseCase.recentImagesSingle()
+      imageListTypes[2] -> wallpaperImagesUseCase.popularImagesSingle()
+      imageListTypes[3] -> wallpaperImagesUseCase.standoutImagesSingle()
+      imageListTypes[4] -> wallpaperImagesUseCase.buildingsImagesSingle()
+      imageListTypes[5] -> wallpaperImagesUseCase.foodImagesSingle()
+      imageListTypes[6] -> wallpaperImagesUseCase.natureImagesSingle()
+      imageListTypes[7] -> wallpaperImagesUseCase.objectsImagesSingle()
+      imageListTypes[8] -> wallpaperImagesUseCase.peopleImagesSingle()
+      else -> wallpaperImagesUseCase.technologyImagesSingle()
     }
   }
 
