@@ -13,10 +13,10 @@ import com.uber.autodispose.ScopeProvider
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import dagger.android.support.AndroidSupportInjection
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
-import kotlinx.android.synthetic.main.fragment_wallpaper_list.errorInfoRelativeLayout
-import kotlinx.android.synthetic.main.fragment_wallpaper_list.recyclerView
-import kotlinx.android.synthetic.main.fragment_wallpaper_list.spinkitView
-import kotlinx.android.synthetic.main.fragment_wallpaper_list.swipeRefreshLayout
+import kotlinx.android.synthetic.main.fragment_image_list.errorInfoRelativeLayout
+import kotlinx.android.synthetic.main.fragment_image_list.recyclerView
+import kotlinx.android.synthetic.main.fragment_image_list.spinkitView
+import kotlinx.android.synthetic.main.fragment_image_list.swipeRefreshLayout
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter
 import zebrostudio.wallr100.android.utils.GridItemDecorator
@@ -49,7 +49,7 @@ class ImageListFragment : Fragment(), ImageListView {
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    return container?.inflate(inflater, R.layout.fragment_wallpaper_list)
+    return container?.inflate(inflater, R.layout.fragment_image_list)
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

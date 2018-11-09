@@ -28,7 +28,6 @@ import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.lang.Exception
 import java.util.UUID.*
-import java.util.concurrent.TimeUnit
 
 @RunWith(MockitoJUnitRunner::class)
 class WallrDataRepositoryTest {

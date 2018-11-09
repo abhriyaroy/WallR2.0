@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootFrameLayout"
     android:layout_width="match_parent"
@@ -59,7 +58,7 @@
           app:stl_dividerThickness="@dimen/main_activity_tab_layout_divider_thickness"
           app:stl_defaultTabBackground="?attr/selectableItemBackground"
           app:stl_defaultTabTextAllCaps="true"
-          app:stl_defaultTabTextColor="#fff"
+          app:stl_defaultTabTextColor="@color/color_white"
           app:stl_defaultTabTextSize="@dimen/main_activity_tab_layout_text_size"
           app:stl_defaultTabTextHorizontalPadding="@dimen/main_activity_tab_layout_text_horizontal_padding"
           app:stl_defaultTabTextMinWidth="@dimen/main_activity_tab_layout_text_min_width"

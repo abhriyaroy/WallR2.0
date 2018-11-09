@@ -13,7 +13,7 @@ class ImageListModule {
   @Provides
   fun provideImagePresenterEntityMapper(): ImagePresenterEntityMapper = ImagePresenterEntityMapper()
 
-  @Provides fun provideExplorePresenter(
+  @Provides fun provideImageListPresenter(
     wallpaperImagesUseCase: WallpaperImagesUseCase,
     imagePresenterEntityMapper: ImagePresenterEntityMapper
   ): ImageListContract.ImageListPresenter = ImageListPresenterImpl(

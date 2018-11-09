@@ -2,7 +2,6 @@ package zebrostudio.wallr100.data
 
 import android.app.Activity
 import android.content.Context
-import android.content.SharedPreferences
 
 interface SharedPrefsHelper {
 

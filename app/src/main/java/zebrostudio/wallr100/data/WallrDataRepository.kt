@@ -4,9 +4,6 @@ import com.google.firebase.database.DatabaseReference
 import io.reactivex.Completable
 import io.reactivex.Single
 import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl.Companion.childPathBuilding
-import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl.Companion.childPathCategories
-import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl.Companion.childPathCollections
-import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl.Companion.childPathExplore
 import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl.Companion.childPathFood
 import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl.Companion.childPathNature
 import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl.Companion.childPathObject

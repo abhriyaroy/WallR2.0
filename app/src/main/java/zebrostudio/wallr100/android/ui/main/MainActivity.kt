@@ -169,7 +169,6 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
         .build()
 
     setUpGuillotineMenuItems(buildGuillotineMenuItems())
-
   }
 
   private fun buildGuillotineMenuItems(): List<Triple<Int, Int, MenuItems>> {

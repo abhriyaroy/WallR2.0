@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.android.ui.buypro
 
-import android.content.Context
 import dagger.Module
 import dagger.Provides
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
