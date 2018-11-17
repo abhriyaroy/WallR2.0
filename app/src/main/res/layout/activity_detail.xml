@@ -8,41 +8,41 @@
     android:layout_height="match_parent">
 
   <com.sothree.slidinguppanel.SlidingUpPanelLayout
-      android:id="@+id/sliding_layout"
+      android:id="@+id/slidingPanel"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:gravity="bottom"
       sothree:umanoPanelHeight="185dp"
       sothree:umanoShadowHeight="4dp">
 
-      <FrameLayout
-          android:id="@+id/imageLayout"
+    <FrameLayout
+        android:id="@+id/imageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent">
+
+      <ImageView
+          android:id="@+id/imageView"
           android:layout_width="match_parent"
-          android:layout_height="fill_parent">
+          android:layout_height="match_parent"
+          android:background="@color/color_primary"
+          android:scaleType="centerCrop"
+          android:transitionName="ImageItem"/>
 
-        <ImageView
-            android:id="@+id/main_picture"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/color_primary"
-            android:scaleType="centerCrop"
-            android:transitionName="ImageItem"/>
+      <ImageView
+          android:id="@+id/imageViewPlaceHolder"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:background="@color/color_primary"
+          android:scaleType="centerCrop"
+          android:transitionName="ImageItem"/>
 
-        <ImageView
-            android:id="@+id/main_picture_small"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/color_primary"
-            android:scaleType="centerCrop"
-            android:transitionName="ImageItem"/>
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="4dp"
+          android:layout_gravity="bottom"
+          android:background="@drawable/shadow_top"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:layout_gravity="bottom"
-            android:background="@drawable/shadow_top"/>
-
-      </FrameLayout>
+    </FrameLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -52,7 +52,7 @@
         android:focusable="false">
 
       <RelativeLayout
-          android:id="@+id/informationRelativeLayout2"
+          android:id="@+id/imageInfoLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:background="@color/color_primary_dark"
@@ -60,7 +60,7 @@
           android:paddingTop="14dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/contributer_picture3"
+            android:id="@+id/authorImage"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_alignParentStart="true"
@@ -71,43 +71,40 @@
             app:civ_border_color="#FFf"
             app:civ_border_width="0dp"/>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+            android:id="@+id/authorName"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/contributer_picture3"
-            android:layout_toRightOf="@id/contributer_picture3">
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingLeft="10dp"
+            android:textSize="20sp"
+            android:layout_alignTop="@id/authorImage"
+            android:layout_toRightOf="@id/authorImage"
+            />
 
-          <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-              android:id="@+id/contributer_name2"
-              android:layout_width="180dp"
-              android:layout_height="wrap_content"
-              android:ellipsize="end"
-              android:maxLines="1"
-              android:paddingLeft="10dp"
-              android:textSize="20sp"
-              />
-
-          <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-              android:id="@+id/websiteReferral"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignLeft="@id/contributer_name2"
-              android:layout_below="@id/contributer_name2"
-              android:paddingLeft="10dp"
-              android:paddingTop="2dp"
-              android:text="www_unsplash_com"
-              android:textAlignment="center"
-              android:textSize="11sp"
-              />
-        </RelativeLayout>
+        <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+            android:id="@+id/websiteReferral"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/authorName"
+            android:layout_below="@id/authorName"
+            android:paddingLeft="10dp"
+            android:paddingTop="2dp"
+            android:text="www_unsplash_com"
+            android:textAlignment="center"
+            android:textSize="11sp"
+            android:layout_alignBaseline="@id/authorImage"
+            android:layout_toRightOf="@id/authorImage"
+            />
 
       </RelativeLayout>
 
       <com.github.zagum.expandicon.ExpandIconView
-          android:id="@+id/swipe_arrow"
+          android:id="@+id/expandIconView"
           android:layout_width="30dp"
           android:layout_height="30dp"
-          android:layout_below="@id/informationRelativeLayout2"
+          android:layout_below="@id/imageInfoLayout"
           android:layout_centerHorizontal="true"
           android:layout_marginTop="4dp"
           app:eiv_animationDuration="300"
@@ -117,17 +114,11 @@
           app:eiv_roundedCorners="false"
           app:eiv_switchColor="true"/>
 
-
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_below="@id/swipe_arrow"
-          android:orientation="vertical">
-
         <LinearLayout
-            android:id="@+id/optionBar"
+            android:id="@+id/wallpaperActionsBarTop"
             android:layout_width="match_parent"
             android:layout_height="80dp"
+            android:layout_below="@id/expandIconView"
             android:layout_marginTop="5dp"
             android:orientation="horizontal"
             android:padding="4dp"
@@ -136,7 +127,7 @@
             android:weightSum="3">
 
           <RelativeLayout
-              android:id="@+id/setWallpaperImageLayout2"
+              android:id="@+id/setWallpaperImageLayout"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_weight="1"
@@ -144,7 +135,7 @@
               android:clickable="true">
 
             <ImageView
-                android:id="@+id/setWallpaperImageview2"
+                android:id="@+id/setWallpaperImageView"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_centerHorizontal="true"
@@ -155,7 +146,7 @@
             <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/setWallpaperImageview2"
+                android:layout_below="@id/setWallpaperImageView"
                 android:paddingBottom="4dp"
                 android:text="@string/quick_set"
                 android:gravity="center"
@@ -166,7 +157,7 @@
 
 
           <RelativeLayout
-              android:id="@+id/downloadImageLayout2"
+              android:id="@+id/downloadImageLayout"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_weight="1"
@@ -174,7 +165,7 @@
               android:clickable="true">
 
             <ImageView
-                android:id="@+id/downloadImageview2"
+                android:id="@+id/downloadImageView"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_centerHorizontal="true"
@@ -184,7 +175,7 @@
             <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/downloadImageview2"
+                android:layout_below="@id/downloadImageView"
                 android:paddingBottom="4dp"
                 android:text="@string/download"
                 android:gravity="center"
@@ -193,7 +184,7 @@
 
 
           <RelativeLayout
-              android:id="@+id/crystallizeImageLayout2"
+              android:id="@+id/crystallizeImageLayout"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_weight="1"
@@ -201,7 +192,7 @@
               android:clickable="true">
 
             <ImageView
-                android:id="@+id/crystallizeImageview2"
+                android:id="@+id/crystallizeImageView"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_centerHorizontal="true"
@@ -211,7 +202,7 @@
             <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/crystallizeImageview2"
+                android:layout_below="@id/crystallizeImageView"
                 android:paddingBottom="4dp"
                 android:text="@string/crystallize"
                 android:gravity="center"
@@ -224,10 +215,10 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/optionBar2"
+            android:id="@+id/wallpaperActionsBarBottom"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:layout_below="@id/optionBar"
+            android:layout_below="@id/wallpaperActionsBarTop"
             android:layout_marginBottom="4dp"
             android:orientation="horizontal"
             android:padding="4dp"
@@ -236,7 +227,7 @@
 
 
           <RelativeLayout
-              android:id="@+id/editAndSetImageLayout2"
+              android:id="@+id/editAndSetImageLayout"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_weight="1"
@@ -244,7 +235,7 @@
               android:clickable="true">
 
             <ImageView
-                android:id="@+id/editAndSetImageview2"
+                android:id="@+id/editAndSetImageView"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_centerHorizontal="true"
@@ -252,7 +243,6 @@
                 android:src="@drawable/ic_share_white"/>
 
             <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-                android:id="@+id/canaroTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -264,7 +254,7 @@
           </RelativeLayout>
 
           <RelativeLayout
-              android:id="@+id/addToGalleryImageLayout2"
+              android:id="@+id/addToGalleryImageLayout"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_weight="1"
@@ -272,7 +262,7 @@
               android:clickable="true">
 
             <ImageView
-                android:id="@+id/addToGalleryImageview2"
+                android:id="@+id/addToGalleryImageView"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_centerHorizontal="true"
@@ -280,7 +270,6 @@
                 android:src="@drawable/ic_share_white"/>
 
             <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-                android:id="@+id/canaroTextView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -292,7 +281,7 @@
           </RelativeLayout>
 
           <RelativeLayout
-              android:id="@+id/shareImageLayout2"
+              android:id="@+id/shareImageLayout"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_weight="1"
@@ -300,7 +289,7 @@
               android:clickable="true">
 
             <ImageView
-                android:id="@+id/downloadRawSizeImageview2"
+                android:id="@+id/downloadRawSizeImageView"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_centerHorizontal="true"
@@ -308,7 +297,6 @@
                 android:src="@drawable/ic_share_white"/>
 
             <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-                android:id="@+id/canaroTextView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -322,67 +310,65 @@
 
         </LinearLayout>
 
-      </LinearLayout>
-
     </RelativeLayout>
 
 
   </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
   <eightbitlab.com.blurview.BlurView
-      android:id="@+id/blurView2"
+      android:id="@+id/blurView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:visibility="gone">
 
-      <TextView
-          android:id="@+id/progressPercentage2"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_centerInParent="true"
-          android:animateLayoutChanges="true"
-          android:fontFamily="sans-serif-thin"
-          android:text="0%"
-          android:textColor="#fff"
-          android:textSize="80sp"
-          android:typeface="sans"
-          android:visibility="gone"/>
+    <TextView
+        android:id="@+id/wallpaperActionProgressPercentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:animateLayoutChanges="true"
+        android:fontFamily="sans-serif-thin"
+        android:text="0%"
+        android:textColor="#fff"
+        android:textSize="80sp"
+        android:typeface="sans"
+        android:visibility="gone"/>
 
 
-      <com.github.ybq.android.spinkit.SpinKitView
-          xmlns:app="http://schemas.android.com/apk/res-auto"
-          android:id="@+id/progress_processProgress2"
-          style="@style/SpinKitView.Large.FoldingCube"
-          android:layout_width="wrap_content"
-          android:layout_height="45dp"
-          android:layout_centerInParent="true"
-          android:padding="10dp"
-          app:SpinKit_Color="#fff"/>
+    <com.github.ybq.android.spinkit.SpinKitView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/wallpaperActionProgressSpinkit"
+        style="@style/SpinKitView.Large.FoldingCube"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_centerInParent="true"
+        android:padding="10dp"
+        app:SpinKit_Color="#fff"/>
 
-      <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-          android:id="@+id/LoadingTextUnderPercentage"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_below="@id/progressPercentage2"
-          android:layout_centerHorizontal="true"
-          android:paddingTop="2dp"
-          android:textSize="16sp"
-          android:maxLines="1"
-          android:ellipsize="end"/>
+    <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+        android:id="@+id/loadingHintBelowProgressPercentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wallpaperActionProgressPercentage"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="2dp"
+        android:textSize="16sp"
+        android:maxLines="1"
+        android:ellipsize="end"/>
 
-      <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-          android:id="@+id/LoadingTextUnderSpinkit"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_below="@id/progress_processProgress2"
-          android:layout_centerHorizontal="true"
-          android:layout_marginTop="4dp"
-          android:paddingTop="4dp"
-          android:text="@string/finalising_wallpaper_please_wait"
-          android:textSize="16sp"
-          android:visibility="gone"
-          android:maxLines="1"
-          android:ellipsize="end"/>
+    <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+        android:id="@+id/loadingHintBelowProgressSpinkit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wallpaperActionProgressSpinkit"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp"
+        android:paddingTop="4dp"
+        android:text="@string/finalising_wallpaper_please_wait"
+        android:textSize="16sp"
+        android:visibility="gone"
+        android:maxLines="1"
+        android:ellipsize="end"/>
 
   </eightbitlab.com.blurview.BlurView>
 
