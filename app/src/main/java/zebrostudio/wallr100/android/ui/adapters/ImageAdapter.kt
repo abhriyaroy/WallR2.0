@@ -50,7 +50,7 @@ class ViewHolder(
         .override(context.integerRes(R.integer.recycler_view_adapter_search_image_width),
             context.integerRes(R.integer.recycler_view_adapter_search_image_height))
         .centerCrop()
-    showImageGlide(link, options)
+    loadAndShowImage(link, options)
   }
 
   override fun setWallpaperImage(link: String) {
@@ -59,10 +59,10 @@ class ViewHolder(
         .override(context.integerRes(R.integer.recycler_view_adapter_wallpaper_image_width),
             context.integerRes(R.integer.recycler_view_adapter_wallpaper_image_height))
         .centerCrop()
-    showImageGlide(link, options)
+    loadAndShowImage(link, options)
   }
 
-  private fun showImageGlide(link: String, options: RequestOptions) {
+  private fun loadAndShowImage(link: String, options: RequestOptions) {
     Glide.with(context)
         .load(link)
         .transition(withCrossFade())

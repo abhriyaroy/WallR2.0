@@ -16,17 +16,6 @@ import zebrostudio.wallr100.android.utils.visible
 
 class WallpaperFragment : BaseFragment() {
 
-  private val exploreTabTitle = "EXPLORE"
-  private val recentTabTitle = "RECENT"
-  private val popularTabTitle = "POPULAR"
-  private val standoutTabTitle = "STANDOUTS"
-  private val buildingsTabTitle = "BUILDINGS"
-  private val foodTabTitle = "FOOD"
-  private val natureTabTitle = "NATURE"
-  private val objectsTabTitle = "OBJECTS"
-  private val peopleTabTitle = "PEOPLE"
-  private val technologyTabTitle = "TECHNOLOGY"
-
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
@@ -51,7 +40,7 @@ class WallpaperFragment : BaseFragment() {
   private fun configureExploreChildView(imageListFragmentClass: Class<ImageListFragment>) {
     val viewPagerItemAdapter =
         FragmentPagerItemAdapter(childFragmentManager, FragmentPagerItems.with(context)
-            .add(exploreTabTitle, imageListFragmentClass)
+            .add(ImageListType.imageType[0], imageListFragmentClass)
             .create())
     wallpaperFragmentViewPager.adapter = viewPagerItemAdapter
   }
@@ -62,9 +51,9 @@ class WallpaperFragment : BaseFragment() {
   ) {
     val viewPagerItemAdapter =
         FragmentPagerItemAdapter(childFragmentManager, FragmentPagerItems.with(context)
-            .add(recentTabTitle, imageListFragmentClass)
-            .add(popularTabTitle, imageListFragmentClass)
-            .add(standoutTabTitle, imageListFragmentClass)
+            .add(ImageListType.imageType[1], imageListFragmentClass)
+            .add(ImageListType.imageType[2], imageListFragmentClass)
+            .add(ImageListType.imageType[3], imageListFragmentClass)
             .create())
     wallpaperFragmentViewPager.adapter = viewPagerItemAdapter
     tabLayout?.setViewPager(wallpaperFragmentViewPager)
@@ -77,12 +66,12 @@ class WallpaperFragment : BaseFragment() {
   ) {
     val viewPagerItemAdapter =
         FragmentPagerItemAdapter(childFragmentManager, FragmentPagerItems.with(context)
-            .add(buildingsTabTitle, imageListFragmentClass)
-            .add(foodTabTitle, imageListFragmentClass)
-            .add(natureTabTitle, imageListFragmentClass)
-            .add(objectsTabTitle, imageListFragmentClass)
-            .add(peopleTabTitle, imageListFragmentClass)
-            .add(technologyTabTitle, imageListFragmentClass)
+            .add(ImageListType.imageType[4], imageListFragmentClass)
+            .add(ImageListType.imageType[5], imageListFragmentClass)
+            .add(ImageListType.imageType[6], imageListFragmentClass)
+            .add(ImageListType.imageType[7], imageListFragmentClass)
+            .add(ImageListType.imageType[8], imageListFragmentClass)
+            .add(ImageListType.imageType[9], imageListFragmentClass)
             .create())
     wallpaperFragmentViewPager.adapter = viewPagerItemAdapter
     tabLayout?.setViewPager(wallpaperFragmentViewPager)

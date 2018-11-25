@@ -3,16 +3,6 @@ package zebrostudio.wallr100.data
 import com.google.firebase.database.DatabaseReference
 import io.reactivex.Completable
 import io.reactivex.Single
-import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl.Companion.childPathBuilding
-import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl.Companion.childPathFood
-import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl.Companion.childPathNature
-import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl.Companion.childPathObject
-import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl.Companion.childPathPeople
-import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl.Companion.childPathPopular
-import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl.Companion.childPathRecent
-import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl.Companion.childPathStandout
-import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl.Companion.childPathTechnology
-import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl.Companion.firebaseTimeoutDuration
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
@@ -40,6 +30,20 @@ class WallrDataRepository(
   private val premiumUserTag = "premium_user"
   private val unableToResolveHostExceptionMessage = "Unable to resolve host " +
       "\"api.unsplash.com\": No address associated with hostname"
+  private val firebaseDatabasePath = "wallr"
+  val childPathExplore = "explore"
+  val childPathCategories = "categories"
+  val childPathCollections = "collections"
+  val childPathRecent = "recent"
+  val childPathPopular = "popular"
+  val childPathStandout = "standout"
+  val childPathBuilding = "building"
+  val childPathFood = "food"
+  val childPathNature = "nature"
+  val childPathObject = "object"
+  val childPathPeople = "people"
+  val childPathTechnology = "technology"
+  val firebaseTimeoutDuration = 15
 
   override fun authenticatePurchase(
     packageName: String,
@@ -85,53 +89,65 @@ class WallrDataRepository(
   }
 
   override fun getExplorePictures(): Single<List<ImageModel>> {
-    return getPicturesFromFirebase(firebaseDatabaseHelper.getExploreNodeReference())
+    return getPicturesFromFirebase(getExploreNodeReference())
   }
 
   override fun getRecentPictures(): Single<List<ImageModel>> {
-    return getPicturesFromFirebase(firebaseDatabaseHelper.getCollectionsNodeReference()
+    return getPicturesFromFirebase(getCollectionsNodeReference()
         .child(childPathRecent))
   }
 
   override fun getPopularPictures(): Single<List<ImageModel>> {
-    return getPicturesFromFirebase(firebaseDatabaseHelper.getCollectionsNodeReference()
+    return getPicturesFromFirebase(getCollectionsNodeReference()
         .child(childPathPopular))
   }
 
   override fun getStandoutPictures(): Single<List<ImageModel>> {
-    return getPicturesFromFirebase(firebaseDatabaseHelper.getCollectionsNodeReference()
+    return getPicturesFromFirebase(getCollectionsNodeReference()
         .child(childPathStandout))
   }
 
   override fun getBuildingsPictures(): Single<List<ImageModel>> {
-    return getPicturesFromFirebase(firebaseDatabaseHelper.getCategoriesNodeReference()
+    return getPicturesFromFirebase(getCategoriesNodeReference()
         .child(childPathBuilding))
   }
 
   override fun getFoodPictures(): Single<List<ImageModel>> {
-    return getPicturesFromFirebase(firebaseDatabaseHelper.getCategoriesNodeReference()
+    return getPicturesFromFirebase(getCategoriesNodeReference()
         .child(childPathFood))
   }
 
   override fun getNaturePictures(): Single<List<ImageModel>> {
-    return getPicturesFromFirebase(firebaseDatabaseHelper.getCategoriesNodeReference()
+    return getPicturesFromFirebase(getCategoriesNodeReference()
         .child(childPathNature))
   }
 
   override fun getObjectsPictures(): Single<List<ImageModel>> {
-    return getPicturesFromFirebase(firebaseDatabaseHelper.getCategoriesNodeReference()
+    return getPicturesFromFirebase(getCategoriesNodeReference()
         .child(childPathObject))
   }
 
   override fun getPeoplePictures(): Single<List<ImageModel>> {
-    return getPicturesFromFirebase(firebaseDatabaseHelper.getCategoriesNodeReference()
+    return getPicturesFromFirebase(getCategoriesNodeReference()
         .child(childPathPeople))
   }
 
   override fun getTechnologyPictures(): Single<List<ImageModel>> {
-    return getPicturesFromFirebase(firebaseDatabaseHelper.getCategoriesNodeReference()
+    return getPicturesFromFirebase(getCategoriesNodeReference()
         .child(childPathTechnology))
   }
+
+  fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()
+      .getReference(firebaseDatabasePath)
+      .child(childPathExplore)
+
+  fun getCollectionsNodeReference() = firebaseDatabaseHelper.getDatabase()
+      .getReference(firebaseDatabasePath)
+      .child(childPathCollections)
+
+  fun getCategoriesNodeReference() = firebaseDatabaseHelper.getDatabase()
+      .getReference(firebaseDatabasePath)
+      .child(childPathCategories)
 
   private fun getPicturesFromFirebase(firebaseDatabaseReference: DatabaseReference) = firebaseDatabaseHelper
       .fetch(firebaseDatabaseReference)
