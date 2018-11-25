@@ -105,4 +105,44 @@
   <dimen name="wallpaper_fragment_bottom_spinkit_marin_bottom">6dp</dimen>
   <dimen name="wallpaper_fragment_shadow_tab_height">2dp</dimen>
 
+
+  <dimen name="detail_activity_sliding_panel_height">185dp</dimen>
+  <dimen name="detail_activity_sliding_panel_shadow_height">4dp</dimen>
+  <dimen name="detail_activity_shadow_top_height">4dp</dimen>
+  <dimen name="detail_activity_image_info_layout_padding_bottom">14dp</dimen>
+  <dimen name="detail_activity_image_info_layout_padding_top">14dp</dimen>
+  <dimen name="detail_activity_image_info_layout_image_view_width">45dp</dimen>
+  <dimen name="detail_activity_image_info_layout_image_view_height">45dp</dimen>
+  <dimen name="detail_activity_image_info_layout_image_view_margin_start">10dp</dimen>
+  <dimen name="detail_activity_image_info_layout_image_view_border_width">0dp</dimen>
+  <dimen name="detail_activity_image_info_layout_author_name_width">180dp</dimen>
+  <dimen name="detail_activity_image_info_layout_author_name_padding_left">180dp</dimen>
+  <dimen name="detail_activity_image_info_layout_author_name_text_size">20sp</dimen>
+  <dimen name="detail_activity_image_info_layout_website_referral_padding_left">10dp</dimen>
+  <dimen name="detail_activity_image_info_layout_website_referral_padding_top">2dp</dimen>
+  <dimen name="detail_activity_image_info_layout_website_referral_text_size">11sp</dimen>
+  <dimen name="detail_activity_expand_icon_view_width">30dp</dimen>
+  <dimen name="detail_activity_expand_icon_view_height">30dp</dimen>
+  <dimen name="detail_activity_expand_icon_view_margin_top">4dp</dimen>
+  <dimen name="detail_activity_wallpaper_actions_bar_height">80dp</dimen>
+  <dimen name="detail_activity_wallpaper_actions_bar_padding">4dp</dimen>
+  <dimen name="detail_activity_option_image_view_width">45dp</dimen>
+  <dimen name="detail_activity_option_image_view_height">45dp</dimen>
+  <dimen name="detail_activity_option_image_view_padding">8dp</dimen>
+  <dimen name="detail_activity_option_text_view_padding_bottom">4dp</dimen>
+  <dimen name="detail_activity_option_text_view_text_size">12sp</dimen>
+  <dimen name="detail_activity_wallpaper_actions_bar_bottom_padding">4dp</dimen>
+  <dimen name="detail_activity_wallpaper_actions_bar_bottom_margin_bottom">4dp</dimen>
+  <dimen name="wallpaper_action_progress_spinkit_height">45dp</dimen>
+  <dimen name="wallpaper_action_progress_spinkit_padding">10dp</dimen>
+  <dimen name="detail_activity_loading_hint_below_progress_percentage_padding_top">2dp</dimen>
+  <dimen name="detail_activity_loading_hint_below_progress_percentage_text_size">16sp</dimen>
+  <dimen name="detail_activity_loading_hint_below_progress_spinkit_margin_top">4dp</dimen>
+  <dimen name="detail_activity_loading_hint_below_progress_spinkit_padding_top">4dp</dimen>
+  <dimen name="detail_activity_loading_hint_below_progress_spinkit_text_size">16sp</dimen>
+  <dimen name="detail_activity_back_icon_width">42dp</dimen>
+  <dimen name="detail_activity_back_icon_height">40dp</dimen>
+  <dimen name="detail_activity_back_icon_margin_start">8dp</dimen>
+  <dimen name="detail_activity_back_icon_margin_top">25dp</dimen>
+
 </resources>

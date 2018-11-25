@@ -77,7 +77,7 @@
             android:layout_alignTop="@id/authorImage"
             android:layout_toRightOf="@id/authorImage"
             android:ellipsize="end"
-            android:maxLines="@dimen/detail_activity_image_info_layout_author_name_max_lines"
+            android:maxLines="1"
             android:paddingLeft="@dimen/detail_activity_image_info_layout_author_name_padding_left"
             android:textSize="@dimen/detail_activity_image_info_layout_author_name_text_size"/>
 

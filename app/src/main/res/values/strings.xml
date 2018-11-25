@@ -115,6 +115,8 @@
   <string name="full_hd">Ultra HD</string>
   <string name="raw">Raw</string>
   <string name="crystallize">CRYSTALLIZE</string>
+  <string name="detail_activity_website_referral_unsplash">www_unsplash_com</string>
+  <string name="wallpaper_action_progress_percentage">0%</string>
 
 
 </resources>
