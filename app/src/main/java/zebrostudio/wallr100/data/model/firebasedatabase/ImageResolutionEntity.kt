@@ -6,6 +6,4 @@ data class ImageResolutionEntity(
   val mediumRes: String,
   val largeRes: String,
   val rawRes: String
-) {
-  constructor() : this("", "", "", "", "")
-}
+)

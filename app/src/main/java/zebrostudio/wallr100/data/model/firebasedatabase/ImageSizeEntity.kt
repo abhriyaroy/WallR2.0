@@ -6,6 +6,4 @@ data class ImageSizeEntity(
   val mediumSize: Long,
   val largeSize: Long,
   val rawSize: Long
-) {
-  constructor() : this(0, 0, 0, 0, 0)
-}
+)

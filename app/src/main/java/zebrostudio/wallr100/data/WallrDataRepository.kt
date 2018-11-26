@@ -1,6 +1,8 @@
 package zebrostudio.wallr100.data
 
+import android.annotation.SuppressLint
 import com.google.firebase.database.DatabaseReference
+import com.google.gson.Gson
 import io.reactivex.Completable
 import io.reactivex.Single
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
@@ -12,6 +14,7 @@ import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
+import zebrostudio.wallr100.data.model.firebasedatabase.FirebaseImageEntity
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
@@ -137,23 +140,31 @@ class WallrDataRepository(
         .child(childPathTechnology))
   }
 
-  fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()
+  private fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()
       .getReference(firebaseDatabasePath)
       .child(childPathExplore)
 
-  fun getCollectionsNodeReference() = firebaseDatabaseHelper.getDatabase()
+  private fun getCollectionsNodeReference() = firebaseDatabaseHelper.getDatabase()
       .getReference(firebaseDatabasePath)
       .child(childPathCollections)
 
-  fun getCategoriesNodeReference() = firebaseDatabaseHelper.getDatabase()
+  private fun getCategoriesNodeReference() = firebaseDatabaseHelper.getDatabase()
       .getReference(firebaseDatabasePath)
       .child(childPathCategories)
 
-  private fun getPicturesFromFirebase(firebaseDatabaseReference: DatabaseReference) = firebaseDatabaseHelper
-      .fetch(firebaseDatabaseReference)
-      .flatMap {
-        Single.just(firebasePictureEntityMapper.mapFromEntity(it))
-      }
-      .timeout(firebaseTimeoutDuration.toLong(), SECONDS)
-
+  @SuppressLint("CheckResult")
+  private fun getPicturesFromFirebase(firebaseDatabaseReference: DatabaseReference): Single<List<ImageModel>> {
+    val imageList = mutableListOf<FirebaseImageEntity>()
+    return firebaseDatabaseHelper
+        .fetch(firebaseDatabaseReference)
+        .flatMap {
+          it.values.forEach { jsonString ->
+            System.out.println(jsonString)
+            imageList.add(Gson().fromJson(jsonString, FirebaseImageEntity::class.java))
+          }
+          imageList.reverse()
+          Single.just(firebasePictureEntityMapper.mapFromEntity(imageList))
+        }
+        .timeout(firebaseTimeoutDuration.toLong(), SECONDS)
+  }
 }

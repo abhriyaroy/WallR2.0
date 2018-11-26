@@ -58,6 +58,7 @@ class ImageListPresenterImpl(
           imageListView?.hideLoader()
           imageListView?.showImageList(it)
         }, {
+          System.out.println(it.message)
           imageListView?.hideLoader()
           imageListView?.showNoInternetMessageView()
           if (refresh) {

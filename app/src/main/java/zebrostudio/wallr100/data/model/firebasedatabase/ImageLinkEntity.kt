@@ -6,6 +6,4 @@ data class ImageLinkEntity(
   val medium: String,
   val large: String,
   val raw: String
-) {
-  constructor() : this("", "", "", "", "")
-}
+)

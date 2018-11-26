@@ -8,13 +8,4 @@ data class FirebaseImageEntity(
   val color: String,
   val timeStamp: Long,
   val referral: String
-) {
-  constructor() : this(
-      ImageLinkEntity("", "", "", "", ""),
-      ImageAuthorEntity("", ""),
-      ImageResolutionEntity("", "", "", "", ""),
-      ImageSizeEntity(0, 0, 0, 0, 0),
-      "",
-      0,
-      "")
-}
+)
