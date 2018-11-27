@@ -11,7 +11,7 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_wallpaper.wallpaperFragmentViewPager
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
-import zebrostudio.wallr100.android.utils.FragmentTag
+import zebrostudio.wallr100.android.utils.FragmentNameTag
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.visible
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 class WallpaperFragment : BaseFragment() {
 
-  @Inject lateinit var fragmentTags: FragmentTag
+  @Inject lateinit var fragmentNameTags: FragmentNameTag
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -38,9 +38,9 @@ class WallpaperFragment : BaseFragment() {
     val tabLayout = activity?.findViewById<SmartTabLayout>(R.id.tabLayout)
     tabLayout?.gone()
     val imageListFragmentClass = ImageListFragment().javaClass
-    if (fragmentTag == fragmentTags.getTag(R.string.guillotine_explore_title)) {
+    if (fragmentTag == fragmentNameTags.getTag(R.string.explore_fragment_tag)) {
       configureExploreChildView(imageListFragmentClass)
-    } else if (fragmentTag == fragmentTags.getTag(R.string.guillotine_top_picks_title)) {
+    } else if (fragmentTag == fragmentNameTags.getTag(R.string.top_picks_fragment_tag)) {
       configureTopPicksChildView(tabLayout, imageListFragmentClass)
     } else {
       configureCategoriesChildView(tabLayout, imageListFragmentClass)

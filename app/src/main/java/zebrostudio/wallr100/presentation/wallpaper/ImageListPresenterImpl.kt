@@ -3,7 +3,7 @@ package zebrostudio.wallr100.presentation.wallpaper
 import com.uber.autodispose.autoDisposable
 import io.reactivex.Single
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.utils.FragmentTag
+import zebrostudio.wallr100.android.utils.FragmentNameTag
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListView
@@ -12,7 +12,7 @@ import zebrostudio.wallr100.presentation.wallpaper.mapper.ImagePresenterEntityMa
 class ImageListPresenterImpl(
   private val wallpaperImagesUseCase: WallpaperImagesUseCase,
   private val imagePresenterEntityMapper: ImagePresenterEntityMapper,
-  private val fragmentNameTag: FragmentTag
+  private val fragmentNameTag: FragmentNameTag
 ) : ImageListContract.ImageListPresenter {
 
   private var imageListView: ImageListView? = null
@@ -28,13 +28,13 @@ class ImageListPresenterImpl(
 
   override fun setImageListType(fragmentTag: String, position: Int) {
     when (fragmentTag) {
-      fragmentNameTag.getTag(R.string.guillotine_explore_title) -> {
+      fragmentNameTag.getTag(R.string.explore_fragment_tag) -> {
         imageListType = position
       }
-      fragmentNameTag.getTag(R.string.guillotine_top_picks_title) -> {
+      fragmentNameTag.getTag(R.string.top_picks_fragment_tag) -> {
         imageListType = position + 1
       }
-      fragmentNameTag.getTag(R.string.guillotine_categories_title) -> {
+      fragmentNameTag.getTag(R.string.categories_fragment_tag) -> {
         imageListType = position + 4
       }
     }

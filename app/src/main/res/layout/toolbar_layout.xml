@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="@string/guillotine_explore_title"
+        android:text="@string/explore_fragment_tag"
         android:textSize="@dimen/guillotine_item_text_size"/>
 
     <ImageView

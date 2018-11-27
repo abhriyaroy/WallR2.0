@@ -22,11 +22,11 @@ abstract class BaseFragment : Fragment(), BaseView {
   internal lateinit var fragmentTag: String
 
   private val menuItemIdList: List<Int> = listOf(
-      R.string.guillotine_explore_title,
-      R.string.guillotine_top_picks_title,
-      R.string.guillotine_categories_title,
-      R.string.guillotine_minimal_title,
-      R.string.guillotine_collection_title
+      R.string.explore_fragment_tag,
+      R.string.top_picks_fragment_tag,
+      R.string.categories_fragment_tag,
+      R.string.minimal_fragment_tag,
+      R.string.collection_fragment_tag
   )
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,9 +57,9 @@ abstract class BaseFragment : Fragment(), BaseView {
     activity?.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.gone()
     activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.gone()
     when (fragmentTag) {
-      getString(R.string.guillotine_minimal_title) ->
+      getString(R.string.minimal_fragment_tag) ->
         activity?.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.visible()
-      getString(R.string.guillotine_collection_title) -> {  // Do nothing
+      getString(R.string.collection_fragment_tag) -> {  // Do nothing
       }
       else -> activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visible()
     }

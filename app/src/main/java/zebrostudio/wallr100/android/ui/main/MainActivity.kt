@@ -33,7 +33,7 @@ import zebrostudio.wallr100.android.ui.collection.CollectionFragment
 import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment
 import zebrostudio.wallr100.android.ui.minimal.MinimalFragment
 import zebrostudio.wallr100.android.ui.search.SearchActivity
-import zebrostudio.wallr100.android.utils.FragmentTag
+import zebrostudio.wallr100.android.utils.FragmentNameTag
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.drawableRes
 import zebrostudio.wallr100.android.utils.errorToast
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   @Inject
   internal lateinit var presenter: MainContract.MainPresenter
   @Inject
-  internal lateinit var fragmentTag: FragmentTag
+  internal lateinit var fragmentNameTag: FragmentNameTag
 
   private lateinit var guillotineMenuAnimation: GuillotineAnimation
 
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     setContentView(R.layout.activity_main)
     initializeViews()
     addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
-        fragmentTag.getTag(R.string.guillotine_explore_title))
+        fragmentNameTag.getTag(R.string.explore_fragment_tag))
 
     attachToolbarItemClickListeners()
   }
@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   }
 
   override fun getExploreFragmentTag(): String {
-    return fragmentTag.getTag(R.string.guillotine_explore_title)
+    return fragmentNameTag.getTag(R.string.explore_fragment_tag)
   }
 
   private inline fun <reified T : BaseFragment> addFragment(
@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     fragmentTag: String
   ) {
     if (!fragmentExistsOnStackTop(fragmentTag)) {
-      if (fragmentTag == this.fragmentTag.getTag(R.string.guillotine_explore_title)) {
+      if (fragmentTag == this.fragmentNameTag.getTag(R.string.explore_fragment_tag)) {
         clearStack()
       }
 
@@ -177,17 +177,17 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   private fun buildGuillotineMenuItems(): List<Triple<Int, Int, MenuItems>> {
     // Declare mutable list containing names and icon resources of guillotine menu items
     return mutableListOf<Triple<Int, Int, MenuItems>>().apply {
-      add(Triple(R.string.guillotine_explore_title, R.drawable.ic_explore_white,
+      add(Triple(R.string.explore_fragment_tag, R.drawable.ic_explore_white,
           MenuItems.EXPLORE))
-      add(Triple(R.string.guillotine_top_picks_title, R.drawable.ic_toppicks_white,
+      add(Triple(R.string.top_picks_fragment_tag, R.drawable.ic_toppicks_white,
           MenuItems.TOP_PICKS))
-      add(Triple(R.string.guillotine_categories_title, R.drawable.ic_categories_white,
+      add(Triple(R.string.categories_fragment_tag, R.drawable.ic_categories_white,
           MenuItems.CATEGORIES))
-      add(Triple(R.string.guillotine_minimal_title, R.drawable.ic_minimal_white,
+      add(Triple(R.string.minimal_fragment_tag, R.drawable.ic_minimal_white,
           MenuItems.MINIMAL))
-      add(Triple(R.string.guillotine_collection_title, R.drawable.ic_collections_white,
+      add(Triple(R.string.collection_fragment_tag, R.drawable.ic_collections_white,
           MenuItems.COLLECTION))
-      add(Triple(R.string.guillotine_feedback_title, R.drawable.ic_feedback_white,
+      add(Triple(R.string.feedback_fragment_tag, R.drawable.ic_feedback_white,
           MenuItems.FEEDBACK))
       add(Triple(R.string.guillotine_buy_pro_title, R.drawable.ic_buypro_black,
           MenuItems.BUY_PRO))
@@ -227,16 +227,16 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   private fun clickListener(item: MenuItems) {
     when (item) {
       MenuItems.EXPLORE -> addFragment(fragmentContainer.id,
-          WallpaperFragment.newInstance(), fragmentTag.getTag(R.string.guillotine_explore_title))
+          WallpaperFragment.newInstance(), fragmentNameTag.getTag(R.string.explore_fragment_tag))
       MenuItems.TOP_PICKS -> addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
-          fragmentTag.getTag(R.string.guillotine_top_picks_title))
+          fragmentNameTag.getTag(R.string.top_picks_fragment_tag))
       MenuItems.CATEGORIES -> addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
-          fragmentTag.getTag(R.string.guillotine_categories_title))
+          fragmentNameTag.getTag(R.string.categories_fragment_tag))
       MenuItems.MINIMAL -> addFragment(fragmentContainer.id,
-          MinimalFragment.newInstance(), fragmentTag.getTag(R.string.guillotine_minimal_title))
+          MinimalFragment.newInstance(), fragmentNameTag.getTag(R.string.minimal_fragment_tag))
       MenuItems.COLLECTION -> addFragment(fragmentContainer.id,
           CollectionFragment.newInstance(),
-          fragmentTag.getTag(R.string.guillotine_collection_title))
+          fragmentNameTag.getTag(R.string.collection_fragment_tag))
       MenuItems.FEEDBACK -> {
         handleFeedbackClick()
       }
