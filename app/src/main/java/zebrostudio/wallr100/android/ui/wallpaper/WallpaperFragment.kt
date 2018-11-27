@@ -7,14 +7,24 @@ import android.view.ViewGroup
 import com.ogaclejapan.smarttablayout.SmartTabLayout
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_wallpaper.wallpaperFragmentViewPager
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
+import zebrostudio.wallr100.android.utils.FragmentTag
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.visible
+import javax.inject.Inject
 
 class WallpaperFragment : BaseFragment() {
+
+  @Inject lateinit var fragmentTags: FragmentTag
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    AndroidSupportInjection.inject(this)
+  }
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -28,9 +38,9 @@ class WallpaperFragment : BaseFragment() {
     val tabLayout = activity?.findViewById<SmartTabLayout>(R.id.tabLayout)
     tabLayout?.gone()
     val imageListFragmentClass = ImageListFragment().javaClass
-    if (fragmentTag == EXPLORE_FRAGMENT_TAG) {
+    if (fragmentTag == fragmentTags.getTag(R.string.guillotine_explore_title)) {
       configureExploreChildView(imageListFragmentClass)
-    } else if (fragmentTag == TOP_PICKS_FRAGMENT_TAG) {
+    } else if (fragmentTag == fragmentTags.getTag(R.string.guillotine_top_picks_title)) {
       configureTopPicksChildView(tabLayout, imageListFragmentClass)
     } else {
       configureCategoriesChildView(tabLayout, imageListFragmentClass)
@@ -40,7 +50,7 @@ class WallpaperFragment : BaseFragment() {
   private fun configureExploreChildView(imageListFragmentClass: Class<ImageListFragment>) {
     val viewPagerItemAdapter =
         FragmentPagerItemAdapter(childFragmentManager, FragmentPagerItems.with(context)
-            .add(ImageListType.imageType[0], imageListFragmentClass)
+            .add(getString(R.string.explore_images), imageListFragmentClass)
             .create())
     wallpaperFragmentViewPager.adapter = viewPagerItemAdapter
   }
@@ -51,9 +61,9 @@ class WallpaperFragment : BaseFragment() {
   ) {
     val viewPagerItemAdapter =
         FragmentPagerItemAdapter(childFragmentManager, FragmentPagerItems.with(context)
-            .add(ImageListType.imageType[1], imageListFragmentClass)
-            .add(ImageListType.imageType[2], imageListFragmentClass)
-            .add(ImageListType.imageType[3], imageListFragmentClass)
+            .add(getString(R.string.recent_images), imageListFragmentClass)
+            .add(getString(R.string.popular_images), imageListFragmentClass)
+            .add(getString(R.string.standouts_images), imageListFragmentClass)
             .create())
     wallpaperFragmentViewPager.adapter = viewPagerItemAdapter
     tabLayout?.setViewPager(wallpaperFragmentViewPager)
@@ -66,12 +76,12 @@ class WallpaperFragment : BaseFragment() {
   ) {
     val viewPagerItemAdapter =
         FragmentPagerItemAdapter(childFragmentManager, FragmentPagerItems.with(context)
-            .add(ImageListType.imageType[4], imageListFragmentClass)
-            .add(ImageListType.imageType[5], imageListFragmentClass)
-            .add(ImageListType.imageType[6], imageListFragmentClass)
-            .add(ImageListType.imageType[7], imageListFragmentClass)
-            .add(ImageListType.imageType[8], imageListFragmentClass)
-            .add(ImageListType.imageType[9], imageListFragmentClass)
+            .add(getString(R.string.buildings_images), imageListFragmentClass)
+            .add(getString(R.string.food_images), imageListFragmentClass)
+            .add(getString(R.string.nature_images), imageListFragmentClass)
+            .add(getString(R.string.objects_images), imageListFragmentClass)
+            .add(getString(R.string.people_images), imageListFragmentClass)
+            .add(getString(R.string.technology_images), imageListFragmentClass)
             .create())
     wallpaperFragmentViewPager.adapter = viewPagerItemAdapter
     tabLayout?.setViewPager(wallpaperFragmentViewPager)
@@ -79,10 +89,6 @@ class WallpaperFragment : BaseFragment() {
   }
 
   companion object {
-    const val EXPLORE_FRAGMENT_TAG = "Explore"
-    const val TOP_PICKS_FRAGMENT_TAG = "Top Picks"
-    const val CATEGORIES_FRAGMENT_TAG = "Categories"
-
     fun newInstance() = WallpaperFragment()
   }
 

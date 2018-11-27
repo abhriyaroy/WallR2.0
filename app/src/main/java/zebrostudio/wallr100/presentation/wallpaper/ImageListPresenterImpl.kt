@@ -2,10 +2,8 @@ package zebrostudio.wallr100.presentation.wallpaper
 
 import com.uber.autodispose.autoDisposable
 import io.reactivex.Single
-import zebrostudio.wallr100.android.ui.wallpaper.ImageListType.imageType
-import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment.Companion.EXPLORE_FRAGMENT_TAG
-import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment.Companion.TOP_PICKS_FRAGMENT_TAG
-import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment.Companion.CATEGORIES_FRAGMENT_TAG
+import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.utils.FragmentTag
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListView
@@ -13,11 +11,12 @@ import zebrostudio.wallr100.presentation.wallpaper.mapper.ImagePresenterEntityMa
 
 class ImageListPresenterImpl(
   private val wallpaperImagesUseCase: WallpaperImagesUseCase,
-  private val imagePresenterEntityMapper: ImagePresenterEntityMapper
+  private val imagePresenterEntityMapper: ImagePresenterEntityMapper,
+  private val fragmentNameTag: FragmentTag
 ) : ImageListContract.ImageListPresenter {
 
   private var imageListView: ImageListView? = null
-  internal lateinit var imageListType: String
+  internal var imageListType = 0
 
   override fun attachView(view: ImageListView) {
     imageListView = view
@@ -29,14 +28,14 @@ class ImageListPresenterImpl(
 
   override fun setImageListType(fragmentTag: String, position: Int) {
     when (fragmentTag) {
-      EXPLORE_FRAGMENT_TAG -> {
-        imageListType = imageType[position]
+      fragmentNameTag.getTag(R.string.guillotine_explore_title) -> {
+        imageListType = position
       }
-      TOP_PICKS_FRAGMENT_TAG -> {
-        imageListType = imageType[position + 1]
+      fragmentNameTag.getTag(R.string.guillotine_top_picks_title) -> {
+        imageListType = position + 1
       }
-      CATEGORIES_FRAGMENT_TAG -> {
-        imageListType = imageType[position + 4]
+      fragmentNameTag.getTag(R.string.guillotine_categories_title) -> {
+        imageListType = position + 4
       }
     }
   }
@@ -58,7 +57,6 @@ class ImageListPresenterImpl(
           imageListView?.hideLoader()
           imageListView?.showImageList(it)
         }, {
-          System.out.println(it.message)
           imageListView?.hideLoader()
           imageListView?.showNoInternetMessageView()
           if (refresh) {
@@ -69,15 +67,15 @@ class ImageListPresenterImpl(
 
   private fun getImageList(): Single<List<ImageModel>> {
     return when (imageListType) {
-      imageType[0] -> wallpaperImagesUseCase.exploreImagesSingle()
-      imageType[1] -> wallpaperImagesUseCase.recentImagesSingle()
-      imageType[2] -> wallpaperImagesUseCase.popularImagesSingle()
-      imageType[3] -> wallpaperImagesUseCase.standoutImagesSingle()
-      imageType[4] -> wallpaperImagesUseCase.buildingsImagesSingle()
-      imageType[5] -> wallpaperImagesUseCase.foodImagesSingle()
-      imageType[6] -> wallpaperImagesUseCase.natureImagesSingle()
-      imageType[7] -> wallpaperImagesUseCase.objectsImagesSingle()
-      imageType[8] -> wallpaperImagesUseCase.peopleImagesSingle()
+      0 -> wallpaperImagesUseCase.exploreImagesSingle()
+      1 -> wallpaperImagesUseCase.recentImagesSingle()
+      2 -> wallpaperImagesUseCase.popularImagesSingle()
+      3 -> wallpaperImagesUseCase.standoutImagesSingle()
+      4 -> wallpaperImagesUseCase.buildingsImagesSingle()
+      5 -> wallpaperImagesUseCase.foodImagesSingle()
+      6 -> wallpaperImagesUseCase.natureImagesSingle()
+      7 -> wallpaperImagesUseCase.objectsImagesSingle()
+      8 -> wallpaperImagesUseCase.peopleImagesSingle()
       else -> wallpaperImagesUseCase.technologyImagesSingle()
     }
   }

@@ -1,6 +1,18 @@
 <resources>
   <string name="app_name">WallR</string>
 
+  <!-- Image list types -->
+  <string name="explore_images">EXPLORE</string>
+  <string name="recent_images">RECENT</string>
+  <string name="popular_images">POPULAR</string>
+  <string name="standouts_images">STANDOUTS</string>
+  <string name="buildings_images">BUILDINGS</string>
+  <string name="food_images">FOOD</string>
+  <string name="nature_images">NATURE</string>
+  <string name="objects_images">OBJECTS</string>
+  <string name="people_images">PEOPLE</string>
+  <string name="technology_images">TECHNOLOGY</string>
+
   <!-- Guillotine menu strings -->
   <string name="guillotine_explore_title">Explore</string>
   <string name="guillotine_top_picks_title">Top Picks</string>

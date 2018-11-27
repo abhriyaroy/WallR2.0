@@ -152,18 +152,17 @@ class WallrDataRepository(
       .getReference(firebaseDatabasePath)
       .child(childPathCategories)
 
-  @SuppressLint("CheckResult")
   private fun getPicturesFromFirebase(firebaseDatabaseReference: DatabaseReference): Single<List<ImageModel>> {
     val imageList = mutableListOf<FirebaseImageEntity>()
     return firebaseDatabaseHelper
         .fetch(firebaseDatabaseReference)
         .flatMap {
           it.values.forEach { jsonString ->
-            System.out.println(jsonString)
             imageList.add(Gson().fromJson(jsonString, FirebaseImageEntity::class.java))
           }
           imageList.reverse()
-          Single.just(firebasePictureEntityMapper.mapFromEntity(imageList))
+          val image = firebasePictureEntityMapper.mapFromEntity(imageList)
+          Single.just(image)
         }
         .timeout(firebaseTimeoutDuration.toLong(), SECONDS)
   }

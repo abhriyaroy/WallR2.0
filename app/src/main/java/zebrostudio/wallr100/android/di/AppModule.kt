@@ -7,6 +7,9 @@ import dagger.Provides
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.android.AndroidMainThread
 import zebrostudio.wallr100.android.di.scopes.PerApplication
+import zebrostudio.wallr100.android.utils.FragmentTag
+import zebrostudio.wallr100.android.utils.ResourceUtils
+import zebrostudio.wallr100.android.utils.ResourceUtilsImpl
 import zebrostudio.wallr100.data.SharedPrefsHelper
 import zebrostudio.wallr100.data.SharedPrefsHelperImpl
 import zebrostudio.wallr100.data.WallrDataRepository
@@ -38,6 +41,14 @@ class AppModule {
   fun provideContext(application: Application): Context {
     return application
   }
+
+  @Provides
+  @PerApplication
+  fun provideResourceUtils(context: Context): ResourceUtils = ResourceUtilsImpl(context)
+
+  @Provides
+  @PerApplication
+  fun providesFragmentTag(resourceUtils: ResourceUtils): FragmentTag = FragmentTag(resourceUtils)
 
   @Provides
   @PerApplication
