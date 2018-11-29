@@ -1,9 +1,14 @@
 package zebrostudio.wallr100.data
 
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.gson.Gson
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.Single
+import io.reactivex.observers.TestObserver
+import io.reactivex.schedulers.TestScheduler
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -28,6 +33,7 @@ import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.lang.Exception
 import java.util.UUID.*
+import java.util.concurrent.TimeUnit
 
 @RunWith(MockitoJUnitRunner::class)
 class WallrDataRepositoryTest {
@@ -39,6 +45,7 @@ class WallrDataRepositoryTest {
   @Mock lateinit var unsplashClientFactory: UnsplashClientFactory
   @Mock lateinit var firebaseDatabaseHelper: FirebaseDatabaseHelper
   @Mock lateinit var databaseReference: DatabaseReference
+  @Mock lateinit var firebaseDatabase: FirebaseDatabase
   private lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
   private lateinit var firebasePictureEntityMapper: FirebasePictureEntityMapper
   private lateinit var wallrDataRepository: WallrDataRepository
@@ -48,6 +55,20 @@ class WallrDataRepositoryTest {
       "\"api.unsplash.com\": No address associated with hostname"
   private val purchasePreferenceName = "PURCHASE_PREF"
   private val premiumUserTag = "premium_user"
+  private val firebaseDatabasePath = "wallr"
+  private val childPathExplore = "explore"
+  private val childPathCategories = "categories"
+  private val childPathTopPicks = "collections"
+  private val childPathRecent = "recent"
+  private val childPathPopular = "popular"
+  private val childPathStandout = "standout"
+  private val childPathBuilding = "building"
+  private val childPathFood = "food"
+  private val childPathNature = "nature"
+  private val childPathObject = "object"
+  private val childPathPeople = "people"
+  private val childPathTechnology = "technology"
+  private val firebaseTimeoutDuration = 15
 
   @Before fun setup() {
     unsplashPictureEntityMapper = UnsplashPictureEntityMapper()
@@ -179,13 +200,70 @@ class WallrDataRepositoryTest {
     `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
         Single.just(unsplashPicturesEntityList))
 
-    val picture = wallrDataRepository.getSearchPictures(randomString)
+    val searchPicturesResult = wallrDataRepository.getSearchPictures(randomString)
         .test()
         .values()[0][0]
 
-    assertTrue(searchPicturesModelList[0].id == picture.id)
+    assertTrue(searchPicturesModelList[0] == searchPicturesResult)
     verify(unsplashClientFactory).getPicturesService(randomString)
     verifyNoMoreInteractions(unsplashClientFactory)
+  }
+
+  @Test fun `should return explore node reference on getNodeReference call`() {
+    stubFirebaseDatabaseNode(childPathExplore)
+
+    val nodeReference = wallrDataRepository.getExploreNodeReference()
+
+    assertTrue(nodeReference == databaseReference)
+    verify(firebaseDatabaseHelper, times(3)).getDatabase()
+    verifyNoMoreInteractions(firebaseDatabaseHelper)
+  }
+
+  @Test fun `should return top picks node reference on getNodeReference call`() {
+    stubFirebaseDatabaseNode(childPathTopPicks)
+
+    val nodeReference = wallrDataRepository.getTopPicksNodeReference()
+
+    assertTrue(nodeReference == databaseReference)
+    verify(firebaseDatabaseHelper, times(3)).getDatabase()
+    verifyNoMoreInteractions(firebaseDatabaseHelper)
+  }
+
+  @Test fun `should return categories node reference on getNodeReference call`() {
+    stubFirebaseDatabaseNode(childPathCategories)
+
+    val nodeReference = wallrDataRepository.getCategoriesNodeReference()
+
+    assertTrue(nodeReference == databaseReference)
+    verify(firebaseDatabaseHelper, times(3)).getDatabase()
+    verifyNoMoreInteractions(firebaseDatabaseHelper)
+  }
+
+  @Test fun `should return Single of ImageModel list on getPicturesFromFirebase call success`() {
+    val map = hashMapOf<String, String>()
+    val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
+    val firebaseImageEntityList = listOf(firebaseImageEntity)
+    val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
+    val testScheduler = TestScheduler()
+    val testObserver = TestObserver<Any>()
+    map[randomString] = Gson().toJson(firebaseImageEntity)
+    `when`(firebaseDatabaseHelper.fetch(databaseReference)).thenReturn(Single.just(map))
+
+    wallrDataRepository.getPicturesFromFirebase(databaseReference).subscribeOn(testScheduler)
+        .subscribe(testObserver)
+    testScheduler.advanceTimeBy(firebaseTimeoutDuration.toLong(), TimeUnit.SECONDS)
+
+    testObserver.assertValue(imageModelList)
+    verify(firebaseDatabaseHelper).fetch(databaseReference)
+    verifyNoMoreInteractions(firebaseDatabaseHelper)
+  }
+
+  private fun stubFirebaseDatabaseNode(childPath: String) {
+    `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
+    `when`(firebaseDatabaseHelper.getDatabase().getReference(firebaseDatabasePath)).thenReturn(
+        databaseReference)
+    `when`(firebaseDatabaseHelper.getDatabase().getReference(firebaseDatabasePath)
+        .child(childPath)).thenReturn(databaseReference)
   }
 
 }

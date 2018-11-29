@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.data
 
-import android.annotation.SuppressLint
 import com.google.firebase.database.DatabaseReference
 import com.google.gson.Gson
 import io.reactivex.Completable
@@ -34,19 +33,19 @@ class WallrDataRepository(
   private val unableToResolveHostExceptionMessage = "Unable to resolve host " +
       "\"api.unsplash.com\": No address associated with hostname"
   private val firebaseDatabasePath = "wallr"
-  val childPathExplore = "explore"
-  val childPathCategories = "categories"
-  val childPathCollections = "collections"
-  val childPathRecent = "recent"
-  val childPathPopular = "popular"
-  val childPathStandout = "standout"
-  val childPathBuilding = "building"
-  val childPathFood = "food"
-  val childPathNature = "nature"
-  val childPathObject = "object"
-  val childPathPeople = "people"
-  val childPathTechnology = "technology"
-  val firebaseTimeoutDuration = 15
+  private val childPathExplore = "explore"
+  private val childPathCategories = "categories"
+  private val childPathTopPicks = "collections"
+  private val childPathRecent = "recent"
+  private val childPathPopular = "popular"
+  private val childPathStandout = "standout"
+  private val childPathBuilding = "building"
+  private val childPathFood = "food"
+  private val childPathNature = "nature"
+  private val childPathObject = "object"
+  private val childPathPeople = "people"
+  private val childPathTechnology = "technology"
+  private val firebaseTimeoutDuration = 15
 
   override fun authenticatePurchase(
     packageName: String,
@@ -96,17 +95,17 @@ class WallrDataRepository(
   }
 
   override fun getRecentPictures(): Single<List<ImageModel>> {
-    return getPicturesFromFirebase(getCollectionsNodeReference()
+    return getPicturesFromFirebase(getTopPicksNodeReference()
         .child(childPathRecent))
   }
 
   override fun getPopularPictures(): Single<List<ImageModel>> {
-    return getPicturesFromFirebase(getCollectionsNodeReference()
+    return getPicturesFromFirebase(getTopPicksNodeReference()
         .child(childPathPopular))
   }
 
   override fun getStandoutPictures(): Single<List<ImageModel>> {
-    return getPicturesFromFirebase(getCollectionsNodeReference()
+    return getPicturesFromFirebase(getTopPicksNodeReference()
         .child(childPathStandout))
   }
 
@@ -140,19 +139,19 @@ class WallrDataRepository(
         .child(childPathTechnology))
   }
 
-  private fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()
+  internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()
       .getReference(firebaseDatabasePath)
       .child(childPathExplore)
 
-  private fun getCollectionsNodeReference() = firebaseDatabaseHelper.getDatabase()
+  internal fun getTopPicksNodeReference() = firebaseDatabaseHelper.getDatabase()
       .getReference(firebaseDatabasePath)
-      .child(childPathCollections)
+      .child(childPathTopPicks)
 
-  private fun getCategoriesNodeReference() = firebaseDatabaseHelper.getDatabase()
+  internal fun getCategoriesNodeReference() = firebaseDatabaseHelper.getDatabase()
       .getReference(firebaseDatabasePath)
       .child(childPathCategories)
 
-  private fun getPicturesFromFirebase(firebaseDatabaseReference: DatabaseReference): Single<List<ImageModel>> {
+  internal fun getPicturesFromFirebase(firebaseDatabaseReference: DatabaseReference): Single<List<ImageModel>> {
     val imageList = mutableListOf<FirebaseImageEntity>()
     return firebaseDatabaseHelper
         .fetch(firebaseDatabaseReference)
