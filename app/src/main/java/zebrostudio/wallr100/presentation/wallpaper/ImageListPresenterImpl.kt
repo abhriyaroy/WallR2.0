@@ -2,8 +2,9 @@ package zebrostudio.wallr100.presentation.wallpaper
 
 import com.uber.autodispose.autoDisposable
 import io.reactivex.Single
-import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.utils.FragmentNameTag
+import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.CATEGORIES_TAG
+import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.EXPLORE_TAG
+import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.TOP_PICKS_TAG
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListView
@@ -11,8 +12,7 @@ import zebrostudio.wallr100.presentation.wallpaper.mapper.ImagePresenterEntityMa
 
 class ImageListPresenterImpl(
   private val wallpaperImagesUseCase: WallpaperImagesUseCase,
-  private val imagePresenterEntityMapper: ImagePresenterEntityMapper,
-  private val fragmentNameTag: FragmentNameTag
+  private val imagePresenterEntityMapper: ImagePresenterEntityMapper
 ) : ImageListContract.ImageListPresenter {
 
   private var imageListView: ImageListView? = null
@@ -28,13 +28,13 @@ class ImageListPresenterImpl(
 
   override fun setImageListType(fragmentTag: String, position: Int) {
     when (fragmentTag) {
-      fragmentNameTag.getTag(R.string.explore_fragment_tag) -> {
+      EXPLORE_TAG -> {
         imageListType = position
       }
-      fragmentNameTag.getTag(R.string.top_picks_fragment_tag) -> {
+      TOP_PICKS_TAG -> {
         imageListType = position + 1
       }
-      fragmentNameTag.getTag(R.string.categories_fragment_tag) -> {
+      CATEGORIES_TAG -> {
         imageListType = position + 4
       }
     }

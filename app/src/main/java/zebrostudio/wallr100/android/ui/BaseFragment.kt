@@ -11,14 +11,17 @@ import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
 import dagger.android.support.AndroidSupportInjection
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.setMenuItemColorRed
 import zebrostudio.wallr100.android.utils.setMenuItemColorWhite
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.BaseView
+import javax.inject.Inject
 
 abstract class BaseFragment : Fragment(), BaseView {
 
+  @Inject lateinit var fragmentNameTagFetcherImpl: FragmentNameTagFetcher
   internal lateinit var fragmentTag: String
 
   private val menuItemIdList: List<Int> = listOf(
@@ -37,7 +40,8 @@ abstract class BaseFragment : Fragment(), BaseView {
   @SuppressLint("ResourceType")
   override fun onResume() {
     super.onResume()
-    activity?.findViewById<WallrCustomTextView>(R.id.toolbarTitle)?.text = fragmentTag
+    activity?.findViewById<WallrCustomTextView>(R.id.toolbarTitle)?.text =
+        fragmentNameTagFetcherImpl.getFragmentName(fragmentTag)
 
     highlightCurrentMenuItem()
     showToolbarMenuIcon()

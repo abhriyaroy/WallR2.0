@@ -33,7 +33,12 @@ import zebrostudio.wallr100.android.ui.collection.CollectionFragment
 import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment
 import zebrostudio.wallr100.android.ui.minimal.MinimalFragment
 import zebrostudio.wallr100.android.ui.search.SearchActivity
-import zebrostudio.wallr100.android.utils.FragmentNameTag
+import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
+import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.CATEGORIES_TAG
+import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.COLLECTIONS_TAG
+import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.EXPLORE_TAG
+import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.MINIMAL_TAG
+import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.TOP_PICKS_TAG
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.drawableRes
 import zebrostudio.wallr100.android.utils.errorToast
@@ -52,7 +57,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   @Inject
   internal lateinit var presenter: MainContract.MainPresenter
   @Inject
-  internal lateinit var fragmentNameTag: FragmentNameTag
+  internal lateinit var fragmentNameTagFetcher: FragmentNameTagFetcher
 
   private lateinit var guillotineMenuAnimation: GuillotineAnimation
 
@@ -65,7 +70,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     setContentView(R.layout.activity_main)
     initializeViews()
     addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
-        fragmentNameTag.getTag(R.string.explore_fragment_tag))
+        fragmentNameTagFetcher.getFragmentName(EXPLORE_TAG))
 
     attachToolbarItemClickListeners()
   }
@@ -114,7 +119,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   }
 
   override fun getExploreFragmentTag(): String {
-    return fragmentNameTag.getTag(R.string.explore_fragment_tag)
+    return fragmentNameTagFetcher.getFragmentName(EXPLORE_TAG)
   }
 
   private inline fun <reified T : BaseFragment> addFragment(
@@ -123,7 +128,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     fragmentTag: String
   ) {
     if (!fragmentExistsOnStackTop(fragmentTag)) {
-      if (fragmentTag == this.fragmentNameTag.getTag(R.string.explore_fragment_tag)) {
+      if (fragmentTag == EXPLORE_TAG) {
         clearStack()
       }
 
@@ -227,16 +232,18 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   private fun clickListener(item: MenuItems) {
     when (item) {
       MenuItems.EXPLORE -> addFragment(fragmentContainer.id,
-          WallpaperFragment.newInstance(), fragmentNameTag.getTag(R.string.explore_fragment_tag))
+          WallpaperFragment.newInstance(),
+          EXPLORE_TAG)
       MenuItems.TOP_PICKS -> addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
-          fragmentNameTag.getTag(R.string.top_picks_fragment_tag))
+          TOP_PICKS_TAG)
       MenuItems.CATEGORIES -> addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
-          fragmentNameTag.getTag(R.string.categories_fragment_tag))
+          CATEGORIES_TAG)
       MenuItems.MINIMAL -> addFragment(fragmentContainer.id,
-          MinimalFragment.newInstance(), fragmentNameTag.getTag(R.string.minimal_fragment_tag))
+          MinimalFragment.newInstance(),
+          MINIMAL_TAG)
       MenuItems.COLLECTION -> addFragment(fragmentContainer.id,
           CollectionFragment.newInstance(),
-          fragmentNameTag.getTag(R.string.collection_fragment_tag))
+          COLLECTIONS_TAG)
       MenuItems.FEEDBACK -> {
         handleFeedbackClick()
       }

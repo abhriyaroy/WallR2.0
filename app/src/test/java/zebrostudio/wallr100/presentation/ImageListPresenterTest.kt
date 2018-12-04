@@ -13,8 +13,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
-import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.utils.FragmentNameTag
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.presentation.datafactory.ImageModelFactory
@@ -31,7 +29,6 @@ class ImageListPresenterTest {
 
   @Mock lateinit var wallpaperImagesUseCase: WallpaperImagesUseCase
   @Mock lateinit var imageListView: ImageListContract.ImageListView
-  @Mock lateinit var fragmentNameTag: FragmentNameTag
   private lateinit var imagePresenterEntityMapper: ImagePresenterEntityMapper
   private lateinit var imageListPresenter: ImageListPresenterImpl
   private lateinit var testScopeProvider: TestLifecycleScopeProvider
@@ -42,7 +39,7 @@ class ImageListPresenterTest {
   @Before fun setup() {
     imagePresenterEntityMapper = ImagePresenterEntityMapper()
     imageListPresenter =
-        ImageListPresenterImpl(wallpaperImagesUseCase, imagePresenterEntityMapper, fragmentNameTag)
+        ImageListPresenterImpl(wallpaperImagesUseCase, imagePresenterEntityMapper)
     imageListPresenter.attachView(imageListView)
     testScopeProvider = TestLifecycleScopeProvider.createInitial(
         TestLifecycleScopeProvider.TestLifecycle.STARTED)
@@ -54,7 +51,6 @@ class ImageListPresenterTest {
   fun `should return imagePresenterEntity list of explore images when fetchImages call with refresh false is success`() {
     val imageModelList = listOf(ImageModelFactory.getImageModel())
     `when`(wallpaperImagesUseCase.exploreImagesSingle()).thenReturn(Single.just(imageModelList))
-    `when`(fragmentNameTag.getTag(R.string.explore_fragment_tag)).thenReturn(exploreTag)
 
     imageListPresenter.setImageListType(exploreTag, 0)
     imageListPresenter.fetchImages(false)
@@ -68,7 +64,6 @@ class ImageListPresenterTest {
   fun `should return imagePresenterEntity list of recent images when fetchImages call with refresh false is success`() {
     val imageModelList = listOf(ImageModelFactory.getImageModel())
     `when`(wallpaperImagesUseCase.recentImagesSingle()).thenReturn(Single.just(imageModelList))
-    `when`(fragmentNameTag.getTag(R.string.top_picks_fragment_tag)).thenReturn(topPicksTag)
 
     imageListPresenter.setImageListType(topPicksTag, 0)
     imageListPresenter.fetchImages(false)
@@ -82,7 +77,6 @@ class ImageListPresenterTest {
   fun `should return imagePresenterEntity list of popular images when fetchImages call with refresh false is success`() {
     val imageModelList = listOf(ImageModelFactory.getImageModel())
     `when`(wallpaperImagesUseCase.popularImagesSingle()).thenReturn(Single.just(imageModelList))
-    `when`(fragmentNameTag.getTag(R.string.top_picks_fragment_tag)).thenReturn(topPicksTag)
 
     imageListPresenter.setImageListType(topPicksTag, 1)
     imageListPresenter.fetchImages(false)
@@ -96,7 +90,6 @@ class ImageListPresenterTest {
   fun `should return imagePresenterEntity list of standout images when fetchImages call with refresh false is success`() {
     val imageModelList = listOf(ImageModelFactory.getImageModel())
     `when`(wallpaperImagesUseCase.standoutImagesSingle()).thenReturn(Single.just(imageModelList))
-    `when`(fragmentNameTag.getTag(R.string.top_picks_fragment_tag)).thenReturn(topPicksTag)
 
     imageListPresenter.setImageListType(topPicksTag, 2)
     imageListPresenter.fetchImages(false)
@@ -110,7 +103,6 @@ class ImageListPresenterTest {
   fun `should return imagePresenterEntity list of building images when fetchImages call with refresh false is success`() {
     val imageModelList = listOf(ImageModelFactory.getImageModel())
     `when`(wallpaperImagesUseCase.buildingsImagesSingle()).thenReturn(Single.just(imageModelList))
-    `when`(fragmentNameTag.getTag(R.string.categories_fragment_tag)).thenReturn(categoriesTag)
 
     imageListPresenter.setImageListType(categoriesTag, 0)
     imageListPresenter.fetchImages(false)
@@ -124,7 +116,6 @@ class ImageListPresenterTest {
   fun `should return imagePresenterEntity list of food images when fetchImages call with refresh false is success`() {
     val imageModelList = listOf(ImageModelFactory.getImageModel())
     `when`(wallpaperImagesUseCase.foodImagesSingle()).thenReturn(Single.just(imageModelList))
-    `when`(fragmentNameTag.getTag(R.string.categories_fragment_tag)).thenReturn(categoriesTag)
 
     imageListPresenter.setImageListType(categoriesTag, 1)
     imageListPresenter.fetchImages(false)
@@ -138,7 +129,6 @@ class ImageListPresenterTest {
   fun `should return imagePresenterEntity list of nature images when fetchImages call with refresh false is success`() {
     val imageModelList = listOf(ImageModelFactory.getImageModel())
     `when`(wallpaperImagesUseCase.natureImagesSingle()).thenReturn(Single.just(imageModelList))
-    `when`(fragmentNameTag.getTag(R.string.categories_fragment_tag)).thenReturn(categoriesTag)
 
     imageListPresenter.setImageListType(categoriesTag, 2)
     imageListPresenter.fetchImages(false)
@@ -152,7 +142,6 @@ class ImageListPresenterTest {
   fun `should return imagePresenterEntity list of object images when fetchImages call with refresh false is success`() {
     val imageModelList = listOf(ImageModelFactory.getImageModel())
     `when`(wallpaperImagesUseCase.objectsImagesSingle()).thenReturn(Single.just(imageModelList))
-    `when`(fragmentNameTag.getTag(R.string.categories_fragment_tag)).thenReturn(categoriesTag)
 
     imageListPresenter.setImageListType(categoriesTag, 3)
     imageListPresenter.fetchImages(false)
@@ -166,7 +155,6 @@ class ImageListPresenterTest {
   fun `should return imagePresenterEntity list of people images when fetchImages call with refresh false is success`() {
     val imageModelList = listOf(ImageModelFactory.getImageModel())
     `when`(wallpaperImagesUseCase.peopleImagesSingle()).thenReturn(Single.just(imageModelList))
-    `when`(fragmentNameTag.getTag(R.string.categories_fragment_tag)).thenReturn(categoriesTag)
 
     imageListPresenter.setImageListType(categoriesTag, 4)
     imageListPresenter.fetchImages(false)
@@ -180,7 +168,6 @@ class ImageListPresenterTest {
   fun `should return imagePresenterEntity list of technology images when fetchImages call with refresh false is success`() {
     val imageModelList = listOf(ImageModelFactory.getImageModel())
     `when`(wallpaperImagesUseCase.technologyImagesSingle()).thenReturn(Single.just(imageModelList))
-    `when`(fragmentNameTag.getTag(R.string.categories_fragment_tag)).thenReturn(categoriesTag)
 
     imageListPresenter.setImageListType(categoriesTag, 5)
     imageListPresenter.fetchImages(false)
@@ -195,7 +182,6 @@ class ImageListPresenterTest {
     val imageModelList = listOf(ImageModelFactory.getImageModel())
     val mappedPresenterEntityList = imagePresenterEntityMapper.mapToPresenterEntity(imageModelList)
     `when`(wallpaperImagesUseCase.technologyImagesSingle()).thenReturn(Single.just(imageModelList))
-    `when`(fragmentNameTag.getTag(R.string.categories_fragment_tag)).thenReturn(categoriesTag)
 
     imageListPresenter.setImageListType(categoriesTag, 5)
     imageListPresenter.fetchImages(true)
@@ -213,7 +199,6 @@ class ImageListPresenterTest {
   fun `should show no internet message view on fetchImages call without refresh failure due to timeout`() {
     `when`(wallpaperImagesUseCase.technologyImagesSingle()).thenReturn(
         Single.error(TimeoutException()))
-    `when`(fragmentNameTag.getTag(R.string.categories_fragment_tag)).thenReturn(categoriesTag)
 
     imageListPresenter.setImageListType(categoriesTag, 5)
     imageListPresenter.fetchImages(false)
@@ -230,7 +215,6 @@ class ImageListPresenterTest {
   fun `should show no internet message view on fetchImages call with refresh failure due to timeout`() {
     `when`(wallpaperImagesUseCase.technologyImagesSingle()).thenReturn(
         Single.error(TimeoutException()))
-    `when`(fragmentNameTag.getTag(R.string.categories_fragment_tag)).thenReturn(categoriesTag)
 
     imageListPresenter.setImageListType(categoriesTag, 5)
     imageListPresenter.fetchImages(true)

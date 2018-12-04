@@ -7,8 +7,8 @@ import dagger.Provides
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.android.AndroidMainThread
 import zebrostudio.wallr100.android.di.scopes.PerApplication
-import zebrostudio.wallr100.android.utils.FragmentNameTag
-import zebrostudio.wallr100.android.utils.FragmentNameTagImpl
+import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
+import zebrostudio.wallr100.android.utils.FragmentNameTagFetcherImpl
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.ResourceUtilsImpl
 import zebrostudio.wallr100.data.SharedPrefsHelper
@@ -49,7 +49,7 @@ class AppModule {
 
   @Provides
   @PerApplication
-  fun providesFragmentTag(resourceUtils: ResourceUtils): FragmentNameTag = FragmentNameTagImpl(
+  fun providesFragmentTag(resourceUtils: ResourceUtils): FragmentNameTagFetcher = FragmentNameTagFetcherImpl(
       resourceUtils)
 
   @Provides
