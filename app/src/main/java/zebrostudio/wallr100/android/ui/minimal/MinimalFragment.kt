@@ -34,8 +34,6 @@ class MinimalFragment : BaseFragment(), MinimalContract.MinimalView {
   }
 
   companion object {
-    const val MINIMAL_FRAGMENT_TAG = "Minimal"
-
     fun newInstance() = MinimalFragment()
   }
 

@@ -34,8 +34,6 @@ class CollectionFragment : BaseFragment(), CollectionContract.CollectionView {
   }
 
   companion object {
-    const val COLLECTION_FRAGMENT_TAG = "Collection"
-
     fun newInstance() = CollectionFragment()
   }
 
