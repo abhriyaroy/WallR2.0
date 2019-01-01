@@ -91,4 +91,43 @@
   <string name="search_view_transition_name">searchTransition</string>
   <string name="search_generic_error_message">Something went wrong. Please try again</string>
 
+  <!-- Detail activity strings -->
+  <string name="then_you_can_enabble_the_automatic_wallpaper_changer_from_here">Then you can enable the Automatic Wallpaper Changer from here</string>
+  <string name="crystallizing_wallpaper_please_wait">Crystallizing wallpaper. Please wait!</string>
+  <string name="super_high">Super High</string>
+  <string name="high">High</string>
+  <string name="medium">Medium</string>
+  <string name="low">Low</string>
+  <string name="super_low">Super Low</string>
+  <string name="or">Or</string>
+  <string name="choose">CHOOSE</string>
+  <string name="you_can_add_external_images_by_clicking_the_icon_with_a_sign_on_a_camera_on_the_top_right_of_the_screen">You can add external wallpapers by clicking the icon with a \'+ sign on a camera\' on the top right corner of the screen</string>
+  <string name="quick_set">QUICK SET</string>
+  <string name="add_to_collection">ADD TO COLLECTION</string>
+  <string name="edit_and_set">EDIT AND SET</string>
+  <string name="solid_wallpaper">Minimal</string>
+  <string name="choose_download_quality">Choose Download Quality</string>
+  <string name="finalising_wallpaper">Finalizing wallpaper...</string>
+  <string name="grabbing_best_quality_wallpaper">Grabbing the best quality wallpaper...</string>
+  <string name="setting_up_the_necessary_resources">Setting up the necessary resources...</string>
+  <string name="opening_editing_tool_now">Firing up the editing tool...</string>
+  <string name="crystallising_wallpaper">Crystallizing wallpaper...</string>
+  <string name="adding_image_to_gallery">Adding wallpaper to collection....</string>
+  <string name="unsplash_com">unsplash.com</string>
+  <string name="fetching_sharable_link">Fetching sharable link...</string>
+  <string name="download">DOWNLOAD</string>
+  <string name="save">SAVE</string>
+  <string name="www_unsplash_com">www.unsplash.com</string>
+  <string name="finalising_wallpaper_please_wait">Finalizing wallpaper...</string>
+  <string name="share">SHARE WITH</string>
+  <string name="explore">Explore</string>
+  <string name="woah_there_we_found_nothing">Woah there! We found nothing</string>
+  <string name="retry">Retry</string>
+  <string name="type_in_a_search_query">Type in a search query</string>
+  <string name="full_hd">Ultra HD</string>
+  <string name="raw">Raw</string>
+  <string name="crystallize">CRYSTALLIZE</string>
+  <string name="detail_activity_website_referral_unsplash">www_unsplash_com</string>
+  <string name="wallpaper_action_progress_percentage">0%</string>
+
 </resources>
