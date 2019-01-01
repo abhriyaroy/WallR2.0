@@ -133,7 +133,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     infoTextSecondLine.gone()
     infoImageView.gone()
     retryButton.gone()
-    imageRecyclerViewPresenter.clearAll()
+    imageRecyclerViewPresenter.clearAllSearchResults()
     recyclerviewAdapter?.notifyDataSetChanged()
     hideLoader()
     hideBottomLoader()

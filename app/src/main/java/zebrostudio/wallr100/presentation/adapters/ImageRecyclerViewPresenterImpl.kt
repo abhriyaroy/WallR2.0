@@ -5,8 +5,8 @@ import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEnt
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 
 class ImageRecyclerViewPresenterImpl : ImageRecyclerItemContract.ImageRecyclerViewPresenter {
-
   private lateinit var imageType: ImageListType
+
   private val searchResultList = mutableListOf<SearchPicturesPresenterEntity>()
   private val wallpaperImageList = mutableListOf<ImagePresenterEntity>()
 
@@ -34,15 +34,16 @@ class ImageRecyclerViewPresenterImpl : ImageRecyclerItemContract.ImageRecyclerVi
   ) {
     when (imageType) {
       SEARCH -> {
-        rowView.setImageViewBackground(searchResultList[position].paletteColor)
+        rowView.setImageViewBackgroundAndClickListener(searchResultList[position].paletteColor)
         rowView.setSearchImage(
             searchResultList[position].imageQualityUrlPresenterEntity.smallImageLink)
       }
       WALLPAPERS -> {
-        rowView.setImageViewBackground(wallpaperImageList[position].color)
+        rowView.setImageViewBackgroundAndClickListener(wallpaperImageList[position].color)
         rowView.setWallpaperImage(wallpaperImageList[position].imageLink.thumb)
       }
     }
+
   }
 
   override fun getItemCount(): Int {
@@ -52,8 +53,18 @@ class ImageRecyclerViewPresenterImpl : ImageRecyclerItemContract.ImageRecyclerVi
     }
   }
 
-  override fun clearAll() {
+  override fun clearAllSearchResults() {
     searchResultList.clear()
+  }
+
+  override fun notifyImageClicked(
+    position: Int,
+    rowView: ImageRecyclerItemContract.ImageRecyclerItemView
+  ) {
+    when (imageType) {
+      SEARCH -> rowView.showSearchImageDetails(searchResultList[position])
+      WALLPAPERS -> rowView.showWallpaperImageDetails(wallpaperImageList[position])
+    }
   }
 
   enum class ImageListType {

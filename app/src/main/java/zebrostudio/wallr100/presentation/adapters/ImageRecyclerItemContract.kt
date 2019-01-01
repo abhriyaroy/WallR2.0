@@ -7,9 +7,11 @@ import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 interface ImageRecyclerItemContract {
 
   interface ImageRecyclerItemView {
-    fun setImageViewBackground(colorHexCode: String)
+    fun setImageViewBackgroundAndClickListener(colorHexCode: String)
     fun setSearchImage(link: String)
     fun setWallpaperImage(link: String)
+    fun showSearchImageDetails(searchImage: SearchPicturesPresenterEntity)
+    fun showWallpaperImageDetails(wallpaperImage: ImagePresenterEntity)
   }
 
   interface ImageRecyclerViewPresenter {
@@ -19,6 +21,7 @@ interface ImageRecyclerItemContract {
     fun addToSearchResultList(list: List<SearchPicturesPresenterEntity>)
     fun onBindRepositoryRowViewAtPosition(position: Int, rowView: ImageRecyclerItemView)
     fun getItemCount(): Int
-    fun clearAll()
+    fun clearAllSearchResults()
+    fun notifyImageClicked(position: Int, rowView: ImageRecyclerItemContract.ImageRecyclerItemView)
   }
 }
