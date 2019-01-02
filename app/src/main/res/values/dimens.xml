@@ -127,7 +127,7 @@
   <dimen name="detail_activity_wallpaper_actions_bar_padding">4dp</dimen>
   <dimen name="detail_activity_option_image_view_width">45dp</dimen>
   <dimen name="detail_activity_option_image_view_height">45dp</dimen>
-  <dimen name="detail_activity_option_image_view_padding">8dp</dimen>
+  <dimen name="detail_activity_option_image_view_padding">4dp</dimen>
   <dimen name="detail_activity_option_text_view_padding_bottom">4dp</dimen>
   <dimen name="detail_activity_option_text_view_text_size">12sp</dimen>
   <dimen name="detail_activity_wallpaper_actions_bar_bottom_padding">4dp</dimen>

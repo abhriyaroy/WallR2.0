@@ -66,7 +66,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="@dimen/detail_activity_image_info_layout_image_view_margin_start"
-            android:src="@drawable/ic_share_white"
+            android:src="@drawable/ic_user_white"
             app:civ_border_color="@color/color_white"
             app:civ_border_width="@dimen/detail_activity_image_info_layout_image_view_border_width"/>
 
@@ -134,7 +134,7 @@
               android:layout_height="@dimen/detail_activity_option_image_view_height"
               android:layout_centerHorizontal="true"
               android:padding="@dimen/detail_activity_option_image_view_padding"
-              android:src="@drawable/ic_share_white"/>
+              android:src="@drawable/ic_set_wallpaper"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
               android:layout_width="match_parent"
@@ -161,7 +161,7 @@
               android:layout_height="@dimen/detail_activity_option_image_view_height"
               android:layout_centerHorizontal="true"
               android:padding="@dimen/detail_activity_option_image_view_padding"
-              android:src="@drawable/ic_share_white"/>
+              android:src="@drawable/ic_download_wallpaper"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
               android:layout_width="match_parent"
@@ -187,7 +187,7 @@
               android:layout_height="@dimen/detail_activity_option_image_view_height"
               android:layout_centerHorizontal="true"
               android:padding="@dimen/detail_activity_option_image_view_padding"
-              android:src="@drawable/ic_share_white"/>
+              android:src="@drawable/ic_crystallize_wallpaper"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
               android:layout_width="match_parent"
@@ -226,7 +226,7 @@
               android:layout_height="@dimen/detail_activity_option_image_view_height"
               android:layout_centerHorizontal="true"
               android:padding="@dimen/detail_activity_option_image_view_padding"
-              android:src="@drawable/ic_share_white"/>
+              android:src="@drawable/ic_edit_set_wallpaper"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
               android:layout_width="match_parent"
@@ -254,7 +254,7 @@
               android:layout_height="@dimen/detail_activity_option_image_view_height"
               android:layout_centerHorizontal="true"
               android:padding="@dimen/detail_activity_option_image_view_padding"
-              android:src="@drawable/ic_share_white"/>
+              android:src="@drawable/ic_add_to_gallery_white"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
               android:layout_width="match_parent"
@@ -282,7 +282,7 @@
               android:layout_height="@dimen/detail_activity_option_image_view_height"
               android:layout_centerHorizontal="true"
               android:padding="@dimen/detail_activity_option_image_view_padding"
-              android:src="@drawable/ic_share_white"/>
+              android:src="@drawable/ic_share_white_small"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
               android:layout_width="match_parent"
