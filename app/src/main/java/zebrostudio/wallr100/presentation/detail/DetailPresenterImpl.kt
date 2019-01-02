@@ -27,6 +27,7 @@ class DetailPresenterImpl : DetailContract.DetailPresenter {
     } else {
       wallpaperImage = detailView?.getWallpaperImageDetails()!!
     }
+    System.out.println(wallpaperImage.author.name)
   }
 
 }
