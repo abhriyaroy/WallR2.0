@@ -11,14 +11,15 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.image_recyclerview_item.view.imageView
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.ui.adapters.ImageAdapter.Companion.imageDetails
+import zebrostudio.wallr100.android.ui.adapters.ImageAdapter.Companion.imageType
 import zebrostudio.wallr100.android.ui.detail.DetailActivity
 import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 
@@ -37,6 +38,12 @@ class ImageAdapter(private val presenter: ImageRecyclerItemContract.ImageRecycle
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     presenter.onBindRepositoryRowViewAtPosition(position, holder)
   }
+
+  companion object {
+    var imageDetails = "ImageDetails"
+    var imageType = "ImageType"
+  }
+
 }
 
 class ViewHolder(
@@ -71,15 +78,15 @@ class ViewHolder(
 
   override fun showSearchImageDetails(searchImage: SearchPicturesPresenterEntity) {
     val intent = Intent(context, DetailActivity::class.java)
-    intent.putExtra("Image", Gson().toJson(searchImage))
-    intent.putExtra("Type", ImageRecyclerViewPresenterImpl.ImageListType.SEARCH)
+    intent.putExtra(imageDetails, searchImage)
+    intent.putExtra(imageType, SEARCH)
     context.startActivity(intent)
   }
 
   override fun showWallpaperImageDetails(wallpaperImage: ImagePresenterEntity) {
     val intent = Intent(context, DetailActivity::class.java)
-    intent.putExtra("Image", Gson().toJson(wallpaperImage))
-    intent.putExtra("Type", ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS)
+    intent.putExtra(imageDetails, wallpaperImage)
+    intent.putExtra(imageType, WALLPAPERS)
     context.startActivity(intent)
   }
 

@@ -1,5 +1,9 @@
 package zebrostudio.wallr100.presentation.search.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class SearchPicturesPresenterEntity(
   val id: String,
   val createdAt: String,
@@ -10,4 +14,4 @@ data class SearchPicturesPresenterEntity(
   val likes: Int,
   val likedByUser: Boolean,
   val imageQualityUrlPresenterEntity: UrlPresenterEntity
-)
+) : Parcelable
