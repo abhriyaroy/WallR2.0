@@ -30,6 +30,30 @@ class DetailPresenterImpl : DetailContract.DetailPresenter {
     decorateScreen()
   }
 
+  override fun notifyQuickSetClick() {
+
+  }
+
+  override fun notifyDownloadClick() {
+
+  }
+
+  override fun notifyCrystallizeClick() {
+
+  }
+
+  override fun notifyEditSetClick() {
+
+  }
+
+  override fun notifyAddToCollectionClick() {
+
+  }
+
+  override fun notifyShareClick() {
+
+  }
+
   private fun decorateScreen() {
     if (imageType == SEARCH) {
       detailView?.setAuthorDetails(searchImage.userPresenterEntity.name,

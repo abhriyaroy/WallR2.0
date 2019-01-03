@@ -8,10 +8,16 @@ import com.bumptech.glide.request.RequestOptions
 import com.github.zagum.expandicon.ExpandIconView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.android.AndroidInjection
+import kotlinx.android.synthetic.main.activity_detail.addToCollectionImageLayout
 import kotlinx.android.synthetic.main.activity_detail.authorImage
 import kotlinx.android.synthetic.main.activity_detail.authorName
+import kotlinx.android.synthetic.main.activity_detail.crystallizeImageLayout
+import kotlinx.android.synthetic.main.activity_detail.downloadImageLayout
+import kotlinx.android.synthetic.main.activity_detail.editAndSetImageLayout
 import kotlinx.android.synthetic.main.activity_detail.expandIconView
 import kotlinx.android.synthetic.main.activity_detail.imageView
+import kotlinx.android.synthetic.main.activity_detail.setWallpaperImageLayout
+import kotlinx.android.synthetic.main.activity_detail.shareImageLayout
 import kotlinx.android.synthetic.main.activity_detail.slidingPanel
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
@@ -35,7 +41,7 @@ class DetailActivity : BaseActivity(), DetailView {
     presenter.setImageType(
         intent.getSerializableExtra(imageType) as ImageListType)
     setUpExpandPanel()
-
+    attachClickListeners()
   }
 
   override fun getWallpaperImageDetails(): ImagePresenterEntity {
@@ -96,7 +102,15 @@ class DetailActivity : BaseActivity(), DetailView {
         }
       }
     })
+  }
 
+  private fun attachClickListeners() {
+    setWallpaperImageLayout.setOnClickListener { presenter.notifyQuickSetClick() }
+    downloadImageLayout.setOnClickListener { presenter.notifyDownloadClick() }
+    crystallizeImageLayout.setOnClickListener { presenter.notifyCrystallizeClick() }
+    editAndSetImageLayout.setOnClickListener { presenter.notifyEditSetClick() }
+    addToCollectionImageLayout.setOnClickListener { presenter.notifyAddToCollectionClick() }
+    shareImageLayout.setOnClickListener { presenter.notifyShareClick() }
   }
 
 }

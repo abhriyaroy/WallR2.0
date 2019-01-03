@@ -233,7 +233,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/addToGalleryImageLayout"
+            android:id="@+id/addToCollectionImageLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -241,7 +241,7 @@
             android:clickable="true">
 
           <ImageView
-              android:id="@+id/addToGalleryImageView"
+              android:id="@+id/addToCollectionImageView"
               android:layout_width="@dimen/detail_activity_option_image_view_width"
               android:layout_height="@dimen/detail_activity_option_image_view_height"
               android:layout_centerHorizontal="true"

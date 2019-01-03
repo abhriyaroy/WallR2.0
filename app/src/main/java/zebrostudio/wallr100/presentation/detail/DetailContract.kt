@@ -17,5 +17,11 @@ interface DetailContract {
 
   interface DetailPresenter : BasePresenter<DetailView> {
     fun setImageType(imageType: ImageListType)
+    fun notifyQuickSetClick()
+    fun notifyDownloadClick()
+    fun notifyCrystallizeClick()
+    fun notifyEditSetClick()
+    fun notifyAddToCollectionClick()
+    fun notifyShareClick()
   }
 }
