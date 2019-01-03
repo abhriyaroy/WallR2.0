@@ -27,7 +27,20 @@ class DetailPresenterImpl : DetailContract.DetailPresenter {
     } else {
       wallpaperImage = detailView?.getWallpaperImageDetails()!!
     }
-    System.out.println(wallpaperImage.author.name)
+    decorateScreen()
+  }
+
+  private fun decorateScreen() {
+    if (imageType == SEARCH) {
+      detailView?.setAuthorDetails(searchImage.userPresenterEntity.name,
+          searchImage.userPresenterEntity.profileImageLink)
+      detailView?.showImage(searchImage.imageQualityUrlPresenterEntity.smallImageLink,
+          searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    } else {
+      detailView?.setAuthorDetails(wallpaperImage.author.name,
+          wallpaperImage.author.profileImageLink)
+      detailView?.showImage(wallpaperImage.imageLink.thumb, wallpaperImage.imageLink.large)
+    }
   }
 
 }

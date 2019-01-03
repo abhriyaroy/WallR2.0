@@ -28,14 +28,6 @@
           android:scaleType="centerCrop"
           android:transitionName="ImageItem"/>
 
-      <ImageView
-          android:id="@+id/imageViewPlaceHolder"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:background="@color/color_primary"
-          android:scaleType="centerCrop"
-          android:transitionName="ImageItem"/>
-
       <View
           android:layout_width="match_parent"
           android:layout_height="@dimen/detail_activity_shadow_top_height"

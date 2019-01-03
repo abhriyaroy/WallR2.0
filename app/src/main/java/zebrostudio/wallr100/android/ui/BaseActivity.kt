@@ -20,8 +20,8 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
   }
 
   override fun onBackPressed() {
-    super.onBackPressed()
     overridePendingTransition(R.anim.no_change, R.anim.slide_to_right)
+    super.onBackPressed()
   }
 
 }

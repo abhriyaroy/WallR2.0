@@ -115,8 +115,8 @@
   <dimen name="detail_activity_image_info_layout_image_view_margin_start">10dp</dimen>
   <dimen name="detail_activity_image_info_layout_image_view_border_width">0dp</dimen>
   <dimen name="detail_activity_image_info_layout_author_name_width">180dp</dimen>
-  <dimen name="detail_activity_image_info_layout_author_name_padding_left">180dp</dimen>
-  <dimen name="detail_activity_image_info_layout_author_name_text_size">20sp</dimen>
+  <dimen name="detail_activity_image_info_layout_author_name_padding_left">10dp</dimen>
+  <dimen name="detail_activity_image_info_layout_author_name_text_size">18sp</dimen>
   <dimen name="detail_activity_image_info_layout_website_referral_padding_left">10dp</dimen>
   <dimen name="detail_activity_image_info_layout_website_referral_padding_top">2dp</dimen>
   <dimen name="detail_activity_image_info_layout_website_referral_text_size">11sp</dimen>

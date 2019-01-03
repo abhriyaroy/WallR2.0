@@ -11,6 +11,8 @@ interface DetailContract {
   interface DetailView : BaseView {
     fun getSearchImageDetails(): SearchPicturesPresenterEntity
     fun getWallpaperImageDetails(): ImagePresenterEntity
+    fun setAuthorDetails(name: String, profileImageLink: String)
+    fun showImage(lowQualityLink: String, highQualityLink: String)
   }
 
   interface DetailPresenter : BasePresenter<DetailView> {
