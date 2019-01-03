@@ -1,24 +1,22 @@
 package zebrostudio.wallr100.android.ui.detail
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.View
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
+import com.github.zagum.expandicon.ExpandIconView
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_detail.authorImage
 import kotlinx.android.synthetic.main.activity_detail.authorName
+import kotlinx.android.synthetic.main.activity_detail.expandIconView
 import kotlinx.android.synthetic.main.activity_detail.imageView
+import kotlinx.android.synthetic.main.activity_detail.slidingPanel
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter.Companion.imageDetails
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter.Companion.imageType
-import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.detail.DetailContract.DetailPresenter
 import zebrostudio.wallr100.presentation.detail.DetailContract.DetailView
@@ -36,6 +34,7 @@ class DetailActivity : BaseActivity(), DetailView {
     setContentView(R.layout.activity_detail)
     presenter.setImageType(
         intent.getSerializableExtra(imageType) as ImageListType)
+    setUpExpandPanel()
 
   }
 
@@ -48,8 +47,6 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun setAuthorDetails(name: String, profileImageLink: String) {
-    System.out.println(name)
-    System.out.println(profileImageLink)
     authorName.text = name
     val options = RequestOptions()
         .placeholder(R.drawable.ic_user_white)
@@ -74,6 +71,32 @@ class DetailActivity : BaseActivity(), DetailView {
             .apply(placeHolderOptions))
         .apply(mainImageOptions)
         .into(imageView)
+  }
+
+  private fun setUpExpandPanel() {
+    //Set Expand arrow to more
+    expandIconView.setState(ExpandIconView.LESS, false)
+    // Set Parallax offset
+    slidingPanel.setParallaxOffset(40)
+    // Set Sliding Panel Listener
+    slidingPanel.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
+      override fun onPanelSlide(panel: View, slideOffset: Float) {
+
+      }
+
+      override fun onPanelStateChanged(
+        panel: View,
+        previousState: SlidingUpPanelLayout.PanelState,
+        newState: SlidingUpPanelLayout.PanelState
+      ) {
+        if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+          expandIconView.setState(ExpandIconView.MORE, true)
+        } else if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+          expandIconView.setState(ExpandIconView.LESS, true)
+        }
+      }
+    })
+
   }
 
 }
