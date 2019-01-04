@@ -1,13 +1,19 @@
 package zebrostudio.wallr100.android.ui.detail
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.github.zagum.expandicon.ExpandIconView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.android.AndroidInjection
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_detail.addToCollectionImageLayout
 import kotlinx.android.synthetic.main.activity_detail.authorImage
 import kotlinx.android.synthetic.main.activity_detail.authorName
@@ -76,18 +82,46 @@ class DetailActivity : BaseActivity(), DetailView {
             .load(lowQualityLink)
             .apply(placeHolderOptions))
         .apply(mainImageOptions)
+        .listener(object : RequestListener<Drawable> {
+          override fun onLoadFailed(
+            e: GlideException?,
+            model: Any?,
+            target: Target<Drawable>?,
+            isFirstResource: Boolean
+          ): Boolean {
+            presenter.notifyHighQualityImageLoadFailed()
+            return false
+          }
+
+          override fun onResourceReady(
+            resource: Drawable?,
+            model: Any?,
+            target: Target<Drawable>?,
+            dataSource: DataSource?,
+            isFirstResource: Boolean
+          ): Boolean {
+            return false
+          }
+
+        })
         .into(imageView)
   }
 
+
+  override fun getStoragePermission() {
+
+  }
+
+  override fun showImageLoadError() {
+    Toasty.error(this, getString(R.string.detail_activity_unable_to_load_hd_image_error))
+  }
+
   private fun setUpExpandPanel() {
-    //Set Expand arrow to more
     expandIconView.setState(ExpandIconView.LESS, false)
-    // Set Parallax offset
     slidingPanel.setParallaxOffset(40)
-    // Set Sliding Panel Listener
     slidingPanel.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
       override fun onPanelSlide(panel: View, slideOffset: Float) {
-
+        // Do nothing
       }
 
       override fun onPanelStateChanged(

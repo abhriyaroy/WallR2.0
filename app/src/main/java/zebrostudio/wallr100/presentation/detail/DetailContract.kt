@@ -13,10 +13,13 @@ interface DetailContract {
     fun getWallpaperImageDetails(): ImagePresenterEntity
     fun setAuthorDetails(name: String, profileImageLink: String)
     fun showImage(lowQualityLink: String, highQualityLink: String)
+    fun showImageLoadError()
+    fun getStoragePermission()
   }
 
   interface DetailPresenter : BasePresenter<DetailView> {
     fun setImageType(imageType: ImageListType)
+    fun notifyHighQualityImageLoadFailed()
     fun notifyQuickSetClick()
     fun notifyDownloadClick()
     fun notifyCrystallizeClick()

@@ -30,6 +30,10 @@ class DetailPresenterImpl : DetailContract.DetailPresenter {
     decorateScreen()
   }
 
+  override fun notifyHighQualityImageLoadFailed() {
+    detailView?.showImageLoadError()
+  }
+
   override fun notifyQuickSetClick() {
 
   }
