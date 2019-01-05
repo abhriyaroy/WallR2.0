@@ -29,6 +29,7 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter.Companion.imageDetails
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter.Companion.imageType
+import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.detail.DetailContract.DetailPresenter
 import zebrostudio.wallr100.presentation.detail.DetailContract.DetailView
@@ -59,6 +60,8 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun setAuthorDetails(name: String, profileImageLink: String) {
+    System.out.println(name)
+    System.out.println(profileImageLink)
     authorName.text = name
     val options = RequestOptions()
         .placeholder(R.drawable.ic_user_white)
@@ -107,7 +110,6 @@ class DetailActivity : BaseActivity(), DetailView {
         .into(imageView)
   }
 
-
   override fun getStoragePermission() {
 
   }
@@ -146,5 +148,4 @@ class DetailActivity : BaseActivity(), DetailView {
     addToCollectionImageLayout.setOnClickListener { presenter.notifyAddToCollectionClick() }
     shareImageLayout.setOnClickListener { presenter.notifyShareClick() }
   }
-
 }

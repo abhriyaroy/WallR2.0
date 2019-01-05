@@ -133,7 +133,7 @@
               android:layout_height="wrap_content"
               android:layout_below="@id/setWallpaperImageView"
               android:paddingBottom="@dimen/detail_activity_option_text_view_padding_bottom"
-              android:text="@string/quick_set"
+              android:text="@string/detail_activity_options_quick_set"
               android:gravity="center"
               android:textSize="@dimen/detail_activity_option_text_view_text_size"/>
 
@@ -160,7 +160,7 @@
               android:layout_height="wrap_content"
               android:layout_below="@id/downloadImageView"
               android:paddingBottom="@dimen/detail_activity_option_text_view_padding_bottom"
-              android:text="@string/download"
+              android:text="@string/detail_activity_options_download"
               android:gravity="center"
               android:textSize="@dimen/detail_activity_option_text_view_text_size"/>
         </RelativeLayout>
@@ -186,7 +186,7 @@
               android:layout_height="wrap_content"
               android:layout_below="@id/crystallizeImageView"
               android:paddingBottom="@dimen/detail_activity_option_text_view_padding_bottom"
-              android:text="@string/crystallize"
+              android:text="@string/detail_activity_options_crystallize"
               android:gravity="center"
               android:textSize="@dimen/detail_activity_option_text_view_text_size"/>
 
@@ -226,7 +226,7 @@
               android:layout_alignParentBottom="true"
               android:layout_alignParentStart="true"
               android:paddingBottom="@dimen/detail_activity_option_text_view_padding_bottom"
-              android:text="@string/edit_and_set"
+              android:text="@string/detail_activity_options_edit_and_set"
               android:gravity="center"
               android:textSize="@dimen/detail_activity_option_text_view_text_size"/>
 
@@ -254,7 +254,7 @@
               android:layout_alignParentBottom="true"
               android:layout_alignParentStart="true"
               android:paddingBottom="@dimen/detail_activity_option_text_view_padding_bottom"
-              android:text="@string/add_to_collection"
+              android:text="@string/detail_activity_options_add_to_collection"
               android:gravity="center"
               android:textSize="@dimen/detail_activity_option_text_view_text_size"/>
 
@@ -282,7 +282,7 @@
               android:layout_alignParentBottom="true"
               android:layout_alignParentStart="true"
               android:paddingBottom="@dimen/detail_activity_option_text_view_padding_bottom"
-              android:text="@string/share"
+              android:text="@string/detail_activity_options_share"
               android:gravity="center"
               android:textSize="@dimen/detail_activity_option_text_view_text_size"/>
 
@@ -307,7 +307,7 @@
         android:layout_centerInParent="true"
         android:animateLayoutChanges="true"
         android:fontFamily="sans-serif-thin"
-        android:text="@string/wallpaper_action_progress_percentage"
+        android:text="@string/detail_activity_wallpaper_action_progress_percentage"
         android:textColor="@color/color_white"
         android:textSize="80sp"
         android:typeface="sans"
@@ -343,7 +343,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/detail_activity_loading_hint_below_progress_spinkit_margin_top"
         android:paddingTop="@dimen/detail_activity_loading_hint_below_progress_spinkit_padding_top"
-        android:text="@string/finalising_wallpaper_please_wait"
+        android:text="@string/detail_activity_finalising_wallpaper_messsage"
         android:textSize="@dimen/detail_activity_loading_hint_below_progress_spinkit_text_size"
         android:visibility="gone"
         android:maxLines="1"
