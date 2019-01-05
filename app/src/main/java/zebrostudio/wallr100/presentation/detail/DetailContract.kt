@@ -14,7 +14,9 @@ interface DetailContract {
     fun setAuthorDetails(name: String, profileImageLink: String)
     fun showImage(lowQualityLink: String, highQualityLink: String)
     fun showImageLoadError()
-    fun getStoragePermission()
+    fun hasStoragePermission(): Boolean
+    fun requestStoragePermission(actionType: ActionType)
+    fun showPermissionRequiredMessage()
   }
 
   interface DetailPresenter : BasePresenter<DetailView> {
@@ -26,5 +28,17 @@ interface DetailContract {
     fun notifyEditSetClick()
     fun notifyAddToCollectionClick()
     fun notifyShareClick()
+
+    fun quickSetWallpaper()
+    fun downloadWallpaper()
+    fun crystallizeWallpaper()
+    fun editSetWallpaper()
+    fun addWallpaperToCollection()
+
+    fun notifyPermissionRequestResult(
+      requestCode: Int,
+      permissions: Array<String>,
+      grantResults: IntArray
+    )
   }
 }

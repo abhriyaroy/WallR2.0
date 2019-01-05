@@ -86,6 +86,7 @@ class WallpaperFragment : BaseFragment() {
     wallpaperFragmentViewPager.adapter = viewPagerItemAdapter
     tabLayout?.setViewPager(wallpaperFragmentViewPager)
     tabLayout?.visible()
+    System.out.println()
   }
 
   companion object {

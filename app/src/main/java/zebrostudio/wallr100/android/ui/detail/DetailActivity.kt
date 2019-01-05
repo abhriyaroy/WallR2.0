@@ -1,7 +1,11 @@
 package zebrostudio.wallr100.android.ui.detail
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -29,8 +33,11 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter.Companion.imageDetails
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter.Companion.imageType
+import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
+import zebrostudio.wallr100.presentation.detail.ActionType
+import zebrostudio.wallr100.presentation.detail.ActionType.*
 import zebrostudio.wallr100.presentation.detail.DetailContract.DetailPresenter
 import zebrostudio.wallr100.presentation.detail.DetailContract.DetailView
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
@@ -49,6 +56,13 @@ class DetailActivity : BaseActivity(), DetailView {
         intent.getSerializableExtra(imageType) as ImageListType)
     setUpExpandPanel()
     attachClickListeners()
+  }
+
+  override fun onRequestPermissionsResult(
+    requestCode: Int,
+    permissions: Array<String>, grantResults: IntArray
+  ) {
+    presenter.notifyPermissionRequestResult(requestCode, permissions, grantResults)
   }
 
   override fun getWallpaperImageDetails(): ImagePresenterEntity {
@@ -110,12 +124,32 @@ class DetailActivity : BaseActivity(), DetailView {
         .into(imageView)
   }
 
-  override fun getStoragePermission() {
-
-  }
-
   override fun showImageLoadError() {
     Toasty.error(this, getString(R.string.detail_activity_unable_to_load_hd_image_error))
+  }
+
+  override fun hasStoragePermission(): Boolean {
+    val readPermission = ContextCompat.checkSelfPermission(this,
+        Manifest.permission.READ_EXTERNAL_STORAGE)
+    val writePermission = ContextCompat.checkSelfPermission(this,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    if (readPermission != PackageManager.PERMISSION_GRANTED
+        && writePermission != PackageManager.PERMISSION_GRANTED) {
+      return false
+    }
+    return true
+  }
+
+  override fun requestStoragePermission(actionType: ActionType) {
+    System.out.println("action called " + actionType.ordinal)
+    ActivityCompat.requestPermissions(this,
+        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE),
+        actionType.ordinal)
+  }
+
+  override fun showPermissionRequiredMessage() {
+    errorToast(getString(R.string.detail_activity_storage_permission_denied_error))
   }
 
   private fun setUpExpandPanel() {

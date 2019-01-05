@@ -124,5 +124,7 @@
   <string name="detail_activity_wallpaper_action_progress_percentage">0%</string>
   <string name="detail_activity_unable_to_load_hd_image_error">
     Unable to load high-definition preview. Please ensure you have a working internet connection</string>
+  <string name="detail_activity_storage_permission_denied_error">
+    Storage permission is required to continue using this app. Please GRANT the permission when asked for</string>
 
 </resources>
