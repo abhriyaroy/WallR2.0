@@ -1,12 +1,14 @@
 package zebrostudio.wallr100.android.ui.detail
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.view.View
+import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -33,6 +35,7 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter.Companion.imageDetails
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter.Companion.imageType
+import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
@@ -45,7 +48,12 @@ import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 import javax.inject.Inject
 
 class DetailActivity : BaseActivity(), DetailView {
+
   @Inject lateinit var presenter: DetailPresenter
+
+  private var materialProgressLoader: MaterialDialog? = null
+  private val slidingPanelParallelOffset = 40
+  private val initialLoaderProgress = 0
 
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)
@@ -65,6 +73,10 @@ class DetailActivity : BaseActivity(), DetailView {
     presenter.notifyPermissionRequestResult(requestCode, permissions, grantResults)
   }
 
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    presenter.notifyActivityResult(requestCode, resultCode, data)
+  }
+
   override fun getWallpaperImageDetails(): ImagePresenterEntity {
     return intent.getParcelableExtra(imageDetails)
   }
@@ -74,8 +86,6 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun setAuthorDetails(name: String, profileImageLink: String) {
-    System.out.println(name)
-    System.out.println(profileImageLink)
     authorName.text = name
     val options = RequestOptions()
         .placeholder(R.drawable.ic_user_white)
@@ -141,7 +151,6 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun requestStoragePermission(actionType: ActionType) {
-    System.out.println("action called " + actionType.ordinal)
     ActivityCompat.requestPermissions(this,
         arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE),
@@ -152,9 +161,46 @@ class DetailActivity : BaseActivity(), DetailView {
     errorToast(getString(R.string.detail_activity_storage_permission_denied_error))
   }
 
+  override fun showNoInternetToShareError() {
+    errorToast(getString(R.string.detail_activity_share_error))
+  }
+
+  override fun shareLink(shortLink: String) {
+    val sendIntent = Intent()
+    sendIntent.action = Intent.ACTION_SEND
+    sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_intent_message) +
+        "\n\n" + shortLink)
+    sendIntent.type = "text/plain"
+    startActivity(Intent.createChooser(sendIntent, getString(R.string.share_link_using)))
+  }
+
+  override fun showWaitLoader(message: String) {
+    materialProgressLoader = MaterialDialog.Builder(this)
+        .widgetColor(resources.getColor(R.color.color_accent))
+        .contentColor(resources.getColor(R.color.color_white))
+        .content(message)
+        .backgroundColor(resources.getColor(R.color.color_primary))
+        .progress(true, initialLoaderProgress)
+        .progressIndeterminateStyle(false)
+        .build()
+    materialProgressLoader?.show()
+  }
+
+  override fun hideWaitLoader() {
+    materialProgressLoader?.dismiss()
+  }
+
+  override fun redirectToBuyPro(requestCode: Int) {
+    startActivityForResult(Intent(this, BuyProActivity::class.java), requestCode)
+  }
+
+  override fun showGenericErrorMessage() {
+    errorToast(getString(R.string.generic_error_message))
+  }
+
   private fun setUpExpandPanel() {
     expandIconView.setState(ExpandIconView.LESS, false)
-    slidingPanel.setParallaxOffset(40)
+    slidingPanel.setParallaxOffset(slidingPanelParallelOffset)
     slidingPanel.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
       override fun onPanelSlide(panel: View, slideOffset: Float) {
         // Do nothing

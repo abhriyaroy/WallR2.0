@@ -1,13 +1,20 @@
 package zebrostudio.wallr100.presentation.detail
 
+import android.content.Intent
 import android.content.pm.PackageManager
+import com.uber.autodispose.autoDisposable
+import zebrostudio.wallr100.domain.interactor.ShareImagesUseCase
+import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.detail.ActionType.*
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 
-class DetailPresenterImpl : DetailContract.DetailPresenter {
+class DetailPresenterImpl(
+  private var shareImagesUseCase: ShareImagesUseCase,
+  private var userPremiumStatusUseCase: UserPremiumStatusUseCase
+) : DetailContract.DetailPresenter {
 
   private var detailView: DetailContract.DetailView? = null
   private lateinit var imageType: ImageListType
@@ -29,7 +36,7 @@ class DetailPresenterImpl : DetailContract.DetailPresenter {
     } else {
       wallpaperImage = detailView?.getWallpaperImageDetails()!!
     }
-    decorateScreen()
+    decorateView()
   }
 
   override fun notifyHighQualityImageLoadFailed() {
@@ -77,27 +84,27 @@ class DetailPresenterImpl : DetailContract.DetailPresenter {
   }
 
   override fun notifyShareClick() {
-
-  }
-
-  override fun quickSetWallpaper() {
-
-  }
-
-  override fun downloadWallpaper() {
-
-  }
-
-  override fun crystallizeWallpaper() {
-
-  }
-
-  override fun editSetWallpaper() {
-
-  }
-
-  override fun addWallpaperToCollection() {
-
+    if (detailView?.isInternetAvailable() == true) {
+      if (userPremiumStatusUseCase.isUserPremium()) {
+        val link = if (imageType == SEARCH) {
+          searchImage.imageQualityUrlPresenterEntity.largeImageLink
+        } else {
+          wallpaperImage.imageLink.large
+        }
+        shareImagesUseCase.getImageShareableLink(link)
+            .autoDisposable(detailView?.getScope()!!)
+            .subscribe({
+              detailView?.hideWaitLoader()
+              detailView?.shareLink(it)
+            }, {
+              detailView?.showGenericErrorMessage()
+            })
+      } else {
+        detailView?.redirectToBuyPro(SHARE.ordinal)
+      }
+    } else {
+      detailView?.showNoInternetToShareError()
+    }
   }
 
   override fun notifyPermissionRequestResult(
@@ -119,7 +126,23 @@ class DetailPresenterImpl : DetailContract.DetailPresenter {
     }
   }
 
-  private fun decorateScreen() {
+  override fun notifyActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    if (requestCode == QUICK_SET.ordinal) {
+      notifyQuickSetClick()
+    } else if (requestCode == DOWNLOAD.ordinal) {
+      notifyDownloadClick()
+    } else if (requestCode == CRYSTALLIZE.ordinal) {
+      notifyCrystallizeClick()
+    } else if (requestCode == EDIT_SET.ordinal) {
+      notifyEditSetClick()
+    } else if (requestCode == ADD_TO_COLLECTION.ordinal) {
+      notifyAddToCollectionClick()
+    } else if (requestCode == SHARE.ordinal) {
+      notifyShareClick()
+    }
+  }
+
+  private fun decorateView() {
     if (imageType == SEARCH) {
       detailView?.setAuthorDetails(searchImage.userPresenterEntity.name,
           searchImage.userPresenterEntity.profileImageLink)
@@ -141,6 +164,26 @@ class DetailPresenterImpl : DetailContract.DetailPresenter {
       ADD_TO_COLLECTION.ordinal -> addWallpaperToCollection()
     }
   }
+
+  private fun quickSetWallpaper() {
+
+  }
+
+  private fun downloadWallpaper() {
+
+  }
+
+  private fun crystallizeWallpaper() {
+
+  }
+
+  private fun editSetWallpaper() {
+
+  }
+
+  private fun addWallpaperToCollection() {
+
+  }
 }
 
 enum class ActionType {
@@ -148,5 +191,6 @@ enum class ActionType {
   DOWNLOAD,
   CRYSTALLIZE,
   EDIT_SET,
-  ADD_TO_COLLECTION
+  ADD_TO_COLLECTION,
+  SHARE
 }

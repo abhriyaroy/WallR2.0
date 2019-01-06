@@ -13,6 +13,7 @@ import dagger.android.support.AndroidSupportInjection
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
 import zebrostudio.wallr100.android.utils.gone
+import zebrostudio.wallr100.android.utils.internetAvailability
 import zebrostudio.wallr100.android.utils.setMenuItemColorRed
 import zebrostudio.wallr100.android.utils.setMenuItemColorWhite
 import zebrostudio.wallr100.android.utils.visible
@@ -72,5 +73,7 @@ abstract class BaseFragment : Fragment(), BaseView {
   override fun getScope(): ScopeProvider {
     return AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)
   }
+
+  override fun isInternetAvailable() = activity?.internetAvailability()!!
 
 }

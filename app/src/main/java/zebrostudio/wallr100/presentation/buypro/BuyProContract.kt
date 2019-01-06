@@ -18,9 +18,7 @@ interface BuyProContract {
     fun showWaitLoader(proTransactionType: PremiumTransactionType)
     fun dismissWaitLoader()
     fun finishWithResult()
-
     fun isIabReady(): Boolean
-    fun isInternetAvailable(): Boolean
     fun launchPurchase()
     fun launchRestore()
 

@@ -23,6 +23,9 @@
   <string name="guillotine_buy_pro_title">Buy Pro</string>
   <string name="guillotine_pro_badge">PRO</string>
 
+  <!-- Generic strings -->
+  <string name="generic_error_message">Something went wrong. Please try again</string>
+
   <!-- Main activity strings -->
   <string name="main_activity_no_email_client_error">There is no email client installed</string>
   <string name="main_activity_exit_confirmation_message">Press back again to exit</string>
@@ -67,7 +70,6 @@
   <string name="buy_pro_unable_to_verify_purchase_message">Unable to verify purchase</string>
   <string name="buy_pro_try_restoring_message">
     Unable to continue purchase. If you have already purchased the app, click on Restore.</string>
-  <string name="buy_pro_generic_error_message">Something went wrong. Please try again</string>
   <string name="buy_pro_verifying_purchase_message">Verifying your purchase, please wait...</string>
   <string name="buy_pro_verifying_restore_message">Restoring your purchase, please wait...</string>
   <string name="buy_pro_purchase_ensure_working_internet_connection_message">
@@ -126,5 +128,9 @@
     Unable to load high-definition preview. Please ensure you have a working internet connection</string>
   <string name="detail_activity_storage_permission_denied_error">
     Storage permission is required to continue using this app. Please GRANT the permission when asked for</string>
+  <string name="detail_activity_share_error">
+    Unable to fetch shareable link. Please ensure you have a working internet connection</string>
+  <string name="share_intent_message">Get high-quality wallpapers for your Android device - WallR</string>
+  <string name="share_link_using">Share link using</string>
 
 </resources>

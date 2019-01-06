@@ -1,14 +1,10 @@
 package zebrostudio.wallr100.android.ui.buypro
 
-import android.arch.lifecycle.Lifecycle
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
-import com.uber.autodispose.ScopeProvider
-import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.zebrostudio.librarypurchaseflow.IabHelper
 import com.zebrostudio.librarypurchaseflow.IabHelper.OnIabPurchaseFinishedListener
 import com.zebrostudio.librarypurchaseflow.IabHelper.QueryInventoryFinishedListener
@@ -21,17 +17,17 @@ import kotlinx.android.synthetic.main.item_buy_pro_features.view.descriptionText
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.headerTextView
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.imageView
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.*
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.infoToast
-import zebrostudio.wallr100.android.utils.internetAvailability
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.presentation.buypro.BuyProContract
 import javax.inject.Inject
 
-class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
+class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
   @Inject
   internal lateinit var buyProPresenter: BuyProContract.BuyProPresenter
 
@@ -121,7 +117,7 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
   }
 
   override fun showGenericVerificationError() {
-    errorToast(stringRes(R.string.buy_pro_generic_error_message))
+    errorToast(stringRes(R.string.generic_error_message))
   }
 
   override fun showSuccessfulTransactionMessage(proTransactionType: PremiumTransactionType) {
@@ -154,10 +150,6 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
     materialDialog.dismiss()
   }
 
-  override fun getScope(): ScopeProvider {
-    return AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)
-  }
-
   override fun finishWithResult() {
     val intent = Intent()
     intent.putExtra(PurchaseTransactionConfig.PURCHASE_TAG,
@@ -172,10 +164,6 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
       return true
     }
     return false
-  }
-
-  override fun isInternetAvailable(): Boolean {
-    return this.internetAvailability()
   }
 
   override fun launchPurchase() {

@@ -29,4 +29,6 @@ interface WallrRepository {
   fun getPeoplePictures(): Single<List<ImageModel>>
   fun getTechnologyPictures(): Single<List<ImageModel>>
 
+  fun getShortImageLink(link: String): Single<String>
+
 }

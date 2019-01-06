@@ -2,6 +2,7 @@ package zebrostudio.wallr100.data
 
 import com.google.firebase.database.DatabaseReference
 import com.google.gson.Gson
+import com.pddstudio.urlshortener.URLShortener
 import io.reactivex.Completable
 import io.reactivex.Single
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
@@ -137,6 +138,12 @@ class WallrDataRepository(
   override fun getTechnologyPictures(): Single<List<ImageModel>> {
     return getPicturesFromFirebase(getCategoriesNodeReference()
         .child(childPathTechnology))
+  }
+
+  override fun getShortImageLink(link: String): Single<String> {
+    return Single.create {
+      it.onSuccess(URLShortener.shortUrl(link))
+    }
   }
 
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()
