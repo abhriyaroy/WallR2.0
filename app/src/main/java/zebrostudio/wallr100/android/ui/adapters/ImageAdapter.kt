@@ -53,7 +53,7 @@ class ViewHolder(
 ) : RecyclerView.ViewHolder(itemView),
     ImageRecyclerItemContract.ImageRecyclerItemView {
 
-  override fun setImageViewBackgroundAndClickListener(colorHexCode: String) {
+  override fun setImageViewBackgroundAndAttachClickListener(colorHexCode: String) {
     itemView.imageView.setBackgroundColor(Color.parseColor(colorHexCode))
     itemView.setOnClickListener { presenter.notifyImageClicked(adapterPosition, this) }
   }

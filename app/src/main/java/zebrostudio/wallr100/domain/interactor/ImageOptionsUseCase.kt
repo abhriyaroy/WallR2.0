@@ -12,8 +12,7 @@ interface ShareImagesUseCase {
 class ShareImagesInteractor(
   private var wallrRepository: WallrRepository,
   private val postExecutionThread: PostExecutionThread
-) :
-    ShareImagesUseCase {
+) : ShareImagesUseCase {
 
   override fun getImageShareableLink(link: String): Single<String> {
     return wallrRepository.getShortImageLink(link)

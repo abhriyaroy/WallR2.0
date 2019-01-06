@@ -144,12 +144,12 @@ class DetailPresenterImpl(
 
   private fun decorateView() {
     if (imageType == SEARCH) {
-      detailView?.setAuthorDetails(searchImage.userPresenterEntity.name,
+      detailView?.showAuthorDetails(searchImage.userPresenterEntity.name,
           searchImage.userPresenterEntity.profileImageLink)
       detailView?.showImage(searchImage.imageQualityUrlPresenterEntity.smallImageLink,
           searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     } else {
-      detailView?.setAuthorDetails(wallpaperImage.author.name,
+      detailView?.showAuthorDetails(wallpaperImage.author.name,
           wallpaperImage.author.profileImageLink)
       detailView?.showImage(wallpaperImage.imageLink.thumb, wallpaperImage.imageLink.large)
     }
@@ -166,23 +166,23 @@ class DetailPresenterImpl(
   }
 
   private fun quickSetWallpaper() {
-
+    // To be implemented later
   }
 
   private fun downloadWallpaper() {
-
+    // To be implemented later
   }
 
   private fun crystallizeWallpaper() {
-
+    // To be implemented later
   }
 
   private fun editSetWallpaper() {
-
+    // To be implemented later
   }
 
   private fun addWallpaperToCollection() {
-
+    // To be implemented later
   }
 }
 

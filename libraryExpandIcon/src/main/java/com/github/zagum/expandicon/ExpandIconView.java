@@ -101,8 +101,8 @@ public class ExpandIconView extends View {
     super(context, attrs, defStyleAttr);
 
     TypedArray array = getContext().getTheme().obtainStyledAttributes(attrs,
-            R.styleable.ExpandIconView,
-            0, 0);
+        R.styleable.ExpandIconView,
+        0, 0);
 
     final boolean roundedCorners;
     final long animationDuration;
@@ -112,7 +112,8 @@ public class ExpandIconView extends View {
       color = array.getColor(R.styleable.ExpandIconView_eiv_color, Color.WHITE);
       colorMore = array.getColor(R.styleable.ExpandIconView_eiv_colorMore, Color.WHITE);
       colorLess = array.getColor(R.styleable.ExpandIconView_eiv_colorLess, Color.WHITE);
-      animationDuration = array.getInteger(R.styleable.ExpandIconView_eiv_animationDuration, (int) DEFAULT_ANIMATION_DURATION);
+      animationDuration = array.getInteger(R.styleable.ExpandIconView_eiv_animationDuration,
+          (int) DEFAULT_ANIMATION_DURATION);
       padding = array.getDimensionPixelSize(R.styleable.ExpandIconView_eiv_padding, -1);
       useDefaultPadding = (padding == -1);
     } finally {
@@ -175,7 +176,8 @@ public class ExpandIconView extends View {
     } else if (state == LESS) {
       fraction = 1f;
     } else {
-      throw new IllegalArgumentException("Unknown state, must be one of STATE_MORE = 0,  STATE_LESS = 1");
+      throw new IllegalArgumentException(
+          "Unknown state, must be one of STATE_MORE = 0,  STATE_LESS = 1");
     }
     updateArrow(animate);
   }
@@ -189,7 +191,8 @@ public class ExpandIconView extends View {
    */
   public void setFraction(@FloatRange(from = 0.f, to = 1.f) float fraction, boolean animate) {
     if (fraction < 0f || fraction > 1f) {
-      throw new IllegalArgumentException("Fraction value must be from 0 to 1f, fraction=" + fraction);
+      throw new IllegalArgumentException(
+          "Fraction value must be from 0 to 1f, fraction=" + fraction);
     }
 
     if (this.fraction == fraction) {

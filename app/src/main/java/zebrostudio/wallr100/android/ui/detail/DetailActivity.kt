@@ -19,7 +19,6 @@ import com.bumptech.glide.request.target.Target
 import com.github.zagum.expandicon.ExpandIconView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.android.AndroidInjection
-import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_detail.addToCollectionImageLayout
 import kotlinx.android.synthetic.main.activity_detail.authorImage
 import kotlinx.android.synthetic.main.activity_detail.authorName
@@ -37,10 +36,8 @@ import zebrostudio.wallr100.android.ui.adapters.ImageAdapter.Companion.imageDeta
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter.Companion.imageType
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.utils.errorToast
-import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.detail.ActionType
-import zebrostudio.wallr100.presentation.detail.ActionType.*
 import zebrostudio.wallr100.presentation.detail.DetailContract.DetailPresenter
 import zebrostudio.wallr100.presentation.detail.DetailContract.DetailView
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
@@ -85,7 +82,7 @@ class DetailActivity : BaseActivity(), DetailView {
     return intent.getParcelableExtra(imageDetails)
   }
 
-  override fun setAuthorDetails(name: String, profileImageLink: String) {
+  override fun showAuthorDetails(name: String, profileImageLink: String) {
     authorName.text = name
     val options = RequestOptions()
         .placeholder(R.drawable.ic_user_white)
@@ -129,13 +126,12 @@ class DetailActivity : BaseActivity(), DetailView {
           ): Boolean {
             return false
           }
-
         })
         .into(imageView)
   }
 
   override fun showImageLoadError() {
-    Toasty.error(this, getString(R.string.detail_activity_unable_to_load_hd_image_error))
+    errorToast(getString(R.string.detail_activity_unable_to_load_hd_image_error))
   }
 
   override fun hasStoragePermission(): Boolean {
