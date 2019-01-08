@@ -27,8 +27,8 @@ import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseInteractor
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.domain.interactor.SearchPicturesInteractor
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
-import zebrostudio.wallr100.domain.interactor.ShareImagesInteractor
-import zebrostudio.wallr100.domain.interactor.ShareImagesUseCase
+import zebrostudio.wallr100.domain.interactor.ImageOptionsInteractor
+import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusInteractor
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesInteractor
@@ -128,7 +128,7 @@ class AppModule {
   fun providesShareImagesUseCase(
     wallrRepository: WallrRepository,
     postExecutionThread: PostExecutionThread
-  ): ShareImagesUseCase = ShareImagesInteractor(wallrRepository, postExecutionThread)
+  ): ImageOptionsUseCase = ImageOptionsInteractor(wallrRepository, postExecutionThread)
 
   @Provides
   fun provideImageRecyclerViewPresenter()

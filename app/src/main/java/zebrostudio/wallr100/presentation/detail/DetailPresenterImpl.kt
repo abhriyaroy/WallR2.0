@@ -3,7 +3,7 @@ package zebrostudio.wallr100.presentation.detail
 import android.content.Intent
 import android.content.pm.PackageManager
 import com.uber.autodispose.autoDisposable
-import zebrostudio.wallr100.domain.interactor.ShareImagesUseCase
+import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
@@ -12,7 +12,7 @@ import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEnt
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 
 class DetailPresenterImpl(
-  private var shareImagesUseCase: ShareImagesUseCase,
+  private var imageOptionsUseCase: ImageOptionsUseCase,
   private var userPremiumStatusUseCase: UserPremiumStatusUseCase
 ) : DetailContract.DetailPresenter {
 
@@ -91,12 +91,13 @@ class DetailPresenterImpl(
         } else {
           wallpaperImage.imageLink.large
         }
-        shareImagesUseCase.getImageShareableLink(link)
+        imageOptionsUseCase.getImageShareableLinkSingle(link)
             .autoDisposable(detailView?.getScope()!!)
             .subscribe({
               detailView?.hideWaitLoader()
               detailView?.shareLink(it)
             }, {
+              detailView?.hideWaitLoader()
               detailView?.showGenericErrorMessage()
             })
       } else {

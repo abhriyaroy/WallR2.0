@@ -140,7 +140,7 @@ class DetailActivity : BaseActivity(), DetailView {
     val writePermission = ContextCompat.checkSelfPermission(this,
         Manifest.permission.WRITE_EXTERNAL_STORAGE)
     if (readPermission != PackageManager.PERMISSION_GRANTED
-        && writePermission != PackageManager.PERMISSION_GRANTED) {
+        || writePermission != PackageManager.PERMISSION_GRANTED) {
       return false
     }
     return true

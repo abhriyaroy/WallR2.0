@@ -5,16 +5,16 @@ import io.reactivex.schedulers.Schedulers
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 
-interface ShareImagesUseCase {
-  fun getImageShareableLink(link: String): Single<String>
+interface ImageOptionsUseCase {
+  fun getImageShareableLinkSingle(link: String): Single<String>
 }
 
-class ShareImagesInteractor(
+class ImageOptionsInteractor(
   private var wallrRepository: WallrRepository,
   private val postExecutionThread: PostExecutionThread
-) : ShareImagesUseCase {
+) : ImageOptionsUseCase {
 
-  override fun getImageShareableLink(link: String): Single<String> {
+  override fun getImageShareableLinkSingle(link: String): Single<String> {
     return wallrRepository.getShortImageLink(link)
         .subscribeOn(Schedulers.io())
         .observeOn(postExecutionThread.scheduler)
