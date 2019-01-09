@@ -38,7 +38,7 @@ class DetailActivityPresenterImplTest {
   }
 
   @Test
-  fun `should show search image details on setting image type as search`() {
+  fun `should show search image details on setImageType as search call`() {
     val searchImagePresenterEntity =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
     `when`(detailView.getSearchImageDetails()).thenReturn(searchImagePresenterEntity)
@@ -55,7 +55,7 @@ class DetailActivityPresenterImplTest {
   }
 
   @Test
-  fun `should show wallpaper image details on setting image type as wallpaper`() {
+  fun `should show wallpaper image details on setImageType as wallpaper call`() {
     val imagePresenterEntity = ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(detailView.getWallpaperImageDetails()).thenReturn(imagePresenterEntity)
 
@@ -108,7 +108,7 @@ class DetailActivityPresenterImplTest {
     verifyNoMoreInteractions(detailView)
   }
 
-  @Test fun `should handle permission granted after notifyPermissionRequestResult is called`(){
+  @Test fun `should handle permission granted after notifyPermissionRequestResult is called`() {
     detailPresenterImpl.notifyPermissionRequestResult(QUICK_SET.ordinal,
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
         intArrayOf(PackageManager.PERMISSION_GRANTED))
