@@ -19,8 +19,8 @@ interface MainContract {
   interface MainPresenter : BasePresenter<MainView> {
 
     fun handleBackPress()
-    fun notifyNavigationMenuOpened()
-    fun notifyNavigationMenuClosed()
+    fun handleNavigationMenuOpened()
+    fun handleNavigationMenuClosed()
     fun setBackPressedFlagToFalse()
     fun shouldShowPurchaseOption(): Boolean
 

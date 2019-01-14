@@ -1,7 +1,6 @@
 package zebrostudio.wallr100.android.ui.adapters
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -50,7 +49,7 @@ class ViewHolder(
 
   override fun setImageViewBackgroundAndAttachClickListener(colorHexCode: String) {
     itemView.imageView.setBackgroundColor(Color.parseColor(colorHexCode))
-    itemView.setOnClickListener { presenter.notifyImageClicked(adapterPosition, this) }
+    itemView.setOnClickListener { presenter.handleImageClicked(adapterPosition, this) }
   }
 
   override fun setSearchImage(link: String) {

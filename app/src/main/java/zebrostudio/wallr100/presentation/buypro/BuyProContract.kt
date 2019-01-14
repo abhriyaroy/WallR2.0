@@ -26,8 +26,8 @@ interface BuyProContract {
 
   interface BuyProPresenter : BasePresenter<BuyProView> {
 
-    fun notifyPurchaseClicked()
-    fun notifyRestoreClicked()
+    fun handlePurchaseClicked()
+    fun handleRestoreClicked()
     fun verifyPurchase(
       packageName: String,
       skuId: String,

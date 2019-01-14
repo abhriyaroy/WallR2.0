@@ -23,7 +23,7 @@ class BuyProPresenterImpl(
     buyProView = null
   }
 
-  override fun notifyPurchaseClicked() {
+  override fun handlePurchaseClicked() {
     if (buyProView?.isIabReady() == true) {
       if (buyProView?.internetAvailability() == true) {
         buyProView?.showWaitLoader(PURCHASE)
@@ -36,7 +36,7 @@ class BuyProPresenterImpl(
     }
   }
 
-  override fun notifyRestoreClicked() {
+  override fun handleRestoreClicked() {
     if (buyProView?.isIabReady() == true) {
       if (buyProView?.internetAvailability() == true) {
         buyProView?.showWaitLoader(RESTORE)

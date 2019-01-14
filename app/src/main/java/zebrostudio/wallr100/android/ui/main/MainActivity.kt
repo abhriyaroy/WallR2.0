@@ -157,11 +157,11 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
 
     val guillotineListener = object : GuillotineListener {
       override fun onGuillotineOpened() {
-        presenter.notifyNavigationMenuOpened()
+        presenter.handleNavigationMenuOpened()
       }
 
       override fun onGuillotineClosed() {
-        presenter.notifyNavigationMenuClosed()
+        presenter.handleNavigationMenuClosed()
       }
     }
 

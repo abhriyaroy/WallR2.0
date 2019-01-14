@@ -36,11 +36,11 @@ class MainActivityPresenterImpl(
     }
   }
 
-  override fun notifyNavigationMenuOpened() {
+  override fun handleNavigationMenuOpened() {
     isGuillotineMenuOpen = true
   }
 
-  override fun notifyNavigationMenuClosed() {
+  override fun handleNavigationMenuClosed() {
     isGuillotineMenuOpen = false
   }
 

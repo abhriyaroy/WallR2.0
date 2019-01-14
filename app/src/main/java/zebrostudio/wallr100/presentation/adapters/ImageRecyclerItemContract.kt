@@ -22,6 +22,6 @@ interface ImageRecyclerItemContract {
     fun onBindRepositoryRowViewAtPosition(position: Int, rowView: ImageRecyclerItemView)
     fun getItemCount(): Int
     fun clearAllSearchResults()
-    fun notifyImageClicked(position: Int, rowView: ImageRecyclerItemContract.ImageRecyclerItemView)
+    fun handleImageClicked(position: Int, rowView: ImageRecyclerItemContract.ImageRecyclerItemView)
   }
 }

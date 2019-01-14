@@ -58,7 +58,7 @@ class ImageRecyclerViewPresenterImpl : ImageRecyclerItemContract.ImageRecyclerVi
     searchResultList.clear()
   }
 
-  override fun notifyImageClicked(
+  override fun handleImageClicked(
     position: Int,
     rowView: ImageRecyclerItemContract.ImageRecyclerItemView
   ) {

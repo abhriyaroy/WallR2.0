@@ -29,7 +29,7 @@ class FragmentNameTagFetcherImplTest {
   }
 
   @Test fun `should return explore string on getFragmentName with explore tag call success`() {
-    val  exploreTag = "EXPLORE"
+    val exploreTag = "EXPLORE"
     `when`(resourceUtils.getStringResource(R.string.explore_fragment_tag)).thenReturn(exploreTag)
 
     val fragmentTag = fragmentNameTag.getFragmentName(EXPLORE_TAG)
@@ -50,9 +50,11 @@ class FragmentNameTagFetcherImplTest {
     assertTrue(fragmentTag == topPicksTag)
   }
 
-  @Test fun `should return categories string on getFragmentName with categories tag call success`() {
+  @Test
+  fun `should return categories string on getFragmentName with categories tag call success`() {
     val categoriesTag = "CATEGORIES"
-    `when`(resourceUtils.getStringResource(R.string.categories_fragment_tag)).thenReturn(categoriesTag)
+    `when`(resourceUtils.getStringResource(R.string.categories_fragment_tag)).thenReturn(
+        categoriesTag)
 
     val fragmentTag = fragmentNameTag.getFragmentName(CATEGORIES_TAG)
 
@@ -72,9 +74,11 @@ class FragmentNameTagFetcherImplTest {
     assertTrue(fragmentTag == minimalTag)
   }
 
-  @Test fun `should return collections string on getFragmentName with collections tag call success`() {
+  @Test
+  fun `should return collections string on getFragmentName with collections tag call success`() {
     val collectionsTag = "COLLECTIONS"
-    `when`(resourceUtils.getStringResource(R.string.collection_fragment_tag)).thenReturn(collectionsTag)
+    `when`(resourceUtils.getStringResource(R.string.collection_fragment_tag)).thenReturn(
+        collectionsTag)
 
     val fragmentTag = fragmentNameTag.getFragmentName(COLLECTIONS_TAG)
 
@@ -82,6 +86,5 @@ class FragmentNameTagFetcherImplTest {
     verifyNoMoreInteractions(resourceUtils)
     assertTrue(fragmentTag == collectionsTag)
   }
-
 
 }

@@ -44,7 +44,7 @@ class BuyProPresenterImplTest {
 
   @Test fun `should showGenericVerificationError if iab not ready and purchase clicked`() {
     stubIabNotReady()
-    buyProPresenterImpl.notifyPurchaseClicked()
+    buyProPresenterImpl.handlePurchaseClicked()
 
     verify(buyProView).isIabReady()
     verify(buyProView).showGenericVerificationError()
@@ -55,7 +55,7 @@ class BuyProPresenterImplTest {
   fun `should showNoInternetErrorMessage if iab ready and purchase clicked but no internet`() {
     stubIabReady()
     stubInternetNotAvailable()
-    buyProPresenterImpl.notifyPurchaseClicked()
+    buyProPresenterImpl.handlePurchaseClicked()
 
     verify(buyProView).isIabReady()
     verify(buyProView).internetAvailability()
@@ -67,7 +67,7 @@ class BuyProPresenterImplTest {
   fun `should launchPurchase if iab ready and purchase clicked and internet available`() {
     stubIabReady()
     stubInternetAvailable()
-    buyProPresenterImpl.notifyPurchaseClicked()
+    buyProPresenterImpl.handlePurchaseClicked()
 
     verify(buyProView).isIabReady()
     verify(buyProView).internetAvailability()
@@ -78,7 +78,7 @@ class BuyProPresenterImplTest {
 
   @Test fun `should showGenericVerificationError if iab not ready and restore clicked`() {
     stubIabNotReady()
-    buyProPresenterImpl.notifyRestoreClicked()
+    buyProPresenterImpl.handleRestoreClicked()
 
     verify(buyProView).isIabReady()
     verify(buyProView).showGenericVerificationError()
@@ -88,7 +88,7 @@ class BuyProPresenterImplTest {
   @Test fun `should showNoInternetErrorMessage if iab ready and restore clicked but no internet`() {
     stubIabReady()
     stubInternetNotAvailable()
-    buyProPresenterImpl.notifyRestoreClicked()
+    buyProPresenterImpl.handleRestoreClicked()
 
     verify(buyProView).isIabReady()
     verify(buyProView).internetAvailability()
@@ -100,7 +100,7 @@ class BuyProPresenterImplTest {
   fun `should launchRestore if iab ready and restore clicked and internet available`() {
     stubIabReady()
     stubInternetAvailable()
-    buyProPresenterImpl.notifyRestoreClicked()
+    buyProPresenterImpl.handleRestoreClicked()
 
     verify(buyProView).isIabReady()
     verify(buyProView).internetAvailability()

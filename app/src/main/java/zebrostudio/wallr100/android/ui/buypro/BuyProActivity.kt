@@ -214,11 +214,11 @@ class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
 
   private fun attachClickListeners() {
     purchaseButton.setOnClickListener {
-      buyProPresenter.notifyPurchaseClicked()
+      buyProPresenter.handlePurchaseClicked()
     }
 
     restoreButton.setOnClickListener {
-      buyProPresenter.notifyRestoreClicked()
+      buyProPresenter.handleRestoreClicked()
     }
   }
 
