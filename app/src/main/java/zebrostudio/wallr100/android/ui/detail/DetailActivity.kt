@@ -74,11 +74,11 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun getWallpaperImageDetails(): ImagePresenterEntity {
-    return intent.getParcelableExtra(imageDetails)
+    return intent.getSerializableExtra(imageDetails) as ImagePresenterEntity
   }
 
   override fun getSearchImageDetails(): SearchPicturesPresenterEntity {
-    return intent.getParcelableExtra(imageDetails)
+    return intent.getSerializableExtra(imageDetails) as SearchPicturesPresenterEntity
   }
 
   override fun showAuthorDetails(name: String, profileImageLink: String) {

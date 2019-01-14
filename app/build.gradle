@@ -22,9 +22,6 @@ android {
       minifyEnabled false
     }
   }
-  androidExtensions {
-    experimental = true
-  }
   testOptions {
     unitTests.returnDefaultValues = true
   }

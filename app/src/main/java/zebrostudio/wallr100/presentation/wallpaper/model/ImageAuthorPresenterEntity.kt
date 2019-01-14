@@ -1,10 +1,8 @@
 package zebrostudio.wallr100.presentation.wallpaper.model
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import java.io.Serializable
 
-@Parcelize
 data class ImageAuthorPresenterEntity(
   val name: String,
   val profileImageLink: String
-) : Parcelable
+) : Serializable
