@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.pddstudio.urlshortener.URLShortener
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.TestScheduler
@@ -46,6 +47,7 @@ class WallrDataRepositoryTest {
   @Mock lateinit var firebaseDatabaseHelper: FirebaseDatabaseHelper
   @Mock lateinit var databaseReference: DatabaseReference
   @Mock lateinit var firebaseDatabase: FirebaseDatabase
+  @Mock lateinit var urlShortener: URLShortener
   private lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
   private lateinit var firebasePictureEntityMapper: FirebasePictureEntityMapper
   private lateinit var wallrDataRepository: WallrDataRepository
@@ -75,7 +77,8 @@ class WallrDataRepositoryTest {
     firebasePictureEntityMapper = FirebasePictureEntityMapper()
     wallrDataRepository =
         WallrDataRepository(remoteAuthServiceFactory, unsplashClientFactory, sharedPrefs,
-            unsplashPictureEntityMapper, firebaseDatabaseHelper, firebasePictureEntityMapper)
+            unsplashPictureEntityMapper, firebaseDatabaseHelper, firebasePictureEntityMapper,
+            urlShortener)
   }
 
   @Test fun `should return single on server success response`() {
@@ -237,6 +240,15 @@ class WallrDataRepositoryTest {
     assertTrue(nodeReference == databaseReference)
     verify(firebaseDatabaseHelper, times(3)).getDatabase()
     verifyNoMoreInteractions(firebaseDatabaseHelper)
+  }
+
+  @Test fun `should return shortened image link on getShortImageLink call success`() {
+    `when`(urlShortener.shortUrl(randomString)).thenReturn(randomString)
+
+    wallrDataRepository.getShortImageLink(randomString).test().assertValue(randomString)
+
+    verify(urlShortener).shortUrl(randomString)
+    verifyNoMoreInteractions(urlShortener)
   }
 
   /* Need to properly implement timeout for Rx Java

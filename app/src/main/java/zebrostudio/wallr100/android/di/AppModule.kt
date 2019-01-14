@@ -2,6 +2,8 @@ package zebrostudio.wallr100.android.di
 
 import android.app.Application
 import android.content.Context
+import com.pddstudio.urlshortener.URLShortener
+import com.pddstudio.urlshortener.URLShortenerImpl
 import dagger.Module
 import dagger.Provides
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
@@ -82,6 +84,9 @@ class AppModule {
   fun provideFirebasePictureEntityMapper(): FirebasePictureEntityMapper = FirebasePictureEntityMapper()
 
   @Provides
+  fun urlShortener(): URLShortener = URLShortenerImpl()
+
+  @Provides
   @PerApplication
   fun provideWallrRepository(
     retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
@@ -89,13 +94,15 @@ class AppModule {
     sharedPrefsHelper: SharedPrefsHelper,
     unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
     firebaseDatabaseHelper: FirebaseDatabaseHelper,
-    firebasePictureEntityMapper: FirebasePictureEntityMapper
+    firebasePictureEntityMapper: FirebasePictureEntityMapper,
+    urlShortener: URLShortener
   ): WallrRepository = WallrDataRepository(retrofitFirebaseAuthFactory,
       unsplashClientFactory,
       sharedPrefsHelper,
       unsplashPictureEntityMapper,
       firebaseDatabaseHelper,
-      firebasePictureEntityMapper)
+      firebasePictureEntityMapper,
+      urlShortener)
 
   @Provides
   @PerApplication

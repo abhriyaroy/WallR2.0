@@ -1,2 +1,2 @@
 include ':app', ':libraryGuillotineMenu', ':libraryPurchaseFlow', ':libraryWallrCustoms',
-        ':librarySearch', ':libraryExpandIcon'
+        ':librarySearch', ':libraryExpandIcon', ':libraryUrlShortener'

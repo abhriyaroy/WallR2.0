@@ -29,7 +29,7 @@ fun Context.errorToast(message: String, length: Int = Toast.LENGTH_LONG) {
   Toasty.error(this, message, length, true).show()
 }
 
-fun Context.internetAvailability(): Boolean {
+fun Context.checkDataConnection(): Boolean {
   val connectivityManager =
       getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
   val activeNetworkInfo = connectivityManager?.activeNetworkInfo

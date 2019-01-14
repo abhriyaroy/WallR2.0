@@ -13,9 +13,9 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.image_recyclerview_item.view.imageView
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.ui.adapters.ImageAdapter.Companion.imageDetails
-import zebrostudio.wallr100.android.ui.adapters.ImageAdapter.Companion.imageType
 import zebrostudio.wallr100.android.ui.detail.DetailActivity
+import zebrostudio.wallr100.android.ui.detail.DetailActivity.Companion.imageDetails
+import zebrostudio.wallr100.android.ui.detail.DetailActivity.Companion.imageType
 import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
@@ -37,11 +37,6 @@ class ImageAdapter(private val presenter: ImageRecyclerItemContract.ImageRecycle
 
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     presenter.onBindRepositoryRowViewAtPosition(position, holder)
-  }
-
-  companion object {
-    var imageDetails = "ImageDetails"
-    var imageType = "ImageType"
   }
 
 }
@@ -77,14 +72,14 @@ class ViewHolder(
   }
 
   override fun showSearchImageDetails(searchImage: SearchPicturesPresenterEntity) {
-    val intent = Intent(context, DetailActivity::class.java)
+    val intent = DetailActivity.getCallingIntent(context)
     intent.putExtra(imageDetails, searchImage)
     intent.putExtra(imageType, SEARCH)
     context.startActivity(intent)
   }
 
   override fun showWallpaperImageDetails(wallpaperImage: ImagePresenterEntity) {
-    val intent = Intent(context, DetailActivity::class.java)
+    val intent = DetailActivity.getCallingIntent(context)
     intent.putExtra(imageDetails, wallpaperImage)
     intent.putExtra(imageType, WALLPAPERS)
     context.startActivity(intent)

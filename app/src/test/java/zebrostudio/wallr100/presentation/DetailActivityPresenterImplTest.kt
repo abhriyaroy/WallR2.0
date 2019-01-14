@@ -70,7 +70,7 @@ class DetailActivityPresenterImplTest {
   }
 
   @Test fun `should show error toast on high quality image loading failure`() {
-    detailPresenterImpl.notifyHighQualityImageLoadFailed()
+    detailPresenterImpl.handleHighQualityImageLoadFailed()
 
     verify(detailView).showImageLoadError()
     verifyNoMoreInteractions(detailView)
@@ -78,29 +78,29 @@ class DetailActivityPresenterImplTest {
 
   @Test
   fun `should show no internet error on notifyShareClicked call failure due to no internet`() {
-    `when`(detailView.isInternetAvailable()).thenReturn(false)
+    `when`(detailView.internetAvailability()).thenReturn(false)
 
-    detailPresenterImpl.notifyShareClick()
+    detailPresenterImpl.handleShareClick()
 
-    verify(detailView).isInternetAvailable()
+    verify(detailView).internetAvailability()
     verify(detailView).showNoInternetToShareError()
     verifyNoMoreInteractions(detailView)
   }
 
   @Test fun `should redirect to pro when notifyShareClicked call failure due to non pro user`() {
-    `when`(detailView.isInternetAvailable()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(false)
 
-    detailPresenterImpl.notifyShareClick()
+    detailPresenterImpl.handleShareClick()
 
-    verify(detailView).isInternetAvailable()
+    verify(detailView).internetAvailability()
     verify(detailView).redirectToBuyPro(SHARE.ordinal)
     verifyNoMoreInteractions(detailView)
   }
 
   @Test
   fun `should show permission required message when notifyPermissionRequestResult is called after permission is denied`() {
-    detailPresenterImpl.notifyPermissionRequestResult(QUICK_SET.ordinal,
+    detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
         intArrayOf(PackageManager.PERMISSION_DENIED))
 
@@ -109,7 +109,7 @@ class DetailActivityPresenterImplTest {
   }
 
   @Test fun `should handle permission granted after notifyPermissionRequestResult is called`() {
-    detailPresenterImpl.notifyPermissionRequestResult(QUICK_SET.ordinal,
+    detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
         intArrayOf(PackageManager.PERMISSION_GRANTED))
 

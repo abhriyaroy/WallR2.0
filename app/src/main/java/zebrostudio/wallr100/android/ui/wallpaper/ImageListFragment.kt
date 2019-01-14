@@ -23,7 +23,7 @@ import zebrostudio.wallr100.android.utils.GridItemDecorator
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
-import zebrostudio.wallr100.android.utils.internetAvailability
+import zebrostudio.wallr100.android.utils.checkDataConnection
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
@@ -69,7 +69,7 @@ class ImageListFragment : Fragment(), ImageListView {
     presenter.detachView()
   }
 
-  override fun isInternetAvailable() = activity?.internetAvailability()!!
+  override fun internetAvailability() = activity?.checkDataConnection()!!
 
   override fun showLoader() {
     spinkitView?.visible()

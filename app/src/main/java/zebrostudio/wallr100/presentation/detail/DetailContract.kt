@@ -28,16 +28,16 @@ interface DetailContract {
 
   interface DetailPresenter : BasePresenter<DetailView> {
     fun setImageType(imageType: ImageListType)
-    fun notifyHighQualityImageLoadFailed()
-    fun notifyQuickSetClick()
-    fun notifyDownloadClick()
-    fun notifyCrystallizeClick()
-    fun notifyEditSetClick()
-    fun notifyAddToCollectionClick()
-    fun notifyShareClick()
-    fun notifyPermissionRequestResult(
+    fun handleHighQualityImageLoadFailed()
+    fun handleQuickSetClick()
+    fun handleDownloadClick()
+    fun handleCrystallizeClick()
+    fun handleEditSetClick()
+    fun handleAddToCollectionClick()
+    fun handleShareClick()
+    fun handlePermissionRequestResult(
       requestCode: Int, permissions: Array<String>, grantResults: IntArray
     )
-    fun notifyActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
   }
 }

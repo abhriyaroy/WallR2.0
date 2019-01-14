@@ -25,10 +25,10 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter
 import zebrostudio.wallr100.android.utils.EndlessScrollListener
 import zebrostudio.wallr100.android.utils.GridItemDecorator
+import zebrostudio.wallr100.android.utils.checkDataConnection
 import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
-import zebrostudio.wallr100.android.utils.internetAvailability
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.android.utils.withDelayOnMain
@@ -95,7 +95,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     } else super.onBackPressed()
   }
 
-  override fun isInternetAvailable() = this.internetAvailability()
+  override fun internetAvailability() = this.checkDataConnection()
 
   override fun showLoader() {
     hideAllLoadersAndMessageViews()

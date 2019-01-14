@@ -26,7 +26,8 @@ class WallrDataRepository(
   private var sharedPrefsHelper: SharedPrefsHelper,
   private var unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
   private var firebaseDatabaseHelper: FirebaseDatabaseHelper,
-  private var firebasePictureEntityMapper: FirebasePictureEntityMapper
+  private var firebasePictureEntityMapper: FirebasePictureEntityMapper,
+  private var urlShortener: URLShortener
 ) : WallrRepository {
 
   private val purchasePreferenceName = "PURCHASE_PREF"
@@ -142,7 +143,7 @@ class WallrDataRepository(
 
   override fun getShortImageLink(link: String): Single<String> {
     return Single.create {
-      it.onSuccess(URLShortener.shortUrl(link))
+      it.onSuccess(urlShortener.shortUrl(link))
     }
   }
 

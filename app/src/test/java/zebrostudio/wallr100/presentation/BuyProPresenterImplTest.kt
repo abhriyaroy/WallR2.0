@@ -58,7 +58,7 @@ class BuyProPresenterImplTest {
     buyProPresenterImpl.notifyPurchaseClicked()
 
     verify(buyProView).isIabReady()
-    verify(buyProView).isInternetAvailable()
+    verify(buyProView).internetAvailability()
     verify(buyProView).showNoInternetErrorMessage(PURCHASE)
     verifyNoMoreInteractions(buyProView)
   }
@@ -70,7 +70,7 @@ class BuyProPresenterImplTest {
     buyProPresenterImpl.notifyPurchaseClicked()
 
     verify(buyProView).isIabReady()
-    verify(buyProView).isInternetAvailable()
+    verify(buyProView).internetAvailability()
     verify(buyProView).showWaitLoader(PURCHASE)
     verify(buyProView).launchPurchase()
     verifyNoMoreInteractions(buyProView)
@@ -91,7 +91,7 @@ class BuyProPresenterImplTest {
     buyProPresenterImpl.notifyRestoreClicked()
 
     verify(buyProView).isIabReady()
-    verify(buyProView).isInternetAvailable()
+    verify(buyProView).internetAvailability()
     verify(buyProView).showNoInternetErrorMessage(RESTORE)
     verifyNoMoreInteractions(buyProView)
   }
@@ -103,7 +103,7 @@ class BuyProPresenterImplTest {
     buyProPresenterImpl.notifyRestoreClicked()
 
     verify(buyProView).isIabReady()
-    verify(buyProView).isInternetAvailable()
+    verify(buyProView).internetAvailability()
     verify(buyProView).showWaitLoader(RESTORE)
     verify(buyProView).launchRestore()
     verifyNoMoreInteractions(buyProView)
@@ -227,11 +227,11 @@ class BuyProPresenterImplTest {
   }
 
   private fun stubInternetAvailable() {
-    `when`(buyProView.isInternetAvailable()).thenReturn(true)
+    `when`(buyProView.internetAvailability()).thenReturn(true)
   }
 
   private fun stubInternetNotAvailable() {
-    `when`(buyProView.isInternetAvailable()).thenReturn(false)
+    `when`(buyProView.internetAvailability()).thenReturn(false)
   }
 
   private fun stubSuccessfulUpdateUserPurchaseStatus() {

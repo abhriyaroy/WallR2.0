@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.android.ui.detail
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
@@ -32,8 +33,6 @@ import kotlinx.android.synthetic.main.activity_detail.shareImageLayout
 import kotlinx.android.synthetic.main.activity_detail.slidingPanel
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
-import zebrostudio.wallr100.android.ui.adapters.ImageAdapter.Companion.imageDetails
-import zebrostudio.wallr100.android.ui.adapters.ImageAdapter.Companion.imageType
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
@@ -67,11 +66,11 @@ class DetailActivity : BaseActivity(), DetailView {
     requestCode: Int,
     permissions: Array<String>, grantResults: IntArray
   ) {
-    presenter.notifyPermissionRequestResult(requestCode, permissions, grantResults)
+    presenter.handlePermissionRequestResult(requestCode, permissions, grantResults)
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    presenter.notifyActivityResult(requestCode, resultCode, data)
+    presenter.handleActivityResult(requestCode, resultCode, data)
   }
 
   override fun getWallpaperImageDetails(): ImagePresenterEntity {
@@ -113,7 +112,7 @@ class DetailActivity : BaseActivity(), DetailView {
             target: Target<Drawable>?,
             isFirstResource: Boolean
           ): Boolean {
-            presenter.notifyHighQualityImageLoadFailed()
+            presenter.handleHighQualityImageLoadFailed()
             return false
           }
 
@@ -217,11 +216,21 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   private fun attachClickListeners() {
-    setWallpaperImageLayout.setOnClickListener { presenter.notifyQuickSetClick() }
-    downloadImageLayout.setOnClickListener { presenter.notifyDownloadClick() }
-    crystallizeImageLayout.setOnClickListener { presenter.notifyCrystallizeClick() }
-    editAndSetImageLayout.setOnClickListener { presenter.notifyEditSetClick() }
-    addToCollectionImageLayout.setOnClickListener { presenter.notifyAddToCollectionClick() }
-    shareImageLayout.setOnClickListener { presenter.notifyShareClick() }
+    setWallpaperImageLayout.setOnClickListener { presenter.handleQuickSetClick() }
+    downloadImageLayout.setOnClickListener { presenter.handleDownloadClick() }
+    crystallizeImageLayout.setOnClickListener { presenter.handleCrystallizeClick() }
+    editAndSetImageLayout.setOnClickListener { presenter.handleEditSetClick() }
+    addToCollectionImageLayout.setOnClickListener { presenter.handleAddToCollectionClick() }
+    shareImageLayout.setOnClickListener { presenter.handleShareClick() }
   }
+
+  companion object {
+    var imageDetails = "ImageDetails"
+    var imageType = "ImageType"
+
+    fun getCallingIntent(context: Context): Intent {
+      return Intent(context, DetailActivity::class.java)
+    }
+  }
+
 }

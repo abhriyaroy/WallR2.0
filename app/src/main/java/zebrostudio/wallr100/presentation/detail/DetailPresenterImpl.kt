@@ -39,11 +39,11 @@ class DetailPresenterImpl(
     decorateView()
   }
 
-  override fun notifyHighQualityImageLoadFailed() {
+  override fun handleHighQualityImageLoadFailed() {
     detailView?.showImageLoadError()
   }
 
-  override fun notifyQuickSetClick() {
+  override fun handleQuickSetClick() {
     if (detailView?.hasStoragePermission() == true) {
       quickSetWallpaper()
     } else {
@@ -51,7 +51,7 @@ class DetailPresenterImpl(
     }
   }
 
-  override fun notifyDownloadClick() {
+  override fun handleDownloadClick() {
     if (detailView?.hasStoragePermission() == true) {
       downloadWallpaper()
     } else {
@@ -59,7 +59,7 @@ class DetailPresenterImpl(
     }
   }
 
-  override fun notifyCrystallizeClick() {
+  override fun handleCrystallizeClick() {
     if (detailView?.hasStoragePermission() == true) {
       crystallizeWallpaper()
     } else {
@@ -67,7 +67,7 @@ class DetailPresenterImpl(
     }
   }
 
-  override fun notifyEditSetClick() {
+  override fun handleEditSetClick() {
     if (detailView?.hasStoragePermission() == true) {
       editSetWallpaper()
     } else {
@@ -75,7 +75,7 @@ class DetailPresenterImpl(
     }
   }
 
-  override fun notifyAddToCollectionClick() {
+  override fun handleAddToCollectionClick() {
     if (detailView?.hasStoragePermission() == true) {
       addWallpaperToCollection()
     } else {
@@ -83,8 +83,8 @@ class DetailPresenterImpl(
     }
   }
 
-  override fun notifyShareClick() {
-    if (detailView?.isInternetAvailable() == true) {
+  override fun handleShareClick() {
+    if (detailView?.internetAvailability() == true) {
       if (userPremiumStatusUseCase.isUserPremium()) {
         val link = if (imageType == SEARCH) {
           searchImage.imageQualityUrlPresenterEntity.largeImageLink
@@ -108,7 +108,7 @@ class DetailPresenterImpl(
     }
   }
 
-  override fun notifyPermissionRequestResult(
+  override fun handlePermissionRequestResult(
     requestCode: Int,
     permissions: Array<String>,
     grantResults: IntArray
@@ -127,19 +127,19 @@ class DetailPresenterImpl(
     }
   }
 
-  override fun notifyActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+  override fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     if (requestCode == QUICK_SET.ordinal) {
-      notifyQuickSetClick()
+      handleQuickSetClick()
     } else if (requestCode == DOWNLOAD.ordinal) {
-      notifyDownloadClick()
+      handleDownloadClick()
     } else if (requestCode == CRYSTALLIZE.ordinal) {
-      notifyCrystallizeClick()
+      handleCrystallizeClick()
     } else if (requestCode == EDIT_SET.ordinal) {
-      notifyEditSetClick()
+      handleEditSetClick()
     } else if (requestCode == ADD_TO_COLLECTION.ordinal) {
-      notifyAddToCollectionClick()
+      handleAddToCollectionClick()
     } else if (requestCode == SHARE.ordinal) {
-      notifyShareClick()
+      handleShareClick()
     }
   }
 

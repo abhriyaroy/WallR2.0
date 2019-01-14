@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import com.uber.autodispose.ScopeProvider
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.utils.internetAvailability
+import zebrostudio.wallr100.android.utils.checkDataConnection
 import zebrostudio.wallr100.presentation.BaseView
 
 abstract class BaseActivity : AppCompatActivity(), BaseView {
@@ -25,6 +25,6 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
     return AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)
   }
 
-  override fun isInternetAvailable() = this.internetAvailability()
+  override fun internetAvailability() = this.checkDataConnection()
 
 }
