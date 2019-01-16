@@ -156,16 +156,10 @@ class WallrDataRepository(
     return imageHandler.fetchImage(link)
         .flatMap {
           if (it == imageDownloadProgressFinished) {
-            Observable.just(ImageDownloadModel(it, null))
-          } else {
             Observable.just(ImageDownloadModel(it, imageHandler.getImageBitmap()))
+          } else {
+            Observable.just(ImageDownloadModel(it, null))
           }
-        }
-        .doOnNext {
-          System.out.println("repository onnext")
-        }
-        .doOnComplete{
-          System.out.println("repository oncomplete")
         }
   }
 

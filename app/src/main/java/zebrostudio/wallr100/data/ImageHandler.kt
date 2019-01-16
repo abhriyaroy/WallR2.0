@@ -5,11 +5,11 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import io.reactivex.Observable
 import zebrostudio.wallr100.data.exception.ImageDownloadException
-import java.io.BufferedInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
+import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -27,11 +27,10 @@ class ImageHandlerImpl(
 ) : ImageHandler {
 
   private var shouldContinueFetchingImage: Boolean = true
-  private val byteArraySize = 8192
+  private val byteArraySize = 2048
 
   override fun fetchImage(link: String): Observable<Long> {
     return Observable.create {
-      var downloadImageBitmap: Bitmap? = null
       var connection: HttpURLConnection? = null
       var inputStream: InputStream? = null
       var outputStream: OutputStream? = null
@@ -43,18 +42,18 @@ class ImageHandlerImpl(
         if (length <= 0) {
           it.onError(ImageDownloadException())
         }
-        inputStream = BufferedInputStream(connection.inputStream, byteArraySize)
+        inputStream = connection.inputStream
         outputStream = FileOutputStream(fileHandler.getCacheFile())
-        val bytes = ByteArray(byteArraySize)
-        var count: Int
+        val data = ByteArray(byteArraySize)
+        var count: Int = inputStream.read(data)
         var read: Long = 0
-        while ((inputStream.read(bytes)) != -1) {
-          count = inputStream.read(bytes)
+        while (count != -1) {
           read += count.toLong()
-          outputStream.write(bytes, 0, count)
+          outputStream.write(data, 0, count)
           if (shouldContinueFetchingImage) {
             val progress = (read * 100 / length)
             it.onNext(progress)
+            count = inputStream.read(data)
           } else {
             try {
               connection.disconnect()
@@ -66,6 +65,8 @@ class ImageHandlerImpl(
             }
           }
         }
+      } catch (e: IOException) {
+        it.onError(e)
       } finally {
         connection?.disconnect()
         if (outputStream != null) {

@@ -18,7 +18,8 @@ class FileHandlerImpl : FileHandler {
       File(Environment.getExternalStorageDirectory().path + File.separator + appDirectoryName
           + File.separator + cacheDirectoryName)
   private val cacheFile: File = File(cacheFolder, System.currentTimeMillis().toString())
-  private val modifiedCacheFile: File = File(cacheFolder, System.currentTimeMillis().toString())
+  private val modifiedCacheFile: File =
+      File(cacheFolder, System.currentTimeMillis().toString())
 
   override fun getCacheFile(): File {
     createCacheFolder()

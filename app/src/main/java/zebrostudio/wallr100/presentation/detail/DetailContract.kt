@@ -27,7 +27,7 @@ interface DetailContract {
     fun showGenericErrorMessage()
     fun blurScreenAndInitializeProgressPercentage()
     fun updateProgressPercentage(progress: String)
-    fun showIndefiniteLoader()
+    fun showIndefiniteLoaderWithAnimation(message: String)
     fun hideScreenBlur()
     fun showWallpaperSetSuccessMessage()
     fun showWallpaperSetErrorMessage()

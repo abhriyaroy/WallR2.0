@@ -13,6 +13,8 @@ import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcherImpl
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.ResourceUtilsImpl
+import zebrostudio.wallr100.android.utils.WallpaperSetter
+import zebrostudio.wallr100.android.utils.WallpaperSetterImpl
 import zebrostudio.wallr100.data.FileHandler
 import zebrostudio.wallr100.data.FileHandlerImpl
 import zebrostudio.wallr100.data.SharedPrefsHelper
@@ -93,6 +95,9 @@ class AppModule {
 
   @Provides
   fun provideFileHandler(): FileHandler = FileHandlerImpl()
+
+  @Provides
+  fun providesWallpaperSetter(context: Context): WallpaperSetter = WallpaperSetterImpl(context)
 
   @Provides
   fun provideImageHandler(

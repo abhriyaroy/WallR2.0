@@ -133,5 +133,8 @@
   <string name="share_intent_message">Get high-quality wallpapers for your Android device - WallR</string>
   <string name="share_link_using">Share link using</string>
   <string name="detail_activity_unsuccessful_purchase_error">Purchase not successful. Please try again</string>
+  <string name="detail_activity_set_wallpaper_success_message">Wallpaper has been set!</string>
+  <string name="detail_activity_set_wallpaper_error_message">Couldn\'t set wallpaper</string>
+  <string name="detail_activity_fetch_wallpaper_error_message">Unable to fetch wallpaper. Please try again</string>
 
 </resources>

@@ -1,26 +1,30 @@
 package zebrostudio.wallr100.presentation.detail
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import com.uber.autodispose.autoDisposable
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
-import org.reactivestreams.Subscriber
-import org.reactivestreams.Subscription
+import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
+import zebrostudio.wallr100.android.utils.WallpaperSetter
+import zebrostudio.wallr100.data.exception.ImageDownloadException
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
-import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
 import zebrostudio.wallr100.presentation.detail.ActionType.*
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 
 class DetailPresenterImpl(
+  private var context: Context,
   private var imageOptionsUseCase: ImageOptionsUseCase,
-  private var userPremiumStatusUseCase: UserPremiumStatusUseCase
+  private var userPremiumStatusUseCase: UserPremiumStatusUseCase,
+  private val wallpaperSetter: WallpaperSetter
 ) : DetailContract.DetailPresenter {
 
   private var detailView: DetailContract.DetailView? = null
@@ -197,29 +201,22 @@ class DetailPresenterImpl(
     }
     imageOptionsUseCase.quickSetImageObservable(imageDownloadLink)
         .autoDisposable(detailView?.getScope()!!)
-        .subscribe(object : Observer<ImageDownloadModel> {
-
-          override fun onComplete() {
-            System.out.println("subcreiber oncomplete")
-          }
-
-          override fun onSubscribe(d: Disposable) {
-
-          }
-
-          override fun onNext(t: ImageDownloadModel) {
-            System.out.println("subcreiber onNext")
-            downloadProgress = t.progress
-            if (downloadProgress == downloadCompletedValue) {
-              detailView?.showIndefiniteLoader()
+        .subscribe({
+          val progress = it.progress
+          detailView?.updateProgressPercentage("$progress%")
+          if (it.progress == downloadCompletedValue) {
+            if (wallpaperSetter.setWallpaper(it.imageBitmap)) {
+              detailView?.showWallpaperSetSuccessMessage()
             } else {
-              detailView?.updateProgressPercentage("$downloadProgress%")
+              detailView?.showUnsuccessfulPurchaseError()
             }
+            detailView?.hideScreenBlur()
           }
-
-          override fun onError(e: Throwable) {
-
+        }, {
+          if (it is ImageDownloadException) {
+            detailView?.showUnableToDownloadErrorMessage()
           }
+        }, {
 
         })
   }

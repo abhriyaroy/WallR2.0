@@ -10,6 +10,8 @@ android {
     applicationId "zebrostudio.wallr100"
     minSdkVersion MINIMUM_SDK_VERSION
     targetSdkVersion TARGET_SDK_VERSION
+    renderscriptTargetApi RENDER_SCRIPT_VERSION
+    renderscriptSupportModeEnabled true
     versionCode APP_VERSION
     versionName "$APP_VERSION_NAME"
   }

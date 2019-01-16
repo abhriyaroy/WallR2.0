@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -20,21 +22,31 @@ import com.bumptech.glide.request.target.Target
 import com.github.zagum.expandicon.ExpandIconView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.android.AndroidInjection
+import eightbitlab.com.blurview.RenderScriptBlur
 import kotlinx.android.synthetic.main.activity_detail.addToCollectionImageLayout
 import kotlinx.android.synthetic.main.activity_detail.authorImage
 import kotlinx.android.synthetic.main.activity_detail.authorName
+import kotlinx.android.synthetic.main.activity_detail.blurView
 import kotlinx.android.synthetic.main.activity_detail.crystallizeImageLayout
 import kotlinx.android.synthetic.main.activity_detail.downloadImageLayout
 import kotlinx.android.synthetic.main.activity_detail.editAndSetImageLayout
 import kotlinx.android.synthetic.main.activity_detail.expandIconView
 import kotlinx.android.synthetic.main.activity_detail.imageView
+import kotlinx.android.synthetic.main.activity_detail.loadingHintBelowProgressPercentage
+import kotlinx.android.synthetic.main.activity_detail.loadingHintBelowProgressSpinkit
+import kotlinx.android.synthetic.main.activity_detail.parentFrameLayout
 import kotlinx.android.synthetic.main.activity_detail.setWallpaperImageLayout
 import kotlinx.android.synthetic.main.activity_detail.shareImageLayout
 import kotlinx.android.synthetic.main.activity_detail.slidingPanel
+import kotlinx.android.synthetic.main.activity_detail.wallpaperActionProgressPercentage
+import kotlinx.android.synthetic.main.activity_detail.wallpaperActionProgressSpinkit
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.utils.errorToast
+import zebrostudio.wallr100.android.utils.gone
+import zebrostudio.wallr100.android.utils.successToast
+import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.detail.ActionType
 import zebrostudio.wallr100.presentation.detail.DetailContract.DetailPresenter
@@ -50,6 +62,7 @@ class DetailActivity : BaseActivity(), DetailView {
   private var materialProgressLoader: MaterialDialog? = null
   private val slidingPanelParallelOffset = 40
   private val initialLoaderProgress = 0
+  private val blurRadius: Float = 8F
 
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)
@@ -60,6 +73,7 @@ class DetailActivity : BaseActivity(), DetailView {
         intent.getSerializableExtra(imageType) as ImageListType)
     setUpExpandPanel()
     attachClickListeners()
+    setUpBlurView()
   }
 
   override fun onRequestPermissionsResult(
@@ -199,31 +213,56 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun blurScreenAndInitializeProgressPercentage() {
-
+    blurView.visible()
+    wallpaperActionProgressPercentage.visible()
+    loadingHintBelowProgressPercentage.text =
+        getString(R.string.detail_activity_grabbing_best_quality_wallpaper_message)
+    loadingHintBelowProgressPercentage.visible()
   }
 
   override fun hideScreenBlur() {
-
+    blurView.gone()
   }
 
-  override fun showIndefiniteLoader() {
+  override fun showIndefiniteLoaderWithAnimation(message: String) {
+    val exitAnimation = AnimationUtils.loadAnimation(this, R.anim.text_slide_in_up)
+    exitAnimation.fillAfter = true
+    val entryAnimation = AnimationUtils.loadAnimation(this, R.anim.text_slide_out_down)
+    entryAnimation.fillAfter = true
+    exitAnimation.setAnimationListener(object : Animation.AnimationListener {
+      override fun onAnimationRepeat(animation: Animation?) {
+        // Do Nothing
+      }
 
+      override fun onAnimationEnd(animation: Animation?) {
+        loadingHintBelowProgressSpinkit.text = message
+        wallpaperActionProgressSpinkit.startAnimation(entryAnimation)
+        loadingHintBelowProgressSpinkit.startAnimation(entryAnimation)
+      }
+
+      override fun onAnimationStart(animation: Animation?) {
+        // Do Nothing
+      }
+
+    })
+    wallpaperActionProgressPercentage.startAnimation(exitAnimation)
+    loadingHintBelowProgressPercentage.startAnimation(exitAnimation)
   }
 
   override fun showUnableToDownloadErrorMessage() {
-
+    errorToast(getString(R.string.detail_activity_fetch_wallpaper_error_message))
   }
 
   override fun showWallpaperSetErrorMessage() {
-
+    errorToast(getString(R.string.detail_activity_set_wallpaper_error_message))
   }
 
   override fun showWallpaperSetSuccessMessage() {
-
+    successToast(getString(R.string.detail_activity_set_wallpaper_success_message))
   }
 
   override fun updateProgressPercentage(progress: String) {
-
+    wallpaperActionProgressPercentage.text = progress
   }
 
   private fun setUpExpandPanel() {
@@ -255,6 +294,11 @@ class DetailActivity : BaseActivity(), DetailView {
     editAndSetImageLayout.setOnClickListener { presenter.handleEditSetClick() }
     addToCollectionImageLayout.setOnClickListener { presenter.handleAddToCollectionClick() }
     shareImageLayout.setOnClickListener { presenter.handleShareClick() }
+  }
+
+  private fun setUpBlurView() {
+    blurView.setupWith(parentFrameLayout).setBlurAlgorithm(RenderScriptBlur(this))
+        .setBlurRadius(blurRadius)
   }
 
   companion object {
