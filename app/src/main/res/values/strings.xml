@@ -132,5 +132,6 @@
     Unable to fetch shareable link. Please ensure you have a working internet connection</string>
   <string name="share_intent_message">Get high-quality wallpapers for your Android device - WallR</string>
   <string name="share_link_using">Share link using</string>
+  <string name="detail_activity_unsuccessful_purchase_error">Purchase not successful. Please try again</string>
 
 </resources>

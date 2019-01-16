@@ -19,6 +19,7 @@ interface DetailContract {
     fun requestStoragePermission(actionType: ActionType)
     fun showPermissionRequiredMessage()
     fun showNoInternetToShareError()
+    fun showUnsuccessfulPurchaseError()
     fun shareLink(shortLink: String)
     fun showWaitLoader(message: String)
     fun hideWaitLoader()

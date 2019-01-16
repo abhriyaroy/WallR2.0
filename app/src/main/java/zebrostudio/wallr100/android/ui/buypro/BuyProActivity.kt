@@ -9,6 +9,7 @@ import com.zebrostudio.librarypurchaseflow.IabHelper
 import com.zebrostudio.librarypurchaseflow.IabHelper.OnIabPurchaseFinishedListener
 import com.zebrostudio.librarypurchaseflow.IabHelper.QueryInventoryFinishedListener
 import dagger.android.AndroidInjection
+import kotlinx.android.synthetic.main.activity_buy_pro.backButtonPro
 import kotlinx.android.synthetic.main.activity_buy_pro.buyProFeatures
 import kotlinx.android.synthetic.main.activity_buy_pro.proLogo
 import kotlinx.android.synthetic.main.activity_buy_pro.purchaseButton
@@ -219,6 +220,10 @@ class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
 
     restoreButton.setOnClickListener {
       buyProPresenter.handleRestoreClicked()
+    }
+
+    backButtonPro.setOnClickListener {
+      onBackPressed()
     }
   }
 

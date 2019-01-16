@@ -7,6 +7,7 @@ import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import org.reactivestreams.Subscriber
 import org.reactivestreams.Subscription
+import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
@@ -137,18 +138,30 @@ class DetailPresenterImpl(
   }
 
   override fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    if (requestCode == QUICK_SET.ordinal) {
-      handleQuickSetClick()
-    } else if (requestCode == DOWNLOAD.ordinal) {
-      handleDownloadClick()
+    if (requestCode == DOWNLOAD.ordinal) {
+      if (resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
+        handleDownloadClick()
+      } else {
+        detailView?.showUnsuccessfulPurchaseError()
+      }
     } else if (requestCode == CRYSTALLIZE.ordinal) {
-      handleCrystallizeClick()
-    } else if (requestCode == EDIT_SET.ordinal) {
-      handleEditSetClick()
+      if (resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
+        handleCrystallizeClick()
+      } else {
+        detailView?.showUnsuccessfulPurchaseError()
+      }
     } else if (requestCode == ADD_TO_COLLECTION.ordinal) {
-      handleAddToCollectionClick()
+      if (resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
+        handleAddToCollectionClick()
+      } else {
+        detailView?.showUnsuccessfulPurchaseError()
+      }
     } else if (requestCode == SHARE.ordinal) {
-      handleShareClick()
+      if (resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
+        handleShareClick()
+      } else {
+        detailView?.showUnsuccessfulPurchaseError()
+      }
     }
   }
 

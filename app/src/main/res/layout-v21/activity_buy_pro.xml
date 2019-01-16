@@ -35,6 +35,7 @@
             android:layout_marginTop="@dimen/buy_pro_back_button_margin_top"
             android:elevation="@dimen/buy_pro_back_button_elevation"
             android:src="@drawable/ic_back_arrow_white"
+            android:background="?android:selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"/>
 

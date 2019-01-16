@@ -70,6 +70,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
     presenter.handleActivityResult(requestCode, resultCode, data)
   }
 
@@ -158,6 +159,10 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun showNoInternetToShareError() {
     errorToast(getString(R.string.detail_activity_share_error))
+  }
+
+  override fun showUnsuccessfulPurchaseError() {
+    errorToast(getString(R.string.detail_activity_unsuccessful_purchase_error))
   }
 
   override fun shareLink(shortLink: String) {
