@@ -1,7 +1,9 @@
 package zebrostudio.wallr100.domain
 
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
+import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
 
@@ -29,6 +31,7 @@ interface WallrRepository {
   fun getPeoplePictures(): Single<List<ImageModel>>
   fun getTechnologyPictures(): Single<List<ImageModel>>
 
+  fun quickSetWallpaper(link: String): Observable<ImageDownloadModel>
   fun getShortImageLink(link: String): Single<String>
 
 }

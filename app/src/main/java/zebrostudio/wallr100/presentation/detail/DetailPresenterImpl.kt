@@ -3,8 +3,14 @@ package zebrostudio.wallr100.presentation.detail
 import android.content.Intent
 import android.content.pm.PackageManager
 import com.uber.autodispose.autoDisposable
+import io.reactivex.Observer
+import io.reactivex.disposables.Disposable
+import org.reactivestreams.Subscriber
+import org.reactivestreams.Subscription
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
+import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
+import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.detail.ActionType.*
@@ -20,6 +26,9 @@ class DetailPresenterImpl(
   private lateinit var imageType: ImageListType
   private lateinit var wallpaperImage: ImagePresenterEntity
   private lateinit var searchImage: SearchPicturesPresenterEntity
+  private val downloadCompletedValue: Long = 100
+  private val downloadStartedValue: Long = 0
+  private var downloadProgress: Long = 0
 
   override fun attachView(view: DetailContract.DetailView) {
     detailView = view
@@ -167,7 +176,39 @@ class DetailPresenterImpl(
   }
 
   private fun quickSetWallpaper() {
-    // To be implemented later
+    downloadProgress = downloadStartedValue
+    detailView?.blurScreenAndInitializeProgressPercentage()
+    val imageDownloadLink = when (imageType) {
+      SEARCH -> searchImage.imageQualityUrlPresenterEntity.largeImageLink
+      else -> wallpaperImage.imageLink.large
+    }
+    imageOptionsUseCase.quickSetImageObservable(imageDownloadLink)
+        .autoDisposable(detailView?.getScope()!!)
+        .subscribe(object : Observer<ImageDownloadModel> {
+
+          override fun onComplete() {
+            System.out.println("subcreiber oncomplete")
+          }
+
+          override fun onSubscribe(d: Disposable) {
+
+          }
+
+          override fun onNext(t: ImageDownloadModel) {
+            System.out.println("subcreiber onNext")
+            downloadProgress = t.progress
+            if (downloadProgress == downloadCompletedValue) {
+              detailView?.showIndefiniteLoader()
+            } else {
+              detailView?.updateProgressPercentage("$downloadProgress%")
+            }
+          }
+
+          override fun onError(e: Throwable) {
+
+          }
+
+        })
   }
 
   private fun downloadWallpaper() {

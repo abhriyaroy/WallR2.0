@@ -1,21 +1,25 @@
 package zebrostudio.wallr100.data
 
+import android.os.Environment
 import com.google.firebase.database.DatabaseReference
 import com.google.gson.Gson
 import com.pddstudio.urlshortener.URLShortener
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.NoResultFoundException
+import zebrostudio.wallr100.data.exception.NotEnoughFreeSpaceException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.firebasedatabase.FirebaseImageEntity
 import zebrostudio.wallr100.domain.WallrRepository
+import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
 import java.util.concurrent.TimeUnit.*
@@ -27,7 +31,8 @@ class WallrDataRepository(
   private var unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
   private var firebaseDatabaseHelper: FirebaseDatabaseHelper,
   private var firebasePictureEntityMapper: FirebasePictureEntityMapper,
-  private var urlShortener: URLShortener
+  private var urlShortener: URLShortener,
+  private var imageHandler: ImageHandler
 ) : WallrRepository {
 
   private val purchasePreferenceName = "PURCHASE_PREF"
@@ -48,6 +53,9 @@ class WallrDataRepository(
   private val childPathPeople = "people"
   private val childPathTechnology = "technology"
   private val firebaseTimeoutDuration = 15
+  private val minimumFreeStorageSpaceInMb = 20
+  private val bytesToMegaBytes = 1048576
+  private val imageDownloadProgressFinished: Long = 100
 
   override fun authenticatePurchase(
     packageName: String,
@@ -141,6 +149,26 @@ class WallrDataRepository(
         .child(childPathTechnology))
   }
 
+  override fun quickSetWallpaper(link: String): Observable<ImageDownloadModel> {
+    if (!freeSpaceAvailability()) {
+      return Observable.error(NotEnoughFreeSpaceException())
+    }
+    return imageHandler.fetchImage(link)
+        .flatMap {
+          if (it == imageDownloadProgressFinished) {
+            Observable.just(ImageDownloadModel(it, null))
+          } else {
+            Observable.just(ImageDownloadModel(it, imageHandler.getImageBitmap()))
+          }
+        }
+        .doOnNext {
+          System.out.println("repository onnext")
+        }
+        .doOnComplete{
+          System.out.println("repository oncomplete")
+        }
+  }
+
   override fun getShortImageLink(link: String): Single<String> {
     return Single.create {
       it.onSuccess(urlShortener.shortUrl(link))
@@ -172,5 +200,11 @@ class WallrDataRepository(
           Single.just(image)
         }
         .timeout(firebaseTimeoutDuration.toLong(), SECONDS)
+  }
+
+  private fun freeSpaceAvailability(): Boolean {
+    val bytesAvailable = Environment.getExternalStorageDirectory().freeSpace
+    val megBytesAvailable = bytesAvailable / bytesToMegaBytes
+    return megBytesAvailable > minimumFreeStorageSpaceInMb
   }
 }

@@ -193,6 +193,34 @@ class DetailActivity : BaseActivity(), DetailView {
     errorToast(getString(R.string.generic_error_message))
   }
 
+  override fun blurScreenAndInitializeProgressPercentage() {
+
+  }
+
+  override fun hideScreenBlur() {
+
+  }
+
+  override fun showIndefiniteLoader() {
+
+  }
+
+  override fun showUnableToDownloadErrorMessage() {
+
+  }
+
+  override fun showWallpaperSetErrorMessage() {
+
+  }
+
+  override fun showWallpaperSetSuccessMessage() {
+
+  }
+
+  override fun updateProgressPercentage(progress: String) {
+
+  }
+
   private fun setUpExpandPanel() {
     expandIconView.setState(ExpandIconView.LESS, false)
     slidingPanel.setParallaxOffset(slidingPanelParallelOffset)

@@ -74,6 +74,7 @@ android {
     // Sliding up panel
     implementation "com.sothree.slidinguppanel:library:$SLIDING_UP_PANEL_VERSION"
     implementation "de.hdodenhof:circleimageview:$CIRCLE_IMAGEVIEW_VERSION"
+    // BlurView
     implementation "com.eightbitlab:blurview:$BLURVIEW_VERSION"
     // Module dependencies
     implementation project(':libraryGuillotineMenu')

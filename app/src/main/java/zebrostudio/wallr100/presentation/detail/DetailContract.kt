@@ -24,6 +24,13 @@ interface DetailContract {
     fun hideWaitLoader()
     fun redirectToBuyPro(requestCode: Int)
     fun showGenericErrorMessage()
+    fun blurScreenAndInitializeProgressPercentage()
+    fun updateProgressPercentage(progress: String)
+    fun showIndefiniteLoader()
+    fun hideScreenBlur()
+    fun showWallpaperSetSuccessMessage()
+    fun showWallpaperSetErrorMessage()
+    fun showUnableToDownloadErrorMessage()
   }
 
   interface DetailPresenter : BasePresenter<DetailView> {
@@ -38,6 +45,7 @@ interface DetailContract {
     fun handlePermissionRequestResult(
       requestCode: Int, permissions: Array<String>, grantResults: IntArray
     )
+
     fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
   }
 }

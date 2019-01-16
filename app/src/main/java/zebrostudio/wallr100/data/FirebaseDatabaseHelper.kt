@@ -1,5 +1,7 @@
 package zebrostudio.wallr100.data
 
+import android.content.Context
+import com.google.firebase.FirebaseApp
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -15,12 +17,13 @@ interface FirebaseDatabaseHelper {
   fun fetch(databaseReference: DatabaseReference): Single<Map<String, String>>
 }
 
-class FirebaseDatabaseHelperImpl : FirebaseDatabaseHelper {
+class FirebaseDatabaseHelperImpl(private var context: Context) : FirebaseDatabaseHelper {
 
   private var firebaseDatabase: FirebaseDatabase? = null
 
   override fun getDatabase(): FirebaseDatabase {
     if (firebaseDatabase == null) {
+      FirebaseApp.initializeApp(context)
       firebaseDatabase = FirebaseDatabase.getInstance()
     }
     return firebaseDatabase as FirebaseDatabase

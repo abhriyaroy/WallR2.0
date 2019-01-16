@@ -13,11 +13,15 @@ import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcherImpl
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.ResourceUtilsImpl
+import zebrostudio.wallr100.data.FileHandler
+import zebrostudio.wallr100.data.FileHandlerImpl
 import zebrostudio.wallr100.data.SharedPrefsHelper
 import zebrostudio.wallr100.data.SharedPrefsHelperImpl
 import zebrostudio.wallr100.data.WallrDataRepository
 import zebrostudio.wallr100.data.FirebaseDatabaseHelper
 import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl
+import zebrostudio.wallr100.data.ImageHandler
+import zebrostudio.wallr100.data.ImageHandlerImpl
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactoryImpl
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
@@ -62,7 +66,8 @@ class AppModule {
 
   @Provides
   @PerApplication
-  fun provideFirebaseDatabaseHelper(): FirebaseDatabaseHelper = FirebaseDatabaseHelperImpl()
+  fun provideFirebaseDatabaseHelper(context: Context): FirebaseDatabaseHelper =
+      FirebaseDatabaseHelperImpl(context)
 
   @Provides
   @PerApplication
@@ -84,7 +89,16 @@ class AppModule {
   fun provideFirebasePictureEntityMapper(): FirebasePictureEntityMapper = FirebasePictureEntityMapper()
 
   @Provides
-  fun urlShortener(): URLShortener = URLShortenerImpl()
+  fun provideUrlShorterner(): URLShortener = URLShortenerImpl()
+
+  @Provides
+  fun provideFileHandler(): FileHandler = FileHandlerImpl()
+
+  @Provides
+  fun provideImageHandler(
+    context: Context,
+    fileHandler: FileHandler
+  ): ImageHandler = ImageHandlerImpl(context, fileHandler)
 
   @Provides
   @PerApplication
@@ -95,14 +109,16 @@ class AppModule {
     unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
     firebaseDatabaseHelper: FirebaseDatabaseHelper,
     firebasePictureEntityMapper: FirebasePictureEntityMapper,
-    urlShortener: URLShortener
+    urlShortener: URLShortener,
+    imageHandler: ImageHandler
   ): WallrRepository = WallrDataRepository(retrofitFirebaseAuthFactory,
       unsplashClientFactory,
       sharedPrefsHelper,
       unsplashPictureEntityMapper,
       firebaseDatabaseHelper,
       firebasePictureEntityMapper,
-      urlShortener)
+      urlShortener,
+      imageHandler)
 
   @Provides
   @PerApplication
