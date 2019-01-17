@@ -2,14 +2,6 @@ apply plugin: 'com.android.library'
 apply from: "../versions.gradle"
 
 android {
-  signingConfigs {
-    config {
-      keyAlias 'wallr#key'
-      keyPassword 'Iownaxolo7!'
-      storeFile file('C:/Users/Abhriya Roy/Downloads/wallrkey.jks')
-      storePassword 'Iownaxolo7!'
-    }
-  }
   compileSdkVersion COMPILE_SDK_VERSION
   buildToolsVersion BUILD_TOOLS_VERSION
   defaultConfig {

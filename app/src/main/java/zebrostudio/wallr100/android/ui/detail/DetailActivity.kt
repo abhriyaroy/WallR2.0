@@ -234,9 +234,9 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showIndefiniteLoaderWithAnimation(message: String) {
-    val exitAnimation = AnimationUtils.loadAnimation(this, R.anim.text_slide_in_up)
+    val exitAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_up_fade_out)
     exitAnimation.fillAfter = true
-    val entryAnimation = AnimationUtils.loadAnimation(this, R.anim.text_slide_out_down)
+    val entryAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_up_fade_in)
     entryAnimation.fillAfter = true
     exitAnimation.setAnimationListener(object : Animation.AnimationListener {
       override fun onAnimationRepeat(animation: Animation?) {
