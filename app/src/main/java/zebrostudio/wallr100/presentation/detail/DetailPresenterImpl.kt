@@ -32,8 +32,11 @@ class DetailPresenterImpl(
   private lateinit var wallpaperImage: ImagePresenterEntity
   private lateinit var searchImage: SearchPicturesPresenterEntity
   private val downloadCompletedValue: Long = 100
+  private val showIndefiniteLoaderAtProgressValue: Long = 99
   private val downloadStartedValue: Long = 0
   private var downloadProgress: Long = 0
+  private var isDownloadInProgress: Boolean = false
+  private var isImageOperationInProgress: Boolean = false
 
   override fun attachView(view: DetailContract.DetailView) {
     detailView = view
@@ -122,6 +125,25 @@ class DetailPresenterImpl(
     }
   }
 
+  override fun handleBackButtonClick() {
+    if (isDownloadInProgress) {
+      imageOptionsUseCase.cancelImageFetching()
+      isDownloadInProgress = false
+      detailView?.hideScreenBlur()
+      detailView?.showDownloadWallpaperCancelledMessage()
+    } else if (isImageOperationInProgress) {
+      detailView?.showWallpaperOperationInProgressWaitMessage()
+    } else {
+      imageOptionsUseCase.clearCachesCompletable()
+          .autoDisposable(detailView?.getScope()!!)
+          .subscribe({
+            detailView?.exitView()
+          }, {
+            detailView?.exitView()
+          })
+    }
+  }
+
   override fun handlePermissionRequestResult(
     requestCode: Int,
     permissions: Array<String>,
@@ -199,24 +221,49 @@ class DetailPresenterImpl(
       SEARCH -> searchImage.imageQualityUrlPresenterEntity.largeImageLink
       else -> wallpaperImage.imageLink.large
     }
-    imageOptionsUseCase.quickSetImageObservable(imageDownloadLink)
+    imageOptionsUseCase.fetchImageBitmapObservable(imageDownloadLink)
         .autoDisposable(detailView?.getScope()!!)
-        .subscribe({
-          val progress = it.progress
-          detailView?.updateProgressPercentage("$progress%")
-          if (it.progress == downloadCompletedValue) {
-            if (wallpaperSetter.setWallpaper(it.imageBitmap)) {
-              detailView?.showWallpaperSetSuccessMessage()
+        .subscribe(object : Observer<ImageDownloadModel> {
+          override fun onComplete() {
+            isDownloadInProgress = false
+          }
+
+          override fun onSubscribe(d: Disposable) {
+            isDownloadInProgress = true
+          }
+
+          override fun onNext(it: ImageDownloadModel) {
+            val progress = it.progress
+            if (progress == showIndefiniteLoaderAtProgressValue) {
+              detailView?.updateProgressPercentage("$downloadCompletedValue%")
+              val message = if (imageType == WALLPAPERS) {
+                context.getString(R.string.detail_activity_finalising_wallpaper_messsage)
+              } else {
+                context.getString(R.string.detail_activity_setting_up_resources_message)
+              }
+              detailView?.showIndefiniteLoaderWithAnimation(message)
+            } else if (progress == downloadCompletedValue) {
+              isImageOperationInProgress = true
+              if (wallpaperSetter.setWallpaper(it.imageBitmap)) {
+                detailView?.showWallpaperSetSuccessMessage()
+              } else {
+                detailView?.showWallpaperSetErrorMessage()
+              }
+              isImageOperationInProgress = false
+              detailView?.hideScreenBlur()
             } else {
-              detailView?.showUnsuccessfulPurchaseError()
+              detailView?.updateProgressPercentage("$progress%")
+            }
+          }
+
+          override fun onError(throwable: Throwable) {
+            if (throwable is ImageDownloadException) {
+              detailView?.showUnableToDownloadErrorMessage()
+            } else {
+              detailView?.showGenericErrorMessage()
             }
             detailView?.hideScreenBlur()
           }
-        }, {
-          if (it is ImageDownloadException) {
-            detailView?.showUnableToDownloadErrorMessage()
-          }
-        }, {
 
         })
   }

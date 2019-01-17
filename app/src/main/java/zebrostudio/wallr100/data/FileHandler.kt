@@ -7,6 +7,7 @@ interface FileHandler {
 
   fun getCacheFile(): File
   fun getModifiedCacheFile(): File
+  fun deleteCacheFiles()
 
 }
 
@@ -35,6 +36,14 @@ class FileHandlerImpl : FileHandler {
       modifiedCacheFile.createNewFile()
     }
     return modifiedCacheFile
+  }
+
+  override fun deleteCacheFiles() {
+    if (cacheFile.exists()) {
+      cacheFile.delete()
+    }
+    if (modifiedCacheFile.exists())
+      modifiedCacheFile.delete()
   }
 
   private fun createCacheFolder() {

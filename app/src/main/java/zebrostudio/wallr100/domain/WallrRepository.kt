@@ -31,7 +31,9 @@ interface WallrRepository {
   fun getPeoplePictures(): Single<List<ImageModel>>
   fun getTechnologyPictures(): Single<List<ImageModel>>
 
-  fun quickSetWallpaper(link: String): Observable<ImageDownloadModel>
+  fun getImageBitmap(link: String): Observable<ImageDownloadModel>
   fun getShortImageLink(link: String): Single<String>
+  fun clearImageCaches() : Completable
+  fun cancelImageBitmapFetchOperation()
 
 }

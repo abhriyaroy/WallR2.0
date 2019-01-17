@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -26,6 +27,7 @@ import eightbitlab.com.blurview.RenderScriptBlur
 import kotlinx.android.synthetic.main.activity_detail.addToCollectionImageLayout
 import kotlinx.android.synthetic.main.activity_detail.authorImage
 import kotlinx.android.synthetic.main.activity_detail.authorName
+import kotlinx.android.synthetic.main.activity_detail.backIcon
 import kotlinx.android.synthetic.main.activity_detail.blurView
 import kotlinx.android.synthetic.main.activity_detail.crystallizeImageLayout
 import kotlinx.android.synthetic.main.activity_detail.downloadImageLayout
@@ -45,6 +47,7 @@ import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
+import zebrostudio.wallr100.android.utils.infoToast
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
@@ -62,6 +65,7 @@ class DetailActivity : BaseActivity(), DetailView {
   private var materialProgressLoader: MaterialDialog? = null
   private val slidingPanelParallelOffset = 40
   private val initialLoaderProgress = 0
+  private val initialLoaderProgressPercentage = "0%"
   private val blurRadius: Float = 8F
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,6 +90,10 @@ class DetailActivity : BaseActivity(), DetailView {
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     presenter.handleActivityResult(requestCode, resultCode, data)
+  }
+
+  override fun onBackPressed() {
+    presenter.handleBackButtonClick()
   }
 
   override fun getWallpaperImageDetails(): ImagePresenterEntity {
@@ -214,6 +222,7 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun blurScreenAndInitializeProgressPercentage() {
     blurView.visible()
+    wallpaperActionProgressPercentage.text = initialLoaderProgressPercentage
     wallpaperActionProgressPercentage.visible()
     loadingHintBelowProgressPercentage.text =
         getString(R.string.detail_activity_grabbing_best_quality_wallpaper_message)
@@ -238,6 +247,8 @@ class DetailActivity : BaseActivity(), DetailView {
         loadingHintBelowProgressSpinkit.text = message
         wallpaperActionProgressSpinkit.startAnimation(entryAnimation)
         loadingHintBelowProgressSpinkit.startAnimation(entryAnimation)
+        wallpaperActionProgressSpinkit.visible()
+        loadingHintBelowProgressSpinkit.visible()
       }
 
       override fun onAnimationStart(animation: Animation?) {
@@ -263,6 +274,19 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun updateProgressPercentage(progress: String) {
     wallpaperActionProgressPercentage.text = progress
+  }
+
+  override fun showWallpaperOperationInProgressWaitMessage() {
+    infoToast(getString(R.string.detail_activity_finalizing_stuff_wait_message), Toast.LENGTH_SHORT)
+  }
+
+  override fun showDownloadWallpaperCancelledMessage() {
+    infoToast(getString(R.string.detail_activity_wallpaper_download_cancelled_message))
+  }
+
+  override fun exitView() {
+    this.finish()
+    overridePendingTransition(R.anim.no_change, R.anim.slide_to_right)
   }
 
   private fun setUpExpandPanel() {
@@ -294,6 +318,7 @@ class DetailActivity : BaseActivity(), DetailView {
     editAndSetImageLayout.setOnClickListener { presenter.handleEditSetClick() }
     addToCollectionImageLayout.setOnClickListener { presenter.handleAddToCollectionClick() }
     shareImageLayout.setOnClickListener { presenter.handleShareClick() }
+    backIcon.setOnClickListener { presenter.handleBackButtonClick() }
   }
 
   private fun setUpBlurView() {

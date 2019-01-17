@@ -32,6 +32,9 @@ interface DetailContract {
     fun showWallpaperSetSuccessMessage()
     fun showWallpaperSetErrorMessage()
     fun showUnableToDownloadErrorMessage()
+    fun showWallpaperOperationInProgressWaitMessage()
+    fun showDownloadWallpaperCancelledMessage()
+    fun exitView()
   }
 
   interface DetailPresenter : BasePresenter<DetailView> {
@@ -43,6 +46,7 @@ interface DetailContract {
     fun handleEditSetClick()
     fun handleAddToCollectionClick()
     fun handleShareClick()
+    fun handleBackButtonClick()
     fun handlePermissionRequestResult(
       requestCode: Int, permissions: Array<String>, grantResults: IntArray
     )

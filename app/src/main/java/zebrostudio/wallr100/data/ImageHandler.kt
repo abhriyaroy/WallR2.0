@@ -3,21 +3,23 @@ package zebrostudio.wallr100.data
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import io.reactivex.Completable
 import io.reactivex.Observable
 import zebrostudio.wallr100.data.exception.ImageDownloadException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
 
 interface ImageHandler {
 
+  fun isImageCached(link: String): Boolean
   fun fetchImage(link: String): Observable<Long>
   fun cancelFetchingImage()
   fun getImageBitmap(): Bitmap
+  fun clearImageCache(): Completable
 
 }
 
@@ -28,6 +30,12 @@ class ImageHandlerImpl(
 
   private var shouldContinueFetchingImage: Boolean = true
   private val byteArraySize = 2048
+  private val downloadProgressCompletedValue: Long = 100
+  private var imageCacheTracker: Pair<Boolean, String> = Pair(false, "")
+
+  override fun isImageCached(link: String): Boolean {
+    return (imageCacheTracker.first && (imageCacheTracker.second == link))
+  }
 
   override fun fetchImage(link: String): Observable<Long> {
     return Observable.create {
@@ -35,6 +43,7 @@ class ImageHandlerImpl(
       var inputStream: InputStream? = null
       var outputStream: OutputStream? = null
       shouldContinueFetchingImage = true
+      imageCacheTracker = Pair(false, "")
       try {
         connection = URL(link).openConnection() as HttpURLConnection
         connection.connect()
@@ -52,27 +61,21 @@ class ImageHandlerImpl(
           outputStream.write(data, 0, count)
           if (shouldContinueFetchingImage) {
             val progress = (read * 100 / length)
+            if (progress == downloadProgressCompletedValue) {
+              imageCacheTracker = Pair(true, link)
+            }
             it.onNext(progress)
             count = inputStream.read(data)
           } else {
-            try {
-              connection.disconnect()
-              outputStream.flush()
-              outputStream.close()
-              inputStream.close()
-            } catch (e: IOException) {
-              it.onError(e)
-            }
+            break
           }
         }
       } catch (e: IOException) {
         it.onError(e)
       } finally {
         connection?.disconnect()
-        if (outputStream != null) {
-          outputStream.flush()
-          outputStream.close()
-        }
+        outputStream?.flush()
+        outputStream?.close()
         inputStream?.close()
         it.onComplete()
       }
@@ -89,8 +92,11 @@ class ImageHandlerImpl(
     return BitmapFactory.decodeFile(fileHandler.getCacheFile().path, options)
   }
 
-  private fun createFiles() {
-
+  override fun clearImageCache(): Completable {
+    return Completable.create {
+      fileHandler.deleteCacheFiles()
+      it.onComplete()
+    }
   }
 
 }

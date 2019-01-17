@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.data
 
 import android.os.Environment
+import android.os.Looper
 import com.google.firebase.database.DatabaseReference
 import com.google.gson.Gson
 import com.pddstudio.urlshortener.URLShortener
@@ -149,9 +150,13 @@ class WallrDataRepository(
         .child(childPathTechnology))
   }
 
-  override fun quickSetWallpaper(link: String): Observable<ImageDownloadModel> {
+  override fun getImageBitmap(link: String): Observable<ImageDownloadModel> {
     if (!freeSpaceAvailability()) {
       return Observable.error(NotEnoughFreeSpaceException())
+    }
+    if (imageHandler.isImageCached(link)) {
+      return Observable.just(
+          ImageDownloadModel(imageDownloadProgressFinished, imageHandler.getImageBitmap()))
     }
     return imageHandler.fetchImage(link)
         .flatMap {
@@ -167,6 +172,14 @@ class WallrDataRepository(
     return Single.create {
       it.onSuccess(urlShortener.shortUrl(link))
     }
+  }
+
+  override fun clearImageCaches(): Completable {
+    return imageHandler.clearImageCache()
+  }
+
+  override fun cancelImageBitmapFetchOperation() {
+    imageHandler.cancelFetchingImage()
   }
 
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()
