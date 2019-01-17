@@ -14,6 +14,13 @@ android {
     renderscriptSupportModeEnabled true
     versionCode APP_VERSION
     versionName "$APP_VERSION_NAME"
+    ndk {
+      abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+    }
+    dexOptions {
+      preDexLibraries = true
+      javaMaxHeapSize "2g"
+    }
   }
   buildTypes {
     release {
@@ -87,6 +94,7 @@ android {
     implementation project(':libraryPurchaseFlow')
     implementation project(':libraryExpandIcon')
     implementation project(':libraryUrlShortener')
+    implementation project(':libraryUCrop')
     // Test runners
     testImplementation "junit:junit:$JUNIT_VERSION"
     testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"
