@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.data
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import io.reactivex.Completable
@@ -24,11 +23,10 @@ interface ImageHandler {
 }
 
 class ImageHandlerImpl(
-  private val context: Context,
   private val fileHandler: FileHandler
 ) : ImageHandler {
 
-  private var shouldContinueFetchingImage: Boolean = true
+  internal var shouldContinueFetchingImage: Boolean = true
   private val byteArraySize = 2048
   private val downloadProgressCompletedValue: Long = 100
   private var imageCacheTracker: Pair<Boolean, String> = Pair(false, "")

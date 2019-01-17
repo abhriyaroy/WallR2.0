@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.presentation
 
 import android.Manifest.*
+import android.content.Context
 import android.content.pm.PackageManager
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -11,7 +12,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
+import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
@@ -29,11 +32,15 @@ class DetailActivityPresenterImplTest {
   @Mock private lateinit var imageOptionsUseCase: ImageOptionsUseCase
   @Mock private lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
   @Mock private lateinit var detailView: DetailContract.DetailView
+  @Mock private lateinit var wallpaperSetter: WallpaperSetter
+  private val mockContext = mock(Context::class.java)
   private lateinit var detailPresenterImpl: DetailPresenterImpl
 
   @Before
   fun setup() {
-    detailPresenterImpl = DetailPresenterImpl(imageOptionsUseCase, userPremiumStatusUseCase)
+    detailPresenterImpl =
+        DetailPresenterImpl(mockContext, imageOptionsUseCase, userPremiumStatusUseCase,
+            wallpaperSetter)
     detailPresenterImpl.attachView(detailView)
   }
 

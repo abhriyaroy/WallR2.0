@@ -1,15 +1,14 @@
 package zebrostudio.wallr100.data
 
+import android.graphics.Bitmap
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.gson.Gson
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.pddstudio.urlshortener.URLShortener
+import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.observers.TestObserver
-import io.reactivex.schedulers.TestScheduler
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -22,19 +21,19 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
-import zebrostudio.wallr100.data.datafactory.FirebaseImageEntityModelFactory
 import zebrostudio.wallr100.data.datafactory.UnsplashPictureEntityModelFactory
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.NoResultFoundException
+import zebrostudio.wallr100.data.exception.NotEnoughFreeSpaceException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
+import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.lang.Exception
 import java.util.UUID.*
-import java.util.concurrent.TimeUnit
 
 @RunWith(MockitoJUnitRunner::class)
 class WallrDataRepositoryTest {
@@ -48,6 +47,8 @@ class WallrDataRepositoryTest {
   @Mock lateinit var databaseReference: DatabaseReference
   @Mock lateinit var firebaseDatabase: FirebaseDatabase
   @Mock lateinit var urlShortener: URLShortener
+  @Mock lateinit var imageHandler: ImageHandler
+  @Mock lateinit var fileHandler: FileHandler
   private lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
   private lateinit var firebasePictureEntityMapper: FirebasePictureEntityMapper
   private lateinit var wallrDataRepository: WallrDataRepository
@@ -71,6 +72,9 @@ class WallrDataRepositoryTest {
   private val childPathPeople = "people"
   private val childPathTechnology = "technology"
   private val firebaseTimeoutDuration = 15
+  private val dummyBitmap = Bitmap.createBitmap(1, 1, null)
+  private val downloadProgressCompletedValue: Long = 100
+  private val downloadProgressCompleteUpTo99: Long = 99
 
   @Before fun setup() {
     unsplashPictureEntityMapper = UnsplashPictureEntityMapper()
@@ -78,7 +82,7 @@ class WallrDataRepositoryTest {
     wallrDataRepository =
         WallrDataRepository(remoteAuthServiceFactory, unsplashClientFactory, sharedPrefs,
             unsplashPictureEntityMapper, firebaseDatabaseHelper, firebasePictureEntityMapper,
-            urlShortener)
+            urlShortener, imageHandler, fileHandler)
   }
 
   @Test fun `should return single on server success response`() {
@@ -251,7 +255,75 @@ class WallrDataRepositoryTest {
     verifyNoMoreInteractions(urlShortener)
   }
 
+  @Test fun `should return NotEnoughFreeSpace exception on getImageBitmap call error`() {
+    `when`(fileHandler.freeSpaceAvailable()).thenReturn(false)
+
+    wallrDataRepository.getImageBitmap(randomString).test()
+        .assertError(NotEnoughFreeSpaceException::class.java)
+
+    verify(fileHandler).freeSpaceAvailable()
+    verifyNoMoreInteractions(fileHandler)
+  }
+
+  @Test fun `should return cached bitmap on getImageBitmap call success and cache is present`() {
+    `when`(fileHandler.freeSpaceAvailable()).thenReturn(true)
+    `when`(imageHandler.isImageCached(randomString)).thenReturn(true)
+    `when`(imageHandler.getImageBitmap()).thenReturn(dummyBitmap)
+    val resultImageDownloadModel =
+        wallrDataRepository.getImageBitmap(randomString).test().values()[0]
+
+    assertEquals(resultImageDownloadModel.progress, downloadProgressCompletedValue)
+    assertEquals(resultImageDownloadModel.imageBitmap, dummyBitmap)
+
+    verify(fileHandler).freeSpaceAvailable()
+    verifyNoMoreInteractions(fileHandler)
+    verify(imageHandler).isImageCached(randomString)
+    verify(imageHandler).getImageBitmap()
+    verifyNoMoreInteractions(imageHandler)
+  }
+
+  @Test
+  fun `should return imageDownloadModel with only progress on getImageBitmap call success and download in progress`() {
+    `when`(fileHandler.freeSpaceAvailable()).thenReturn(true)
+    `when`(imageHandler.isImageCached(randomString)).thenReturn(false)
+    `when`(imageHandler.fetchImage(randomString)).thenReturn(
+        Observable.just(downloadProgressCompleteUpTo99))
+
+    val resultImageDownloadModel =
+        wallrDataRepository.getImageBitmap(randomString).test().values()[0]
+
+    assertEquals(resultImageDownloadModel.progress, downloadProgressCompleteUpTo99)
+    assertEquals(resultImageDownloadModel.imageBitmap, null)
+    verify(fileHandler).freeSpaceAvailable()
+    verifyNoMoreInteractions(fileHandler)
+    verify(imageHandler).fetchImage(randomString)
+    verify(imageHandler).isImageCached(randomString)
+    verifyNoMoreInteractions(imageHandler)
+  }
+
+  @Test
+  fun `should return imageDownloadProgress with progress and bitmap on getImageBitmap call success and download is completed`() {
+    `when`(fileHandler.freeSpaceAvailable()).thenReturn(true)
+    `when`(imageHandler.isImageCached(randomString)).thenReturn(false)
+    `when`(imageHandler.fetchImage(randomString)).thenReturn(
+        Observable.just(downloadProgressCompletedValue))
+    `when`(imageHandler.getImageBitmap()).thenReturn(dummyBitmap)
+
+    val resultImageDownloadModel =
+        wallrDataRepository.getImageBitmap(randomString).test().values()[0]
+
+    assertEquals(resultImageDownloadModel.progress, downloadProgressCompletedValue)
+    assertEquals(resultImageDownloadModel.imageBitmap, dummyBitmap)
+    verify(fileHandler).freeSpaceAvailable()
+    verifyNoMoreInteractions(fileHandler)
+    verify(imageHandler).fetchImage(randomString)
+    verify(imageHandler).isImageCached(randomString)
+    verify(imageHandler).getImageBitmap()
+    verifyNoMoreInteractions(imageHandler)
+  }
+
   /* Need to properly implement timeout for Rx Java
+
   @Test fun `should return Single of ImageModel list on getPicturesFromFirebase call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
@@ -271,7 +343,7 @@ class WallrDataRepositoryTest {
     verifyNoMoreInteractions(firebaseDatabaseHelper)
   }*/
 
-  private fun stubFirebaseDatabaseNode(childPath: String) {
+  fun stubFirebaseDatabaseNode(childPath: String) {
     `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
     `when`(firebaseDatabaseHelper.getDatabase().getReference(firebaseDatabasePath)).thenReturn(
         databaseReference)

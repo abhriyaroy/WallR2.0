@@ -101,9 +101,8 @@ class AppModule {
 
   @Provides
   fun provideImageHandler(
-    context: Context,
     fileHandler: FileHandler
-  ): ImageHandler = ImageHandlerImpl(context, fileHandler)
+  ): ImageHandler = ImageHandlerImpl(fileHandler)
 
   @Provides
   @PerApplication
@@ -115,7 +114,8 @@ class AppModule {
     firebaseDatabaseHelper: FirebaseDatabaseHelper,
     firebasePictureEntityMapper: FirebasePictureEntityMapper,
     urlShortener: URLShortener,
-    imageHandler: ImageHandler
+    imageHandler: ImageHandler,
+    fileHandler: FileHandler
   ): WallrRepository = WallrDataRepository(retrofitFirebaseAuthFactory,
       unsplashClientFactory,
       sharedPrefsHelper,
@@ -123,7 +123,8 @@ class AppModule {
       firebaseDatabaseHelper,
       firebasePictureEntityMapper,
       urlShortener,
-      imageHandler)
+      imageHandler,
+      fileHandler)
 
   @Provides
   @PerApplication

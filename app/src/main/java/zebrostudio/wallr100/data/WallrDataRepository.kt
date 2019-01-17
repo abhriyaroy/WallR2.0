@@ -1,7 +1,5 @@
 package zebrostudio.wallr100.data
 
-import android.os.Environment
-import android.os.Looper
 import com.google.firebase.database.DatabaseReference
 import com.google.gson.Gson
 import com.pddstudio.urlshortener.URLShortener
@@ -33,7 +31,8 @@ class WallrDataRepository(
   private var firebaseDatabaseHelper: FirebaseDatabaseHelper,
   private var firebasePictureEntityMapper: FirebasePictureEntityMapper,
   private var urlShortener: URLShortener,
-  private var imageHandler: ImageHandler
+  private var imageHandler: ImageHandler,
+  private val fileHandler: FileHandler
 ) : WallrRepository {
 
   private val purchasePreferenceName = "PURCHASE_PREF"
@@ -54,8 +53,6 @@ class WallrDataRepository(
   private val childPathPeople = "people"
   private val childPathTechnology = "technology"
   private val firebaseTimeoutDuration = 15
-  private val minimumFreeStorageSpaceInMb = 20
-  private val bytesToMegaBytes = 1048576
   private val imageDownloadProgressFinished: Long = 100
 
   override fun authenticatePurchase(
@@ -151,7 +148,7 @@ class WallrDataRepository(
   }
 
   override fun getImageBitmap(link: String): Observable<ImageDownloadModel> {
-    if (!freeSpaceAvailability()) {
+    if (!fileHandler.freeSpaceAvailable()) {
       return Observable.error(NotEnoughFreeSpaceException())
     }
     if (imageHandler.isImageCached(link)) {
@@ -209,9 +206,4 @@ class WallrDataRepository(
         .timeout(firebaseTimeoutDuration.toLong(), SECONDS)
   }
 
-  private fun freeSpaceAvailability(): Boolean {
-    val bytesAvailable = Environment.getExternalStorageDirectory().freeSpace
-    val megBytesAvailable = bytesAvailable / bytesToMegaBytes
-    return megBytesAvailable > minimumFreeStorageSpaceInMb
-  }
 }
