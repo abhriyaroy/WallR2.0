@@ -23,7 +23,7 @@ class ImageHandlerTest {
     imageHandlerImpl = ImageHandlerImpl(fileHandler)
   }
 
-  @Test fun `should set continueFetchingImage to false on cancelFetchingImage call`() {
+  @Test fun `should set continueFetchingImage to false on cancelFetchingImage call success`() {
     imageHandlerImpl.cancelFetchingImage()
 
     assertEquals(imageHandlerImpl.shouldContinueFetchingImage, false)

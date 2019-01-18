@@ -93,6 +93,7 @@ class ImageHandlerImpl(
   override fun clearImageCache(): Completable {
     return Completable.create {
       fileHandler.deleteCacheFiles()
+      imageCacheTracker = Pair(false, "")
       it.onComplete()
     }
   }

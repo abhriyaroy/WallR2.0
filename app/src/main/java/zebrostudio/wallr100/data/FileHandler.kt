@@ -47,6 +47,7 @@ class FileHandlerImpl : FileHandler {
     }
     if (modifiedCacheFile.exists())
       modifiedCacheFile.delete()
+    
   }
 
   override fun freeSpaceAvailable(): Boolean {

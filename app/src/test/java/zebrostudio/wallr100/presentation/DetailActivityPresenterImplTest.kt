@@ -16,7 +16,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.WallpaperSetter
@@ -39,9 +38,9 @@ class DetailActivityPresenterImplTest {
   @Mock private lateinit var detailView: DetailContract.DetailView
   @Mock private lateinit var wallpaperSetter: WallpaperSetter
   @Mock private lateinit var dummyBitmap: Bitmap
+  @Mock private lateinit var mockContext: Context
   private lateinit var detailPresenterImpl: DetailPresenterImpl
   private lateinit var testScopeProvider: TestLifecycleScopeProvider
-  private lateinit var mockContext: Context
   private val downloadProgressCompletedValue: Long = 100
   private val downloadProgressCompleteUpTo99: Long = 99
   private val downloadProgressCompleteUpTo98: Long = 98
@@ -50,7 +49,6 @@ class DetailActivityPresenterImplTest {
 
   @Before
   fun setup() {
-    mockContext = mock(android.content.Context::class.java)
     detailPresenterImpl =
         DetailPresenterImpl(mockContext, imageOptionsUseCase, userPremiumStatusUseCase,
             wallpaperSetter)
@@ -307,7 +305,7 @@ class DetailActivityPresenterImplTest {
     detailPresenterImpl.handleBackButtonClick()
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, false)
-    verify(imageOptionsUseCase).cancelImageFetching()
+    verify(imageOptionsUseCase).cancelFetchImageOperation()
     verifyNoMoreInteractions(imageOptionsUseCase)
     verify(detailView).hideScreenBlur()
     verify(detailView).showDownloadWallpaperCancelledMessage()
@@ -321,7 +319,7 @@ class DetailActivityPresenterImplTest {
     detailPresenterImpl.handleBackButtonClick()
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, false)
-    verify(imageOptionsUseCase).cancelImageFetching()
+    verify(imageOptionsUseCase).cancelFetchImageOperation()
     verifyNoMoreInteractions(imageOptionsUseCase)
     verify(detailView).hideScreenBlur()
     verify(detailView).showDownloadWallpaperCancelledMessage()

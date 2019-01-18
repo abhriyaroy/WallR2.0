@@ -40,8 +40,8 @@ import kotlinx.android.synthetic.main.activity_detail.parentFrameLayout
 import kotlinx.android.synthetic.main.activity_detail.setWallpaperImageLayout
 import kotlinx.android.synthetic.main.activity_detail.shareImageLayout
 import kotlinx.android.synthetic.main.activity_detail.slidingPanel
-import kotlinx.android.synthetic.main.activity_detail.wallpaperActionProgressPercentage
 import kotlinx.android.synthetic.main.activity_detail.wallpaperActionProgressSpinkit
+import kotlinx.android.synthetic.main.activity_detail.wallpaperDownloadProgressPercentage
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
@@ -226,8 +226,8 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun blurScreenAndInitializeProgressPercentage() {
     blurView.visible()
-    wallpaperActionProgressPercentage.text = initialLoaderProgressPercentage
-    wallpaperActionProgressPercentage.visible()
+    wallpaperDownloadProgressPercentage.text = initialLoaderProgressPercentage
+    wallpaperDownloadProgressPercentage.visible()
     loadingHintBelowProgressPercentage.text =
         getString(R.string.detail_activity_grabbing_best_quality_wallpaper_message)
     loadingHintBelowProgressPercentage.visible()
@@ -260,7 +260,7 @@ class DetailActivity : BaseActivity(), DetailView {
       }
 
     })
-    wallpaperActionProgressPercentage.startAnimation(exitAnimation)
+    wallpaperDownloadProgressPercentage.startAnimation(exitAnimation)
     loadingHintBelowProgressPercentage.startAnimation(exitAnimation)
   }
 
@@ -277,7 +277,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun updateProgressPercentage(progress: String) {
-    wallpaperActionProgressPercentage.text = progress
+    wallpaperDownloadProgressPercentage.text = progress
   }
 
   override fun showWallpaperOperationInProgressWaitMessage() {

@@ -40,7 +40,7 @@ class ImageOptionsUseCaseTest {
     stubPostExecutionThreadReturnsIoScheduler()
   }
 
-  @Test fun `should call getImageBitmap and return imageDownloadModel on success`() {
+  @Test fun `should return imageDownloadModel on getImageBitmap call success`() {
     `when`(wallrRepository.getImageBitmap(randomString)).thenReturn(Observable.just(
         ImageDownloadModel(downloadCompleteValue, dummyBitmap)))
 
@@ -50,7 +50,7 @@ class ImageOptionsUseCaseTest {
     verifyNoMoreInteractions(wallrRepository)
   }
 
-  @Test fun `should call getShareableImageLink and return single of shareable link on success`() {
+  @Test fun `should return single of shareable link on getShareableImageLink call success`() {
     `when`(wallrRepository.getShortImageLink(randomString)).thenReturn(
         Single.just(randomString))
     imageOptionsUseCase.getImageShareableLinkSingle(randomString)
@@ -59,7 +59,7 @@ class ImageOptionsUseCaseTest {
     verifyNoMoreInteractions(wallrRepository)
   }
 
-  @Test fun `should call clearImageCaches and return completable on success`() {
+  @Test fun `should return completable on clearImageCaches call success`() {
     `when`(wallrRepository.clearImageCaches()).thenReturn(Completable.complete())
 
     imageOptionsUseCase.clearCachesCompletable()
@@ -69,7 +69,7 @@ class ImageOptionsUseCaseTest {
   }
 
   @Test fun `should call cancelImageBitmapFetchingOperation on canImageFetching call success`() {
-    imageOptionsUseCase.cancelImageFetching()
+    imageOptionsUseCase.cancelFetchImageOperation()
 
     verify(wallrRepository).cancelImageBitmapFetchOperation()
     verifyNoMoreInteractions(wallrRepository)

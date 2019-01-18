@@ -305,7 +305,7 @@
         android:layout_height="match_parent">
 
       <TextView
-          android:id="@+id/wallpaperActionProgressPercentage"
+          android:id="@+id/wallpaperDownloadProgressPercentage"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_centerInParent="true"
@@ -332,7 +332,7 @@
           android:id="@+id/loadingHintBelowProgressPercentage"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_below="@id/wallpaperActionProgressPercentage"
+          android:layout_below="@id/wallpaperDownloadProgressPercentage"
           android:layout_centerHorizontal="true"
           android:paddingTop="@dimen/detail_activity_loading_hint_below_progress_percentage_padding_top"
           android:textSize="@dimen/detail_activity_loading_hint_below_progress_percentage_text_size"

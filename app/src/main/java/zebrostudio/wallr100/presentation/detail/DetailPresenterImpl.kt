@@ -73,42 +73,62 @@ class DetailPresenterImpl(
   }
 
   override fun handleDownloadClick() {
-    if (detailView?.hasStoragePermission() == true) {
-      if (detailView?.internetAvailability() == true) {
-        downloadWallpaper()
+    if (userPremiumStatusUseCase.isUserPremium()) {
+      if (detailView?.hasStoragePermission() == true) {
+        if (detailView?.internetAvailability() == true) {
+          downloadWallpaper()
+        } else {
+          detailView?.showNoInternetError()
+        }
       } else {
-        detailView?.showNoInternetError()
+        detailView?.requestStoragePermission(DOWNLOAD)
       }
     } else {
-      detailView?.requestStoragePermission(DOWNLOAD)
+      detailView?.redirectToBuyPro(DOWNLOAD.ordinal)
     }
   }
 
   override fun handleCrystallizeClick() {
-    if (detailView?.hasStoragePermission() == true) {
-      if (detailView?.internetAvailability() == true) {
-        crystallizeWallpaper()
+    if (userPremiumStatusUseCase.isUserPremium()) {
+      if (detailView?.hasStoragePermission() == true) {
+        if (detailView?.internetAvailability() == true) {
+          crystallizeWallpaper()
+        } else {
+          detailView?.showNoInternetError()
+        }
       } else {
-        detailView?.showNoInternetError()
+        detailView?.requestStoragePermission(CRYSTALLIZE)
       }
     } else {
-      detailView?.requestStoragePermission(CRYSTALLIZE)
+      detailView?.redirectToBuyPro(CRYSTALLIZE.ordinal)
     }
   }
 
   override fun handleEditSetClick() {
     if (detailView?.hasStoragePermission() == true) {
-      editSetWallpaper()
+      if (detailView?.internetAvailability() == true) {
+        editSetWallpaper()
+      } else {
+        detailView?.showNoInternetError()
+      }
     } else {
       detailView?.requestStoragePermission(EDIT_SET)
     }
   }
 
   override fun handleAddToCollectionClick() {
-    if (detailView?.hasStoragePermission() == true) {
-      addWallpaperToCollection()
+    if (userPremiumStatusUseCase.isUserPremium()) {
+      if (detailView?.hasStoragePermission() == true) {
+        if (detailView?.internetAvailability() == true) {
+          addWallpaperToCollection()
+        } else {
+          detailView?.showNoInternetError()
+        }
+      } else {
+        detailView?.requestStoragePermission(ADD_TO_COLLECTION)
+      }
     } else {
-      detailView?.requestStoragePermission(ADD_TO_COLLECTION)
+      detailView?.redirectToBuyPro(ADD_TO_COLLECTION.ordinal)
     }
   }
 
@@ -139,7 +159,7 @@ class DetailPresenterImpl(
 
   override fun handleBackButtonClick() {
     if (isDownloadInProgress) {
-      imageOptionsUseCase.cancelImageFetching()
+      imageOptionsUseCase.cancelFetchImageOperation()
       isDownloadInProgress = false
       detailView?.hideScreenBlur()
       detailView?.showDownloadWallpaperCancelledMessage()

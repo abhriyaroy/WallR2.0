@@ -12,7 +12,7 @@ interface ImageOptionsUseCase {
   fun fetchImageBitmapObservable(link: String): Observable<ImageDownloadModel>
   fun getImageShareableLinkSingle(link: String): Single<String>
   fun clearCachesCompletable(): Completable
-  fun cancelImageFetching()
+  fun cancelFetchImageOperation()
 }
 
 class ImageOptionsInteractor(
@@ -38,7 +38,7 @@ class ImageOptionsInteractor(
         .observeOn(postExecutionThread.scheduler)
   }
 
-  override fun cancelImageFetching() {
+  override fun cancelFetchImageOperation() {
     wallrRepository.cancelImageBitmapFetchOperation()
   }
 

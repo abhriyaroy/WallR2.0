@@ -100,9 +100,7 @@ class AppModule {
   fun providesWallpaperSetter(context: Context): WallpaperSetter = WallpaperSetterImpl(context)
 
   @Provides
-  fun provideImageHandler(
-    fileHandler: FileHandler
-  ): ImageHandler = ImageHandlerImpl(fileHandler)
+  fun provideImageHandler(fileHandler: FileHandler): ImageHandler = ImageHandlerImpl(fileHandler)
 
   @Provides
   @PerApplication
