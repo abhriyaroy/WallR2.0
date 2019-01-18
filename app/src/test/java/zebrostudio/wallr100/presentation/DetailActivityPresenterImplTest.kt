@@ -3,9 +3,13 @@ package zebrostudio.wallr100.presentation
 import android.Manifest.*
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider
+import io.reactivex.Observable
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -14,34 +18,48 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
+import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
+import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
 import zebrostudio.wallr100.presentation.datafactory.ImagePresenterEntityFactory
 import zebrostudio.wallr100.presentation.datafactory.SearchPicturesPresenterEntityFactory
 import zebrostudio.wallr100.presentation.detail.ActionType.*
 import zebrostudio.wallr100.presentation.detail.DetailContract
 import zebrostudio.wallr100.presentation.detail.DetailPresenterImpl
-import zebrostudio.wallr100.rules.TrampolineSchedulerRule
+import java.util.UUID.*
 
 @RunWith(MockitoJUnitRunner::class)
 class DetailActivityPresenterImplTest {
 
-  @get:Rule var trampolineSchedulerRule = TrampolineSchedulerRule()
   @Mock private lateinit var imageOptionsUseCase: ImageOptionsUseCase
   @Mock private lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
   @Mock private lateinit var detailView: DetailContract.DetailView
   @Mock private lateinit var wallpaperSetter: WallpaperSetter
-  private val mockContext = mock(Context::class.java)
+  @Mock private lateinit var dummyBitmap: Bitmap
   private lateinit var detailPresenterImpl: DetailPresenterImpl
+  private lateinit var testScopeProvider: TestLifecycleScopeProvider
+  private lateinit var mockContext: Context
+  private val randomString = randomUUID().toString()
+  private val downloadProgressCompletedValue: Long = 100
+  private val downloadProgressCompleteUpTo99: Long = 99
+  private val downloadProgressCompleteUpTo98: Long = 98
+  private val indefiniteLoaderWallpaperTypeMessage = "Finalizing wallpaper..."
+  private val indefiniteLoaderSearchTypeMessage = "Firing up the editing tool..."
 
   @Before
   fun setup() {
+    mockContext = mock(android.content.Context::class.java)
     detailPresenterImpl =
         DetailPresenterImpl(mockContext, imageOptionsUseCase, userPremiumStatusUseCase,
             wallpaperSetter)
     detailPresenterImpl.attachView(detailView)
+
+    testScopeProvider = TestLifecycleScopeProvider.createInitial(
+        TestLifecycleScopeProvider.TestLifecycle.STARTED)
+    `when`(detailView.getScope()).thenReturn(testScopeProvider)
   }
 
   @Test
@@ -115,11 +133,148 @@ class DetailActivityPresenterImplTest {
     verifyNoMoreInteractions(detailView)
   }
 
-  @Test fun `should handle permission granted after notifyPermissionRequestResult is called`() {
+  @Test
+  fun `should handle permission granted success and show progress after notifyPermissionRequestResult is called`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
         intArrayOf(PackageManager.PERMISSION_GRANTED))
 
+    assertEquals(detailPresenterImpl.isDownloadInProgress, true)
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).getScope()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should handle permission granted success and show finalizing wallpaper message after notifyPermissionRequestResult is called`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+    `when`(
+        mockContext.getString(R.string.detail_activity_finalising_wallpaper_messsage)).thenReturn(
+        indefiniteLoaderWallpaperTypeMessage)
+
+    detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
+        arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    assertEquals(detailPresenterImpl.isDownloadInProgress, false)
+    assertEquals(detailPresenterImpl.isImageOperationInProgress, true)
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).getScope()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
+    verify(detailView).showIndefiniteLoaderWithAnimation(indefiniteLoaderWallpaperTypeMessage)
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should handle permission granted success and show firing up tool message after notifyPermissionRequestResult is called`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+    `when`(mockContext.getString(R.string.detail_activity_editing_tool_message)).thenReturn(
+        indefiniteLoaderSearchTypeMessage)
+
+    detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
+        arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    assertEquals(detailPresenterImpl.isDownloadInProgress, false)
+    assertEquals(detailPresenterImpl.isImageOperationInProgress, true)
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).getScope()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
+    verify(detailView).showIndefiniteLoaderWithAnimation(indefiniteLoaderSearchTypeMessage)
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should handle permission granted success and set wallpaper successfully after notifyPermissionRequestResult is called`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, dummyBitmap)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+        Observable.just(imageDownloadModel))
+    `when`(wallpaperSetter.setWallpaper(dummyBitmap)).thenReturn(true)
+
+    detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
+        arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    assertEquals(detailPresenterImpl.isImageOperationInProgress, false)
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).getScope()
+    verify(detailView).showWallpaperSetSuccessMessage()
+    verify(detailView).hideScreenBlur()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should handle permission granted success show set wallpaper error message after notifyPermissionRequestResult is called`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, dummyBitmap)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+        Observable.just(imageDownloadModel))
+    `when`(wallpaperSetter.setWallpaper(dummyBitmap)).thenReturn(false)
+
+    detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
+        arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    assertEquals(detailPresenterImpl.isImageOperationInProgress, false)
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).getScope()
+    verify(detailView).showWallpaperSetErrorMessage()
+    verify(detailView).hideScreenBlur()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test fun `should cancel download on handleBackButtonClick call while download in progress`() {
+    detailPresenterImpl.isDownloadInProgress = true
+
+    detailPresenterImpl.handleBackButtonClick()
+
+    assertEquals(detailPresenterImpl.isDownloadInProgress, false)
+    verify(imageOptionsUseCase).cancelImageFetching()
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(detailView).hideScreenBlur()
+    verify(detailView).showDownloadWallpaperCancelledMessage()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show wait message when handleBackButtonClick is called while image operation is in progress`() {
+    detailPresenterImpl.isImageOperationInProgress = true
+
+    detailPresenterImpl.handleBackButtonClick()
+
+    verify(detailView).showWallpaperOperationInProgressWaitMessage()
     verifyNoMoreInteractions(detailView)
   }
 

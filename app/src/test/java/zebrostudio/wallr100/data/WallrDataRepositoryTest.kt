@@ -49,6 +49,7 @@ class WallrDataRepositoryTest {
   @Mock lateinit var urlShortener: URLShortener
   @Mock lateinit var imageHandler: ImageHandler
   @Mock lateinit var fileHandler: FileHandler
+  @Mock lateinit var dummyBitmap :Bitmap
   private lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
   private lateinit var firebasePictureEntityMapper: FirebasePictureEntityMapper
   private lateinit var wallrDataRepository: WallrDataRepository
@@ -72,11 +73,11 @@ class WallrDataRepositoryTest {
   private val childPathPeople = "people"
   private val childPathTechnology = "technology"
   private val firebaseTimeoutDuration = 15
-  private val dummyBitmap = Bitmap.createBitmap(1, 1, null)
   private val downloadProgressCompletedValue: Long = 100
   private val downloadProgressCompleteUpTo99: Long = 99
 
-  @Before fun setup() {
+  @Before
+  fun setup() {
     unsplashPictureEntityMapper = UnsplashPictureEntityMapper()
     firebasePictureEntityMapper = FirebasePictureEntityMapper()
     wallrDataRepository =

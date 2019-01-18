@@ -28,15 +28,15 @@ class DetailPresenterImpl(
 ) : DetailContract.DetailPresenter {
 
   private var detailView: DetailContract.DetailView? = null
-  private lateinit var imageType: ImageListType
-  private lateinit var wallpaperImage: ImagePresenterEntity
-  private lateinit var searchImage: SearchPicturesPresenterEntity
+  internal lateinit var imageType: ImageListType
+  internal lateinit var wallpaperImage: ImagePresenterEntity
+  internal lateinit var searchImage: SearchPicturesPresenterEntity
   private val downloadCompletedValue: Long = 100
   private val showIndefiniteLoaderAtProgressValue: Long = 99
   private val downloadStartedValue: Long = 0
   private var downloadProgress: Long = 0
-  private var isDownloadInProgress: Boolean = false
-  private var isImageOperationInProgress: Boolean = false
+  internal var isDownloadInProgress: Boolean = false
+  internal var isImageOperationInProgress: Boolean = false
 
   override fun attachView(view: DetailContract.DetailView) {
     detailView = view
@@ -235,15 +235,16 @@ class DetailPresenterImpl(
           override fun onNext(it: ImageDownloadModel) {
             val progress = it.progress
             if (progress == showIndefiniteLoaderAtProgressValue) {
+              isDownloadInProgress = false
+              isImageOperationInProgress = true
               detailView?.updateProgressPercentage("$downloadCompletedValue%")
               val message = if (imageType == WALLPAPERS) {
                 context.getString(R.string.detail_activity_finalising_wallpaper_messsage)
               } else {
-                context.getString(R.string.detail_activity_setting_up_resources_message)
+                context.getString(R.string.detail_activity_editing_tool_message)
               }
               detailView?.showIndefiniteLoaderWithAnimation(message)
             } else if (progress == downloadCompletedValue) {
-              isImageOperationInProgress = true
               if (wallpaperSetter.setWallpaper(it.imageBitmap)) {
                 detailView?.showWallpaperSetSuccessMessage()
               } else {
