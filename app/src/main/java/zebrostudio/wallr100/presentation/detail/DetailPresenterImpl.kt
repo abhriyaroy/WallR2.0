@@ -62,7 +62,11 @@ class DetailPresenterImpl(
 
   override fun handleQuickSetClick() {
     if (detailView?.hasStoragePermission() == true) {
-      quickSetWallpaper()
+      if (detailView?.internetAvailability() == true) {
+        quickSetWallpaper()
+      } else {
+        detailView?.showNoInternetError()
+      }
     } else {
       detailView?.requestStoragePermission(QUICK_SET)
     }
@@ -70,7 +74,11 @@ class DetailPresenterImpl(
 
   override fun handleDownloadClick() {
     if (detailView?.hasStoragePermission() == true) {
-      downloadWallpaper()
+      if (detailView?.internetAvailability() == true) {
+        downloadWallpaper()
+      } else {
+        detailView?.showNoInternetError()
+      }
     } else {
       detailView?.requestStoragePermission(DOWNLOAD)
     }
@@ -78,7 +86,11 @@ class DetailPresenterImpl(
 
   override fun handleCrystallizeClick() {
     if (detailView?.hasStoragePermission() == true) {
-      crystallizeWallpaper()
+      if (detailView?.internetAvailability() == true) {
+        crystallizeWallpaper()
+      } else {
+        detailView?.showNoInternetError()
+      }
     } else {
       detailView?.requestStoragePermission(CRYSTALLIZE)
     }
@@ -284,6 +296,7 @@ class DetailPresenterImpl(
   private fun addWallpaperToCollection() {
     // To be implemented later
   }
+
 }
 
 enum class ActionType {

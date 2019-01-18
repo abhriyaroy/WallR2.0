@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider
+import io.reactivex.Completable
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -29,6 +30,7 @@ import zebrostudio.wallr100.presentation.datafactory.SearchPicturesPresenterEnti
 import zebrostudio.wallr100.presentation.detail.ActionType.*
 import zebrostudio.wallr100.presentation.detail.DetailContract
 import zebrostudio.wallr100.presentation.detail.DetailPresenterImpl
+import java.lang.Exception
 import java.util.UUID.*
 
 @RunWith(MockitoJUnitRunner::class)
@@ -102,7 +104,54 @@ class DetailActivityPresenterImplTest {
   }
 
   @Test
-  fun `should show no internet error on notifyShareClicked call failure due to no internet`() {
+  fun `should request storage permission on handleQuickSetClicked call`() {
+    `when`(detailView.hasStoragePermission()).thenReturn(false)
+
+    detailPresenterImpl.handleQuickSetClick()
+
+    verify(detailView).hasStoragePermission()
+    verify(detailView).requestStoragePermission(QUICK_SET)
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show no internet error on handleQuickSetClicked call failure due to no internet`() {
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(false)
+
+    detailPresenterImpl.handleQuickSetClick()
+
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showNoInternetError()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test fun `should show image download progress on handleQuickSetClicked call success`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+
+    detailPresenterImpl.handleQuickSetClick()
+
+    assertEquals(detailPresenterImpl.isDownloadInProgress, true)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).getScope()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show no internet error on handleShareClicked call failure due to no internet`() {
     `when`(detailView.internetAvailability()).thenReturn(false)
 
     detailPresenterImpl.handleShareClick()
@@ -112,7 +161,7 @@ class DetailActivityPresenterImplTest {
     verifyNoMoreInteractions(detailView)
   }
 
-  @Test fun `should redirect to pro when notifyShareClicked call failure due to non pro user`() {
+  @Test fun `should redirect to pro when handleShareClicked call failure due to non pro user`() {
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(false)
 
@@ -124,7 +173,7 @@ class DetailActivityPresenterImplTest {
   }
 
   @Test
-  fun `should show permission required message when notifyPermissionRequestResult is called after permission is denied`() {
+  fun `should show permission required message when handlePermissionRequestResult is called after permission is denied`() {
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
         intArrayOf(PackageManager.PERMISSION_DENIED))
@@ -134,7 +183,7 @@ class DetailActivityPresenterImplTest {
   }
 
   @Test
-  fun `should handle permission granted success and show progress after notifyPermissionRequestResult is called`() {
+  fun `should handle permission granted success and show progress after handlePermissionRequestResult is called`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
@@ -156,7 +205,7 @@ class DetailActivityPresenterImplTest {
   }
 
   @Test
-  fun `should handle permission granted success and show finalizing wallpaper message after notifyPermissionRequestResult is called`() {
+  fun `should handle permission granted success and show finalizing wallpaper message after handlePermissionRequestResult is called`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
@@ -183,7 +232,7 @@ class DetailActivityPresenterImplTest {
   }
 
   @Test
-  fun `should handle permission granted success and show firing up tool message after notifyPermissionRequestResult is called`() {
+  fun `should handle permission granted success and show firing up tool message after handlePermissionRequestResult is called`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
     detailPresenterImpl.imageType = SEARCH
     detailPresenterImpl.searchImage =
@@ -210,7 +259,7 @@ class DetailActivityPresenterImplTest {
   }
 
   @Test
-  fun `should handle permission granted success and set wallpaper successfully after notifyPermissionRequestResult is called`() {
+  fun `should handle permission granted success and set wallpaper successfully after handlePermissionRequestResult is called`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, dummyBitmap)
     detailPresenterImpl.imageType = SEARCH
     detailPresenterImpl.searchImage =
@@ -233,7 +282,7 @@ class DetailActivityPresenterImplTest {
   }
 
   @Test
-  fun `should handle permission granted success show set wallpaper error message after notifyPermissionRequestResult is called`() {
+  fun `should handle permission granted success show set wallpaper error message after handlePermissionRequestResult is called`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, dummyBitmap)
     detailPresenterImpl.imageType = SEARCH
     detailPresenterImpl.searchImage =
@@ -269,12 +318,52 @@ class DetailActivityPresenterImplTest {
   }
 
   @Test
+  fun `should cancel download when handleBackButtonClick is called while image downloading is in progress`() {
+    detailPresenterImpl.isDownloadInProgress = true
+
+    detailPresenterImpl.handleBackButtonClick()
+
+    assertEquals(detailPresenterImpl.isDownloadInProgress, false)
+    verify(imageOptionsUseCase).cancelImageFetching()
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(detailView).hideScreenBlur()
+    verify(detailView).showDownloadWallpaperCancelledMessage()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
   fun `should show wait message when handleBackButtonClick is called while image operation is in progress`() {
     detailPresenterImpl.isImageOperationInProgress = true
 
     detailPresenterImpl.handleBackButtonClick()
 
     verify(detailView).showWallpaperOperationInProgressWaitMessage()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should exit activity when handleBackButtonClick is called and clearing cache is successful`() {
+    detailPresenterImpl.isDownloadInProgress = false
+    detailPresenterImpl.isImageOperationInProgress = false
+    `when`(imageOptionsUseCase.clearCachesCompletable()).thenReturn(Completable.complete())
+
+    detailPresenterImpl.handleBackButtonClick()
+
+    verify(detailView).getScope()
+    verify(detailView).exitView()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should exit activity when handleBackButtonClick is called and clearing cache is unsuccessful`() {
+    detailPresenterImpl.isDownloadInProgress = false
+    detailPresenterImpl.isImageOperationInProgress = false
+    `when`(imageOptionsUseCase.clearCachesCompletable()).thenReturn(Completable.error(Exception()))
+
+    detailPresenterImpl.handleBackButtonClick()
+
+    verify(detailView).getScope()
+    verify(detailView).exitView()
     verifyNoMoreInteractions(detailView)
   }
 

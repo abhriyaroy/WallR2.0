@@ -148,13 +148,13 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     infoImageView.visible()
     infoTextFirstLine.text = getText(R.string.search_unable_to_search_message)
     infoTextFirstLine.visible()
-    infoTextSecondLine.text = getText(R.string.search_no_internet_message)
+    infoTextSecondLine.text = getText(R.string.no_internet_message)
     infoTextSecondLine.visible()
     retryButton.visible()
   }
 
   override fun showNoInternetToast() {
-    errorToast(getString(R.string.search_no_internet_message))
+    errorToast(getString(R.string.no_internet_message))
   }
 
   override fun showGenericErrorView() {

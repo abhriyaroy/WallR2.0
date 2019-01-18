@@ -15,6 +15,7 @@ interface DetailContract {
     fun showAuthorDetails(name: String, profileImageLink: String)
     fun showImage(lowQualityLink: String, highQualityLink: String)
     fun showImageLoadError()
+    fun showNoInternetError()
     fun hasStoragePermission(): Boolean
     fun requestStoragePermission(actionType: ActionType)
     fun showPermissionRequiredMessage()

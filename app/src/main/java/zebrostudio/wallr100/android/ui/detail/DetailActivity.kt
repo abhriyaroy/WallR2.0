@@ -156,6 +156,10 @@ class DetailActivity : BaseActivity(), DetailView {
     errorToast(getString(R.string.detail_activity_unable_to_load_hd_image_error))
   }
 
+  override fun showNoInternetError() {
+    errorToast(getString(R.string.no_internet_message))
+  }
+
   override fun hasStoragePermission(): Boolean {
     val readPermission = ContextCompat.checkSelfPermission(this,
         Manifest.permission.READ_EXTERNAL_STORAGE)
