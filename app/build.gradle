@@ -94,7 +94,6 @@ android {
     implementation project(':libraryPurchaseFlow')
     implementation project(':libraryExpandIcon')
     implementation project(':libraryUrlShortener')
-    implementation project(':libraryUCrop')
     // Test runners
     testImplementation "junit:junit:$JUNIT_VERSION"
     testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"
