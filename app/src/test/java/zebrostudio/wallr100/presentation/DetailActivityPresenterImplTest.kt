@@ -12,7 +12,6 @@ import io.reactivex.Observable
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -31,7 +30,6 @@ import zebrostudio.wallr100.presentation.detail.ActionType.*
 import zebrostudio.wallr100.presentation.detail.DetailContract
 import zebrostudio.wallr100.presentation.detail.DetailPresenterImpl
 import java.lang.Exception
-import java.util.UUID.*
 
 @RunWith(MockitoJUnitRunner::class)
 class DetailActivityPresenterImplTest {
@@ -44,7 +42,6 @@ class DetailActivityPresenterImplTest {
   private lateinit var detailPresenterImpl: DetailPresenterImpl
   private lateinit var testScopeProvider: TestLifecycleScopeProvider
   private lateinit var mockContext: Context
-  private val randomString = randomUUID().toString()
   private val downloadProgressCompletedValue: Long = 100
   private val downloadProgressCompleteUpTo99: Long = 99
   private val downloadProgressCompleteUpTo98: Long = 98

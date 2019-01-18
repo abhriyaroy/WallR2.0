@@ -30,7 +30,6 @@ import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
-import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.lang.Exception
 import java.util.UUID.*
@@ -49,7 +48,7 @@ class WallrDataRepositoryTest {
   @Mock lateinit var urlShortener: URLShortener
   @Mock lateinit var imageHandler: ImageHandler
   @Mock lateinit var fileHandler: FileHandler
-  @Mock lateinit var dummyBitmap :Bitmap
+  @Mock lateinit var dummyBitmap: Bitmap
   private lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
   private lateinit var firebasePictureEntityMapper: FirebasePictureEntityMapper
   private lateinit var wallrDataRepository: WallrDataRepository
