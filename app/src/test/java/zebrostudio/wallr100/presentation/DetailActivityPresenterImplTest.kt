@@ -6,9 +6,11 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.whenever
 import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -19,6 +21,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.WallpaperSetter
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
@@ -39,6 +42,7 @@ class DetailActivityPresenterImplTest {
   @Mock private lateinit var wallpaperSetter: WallpaperSetter
   @Mock private lateinit var dummyBitmap: Bitmap
   @Mock private lateinit var mockContext: Context
+  @Mock private lateinit var postExecutionThread: PostExecutionThread
   private lateinit var detailPresenterImpl: DetailPresenterImpl
   private lateinit var testScopeProvider: TestLifecycleScopeProvider
   private val downloadProgressCompletedValue: Long = 100
@@ -51,12 +55,13 @@ class DetailActivityPresenterImplTest {
   fun setup() {
     detailPresenterImpl =
         DetailPresenterImpl(mockContext, imageOptionsUseCase, userPremiumStatusUseCase,
-            wallpaperSetter)
+            wallpaperSetter, postExecutionThread)
     detailPresenterImpl.attachView(detailView)
 
     testScopeProvider = TestLifecycleScopeProvider.createInitial(
         TestLifecycleScopeProvider.TestLifecycle.STARTED)
     `when`(detailView.getScope()).thenReturn(testScopeProvider)
+    stubPostExecutionThreadReturnsIoScheduler()
   }
 
   @Test
@@ -143,6 +148,8 @@ class DetailActivityPresenterImplTest {
     verify(detailView).getScope()
     verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
     verifyNoMoreInteractions(detailView)
+    verify(postExecutionThread).scheduler
+    verifyNoMoreInteractions(postExecutionThread)
   }
 
   @Test
@@ -197,6 +204,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).getScope()
     verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -224,6 +232,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
     verify(detailView).showIndefiniteLoaderWithAnimation(indefiniteLoaderWallpaperTypeMessage)
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -251,6 +260,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
     verify(detailView).showIndefiniteLoaderWithAnimation(indefiniteLoaderSearchTypeMessage)
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -274,6 +284,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).showWallpaperSetSuccessMessage()
     verify(detailView).hideScreenBlur()
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -297,6 +308,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).showWallpaperSetErrorMessage()
     verify(detailView).hideScreenBlur()
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should cancel download on handleBackButtonClick call while download in progress`() {
@@ -365,6 +377,15 @@ class DetailActivityPresenterImplTest {
   @After
   fun cleanup() {
     detailPresenterImpl.detachView()
+  }
+
+  private fun stubPostExecutionThreadReturnsIoScheduler() {
+    whenever(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
+  }
+
+  private fun shouldVerifyPostExecutionThreadSchedulerCall() {
+    verify(postExecutionThread).scheduler
+    verifyNoMoreInteractions(postExecutionThread)
   }
 
 }

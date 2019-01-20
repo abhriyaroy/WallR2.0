@@ -51,6 +51,7 @@ class SearchPicturesInteractorTest {
 
     verify(wallrRepository).getSearchPictures(dummyString)
     verifyNoMoreInteractions(wallrRepository)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -64,6 +65,7 @@ class SearchPicturesInteractorTest {
 
     verify(wallrRepository).getSearchPictures(dummyString)
     verifyNoMoreInteractions(wallrRepository)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -77,5 +79,12 @@ class SearchPicturesInteractorTest {
 
     verify(wallrRepository).getSearchPictures(dummyString)
     verifyNoMoreInteractions(wallrRepository)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
+
+  private fun shouldVerifyPostExecutionThreadSchedulerCall() {
+    verify(postExecutionThread).scheduler
+    verifyNoMoreInteractions(postExecutionThread)
+  }
+
 }

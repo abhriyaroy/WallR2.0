@@ -45,9 +45,6 @@ class ImageOptionsUseCaseTest {
         ImageDownloadModel(downloadCompleteValue, dummyBitmap)))
 
     imageOptionsUseCase.fetchImageBitmapObservable(randomString)
-
-    verify(wallrRepository).getImageBitmap(randomString)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return single of shareable link on getShareableImageLink call success`() {
@@ -57,6 +54,7 @@ class ImageOptionsUseCaseTest {
 
     verify(wallrRepository).getShortImageLink(randomString)
     verifyNoMoreInteractions(wallrRepository)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should return completable on clearImageCaches call success`() {
@@ -66,6 +64,7 @@ class ImageOptionsUseCaseTest {
 
     verify(wallrRepository).clearImageCaches()
     verifyNoMoreInteractions(wallrRepository)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should call cancelImageBitmapFetchingOperation on canImageFetching call success`() {
@@ -77,6 +76,11 @@ class ImageOptionsUseCaseTest {
 
   private fun stubPostExecutionThreadReturnsIoScheduler() {
     whenever(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
+  }
+
+  private fun shouldVerifyPostExecutionThreadSchedulerCall() {
+    verify(postExecutionThread).scheduler
+    verifyNoMoreInteractions(postExecutionThread)
   }
 
 }

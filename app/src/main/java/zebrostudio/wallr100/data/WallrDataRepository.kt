@@ -162,6 +162,9 @@ class WallrDataRepository(
           } else {
             Observable.just(ImageDownloadModel(it, null))
           }
+        }.doOnNext {
+          if (it.progress == imageDownloadProgressFinished)
+            System.out.println("processing item on thread first" + Thread.currentThread().getName())
         }
   }
 

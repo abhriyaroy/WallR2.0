@@ -23,7 +23,6 @@ class ImageOptionsInteractor(
   override fun fetchImageBitmapObservable(link: String): Observable<ImageDownloadModel> {
     return wallrRepository.getImageBitmap(link)
         .subscribeOn(Schedulers.io())
-        .observeOn(postExecutionThread.scheduler)
   }
 
   override fun getImageShareableLinkSingle(link: String): Single<String> {

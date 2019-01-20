@@ -4,12 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import com.uber.autodispose.autoDisposable
+import io.reactivex.Completable
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.data.exception.ImageDownloadException
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
@@ -24,7 +26,8 @@ class DetailPresenterImpl(
   private var context: Context,
   private var imageOptionsUseCase: ImageOptionsUseCase,
   private var userPremiumStatusUseCase: UserPremiumStatusUseCase,
-  private val wallpaperSetter: WallpaperSetter
+  private val wallpaperSetter: WallpaperSetter,
+  private val postExecutionThread: PostExecutionThread
 ) : DetailContract.DetailPresenter {
 
   private var detailView: DetailContract.DetailView? = null
@@ -37,6 +40,7 @@ class DetailPresenterImpl(
   private var downloadProgress: Long = 0
   internal var isDownloadInProgress: Boolean = false
   internal var isImageOperationInProgress: Boolean = false
+  internal var wallpaperHasBeenSet: Boolean = false
 
   override fun attachView(view: DetailContract.DetailView) {
     detailView = view
@@ -254,6 +258,12 @@ class DetailPresenterImpl(
       else -> wallpaperImage.imageLink.large
     }
     imageOptionsUseCase.fetchImageBitmapObservable(imageDownloadLink)
+        .doOnNext {
+          if (it.progress == downloadCompletedValue) {
+            wallpaperHasBeenSet = wallpaperSetter.setWallpaper(it.imageBitmap)
+          }
+        }
+        .observeOn(postExecutionThread.scheduler)
         .autoDisposable(detailView?.getScope()!!)
         .subscribe(object : Observer<ImageDownloadModel> {
           override fun onComplete() {
@@ -262,6 +272,7 @@ class DetailPresenterImpl(
 
           override fun onSubscribe(d: Disposable) {
             isDownloadInProgress = true
+            wallpaperHasBeenSet = false
           }
 
           override fun onNext(it: ImageDownloadModel) {
@@ -277,7 +288,7 @@ class DetailPresenterImpl(
               }
               detailView?.showIndefiniteLoaderWithAnimation(message)
             } else if (progress == downloadCompletedValue) {
-              if (wallpaperSetter.setWallpaper(it.imageBitmap)) {
+              if (wallpaperHasBeenSet) {
                 detailView?.showWallpaperSetSuccessMessage()
               } else {
                 detailView?.showWallpaperSetErrorMessage()

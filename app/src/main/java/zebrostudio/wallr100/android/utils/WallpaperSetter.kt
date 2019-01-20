@@ -15,11 +15,9 @@ class WallpaperSetterImpl(private var context: Context) : WallpaperSetter {
     val wallpaperManager = WallpaperManager.getInstance(context)
     val width = wallpaperManager.desiredMinimumWidth
     val height = wallpaperManager.desiredMinimumHeight
-    if (imageBitmap != null) {
-      doAsync {
-        val scaledBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false)
-        wallpaperManager.setBitmap(scaledBitmap)
-      }
+    imageBitmap?.let {
+      val scaledBitmapToFitPhoneAspectRatio = Bitmap.createScaledBitmap(it, width, height, false)
+      wallpaperManager.setBitmap(scaledBitmapToFitPhoneAspectRatio)
       return true
     }
     return false

@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import zebrostudio.wallr100.android.utils.WallpaperSetter
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.presentation.detail.DetailContract
@@ -17,9 +18,11 @@ class DetailActivityModule {
     context: Context,
     imageOptionsUseCase: ImageOptionsUseCase,
     userPremiumStatusUseCase: UserPremiumStatusUseCase,
-    wallpaperSetter: WallpaperSetter
+    wallpaperSetter: WallpaperSetter,
+    postExecutionThread: PostExecutionThread
   ): DetailContract.DetailPresenter = DetailPresenterImpl(context,
       imageOptionsUseCase,
       userPremiumStatusUseCase,
-      wallpaperSetter)
+      wallpaperSetter,
+      postExecutionThread)
 }
