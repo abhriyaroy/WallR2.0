@@ -3,7 +3,6 @@ package zebrostudio.wallr100.android.utils
 import android.app.WallpaperManager
 import android.content.Context
 import android.graphics.Bitmap
-import org.jetbrains.anko.doAsync
 
 interface WallpaperSetter {
   fun setWallpaper(imageBitmap: Bitmap?): Boolean

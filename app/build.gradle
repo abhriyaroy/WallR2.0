@@ -85,8 +85,6 @@ android {
     implementation "de.hdodenhof:circleimageview:$CIRCLE_IMAGEVIEW_VERSION"
     // BlurView
     implementation "com.eightbitlab:blurview:$BLURVIEW_VERSION"
-    // Anko
-    implementation "org.jetbrains.anko:anko-commons:$ANKO_VERSION"
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
     implementation project(':librarySearch')
