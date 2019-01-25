@@ -1,9 +1,12 @@
 package zebrostudio.wallr100.data
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import zebrostudio.wallr100.data.exception.ImageDownloadException
 import java.io.FileOutputStream
 import java.io.IOException
@@ -19,16 +22,21 @@ interface ImageHandler {
   fun cancelFetchingImage()
   fun getImageBitmap(): Bitmap
   fun clearImageCache(): Completable
+  fun getImageUri(): Uri
+  fun convertUriToBitmap(uri: Uri): Single<Bitmap>
 
 }
 
 class ImageHandlerImpl(
+  private val context: Context,
   private val fileHandler: FileHandler
 ) : ImageHandler {
 
   internal var shouldContinueFetchingImage: Boolean = true
   private val byteArraySize = 2048
   private val downloadProgressCompletedValue: Long = 100
+  private val readMode = "r"
+  private val bitmapCompressQuality = 100
   private var imageCacheTracker: Pair<Boolean, String> = Pair(false, "")
 
   override fun isImageCached(link: String): Boolean {
@@ -65,6 +73,10 @@ class ImageHandlerImpl(
             it.onNext(progress)
             count = inputStream.read(data)
           } else {
+            connection.disconnect()
+            outputStream.flush()
+            outputStream.close()
+            inputStream?.close()
             break
           }
         }
@@ -95,6 +107,30 @@ class ImageHandlerImpl(
       fileHandler.deleteCacheFiles()
       imageCacheTracker = Pair(false, "")
       it.onComplete()
+    }
+  }
+
+  override fun getImageUri(): Uri {
+    val bitmap = getImageBitmap()
+    val outputStream = fileHandler.getCacheFile().outputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG, bitmapCompressQuality, outputStream)
+    outputStream.flush()
+    outputStream.close()
+    return Uri.fromFile(fileHandler.getCacheFile())
+  }
+
+  override fun convertUriToBitmap(uri: Uri): Single<Bitmap> {
+    return Single.create {
+      val parcelFileDescriptor =
+          context.contentResolver.openFileDescriptor(uri, readMode)
+      val fileDescriptor = parcelFileDescriptor!!.fileDescriptor
+      val bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+      parcelFileDescriptor.close()
+      val outputStream = fileHandler.getCacheFile().outputStream()
+      bitmap.compress(Bitmap.CompressFormat.JPEG, bitmapCompressQuality, outputStream)
+      outputStream.flush()
+      outputStream.close()
+      it.onSuccess(bitmap)
     }
   }
 

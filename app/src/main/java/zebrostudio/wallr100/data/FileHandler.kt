@@ -6,7 +6,8 @@ import java.io.File
 interface FileHandler {
 
   fun getCacheFile(): File
-  fun getModifiedCacheFile(): File
+  fun getCacheFileForCropping(): File
+  fun getCrystallizedCacheFile(): File
   fun deleteCacheFiles()
   fun freeSpaceAvailable(): Boolean
 
@@ -20,7 +21,9 @@ class FileHandlerImpl : FileHandler {
       File(Environment.getExternalStorageDirectory().path + File.separator + appDirectoryName
           + File.separator + cacheDirectoryName)
   private val cacheFile: File = File(cacheFolder, System.currentTimeMillis().toString())
-  private val modifiedCacheFile: File =
+  private val cacheCroppedFile: File =
+      File(cacheFolder, System.currentTimeMillis().toString())
+  private val cacheCrystallizedFile: File =
       File(cacheFolder, System.currentTimeMillis().toString())
   private val minimumFreeStorageSpaceInMb = 20
   private val bytesToMegaBytes = 1048576
@@ -33,21 +36,26 @@ class FileHandlerImpl : FileHandler {
     return cacheFile
   }
 
-  override fun getModifiedCacheFile(): File {
+  override fun getCacheFileForCropping(): File {
     createCacheFolder()
-    if (!modifiedCacheFile.exists()) {
-      modifiedCacheFile.createNewFile()
+    if (!cacheCroppedFile.exists()) {
+      cacheCroppedFile.createNewFile()
     }
-    return modifiedCacheFile
+    return cacheCroppedFile
+  }
+
+  override fun getCrystallizedCacheFile(): File {
+    createCacheFolder()
+    if (!cacheCrystallizedFile.exists()) {
+      cacheCrystallizedFile.createNewFile()
+    }
+    return cacheCrystallizedFile
   }
 
   override fun deleteCacheFiles() {
-    if (cacheFile.exists()) {
-      cacheFile.delete()
+    if (cacheFolder.exists()) {
+      cacheFolder.deleteRecursively()
     }
-    if (modifiedCacheFile.exists())
-      modifiedCacheFile.delete()
-    
   }
 
   override fun freeSpaceAvailable(): Boolean {

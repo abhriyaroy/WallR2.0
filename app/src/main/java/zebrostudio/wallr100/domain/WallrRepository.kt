@@ -1,5 +1,7 @@
 package zebrostudio.wallr100.domain
 
+import android.graphics.Bitmap
+import android.net.Uri
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -33,7 +35,12 @@ interface WallrRepository {
 
   fun getImageBitmap(link: String): Observable<ImageDownloadModel>
   fun getShortImageLink(link: String): Single<String>
-  fun clearImageCaches() : Completable
+  fun clearImageCaches(): Completable
   fun cancelImageBitmapFetchOperation()
+
+  fun getCacheSourceUri(): Uri
+  fun getCacheDestinationUri(): Uri
+
+  fun getBitmapFromUri(uri: Uri): Single<Bitmap>
 
 }

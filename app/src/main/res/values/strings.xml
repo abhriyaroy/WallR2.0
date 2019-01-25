@@ -138,6 +138,6 @@
   <string name="detail_activity_fetch_wallpaper_error_message">
     Unable to fetch wallpaper. Please try again</string>
   <string name="detail_activity_finalizing_stuff_wait_message">Finalizing stuff. Please wait...</string>
-  <string name="detail_activity_wallpaper_download_cancelled_message">Cancelled wallpaper download</string>
+  <string name="detail_activity_wallpaper_download_cancelled_message">Wallpaper download cancelled</string>
 
 </resources>

@@ -1,5 +1,7 @@
 package zebrostudio.wallr100.data
 
+import android.graphics.Bitmap
+import android.net.Uri
 import com.google.firebase.database.DatabaseReference
 import com.google.gson.Gson
 import com.pddstudio.urlshortener.URLShortener
@@ -180,6 +182,14 @@ class WallrDataRepository(
 
   override fun cancelImageBitmapFetchOperation() {
     imageHandler.cancelFetchingImage()
+  }
+
+  override fun getCacheSourceUri() = imageHandler.getImageUri()
+
+  override fun getCacheDestinationUri() = Uri.fromFile(fileHandler.getCacheFileForCropping())!!
+
+  override fun getBitmapFromUri(uri: Uri): Single<Bitmap> {
+    return imageHandler.convertUriToBitmap(uri)
   }
 
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()

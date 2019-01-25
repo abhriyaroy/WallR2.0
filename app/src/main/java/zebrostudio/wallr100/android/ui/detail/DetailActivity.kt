@@ -4,7 +4,9 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -17,11 +19,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.github.zagum.expandicon.ExpandIconView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import com.yalantis.ucrop.UCrop
 import dagger.android.AndroidInjection
 import eightbitlab.com.blurview.RenderScriptBlur
 import kotlinx.android.synthetic.main.activity_detail.addToCollectionImageLayout
@@ -56,6 +60,7 @@ import zebrostudio.wallr100.presentation.detail.DetailContract.DetailPresenter
 import zebrostudio.wallr100.presentation.detail.DetailContract.DetailView
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
+import java.lang.Exception
 import javax.inject.Inject
 
 class DetailActivity : BaseActivity(), DetailView {
@@ -89,7 +94,7 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    presenter.handleActivityResult(requestCode, resultCode, data)
+    presenter.handleViewResult(requestCode, resultCode, data)
   }
 
   override fun onBackPressed() {
@@ -150,6 +155,21 @@ class DetailActivity : BaseActivity(), DetailView {
           }
         })
         .into(imageView)
+  }
+
+  override fun showImage(bitmap: Bitmap) {
+    val imageOptions = RequestOptions()
+        .diskCacheStrategy(DiskCacheStrategy.NONE)
+        .centerCrop()
+    try {
+      Glide.with(this)
+          .load(bitmap)
+          .apply(imageOptions)
+          .transition(DrawableTransitionOptions.withCrossFade())
+          .into(imageView)
+    } catch (e: Exception) {
+      System.out.println(e.message)
+    }
   }
 
   override fun showImageLoadError() {
@@ -224,6 +244,14 @@ class DetailActivity : BaseActivity(), DetailView {
     errorToast(getString(R.string.generic_error_message))
   }
 
+  override fun blurScreen() {
+    blurView.visible()
+    wallpaperDownloadProgressPercentage.gone()
+    loadingHintBelowProgressPercentage.gone()
+    wallpaperActionProgressSpinkit.gone()
+    loadingHintBelowProgressSpinkit.gone()
+  }
+
   override fun blurScreenAndInitializeProgressPercentage() {
     blurView.visible()
     wallpaperDownloadProgressPercentage.text = initialLoaderProgressPercentage
@@ -235,6 +263,12 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun hideScreenBlur() {
     blurView.gone()
+  }
+
+  override fun showIndefiniteLoader(message: String) {
+    wallpaperActionProgressSpinkit.visible()
+    loadingHintBelowProgressSpinkit.text = message
+    loadingHintBelowProgressSpinkit.visible()
   }
 
   override fun showIndefiniteLoaderWithAnimation(message: String) {
@@ -264,6 +298,15 @@ class DetailActivity : BaseActivity(), DetailView {
     loadingHintBelowProgressPercentage.startAnimation(exitAnimation)
   }
 
+  override fun hideIndefiniteLoader() {
+    wallpaperActionProgressSpinkit.gone()
+    loadingHintBelowProgressSpinkit.gone()
+  }
+
+  override fun getUriFromIntent(data: Intent): Uri? {
+    return UCrop.getOutput(data)
+  }
+
   override fun showUnableToDownloadErrorMessage() {
     errorToast(getString(R.string.detail_activity_fetch_wallpaper_error_message))
   }
@@ -288,9 +331,25 @@ class DetailActivity : BaseActivity(), DetailView {
     infoToast(getString(R.string.detail_activity_wallpaper_download_cancelled_message))
   }
 
+  override fun startCroppingActivity(
+    source: Uri,
+    destination: Uri,
+    minimumWidth: Int,
+    minimumHeight: Int
+  ) {
+    UCrop.of(source, destination)
+        .withMaxResultSize(minimumWidth, minimumHeight)
+        .useSourceImageAspectRatio()
+        .start(this)
+  }
+
+  override fun collapseSlidingPanel() {
+    slidingPanel.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+  }
+
   override fun exitView() {
-    this.finish()
     overridePendingTransition(R.anim.no_change, R.anim.slide_to_right)
+    this.finish()
   }
 
   private fun setUpExpandPanel() {
@@ -308,8 +367,10 @@ class DetailActivity : BaseActivity(), DetailView {
       ) {
         if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
           expandIconView.setState(ExpandIconView.MORE, true)
+          presenter.setPanelStateAsExpanded()
         } else if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
           expandIconView.setState(ExpandIconView.LESS, true)
+          presenter.setPanelStateAsCollapsed()
         }
       }
     })

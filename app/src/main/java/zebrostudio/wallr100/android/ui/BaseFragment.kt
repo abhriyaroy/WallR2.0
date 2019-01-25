@@ -12,6 +12,7 @@ import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
 import dagger.android.support.AndroidSupportInjection
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
+import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.EXPLORE_TAG
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.checkDataConnection
 import zebrostudio.wallr100.android.utils.setMenuItemColorRed
@@ -23,7 +24,7 @@ import javax.inject.Inject
 abstract class BaseFragment : Fragment(), BaseView {
 
   @Inject lateinit var fragmentNameTagFetcherImpl: FragmentNameTagFetcher
-  internal lateinit var fragmentTag: String
+  internal var fragmentTag: String = EXPLORE_TAG
 
   private val menuItemIdList: List<Int> = listOf(
       R.string.explore_fragment_tag,

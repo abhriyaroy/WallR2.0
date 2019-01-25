@@ -4,6 +4,7 @@ import android.Manifest.*
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
@@ -43,13 +44,13 @@ class DetailActivityPresenterImplTest {
   @Mock private lateinit var dummyBitmap: Bitmap
   @Mock private lateinit var mockContext: Context
   @Mock private lateinit var postExecutionThread: PostExecutionThread
+  @Mock private lateinit var sourceUri : Uri
   private lateinit var detailPresenterImpl: DetailPresenterImpl
   private lateinit var testScopeProvider: TestLifecycleScopeProvider
   private val downloadProgressCompletedValue: Long = 100
   private val downloadProgressCompleteUpTo99: Long = 99
   private val downloadProgressCompleteUpTo98: Long = 98
-  private val indefiniteLoaderWallpaperTypeMessage = "Finalizing wallpaper..."
-  private val indefiniteLoaderSearchTypeMessage = "Firing up the editing tool..."
+  private val indefiniteLoaderMessage = "Finalizing wallpaper..."
 
   @Before
   fun setup() {
@@ -145,6 +146,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
     verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
     verifyNoMoreInteractions(detailView)
@@ -201,6 +203,7 @@ class DetailActivityPresenterImplTest {
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, true)
     verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
     verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
     verifyNoMoreInteractions(detailView)
@@ -219,7 +222,7 @@ class DetailActivityPresenterImplTest {
         })
     `when`(
         mockContext.getString(R.string.detail_activity_finalising_wallpaper_messsage)).thenReturn(
-        indefiniteLoaderWallpaperTypeMessage)
+        indefiniteLoaderMessage)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
@@ -228,37 +231,10 @@ class DetailActivityPresenterImplTest {
     assertEquals(detailPresenterImpl.isDownloadInProgress, false)
     assertEquals(detailPresenterImpl.isImageOperationInProgress, true)
     verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
     verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
-    verify(detailView).showIndefiniteLoaderWithAnimation(indefiniteLoaderWallpaperTypeMessage)
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
-  }
-
-  @Test
-  fun `should handle permission granted success and show firing up tool message after handlePermissionRequestResult is called`() {
-    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
-    detailPresenterImpl.imageType = SEARCH
-    detailPresenterImpl.searchImage =
-        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
-    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
-    `when`(mockContext.getString(R.string.detail_activity_editing_tool_message)).thenReturn(
-        indefiniteLoaderSearchTypeMessage)
-
-    detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
-        arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
-
-    assertEquals(detailPresenterImpl.isDownloadInProgress, false)
-    assertEquals(detailPresenterImpl.isImageOperationInProgress, true)
-    verify(detailView).blurScreenAndInitializeProgressPercentage()
-    verify(detailView).getScope()
-    verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
-    verify(detailView).showIndefiniteLoaderWithAnimation(indefiniteLoaderSearchTypeMessage)
+    verify(detailView).showIndefiniteLoaderWithAnimation(indefiniteLoaderMessage)
     verifyNoMoreInteractions(detailView)
     shouldVerifyPostExecutionThreadSchedulerCall()
   }
@@ -280,6 +256,7 @@ class DetailActivityPresenterImplTest {
 
     assertEquals(detailPresenterImpl.isImageOperationInProgress, false)
     verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
     verify(detailView).showWallpaperSetSuccessMessage()
     verify(detailView).hideScreenBlur()
@@ -304,6 +281,7 @@ class DetailActivityPresenterImplTest {
 
     assertEquals(detailPresenterImpl.isImageOperationInProgress, false)
     verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
     verify(detailView).showWallpaperSetErrorMessage()
     verify(detailView).hideScreenBlur()

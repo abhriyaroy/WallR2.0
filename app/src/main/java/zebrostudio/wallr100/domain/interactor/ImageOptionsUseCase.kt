@@ -1,5 +1,7 @@
 package zebrostudio.wallr100.domain.interactor
 
+import android.graphics.Bitmap
+import android.net.Uri
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -13,6 +15,9 @@ interface ImageOptionsUseCase {
   fun getImageShareableLinkSingle(link: String): Single<String>
   fun clearCachesCompletable(): Completable
   fun cancelFetchImageOperation()
+  fun getCroppingSourceUri(): Uri
+  fun getCroppingDestinationUri(): Uri
+  fun getBitmapFromUriSingle(imageUri: Uri): Single<Bitmap>
 }
 
 class ImageOptionsInteractor(
@@ -39,6 +44,16 @@ class ImageOptionsInteractor(
 
   override fun cancelFetchImageOperation() {
     wallrRepository.cancelImageBitmapFetchOperation()
+  }
+
+  override fun getCroppingSourceUri() = wallrRepository.getCacheSourceUri()
+
+  override fun getCroppingDestinationUri() = wallrRepository.getCacheDestinationUri()
+
+  override fun getBitmapFromUriSingle(imageUri: Uri): Single<Bitmap> {
+    return wallrRepository.getBitmapFromUri(imageUri)
+        .subscribeOn(Schedulers.io())
+        .observeOn(postExecutionThread.scheduler)
   }
 
 }

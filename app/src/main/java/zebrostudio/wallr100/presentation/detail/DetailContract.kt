@@ -1,6 +1,8 @@
 package zebrostudio.wallr100.presentation.detail
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import zebrostudio.wallr100.presentation.BasePresenter
 import zebrostudio.wallr100.presentation.BaseView
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
@@ -14,6 +16,7 @@ interface DetailContract {
     fun getWallpaperImageDetails(): ImagePresenterEntity
     fun showAuthorDetails(name: String, profileImageLink: String)
     fun showImage(lowQualityLink: String, highQualityLink: String)
+    fun showImage(bitmap: Bitmap)
     fun showImageLoadError()
     fun showNoInternetError()
     fun hasStoragePermission(): Boolean
@@ -26,15 +29,21 @@ interface DetailContract {
     fun hideWaitLoader()
     fun redirectToBuyPro(requestCode: Int)
     fun showGenericErrorMessage()
+    fun blurScreen()
     fun blurScreenAndInitializeProgressPercentage()
     fun updateProgressPercentage(progress: String)
+    fun showIndefiniteLoader(message: String)
     fun showIndefiniteLoaderWithAnimation(message: String)
+    fun hideIndefiniteLoader()
+    fun getUriFromIntent(data: Intent): Uri?
     fun hideScreenBlur()
     fun showWallpaperSetSuccessMessage()
     fun showWallpaperSetErrorMessage()
     fun showUnableToDownloadErrorMessage()
     fun showWallpaperOperationInProgressWaitMessage()
     fun showDownloadWallpaperCancelledMessage()
+    fun startCroppingActivity(source: Uri, destination: Uri, minimumWidth: Int, minimumHeight: Int)
+    fun collapseSlidingPanel()
     fun exitView()
   }
 
@@ -52,6 +61,8 @@ interface DetailContract {
       requestCode: Int, permissions: Array<String>, grantResults: IntArray
     )
 
-    fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    fun handleViewResult(requestCode: Int, resultCode: Int, data: Intent?)
+    fun setPanelStateAsExpanded()
+    fun setPanelStateAsCollapsed()
   }
 }

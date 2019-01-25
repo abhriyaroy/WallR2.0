@@ -25,6 +25,9 @@
     <activity android:name=".android.ui.buypro.BuyProActivity"/>
     <activity android:name=".android.ui.search.SearchActivity"/>
     <activity android:name=".android.ui.detail.DetailActivity"/>
+    <activity
+        android:name="com.yalantis.ucrop.UCropActivity"
+        android:screenOrientation="portrait"/>
   </application>
 
 </manifest>

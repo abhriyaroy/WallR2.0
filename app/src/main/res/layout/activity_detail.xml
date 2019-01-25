@@ -298,7 +298,9 @@
       android:id="@+id/blurView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:visibility="gone">
+      android:visibility="gone"
+      android:clickable="true"
+      android:longClickable="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
