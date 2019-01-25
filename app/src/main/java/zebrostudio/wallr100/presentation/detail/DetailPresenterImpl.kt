@@ -22,7 +22,6 @@ import zebrostudio.wallr100.presentation.detail.ActionType.*
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 import android.net.Uri
-import zebrostudio.wallr100.data.exception.UnableToSetWallpaperException
 import java.lang.Exception
 
 class DetailPresenterImpl(
@@ -278,8 +277,8 @@ class DetailPresenterImpl(
 
   private fun quickSetWallpaper() {
     downloadProgress = downloadStartedValue
-    detailView?.blurScreenAndInitializeProgressPercentage()
     detailView?.hideIndefiniteLoader()
+    detailView?.blurScreenAndInitializeProgressPercentage()
     val imageDownloadLink = when (imageType) {
       SEARCH -> searchImage.imageQualityUrlPresenterEntity.largeImageLink
       else -> wallpaperImage.imageLink.large
@@ -348,8 +347,8 @@ class DetailPresenterImpl(
 
   private fun editSetWallpaper() {
     downloadProgress = downloadStartedValue
-    detailView?.blurScreenAndInitializeProgressPercentage()
     detailView?.hideIndefiniteLoader()
+    detailView?.blurScreenAndInitializeProgressPercentage()
     val imageDownloadLink = when (imageType) {
       SEARCH -> searchImage.imageQualityUrlPresenterEntity.largeImageLink
       else -> wallpaperImage.imageLink.large
@@ -386,7 +385,7 @@ class DetailPresenterImpl(
               val message =
                   context.getString(R.string.detail_activity_editing_tool_message)
               detailView?.showIndefiniteLoaderWithAnimation(message)
-            } else {
+            }  else {
               detailView?.updateProgressPercentage("$progress%")
             }
           }

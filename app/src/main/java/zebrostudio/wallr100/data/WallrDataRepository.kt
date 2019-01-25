@@ -56,6 +56,7 @@ class WallrDataRepository(
   private val childPathTechnology = "technology"
   private val firebaseTimeoutDuration = 15
   private val imageDownloadProgressFinished: Long = 100
+  private val imageDownloadProgressUpTo99: Long = 99
 
   override fun authenticatePurchase(
     packageName: String,
@@ -154,8 +155,12 @@ class WallrDataRepository(
       return Observable.error(NotEnoughFreeSpaceException())
     }
     if (imageHandler.isImageCached(link)) {
-      return Observable.just(
-          ImageDownloadModel(imageDownloadProgressFinished, imageHandler.getImageBitmap()))
+      return Observable.create {
+        it.onNext(ImageDownloadModel(imageDownloadProgressUpTo99, null))
+        it.onNext(ImageDownloadModel(imageDownloadProgressFinished, imageHandler.getImageBitmap()))
+        it.onComplete()
+      }
+
     }
     return imageHandler.fetchImage(link)
         .flatMap {

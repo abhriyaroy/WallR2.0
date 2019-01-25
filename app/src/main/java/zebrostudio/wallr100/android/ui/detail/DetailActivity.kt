@@ -300,6 +300,7 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun hideIndefiniteLoader() {
     wallpaperActionProgressSpinkit.gone()
+    loadingHintBelowProgressSpinkit.text = ""
     loadingHintBelowProgressSpinkit.gone()
   }
 
