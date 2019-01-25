@@ -21,10 +21,9 @@ import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
 import zebrostudio.wallr100.presentation.detail.ActionType.*
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
-import android.provider.MediaStore
-import android.graphics.Bitmap
 import android.net.Uri
-import java.io.ByteArrayOutputStream
+import zebrostudio.wallr100.data.exception.UnableToSetWallpaperException
+import java.lang.Exception
 
 class DetailPresenterImpl(
   private var context: Context,
@@ -411,25 +410,34 @@ class DetailPresenterImpl(
   }
 
   private fun handleCropResult(cropResultUri: Uri) {
+    var hasWallpaperBeenSet = false
     detailView?.blurScreen()
     detailView?.showIndefiniteLoader(
         context.getString(R.string.detail_activity_finalising_wallpaper_messsage))
-    imageOptionsUseCase.getBitmapFromUriSingle(cropResultUri)
-        .autoDisposable(detailView?.getScope()!!)
-        .subscribe({
-          if (wallpaperSetter.setWallpaper(it)) {
-            detailView?.showImage(it)
-            detailView?.showWallpaperSetSuccessMessage()
-          } else {
-            detailView?.showWallpaperSetErrorMessage()
+    try {
+      imageOptionsUseCase.getBitmapFromUriSingle(cropResultUri)
+          .doOnSuccess {
+            hasWallpaperBeenSet = wallpaperSetter.setWallpaper(it)
           }
-          isImageOperationInProgress = false
-          detailView?.hideScreenBlur()
-        }, {
-          isImageOperationInProgress = false
-          detailView?.hideScreenBlur()
-          detailView?.showGenericErrorMessage()
-        })
+          .observeOn(postExecutionThread.scheduler)
+          .autoDisposable(detailView?.getScope()!!)
+          .subscribe({
+            if (hasWallpaperBeenSet) {
+              detailView?.showImage(it)
+              detailView?.showWallpaperSetSuccessMessage()
+            } else {
+              detailView?.showWallpaperSetErrorMessage()
+            }
+            isImageOperationInProgress = false
+            detailView?.hideScreenBlur()
+          }, {
+            detailView?.showGenericErrorMessage()
+            isImageOperationInProgress = false
+            detailView?.hideScreenBlur()
+          })
+    } catch (e: Exception) {
+      System.out.println(e.message)
+    }
   }
 }
 

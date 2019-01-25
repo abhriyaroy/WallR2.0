@@ -53,7 +53,6 @@ class ImageOptionsInteractor(
   override fun getBitmapFromUriSingle(imageUri: Uri): Single<Bitmap> {
     return wallrRepository.getBitmapFromUri(imageUri)
         .subscribeOn(Schedulers.io())
-        .observeOn(postExecutionThread.scheduler)
   }
 
 }
