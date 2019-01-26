@@ -1,12 +1,13 @@
 package zebrostudio.wallr100.data
 
+import android.net.Uri
 import android.os.Environment
 import java.io.File
 
 interface FileHandler {
 
   fun getCacheFile(): File
-  fun getCacheFileForCropping(): File
+  fun getCacheFileUriForCropping(): Uri
   fun getCrystallizedCacheFile(): File
   fun deleteCacheFiles()
   fun freeSpaceAvailable(): Boolean
@@ -36,12 +37,12 @@ class FileHandlerImpl : FileHandler {
     return cacheFile
   }
 
-  override fun getCacheFileForCropping(): File {
+  override fun getCacheFileUriForCropping(): Uri {
     createCacheFolder()
     if (!cacheCroppedFile.exists()) {
       cacheCroppedFile.createNewFile()
     }
-    return cacheCroppedFile
+    return Uri.fromFile(cacheCroppedFile)
   }
 
   override fun getCrystallizedCacheFile(): File {

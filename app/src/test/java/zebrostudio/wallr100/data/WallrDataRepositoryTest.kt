@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.data
 
 import android.graphics.Bitmap
+import android.net.Uri
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.nhaarman.mockitokotlin2.times
@@ -48,7 +49,8 @@ class WallrDataRepositoryTest {
   @Mock lateinit var urlShortener: URLShortener
   @Mock lateinit var imageHandler: ImageHandler
   @Mock lateinit var fileHandler: FileHandler
-  @Mock lateinit var dummyBitmap: Bitmap
+  @Mock lateinit var mockBitmap: Bitmap
+  @Mock lateinit var mockUri: Uri
   private lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
   private lateinit var firebasePictureEntityMapper: FirebasePictureEntityMapper
   private lateinit var wallrDataRepository: WallrDataRepository
@@ -268,12 +270,15 @@ class WallrDataRepositoryTest {
   @Test fun `should return cached bitmap on getImageBitmap call success and cache is present`() {
     `when`(fileHandler.freeSpaceAvailable()).thenReturn(true)
     `when`(imageHandler.isImageCached(randomString)).thenReturn(true)
-    `when`(imageHandler.getImageBitmap()).thenReturn(dummyBitmap)
-    val resultImageDownloadModel =
-        wallrDataRepository.getImageBitmap(randomString).test().values()[0]
+    `when`(imageHandler.getImageBitmap()).thenReturn(mockBitmap)
+    val testObserver = wallrDataRepository.getImageBitmap(randomString).test()
+    val resultImageDownloadModel = testObserver.values()[0]
+    val resultImageDownloadModelCompleted = testObserver.values()[1]
 
-    assertEquals(resultImageDownloadModel.progress, downloadProgressCompletedValue)
-    assertEquals(resultImageDownloadModel.imageBitmap, dummyBitmap)
+    assertEquals(resultImageDownloadModel.progress, downloadProgressCompleteUpTo99)
+    assertEquals(resultImageDownloadModel.imageBitmap, null)
+    assertEquals(resultImageDownloadModelCompleted.progress, downloadProgressCompletedValue)
+    assertEquals(resultImageDownloadModelCompleted.imageBitmap, mockBitmap)
 
     verify(fileHandler).freeSpaceAvailable()
     verifyNoMoreInteractions(fileHandler)
@@ -307,18 +312,48 @@ class WallrDataRepositoryTest {
     `when`(imageHandler.isImageCached(randomString)).thenReturn(false)
     `when`(imageHandler.fetchImage(randomString)).thenReturn(
         Observable.just(downloadProgressCompletedValue))
-    `when`(imageHandler.getImageBitmap()).thenReturn(dummyBitmap)
+    `when`(imageHandler.getImageBitmap()).thenReturn(mockBitmap)
 
     val resultImageDownloadModel =
         wallrDataRepository.getImageBitmap(randomString).test().values()[0]
 
     assertEquals(resultImageDownloadModel.progress, downloadProgressCompletedValue)
-    assertEquals(resultImageDownloadModel.imageBitmap, dummyBitmap)
+    assertEquals(resultImageDownloadModel.imageBitmap, mockBitmap)
     verify(fileHandler).freeSpaceAvailable()
     verifyNoMoreInteractions(fileHandler)
     verify(imageHandler).fetchImage(randomString)
     verify(imageHandler).isImageCached(randomString)
     verify(imageHandler).getImageBitmap()
+    verifyNoMoreInteractions(imageHandler)
+  }
+
+  @Test fun `should return image uri on getCacheSourceUri call success`() {
+    `when`(imageHandler.getImageUri()).thenReturn(mockUri)
+
+    val uri = wallrDataRepository.getCacheSourceUri()
+
+    assertEquals(mockUri, uri)
+    verify(imageHandler).getImageUri()
+    verifyNoMoreInteractions(imageHandler)
+  }
+
+  @Test fun `should return result destination file uri on getCacheResultUri call success`() {
+    `when`(fileHandler.getCacheFileUriForCropping()).thenReturn(mockUri)
+
+    val uri = wallrDataRepository.getCacheResultUri()
+
+    assertEquals(mockUri, uri)
+    verify(fileHandler).getCacheFileUriForCropping()
+    verifyNoMoreInteractions(fileHandler)
+  }
+
+  @Test fun `should return Single of bitmap on getBitmapFromUri call success`() {
+    `when`(imageHandler.convertUriToBitmap(mockUri)).thenReturn(Single.just(mockBitmap))
+
+    wallrDataRepository.getBitmapFromUri(mockUri).test()
+        .assertValue(mockBitmap)
+
+    verify(imageHandler).convertUriToBitmap(mockUri)
     verifyNoMoreInteractions(imageHandler)
   }
 

@@ -33,6 +33,7 @@ import zebrostudio.wallr100.presentation.detail.ActionType.*
 import zebrostudio.wallr100.presentation.detail.DetailContract
 import zebrostudio.wallr100.presentation.detail.DetailPresenterImpl
 import java.lang.Exception
+import java.util.UUID.*
 
 @RunWith(MockitoJUnitRunner::class)
 class DetailActivityPresenterImplTest {
@@ -44,13 +45,14 @@ class DetailActivityPresenterImplTest {
   @Mock private lateinit var dummyBitmap: Bitmap
   @Mock private lateinit var mockContext: Context
   @Mock private lateinit var postExecutionThread: PostExecutionThread
-  @Mock private lateinit var sourceUri : Uri
+  @Mock private lateinit var sourceUri: Uri
   private lateinit var detailPresenterImpl: DetailPresenterImpl
   private lateinit var testScopeProvider: TestLifecycleScopeProvider
   private val downloadProgressCompletedValue: Long = 100
   private val downloadProgressCompleteUpTo99: Long = 99
   private val downloadProgressCompleteUpTo98: Long = 98
   private val indefiniteLoaderMessage = "Finalizing wallpaper..."
+  private var randomString = randomUUID().toString()
 
   @Before
   fun setup() {
@@ -220,9 +222,8 @@ class DetailActivityPresenterImplTest {
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(
-        mockContext.getString(R.string.detail_activity_finalising_wallpaper_messsage)).thenReturn(
-        indefiniteLoaderMessage)
+    `when`(mockContext.getString(R.string.detail_activity_finalising_wallpaper_messsage))
+        .thenReturn(indefiniteLoaderMessage)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
@@ -249,6 +250,8 @@ class DetailActivityPresenterImplTest {
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
         Observable.just(imageDownloadModel))
     `when`(wallpaperSetter.setWallpaper(dummyBitmap)).thenReturn(true)
+    `when`(mockContext.getString(R.string.detail_activity_finalising_wallpaper_messsage))
+        .thenReturn(indefiniteLoaderMessage)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
@@ -258,6 +261,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
+    verify(detailView).showIndefiniteLoader(indefiniteLoaderMessage)
     verify(detailView).showWallpaperSetSuccessMessage()
     verify(detailView).hideScreenBlur()
     verifyNoMoreInteractions(detailView)
@@ -274,6 +278,9 @@ class DetailActivityPresenterImplTest {
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
         Observable.just(imageDownloadModel))
     `when`(wallpaperSetter.setWallpaper(dummyBitmap)).thenReturn(false)
+    `when`(
+        mockContext.getString(R.string.detail_activity_finalising_wallpaper_messsage))
+        .thenReturn(randomString)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
@@ -283,6 +290,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
+    verify(detailView).showIndefiniteLoader(randomString)
     verify(detailView).showWallpaperSetErrorMessage()
     verify(detailView).hideScreenBlur()
     verifyNoMoreInteractions(detailView)

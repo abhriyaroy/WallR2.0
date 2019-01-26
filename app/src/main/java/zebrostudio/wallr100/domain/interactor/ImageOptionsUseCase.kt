@@ -48,7 +48,7 @@ class ImageOptionsInteractor(
 
   override fun getCroppingSourceUri() = wallrRepository.getCacheSourceUri()
 
-  override fun getCroppingDestinationUri() = wallrRepository.getCacheDestinationUri()
+  override fun getCroppingDestinationUri() = wallrRepository.getCacheResultUri()
 
   override fun getBitmapFromUriSingle(imageUri: Uri): Single<Bitmap> {
     return wallrRepository.getBitmapFromUri(imageUri)

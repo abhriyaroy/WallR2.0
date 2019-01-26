@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.data
 
+import android.content.Context
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Assert.assertEquals
@@ -16,11 +17,12 @@ class ImageHandlerTest {
 
   @get:Rule var trampolineSchedulerRule = TrampolineSchedulerRule()
   @Mock lateinit var fileHandler: FileHandler
+  @Mock lateinit var context: Context
   private lateinit var imageHandlerImpl: ImageHandlerImpl
 
   @Before
   fun setup() {
-    imageHandlerImpl = ImageHandlerImpl(fileHandler)
+    imageHandlerImpl = ImageHandlerImpl(context, fileHandler)
   }
 
   @Test fun `should set continueFetchingImage to false on cancelFetchingImage call success`() {

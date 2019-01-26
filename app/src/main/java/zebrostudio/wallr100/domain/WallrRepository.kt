@@ -39,7 +39,7 @@ interface WallrRepository {
   fun cancelImageBitmapFetchOperation()
 
   fun getCacheSourceUri(): Uri
-  fun getCacheDestinationUri(): Uri
+  fun getCacheResultUri(): Uri
 
   fun getBitmapFromUri(uri: Uri): Single<Bitmap>
 

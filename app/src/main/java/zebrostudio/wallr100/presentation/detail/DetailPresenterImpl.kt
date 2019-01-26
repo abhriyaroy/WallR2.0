@@ -313,7 +313,7 @@ class DetailPresenterImpl(
             } else if (progress == downloadCompletedValue) {
               val message =
                   context.getString(R.string.detail_activity_finalising_wallpaper_messsage)
-              detailView?.showIndefiniteLoaderWithAnimation(message)
+              detailView?.showIndefiniteLoader(message)
               if (wallpaperHasBeenSet) {
                 detailView?.showWallpaperSetSuccessMessage()
               } else {
