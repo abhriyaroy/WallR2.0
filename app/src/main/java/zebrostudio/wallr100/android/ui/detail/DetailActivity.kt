@@ -161,15 +161,11 @@ class DetailActivity : BaseActivity(), DetailView {
     val imageOptions = RequestOptions()
         .diskCacheStrategy(DiskCacheStrategy.NONE)
         .centerCrop()
-    try {
-      Glide.with(this)
-          .load(bitmap)
-          .apply(imageOptions)
-          .transition(DrawableTransitionOptions.withCrossFade())
-          .into(imageView)
-    } catch (e: Exception) {
-      System.out.println(e.message)
-    }
+    Glide.with(this)
+        .load(bitmap)
+        .apply(imageOptions)
+        .transition(DrawableTransitionOptions.withCrossFade())
+        .into(imageView)
   }
 
   override fun showImageLoadError() {

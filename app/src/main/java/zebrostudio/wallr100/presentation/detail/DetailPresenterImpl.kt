@@ -385,13 +385,12 @@ class DetailPresenterImpl(
               val message =
                   context.getString(R.string.detail_activity_editing_tool_message)
               detailView?.showIndefiniteLoaderWithAnimation(message)
-            }  else {
+            } else {
               detailView?.updateProgressPercentage("$progress%")
             }
           }
 
           override fun onError(throwable: Throwable) {
-            System.out.println(throwable.message)
             if (throwable is ImageDownloadException) {
               detailView?.showUnableToDownloadErrorMessage()
             } else {
@@ -435,7 +434,8 @@ class DetailPresenterImpl(
             detailView?.hideScreenBlur()
           })
     } catch (e: Exception) {
-      System.out.println(e.message)
+      detailView?.hideScreenBlur()
+      detailView?.showGenericErrorMessage()
     }
   }
 }
