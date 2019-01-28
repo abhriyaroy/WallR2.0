@@ -108,7 +108,7 @@
   <string name="detail_activity_options_add_to_collection">ADD TO COLLECTION</string>
   <string name="detail_activity_options_edit_and_set">EDIT AND SET</string>
   <string name="detail_activity_choose_download_quality_message">Choose Download Quality</string>
-  <string name="detail_activity_finalising_wallpaper_messsage">Finalizing wallpaper...</string>
+  <string name="detail_activity_finalizing_wallpaper_messsage">Finalizing wallpaper...</string>
   <string name="detail_activity_grabbing_best_quality_wallpaper_message">Grabbing the best quality wallpaper...</string>
   <string name="detail_activity_setting_up_resources_message">Setting up the necessary resources...</string>
   <string name="detail_activity_editing_tool_message">Firing up the editing tool...</string>

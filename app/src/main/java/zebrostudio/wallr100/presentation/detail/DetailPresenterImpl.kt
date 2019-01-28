@@ -231,7 +231,7 @@ class DetailPresenterImpl(
       } else {
         detailView?.showUnsuccessfulPurchaseError()
       }
-    } else if (resultCode == RESULT_OK && requestCode == REQUEST_CROP) {
+    } else if (requestCode == REQUEST_CROP && resultCode == RESULT_OK) {
       detailView?.let {
         detailView?.getUriFromIntent(data!!)?.let { resultUri ->
           handleCropResult(resultUri)
@@ -308,11 +308,11 @@ class DetailPresenterImpl(
               isImageOperationInProgress = true
               detailView?.updateProgressPercentage("$downloadCompletedValue%")
               val message =
-                  context.getString(R.string.detail_activity_finalising_wallpaper_messsage)
+                  context.getString(R.string.detail_activity_finalizing_wallpaper_messsage)
               detailView?.showIndefiniteLoaderWithAnimation(message)
             } else if (progress == downloadCompletedValue) {
               val message =
-                  context.getString(R.string.detail_activity_finalising_wallpaper_messsage)
+                  context.getString(R.string.detail_activity_finalizing_wallpaper_messsage)
               detailView?.showIndefiniteLoader(message)
               if (wallpaperHasBeenSet) {
                 detailView?.showWallpaperSetSuccessMessage()
@@ -411,32 +411,27 @@ class DetailPresenterImpl(
     var hasWallpaperBeenSet = false
     detailView?.blurScreen()
     detailView?.showIndefiniteLoader(
-        context.getString(R.string.detail_activity_finalising_wallpaper_messsage))
-    try {
-      imageOptionsUseCase.getBitmapFromUriSingle(cropResultUri)
-          .doOnSuccess {
-            hasWallpaperBeenSet = wallpaperSetter.setWallpaper(it)
+        context.getString(R.string.detail_activity_finalizing_wallpaper_messsage))
+    imageOptionsUseCase.getBitmapFromUriSingle(cropResultUri)
+        .doOnSuccess {
+          hasWallpaperBeenSet = wallpaperSetter.setWallpaper(it)
+        }
+        .observeOn(postExecutionThread.scheduler)
+        .autoDisposable(detailView?.getScope()!!)
+        .subscribe({
+          if (hasWallpaperBeenSet) {
+            detailView?.showImage(it)
+            detailView?.showWallpaperSetSuccessMessage()
+          } else {
+            detailView?.showWallpaperSetErrorMessage()
           }
-          .observeOn(postExecutionThread.scheduler)
-          .autoDisposable(detailView?.getScope()!!)
-          .subscribe({
-            if (hasWallpaperBeenSet) {
-              detailView?.showImage(it)
-              detailView?.showWallpaperSetSuccessMessage()
-            } else {
-              detailView?.showWallpaperSetErrorMessage()
-            }
-            isImageOperationInProgress = false
-            detailView?.hideScreenBlur()
-          }, {
-            detailView?.showGenericErrorMessage()
-            isImageOperationInProgress = false
-            detailView?.hideScreenBlur()
-          })
-    } catch (e: Exception) {
-      detailView?.hideScreenBlur()
-      detailView?.showGenericErrorMessage()
-    }
+          isImageOperationInProgress = false
+          detailView?.hideScreenBlur()
+        }, {
+          detailView?.showGenericErrorMessage()
+          isImageOperationInProgress = false
+          detailView?.hideScreenBlur()
+        })
   }
 }
 
