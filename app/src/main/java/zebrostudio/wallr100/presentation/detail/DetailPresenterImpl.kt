@@ -233,8 +233,12 @@ class DetailPresenterImpl(
       }
     } else if (requestCode == REQUEST_CROP && resultCode == RESULT_OK) {
       detailView?.let {
-        detailView?.getUriFromIntent(data!!)?.let { resultUri ->
-          handleCropResult(resultUri)
+        val cropResultUri = detailView?.getUriFromIntent(data!!)
+        if (cropResultUri != null) {
+          handleCropResult(cropResultUri)
+        } else {
+          detailView?.hideScreenBlur()
+          detailView?.showGenericErrorMessage()
         }
       }
     } else {

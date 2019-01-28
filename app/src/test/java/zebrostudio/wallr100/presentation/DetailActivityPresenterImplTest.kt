@@ -25,6 +25,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
@@ -182,6 +183,26 @@ class DetailActivityPresenterImplTest {
 
     verify(detailView).internetAvailability()
     verify(detailView).redirectToBuyPro(SHARE.ordinal)
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should unsuccessful purchase error after handleShareClick is called and premium purchase is unsuccessful`() {
+    detailPresenterImpl.handleViewResult(SHARE.ordinal, RESULT_ERROR, mockIntent)
+
+    verify(detailView).showUnsuccessfulPurchaseError()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show no internet error due to no internet after handleShareClick is called and premium purchase is successful`() {
+    `when`(detailView.internetAvailability()).thenReturn(false)
+
+    detailPresenterImpl.handleViewResult(SHARE.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, mockIntent)
+
+    verify(detailView).internetAvailability()
+    verify(detailView).showNoInternetToShareError()
     verifyNoMoreInteractions(detailView)
   }
 
@@ -450,7 +471,8 @@ class DetailActivityPresenterImplTest {
     shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should set wallpaper and show success message on crop activity success result`() {
+  @Test
+  fun `should set wallpaper and show success message when crop activity results to success`() {
     `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
     `when`(mockContext.getString(R.string.detail_activity_finalizing_wallpaper_messsage))
         .thenReturn(randomString)
@@ -472,7 +494,7 @@ class DetailActivityPresenterImplTest {
     verifyNoMoreInteractions(imageOptionsUseCase)
   }
 
-  @Test fun `should wallpaper set error message on crop activity success result`() {
+  @Test fun `should show wallpaper setting error message when crop activity results to success`() {
     `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
     `when`(mockContext.getString(R.string.detail_activity_finalizing_wallpaper_messsage))
         .thenReturn(randomString)
@@ -493,7 +515,30 @@ class DetailActivityPresenterImplTest {
     verifyNoMoreInteractions(imageOptionsUseCase)
   }
 
-  @Test fun `should generic error message on crop activity success result`() {
+  @Test
+  fun `should show generic error message when crop activity results to success but getBitmapFromUriSingle call fails`() {
+    `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
+    `when`(mockContext.getString(R.string.detail_activity_finalizing_wallpaper_messsage))
+        .thenReturn(randomString)
+    `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri))
+        .thenReturn(Single.error(Exception()))
+    `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(false)
+
+    detailPresenterImpl.handleViewResult(REQUEST_CROP, RESULT_OK, mockIntent)
+
+    assertEquals(false, detailPresenterImpl.isImageOperationInProgress)
+    verify(detailView).getUriFromIntent(mockIntent)
+    verify(detailView).blurScreen()
+    verify(detailView).showIndefiniteLoader(randomString)
+    verify(detailView).getScope()
+    verify(detailView).showGenericErrorMessage()
+    verify(detailView).hideScreenBlur()
+    verifyNoMoreInteractions(detailView)
+    verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
+    verifyNoMoreInteractions(imageOptionsUseCase)
+  }
+
+  @Test fun `should show generic error message when crop activity results to failure`() {
     `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
     `when`(mockContext.getString(R.string.detail_activity_finalizing_wallpaper_messsage))
         .thenReturn(randomString)
