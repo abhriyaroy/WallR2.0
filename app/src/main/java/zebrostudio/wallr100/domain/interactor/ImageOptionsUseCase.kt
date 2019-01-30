@@ -18,6 +18,8 @@ interface ImageOptionsUseCase {
   fun getCroppingSourceUri(): Uri
   fun getCroppingDestinationUri(): Uri
   fun getBitmapFromUriSingle(imageUri: Uri): Single<Bitmap>
+  fun downloadImageObservable(link: String): Observable<Long>
+  fun downloadCrystallizedImage(): Observable<Long>
 }
 
 class ImageOptionsInteractor(
@@ -53,6 +55,18 @@ class ImageOptionsInteractor(
   override fun getBitmapFromUriSingle(imageUri: Uri): Single<Bitmap> {
     return wallrRepository.getBitmapFromUri(imageUri)
         .subscribeOn(Schedulers.io())
+  }
+
+  override fun downloadImageObservable(link: String): Observable<Long> {
+    return wallrRepository.downloadImage(link)
+        .subscribeOn(Schedulers.io())
+        .observeOn(postExecutionThread.scheduler)
+  }
+
+  override fun downloadCrystallizedImage(): Observable<Long> {
+    return wallrRepository.saveCrystallizedImageToDownloads()
+        .subscribeOn(Schedulers.io())
+        .observeOn(postExecutionThread.scheduler)
   }
 
 }

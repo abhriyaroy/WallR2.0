@@ -8,6 +8,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import zebrostudio.wallr100.data.exception.ImageDownloadException
+import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
@@ -18,7 +19,7 @@ import java.net.URL
 interface ImageHandler {
 
   fun isImageCached(link: String): Boolean
-  fun fetchImage(link: String): Observable<Long>
+  fun fetchImage(link: String, outputFile: File): Observable<Long>
   fun cancelFetchingImage()
   fun getImageBitmap(): Bitmap
   fun clearImageCache(): Completable
@@ -43,7 +44,7 @@ class ImageHandlerImpl(
     return (imageCacheTracker.first && (imageCacheTracker.second == link))
   }
 
-  override fun fetchImage(link: String): Observable<Long> {
+  override fun fetchImage(link: String, outputFile: File): Observable<Long> {
     return Observable.create {
       var connection: HttpURLConnection? = null
       var inputStream: InputStream? = null
@@ -58,7 +59,7 @@ class ImageHandlerImpl(
           it.onError(ImageDownloadException())
         }
         inputStream = connection.inputStream
-        outputStream = FileOutputStream(fileHandler.getCacheFile())
+        outputStream = FileOutputStream(outputFile)
         val data = ByteArray(byteArraySize)
         var count: Int = inputStream.read(data)
         var read: Long = 0

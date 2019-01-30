@@ -162,7 +162,7 @@ class WallrDataRepository(
       }
 
     }
-    return imageHandler.fetchImage(link)
+    return imageHandler.fetchImage(link, fileHandler.getCacheFile())
         .flatMap {
           if (it == imageDownloadProgressFinished) {
             Observable.just(ImageDownloadModel(it, imageHandler.getImageBitmap()))
@@ -192,6 +192,15 @@ class WallrDataRepository(
 
   override fun getBitmapFromUri(uri: Uri): Single<Bitmap> {
     return imageHandler.convertUriToBitmap(uri)
+  }
+
+  override fun downloadImage(link: String): Observable<Long> {
+    return imageHandler.fetchImage(link, fileHandler.getDownloadFile())
+  }
+
+  override fun saveCrystallizedImageToDownloads(): Observable<Long> {
+    // To be implemented properly later on
+    return Observable.just(100)
   }
 
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()

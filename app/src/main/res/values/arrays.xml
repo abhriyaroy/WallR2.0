@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string-array name="imageDownloadQualities">
+    <item>Super High</item>
+    <item>High</item>
+    <item>Medium</item>
+    <item>Low</item>
+    <item>Super Low</item>
+  </string-array>
+
+  <string-array name="imageDownloadQualitiesWithCrystallized">
+    <item>Super High</item>
+    <item>High</item>
+    <item>Medium</item>
+    <item>Low</item>
+    <item>Super Low</item>
+    <item>Crystallized Version</item>
+  </string-array>
+
+</resources>

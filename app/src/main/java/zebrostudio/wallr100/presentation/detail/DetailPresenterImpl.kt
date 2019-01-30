@@ -22,7 +22,6 @@ import zebrostudio.wallr100.presentation.detail.ActionType.*
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 import android.net.Uri
-import java.lang.Exception
 
 class DetailPresenterImpl(
   private var context: Context,
@@ -32,24 +31,26 @@ class DetailPresenterImpl(
   private val postExecutionThread: PostExecutionThread
 ) : DetailContract.DetailPresenter {
 
-  private var detailView: DetailContract.DetailView? = null
   internal lateinit var imageType: ImageListType
   internal lateinit var wallpaperImage: ImagePresenterEntity
   internal lateinit var searchImage: SearchPicturesPresenterEntity
-  private val downloadCompletedValue: Long = 100
-  private val showIndefiniteLoaderAtProgressValue: Long = 99
-  private val downloadStartedValue: Long = 0
-  private var downloadProgress: Long = 0
   internal var isDownloadInProgress: Boolean = false
   internal var isImageOperationInProgress: Boolean = false
   internal var wallpaperHasBeenSet: Boolean = false
   internal var isSlidingPanelExpanded: Boolean = false
+  private val downloadCompletedValue: Long = 100
+  private val showIndefiniteLoaderAtProgressValue: Long = 99
+  private val downloadStartedValue: Long = 0
+  private var downloadProgress: Long = 0
+  private var imageHasBeenCrystallized: Boolean = false
+  private var detailView: DetailContract.DetailView? = null
 
   override fun attachView(view: DetailContract.DetailView) {
     detailView = view
   }
 
   override fun detachView() {
+    imageHasBeenCrystallized = false
     detailView = null
   }
 
@@ -248,6 +249,47 @@ class DetailPresenterImpl(
     }
   }
 
+  override fun handleDownloadQualitySelectionEvent(
+    downloadType: ImageListType,
+    selectedIndex: Int
+  ) {
+    val imageDownloadObservable =
+        if (downloadType == SEARCH) {
+          if (selectedIndex == 0) {
+            imageOptionsUseCase.downloadImageObservable(
+                searchImage.imageQualityUrlPresenterEntity.rawImageLink)
+          } else if (selectedIndex == 1) {
+            imageOptionsUseCase.downloadImageObservable(
+                searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+          } else if (selectedIndex == 2) {
+            imageOptionsUseCase.downloadImageObservable(
+                searchImage.imageQualityUrlPresenterEntity.regularImageLink)
+          } else if (selectedIndex == 3) {
+            imageOptionsUseCase.downloadImageObservable(
+                searchImage.imageQualityUrlPresenterEntity.thumbImageLink)
+          } else if (selectedIndex == 4) {
+            imageOptionsUseCase.downloadImageObservable(
+                searchImage.imageQualityUrlPresenterEntity.smallImageLink)
+          } else {
+            imageOptionsUseCase.downloadCrystallizedImage()
+          }
+        } else {
+          if (selectedIndex == 0) {
+            imageOptionsUseCase.downloadImageObservable(wallpaperImage.imageLink.raw)
+          } else if (selectedIndex == 1) {
+            imageOptionsUseCase.downloadImageObservable(wallpaperImage.imageLink.large)
+          } else if (selectedIndex == 2) {
+            imageOptionsUseCase.downloadImageObservable(wallpaperImage.imageLink.medium)
+          } else if (selectedIndex == 3) {
+            imageOptionsUseCase.downloadImageObservable(wallpaperImage.imageLink.thumb)
+          } else if (selectedIndex == 4) {
+            imageOptionsUseCase.downloadImageObservable(wallpaperImage.imageLink.small)
+          } else {
+            imageOptionsUseCase.downloadCrystallizedImage()
+          }
+        }
+  }
+
   override fun setPanelStateAsExpanded() {
     isSlidingPanelExpanded = true
   }
@@ -342,7 +384,20 @@ class DetailPresenterImpl(
   }
 
   private fun downloadWallpaper() {
-    // To be implemented later
+    if (imageType == SEARCH) {
+      if (imageHasBeenCrystallized) {
+        detailView?.showSearchTypeDownloadDialog(true)
+      } else {
+        detailView?.showSearchTypeDownloadDialog(false)
+      }
+    } else {
+
+      if (imageHasBeenCrystallized) {
+        detailView?.showWallpaperTypeDownloadDialog(true)
+      } else {
+        detailView?.showWallpaperTypeDownloadDialog(false)
+      }
+    }
   }
 
   private fun crystallizeWallpaper() {
@@ -446,4 +501,13 @@ enum class ActionType {
   EDIT_SET,
   ADD_TO_COLLECTION,
   SHARE
+}
+
+enum class ImageDownloadType {
+  SUPER_HIGH,
+  HIGH,
+  MEDIUM,
+  LOW,
+  SUPER_LOW,
+  CRYSTALLIZED_VERSION
 }

@@ -42,5 +42,7 @@ interface WallrRepository {
   fun getCacheResultUri(): Uri
 
   fun getBitmapFromUri(uri: Uri): Single<Bitmap>
+  fun downloadImage(link: String): Observable<Long>
+  fun saveCrystallizedImageToDownloads(): Observable<Long>
 
 }

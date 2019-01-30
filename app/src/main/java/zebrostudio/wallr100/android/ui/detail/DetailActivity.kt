@@ -49,18 +49,19 @@ import kotlinx.android.synthetic.main.activity_detail.wallpaperDownloadProgressP
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
+import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.infoToast
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
 import zebrostudio.wallr100.presentation.detail.ActionType
 import zebrostudio.wallr100.presentation.detail.DetailContract.DetailPresenter
 import zebrostudio.wallr100.presentation.detail.DetailContract.DetailView
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
-import java.lang.Exception
 import javax.inject.Inject
 
 class DetailActivity : BaseActivity(), DetailView {
@@ -72,6 +73,7 @@ class DetailActivity : BaseActivity(), DetailView {
   private val initialLoaderProgress = 0
   private val initialLoaderProgressPercentage = "0%"
   private val blurRadius: Float = 8F
+  private val intiallySelectedDownloadOptionIndex = 0
 
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)
@@ -338,6 +340,54 @@ class DetailActivity : BaseActivity(), DetailView {
         .withMaxResultSize(minimumWidth, minimumHeight)
         .useSourceImageAspectRatio()
         .start(this)
+  }
+
+  override fun showSearchTypeDownloadDialog(showCrystallizedOption: Boolean) {
+    val optionsArray: Int = if (showCrystallizedOption) {
+      R.array.imageDownloadQualitiesWithCrystallized
+    } else {
+      R.array.imageDownloadQualities
+    }
+    MaterialDialog.Builder(this)
+        .backgroundColor(colorRes(R.color.color_primary))
+        .title(R.string.detail_activity_choose_download_quality_message)
+        .items(optionsArray)
+        .contentColor(colorRes(R.color.color_white))
+        .widgetColor(colorRes(R.color.color_accent))
+        .positiveColor(colorRes(R.color.color_accent))
+        .negativeColor(colorRes(R.color.color_accent))
+        .itemsCallbackSingleChoice(intiallySelectedDownloadOptionIndex
+        ) { _, _, which, _ ->
+          presenter.handleDownloadQualitySelectionEvent(SEARCH, which)
+          true
+        }
+        .positiveText(R.string.detail_activity_options_download)
+        .negativeText(R.string.cancel_text)
+        .show()
+  }
+
+  override fun showWallpaperTypeDownloadDialog(showCrystallizedOption: Boolean) {
+    val optionsArray: Int = if (showCrystallizedOption) {
+      R.array.imageDownloadQualitiesWithCrystallized
+    } else {
+      R.array.imageDownloadQualities
+    }
+    MaterialDialog.Builder(this)
+        .backgroundColor(colorRes(R.color.color_primary))
+        .title(R.string.detail_activity_choose_download_quality_message)
+        .items(optionsArray)
+        .contentColor(colorRes(R.color.color_white))
+        .widgetColor(colorRes(R.color.color_accent))
+        .positiveColor(colorRes(R.color.color_accent))
+        .negativeColor(colorRes(R.color.color_accent))
+        .itemsCallbackSingleChoice(intiallySelectedDownloadOptionIndex
+        ) { _, _, which, _ ->
+          presenter.handleDownloadQualitySelectionEvent(WALLPAPERS, which)
+          true
+        }
+        .positiveText(R.string.detail_activity_options_download)
+        .negativeText(R.string.cancel_text)
+        .show()
   }
 
   override fun collapseSlidingPanel() {

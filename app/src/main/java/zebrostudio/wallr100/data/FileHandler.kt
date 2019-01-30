@@ -9,6 +9,7 @@ interface FileHandler {
   fun getCacheFile(): File
   fun getCacheFileUriForCropping(): Uri
   fun getCrystallizedCacheFile(): File
+  fun getDownloadFile(): File
   fun deleteCacheFiles()
   fun freeSpaceAvailable(): Boolean
 
@@ -18,14 +19,19 @@ class FileHandlerImpl : FileHandler {
 
   private val appDirectoryName = "WallR"
   private val cacheDirectoryName = ".cache"
+  private val downloadsDirectoryName = "Downloads"
   private val cacheFolder: File =
       File(Environment.getExternalStorageDirectory().path + File.separator + appDirectoryName
           + File.separator + cacheDirectoryName)
+  private val downloadsFolder: File =
+      File(Environment.getExternalStorageDirectory().path + File.separator + appDirectoryName
+          + File.separator + downloadsDirectoryName)
   private val cacheFile: File = File(cacheFolder, System.currentTimeMillis().toString())
   private val cacheCroppedFile: File =
       File(cacheFolder, System.currentTimeMillis().toString())
   private val cacheCrystallizedFile: File =
       File(cacheFolder, System.currentTimeMillis().toString())
+  private val downloadFile: File = File(downloadsFolder, System.currentTimeMillis().toString())
   private val minimumFreeStorageSpaceInMb = 20
   private val bytesToMegaBytes = 1048576
 
@@ -53,6 +59,14 @@ class FileHandlerImpl : FileHandler {
     return cacheCrystallizedFile
   }
 
+  override fun getDownloadFile(): File {
+    createDownloadsFolder()
+    if (!downloadFile.exists()) {
+      downloadFile.createNewFile()
+    }
+    return downloadFile
+  }
+
   override fun deleteCacheFiles() {
     if (cacheFolder.exists()) {
       cacheFolder.deleteRecursively()
@@ -68,6 +82,12 @@ class FileHandlerImpl : FileHandler {
   private fun createCacheFolder() {
     if (!cacheFolder.exists()) {
       cacheFolder.mkdirs()
+    }
+  }
+
+  private fun createDownloadsFolder() {
+    if (!downloadsFolder.exists()) {
+      downloadsFolder.mkdirs()
     }
   }
 

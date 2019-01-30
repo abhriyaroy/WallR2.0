@@ -82,6 +82,7 @@ android {
     implementation "com.google.firebase:firebase-database:$FIREBASE_DATABASE_VERSION"
     // Sliding up panel
     implementation "com.sothree.slidinguppanel:library:$SLIDING_UP_PANEL_VERSION"
+    // Circle ImageView
     implementation "de.hdodenhof:circleimageview:$CIRCLE_IMAGEVIEW_VERSION"
     // BlurView
     implementation "com.eightbitlab:blurview:$BLURVIEW_VERSION"

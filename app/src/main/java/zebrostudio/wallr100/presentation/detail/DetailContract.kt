@@ -43,6 +43,8 @@ interface DetailContract {
     fun showWallpaperOperationInProgressWaitMessage()
     fun showDownloadWallpaperCancelledMessage()
     fun startCroppingActivity(source: Uri, destination: Uri, minimumWidth: Int, minimumHeight: Int)
+    fun showSearchTypeDownloadDialog(showCrystallizedOption: Boolean)
+    fun showWallpaperTypeDownloadDialog(showCrystallizedOption: Boolean)
     fun collapseSlidingPanel()
     fun exitView()
   }
@@ -62,6 +64,7 @@ interface DetailContract {
     )
 
     fun handleViewResult(requestCode: Int, resultCode: Int, data: Intent?)
+    fun handleDownloadQualitySelectionEvent(downloadType: ImageListType, selectedIndex: Int)
     fun setPanelStateAsExpanded()
     fun setPanelStateAsCollapsed()
   }
