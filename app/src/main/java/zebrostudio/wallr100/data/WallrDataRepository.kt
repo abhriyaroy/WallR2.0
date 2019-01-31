@@ -34,7 +34,8 @@ class WallrDataRepository(
   private var firebasePictureEntityMapper: FirebasePictureEntityMapper,
   private var urlShortener: URLShortener,
   private var imageHandler: ImageHandler,
-  private val fileHandler: FileHandler
+  private val fileHandler: FileHandler,
+  private val downloadHelper: DownloadHelper
 ) : WallrRepository {
 
   private val purchasePreferenceName = "PURCHASE_PREF"
@@ -162,7 +163,7 @@ class WallrDataRepository(
       }
 
     }
-    return imageHandler.fetchImage(link, fileHandler.getCacheFile())
+    return imageHandler.fetchImage(link)
         .flatMap {
           if (it == imageDownloadProgressFinished) {
             Observable.just(ImageDownloadModel(it, imageHandler.getImageBitmap()))
@@ -194,13 +195,17 @@ class WallrDataRepository(
     return imageHandler.convertUriToBitmap(uri)
   }
 
-  override fun downloadImage(link: String): Observable<Long> {
-    return imageHandler.fetchImage(link, fileHandler.getDownloadFile())
+  override fun downloadImage(link: String): Completable {
+    return downloadHelper.downloadImage(link)
   }
 
-  override fun saveCrystallizedImageToDownloads(): Observable<Long> {
+  override fun saveCrystallizedImageToDownloads(): Completable {
     // To be implemented properly later on
-    return Observable.just(100)
+    return Completable.complete()
+  }
+
+  override fun checkIfDownloadIsInProgress(link: String): Boolean {
+    return downloadHelper.isDownloadEnqued(link)
   }
 
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()

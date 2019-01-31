@@ -140,5 +140,9 @@
     Unable to fetch wallpaper. Please try again</string>
   <string name="detail_activity_finalizing_stuff_wait_message">Finalizing stuff. Please wait...</string>
   <string name="detail_activity_wallpaper_download_cancelled_message">Wallpaper download cancelled</string>
+  <string name="detail_activity_download_notification_title_text">Downloading wallpaper</string>
+  <string name="detail_activity_download_started_message">Your wallpaper download has been started</string>
+  <string name="detail_activity_download_already_in_progress_message">Your wallpaper download is already in progress</string>
+  <string name="detail_activity_download_finished_message">Your wallpaper has finished downloading</string>
 
 </resources>

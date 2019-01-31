@@ -15,6 +15,8 @@ import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.ResourceUtilsImpl
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.android.utils.WallpaperSetterImpl
+import zebrostudio.wallr100.data.DownloadHelper
+import zebrostudio.wallr100.data.DownloadHelperImpl
 import zebrostudio.wallr100.data.FileHandler
 import zebrostudio.wallr100.data.FileHandlerImpl
 import zebrostudio.wallr100.data.SharedPrefsHelper
@@ -100,6 +102,12 @@ class AppModule {
   fun providesWallpaperSetter(context: Context): WallpaperSetter = WallpaperSetterImpl(context)
 
   @Provides
+  fun providesDownloadHelper(
+    context: Context,
+    fileHandler: FileHandler
+  ): DownloadHelper = DownloadHelperImpl(context, fileHandler)
+
+  @Provides
   fun provideImageHandler(
     context: Context,
     fileHandler: FileHandler
@@ -116,7 +124,8 @@ class AppModule {
     firebasePictureEntityMapper: FirebasePictureEntityMapper,
     urlShortener: URLShortener,
     imageHandler: ImageHandler,
-    fileHandler: FileHandler
+    fileHandler: FileHandler,
+    downloadHelper: DownloadHelper
   ): WallrRepository = WallrDataRepository(retrofitFirebaseAuthFactory,
       unsplashClientFactory,
       sharedPrefsHelper,
@@ -125,7 +134,8 @@ class AppModule {
       firebasePictureEntityMapper,
       urlShortener,
       imageHandler,
-      fileHandler)
+      fileHandler,
+      downloadHelper)
 
   @Provides
   @PerApplication

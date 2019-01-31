@@ -1,6 +1,8 @@
 package zebrostudio.wallr100.android.ui.detail
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,6 +11,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.animation.Animation
@@ -68,12 +71,19 @@ class DetailActivity : BaseActivity(), DetailView {
 
   @Inject lateinit var presenter: DetailPresenter
 
-  private var materialProgressLoader: MaterialDialog? = null
   private val slidingPanelParallelOffset = 40
   private val initialLoaderProgress = 0
   private val initialLoaderProgressPercentage = "0%"
   private val blurRadius: Float = 8F
-  private val intiallySelectedDownloadOptionIndex = 0
+  private val initialSelectedDownloadOptionIndex = 0
+  private val downloadCompleteValue = 100
+  private val channelId = "wallrNotificationChannel"
+  private val channelName = "wallr"
+  private val notificationId = 1
+  private val importance = NotificationManager.IMPORTANCE_HIGH
+  private lateinit var notificationBuilder: NotificationCompat.Builder
+  private lateinit var notificationManager: NotificationManager
+  private var materialProgressLoader: MaterialDialog? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)
@@ -356,7 +366,7 @@ class DetailActivity : BaseActivity(), DetailView {
         .widgetColor(colorRes(R.color.color_accent))
         .positiveColor(colorRes(R.color.color_accent))
         .negativeColor(colorRes(R.color.color_accent))
-        .itemsCallbackSingleChoice(intiallySelectedDownloadOptionIndex
+        .itemsCallbackSingleChoice(initialSelectedDownloadOptionIndex
         ) { _, _, which, _ ->
           presenter.handleDownloadQualitySelectionEvent(SEARCH, which)
           true
@@ -380,7 +390,7 @@ class DetailActivity : BaseActivity(), DetailView {
         .widgetColor(colorRes(R.color.color_accent))
         .positiveColor(colorRes(R.color.color_accent))
         .negativeColor(colorRes(R.color.color_accent))
-        .itemsCallbackSingleChoice(intiallySelectedDownloadOptionIndex
+        .itemsCallbackSingleChoice(initialSelectedDownloadOptionIndex
         ) { _, _, which, _ ->
           presenter.handleDownloadQualitySelectionEvent(WALLPAPERS, which)
           true
@@ -388,6 +398,18 @@ class DetailActivity : BaseActivity(), DetailView {
         .positiveText(R.string.detail_activity_options_download)
         .negativeText(R.string.cancel_text)
         .show()
+  }
+
+  override fun showDownloadStartedMessage() {
+    infoToast(getString(R.string.detail_activity_download_started_message))
+  }
+
+  override fun showDowloadAlreadyInProgressMessage() {
+    errorToast(getString(R.string.detail_activity_download_already_in_progress_message))
+  }
+
+  override fun showDownloadCompletedSuccessMessage() {
+    successToast(getString(R.string.detail_activity_download_finished_message))
   }
 
   override fun collapseSlidingPanel() {

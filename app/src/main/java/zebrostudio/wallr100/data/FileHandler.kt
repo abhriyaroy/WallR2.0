@@ -31,7 +31,8 @@ class FileHandlerImpl : FileHandler {
       File(cacheFolder, System.currentTimeMillis().toString())
   private val cacheCrystallizedFile: File =
       File(cacheFolder, System.currentTimeMillis().toString())
-  private val downloadFile: File = File(downloadsFolder, System.currentTimeMillis().toString())
+  private val downloadFile: File =
+      File(downloadsFolder, "${System.currentTimeMillis()}.jpg")
   private val minimumFreeStorageSpaceInMb = 20
   private val bytesToMegaBytes = 1048576
 

@@ -19,7 +19,7 @@ import java.net.URL
 interface ImageHandler {
 
   fun isImageCached(link: String): Boolean
-  fun fetchImage(link: String, outputFile: File): Observable<Long>
+  fun fetchImage(link: String): Observable<Long>
   fun cancelFetchingImage()
   fun getImageBitmap(): Bitmap
   fun clearImageCache(): Completable
@@ -44,7 +44,7 @@ class ImageHandlerImpl(
     return (imageCacheTracker.first && (imageCacheTracker.second == link))
   }
 
-  override fun fetchImage(link: String, outputFile: File): Observable<Long> {
+  override fun fetchImage(link: String): Observable<Long> {
     return Observable.create {
       var connection: HttpURLConnection? = null
       var inputStream: InputStream? = null
@@ -59,7 +59,7 @@ class ImageHandlerImpl(
           it.onError(ImageDownloadException())
         }
         inputStream = connection.inputStream
-        outputStream = FileOutputStream(outputFile)
+        outputStream = FileOutputStream(fileHandler.getCacheFile())
         val data = ByteArray(byteArraySize)
         var count: Int = inputStream.read(data)
         var read: Long = 0

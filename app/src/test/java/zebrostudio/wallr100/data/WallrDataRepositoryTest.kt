@@ -49,6 +49,7 @@ class WallrDataRepositoryTest {
   @Mock lateinit var urlShortener: URLShortener
   @Mock lateinit var imageHandler: ImageHandler
   @Mock lateinit var fileHandler: FileHandler
+  @Mock lateinit var downloadHelper: DownloadHelper
   @Mock lateinit var mockBitmap: Bitmap
   @Mock lateinit var mockUri: Uri
   private lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
@@ -84,7 +85,7 @@ class WallrDataRepositoryTest {
     wallrDataRepository =
         WallrDataRepository(remoteAuthServiceFactory, unsplashClientFactory, sharedPrefs,
             unsplashPictureEntityMapper, firebaseDatabaseHelper, firebasePictureEntityMapper,
-            urlShortener, imageHandler, fileHandler)
+            urlShortener, imageHandler, fileHandler, downloadHelper)
   }
 
   @Test fun `should return single on server success response`() {

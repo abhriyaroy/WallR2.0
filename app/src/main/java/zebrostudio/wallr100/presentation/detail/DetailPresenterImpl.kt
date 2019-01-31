@@ -253,41 +253,24 @@ class DetailPresenterImpl(
     downloadType: ImageListType,
     selectedIndex: Int
   ) {
-    val imageDownloadObservable =
-        if (downloadType == SEARCH) {
-          if (selectedIndex == 0) {
-            imageOptionsUseCase.downloadImageObservable(
-                searchImage.imageQualityUrlPresenterEntity.rawImageLink)
-          } else if (selectedIndex == 1) {
-            imageOptionsUseCase.downloadImageObservable(
-                searchImage.imageQualityUrlPresenterEntity.largeImageLink)
-          } else if (selectedIndex == 2) {
-            imageOptionsUseCase.downloadImageObservable(
-                searchImage.imageQualityUrlPresenterEntity.regularImageLink)
-          } else if (selectedIndex == 3) {
-            imageOptionsUseCase.downloadImageObservable(
-                searchImage.imageQualityUrlPresenterEntity.thumbImageLink)
-          } else if (selectedIndex == 4) {
-            imageOptionsUseCase.downloadImageObservable(
-                searchImage.imageQualityUrlPresenterEntity.smallImageLink)
-          } else {
-            imageOptionsUseCase.downloadCrystallizedImage()
-          }
-        } else {
-          if (selectedIndex == 0) {
-            imageOptionsUseCase.downloadImageObservable(wallpaperImage.imageLink.raw)
-          } else if (selectedIndex == 1) {
-            imageOptionsUseCase.downloadImageObservable(wallpaperImage.imageLink.large)
-          } else if (selectedIndex == 2) {
-            imageOptionsUseCase.downloadImageObservable(wallpaperImage.imageLink.medium)
-          } else if (selectedIndex == 3) {
-            imageOptionsUseCase.downloadImageObservable(wallpaperImage.imageLink.thumb)
-          } else if (selectedIndex == 4) {
-            imageOptionsUseCase.downloadImageObservable(wallpaperImage.imageLink.small)
-          } else {
-            imageOptionsUseCase.downloadCrystallizedImage()
-          }
-        }
+    if (selectedIndex < 5) {
+      val downloadLink = getDownloadLink(downloadType, selectedIndex)
+      if (imageOptionsUseCase.isDownloadInProgress(downloadLink)) {
+        detailView?.showDowloadAlreadyInProgressMessage()
+      } else {
+        imageOptionsUseCase.downloadImageObservable(downloadLink)
+            .doOnSubscribe {
+              detailView?.showDownloadStartedMessage()
+            }
+            .autoDisposable(detailView?.getScope()!!)
+            .subscribe({
+              detailView?.showDownloadCompletedSuccessMessage()
+            }, {
+              detailView?.showGenericErrorMessage()
+            })
+      }
+    }
+
   }
 
   override fun setPanelStateAsExpanded() {
@@ -391,7 +374,6 @@ class DetailPresenterImpl(
         detailView?.showSearchTypeDownloadDialog(false)
       }
     } else {
-
       if (imageHasBeenCrystallized) {
         detailView?.showWallpaperTypeDownloadDialog(true)
       } else {
@@ -491,6 +473,37 @@ class DetailPresenterImpl(
           isImageOperationInProgress = false
           detailView?.hideScreenBlur()
         })
+  }
+
+  private fun getDownloadLink(
+    downloadType: ImageListType,
+    selectedIndex: Int
+  ): String {
+    return if (downloadType == SEARCH) {
+      if (selectedIndex == 0) {
+        searchImage.imageQualityUrlPresenterEntity.rawImageLink
+      } else if (selectedIndex == 1) {
+        searchImage.imageQualityUrlPresenterEntity.largeImageLink
+      } else if (selectedIndex == 2) {
+        searchImage.imageQualityUrlPresenterEntity.regularImageLink
+      } else if (selectedIndex == 3) {
+        searchImage.imageQualityUrlPresenterEntity.thumbImageLink
+      } else {
+        searchImage.imageQualityUrlPresenterEntity.smallImageLink
+      }
+    } else {
+      if (selectedIndex == 0) {
+        wallpaperImage.imageLink.raw
+      } else if (selectedIndex == 1) {
+        wallpaperImage.imageLink.large
+      } else if (selectedIndex == 2) {
+        wallpaperImage.imageLink.medium
+      } else if (selectedIndex == 3) {
+        wallpaperImage.imageLink.thumb
+      } else {
+        wallpaperImage.imageLink.small
+      }
+    }
   }
 }
 

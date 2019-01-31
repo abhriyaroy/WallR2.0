@@ -45,6 +45,9 @@ interface DetailContract {
     fun startCroppingActivity(source: Uri, destination: Uri, minimumWidth: Int, minimumHeight: Int)
     fun showSearchTypeDownloadDialog(showCrystallizedOption: Boolean)
     fun showWallpaperTypeDownloadDialog(showCrystallizedOption: Boolean)
+    fun showDownloadStartedMessage()
+    fun showDowloadAlreadyInProgressMessage()
+    fun showDownloadCompletedSuccessMessage()
     fun collapseSlidingPanel()
     fun exitView()
   }

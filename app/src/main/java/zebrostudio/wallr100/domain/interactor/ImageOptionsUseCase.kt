@@ -18,8 +18,9 @@ interface ImageOptionsUseCase {
   fun getCroppingSourceUri(): Uri
   fun getCroppingDestinationUri(): Uri
   fun getBitmapFromUriSingle(imageUri: Uri): Single<Bitmap>
-  fun downloadImageObservable(link: String): Observable<Long>
-  fun downloadCrystallizedImage(): Observable<Long>
+  fun downloadImageObservable(link: String): Completable
+  fun downloadCrystallizedImage(): Completable
+  fun isDownloadInProgress(link: String): Boolean
 }
 
 class ImageOptionsInteractor(
@@ -57,16 +58,20 @@ class ImageOptionsInteractor(
         .subscribeOn(Schedulers.io())
   }
 
-  override fun downloadImageObservable(link: String): Observable<Long> {
+  override fun downloadImageObservable(link: String): Completable {
     return wallrRepository.downloadImage(link)
         .subscribeOn(Schedulers.io())
         .observeOn(postExecutionThread.scheduler)
   }
 
-  override fun downloadCrystallizedImage(): Observable<Long> {
+  override fun downloadCrystallizedImage(): Completable {
     return wallrRepository.saveCrystallizedImageToDownloads()
         .subscribeOn(Schedulers.io())
         .observeOn(postExecutionThread.scheduler)
+  }
+
+  override fun isDownloadInProgress(link: String): Boolean {
+    return wallrRepository.checkIfDownloadIsInProgress(link)
   }
 
 }
