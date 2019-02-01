@@ -14,9 +14,6 @@ android {
     renderscriptSupportModeEnabled true
     versionCode APP_VERSION
     versionName "$APP_VERSION_NAME"
-    ndk {
-      abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
-    }
     dexOptions {
       preDexLibraries = true
       javaMaxHeapSize "2g"

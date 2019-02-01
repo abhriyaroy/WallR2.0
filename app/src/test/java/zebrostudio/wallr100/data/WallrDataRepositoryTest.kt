@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.pddstudio.urlshortener.URLShortener
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.Assert.assertEquals
@@ -358,6 +359,24 @@ class WallrDataRepositoryTest {
     verifyNoMoreInteractions(imageHandler)
   }
 
+  @Test fun `should complete successfully on downloadImage call success`() {
+    `when`(downloadHelper.downloadImage(randomString)).thenReturn(Completable.complete())
+
+    wallrDataRepository.downloadImage(randomString).test().assertComplete()
+
+    verify(downloadHelper).downloadImage(randomString)
+    verifyNoMoreInteractions(downloadHelper)
+  }
+
+  @Test fun `should return true on checkIfDownloadIsInProgress call success`() {
+    `when`(downloadHelper.isDownloadEnqued(randomString)).thenReturn(true)
+
+    assertTrue(wallrDataRepository.checkIfDownloadIsInProgress(randomString))
+
+    verify(downloadHelper).isDownloadEnqued(randomString)
+    verifyNoMoreInteractions(downloadHelper)
+  }
+
   /* Need to properly implement timeout for Rx Java
 
   @Test fun `should return Single of ImageModel list on getPicturesFromFirebase call success`() {
@@ -379,7 +398,7 @@ class WallrDataRepositoryTest {
     verifyNoMoreInteractions(firebaseDatabaseHelper)
   }*/
 
-  fun stubFirebaseDatabaseNode(childPath: String) {
+  private fun stubFirebaseDatabaseNode(childPath: String) {
     `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
     `when`(firebaseDatabaseHelper.getDatabase().getReference(firebaseDatabasePath)).thenReturn(
         databaseReference)
