@@ -18,6 +18,7 @@ import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -37,6 +38,7 @@ import zebrostudio.wallr100.presentation.datafactory.SearchPicturesPresenterEnti
 import zebrostudio.wallr100.presentation.detail.ActionType.*
 import zebrostudio.wallr100.presentation.detail.DetailContract
 import zebrostudio.wallr100.presentation.detail.DetailPresenterImpl
+import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 import java.lang.Exception
 import java.util.Random
 import java.util.UUID.*
@@ -221,6 +223,8 @@ class DetailActivityPresenterImplTest {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
         Observable.create {
@@ -232,6 +236,8 @@ class DetailActivityPresenterImplTest {
         intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, true)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
@@ -244,6 +250,8 @@ class DetailActivityPresenterImplTest {
   fun `should handle permission granted success and show finalizing wallpaper message after handlePermissionRequestResult is called in handleQuickSet call`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
     detailPresenterImpl.imageType = WALLPAPERS
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
@@ -259,6 +267,8 @@ class DetailActivityPresenterImplTest {
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, false)
     assertEquals(detailPresenterImpl.isImageOperationInProgress, true)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
@@ -277,6 +287,8 @@ class DetailActivityPresenterImplTest {
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
         Observable.just(imageDownloadModel))
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(true)
     `when`(mockContext.getString(R.string.detail_activity_finalizing_wallpaper_messsage))
         .thenReturn(indefiniteLoaderMessage)
@@ -286,6 +298,8 @@ class DetailActivityPresenterImplTest {
         intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(detailPresenterImpl.isImageOperationInProgress, false)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
@@ -302,6 +316,8 @@ class DetailActivityPresenterImplTest {
     detailPresenterImpl.imageType = SEARCH
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
         Observable.just(imageDownloadModel))
@@ -315,6 +331,8 @@ class DetailActivityPresenterImplTest {
         intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(detailPresenterImpl.isImageOperationInProgress, false)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
@@ -393,6 +411,8 @@ class DetailActivityPresenterImplTest {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
         Observable.create {
@@ -404,6 +424,8 @@ class DetailActivityPresenterImplTest {
         intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, true)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
@@ -416,6 +438,8 @@ class DetailActivityPresenterImplTest {
   fun `should handle permission granted success and show indefinite loader after handlePermissionRequestResult is called in handleEditSet call`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
     detailPresenterImpl.imageType = WALLPAPERS
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
@@ -431,6 +455,8 @@ class DetailActivityPresenterImplTest {
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, false)
     assertEquals(detailPresenterImpl.isImageOperationInProgress, true)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
@@ -445,6 +471,8 @@ class DetailActivityPresenterImplTest {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, null)
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
         Observable.create {
@@ -459,6 +487,8 @@ class DetailActivityPresenterImplTest {
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
         intArrayOf(PackageManager.PERMISSION_GRANTED))
 
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
@@ -522,7 +552,6 @@ class DetailActivityPresenterImplTest {
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri))
         .thenReturn(Single.error(Exception()))
-    `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(false)
 
     detailPresenterImpl.handleViewResult(REQUEST_CROP, RESULT_OK, mockIntent)
 
@@ -544,7 +573,6 @@ class DetailActivityPresenterImplTest {
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri))
         .thenReturn(Single.error(Exception()))
-    `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(false)
 
     detailPresenterImpl.handleViewResult(REQUEST_CROP, RESULT_OK, mockIntent)
 
@@ -558,6 +586,383 @@ class DetailActivityPresenterImplTest {
     verifyNoMoreInteractions(detailView)
     verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
     verifyNoMoreInteractions(imageOptionsUseCase)
+  }
+
+  @Test fun `should redirect to buy pro on handleDownloadClick call failure`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(false)
+
+    detailPresenterImpl.handleDownloadClick()
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(detailView).redirectToBuyPro(DOWNLOAD.ordinal)
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test fun `should request storage permission on handleDownloadClick call failure`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(false)
+
+    detailPresenterImpl.handleDownloadClick()
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).requestStoragePermission(DOWNLOAD)
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test fun `should show no internet error message on handleDownloadClick call failure`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(false)
+
+    detailPresenterImpl.handleDownloadClick()
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showNoInternetError()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show download dialog with crystallized search image option on handleDownloadClick call success`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.imageHasBeenCrystallized = true
+
+    detailPresenterImpl.handleDownloadClick()
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showSearchTypeDownloadDialog(true)
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show download dialog without crystallized search image option on handleDownloadClick call success`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.imageHasBeenCrystallized = false
+
+    detailPresenterImpl.handleDownloadClick()
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showSearchTypeDownloadDialog(false)
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show download dialog with crystallized wallpaper image option on handleDownloadClick call success`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.imageHasBeenCrystallized = true
+
+    detailPresenterImpl.handleDownloadClick()
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showWallpaperTypeDownloadDialog(true)
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show download dialog without crystallized wallpaper image option on handleDownloadClick call success`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.imageHasBeenCrystallized = false
+
+    detailPresenterImpl.handleDownloadClick()
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showWallpaperTypeDownloadDialog(false)
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show download dialog with crystallized wallpaper image option on handlePermissionRequestResult call success`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.imageHasBeenCrystallized = true
+
+    detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showWallpaperTypeDownloadDialog(true)
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show permission required message on handlePermissionRequestResult call failure`() {
+    detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_DENIED))
+
+    verify(detailView).showPermissionRequiredMessage()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show download complete message on handleDownloadQualitySelectionEvent call success of search image of super high quality`() {
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    val link = detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.rawImageLink
+    `when`(imageOptionsUseCase.isDownloadInProgress(link)).thenReturn(false)
+    `when`(imageOptionsUseCase.downloadImageCompletable(link)).thenReturn(Completable.complete())
+
+    detailPresenterImpl.handleDownloadQualitySelectionEvent(SEARCH, 0)
+
+    verify(imageOptionsUseCase).isDownloadInProgress(link)
+    verify(imageOptionsUseCase).downloadImageCompletable(link)
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(detailView).getScope()
+    verify(detailView).showDownloadStartedMessage()
+    verify(detailView).showDownloadCompletedSuccessMessage()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show generic error message on handleDownloadQualitySelectionEvent call success of search image of super high quality`() {
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    val link = detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.rawImageLink
+    `when`(imageOptionsUseCase.isDownloadInProgress(link)).thenReturn(false)
+    `when`(imageOptionsUseCase.downloadImageCompletable(link)).thenReturn(
+        Completable.error(Exception()))
+
+    detailPresenterImpl.handleDownloadQualitySelectionEvent(SEARCH, 0)
+
+    verify(imageOptionsUseCase).isDownloadInProgress(link)
+    verify(imageOptionsUseCase).downloadImageCompletable(link)
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(detailView).getScope()
+    verify(detailView).showDownloadStartedMessage()
+    verify(detailView).showGenericErrorMessage()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show download complete message on handleDownloadQualitySelectionEvent call success of search image of high quality`() {
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    val link = detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink
+    `when`(imageOptionsUseCase.isDownloadInProgress(link)).thenReturn(false)
+    `when`(imageOptionsUseCase.downloadImageCompletable(link)).thenReturn(Completable.complete())
+
+    detailPresenterImpl.handleDownloadQualitySelectionEvent(SEARCH, 1)
+
+    verify(imageOptionsUseCase).isDownloadInProgress(link)
+    verify(imageOptionsUseCase).downloadImageCompletable(link)
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(detailView).getScope()
+    verify(detailView).showDownloadStartedMessage()
+    verify(detailView).showDownloadCompletedSuccessMessage()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show download complete message on handleDownloadQualitySelectionEvent call success of search image of medium quality`() {
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    val link = detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.regularImageLink
+    `when`(imageOptionsUseCase.isDownloadInProgress(link)).thenReturn(false)
+    `when`(imageOptionsUseCase.downloadImageCompletable(link)).thenReturn(Completable.complete())
+
+    detailPresenterImpl.handleDownloadQualitySelectionEvent(SEARCH, 2)
+
+    verify(imageOptionsUseCase).isDownloadInProgress(link)
+    verify(imageOptionsUseCase).downloadImageCompletable(link)
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(detailView).getScope()
+    verify(detailView).showDownloadStartedMessage()
+    verify(detailView).showDownloadCompletedSuccessMessage()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show download complete message on handleDownloadQualitySelectionEvent call success of search image of low quality`() {
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    val link = detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.thumbImageLink
+    `when`(imageOptionsUseCase.isDownloadInProgress(link)).thenReturn(false)
+    `when`(imageOptionsUseCase.downloadImageCompletable(link)).thenReturn(Completable.complete())
+
+    detailPresenterImpl.handleDownloadQualitySelectionEvent(SEARCH, 3)
+
+    verify(imageOptionsUseCase).isDownloadInProgress(link)
+    verify(imageOptionsUseCase).downloadImageCompletable(link)
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(detailView).getScope()
+    verify(detailView).showDownloadStartedMessage()
+    verify(detailView).showDownloadCompletedSuccessMessage()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show download complete message on handleDownloadQualitySelectionEvent call success of search image of super low quality`() {
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    val link = detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.smallImageLink
+    `when`(imageOptionsUseCase.isDownloadInProgress(link)).thenReturn(false)
+    `when`(imageOptionsUseCase.downloadImageCompletable(link)).thenReturn(Completable.complete())
+
+    detailPresenterImpl.handleDownloadQualitySelectionEvent(SEARCH, 4)
+
+    verify(imageOptionsUseCase).isDownloadInProgress(link)
+    verify(imageOptionsUseCase).downloadImageCompletable(link)
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(detailView).getScope()
+    verify(detailView).showDownloadStartedMessage()
+    verify(detailView).showDownloadCompletedSuccessMessage()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show download complete message on handleDownloadQualitySelectionEvent call success of wallpaper image of super high quality`() {
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    val link = detailPresenterImpl.wallpaperImage.imageLink.raw
+    `when`(imageOptionsUseCase.isDownloadInProgress(link)).thenReturn(false)
+    `when`(imageOptionsUseCase.downloadImageCompletable(link)).thenReturn(Completable.complete())
+
+    detailPresenterImpl.handleDownloadQualitySelectionEvent(WALLPAPERS, 0)
+
+    verify(imageOptionsUseCase).isDownloadInProgress(link)
+    verify(imageOptionsUseCase).downloadImageCompletable(link)
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(detailView).getScope()
+    verify(detailView).showDownloadStartedMessage()
+    verify(detailView).showDownloadCompletedSuccessMessage()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show generic error message on handleDownloadQualitySelectionEvent call success of wallpaper image of super high quality`() {
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    val link = detailPresenterImpl.wallpaperImage.imageLink.raw
+    `when`(imageOptionsUseCase.isDownloadInProgress(link)).thenReturn(false)
+    `when`(imageOptionsUseCase.downloadImageCompletable(link)).thenReturn(
+        Completable.error(Exception()))
+
+    detailPresenterImpl.handleDownloadQualitySelectionEvent(WALLPAPERS, 0)
+
+    verify(imageOptionsUseCase).isDownloadInProgress(link)
+    verify(imageOptionsUseCase).downloadImageCompletable(link)
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(detailView).getScope()
+    verify(detailView).showDownloadStartedMessage()
+    verify(detailView).showGenericErrorMessage()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show download complete message on handleDownloadQualitySelectionEvent call success of wallpaper image of high quality`() {
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    val link = detailPresenterImpl.wallpaperImage.imageLink.large
+    `when`(imageOptionsUseCase.isDownloadInProgress(link)).thenReturn(false)
+    `when`(imageOptionsUseCase.downloadImageCompletable(link)).thenReturn(Completable.complete())
+
+    detailPresenterImpl.handleDownloadQualitySelectionEvent(WALLPAPERS, 1)
+
+    verify(imageOptionsUseCase).isDownloadInProgress(link)
+    verify(imageOptionsUseCase).downloadImageCompletable(link)
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(detailView).getScope()
+    verify(detailView).showDownloadStartedMessage()
+    verify(detailView).showDownloadCompletedSuccessMessage()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show download complete message on handleDownloadQualitySelectionEvent call success of wallpaper image of medium quality`() {
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    val link = detailPresenterImpl.wallpaperImage.imageLink.medium
+    `when`(imageOptionsUseCase.isDownloadInProgress(link)).thenReturn(false)
+    `when`(imageOptionsUseCase.downloadImageCompletable(link)).thenReturn(Completable.complete())
+
+    detailPresenterImpl.handleDownloadQualitySelectionEvent(WALLPAPERS, 2)
+
+    verify(imageOptionsUseCase).isDownloadInProgress(link)
+    verify(imageOptionsUseCase).downloadImageCompletable(link)
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(detailView).getScope()
+    verify(detailView).showDownloadStartedMessage()
+    verify(detailView).showDownloadCompletedSuccessMessage()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show download complete message on handleDownloadQualitySelectionEvent call success of wallpaper image of low quality`() {
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    val link = detailPresenterImpl.wallpaperImage.imageLink.thumb
+    `when`(imageOptionsUseCase.isDownloadInProgress(link)).thenReturn(false)
+    `when`(imageOptionsUseCase.downloadImageCompletable(link)).thenReturn(Completable.complete())
+
+    detailPresenterImpl.handleDownloadQualitySelectionEvent(WALLPAPERS, 3)
+
+    verify(imageOptionsUseCase).isDownloadInProgress(link)
+    verify(imageOptionsUseCase).downloadImageCompletable(link)
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(detailView).getScope()
+    verify(detailView).showDownloadStartedMessage()
+    verify(detailView).showDownloadCompletedSuccessMessage()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show download complete message on handleDownloadQualitySelectionEvent call success of wallpaper image of super low quality`() {
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    val link = detailPresenterImpl.wallpaperImage.imageLink.small
+    `when`(imageOptionsUseCase.isDownloadInProgress(link)).thenReturn(false)
+    `when`(imageOptionsUseCase.downloadImageCompletable(link)).thenReturn(Completable.complete())
+
+    detailPresenterImpl.handleDownloadQualitySelectionEvent(WALLPAPERS, 4)
+
+    verify(imageOptionsUseCase).isDownloadInProgress(link)
+    verify(imageOptionsUseCase).downloadImageCompletable(link)
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(detailView).getScope()
+    verify(detailView).showDownloadStartedMessage()
+    verify(detailView).showDownloadCompletedSuccessMessage()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should set isSlidingPanelExpanded to true on setSlidingPanelStateAsExpanded call success`() {
+    detailPresenterImpl.setPanelStateAsExpanded()
+
+    assertTrue(detailPresenterImpl.isSlidingPanelExpanded)
+  }
+
+  @Test
+  fun `should set isSlidingPanelExpanded to false on setSlidingPanelStateAsCollapsed call success`() {
+    detailPresenterImpl.setPanelStateAsCollapsed()
+
+    assertTrue(!detailPresenterImpl.isSlidingPanelExpanded)
   }
 
   @After

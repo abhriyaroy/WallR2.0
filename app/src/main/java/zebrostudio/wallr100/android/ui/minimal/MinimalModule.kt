@@ -6,7 +6,8 @@ import zebrostudio.wallr100.presentation.minimal.MinimalContract
 import zebrostudio.wallr100.presentation.minimal.MinimalPresenterImpl
 
 @Module
-class MinimalModule {
+class
+MinimalModule {
 
   @Provides
   internal fun provideMinimalPresenter(): MinimalContract.MinimalPresenter = MinimalPresenterImpl()

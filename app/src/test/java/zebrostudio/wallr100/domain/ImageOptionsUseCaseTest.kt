@@ -10,6 +10,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -109,6 +110,35 @@ class ImageOptionsUseCaseTest {
         .assertValue(mockBitmap)
 
     verify(wallrRepository).getBitmapFromUri(mockUri)
+    verifyNoMoreInteractions(wallrRepository)
+  }
+
+  @Test fun `should complete on downloadImageCompletable call success`() {
+    `when`(wallrRepository.downloadImage(randomString)).thenReturn(Completable.complete())
+
+    imageOptionsUseCase.downloadImageCompletable(randomString).test().assertComplete()
+
+    verify(wallrRepository).downloadImage(randomString)
+    verifyNoMoreInteractions(wallrRepository)
+    shouldVerifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test fun `should complete on downloadCrystallizedImageCompletable call success`() {
+    `when`(wallrRepository.saveCrystallizedImageToDownloads()).thenReturn(Completable.complete())
+
+    imageOptionsUseCase.downloadCrystallizedImageCompletable().test().assertComplete()
+
+    verify(wallrRepository).saveCrystallizedImageToDownloads()
+    verifyNoMoreInteractions(wallrRepository)
+    shouldVerifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test fun `should return true on downloadCrystallizedImageCompletable call success`() {
+    `when`(wallrRepository.checkIfDownloadIsInProgress(randomString)).thenReturn(true)
+
+    assertTrue(imageOptionsUseCase.isDownloadInProgress(randomString))
+
+    verify(wallrRepository).checkIfDownloadIsInProgress(randomString)
     verifyNoMoreInteractions(wallrRepository)
   }
 

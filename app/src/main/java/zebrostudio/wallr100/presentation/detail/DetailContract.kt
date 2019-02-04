@@ -46,7 +46,7 @@ interface DetailContract {
     fun showSearchTypeDownloadDialog(showCrystallizedOption: Boolean)
     fun showWallpaperTypeDownloadDialog(showCrystallizedOption: Boolean)
     fun showDownloadStartedMessage()
-    fun showDowloadAlreadyInProgressMessage()
+    fun showDownloadAlreadyInProgressMessage()
     fun showDownloadCompletedSuccessMessage()
     fun collapseSlidingPanel()
     fun exitView()

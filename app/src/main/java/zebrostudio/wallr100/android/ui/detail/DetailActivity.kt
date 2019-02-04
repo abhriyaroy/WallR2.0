@@ -404,7 +404,7 @@ class DetailActivity : BaseActivity(), DetailView {
     infoToast(getString(R.string.detail_activity_download_started_message))
   }
 
-  override fun showDowloadAlreadyInProgressMessage() {
+  override fun showDownloadAlreadyInProgressMessage() {
     errorToast(getString(R.string.detail_activity_download_already_in_progress_message))
   }
 

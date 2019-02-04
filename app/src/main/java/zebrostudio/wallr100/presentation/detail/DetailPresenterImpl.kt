@@ -38,11 +38,11 @@ class DetailPresenterImpl(
   internal var isImageOperationInProgress: Boolean = false
   internal var wallpaperHasBeenSet: Boolean = false
   internal var isSlidingPanelExpanded: Boolean = false
+  internal var imageHasBeenCrystallized: Boolean = false
   private val downloadCompletedValue: Long = 100
   private val showIndefiniteLoaderAtProgressValue: Long = 99
   private val downloadStartedValue: Long = 0
   private var downloadProgress: Long = 0
-  private var imageHasBeenCrystallized: Boolean = false
   private var detailView: DetailContract.DetailView? = null
 
   override fun attachView(view: DetailContract.DetailView) {
@@ -256,9 +256,9 @@ class DetailPresenterImpl(
     if (selectedIndex < 5) {
       val downloadLink = getDownloadLink(downloadType, selectedIndex)
       if (imageOptionsUseCase.isDownloadInProgress(downloadLink)) {
-        detailView?.showDowloadAlreadyInProgressMessage()
+        detailView?.showDownloadAlreadyInProgressMessage()
       } else {
-        imageOptionsUseCase.downloadImageObservable(downloadLink)
+        imageOptionsUseCase.downloadImageCompletable(downloadLink)
             .doOnSubscribe {
               detailView?.showDownloadStartedMessage()
             }
@@ -270,7 +270,6 @@ class DetailPresenterImpl(
             })
       }
     }
-
   }
 
   override fun setPanelStateAsExpanded() {
@@ -296,11 +295,11 @@ class DetailPresenterImpl(
 
   private fun handlePermissionGranted(requestCode: Int) {
     when (requestCode) {
-      QUICK_SET.ordinal -> quickSetWallpaper()
-      DOWNLOAD.ordinal -> downloadWallpaper()
-      CRYSTALLIZE.ordinal -> crystallizeWallpaper()
-      EDIT_SET.ordinal -> editSetWallpaper()
-      ADD_TO_COLLECTION.ordinal -> addWallpaperToCollection()
+      QUICK_SET.ordinal -> handleQuickSetClick()
+      DOWNLOAD.ordinal -> handleDownloadClick()
+      CRYSTALLIZE.ordinal -> handleCrystallizeClick()
+      EDIT_SET.ordinal -> handleEditSetClick()
+      ADD_TO_COLLECTION.ordinal -> handleAddToCollectionClick()
     }
   }
 
