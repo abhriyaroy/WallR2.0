@@ -13,8 +13,8 @@ import dagger.android.support.AndroidSupportInjection
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.EXPLORE_TAG
-import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.checkDataConnection
+import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.setMenuItemColorRed
 import zebrostudio.wallr100.android.utils.setMenuItemColorWhite
 import zebrostudio.wallr100.android.utils.visible

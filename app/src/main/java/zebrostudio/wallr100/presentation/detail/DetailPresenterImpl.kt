@@ -4,6 +4,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import com.uber.autodispose.autoDisposable
 import com.yalantis.ucrop.UCrop.REQUEST_CROP
 import io.reactivex.Observer
@@ -18,10 +19,14 @@ import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
-import zebrostudio.wallr100.presentation.detail.ActionType.*
+import zebrostudio.wallr100.presentation.detail.ActionType.ADD_TO_COLLECTION
+import zebrostudio.wallr100.presentation.detail.ActionType.CRYSTALLIZE
+import zebrostudio.wallr100.presentation.detail.ActionType.DOWNLOAD
+import zebrostudio.wallr100.presentation.detail.ActionType.EDIT_SET
+import zebrostudio.wallr100.presentation.detail.ActionType.QUICK_SET
+import zebrostudio.wallr100.presentation.detail.ActionType.SHARE
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
-import android.net.Uri
 
 class DetailPresenterImpl(
   private var context: Context,
@@ -34,11 +39,11 @@ class DetailPresenterImpl(
   internal lateinit var imageType: ImageListType
   internal lateinit var wallpaperImage: ImagePresenterEntity
   internal lateinit var searchImage: SearchPicturesPresenterEntity
-  internal var isDownloadInProgress: Boolean = false
-  internal var isImageOperationInProgress: Boolean = false
-  internal var wallpaperHasBeenSet: Boolean = false
-  internal var isSlidingPanelExpanded: Boolean = false
-  internal var imageHasBeenCrystallized: Boolean = false
+  internal var isDownloadInProgress = false
+  internal var isImageOperationInProgress = false
+  internal var wallpaperHasBeenSet = false
+  internal var isSlidingPanelExpanded = false
+  internal var imageHasBeenCrystallized = false
   private val downloadCompletedValue: Long = 100
   private val showIndefiniteLoaderAtProgressValue: Long = 99
   private val downloadStartedValue: Long = 0
