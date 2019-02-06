@@ -11,10 +11,8 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_wallpaper.wallpaperFragmentViewPager
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.EXPLORE_TAG
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.TOP_PICKS_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcherImpl
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.visible

@@ -1,7 +1,6 @@
 package zebrostudio.wallr100.android.ui.detail
 
 import android.Manifest
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
@@ -76,13 +75,6 @@ class DetailActivity : BaseActivity(), DetailView {
   private val initialLoaderProgressPercentage = "0%"
   private val blurRadius: Float = 8F
   private val initialSelectedDownloadOptionIndex = 0
-  private val downloadCompleteValue = 100
-  private val channelId = "wallrNotificationChannel"
-  private val channelName = "wallr"
-  private val notificationId = 1
-  private val importance = NotificationManager.IMPORTANCE_HIGH
-  private lateinit var notificationBuilder: NotificationCompat.Builder
-  private lateinit var notificationManager: NotificationManager
   private var materialProgressLoader: MaterialDialog? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
