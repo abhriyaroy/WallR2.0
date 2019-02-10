@@ -6,7 +6,6 @@ import com.pddstudio.urlshortener.URLShortener
 import com.pddstudio.urlshortener.URLShortenerImpl
 import dagger.Module
 import dagger.Provides
-import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.android.AndroidMainThread
 import zebrostudio.wallr100.android.di.scopes.PerApplication
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
@@ -19,13 +18,13 @@ import zebrostudio.wallr100.data.DownloadHelper
 import zebrostudio.wallr100.data.DownloadHelperImpl
 import zebrostudio.wallr100.data.FileHandler
 import zebrostudio.wallr100.data.FileHandlerImpl
-import zebrostudio.wallr100.data.SharedPrefsHelper
-import zebrostudio.wallr100.data.SharedPrefsHelperImpl
-import zebrostudio.wallr100.data.WallrDataRepository
 import zebrostudio.wallr100.data.FirebaseDatabaseHelper
 import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl
 import zebrostudio.wallr100.data.ImageHandler
 import zebrostudio.wallr100.data.ImageHandlerImpl
+import zebrostudio.wallr100.data.SharedPrefsHelper
+import zebrostudio.wallr100.data.SharedPrefsHelperImpl
+import zebrostudio.wallr100.data.WallrDataRepository
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactoryImpl
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
@@ -33,12 +32,13 @@ import zebrostudio.wallr100.data.api.UnsplashClientFactoryImpl
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.domain.WallrRepository
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseInteractor
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
-import zebrostudio.wallr100.domain.interactor.SearchPicturesInteractor
-import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.domain.interactor.ImageOptionsInteractor
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
+import zebrostudio.wallr100.domain.interactor.SearchPicturesInteractor
+import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusInteractor
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesInteractor
@@ -61,7 +61,7 @@ class AppModule {
 
   @Provides
   @PerApplication
-  fun providesFragmentTag(resourceUtils: ResourceUtils): FragmentNameTagFetcher = FragmentNameTagFetcherImpl(
+  fun provideFragmentTag(resourceUtils: ResourceUtils): FragmentNameTagFetcher = FragmentNameTagFetcherImpl(
       resourceUtils)
 
   @Provides
@@ -99,10 +99,10 @@ class AppModule {
   fun provideFileHandler(): FileHandler = FileHandlerImpl()
 
   @Provides
-  fun providesWallpaperSetter(context: Context): WallpaperSetter = WallpaperSetterImpl(context)
+  fun provideWallpaperSetter(context: Context): WallpaperSetter = WallpaperSetterImpl(context)
 
   @Provides
-  fun providesDownloadHelper(
+  fun provideDownloadHelper(
     context: Context,
     fileHandler: FileHandler
   ): DownloadHelper = DownloadHelperImpl(context, fileHandler)
@@ -159,13 +159,13 @@ class AppModule {
   ): SearchPicturesUseCase = SearchPicturesInteractor(wallrRepository, postExecutionThread)
 
   @Provides
-  fun providesWallpaperUseCase(
+  fun provideWallpaperUseCase(
     wallrRepository: WallrRepository,
     postExecutionThread: PostExecutionThread
   ): WallpaperImagesUseCase = WallpaperImagesInteractor(wallrRepository, postExecutionThread)
 
   @Provides
-  fun providesShareImagesUseCase(
+  fun provideShareImagesUseCase(
     wallrRepository: WallrRepository,
     postExecutionThread: PostExecutionThread
   ): ImageOptionsUseCase = ImageOptionsInteractor(wallrRepository, postExecutionThread)
