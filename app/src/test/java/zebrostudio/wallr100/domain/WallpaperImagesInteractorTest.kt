@@ -1,16 +1,12 @@
 package zebrostudio.wallr100.domain
 
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.domain.datafactory.ImageModelFactory
@@ -30,9 +26,7 @@ class WallpaperImagesInteractorTest {
   private var imageModelList = listOf(ImageModelFactory.getImageModel())
 
   @Before fun setup() {
-    wallpaperImagesInteractor = WallpaperImagesInteractor(wallrRepository, postExecutionThread)
-
-    Mockito.`when`(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
+    wallpaperImagesInteractor = WallpaperImagesInteractor(wallrRepository)
   }
 
   @Test fun `should return single on exploreImagesSingle call success`() {
@@ -41,7 +35,6 @@ class WallpaperImagesInteractorTest {
     val imageList = wallpaperImagesInteractor.exploreImagesSingle().test().values()[0][0]
 
     assertTrue(imageModelList[0] == imageList)
-    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should return single on recentImagesSingle call success`() {
@@ -50,7 +43,6 @@ class WallpaperImagesInteractorTest {
     val imageList = wallpaperImagesInteractor.recentImagesSingle().test().values()[0][0]
 
     assertTrue(imageModelList[0] == imageList)
-    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should return single on popularImagesSingle call success`() {
@@ -59,7 +51,6 @@ class WallpaperImagesInteractorTest {
     val imageList = wallpaperImagesInteractor.popularImagesSingle().test().values()[0][0]
 
     assertTrue(imageModelList[0] == imageList)
-    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should return single on standoutImagesSingle call success`() {
@@ -68,7 +59,6 @@ class WallpaperImagesInteractorTest {
     val imageList = wallpaperImagesInteractor.standoutImagesSingle().test().values()[0][0]
 
     assertTrue(imageModelList[0] == imageList)
-    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should return single on buildingImagesSingle call success`() {
@@ -77,7 +67,6 @@ class WallpaperImagesInteractorTest {
     val imageList = wallpaperImagesInteractor.buildingsImagesSingle().test().values()[0][0]
 
     assertTrue(imageModelList[0] == imageList)
-    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should return single on foodImagesSingle call success`() {
@@ -86,7 +75,6 @@ class WallpaperImagesInteractorTest {
     val imageList = wallpaperImagesInteractor.foodImagesSingle().test().values()[0][0]
 
     assertTrue(imageModelList[0] == imageList)
-    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should return single on natureImagesSingle call success`() {
@@ -95,7 +83,6 @@ class WallpaperImagesInteractorTest {
     val imageList = wallpaperImagesInteractor.natureImagesSingle().test().values()[0][0]
 
     assertTrue(imageModelList[0] == imageList)
-    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should return single on objectImagesSingle call success`() {
@@ -104,7 +91,6 @@ class WallpaperImagesInteractorTest {
     val imageList = wallpaperImagesInteractor.objectsImagesSingle().test().values()[0][0]
 
     assertTrue(imageModelList[0] == imageList)
-    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should return single on peopleImagesSingle call success`() {
@@ -113,7 +99,6 @@ class WallpaperImagesInteractorTest {
     val imageList = wallpaperImagesInteractor.peopleImagesSingle().test().values()[0][0]
 
     assertTrue(imageModelList[0] == imageList)
-    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should return single on technologyImagesSingle call success`() {
@@ -122,12 +107,6 @@ class WallpaperImagesInteractorTest {
     val imageList = wallpaperImagesInteractor.technologyImagesSingle().test().values()[0][0]
 
     assertTrue(imageModelList[0] == imageList)
-    shouldVerifyPostExecutionThreadSchedulerCall()
-  }
-
-  private fun shouldVerifyPostExecutionThreadSchedulerCall() {
-    verify(postExecutionThread).scheduler
-    verifyNoMoreInteractions(postExecutionThread)
   }
 
 }

@@ -10,6 +10,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider
 import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider.createInitial
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -23,6 +24,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.data.api.UrlMap.getQueryString
 import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.presentation.datafactory.SearchPicturesModelFactory
 import zebrostudio.wallr100.presentation.search.SearchContract
@@ -30,14 +32,14 @@ import zebrostudio.wallr100.presentation.search.SearchPresenterImpl
 import zebrostudio.wallr100.presentation.search.mapper.SearchPicturesPresenterEntityMapper
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
-import java.lang.Exception
-import java.util.UUID.*
+import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class SearchPresenterImplTest {
 
   @get:Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
 
+  @Mock lateinit var postExecutionThread: PostExecutionThread
   @Mock lateinit var searchView: SearchContract.SearchView
   @Mock lateinit var searchPicturesUseCase: SearchPicturesUseCase
   @Mock lateinit var intent: Intent
@@ -51,11 +53,13 @@ class SearchPresenterImplTest {
   @Before fun setup() {
     searchPicturesPresenterEntityMapper = SearchPicturesPresenterEntityMapper()
     searchPresenterImpl =
-        SearchPresenterImpl(searchPicturesUseCase, searchPicturesPresenterEntityMapper)
+        SearchPresenterImpl(searchPicturesUseCase, searchPicturesPresenterEntityMapper,
+            postExecutionThread)
     searchPresenterImpl.attachView(searchView)
     testLifecycleScopeProvider = createInitial(TestLifecycleScopeProvider.TestLifecycle.STARTED)
 
     `when`(searchView.getScope()).thenReturn(testLifecycleScopeProvider)
+    `when`(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 
   @Test fun `should return query string`() {
@@ -76,6 +80,7 @@ class SearchPresenterImplTest {
     verify(searchView).getScope()
     verify(searchView).showNoResultView(randomString)
     verifyNoMoreInteractions(searchView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -91,6 +96,7 @@ class SearchPresenterImplTest {
     verify(searchView).getScope()
     verify(searchView).showNoInternetView()
     verifyNoMoreInteractions(searchView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should show generic error view on notifyQuerySubmitted call failure`() {
@@ -105,6 +111,7 @@ class SearchPresenterImplTest {
     verify(searchView).getScope()
     verify(searchView).showGenericErrorView()
     verifyNoMoreInteractions(searchView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -127,6 +134,7 @@ class SearchPresenterImplTest {
     verify(searchView).showSearchResults(argCaptor.capture())
     assertTrue(argCaptor.firstValue == searchPicturesPresenterEntity)
     verifyNoMoreInteractions(searchView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -143,6 +151,7 @@ class SearchPresenterImplTest {
     verify(searchView).setEndlessLoadingToFalse()
     verify(searchView).hideBottomLoader()
     verifyNoMoreInteractions(searchView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should show generic error toast on fetchMoreImages call failure`() {
@@ -158,6 +167,7 @@ class SearchPresenterImplTest {
     verify(searchView).showGenericErrorToast()
     verify(searchView).hideBottomLoader()
     verifyNoMoreInteractions(searchView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -181,6 +191,7 @@ class SearchPresenterImplTest {
     assertEquals(firstArgCaptor.firstValue, 0)
     assertTrue(secondArgCaptor.firstValue == searchPicturesPresenterEntity)
     verifyNoMoreInteractions(searchView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -212,6 +223,7 @@ class SearchPresenterImplTest {
     verify(searchView).showSearchResults(argCaptor.capture())
     assertTrue(argCaptor.firstValue == searchPicturesPresenterEntity)
     verifyNoMoreInteractions(searchView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -225,11 +237,15 @@ class SearchPresenterImplTest {
 
     verify(searchView).setSearchQueryWithoutSubmitting(randomString)
     verifyNoMoreInteractions(searchView)
-
   }
 
   @After fun tearDown() {
     searchPresenterImpl.detachView()
+  }
+
+  private fun shouldVerifyPostExecutionThreadSchedulerCall() {
+    verify(postExecutionThread).scheduler
+    verifyNoMoreInteractions(postExecutionThread)
   }
 
 }

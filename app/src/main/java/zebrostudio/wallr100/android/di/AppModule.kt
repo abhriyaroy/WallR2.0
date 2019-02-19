@@ -152,15 +152,13 @@ class AppModule {
   @Provides
   @PerApplication
   fun provideSearchPicturesUseCase(
-    wallrRepository: WallrRepository,
-    postExecutionThread: PostExecutionThread
-  ): SearchPicturesUseCase = SearchPicturesInteractor(wallrRepository, postExecutionThread)
+    wallrRepository: WallrRepository
+  ): SearchPicturesUseCase = SearchPicturesInteractor(wallrRepository)
 
   @Provides
   fun provideWallpaperUseCase(
-    wallrRepository: WallrRepository,
-    postExecutionThread: PostExecutionThread
-  ): WallpaperImagesUseCase = WallpaperImagesInteractor(wallrRepository, postExecutionThread)
+    wallrRepository: WallrRepository
+  ): WallpaperImagesUseCase = WallpaperImagesInteractor(wallrRepository)
 
   @Provides
   fun provideShareImagesUseCase(

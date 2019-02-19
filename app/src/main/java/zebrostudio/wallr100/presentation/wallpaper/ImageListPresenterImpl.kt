@@ -5,6 +5,7 @@ import io.reactivex.Single
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.CATEGORIES_TAG
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.EXPLORE_TAG
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.TOP_PICKS_TAG
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListView
@@ -12,7 +13,8 @@ import zebrostudio.wallr100.presentation.wallpaper.mapper.ImagePresenterEntityMa
 
 class ImageListPresenterImpl(
   private val wallpaperImagesUseCase: WallpaperImagesUseCase,
-  private val imagePresenterEntityMapper: ImagePresenterEntityMapper
+  private val imagePresenterEntityMapper: ImagePresenterEntityMapper,
+  private var postExecutionThread: PostExecutionThread
 ) : ImageListContract.ImageListPresenter {
 
   private var imageListView: ImageListView? = null
@@ -49,6 +51,7 @@ class ImageListPresenterImpl(
         .map {
           imagePresenterEntityMapper.mapToPresenterEntity(it)
         }
+        .observeOn(postExecutionThread.scheduler)
         .autoDisposable(imageListView?.getScope()!!)
         .subscribe({
           if (refresh) {

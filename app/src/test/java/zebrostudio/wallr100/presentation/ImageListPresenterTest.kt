@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -13,6 +14,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.presentation.datafactory.ImageModelFactory
@@ -27,6 +29,7 @@ class ImageListPresenterTest {
 
   @get:Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
 
+  @Mock lateinit var postExecutionThread: PostExecutionThread
   @Mock lateinit var wallpaperImagesUseCase: WallpaperImagesUseCase
   @Mock lateinit var imageListView: ImageListContract.ImageListView
   private lateinit var imagePresenterEntityMapper: ImagePresenterEntityMapper
@@ -39,12 +42,14 @@ class ImageListPresenterTest {
   @Before fun setup() {
     imagePresenterEntityMapper = ImagePresenterEntityMapper()
     imageListPresenter =
-        ImageListPresenterImpl(wallpaperImagesUseCase, imagePresenterEntityMapper)
+        ImageListPresenterImpl(wallpaperImagesUseCase, imagePresenterEntityMapper,
+            postExecutionThread)
     imageListPresenter.attachView(imageListView)
     testScopeProvider = TestLifecycleScopeProvider.createInitial(
         TestLifecycleScopeProvider.TestLifecycle.STARTED)
 
     `when`(imageListView.getScope()).thenReturn(testScopeProvider)
+    `when`(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 
   @Test
@@ -58,6 +63,7 @@ class ImageListPresenterTest {
     assertTrue(0 == imageListPresenter.imageListType)
     `verify imageListView interactions on fetchImages with refresh false is a success`(
         imageModelList)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -71,6 +77,7 @@ class ImageListPresenterTest {
     assertTrue(1 == imageListPresenter.imageListType)
     `verify imageListView interactions on fetchImages with refresh false is a success`(
         imageModelList)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -84,6 +91,7 @@ class ImageListPresenterTest {
     assertTrue(2 == imageListPresenter.imageListType)
     `verify imageListView interactions on fetchImages with refresh false is a success`(
         imageModelList)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -97,6 +105,7 @@ class ImageListPresenterTest {
     assertTrue(3 == imageListPresenter.imageListType)
     `verify imageListView interactions on fetchImages with refresh false is a success`(
         imageModelList)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -110,6 +119,7 @@ class ImageListPresenterTest {
     assertTrue(4 == imageListPresenter.imageListType)
     `verify imageListView interactions on fetchImages with refresh false is a success`(
         imageModelList)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -123,6 +133,7 @@ class ImageListPresenterTest {
     assertTrue(5 == imageListPresenter.imageListType)
     `verify imageListView interactions on fetchImages with refresh false is a success`(
         imageModelList)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -136,6 +147,7 @@ class ImageListPresenterTest {
     assertTrue(6 == imageListPresenter.imageListType)
     `verify imageListView interactions on fetchImages with refresh false is a success`(
         imageModelList)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -149,6 +161,7 @@ class ImageListPresenterTest {
     assertTrue(7 == imageListPresenter.imageListType)
     `verify imageListView interactions on fetchImages with refresh false is a success`(
         imageModelList)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -162,6 +175,7 @@ class ImageListPresenterTest {
     assertTrue(8 == imageListPresenter.imageListType)
     `verify imageListView interactions on fetchImages with refresh false is a success`(
         imageModelList)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -175,6 +189,7 @@ class ImageListPresenterTest {
     assertTrue(9 == imageListPresenter.imageListType)
     `verify imageListView interactions on fetchImages with refresh false is a success`(
         imageModelList)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -193,6 +208,7 @@ class ImageListPresenterTest {
     verify(imageListView).hideRefreshing()
     verify(imageListView).getScope()
     verifyNoMoreInteractions(imageListView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -209,6 +225,7 @@ class ImageListPresenterTest {
     verify(imageListView).showNoInternetMessageView()
     verify(imageListView).getScope()
     verifyNoMoreInteractions(imageListView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -225,6 +242,7 @@ class ImageListPresenterTest {
     verify(imageListView).hideRefreshing()
     verify(imageListView).getScope()
     verifyNoMoreInteractions(imageListView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   private fun `verify imageListView interactions on fetchImages with refresh false is a success`(
@@ -241,5 +259,10 @@ class ImageListPresenterTest {
 
   @After fun tearDown() {
     imageListPresenter.detachView()
+  }
+
+  private fun shouldVerifyPostExecutionThreadSchedulerCall() {
+    verify(postExecutionThread).scheduler
+    verifyNoMoreInteractions(postExecutionThread)
   }
 }

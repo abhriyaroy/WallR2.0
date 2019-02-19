@@ -8,14 +8,15 @@ import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.data.api.UrlMap.getQueryString
 import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.presentation.search.mapper.SearchPicturesPresenterEntityMapper
 
 class SearchPresenterImpl(
   private var searchPicturesUseCase: SearchPicturesUseCase,
-  private var searchPicturesPresenterEntityMapper: SearchPicturesPresenterEntityMapper
-) :
-    SearchContract.SearchPresenter {
+  private var searchPicturesPresenterEntityMapper: SearchPicturesPresenterEntityMapper,
+  private var postExecutionThread: PostExecutionThread
+) : SearchContract.SearchPresenter {
 
   private var searchView: SearchContract.SearchView? = null
   private var queryPage = 1
@@ -38,6 +39,7 @@ class SearchPresenterImpl(
         .map {
           searchPicturesPresenterEntityMapper.mapToPresenterEntity(it)
         }
+        .observeOn(postExecutionThread.scheduler)
         .autoDisposable(searchView?.getScope()!!)
         .subscribe({
           searchView?.hideLoader()
@@ -61,6 +63,7 @@ class SearchPresenterImpl(
           .map {
             searchPicturesPresenterEntityMapper.mapToPresenterEntity(it)
           }
+          .observeOn(postExecutionThread.scheduler)
           .autoDisposable(searchView?.getScope()!!)
           .subscribe({
             searchView?.hideBottomLoader()
