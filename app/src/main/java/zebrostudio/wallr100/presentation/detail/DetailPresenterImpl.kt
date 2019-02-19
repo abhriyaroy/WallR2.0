@@ -154,6 +154,7 @@ class DetailPresenterImpl(
           wallpaperImage.imageLink.large
         }
         imageOptionsUseCase.getImageShareableLinkSingle(link)
+            .observeOn(postExecutionThread.scheduler)
             .autoDisposable(detailView?.getScope()!!)
             .subscribe({
               detailView?.hideWaitLoader()
@@ -183,6 +184,7 @@ class DetailPresenterImpl(
         detailView?.collapseSlidingPanel()
       } else {
         imageOptionsUseCase.clearCachesCompletable()
+            .observeOn(postExecutionThread.scheduler)
             .autoDisposable(detailView?.getScope()!!)
             .subscribe({
               detailView?.exitView()
@@ -264,6 +266,7 @@ class DetailPresenterImpl(
         detailView?.showDownloadAlreadyInProgressMessage()
       } else {
         imageOptionsUseCase.downloadImageCompletable(downloadLink)
+            .observeOn(postExecutionThread.scheduler)
             .doOnSubscribe {
               detailView?.showDownloadStartedMessage()
             }

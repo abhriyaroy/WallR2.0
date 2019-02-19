@@ -140,10 +140,8 @@ class AppModule {
   @Provides
   @PerApplication
   fun provideAuthenticatePurchaseUseCase(
-    wallrRepository: WallrRepository,
-    postExecutionThread: PostExecutionThread
-  ): AuthenticatePurchaseUseCase = AuthenticatePurchaseInteractor(wallrRepository,
-      postExecutionThread)
+    wallrRepository: WallrRepository
+  ): AuthenticatePurchaseUseCase = AuthenticatePurchaseInteractor(wallrRepository)
 
   @Provides
   @PerApplication
@@ -166,9 +164,8 @@ class AppModule {
 
   @Provides
   fun provideShareImagesUseCase(
-    wallrRepository: WallrRepository,
-    postExecutionThread: PostExecutionThread
-  ): ImageOptionsUseCase = ImageOptionsInteractor(wallrRepository, postExecutionThread)
+    wallrRepository: WallrRepository
+  ): ImageOptionsUseCase = ImageOptionsInteractor(wallrRepository)
 
   @Provides
   fun provideImageRecyclerViewPresenter()

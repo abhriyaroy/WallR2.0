@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.presentation
 
-import android.Manifest.*
+import android.Manifest.permission
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
@@ -11,7 +11,8 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider
-import com.yalantis.ucrop.UCrop.*
+import com.yalantis.ucrop.UCrop.REQUEST_CROP
+import com.yalantis.ucrop.UCrop.RESULT_ERROR
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -32,16 +33,18 @@ import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
 import zebrostudio.wallr100.presentation.datafactory.ImagePresenterEntityFactory
 import zebrostudio.wallr100.presentation.datafactory.SearchPicturesPresenterEntityFactory
-import zebrostudio.wallr100.presentation.detail.ActionType.*
+import zebrostudio.wallr100.presentation.detail.ActionType.DOWNLOAD
+import zebrostudio.wallr100.presentation.detail.ActionType.EDIT_SET
+import zebrostudio.wallr100.presentation.detail.ActionType.QUICK_SET
+import zebrostudio.wallr100.presentation.detail.ActionType.SHARE
 import zebrostudio.wallr100.presentation.detail.DetailContract
 import zebrostudio.wallr100.presentation.detail.DetailPresenterImpl
-import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
-import java.lang.Exception
 import java.util.Random
-import java.util.UUID.*
+import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class DetailActivityPresenterImplTest {
@@ -391,6 +394,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).getScope()
     verify(detailView).exitView()
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -404,6 +408,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).getScope()
     verify(detailView).exitView()
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -522,6 +527,7 @@ class DetailActivityPresenterImplTest {
     verifyNoMoreInteractions(detailView)
     verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
     verifyNoMoreInteractions(imageOptionsUseCase)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should show wallpaper setting error message when crop activity results to success`() {
@@ -543,6 +549,7 @@ class DetailActivityPresenterImplTest {
     verifyNoMoreInteractions(detailView)
     verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
     verifyNoMoreInteractions(imageOptionsUseCase)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -565,6 +572,7 @@ class DetailActivityPresenterImplTest {
     verifyNoMoreInteractions(detailView)
     verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
     verifyNoMoreInteractions(imageOptionsUseCase)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should show generic error message when crop activity results to failure`() {
@@ -586,6 +594,7 @@ class DetailActivityPresenterImplTest {
     verifyNoMoreInteractions(detailView)
     verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
     verifyNoMoreInteractions(imageOptionsUseCase)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should redirect to buy pro on handleDownloadClick call failure`() {
@@ -744,6 +753,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -764,6 +774,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showGenericErrorMessage()
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -783,6 +794,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -802,6 +814,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -821,6 +834,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -840,6 +854,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -858,6 +873,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -877,6 +893,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showGenericErrorMessage()
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -895,6 +912,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -913,6 +931,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -931,6 +950,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -949,6 +969,7 @@ class DetailActivityPresenterImplTest {
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
     verifyNoMoreInteractions(detailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test

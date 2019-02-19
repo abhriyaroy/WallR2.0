@@ -2,9 +2,11 @@ package zebrostudio.wallr100.presentation
 
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.whenever
 import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider
-import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider.TestLifecycle.*
+import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider.TestLifecycle.STARTED
 import io.reactivex.Completable
+import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -12,19 +14,21 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
-import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.*
+import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.PURCHASE
+import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.RESTORE
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.presentation.buypro.BuyProContract
 import zebrostudio.wallr100.presentation.buypro.BuyProPresenterImpl
-import java.lang.Exception
-import java.util.UUID.*
+import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class BuyProPresenterImplTest {
 
+  @Mock private lateinit var postExecutionThread: PostExecutionThread
   @Mock lateinit var buyProView: BuyProContract.BuyProView
   @Mock lateinit var authenticatePurchaseUseCase: AuthenticatePurchaseUseCase
   @Mock lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
@@ -35,11 +39,13 @@ class BuyProPresenterImplTest {
   private val purchaseToken = randomUUID().toString()
 
   @Before fun setup() {
-    buyProPresenterImpl = BuyProPresenterImpl(authenticatePurchaseUseCase, userPremiumStatusUseCase)
+    buyProPresenterImpl = BuyProPresenterImpl(
+        authenticatePurchaseUseCase, userPremiumStatusUseCase, postExecutionThread)
     buyProPresenterImpl.attachView(buyProView)
     testScopeProvider = TestLifecycleScopeProvider.createInitial(STARTED)
 
     `when`(buyProView.getScope()).thenReturn(testScopeProvider)
+    stubPostExecutionThreadReturnsIoScheduler()
   }
 
   @Test fun `should showGenericVerificationError if iab not ready and purchase clicked`() {
@@ -157,6 +163,7 @@ class BuyProPresenterImplTest {
     verify(buyProView).showInvalidPurchaseError()
     verify(buyProView).dismissWaitLoader()
     verifyNoMoreInteractions(buyProView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -170,6 +177,7 @@ class BuyProPresenterImplTest {
     verify(buyProView).showUnableToVerifyPurchaseError()
     verify(buyProView).dismissWaitLoader()
     verifyNoMoreInteractions(buyProView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -183,6 +191,7 @@ class BuyProPresenterImplTest {
     verify(buyProView).showGenericVerificationError()
     verify(buyProView).dismissWaitLoader()
     verifyNoMoreInteractions(buyProView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should call handle successful verification on successful verification of purchase`() {
@@ -197,6 +206,7 @@ class BuyProPresenterImplTest {
     verify(buyProView).showSuccessfulTransactionMessage(PURCHASE)
     verify(buyProView).finishWithResult()
     verifyNoMoreInteractions(buyProView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -212,6 +222,7 @@ class BuyProPresenterImplTest {
     verify(buyProView).showSuccessfulTransactionMessage(RESTORE)
     verify(buyProView).finishWithResult()
     verifyNoMoreInteractions(buyProView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @After fun tearDown() {
@@ -240,5 +251,14 @@ class BuyProPresenterImplTest {
 
   private fun stubUnsuccessfulUpdateUserPurchaseStatus() {
     `when`(userPremiumStatusUseCase.updateUserPurchaseStatus()).thenReturn(false)
+  }
+
+  private fun stubPostExecutionThreadReturnsIoScheduler() {
+    whenever(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
+  }
+
+  private fun shouldVerifyPostExecutionThreadSchedulerCall() {
+    verify(postExecutionThread).scheduler
+    verifyNoMoreInteractions(postExecutionThread)
   }
 }

@@ -1,21 +1,18 @@
 package zebrostudio.wallr100.data
 
-import io.reactivex.Completable
 import android.app.DownloadManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Context.DOWNLOAD_SERVICE
-import android.net.Uri
-import android.widget.Toast
 import android.content.Intent
-import android.content.BroadcastReceiver
 import android.content.IntentFilter
+import android.net.Uri
+import io.reactivex.Completable
 import zebrostudio.wallr100.R
 
 interface DownloadHelper {
-
   fun downloadImage(link: String): Completable
-  fun isDownloadEnqued(link: String): Boolean
-
+  fun isDownloadEnqueued(link: String): Boolean
 }
 
 class DownloadHelperImpl(
@@ -61,7 +58,7 @@ class DownloadHelperImpl(
     }
   }
 
-  override fun isDownloadEnqued(link: String): Boolean {
+  override fun isDownloadEnqueued(link: String): Boolean {
     return downloadTrackerMap.containsKey(link)
   }
 

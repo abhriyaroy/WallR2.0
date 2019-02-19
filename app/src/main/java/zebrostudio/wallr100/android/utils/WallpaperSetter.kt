@@ -15,13 +15,10 @@ class WallpaperSetterImpl(private var context: Context) : WallpaperSetter {
   private var wallpaperManager: WallpaperManager? = null
 
   override fun setWallpaper(imageBitmap: Bitmap?): Boolean {
-    if (wallpaperManager == null) {
-      wallpaperManager = WallpaperManager.getInstance(context)
-    }
     imageBitmap?.let {
       val scaledBitmapToFitPhoneAspectRatio =
           Bitmap.createScaledBitmap(it, getDesiredMinimumWidth(), getDesiredMinimumHeight(), false)
-      wallpaperManager!!.setBitmap(scaledBitmapToFitPhoneAspectRatio)
+      getWallpaperManagerInstance().setBitmap(scaledBitmapToFitPhoneAspectRatio)
       scaledBitmapToFitPhoneAspectRatio.recycle()
       return true
     }
@@ -29,16 +26,17 @@ class WallpaperSetterImpl(private var context: Context) : WallpaperSetter {
   }
 
   override fun getDesiredMinimumWidth(): Int {
-    if (wallpaperManager == null) {
-      wallpaperManager = WallpaperManager.getInstance(context)
-    }
-    return wallpaperManager!!.desiredMinimumWidth
+    return getWallpaperManagerInstance().desiredMinimumWidth
   }
 
   override fun getDesiredMinimumHeight(): Int {
+    return getWallpaperManagerInstance().desiredMinimumHeight
+  }
+
+  private fun getWallpaperManagerInstance(): WallpaperManager {
     if (wallpaperManager == null) {
       wallpaperManager = WallpaperManager.getInstance(context)
     }
-    return wallpaperManager!!.desiredMinimumHeight
+    return wallpaperManager!!
   }
 }

@@ -30,7 +30,6 @@ class ImageOptionsUseCaseTest {
 
   @get:Rule var trampolineSchedulerRule = TrampolineSchedulerRule()
 
-  @Mock private lateinit var postExecutionThread: PostExecutionThread
   @Mock private lateinit var wallrRepository: WallrRepository
   @Mock private lateinit var mockBitmap: Bitmap
   @Mock private lateinit var mockUri: Uri
@@ -40,8 +39,7 @@ class ImageOptionsUseCaseTest {
 
   @Before
   fun setup() {
-    imageOptionsUseCase = ImageOptionsInteractor(wallrRepository, postExecutionThread)
-    stubPostExecutionThreadReturnsIoScheduler()
+    imageOptionsUseCase = ImageOptionsInteractor(wallrRepository)
   }
 
   @Test fun `should return imageDownloadModel on getImageBitmap call success`() {
@@ -63,7 +61,6 @@ class ImageOptionsUseCaseTest {
 
     verify(wallrRepository).getShortImageLink(randomString)
     verifyNoMoreInteractions(wallrRepository)
-    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should return completable on clearImageCaches call success`() {
@@ -73,7 +70,6 @@ class ImageOptionsUseCaseTest {
 
     verify(wallrRepository).clearImageCaches()
     verifyNoMoreInteractions(wallrRepository)
-    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should call cancelImageBitmapFetchingOperation on canImageFetching call success`() {
@@ -120,7 +116,6 @@ class ImageOptionsUseCaseTest {
 
     verify(wallrRepository).downloadImage(randomString)
     verifyNoMoreInteractions(wallrRepository)
-    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should complete on downloadCrystallizedImageCompletable call success`() {
@@ -130,7 +125,6 @@ class ImageOptionsUseCaseTest {
 
     verify(wallrRepository).saveCrystallizedImageToDownloads()
     verifyNoMoreInteractions(wallrRepository)
-    shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should return true on downloadCrystallizedImageCompletable call success`() {
@@ -140,15 +134,6 @@ class ImageOptionsUseCaseTest {
 
     verify(wallrRepository).checkIfDownloadIsInProgress(randomString)
     verifyNoMoreInteractions(wallrRepository)
-  }
-
-  private fun stubPostExecutionThreadReturnsIoScheduler() {
-    whenever(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
-  }
-
-  private fun shouldVerifyPostExecutionThreadSchedulerCall() {
-    verify(postExecutionThread).scheduler
-    verifyNoMoreInteractions(postExecutionThread)
   }
 
 }

@@ -8,7 +8,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import zebrostudio.wallr100.data.exception.ImageDownloadException
-import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
@@ -17,7 +16,6 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 interface ImageHandler {
-
   fun isImageCached(link: String): Boolean
   fun fetchImage(link: String): Observable<Long>
   fun cancelFetchingImage()
@@ -25,7 +23,6 @@ interface ImageHandler {
   fun clearImageCache(): Completable
   fun getImageUri(): Uri
   fun convertUriToBitmap(uri: Uri): Single<Bitmap>
-
 }
 
 class ImageHandlerImpl(

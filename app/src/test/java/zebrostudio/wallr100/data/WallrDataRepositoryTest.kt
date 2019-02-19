@@ -369,11 +369,11 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should return true on checkIfDownloadIsInProgress call success`() {
-    `when`(downloadHelper.isDownloadEnqued(randomString)).thenReturn(true)
+    `when`(downloadHelper.isDownloadEnqueued(randomString)).thenReturn(true)
 
     assertTrue(wallrDataRepository.checkIfDownloadIsInProgress(randomString))
 
-    verify(downloadHelper).isDownloadEnqued(randomString)
+    verify(downloadHelper).isDownloadEnqueued(randomString)
     verifyNoMoreInteractions(downloadHelper)
   }
 

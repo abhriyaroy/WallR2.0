@@ -2,7 +2,6 @@ package zebrostudio.wallr100.domain.interactor
 
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
-import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.WallrRepository
 
 interface AuthenticatePurchaseUseCase {
@@ -14,8 +13,7 @@ interface AuthenticatePurchaseUseCase {
 }
 
 class AuthenticatePurchaseInteractor(
-  private val wallrRepository: WallrRepository,
-  private val postExecutionThread: PostExecutionThread
+  private val wallrRepository: WallrRepository
 ) : AuthenticatePurchaseUseCase {
 
   override fun buildUseCaseCompletable(
@@ -25,7 +23,6 @@ class AuthenticatePurchaseInteractor(
   ): Completable {
     return wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)
         .subscribeOn(Schedulers.io())
-        .observeOn(postExecutionThread.scheduler)
   }
 
 }

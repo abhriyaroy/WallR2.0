@@ -2,15 +2,18 @@ package zebrostudio.wallr100.presentation.buypro
 
 import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType
-import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.*
+import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.PURCHASE
+import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.RESTORE
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 
 class BuyProPresenterImpl(
   private var authenticatePurchaseUseCase: AuthenticatePurchaseUseCase,
-  private var userPremiumStatusUseCase: UserPremiumStatusUseCase
+  private var userPremiumStatusUseCase: UserPremiumStatusUseCase,
+  private var postExecutionThread: PostExecutionThread
 ) : BuyProContract.BuyProPresenter {
 
   private var buyProView: BuyProContract.BuyProView? = null
@@ -56,6 +59,7 @@ class BuyProPresenterImpl(
     proTransactionType: PremiumTransactionType
   ) {
     authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId, purchaseToken)
+        .observeOn(postExecutionThread.scheduler)
         .autoDisposable(buyProView?.getScope()!!)
         .subscribe({
           handleSuccessfulVerification(proTransactionType)

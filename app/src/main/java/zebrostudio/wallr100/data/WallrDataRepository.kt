@@ -23,7 +23,7 @@ import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
-import java.util.concurrent.TimeUnit.*
+import java.util.concurrent.TimeUnit.SECONDS
 
 class WallrDataRepository(
   private var retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
@@ -201,11 +201,11 @@ class WallrDataRepository(
 
   override fun saveCrystallizedImageToDownloads(): Completable {
     // To be implemented properly later on
-    return Completable.complete()
+    throw IllegalStateException("This is not supported yet")
   }
 
   override fun checkIfDownloadIsInProgress(link: String): Boolean {
-    return downloadHelper.isDownloadEnqued(link)
+    return downloadHelper.isDownloadEnqueued(link)
   }
 
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()

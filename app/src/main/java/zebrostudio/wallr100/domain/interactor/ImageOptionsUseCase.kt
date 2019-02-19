@@ -7,7 +7,6 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import zebrostudio.wallr100.domain.WallrRepository
-import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 
 interface ImageOptionsUseCase {
@@ -24,8 +23,7 @@ interface ImageOptionsUseCase {
 }
 
 class ImageOptionsInteractor(
-  private var wallrRepository: WallrRepository,
-  private val postExecutionThread: PostExecutionThread
+  private var wallrRepository: WallrRepository
 ) : ImageOptionsUseCase {
 
   override fun fetchImageBitmapObservable(link: String): Observable<ImageDownloadModel> {
@@ -36,13 +34,11 @@ class ImageOptionsInteractor(
   override fun getImageShareableLinkSingle(link: String): Single<String> {
     return wallrRepository.getShortImageLink(link)
         .subscribeOn(Schedulers.io())
-        .observeOn(postExecutionThread.scheduler)
   }
 
   override fun clearCachesCompletable(): Completable {
     return wallrRepository.clearImageCaches()
         .subscribeOn(Schedulers.io())
-        .observeOn(postExecutionThread.scheduler)
   }
 
   override fun cancelFetchImageOperation() {
@@ -61,13 +57,11 @@ class ImageOptionsInteractor(
   override fun downloadImageCompletable(link: String): Completable {
     return wallrRepository.downloadImage(link)
         .subscribeOn(Schedulers.io())
-        .observeOn(postExecutionThread.scheduler)
   }
 
   override fun downloadCrystallizedImageCompletable(): Completable {
     return wallrRepository.saveCrystallizedImageToDownloads()
         .subscribeOn(Schedulers.io())
-        .observeOn(postExecutionThread.scheduler)
   }
 
   override fun isDownloadInProgress(link: String): Boolean {
