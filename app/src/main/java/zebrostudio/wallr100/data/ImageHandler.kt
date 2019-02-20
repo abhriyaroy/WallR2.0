@@ -122,14 +122,15 @@ class ImageHandlerImpl(
 
   override fun convertUriToBitmap(uri: Uri): Single<Bitmap> {
     return Single.create {
-      with(context.contentResolver.openFileDescriptor(uri, readMode)){
-        val bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
-        close()
-        fileHandler.getCacheFile().outputStream().apply {
-          bitmap.compress(Bitmap.CompressFormat.JPEG, bitmapCompressQuality, this)
-          flush()
+      with(context.contentResolver.openFileDescriptor(uri, readMode)) {
+        BitmapFactory.decodeFileDescriptor(fileDescriptor).let { bitmap ->
           close()
-          it.onSuccess(bitmap)
+          fileHandler.getCacheFile().outputStream().apply {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, bitmapCompressQuality, this)
+            flush()
+            close()
+            it.onSuccess(bitmap)
+          }
         }
       }
     }
