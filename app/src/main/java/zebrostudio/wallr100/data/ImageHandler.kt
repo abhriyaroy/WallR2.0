@@ -95,9 +95,10 @@ class ImageHandlerImpl(
   }
 
   override fun getImageBitmap(): Bitmap {
-    val options = BitmapFactory.Options()
-    options.inPreferredConfig = Bitmap.Config.ARGB_8888
-    return BitmapFactory.decodeFile(fileHandler.getCacheFile().path, options)
+    return BitmapFactory.Options().let {
+      it.inPreferredConfig = Bitmap.Config.ARGB_8888
+      BitmapFactory.decodeFile(fileHandler.getCacheFile().path, it)
+    }
   }
 
   override fun clearImageCache(): Completable {
@@ -109,26 +110,28 @@ class ImageHandlerImpl(
   }
 
   override fun getImageUri(): Uri {
-    val bitmap = getImageBitmap()
-    val outputStream = fileHandler.getCacheFile().outputStream()
-    bitmap.compress(Bitmap.CompressFormat.JPEG, bitmapCompressQuality, outputStream)
-    outputStream.flush()
-    outputStream.close()
-    return Uri.fromFile(fileHandler.getCacheFile())
+    return getImageBitmap().let { bitmap ->
+      fileHandler.getCacheFile().outputStream().apply {
+        bitmap.compress(Bitmap.CompressFormat.JPEG, bitmapCompressQuality, this)
+        flush()
+        close()
+      }
+      Uri.fromFile(fileHandler.getCacheFile())
+    }
   }
 
   override fun convertUriToBitmap(uri: Uri): Single<Bitmap> {
     return Single.create {
-      val parcelFileDescriptor =
-          context.contentResolver.openFileDescriptor(uri, readMode)
-      val fileDescriptor = parcelFileDescriptor!!.fileDescriptor
-      val bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
-      parcelFileDescriptor.close()
-      val outputStream = fileHandler.getCacheFile().outputStream()
-      bitmap.compress(Bitmap.CompressFormat.JPEG, bitmapCompressQuality, outputStream)
-      outputStream.flush()
-      outputStream.close()
-      it.onSuccess(bitmap)
+      with(context.contentResolver.openFileDescriptor(uri, readMode)){
+        val bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+        close()
+        fileHandler.getCacheFile().outputStream().apply {
+          bitmap.compress(Bitmap.CompressFormat.JPEG, bitmapCompressQuality, this)
+          flush()
+          close()
+          it.onSuccess(bitmap)
+        }
+      }
     }
   }
 
