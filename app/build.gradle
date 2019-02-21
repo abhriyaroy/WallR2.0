@@ -18,6 +18,9 @@ android {
       preDexLibraries = true
       javaMaxHeapSize "2g"
     }
+    ndk {
+      abiFilters "armeabi", "armeabi-v7a", "x86"
+    }
   }
   buildTypes {
     release {
@@ -76,6 +79,7 @@ android {
     // Recyclerview Animator
     implementation "jp.wasabeef:recyclerview-animators:$RECYCLER_VIEW_ANIMATOR_VERSION"
     // Firebase
+    implementation "com.google.firebase:firebase-core:$FIREBASE_CORE_VERSION"
     implementation "com.google.firebase:firebase-database:$FIREBASE_DATABASE_VERSION"
     // Sliding up panel
     implementation "com.sothree.slidinguppanel:library:$SLIDING_UP_PANEL_VERSION"
@@ -91,6 +95,7 @@ android {
     implementation project(':libraryExpandIcon')
     implementation project(':libraryUrlShortener')
     implementation project(':libraryUCrop')
+    implementation project(':libraryLowpoly')
     // Test runners
     testImplementation "junit:junit:$JUNIT_VERSION"
     testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"

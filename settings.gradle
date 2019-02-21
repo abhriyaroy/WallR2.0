@@ -1,2 +1,3 @@
 include ':app', ':libraryGuillotineMenu', ':libraryPurchaseFlow', ':libraryWallrCustoms',
-        ':librarySearch', ':libraryExpandIcon', ':libraryUrlShortener', ':libraryUCrop'
+        ':librarySearch', ':libraryExpandIcon', ':libraryUrlShortener', ':libraryUCrop',
+        ':libraryLowpoly'

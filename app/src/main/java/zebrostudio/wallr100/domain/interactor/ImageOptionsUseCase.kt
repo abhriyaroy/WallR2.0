@@ -16,6 +16,7 @@ interface ImageOptionsUseCase {
   fun cancelFetchImageOperation()
   fun getCroppingSourceUri(): Uri
   fun getCroppingDestinationUri(): Uri
+  fun crystallizeImageSingle(): Single<Bitmap>
   fun getBitmapFromUriSingle(imageUri: Uri): Single<Bitmap>
   fun downloadImageCompletable(link: String): Completable
   fun downloadCrystallizedImageCompletable(): Completable
@@ -51,6 +52,11 @@ class ImageOptionsInteractor(
 
   override fun getBitmapFromUriSingle(imageUri: Uri): Single<Bitmap> {
     return wallrRepository.getBitmapFromUri(imageUri)
+        .subscribeOn(Schedulers.io())
+  }
+
+  override fun crystallizeImageSingle(): Single<Bitmap> {
+    return wallrRepository.crystallizeImage()
         .subscribeOn(Schedulers.io())
   }
 

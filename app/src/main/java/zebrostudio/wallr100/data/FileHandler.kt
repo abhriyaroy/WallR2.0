@@ -5,14 +5,12 @@ import android.os.Environment
 import java.io.File
 
 interface FileHandler {
-
   fun getCacheFile(): File
   fun getCacheFileUriForCropping(): Uri
   fun getCrystallizedCacheFile(): File
   fun getDownloadFile(): File
   fun deleteCacheFiles()
   fun freeSpaceAvailable(): Boolean
-
 }
 
 class FileHandlerImpl : FileHandler {

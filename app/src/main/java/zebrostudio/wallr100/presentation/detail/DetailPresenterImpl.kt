@@ -390,7 +390,61 @@ class DetailPresenterImpl(
   }
 
   private fun crystallizeWallpaper() {
-    // To be implemented later
+    downloadProgress = downloadStartedValue
+    detailView?.hideIndefiniteLoader()
+    detailView?.blurScreenAndInitializeProgressPercentage()
+    val imageDownloadLink = when (imageType) {
+      SEARCH -> searchImage.imageQualityUrlPresenterEntity.largeImageLink
+      else -> wallpaperImage.imageLink.large
+    }
+    imageOptionsUseCase.fetchImageBitmapObservable(imageDownloadLink)
+        .doOnNext {
+          if (it.progress == downloadCompletedValue) {
+            imageOptionsUseCase.crystallizeImageSingle()
+                .observeOn(postExecutionThread.scheduler)
+                .subscribe { bitmap->
+                  detailView?.showImage(bitmap)
+                  detailView?.hideScreenBlur()
+                }
+          }
+        }
+        .observeOn(postExecutionThread.scheduler)
+        .autoDisposable(detailView?.getScope()!!)
+        .subscribe(object : Observer<ImageDownloadModel> {
+          override fun onComplete() {
+            isDownloadInProgress = false
+          }
+
+          override fun onSubscribe(d: Disposable) {
+            isDownloadInProgress = true
+            wallpaperHasBeenSet = false
+          }
+
+          override fun onNext(it: ImageDownloadModel) {
+            val progress = it.progress
+            if (progress == showIndefiniteLoaderAtProgressValue) {
+              isDownloadInProgress = false
+              isImageOperationInProgress = true
+              detailView?.updateProgressPercentage("$downloadCompletedValue%")
+              val message =
+                  context.getString(R.string.detail_activity_editing_tool_message)
+              detailView?.showIndefiniteLoaderWithAnimation(message)
+            } else {
+              detailView?.updateProgressPercentage("$progress%")
+            }
+          }
+
+          override fun onError(throwable: Throwable) {
+            if (throwable is ImageDownloadException) {
+              detailView?.showUnableToDownloadErrorMessage()
+            } else {
+              detailView?.showGenericErrorMessage()
+            }
+            detailView?.hideScreenBlur()
+          }
+
+        })
+
   }
 
   private fun editSetWallpaper() {
@@ -448,7 +502,6 @@ class DetailPresenterImpl(
           }
 
         })
-
   }
 
   private fun addWallpaperToCollection() {

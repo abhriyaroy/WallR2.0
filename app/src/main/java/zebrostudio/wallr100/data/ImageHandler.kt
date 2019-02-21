@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import com.uniquestudio.lowpoly.LowPoly
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -23,6 +24,7 @@ interface ImageHandler {
   fun clearImageCache(): Completable
   fun getImageUri(): Uri
   fun convertUriToBitmap(uri: Uri): Single<Bitmap>
+  fun convertImageToLowpoly(): Single<Bitmap>
 }
 
 class ImageHandlerImpl(
@@ -35,6 +37,7 @@ class ImageHandlerImpl(
   private val downloadProgressCompletedValue: Long = 100
   private val readMode = "r"
   private val bitmapCompressQuality = 100
+  private val gradientThresholdLowpoly = 40
   private var imageCacheTracker: Pair<Boolean, String> = Pair(false, "")
 
   override fun isImageCached(link: String): Boolean {
@@ -132,6 +135,25 @@ class ImageHandlerImpl(
             it.onSuccess(bitmap)
           }
         }
+      }
+    }
+  }
+
+  override fun convertImageToLowpoly(): Single<Bitmap> {
+    return Single.create {
+      try {
+        LowPoly.generate(getImageBitmap(), gradientThresholdLowpoly).let { bitmap ->
+          fileHandler.getCacheFile().outputStream().apply {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, bitmapCompressQuality, this)
+            flush()
+            close()
+          }
+          it.onSuccess(bitmap)
+        }
+      } catch (e: Exception) {
+        System.out.println(e.message)
+      } catch (e: UnsatisfiedLinkError) {
+        System.out.println(e.message)
       }
     }
   }

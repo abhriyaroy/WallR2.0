@@ -40,6 +40,8 @@ class WallrDataRepository(
 
   private val purchasePreferenceName = "PURCHASE_PREF"
   private val premiumUserTag = "premium_user"
+  private val imagePreferenceName = "IMAGE_PREF"
+  private val firstTimeCrystallizeClickTag = "crystallize_click_first"
   private val unableToResolveHostExceptionMessage = "Unable to resolve host " +
       "\"api.unsplash.com\": No address associated with hostname"
   private val firebaseDatabasePath = "wallr"
@@ -197,6 +199,17 @@ class WallrDataRepository(
 
   override fun downloadImage(link: String): Completable {
     return downloadHelper.downloadImage(link)
+  }
+
+  override fun hasAnyImageBeenCrystallizedBefore(): Boolean {
+    return sharedPrefsHelper.getBoolean(imagePreferenceName, firstTimeCrystallizeClickTag)
+  }
+
+  override fun crystallizeImage(): Single<Bitmap> {
+    return imageHandler.convertImageToLowpoly()
+        .doOnSuccess {
+          sharedPrefsHelper.setBoolean(imagePreferenceName, firstTimeCrystallizeClickTag, true)
+        }
   }
 
   override fun saveCrystallizedImageToDownloads(): Completable {
