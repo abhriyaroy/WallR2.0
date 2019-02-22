@@ -48,6 +48,7 @@ interface DetailContract {
     fun showDownloadStartedMessage()
     fun showDownloadAlreadyInProgressMessage()
     fun showDownloadCompletedSuccessMessage()
+    fun showCrystallizeSuccessMessage()
     fun collapseSlidingPanel()
     fun exitView()
   }

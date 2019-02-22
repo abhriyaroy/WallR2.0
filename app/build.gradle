@@ -19,8 +19,9 @@ android {
       javaMaxHeapSize "2g"
     }
     ndk {
-      abiFilters "armeabi", "armeabi-v7a", "x86"
+      abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
     }
+    multiDexEnabled true
   }
   buildTypes {
     release {
@@ -47,6 +48,8 @@ android {
     implementation "com.google.dagger:dagger-android-support:$DAGGER_VERSION"
     kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
     kapt "com.google.dagger:dagger-android-processor:$DAGGER_VERSION"
+    // Multidex
+    implementation "com.android.support:multidex:$MULTIDEX_VERSION"
     // Rx java
     implementation "io.reactivex.rxjava2:rxjava:$RX_JAVA_VERSION"
     // Rx android

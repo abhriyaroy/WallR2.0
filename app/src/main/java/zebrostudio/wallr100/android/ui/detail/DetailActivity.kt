@@ -403,6 +403,10 @@ class DetailActivity : BaseActivity(), DetailView {
     successToast(getString(R.string.detail_activity_download_finished_message))
   }
 
+  override fun showCrystallizeSuccessMessage() {
+    successToast(getString(R.string.detail_activity_crystallizing_wallpaper_successful_message))
+  }
+
   override fun collapseSlidingPanel() {
     slidingPanel.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
   }

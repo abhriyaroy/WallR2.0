@@ -41,7 +41,7 @@ class WallrDataRepository(
   private val purchasePreferenceName = "PURCHASE_PREF"
   private val premiumUserTag = "premium_user"
   private val imagePreferenceName = "IMAGE_PREF"
-  private val firstTimeCrystallizeClickTag = "crystallize_click_first"
+  private val crystallizeTipDialogShownBeforeTag = "crystallize_click_dialog"
   private val unableToResolveHostExceptionMessage = "Unable to resolve host " +
       "\"api.unsplash.com\": No address associated with hostname"
   private val firebaseDatabasePath = "wallr"
@@ -202,13 +202,17 @@ class WallrDataRepository(
   }
 
   override fun hasAnyImageBeenCrystallizedBefore(): Boolean {
-    return sharedPrefsHelper.getBoolean(imagePreferenceName, firstTimeCrystallizeClickTag)
+    return sharedPrefsHelper.getBoolean(imagePreferenceName, crystallizeTipDialogShownBeforeTag)
   }
 
-  override fun crystallizeImage(): Single<Bitmap> {
+  override fun crystallizeImage(): Single<Pair<Boolean, Bitmap>> {
     return imageHandler.convertImageToLowpoly()
+        .map {
+          Pair(true, it)
+        }
         .doOnSuccess {
-          sharedPrefsHelper.setBoolean(imagePreferenceName, firstTimeCrystallizeClickTag, true)
+          sharedPrefsHelper.setBoolean(imagePreferenceName, crystallizeTipDialogShownBeforeTag,
+              true)
         }
   }
 

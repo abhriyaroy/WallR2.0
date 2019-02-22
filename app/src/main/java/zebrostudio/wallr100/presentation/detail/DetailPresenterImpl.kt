@@ -8,6 +8,7 @@ import android.net.Uri
 import com.uber.autodispose.autoDisposable
 import com.yalantis.ucrop.UCrop.REQUEST_CROP
 import io.reactivex.Observer
+import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
@@ -398,51 +399,47 @@ class DetailPresenterImpl(
       else -> wallpaperImage.imageLink.large
     }
     imageOptionsUseCase.fetchImageBitmapObservable(imageDownloadLink)
+        .observeOn(postExecutionThread.scheduler)
         .doOnNext {
+          val progress = it.progress
+          if (progress == showIndefiniteLoaderAtProgressValue) {
+            isDownloadInProgress = false
+            isImageOperationInProgress = true
+            detailView?.updateProgressPercentage("$downloadCompletedValue%")
+            val message =
+                context.getString(R.string.detail_activity_crystallizing_wallpaper_message)
+            detailView?.showIndefiniteLoaderWithAnimation(message)
+          } else {
+            detailView?.updateProgressPercentage("$progress%")
+          }
+        }
+        .doOnSubscribe {
+          isDownloadInProgress = true
+          wallpaperHasBeenSet = false
+        }
+        .flatMapSingle {
           if (it.progress == downloadCompletedValue) {
             imageOptionsUseCase.crystallizeImageSingle()
                 .observeOn(postExecutionThread.scheduler)
-                .subscribe { bitmap->
-                  detailView?.showImage(bitmap)
-                  detailView?.hideScreenBlur()
-                }
+          } else {
+            Single.just(Pair(false, null))
           }
         }
-        .observeOn(postExecutionThread.scheduler)
         .autoDisposable(detailView?.getScope()!!)
-        .subscribe(object : Observer<ImageDownloadModel> {
-          override fun onComplete() {
-            isDownloadInProgress = false
-          }
-
-          override fun onSubscribe(d: Disposable) {
-            isDownloadInProgress = true
-            wallpaperHasBeenSet = false
-          }
-
-          override fun onNext(it: ImageDownloadModel) {
-            val progress = it.progress
-            if (progress == showIndefiniteLoaderAtProgressValue) {
-              isDownloadInProgress = false
-              isImageOperationInProgress = true
-              detailView?.updateProgressPercentage("$downloadCompletedValue%")
-              val message =
-                  context.getString(R.string.detail_activity_editing_tool_message)
-              detailView?.showIndefiniteLoaderWithAnimation(message)
-            } else {
-              detailView?.updateProgressPercentage("$progress%")
-            }
-          }
-
-          override fun onError(throwable: Throwable) {
-            if (throwable is ImageDownloadException) {
-              detailView?.showUnableToDownloadErrorMessage()
-            } else {
-              detailView?.showGenericErrorMessage()
-            }
+        .subscribe({
+          if (it.first) {
+            detailView?.showImage(it.second!!)
             detailView?.hideScreenBlur()
+            detailView?.showCrystallizeSuccessMessage()
+            isImageOperationInProgress = false
           }
-
+        }, {
+          if (it is ImageDownloadException) {
+            detailView?.showUnableToDownloadErrorMessage()
+          } else {
+            detailView?.showGenericErrorMessage()
+          }
+          detailView?.hideScreenBlur()
         })
 
   }

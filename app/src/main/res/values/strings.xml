@@ -113,7 +113,8 @@
   <string name="detail_activity_grabbing_best_quality_wallpaper_message">Grabbing the best quality wallpaper...</string>
   <string name="detail_activity_setting_up_resources_message">Setting up the necessary resources...</string>
   <string name="detail_activity_editing_tool_message">Firing up the editing tool...</string>
-  <string name="detail_activity_crystallising_wallpaper_message">Crystallizing wallpaper...</string>
+  <string name="detail_activity_crystallizing_wallpaper_message">Crystallizing wallpaper...</string>
+  <string name="detail_activity_crystallizing_wallpaper_successful_message">Wallpaper has been crystallized!</string>
   <string name="detail_activity_adding_image_to_collections_message">Adding wallpaper to collection....</string>
   <string name="detail_activity_fetching_sharable_link_message">Fetching sharable link...</string>
   <string name="detail_activity_options_download">DOWNLOAD</string>
