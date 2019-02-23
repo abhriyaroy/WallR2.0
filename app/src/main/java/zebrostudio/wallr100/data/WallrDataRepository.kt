@@ -201,10 +201,6 @@ class WallrDataRepository(
     return downloadHelper.downloadImage(link)
   }
 
-  override fun hasAnyImageBeenCrystallizedBefore(): Boolean {
-    return sharedPrefsHelper.getBoolean(imagePreferenceName, crystallizeTipDialogShownBeforeTag)
-  }
-
   override fun crystallizeImage(): Single<Pair<Boolean, Bitmap>> {
     return imageHandler.convertImageToLowpoly()
         .map {
@@ -220,7 +216,7 @@ class WallrDataRepository(
     return sharedPrefsHelper.getBoolean(imagePreferenceName, crystallizeTipDialogShownBeforeTag)
   }
 
-  override fun setCrystallizeDescriptionShown() {
+  override fun rememberCrystallizeDescriptionShown() {
     sharedPrefsHelper.setBoolean(imagePreferenceName, crystallizeTipDialogShownBeforeTag, true)
   }
 

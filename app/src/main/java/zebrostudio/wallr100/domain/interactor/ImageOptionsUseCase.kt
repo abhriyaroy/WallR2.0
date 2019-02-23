@@ -81,6 +81,6 @@ class ImageOptionsInteractor(
   }
 
   override fun setCrystallizeDescriptionShownOnce() {
-    wallrRepository.setCrystallizeDescriptionShown()
+    wallrRepository.rememberCrystallizeDescriptionShown()
   }
 }

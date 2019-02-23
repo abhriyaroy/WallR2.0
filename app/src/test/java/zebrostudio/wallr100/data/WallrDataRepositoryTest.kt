@@ -12,15 +12,16 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
-import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
+import org.mockito.junit.MockitoJUnitRunner
+import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
 import zebrostudio.wallr100.data.datafactory.UnsplashPictureEntityModelFactory
@@ -33,8 +34,7 @@ import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
-import java.lang.Exception
-import java.util.UUID.*
+import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class WallrDataRepositoryTest {
@@ -62,6 +62,8 @@ class WallrDataRepositoryTest {
       "\"api.unsplash.com\": No address associated with hostname"
   private val purchasePreferenceName = "PURCHASE_PREF"
   private val premiumUserTag = "premium_user"
+  private val imagePreferenceName = "IMAGE_PREF"
+  private val crystallizeTipDialogShownBeforeTag = "crystallize_click_dialog"
   private val firebaseDatabasePath = "wallr"
   private val childPathExplore = "explore"
   private val childPathCategories = "categories"
@@ -375,6 +377,43 @@ class WallrDataRepositoryTest {
 
     verify(downloadHelper).isDownloadEnqueued(randomString)
     verifyNoMoreInteractions(downloadHelper)
+  }
+
+  @Test fun `should return pair on crystallize image call success`() {
+    `when`(imageHandler.convertImageToLowpoly()).thenReturn(Single.just(mockBitmap))
+
+    val result = wallrDataRepository.crystallizeImage().test().values()[0]
+
+    assertEquals(true, result.first)
+    assertEquals(mockBitmap, result.second)
+    verify(imageHandler).convertImageToLowpoly()
+    verifyNoMoreInteractions(imageHandler)
+  }
+
+  @Test fun `should complete on saveCrystallizedImageToDownloads call success`() {
+    `when`(imageHandler.saveLowPolyImageToDownloads()).thenReturn(Completable.complete())
+
+    wallrDataRepository.saveCrystallizedImageToDownloads().test().assertComplete()
+
+    verify(imageHandler).saveLowPolyImageToDownloads()
+    verifyNoMoreInteractions(imageHandler)
+  }
+
+  @Test fun `should return false on isCrystallizeDescriptionShown call success`() {
+    `when`(sharedPrefs.getBoolean(imagePreferenceName, crystallizeTipDialogShownBeforeTag))
+        .thenReturn(false)
+
+    assertFalse(wallrDataRepository.isCrystallizeDescriptionShown())
+
+    verify(sharedPrefs).getBoolean(imagePreferenceName, crystallizeTipDialogShownBeforeTag)
+    verifyNoMoreInteractions(sharedPrefs)
+  }
+
+  @Test fun `should call shared preference on rememberCrystallizeDescriptionShown call success`() {
+    wallrDataRepository.rememberCrystallizeDescriptionShown()
+
+    verify(sharedPrefs).setBoolean(imagePreferenceName, crystallizeTipDialogShownBeforeTag, true)
+    verifyNoMoreInteractions(sharedPrefs)
   }
 
   /* Need to properly implement timeout for Rx Java
