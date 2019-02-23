@@ -48,6 +48,7 @@ interface DetailContract {
     fun showDownloadStartedMessage()
     fun showDownloadAlreadyInProgressMessage()
     fun showDownloadCompletedSuccessMessage()
+    fun showCrystallizedDownloadCompletedSuccessMessage()
     fun showTryCrystallizeDescriptionDialog()
     fun showCrystallizeSuccessMessage()
     fun showImageHasAlreadyBeenCrystallizedMessage()

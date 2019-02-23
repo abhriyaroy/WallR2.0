@@ -13,6 +13,7 @@ import io.reactivex.disposables.Disposable
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.android.utils.WallpaperSetter
+import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.data.exception.ImageDownloadException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
@@ -109,7 +110,7 @@ class DetailPresenterImpl(
           if (imageOptionsUseCase.isCrystallizeDescriptionDialogShown()) {
             if (!imageHasBeenCrystallized) {
               crystallizeWallpaper()
-            } else{
+            } else {
               detailView?.showImageHasAlreadyBeenCrystallizedMessage()
             }
           } else {
@@ -286,7 +287,23 @@ class DetailPresenterImpl(
               detailView?.showGenericErrorMessage()
             })
       }
+    } else {
     }
+    imageOptionsUseCase.downloadCrystallizedImageCompletable()
+        .observeOn(postExecutionThread.scheduler)
+        .doOnSubscribe {
+          detailView?.blurScreen()
+          detailView?.showIndefiniteLoader(context
+              .stringRes(R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
+        }
+        .autoDisposable(detailView?.getScope()!!)
+        .subscribe({
+          detailView?.hideScreenBlur()
+          detailView?.showDownloadCompletedSuccessMessage()
+        }, {
+          detailView?.hideScreenBlur()
+          detailView?.showGenericErrorMessage()
+        })
   }
 
   override fun handleCrystallizeDialogPositiveClick() {

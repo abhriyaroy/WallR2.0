@@ -213,8 +213,7 @@ class WallrDataRepository(
   }
 
   override fun saveCrystallizedImageToDownloads(): Completable {
-    // To be implemented properly later on
-    throw IllegalStateException("This is not supported yet")
+    return imageHandler.saveLowPolyImageToDownloads()
   }
 
   override fun isCrystallizeDescriptionShown(): Boolean {

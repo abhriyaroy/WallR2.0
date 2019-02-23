@@ -403,6 +403,10 @@ class DetailActivity : BaseActivity(), DetailView {
     successToast(getString(R.string.detail_activity_download_finished_message))
   }
 
+  override fun showCrystallizedDownloadCompletedSuccessMessage() {
+    successToast(getString(R.string.detail_activity_crystallized_download_finished_message))
+  }
+
   override fun showTryCrystallizeDescriptionDialog() {
     MaterialDialog.Builder(this)
         .backgroundColor(colorRes(R.color.color_primary))

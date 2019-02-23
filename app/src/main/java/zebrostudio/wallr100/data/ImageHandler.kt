@@ -25,6 +25,7 @@ interface ImageHandler {
   fun getImageUri(): Uri
   fun convertUriToBitmap(uri: Uri): Single<Bitmap>
   fun convertImageToLowpoly(): Single<Bitmap>
+  fun saveLowPolyImageToDownloads(): Completable
 }
 
 class ImageHandlerImpl(
@@ -148,6 +149,26 @@ class ImageHandlerImpl(
           close()
         }
         it.onSuccess(bitmap)
+      }
+    }
+  }
+
+  override fun saveLowPolyImageToDownloads(): Completable {
+    return Completable.create {
+      fileHandler.getCacheFile().inputStream().let { inputStream ->
+        fileHandler.getDownloadFile().outputStream().let { outputStream ->
+          ByteArray(1024).apply {
+            var length = inputStream.read(this)
+            while (length > 0) {
+              outputStream.write(this, 0, length)
+              length = inputStream.read(this)
+            }
+            it.onComplete()
+          }
+          outputStream.flush()
+          outputStream.close()
+        }
+        inputStream.close()
       }
     }
   }

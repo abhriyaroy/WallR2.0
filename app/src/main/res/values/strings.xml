@@ -97,7 +97,7 @@
   <!-- Detail activity strings -->
   <string name="detail_activity_enable_automatic_wallpaper_changer_from_her_messagee">
     Then you can enable the Automatic Wallpaper Changer from here</string>
-  <string name="detail_activity_crystallizing_wallpaper_please_wait_message">Crystallizing wallpaper. Please wait!</string>
+  <string name="detail_activity_crystallizing_wallpaper_please_wait_message">Crystallizing wallpaper. Please wait…</string>
   <string name="detail_activity_download_options_super_high">Super High</string>
   <string name="detail_activity_download_options_high">High</string>
   <string name="detail_activity_download_options_medium">Medium</string>
@@ -152,6 +152,7 @@
   <string name="detail_activity_crystallize_dialog_positive_text">TRY NOW</string>
   <string name="detail_activity_crystallize_dialog_negative_text">CANCEL</string>
   <string name="detail_activity_image_already_crystallized_message">This image has already been crystallized</string>
+  <string name="detail_activity_crystallized_download_finished_message">Your crystallized wallpaper has finished downloading</string>
 
 
 </resources>
