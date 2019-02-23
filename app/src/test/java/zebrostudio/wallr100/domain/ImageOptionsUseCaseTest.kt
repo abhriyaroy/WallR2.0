@@ -4,12 +4,11 @@ import android.graphics.Bitmap
 import android.net.Uri
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -18,12 +17,11 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
-import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsInteractor
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
-import java.util.UUID.*
+import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class ImageOptionsUseCaseTest {
@@ -127,12 +125,29 @@ class ImageOptionsUseCaseTest {
     verifyNoMoreInteractions(wallrRepository)
   }
 
-  @Test fun `should return true on downloadCrystallizedImageCompletable call success`() {
+  @Test fun `should return true on isDownloadInProgress call success`() {
     `when`(wallrRepository.checkIfDownloadIsInProgress(randomString)).thenReturn(true)
 
     assertTrue(imageOptionsUseCase.isDownloadInProgress(randomString))
 
     verify(wallrRepository).checkIfDownloadIsInProgress(randomString)
+    verifyNoMoreInteractions(wallrRepository)
+  }
+
+  @Test fun `should return false on isCrystallizeDescriptionDialogShown call success`() {
+    `when`(wallrRepository.isCrystallizeDescriptionShown()).thenReturn(false)
+
+    assertFalse(imageOptionsUseCase.isCrystallizeDescriptionDialogShown())
+
+    verify(wallrRepository).isCrystallizeDescriptionShown()
+    verifyNoMoreInteractions(wallrRepository)
+  }
+
+  @Test
+  fun `should invoke rememberCrystallizeDescriptionShown on setCrystallizeDescriptionShownOnce call success`() {
+    imageOptionsUseCase.setCrystallizeDescriptionShownOnce()
+
+    verify(wallrRepository).rememberCrystallizeDescriptionShown()
     verifyNoMoreInteractions(wallrRepository)
   }
 
