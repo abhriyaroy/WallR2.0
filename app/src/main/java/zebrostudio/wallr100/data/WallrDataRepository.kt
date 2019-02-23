@@ -210,15 +210,19 @@ class WallrDataRepository(
         .map {
           Pair(true, it)
         }
-        .doOnSuccess {
-          sharedPrefsHelper.setBoolean(imagePreferenceName, crystallizeTipDialogShownBeforeTag,
-              true)
-        }
   }
 
   override fun saveCrystallizedImageToDownloads(): Completable {
     // To be implemented properly later on
     throw IllegalStateException("This is not supported yet")
+  }
+
+  override fun isCrystallizeDescriptionShown(): Boolean {
+    return sharedPrefsHelper.getBoolean(imagePreferenceName, crystallizeTipDialogShownBeforeTag)
+  }
+
+  override fun setCrystallizeDescriptionShown() {
+    sharedPrefsHelper.setBoolean(imagePreferenceName, crystallizeTipDialogShownBeforeTag, true)
   }
 
   override fun checkIfDownloadIsInProgress(link: String): Boolean {

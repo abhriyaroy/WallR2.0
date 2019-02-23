@@ -21,6 +21,8 @@ interface ImageOptionsUseCase {
   fun downloadImageCompletable(link: String): Completable
   fun downloadCrystallizedImageCompletable(): Completable
   fun isDownloadInProgress(link: String): Boolean
+  fun isCrystallizeDescriptionDialogShown(): Boolean
+  fun setCrystallizeDescriptionShownOnce()
 }
 
 class ImageOptionsInteractor(
@@ -74,4 +76,11 @@ class ImageOptionsInteractor(
     return wallrRepository.checkIfDownloadIsInProgress(link)
   }
 
+  override fun isCrystallizeDescriptionDialogShown(): Boolean {
+    return wallrRepository.isCrystallizeDescriptionShown()
+  }
+
+  override fun setCrystallizeDescriptionShownOnce() {
+    wallrRepository.setCrystallizeDescriptionShown()
+  }
 }

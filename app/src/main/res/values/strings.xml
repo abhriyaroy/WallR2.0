@@ -145,5 +145,13 @@
   <string name="detail_activity_download_started_message">Your wallpaper download has been started</string>
   <string name="detail_activity_download_already_in_progress_message">Your wallpaper download is already in progress</string>
   <string name="detail_activity_download_finished_message">Your wallpaper has finished downloading</string>
+  <string name="detail_activity_crystallize_dialog_description">Generates a beautiful and unique artwork of the current wallpaper using WallR\'s innovative Crystallize algorithm. It can give your device the fresh look it deserves.</string>
+  <string name="detail_activity_crystallize_wallpaper_dialog_title">Crystallize Wallpaper</string>
+  <string name="detail_activity_crystallize_dialog_before_text">BEFORE</string>
+  <string name="detail_activity_crystallize_dialog_after_text">AFTER</string>
+  <string name="detail_activity_crystallize_dialog_positive_text">TRY NOW</string>
+  <string name="detail_activity_crystallize_dialog_negative_text">CANCEL</string>
+  <string name="detail_activity_image_already_crystallized_message">This image has already been crystallized</string>
+
 
 </resources>

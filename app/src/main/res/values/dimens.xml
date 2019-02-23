@@ -143,5 +143,19 @@
   <dimen name="detail_activity_back_icon_height">40dp</dimen>
   <dimen name="detail_activity_back_icon_margin_start">8dp</dimen>
   <dimen name="detail_activity_back_icon_margin_top">25dp</dimen>
+  <dimen name="detail_activity_crystallize_dialog_title_size">16sp</dimen>
+  <dimen name="detail_activity_crystallize_dialog_description_size">13sp</dimen>
+  <dimen name="detail_activity_crystallize_dialog_height">190dp</dimen>
+  <dimen name="detail_activity_crystallize_dialog_margin_left">3dp</dimen>
+  <dimen name="detail_activity_crystallize_dialog_before_layout_padding">8dp</dimen>
+  <dimen name="detail_activity_crystallize_dialog_before_layout_margin">8dp</dimen>
+  <dimen name="detail_activity_crystallize_dialog_before_text_size">11sp</dimen>
+  <dimen name="detail_activity_crystallize_dialog_after_text_size">11sp</dimen>
+  <dimen name="detail_activity_crystallize_dialog_after_layout_margin">8dp</dimen>
+  <dimen name="detail_activity_crystallize_dialog_after_layout_padding">8dp</dimen>
+  <dimen name="detail_activity_crystallize_dialog_scrollview_padding_bottom">8dp</dimen>
+  <dimen name="detail_activity_crystallize_dialog_scrollview_padding_top">8dp</dimen>
+  <dimen name="detail_activity_crystallize_dialog_scrollview_padding_left">24dp</dimen>
+  <dimen name="detail_activity_crystallize_dialog_scrollview_padding_right">24dp</dimen>
 
 </resources>

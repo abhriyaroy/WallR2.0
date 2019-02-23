@@ -46,6 +46,8 @@ interface WallrRepository {
   fun hasAnyImageBeenCrystallizedBefore(): Boolean
   fun crystallizeImage(): Single<Pair<Boolean, Bitmap>>
   fun saveCrystallizedImageToDownloads(): Completable
+  fun isCrystallizeDescriptionShown(): Boolean
+  fun setCrystallizeDescriptionShown()
   fun checkIfDownloadIsInProgress(link: String): Boolean
 
 }

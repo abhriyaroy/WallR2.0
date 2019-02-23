@@ -141,19 +141,13 @@ class ImageHandlerImpl(
 
   override fun convertImageToLowpoly(): Single<Bitmap> {
     return Single.create {
-      try {
-        LowPoly.generate(getImageBitmap(), gradientThresholdLowpoly).let { bitmap ->
-          fileHandler.getCacheFile().outputStream().apply {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, bitmapCompressQuality, this)
-            flush()
-            close()
-          }
-          it.onSuccess(bitmap)
+      LowPoly.generate(getImageBitmap(), gradientThresholdLowpoly).let { bitmap ->
+        fileHandler.getCacheFile().outputStream().apply {
+          bitmap.compress(Bitmap.CompressFormat.JPEG, bitmapCompressQuality, this)
+          flush()
+          close()
         }
-      } catch (e: Exception) {
-        System.out.println(e.message)
-      } catch (e: UnsatisfiedLinkError) {
-        System.out.println(e.message)
+        it.onSuccess(bitmap)
       }
     }
   }

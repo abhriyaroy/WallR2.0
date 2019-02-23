@@ -106,7 +106,15 @@ class DetailPresenterImpl(
     if (userPremiumStatusUseCase.isUserPremium()) {
       if (detailView?.hasStoragePermission() == true) {
         if (detailView?.internetAvailability() == true) {
-          crystallizeWallpaper()
+          if (imageOptionsUseCase.isCrystallizeDescriptionDialogShown()) {
+            if (!imageHasBeenCrystallized) {
+              crystallizeWallpaper()
+            } else{
+              detailView?.showImageHasAlreadyBeenCrystallizedMessage()
+            }
+          } else {
+            detailView?.showTryCrystallizeDescriptionDialog()
+          }
         } else {
           detailView?.showNoInternetError()
         }
@@ -281,6 +289,11 @@ class DetailPresenterImpl(
     }
   }
 
+  override fun handleCrystallizeDialogPositiveClick() {
+    imageOptionsUseCase.setCrystallizeDescriptionShownOnce()
+    handleCrystallizeClick()
+  }
+
   override fun setPanelStateAsExpanded() {
     isSlidingPanelExpanded = true
   }
@@ -431,6 +444,7 @@ class DetailPresenterImpl(
             detailView?.showImage(it.second!!)
             detailView?.hideScreenBlur()
             detailView?.showCrystallizeSuccessMessage()
+            imageHasBeenCrystallized = true
             isImageOperationInProgress = false
           }
         }, {

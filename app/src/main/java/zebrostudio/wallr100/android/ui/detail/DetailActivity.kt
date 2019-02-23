@@ -221,10 +221,10 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun showWaitLoader(message: String) {
     materialProgressLoader = MaterialDialog.Builder(this)
-        .widgetColor(resources.getColor(R.color.color_accent))
-        .contentColor(resources.getColor(R.color.color_white))
+        .widgetColor(colorRes(R.color.color_accent))
+        .contentColor(colorRes(R.color.color_white))
         .content(message)
-        .backgroundColor(resources.getColor(R.color.color_primary))
+        .backgroundColor(colorRes(R.color.color_primary))
         .progress(true, initialLoaderProgress)
         .progressIndeterminateStyle(false)
         .build()
@@ -401,6 +401,26 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun showDownloadCompletedSuccessMessage() {
     successToast(getString(R.string.detail_activity_download_finished_message))
+  }
+
+  override fun showTryCrystallizeDescriptionDialog() {
+    MaterialDialog.Builder(this)
+        .backgroundColor(colorRes(R.color.color_primary))
+        .customView(R.layout.crystallize_example_dialog_layout, false)
+        .contentColor(colorRes(R.color.color_white))
+        .widgetColor(colorRes(R.color.color_accent))
+        .positiveColor(colorRes(R.color.color_accent))
+        .negativeColor(colorRes(R.color.color_accent))
+        .positiveText(getString(R.string.detail_activity_crystallize_dialog_positive_text))
+        .negativeText(getString(R.string.detail_activity_crystallize_dialog_negative_text))
+        .onPositive { _, _ ->
+          presenter.handleCrystallizeDialogPositiveClick()
+        }
+        .show()
+  }
+
+  override fun showImageHasAlreadyBeenCrystallizedMessage() {
+    infoToast(getString(R.string.detail_activity_image_already_crystallized_message))
   }
 
   override fun showCrystallizeSuccessMessage() {
