@@ -49,7 +49,7 @@ interface DetailContract {
     fun showDownloadAlreadyInProgressMessage()
     fun showDownloadCompletedSuccessMessage()
     fun showCrystallizedDownloadCompletedSuccessMessage()
-    fun showTryCrystallizeDescriptionDialog()
+    fun showCrystallizeDescriptionDialog()
     fun showCrystallizeSuccessMessage()
     fun showImageHasAlreadyBeenCrystallizedMessage()
     fun collapseSlidingPanel()

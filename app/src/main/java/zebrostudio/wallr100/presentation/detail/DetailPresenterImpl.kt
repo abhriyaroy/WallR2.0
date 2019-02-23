@@ -114,7 +114,7 @@ class DetailPresenterImpl(
               detailView?.showImageHasAlreadyBeenCrystallizedMessage()
             }
           } else {
-            detailView?.showTryCrystallizeDescriptionDialog()
+            detailView?.showCrystallizeDescriptionDialog()
           }
         } else {
           detailView?.showNoInternetError()
@@ -288,22 +288,22 @@ class DetailPresenterImpl(
             })
       }
     } else {
+      imageOptionsUseCase.downloadCrystallizedImageCompletable()
+          .observeOn(postExecutionThread.scheduler)
+          .doOnSubscribe {
+            detailView?.blurScreen()
+            detailView?.showIndefiniteLoader(context
+                .stringRes(R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
+          }
+          .autoDisposable(detailView?.getScope()!!)
+          .subscribe({
+            detailView?.hideScreenBlur()
+            detailView?.showDownloadCompletedSuccessMessage()
+          }, {
+            detailView?.hideScreenBlur()
+            detailView?.showGenericErrorMessage()
+          })
     }
-    imageOptionsUseCase.downloadCrystallizedImageCompletable()
-        .observeOn(postExecutionThread.scheduler)
-        .doOnSubscribe {
-          detailView?.blurScreen()
-          detailView?.showIndefiniteLoader(context
-              .stringRes(R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
-        }
-        .autoDisposable(detailView?.getScope()!!)
-        .subscribe({
-          detailView?.hideScreenBlur()
-          detailView?.showDownloadCompletedSuccessMessage()
-        }, {
-          detailView?.hideScreenBlur()
-          detailView?.showGenericErrorMessage()
-        })
   }
 
   override fun handleCrystallizeDialogPositiveClick() {
@@ -439,7 +439,7 @@ class DetailPresenterImpl(
             val message =
                 context.getString(R.string.detail_activity_crystallizing_wallpaper_message)
             detailView?.showIndefiniteLoaderWithAnimation(message)
-          } else {
+          } else if (progress != downloadCompletedValue) {
             detailView?.updateProgressPercentage("$progress%")
           }
         }

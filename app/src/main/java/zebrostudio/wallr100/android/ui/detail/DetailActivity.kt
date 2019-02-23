@@ -407,7 +407,7 @@ class DetailActivity : BaseActivity(), DetailView {
     successToast(getString(R.string.detail_activity_crystallized_download_finished_message))
   }
 
-  override fun showTryCrystallizeDescriptionDialog() {
+  override fun showCrystallizeDescriptionDialog() {
     MaterialDialog.Builder(this)
         .backgroundColor(colorRes(R.color.color_primary))
         .customView(R.layout.crystallize_example_dialog_layout, false)

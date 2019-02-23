@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
@@ -37,6 +38,7 @@ import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
 import zebrostudio.wallr100.presentation.datafactory.ImagePresenterEntityFactory
 import zebrostudio.wallr100.presentation.datafactory.SearchPicturesPresenterEntityFactory
+import zebrostudio.wallr100.presentation.detail.ActionType.CRYSTALLIZE
 import zebrostudio.wallr100.presentation.detail.ActionType.DOWNLOAD
 import zebrostudio.wallr100.presentation.detail.ActionType.EDIT_SET
 import zebrostudio.wallr100.presentation.detail.ActionType.QUICK_SET
@@ -973,6 +975,167 @@ class DetailActivityPresenterImplTest {
   }
 
   @Test
+  fun `should redirect to pro when handleCrystallizeClicked call failure due to non pro user`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(false)
+
+    detailPresenterImpl.handleCrystallizeClick()
+
+    verify(detailView).redirectToBuyPro(CRYSTALLIZE.ordinal)
+  }
+
+  @Test
+  fun `should request storage permission on handleCrystallizeClick call`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(false)
+
+    detailPresenterImpl.handleCrystallizeClick()
+
+    verify(detailView).hasStoragePermission()
+    verify(detailView).requestStoragePermission(CRYSTALLIZE)
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show no internet error on handleCrystallizeClick call failure due to no internet`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(false)
+
+    detailPresenterImpl.handleCrystallizeClick()
+
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showNoInternetError()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show crystallize description dialog on handleCrystallizeClick first call`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(false)
+
+    detailPresenterImpl.handleCrystallizeClick()
+
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showCrystallizeDescriptionDialog()
+    verifyNoMoreInteractions(detailView)
+    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
+    verifyNoMoreInteractions(imageOptionsUseCase)
+  }
+
+  @Test
+  fun `should set bitmap to image view on handleCrystallize call success of search type`() {
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    val link = detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
+        Observable.just(imageDownloadModel))
+    `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
+        Single.just(Pair(true, mockBitmap)))
+
+    detailPresenterImpl.handleCrystallizeClick()
+
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).showImage(mockBitmap)
+    verify(detailView).hideScreenBlur()
+    verify(detailView).showCrystallizeSuccessMessage()
+    verify(detailView).getScope()
+    verifyNoMoreInteractions(detailView)
+    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
+    verify(imageOptionsUseCase).crystallizeImageSingle()
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    shouldVerifyPostExecutionThreadSchedulerCall(2)
+  }
+
+  @Test
+  fun `should set bitmap to image view on handleViewResult with crystallize request code call success of search type`() {
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    val link = detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
+        Observable.just(imageDownloadModel))
+    `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
+        Single.just(Pair(true, mockBitmap)))
+
+    detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
+
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).showImage(mockBitmap)
+    verify(detailView).hideScreenBlur()
+    verify(detailView).showCrystallizeSuccessMessage()
+    verify(detailView).getScope()
+    verifyNoMoreInteractions(detailView)
+    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
+    verify(imageOptionsUseCase).crystallizeImageSingle()
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    shouldVerifyPostExecutionThreadSchedulerCall(2)
+  }
+
+  @Test
+  fun `should show error message on handleViewResult with crystallize request code call failure of search type`() {
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    val link = detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
+        Observable.just(imageDownloadModel))
+    `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
+        Single.error(Exception()))
+
+    detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
+
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).showGenericErrorMessage()
+    verify(detailView).hideScreenBlur()
+    verify(detailView).getScope()
+    verifyNoMoreInteractions(detailView)
+    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
+    verify(imageOptionsUseCase).crystallizeImageSingle()
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    shouldVerifyPostExecutionThreadSchedulerCall(2)
+  }
+
+  @Test
   fun `should set isSlidingPanelExpanded to true on setSlidingPanelStateAsExpanded call success`() {
     detailPresenterImpl.setPanelStateAsExpanded()
 
@@ -995,8 +1158,8 @@ class DetailActivityPresenterImplTest {
     whenever(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 
-  private fun shouldVerifyPostExecutionThreadSchedulerCall() {
-    verify(postExecutionThread).scheduler
+  private fun shouldVerifyPostExecutionThreadSchedulerCall(times: Int = 1) {
+    verify(postExecutionThread, times(times)).scheduler
     verifyNoMoreInteractions(postExecutionThread)
   }
 
