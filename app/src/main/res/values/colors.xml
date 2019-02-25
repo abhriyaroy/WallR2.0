@@ -17,4 +17,6 @@
   <color name="color_buy_pro_top_half">#37474F</color>
   <color name="color_item_buy_pro_description_text">#dbd4cf</color>
 
+  <color name="black_overlay">#66000000</color>
+
 </resources>

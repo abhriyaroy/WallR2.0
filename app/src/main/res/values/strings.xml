@@ -27,6 +27,8 @@
   <string name="generic_error_message">Something went wrong. Please try again</string>
   <string name="no_internet_message">Please ensure you have a working internet connection</string>
   <string name="cancel_text">Cancel</string>
+  <string name="unable_to_load_hd_image_error">
+    Unable to load high-definition preview. Please ensure you have a working internet connection</string>
 
   <!-- Main activity strings -->
   <string name="main_activity_no_email_client_error">There is no email client installed</string>
@@ -126,8 +128,6 @@
   <string name="detail_activity_options_crystallize">CRYSTALLIZE</string>
   <string name="detail_activity_website_referral_unsplash">www.unsplash.com</string>
   <string name="detail_activity_wallpaper_action_progress_percentage">0%</string>
-  <string name="detail_activity_unable_to_load_hd_image_error">
-    Unable to load high-definition preview. Please ensure you have a working internet connection</string>
   <string name="detail_activity_storage_permission_denied_error">
     Storage permission is required to continue using this app. Please GRANT the permission when asked for</string>
   <string name="detail_activity_share_error">
@@ -153,6 +153,10 @@
   <string name="detail_activity_crystallize_dialog_negative_text">CANCEL</string>
   <string name="detail_activity_image_already_crystallized_message">This image has already been crystallized</string>
   <string name="detail_activity_crystallized_download_finished_message">Your crystallized wallpaper has finished downloading</string>
+
+  <string name="title_activity_fullscreen">FullscreenActivity</string>
+  <string name="dummy_button">Dummy Button</string>
+  <string name="dummy_content">DUMMY\nCONTENT</string>
 
 
 </resources>

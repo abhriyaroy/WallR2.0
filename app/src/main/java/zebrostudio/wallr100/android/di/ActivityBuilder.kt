@@ -3,11 +3,13 @@ package zebrostudio.wallr100.android.di
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import zebrostudio.wallr100.android.di.scopes.PerActivity
-import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProModule
 import zebrostudio.wallr100.android.ui.detail.DetailActivity
 import zebrostudio.wallr100.android.ui.detail.DetailActivityModule
+import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
+import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageModule
+import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.android.ui.main.MainActivityModule
 import zebrostudio.wallr100.android.ui.search.SearchActivity
 import zebrostudio.wallr100.android.ui.search.SearchActivityModule
@@ -30,5 +32,9 @@ abstract class ActivityBuilder {
   @PerActivity
   @ContributesAndroidInjector(modules = [(DetailActivityModule::class)])
   abstract fun detailActivity(): DetailActivity
+
+  @PerActivity
+  @ContributesAndroidInjector(modules = [(FullScreenImageModule::class)])
+  abstract fun fullScreenImageActivity(): FullScreenImageActivity
 
 }

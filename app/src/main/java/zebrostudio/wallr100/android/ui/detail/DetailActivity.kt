@@ -49,6 +49,7 @@ import kotlinx.android.synthetic.main.activity_detail.wallpaperDownloadProgressP
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
+import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
@@ -172,7 +173,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showImageLoadError() {
-    errorToast(getString(R.string.detail_activity_unable_to_load_hd_image_error))
+    errorToast(getString(R.string.unable_to_load_hd_image_error))
   }
 
   override fun showNoInternetError() {
@@ -431,6 +432,14 @@ class DetailActivity : BaseActivity(), DetailView {
     successToast(getString(R.string.detail_activity_crystallizing_wallpaper_successful_message))
   }
 
+  override fun showExpandedImage(lowQualityLink: String, highQualityLink: String) {
+    Bundle().let {
+      it.putString(FullScreenImageActivity.lowQualityImageBundleTag, lowQualityLink)
+      it.putString(FullScreenImageActivity.highQualityImageBundleTag, highQualityLink)
+      startActivity(FullScreenImageActivity.getCallingIntent(this), it)
+    }
+  }
+
   override fun collapseSlidingPanel() {
     slidingPanel.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
   }
@@ -472,6 +481,7 @@ class DetailActivity : BaseActivity(), DetailView {
     addToCollectionImageLayout.setOnClickListener { presenter.handleAddToCollectionClick() }
     shareImageLayout.setOnClickListener { presenter.handleShareClick() }
     backIcon.setOnClickListener { presenter.handleBackButtonClick() }
+    imageView.setOnClickListener { presenter.handleImageViewClicked() }
   }
 
   private fun setUpBlurView() {

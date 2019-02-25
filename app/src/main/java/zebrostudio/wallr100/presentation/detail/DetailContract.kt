@@ -52,6 +52,7 @@ interface DetailContract {
     fun showCrystallizeDescriptionDialog()
     fun showCrystallizeSuccessMessage()
     fun showImageHasAlreadyBeenCrystallizedMessage()
+    fun showExpandedImage(lowQualityLink: String, highQualityLink: String)
     fun collapseSlidingPanel()
     fun exitView()
   }
@@ -73,6 +74,7 @@ interface DetailContract {
     fun handleViewResult(requestCode: Int, resultCode: Int, data: Intent?)
     fun handleDownloadQualitySelectionEvent(downloadType: ImageListType, selectedIndex: Int)
     fun handleCrystallizeDialogPositiveClick()
+    fun handleImageViewClicked()
     fun setPanelStateAsExpanded()
     fun setPanelStateAsCollapsed()
   }
