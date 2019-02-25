@@ -433,10 +433,10 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showExpandedImage(lowQualityLink: String, highQualityLink: String) {
-    Bundle().let {
-      it.putString(FullScreenImageActivity.lowQualityImageBundleTag, lowQualityLink)
-      it.putString(FullScreenImageActivity.highQualityImageBundleTag, highQualityLink)
-      startActivity(FullScreenImageActivity.getCallingIntent(this), it)
+    FullScreenImageActivity.getCallingIntent(this).apply {
+      putExtra(FullScreenImageActivity.lowQualityImageBundleTag, lowQualityLink)
+      putExtra(FullScreenImageActivity.highQualityImageBundleTag, highQualityLink)
+      startActivity(this)
     }
   }
 

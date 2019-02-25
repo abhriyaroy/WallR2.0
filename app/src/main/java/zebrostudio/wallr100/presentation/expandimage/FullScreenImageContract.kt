@@ -13,6 +13,8 @@ interface FullScreenImageContract {
     fun hideLoader()
     fun showHighQualityImageLoadingError()
     fun hideLowQualityImage()
+    fun showStatusBarAndNavigationBar()
+    fun hideStatusBarAndNavigationBar()
   }
 
   interface FullScreenImagePresenter : BasePresenter<FullScreenImageView> {
@@ -20,5 +22,8 @@ interface FullScreenImageContract {
     fun setHighQualityImageLink(link: String)
     fun notifyHighQualityImageLoadingFinished()
     fun notifyHighQualityImageLoadingFailed()
+    fun notifyPhotoViewTapped()
+    fun notifyStatusBarAndNavBarShown()
+    fun notifyStatusBarAndNavBarHidden()
   }
 }

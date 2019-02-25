@@ -312,11 +312,16 @@ class DetailPresenterImpl(
   }
 
   override fun handleImageViewClicked() {
-    if (imageType == SEARCH) {
-      detailView?.showExpandedImage(searchImage.imageQualityUrlPresenterEntity.smallImageLink,
-          searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    if (isSlidingPanelExpanded) {
+      detailView?.collapseSlidingPanel()
     } else {
-      detailView?.showExpandedImage(wallpaperImage.imageLink.thumb, wallpaperImage.imageLink.large)
+      if (imageType == SEARCH) {
+        detailView?.showExpandedImage(searchImage.imageQualityUrlPresenterEntity.smallImageLink,
+            searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      } else {
+        detailView?.showExpandedImage(wallpaperImage.imageLink.thumb,
+            wallpaperImage.imageLink.large)
+      }
     }
   }
 

@@ -3,9 +3,9 @@ package zebrostudio.wallr100.android.ui.search
 import android.arch.lifecycle.Lifecycle
 import android.content.Intent
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.uber.autodispose.ScopeProvider
@@ -26,17 +26,17 @@ import zebrostudio.wallr100.android.ui.adapters.ImageAdapter
 import zebrostudio.wallr100.android.utils.EndlessScrollListener
 import zebrostudio.wallr100.android.utils.GridItemDecorator
 import zebrostudio.wallr100.android.utils.checkDataConnection
-import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
+import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.android.utils.withDelayOnMain
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.search.SearchContract
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
-import java.util.concurrent.TimeUnit.*
+import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
 
 class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
@@ -71,7 +71,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     super.onDestroy()
   }
 
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     presenter.notifyActivityResult(requestCode, resultCode, data)
   }
 
@@ -202,13 +202,14 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   }
 
   private fun initAppbar() {
-    searchAppBar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-      if (Math.abs(verticalOffset) == appBarLayout.totalScrollRange) {
-        appBarIsCollapsed = true
-      } else if (verticalOffset == 0) {
-        appBarIsCollapsed = false
-      }
-    }
+    searchAppBar.addOnOffsetChangedListener(
+        AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+          if (Math.abs(verticalOffset) == appBarLayout.totalScrollRange) {
+            appBarIsCollapsed = true
+          } else if (verticalOffset == 0) {
+            appBarIsCollapsed = false
+          }
+        })
     searchView.backButton.setOnClickListener { onBackPressed() }
     searchView.setVoiceSearch(true)
     searchView.showSearch()

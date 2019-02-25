@@ -30,7 +30,7 @@ abstract class EndlessScrollListener(layoutManager: GridLayoutManager) : Recycle
     return maxSize
   }
 
-  override fun onScrolled(view: RecyclerView?, dx: Int, dy: Int) {
+  override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
     var lastVisibleItemPosition = 0
     val totalItemCount = mLayoutManager.itemCount
 

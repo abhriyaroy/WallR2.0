@@ -13,7 +13,7 @@ class RecyclerViewItemDecorator(private val sizeGridSpacingPx: Int, private val 
     outRect: Rect,
     view: View,
     parent: RecyclerView,
-    state: RecyclerView.State?
+    state: RecyclerView.State
   ) {
     val frameWidth =
         ((parent.width - sizeGridSpacingPx.toFloat() * (gridSize - 1)) / gridSize).toInt()

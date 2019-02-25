@@ -30,7 +30,7 @@ interface SearchContract {
     fun notifyQuerySubmitted(query: String)
     fun fetchMoreImages()
     fun notifyRetryButtonClicked()
-    fun notifyActivityResult(requestCode: Int, resultCode: Int, data: Intent)
+    fun notifyActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
   }
 
 }

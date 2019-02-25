@@ -8,7 +8,7 @@
     tools:context=".android.ui.expandimage.FullScreenImageActivity">
 
   <com.github.chrisbanes.photoview.PhotoView
-      android:id="@+id/imageFullSize"
+      android:id="@+id/highQualityImagePhotoView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:scaleType="centerCrop"
@@ -19,11 +19,13 @@
       app:layout_constraintTop_toTopOf="parent"/>
 
   <ImageView
-      android:id="@+id/imageThumbSize"
+      android:id="@+id/lowQualityImageView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:scaleType="centerCrop"
       android:background="@color/color_primary"
+      android:clickable="true"
+      android:focusable="true"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
@@ -36,7 +38,7 @@
       android:layout_gravity="bottom|center_horizontal"
       app:SpinKit_Color="@color/color_white"
       android:layout_marginBottom="@dimen/full_screen_image_spinkit_margin_bottom"
-      app:layout_constraintBottom_toBottomOf="@+id/imageThumbSize"
+      app:layout_constraintBottom_toBottomOf="@+id/lowQualityImageView"
       android:layout_marginEnd="@dimen/full_screen_image_spinkit_margin_end"
       style="@style/SpinKitView.ThreeBounce"
       app:layout_constraintEnd_toEndOf="parent"
@@ -50,9 +52,8 @@
       android:layout_alignParentStart="true"
       android:clickable="true"
       android:focusable="true"
-      android:background="?attr/selectableItemBackgroundBorderless"
+      android:foreground="?attr/selectableItemBackgroundBorderless"
       android:src="@drawable/ic_back_arrow_white"
-      android:visibility="invisible"
       app:layout_constraintStart_toStartOf="parent"
       android:layout_marginStart="@dimen/back_icon_margin_start"
       android:layout_marginTop="@dimen/back_icon_margin_top"
