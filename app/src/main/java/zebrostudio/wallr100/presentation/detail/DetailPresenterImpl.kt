@@ -104,6 +104,7 @@ class DetailPresenterImpl(
   }
 
   override fun handleCrystallizeClick() {
+    crystallizeWallpaper()
     if (userPremiumStatusUseCase.isUserPremium()) {
       if (detailView?.hasStoragePermission() == true) {
         if (detailView?.internetAvailability() == true) {
@@ -414,6 +415,7 @@ class DetailPresenterImpl(
               detailView?.showGenericErrorMessage()
             }
             detailView?.hideScreenBlur()
+            setAllImageOperationFlagsToFalse()
           }
         })
   }
@@ -482,9 +484,11 @@ class DetailPresenterImpl(
           if (it is ImageDownloadException) {
             detailView?.showUnableToDownloadErrorMessage()
           } else {
+            System.out.println(it.message)
             detailView?.showGenericErrorMessage()
           }
           detailView?.hideScreenBlur()
+          setAllImageOperationFlagsToFalse()
         })
 
   }
@@ -541,8 +545,8 @@ class DetailPresenterImpl(
               detailView?.showGenericErrorMessage()
             }
             detailView?.hideScreenBlur()
+            setAllImageOperationFlagsToFalse()
           }
-
         })
   }
 
@@ -572,7 +576,7 @@ class DetailPresenterImpl(
           detailView?.hideScreenBlur()
         }, {
           detailView?.showGenericErrorMessage()
-          isImageOperationInProgress = false
+          setAllImageOperationFlagsToFalse()
           detailView?.hideScreenBlur()
         })
   }
@@ -606,6 +610,12 @@ class DetailPresenterImpl(
         wallpaperImage.imageLink.small
       }
     }
+  }
+
+  private fun setAllImageOperationFlagsToFalse() {
+    isImageOperationInProgress = false
+    isImageOperationInProgress = false
+    isDownloadInProgress = false
   }
 }
 

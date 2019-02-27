@@ -63,7 +63,7 @@ class WallrDataRepositoryTest {
   private val purchasePreferenceName = "PURCHASE_PREF"
   private val premiumUserTag = "premium_user"
   private val imagePreferenceName = "IMAGE_PREF"
-  private val crystallizeTipDialogShownBeforeTag = "crystallize_click_dialog"
+  private val crystallizeHintDialogShownBeforeTag = "crystallize_click_dialog"
   private val firebaseDatabasePath = "wallr"
   private val childPathExplore = "explore"
   private val childPathCategories = "categories"
@@ -400,19 +400,19 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should return false on isCrystallizeDescriptionShown call success`() {
-    `when`(sharedPrefs.getBoolean(imagePreferenceName, crystallizeTipDialogShownBeforeTag))
+    `when`(sharedPrefs.getBoolean(imagePreferenceName, crystallizeHintDialogShownBeforeTag))
         .thenReturn(false)
 
     assertFalse(wallrDataRepository.isCrystallizeDescriptionShown())
 
-    verify(sharedPrefs).getBoolean(imagePreferenceName, crystallizeTipDialogShownBeforeTag)
+    verify(sharedPrefs).getBoolean(imagePreferenceName, crystallizeHintDialogShownBeforeTag)
     verifyNoMoreInteractions(sharedPrefs)
   }
 
   @Test fun `should call shared preference on rememberCrystallizeDescriptionShown call success`() {
     wallrDataRepository.rememberCrystallizeDescriptionShown()
 
-    verify(sharedPrefs).setBoolean(imagePreferenceName, crystallizeTipDialogShownBeforeTag, true)
+    verify(sharedPrefs).setBoolean(imagePreferenceName, crystallizeHintDialogShownBeforeTag, true)
     verifyNoMoreInteractions(sharedPrefs)
   }
 

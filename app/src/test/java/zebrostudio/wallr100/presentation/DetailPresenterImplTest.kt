@@ -49,7 +49,7 @@ import java.util.Random
 import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
-class DetailActivityPresenterImplTest {
+class DetailPresenterImplTest {
 
   @Mock private lateinit var imageOptionsUseCase: ImageOptionsUseCase
   @Mock private lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
@@ -1147,6 +1147,30 @@ class DetailActivityPresenterImplTest {
     detailPresenterImpl.setPanelStateAsCollapsed()
 
     assertTrue(!detailPresenterImpl.isSlidingPanelExpanded)
+  }
+
+  @Test
+  fun `should collapse sliding panel on handleImageViewClicked call success when sliding panel is in expanded state`() {
+    detailPresenterImpl.isSlidingPanelExpanded = true
+
+    detailPresenterImpl.handleBackButtonClick()
+
+    verify(detailView).collapseSlidingPanel()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show full screen image on handleImageViewClicked call success of search image type`() {
+    detailPresenterImpl.isSlidingPanelExpanded = false
+    detailPresenterImpl.imageType = SEARCH
+    val searchImage = SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    detailPresenterImpl.searchImage = searchImage
+
+    detailPresenterImpl.handleImageViewClicked()
+
+    verify(detailView).showExpandedImage(searchImage.imageQualityUrlPresenterEntity.smallImageLink,
+        searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verifyNoMoreInteractions(detailView)
   }
 
   @After

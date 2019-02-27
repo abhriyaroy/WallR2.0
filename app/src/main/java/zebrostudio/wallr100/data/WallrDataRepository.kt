@@ -41,7 +41,7 @@ class WallrDataRepository(
   private val purchasePreferenceName = "PURCHASE_PREF"
   private val premiumUserTag = "premium_user"
   private val imagePreferenceName = "IMAGE_PREF"
-  private val crystallizeTipDialogShownBeforeTag = "crystallize_click_dialog"
+  private val crystallizeHintDialogShownBeforeTag = "crystallize_click_dialog"
   private val unableToResolveHostExceptionMessage = "Unable to resolve host " +
       "\"api.unsplash.com\": No address associated with hostname"
   private val firebaseDatabasePath = "wallr"
@@ -213,11 +213,11 @@ class WallrDataRepository(
   }
 
   override fun isCrystallizeDescriptionShown(): Boolean {
-    return sharedPrefsHelper.getBoolean(imagePreferenceName, crystallizeTipDialogShownBeforeTag)
+    return sharedPrefsHelper.getBoolean(imagePreferenceName, crystallizeHintDialogShownBeforeTag)
   }
 
   override fun rememberCrystallizeDescriptionShown() {
-    sharedPrefsHelper.setBoolean(imagePreferenceName, crystallizeTipDialogShownBeforeTag, true)
+    sharedPrefsHelper.setBoolean(imagePreferenceName, crystallizeHintDialogShownBeforeTag, true)
   }
 
   override fun checkIfDownloadIsInProgress(link: String): Boolean {

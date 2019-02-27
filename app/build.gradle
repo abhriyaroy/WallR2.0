@@ -15,9 +15,6 @@ android {
     renderscriptSupportModeEnabled true
     versionCode APP_VERSION
     versionName "$APP_VERSION_NAME"
-    ndk {
-      abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
-    }
   }
   buildTypes {
     release {
@@ -88,7 +85,6 @@ android {
     // BlurView
     implementation "com.eightbitlab:blurview:$BLURVIEW_VERSION"
     // Module dependencies
-    implementation fileTree(include: ['*.jar'], dir: 'WallR2.0')
     implementation project(':libraryGuillotineMenu')
     implementation project(':librarySearch')
     implementation project(':libraryWallrCustoms')
@@ -96,7 +92,6 @@ android {
     implementation project(':libraryExpandIcon')
     implementation project(':libraryUrlShortener')
     implementation project(':libraryUCrop')
-    implementation project(':libraryLowpoly')
     implementation project(':libraryPhotoView')
     // Test runners
     testImplementation "junit:junit:$JUNIT_VERSION"

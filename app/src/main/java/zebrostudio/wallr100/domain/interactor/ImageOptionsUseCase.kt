@@ -59,7 +59,7 @@ class ImageOptionsInteractor(
 
   override fun crystallizeImageSingle(): Single<Pair<Boolean, Bitmap>> {
     return wallrRepository.crystallizeImage()
-        .subscribeOn(Schedulers.io())
+        .subscribeOn(Schedulers.computation())
   }
 
   override fun downloadImageCompletable(link: String): Completable {
