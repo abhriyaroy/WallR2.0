@@ -9,7 +9,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.gson.Gson
 import io.reactivex.Single
-import java.lang.NumberFormatException
 
 interface FirebaseDatabaseHelper {
 

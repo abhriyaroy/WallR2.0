@@ -7,15 +7,16 @@ package com.pddstudio.urlshortener.model;
  */
 public class RequestModel {
 
-    private String longUrl;
+  private String longUrl;
 
-    public RequestModel() {}
+  public RequestModel() {
+  }
 
-    public RequestModel(String longUrl) {
-        this.longUrl = longUrl;
-    }
+  public RequestModel(String longUrl) {
+    this.longUrl = longUrl;
+  }
 
-    public String getLongUrl() {
-        return longUrl;
-    }
+  public String getLongUrl() {
+    return longUrl;
+  }
 }

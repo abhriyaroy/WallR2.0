@@ -1,8 +1,5 @@
 package com.yalantis.ucrop.model;
 
-/**
- * Created by Oleksii Shliama [https://github.com/shliama] on 6/21/16.
- */
 public class ExifInfo {
 
   private int mExifOrientation;
@@ -19,20 +16,20 @@ public class ExifInfo {
     return mExifOrientation;
   }
 
-  public int getExifDegrees() {
-    return mExifDegrees;
-  }
-
-  public int getExifTranslation() {
-    return mExifTranslation;
-  }
-
   public void setExifOrientation(int exifOrientation) {
     mExifOrientation = exifOrientation;
   }
 
+  public int getExifDegrees() {
+    return mExifDegrees;
+  }
+
   public void setExifDegrees(int exifDegrees) {
     mExifDegrees = exifDegrees;
+  }
+
+  public int getExifTranslation() {
+    return mExifTranslation;
   }
 
   public void setExifTranslation(int exifTranslation) {

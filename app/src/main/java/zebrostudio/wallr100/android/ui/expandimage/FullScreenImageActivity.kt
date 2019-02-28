@@ -2,6 +2,7 @@ package zebrostudio.wallr100.android.ui.expandimage
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -19,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_full_screen_image.lowQualityImage
 import kotlinx.android.synthetic.main.fragment_image_list.spinkitView
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
+import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.REMOTE
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.visible
@@ -47,6 +49,10 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
     super.onDestroy()
   }
 
+  override fun getImageLoadingType(): Int {
+    return intent.getIntExtra(imageLoadingTypeTag, REMOTE.ordinal)
+  }
+
   override fun getImageLinksFromBundle() {
     presenter.setLowQualityImageLink(intent.getStringExtra(lowQualityImageBundleTag))
     presenter.setHighQualityImageLink(intent.getStringExtra(highQualityImageBundleTag))
@@ -61,6 +67,35 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
   override fun startLoadingHighQualityImage(link: String) {
     Glide.with(this)
         .load(link)
+        .listener(object : RequestListener<Drawable> {
+          override fun onLoadFailed(
+            e: GlideException?,
+            model: Any?,
+            target: Target<Drawable>?,
+            isFirstResource: Boolean
+          ): Boolean {
+            presenter.notifyHighQualityImageLoadingFailed()
+            return false
+          }
+
+          override fun onResourceReady(
+            resource: Drawable?,
+            model: Any?,
+            target: Target<Drawable>?,
+            dataSource: DataSource?,
+            isFirstResource: Boolean
+          ): Boolean {
+            presenter.notifyHighQualityImageLoadingFinished()
+            return false
+          }
+
+        })
+        .into(highQualityImagePhotoView)
+  }
+
+  override fun showImage(bitmap: Bitmap) {
+    Glide.with(this)
+        .load(bitmap)
         .listener(object : RequestListener<Drawable> {
           override fun onLoadFailed(
             e: GlideException?,
@@ -126,6 +161,10 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
     }
   }
 
+  override fun showGenericErrorMessage() {
+    errorToast(getString(R.string.generic_error_message))
+  }
+
   private fun preventWindowFromTakingScreenshot() {
     try {
       window.setFlags(WindowManager.LayoutParams.FLAG_SECURE,
@@ -159,6 +198,7 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
   }
 
   companion object {
+    const val imageLoadingTypeTag = "LOADING_TYPE"
     const val lowQualityImageBundleTag = "LOW"
     const val highQualityImageBundleTag = "HIGH"
 
@@ -166,4 +206,9 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
       return Intent(context, FullScreenImageActivity::class.java)
     }
   }
+}
+
+enum class ImageLoadingType {
+  REMOTE,
+  CRYSTALLIZED_BITMAP_CACHE,
 }

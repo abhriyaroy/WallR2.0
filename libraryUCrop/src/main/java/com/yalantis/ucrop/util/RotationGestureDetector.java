@@ -97,16 +97,16 @@ public class RotationGestureDetector {
     return mAngle;
   }
 
+  public interface OnRotationGestureListener {
+
+    boolean onRotation(RotationGestureDetector rotationDetector);
+  }
+
   public static class SimpleOnRotationGestureListener implements OnRotationGestureListener {
 
     @Override
     public boolean onRotation(RotationGestureDetector rotationDetector) {
       return false;
     }
-  }
-
-  public interface OnRotationGestureListener {
-
-    boolean onRotation(RotationGestureDetector rotationDetector);
   }
 }

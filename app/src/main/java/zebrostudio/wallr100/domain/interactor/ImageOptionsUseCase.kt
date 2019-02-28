@@ -23,6 +23,7 @@ interface ImageOptionsUseCase {
   fun isDownloadInProgress(link: String): Boolean
   fun isCrystallizeDescriptionDialogShown(): Boolean
   fun setCrystallizeDescriptionShownOnce()
+  fun getCrystallizedBitmapSingle(): Single<Bitmap>
 }
 
 class ImageOptionsInteractor(
@@ -82,5 +83,10 @@ class ImageOptionsInteractor(
 
   override fun setCrystallizeDescriptionShownOnce() {
     wallrRepository.rememberCrystallizeDescriptionShown()
+  }
+
+  override fun getCrystallizedBitmapSingle(): Single<Bitmap> {
+    return wallrRepository.getCacheImageBitmap()
+        .subscribeOn(Schedulers.io())
   }
 }

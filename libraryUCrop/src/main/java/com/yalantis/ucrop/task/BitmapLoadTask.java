@@ -12,12 +12,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
-
 import com.yalantis.ucrop.callback.BitmapLoadCallback;
 import com.yalantis.ucrop.model.ExifInfo;
 import com.yalantis.ucrop.util.BitmapLoadUtils;
 import com.yalantis.ucrop.util.FileUtils;
-
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
@@ -25,7 +23,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -43,28 +40,11 @@ public class BitmapLoadTask extends AsyncTask<Void, Void, BitmapLoadTask.BitmapW
   private static final String TAG = "BitmapWorkerTask";
 
   private final Context mContext;
-  private Uri mInputUri;
-  private Uri mOutputUri;
   private final int mRequiredWidth;
   private final int mRequiredHeight;
-
   private final BitmapLoadCallback mBitmapLoadCallback;
-
-  public static class BitmapWorkerResult {
-
-    Bitmap mBitmapResult;
-    ExifInfo mExifInfo;
-    Exception mBitmapWorkerException;
-
-    public BitmapWorkerResult(@NonNull Bitmap bitmapResult, @NonNull ExifInfo exifInfo) {
-      mBitmapResult = bitmapResult;
-      mExifInfo = exifInfo;
-    }
-
-    public BitmapWorkerResult(@NonNull Exception bitmapWorkerException) {
-      mBitmapWorkerException = bitmapWorkerException;
-    }
-  }
+  private Uri mInputUri;
+  private Uri mOutputUri;
 
   public BitmapLoadTask(@NonNull Context context,
       @NonNull Uri inputUri, @Nullable Uri outputUri,
@@ -269,6 +249,22 @@ public class BitmapLoadTask extends AsyncTask<Void, Void, BitmapLoadTask.BitmapW
           mInputUri.getPath(), (mOutputUri == null) ? null : mOutputUri.getPath());
     } else {
       mBitmapLoadCallback.onFailure(result.mBitmapWorkerException);
+    }
+  }
+
+  public static class BitmapWorkerResult {
+
+    Bitmap mBitmapResult;
+    ExifInfo mExifInfo;
+    Exception mBitmapWorkerException;
+
+    public BitmapWorkerResult(@NonNull Bitmap bitmapResult, @NonNull ExifInfo exifInfo) {
+      mBitmapResult = bitmapResult;
+      mExifInfo = exifInfo;
+    }
+
+    public BitmapWorkerResult(@NonNull Exception bitmapWorkerException) {
+      mBitmapWorkerException = bitmapWorkerException;
     }
   }
 }

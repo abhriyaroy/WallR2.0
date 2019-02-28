@@ -104,7 +104,6 @@ class DetailPresenterImpl(
   }
 
   override fun handleCrystallizeClick() {
-    crystallizeWallpaper()
     if (userPremiumStatusUseCase.isUserPremium()) {
       if (detailView?.hasStoragePermission() == true) {
         if (detailView?.internetAvailability() == true) {
@@ -316,12 +315,16 @@ class DetailPresenterImpl(
     if (isSlidingPanelExpanded) {
       detailView?.collapseSlidingPanel()
     } else {
-      if (imageType == SEARCH) {
-        detailView?.showExpandedImage(searchImage.imageQualityUrlPresenterEntity.smallImageLink,
-            searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      if (imageHasBeenCrystallized) {
+        detailView?.showExpandedCrystallizedImage()
       } else {
-        detailView?.showExpandedImage(wallpaperImage.imageLink.thumb,
-            wallpaperImage.imageLink.large)
+        if (imageType == SEARCH) {
+          detailView?.showExpandedImage(searchImage.imageQualityUrlPresenterEntity.smallImageLink,
+              searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+        } else {
+          detailView?.showExpandedImage(wallpaperImage.imageLink.thumb,
+              wallpaperImage.imageLink.large)
+        }
       }
     }
   }

@@ -4,11 +4,19 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
-/**
- * Created by Oleksii Shliama [https://github.com/shliama] on 6/24/16.
- */
 public class AspectRatio implements Parcelable {
 
+  public static final Creator<AspectRatio> CREATOR = new Creator<AspectRatio>() {
+    @Override
+    public AspectRatio createFromParcel(Parcel in) {
+      return new AspectRatio(in);
+    }
+
+    @Override
+    public AspectRatio[] newArray(int size) {
+      return new AspectRatio[size];
+    }
+  };
   @Nullable
   private final String mAspectRatioTitle;
   private final float mAspectRatioX;
@@ -37,18 +45,6 @@ public class AspectRatio implements Parcelable {
   public int describeContents() {
     return 0;
   }
-
-  public static final Creator<AspectRatio> CREATOR = new Creator<AspectRatio>() {
-    @Override
-    public AspectRatio createFromParcel(Parcel in) {
-      return new AspectRatio(in);
-    }
-
-    @Override
-    public AspectRatio[] newArray(int size) {
-      return new AspectRatio[size];
-    }
-  };
 
   @Nullable
   public String getAspectRatioTitle() {

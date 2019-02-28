@@ -4,11 +4,11 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import zebrostudio.wallr100.android.ui.collection.CollectionFragment
 import zebrostudio.wallr100.android.ui.collection.CollectionModule
-import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment
 import zebrostudio.wallr100.android.ui.minimal.MinimalFragment
 import zebrostudio.wallr100.android.ui.minimal.MinimalModule
 import zebrostudio.wallr100.android.ui.wallpaper.ImageListFragment
 import zebrostudio.wallr100.android.ui.wallpaper.ImageListModule
+import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment
 
 @Module
 abstract class FragmentProvider {

@@ -14,9 +14,6 @@ import android.view.View;
 
 import com.yalantis.ucrop.R;
 
-/**
- * Created by Oleksii Shliama (https://github.com/shliama).
- */
 public class HorizontalProgressWheelView extends View {
 
   private final Rect mCanvasClipBounds = new Rect();

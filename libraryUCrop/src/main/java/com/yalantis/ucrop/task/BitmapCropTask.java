@@ -9,14 +9,12 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-
 import com.yalantis.ucrop.callback.BitmapCropCallback;
 import com.yalantis.ucrop.model.CropParameters;
 import com.yalantis.ucrop.model.ExifInfo;
 import com.yalantis.ucrop.model.ImageState;
 import com.yalantis.ucrop.util.FileUtils;
 import com.yalantis.ucrop.util.ImageHeaderParser;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -35,19 +33,16 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
     System.loadLibrary("ucrop");
   }
 
-  private Bitmap mViewBitmap;
-
   private final RectF mCropRect;
   private final RectF mCurrentImageRect;
-
-  private float mCurrentScale, mCurrentAngle;
   private final int mMaxResultImageSizeX, mMaxResultImageSizeY;
-
   private final Bitmap.CompressFormat mCompressFormat;
   private final int mCompressQuality;
   private final String mImageInputPath, mImageOutputPath;
   private final ExifInfo mExifInfo;
   private final BitmapCropCallback mCropCallback;
+  private Bitmap mViewBitmap;
+  private float mCurrentScale, mCurrentAngle;
 
   public BitmapCropTask(@Nullable Bitmap viewBitmap, @NonNull ImageState imageState,
       @NonNull CropParameters cropParameters,

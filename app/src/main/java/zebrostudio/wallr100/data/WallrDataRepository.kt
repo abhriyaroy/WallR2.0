@@ -175,6 +175,12 @@ class WallrDataRepository(
         }
   }
 
+  override fun getCacheImageBitmap(): Single<Bitmap> {
+    return Single.create {
+      it.onSuccess(imageHandler.getImageBitmap())
+    }
+  }
+
   override fun getShortImageLink(link: String): Single<String> {
     return Single.create {
       it.onSuccess(urlShortener.shortUrl(link))

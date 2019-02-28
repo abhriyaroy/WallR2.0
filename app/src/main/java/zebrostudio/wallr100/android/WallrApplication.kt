@@ -5,7 +5,6 @@ import android.app.Application
 import android.content.Context
 import android.support.multidex.MultiDex
 import com.bumptech.glide.request.target.ViewTarget
-import com.google.firebase.FirebaseApp
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import zebrostudio.wallr100.R

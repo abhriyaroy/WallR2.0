@@ -34,6 +34,7 @@ interface WallrRepository {
   fun getTechnologyPictures(): Single<List<ImageModel>>
 
   fun getImageBitmap(link: String): Observable<ImageDownloadModel>
+  fun getCacheImageBitmap(): Single<Bitmap>
   fun getShortImageLink(link: String): Single<String>
   fun clearImageCaches(): Completable
   fun cancelImageBitmapFetchOperation()

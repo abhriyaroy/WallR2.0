@@ -2,9 +2,6 @@ package com.yalantis.ucrop.model;
 
 import android.graphics.Bitmap;
 
-/**
- * Created by Oleksii Shliama [https://github.com/shliama] on 6/21/16.
- */
 public class CropParameters {
 
   private int mMaxResultImageSizeX, mMaxResultImageSizeY;

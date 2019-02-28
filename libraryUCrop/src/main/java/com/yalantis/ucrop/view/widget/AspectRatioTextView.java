@@ -22,9 +22,6 @@ import com.yalantis.ucrop.view.CropImageView;
 
 import java.util.Locale;
 
-/**
- * Created by Oleksii Shliama (https://github.com/shliama).
- */
 public class AspectRatioTextView extends TextView {
 
   private final Rect mCanvasClipBounds = new Rect();
