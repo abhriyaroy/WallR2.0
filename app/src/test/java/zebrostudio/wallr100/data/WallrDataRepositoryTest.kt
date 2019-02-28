@@ -331,6 +331,15 @@ class WallrDataRepositoryTest {
     verifyNoMoreInteractions(imageHandler)
   }
 
+  @Test fun `should return Single of bitmap on getCacheImageBitmap call success`() {
+    `when`(imageHandler.getImageBitmap()).thenReturn(mockBitmap)
+
+    wallrDataRepository.getCacheImageBitmap().test().assertValue(mockBitmap)
+
+    verify(imageHandler).getImageBitmap()
+    verifyNoMoreInteractions(imageHandler)
+  }
+
   @Test fun `should return image uri on getCacheSourceUri call success`() {
     `when`(imageHandler.getImageUri()).thenReturn(mockUri)
 

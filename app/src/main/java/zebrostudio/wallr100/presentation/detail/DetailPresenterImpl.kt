@@ -487,7 +487,6 @@ class DetailPresenterImpl(
           if (it is ImageDownloadException) {
             detailView?.showUnableToDownloadErrorMessage()
           } else {
-            System.out.println(it.message)
             detailView?.showGenericErrorMessage()
           }
           detailView?.hideScreenBlur()
