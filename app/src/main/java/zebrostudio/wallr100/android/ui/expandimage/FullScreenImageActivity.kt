@@ -50,12 +50,12 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
   }
 
   override fun getImageLoadingType(): Int {
-    return intent.getIntExtra(imageLoadingTypeTag, REMOTE.ordinal)
+    return intent.getIntExtra(IMAGE_LOADING_TYPE_TAG, REMOTE.ordinal)
   }
 
   override fun getImageLinksFromBundle() {
-    presenter.setLowQualityImageLink(intent.getStringExtra(lowQualityImageBundleTag))
-    presenter.setHighQualityImageLink(intent.getStringExtra(highQualityImageBundleTag))
+    presenter.setLowQualityImageLink(intent.getStringExtra(LOW_QUALITY_IMAGE_TAG))
+    presenter.setHighQualityImageLink(intent.getStringExtra(HIGH_QUALITY_IMAGE_TAG))
   }
 
   override fun showLowQualityImage(link: String) {
@@ -166,12 +166,8 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
   }
 
   private fun preventWindowFromTakingScreenshot() {
-    try {
-      window.setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-          WindowManager.LayoutParams.FLAG_SECURE)
-    } catch (e: Exception) {
-
-    }
+    window.setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+        WindowManager.LayoutParams.FLAG_SECURE)
   }
 
   private fun initStatusBarAndNavigationBarConfiguration() {
@@ -198,9 +194,9 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
   }
 
   companion object {
-    const val imageLoadingTypeTag = "LOADING_TYPE"
-    const val lowQualityImageBundleTag = "LOW"
-    const val highQualityImageBundleTag = "HIGH"
+    const val IMAGE_LOADING_TYPE_TAG = "LOADING_TYPE"
+    const val LOW_QUALITY_IMAGE_TAG = "LOW"
+    const val HIGH_QUALITY_IMAGE_TAG = "HIGH"
 
     fun getCallingIntent(context: Context): Intent {
       return Intent(context, FullScreenImageActivity::class.java)
@@ -211,4 +207,5 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
 enum class ImageLoadingType {
   REMOTE,
   CRYSTALLIZED_BITMAP_CACHE,
+  EDITED_BITMAP_CACHE
 }

@@ -24,7 +24,7 @@ interface ImageHandler {
   fun clearImageCache(): Completable
   fun getImageUri(): Uri
   fun convertUriToBitmap(uri: Uri): Single<Bitmap>
-  fun convertImageToLowpoly(): Single<Bitmap>
+  fun convertImageInCacheToLowpoly(): Single<Bitmap>
   fun saveLowPolyImageToDownloads(): Completable
 }
 
@@ -38,7 +38,8 @@ class ImageHandlerImpl(
   private val downloadProgressCompletedValue: Long = 100
   private val readMode = "r"
   private val bitmapCompressQuality = 100
-  private val lowpolyGradientThreshold = 40
+  private val lowpolyByteArraySize = 1024
+  private val initialSize = 0
   private var imageCacheTracker: Pair<Boolean, String> = Pair(false, "")
 
   override fun isImageCached(link: String): Boolean {
@@ -56,7 +57,7 @@ class ImageHandlerImpl(
         connection = URL(link).openConnection() as HttpURLConnection
         connection.connect()
         val length = connection.contentLength
-        if (length <= 0) {
+        if (length <= initialSize) {
           it.onError(ImageDownloadException())
         }
         inputStream = connection.inputStream
@@ -66,7 +67,7 @@ class ImageHandlerImpl(
         var read: Long = 0
         while (count != -1) {
           read += count.toLong()
-          outputStream.write(data, 0, count)
+          outputStream.write(data, initialSize, count)
           if (shouldContinueFetchingImage) {
             val progress = (read * 100 / length)
             if (progress == downloadProgressCompletedValue) {
@@ -140,7 +141,7 @@ class ImageHandlerImpl(
     }
   }
 
-  override fun convertImageToLowpoly(): Single<Bitmap> {
+  override fun convertImageInCacheToLowpoly(): Single<Bitmap> {
     return Single.create {
       LowPoly.generate(getImageBitmap()).let { bitmap ->
         fileHandler.getCacheFile().outputStream().apply {
@@ -157,10 +158,10 @@ class ImageHandlerImpl(
     return Completable.create {
       fileHandler.getCacheFile().inputStream().let { inputStream ->
         fileHandler.getDownloadFile().outputStream().let { outputStream ->
-          ByteArray(1024).apply {
+          ByteArray(lowpolyByteArraySize).apply {
             var length = inputStream.read(this)
-            while (length > 0) {
-              outputStream.write(this, 0, length)
+            while (length > initialSize) {
+              outputStream.write(this, initialSize, length)
               length = inputStream.read(this)
             }
             it.onComplete()

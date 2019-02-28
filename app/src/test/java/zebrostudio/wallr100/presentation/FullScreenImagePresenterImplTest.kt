@@ -16,7 +16,9 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
-import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType
+import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE
+import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.EDITED_BITMAP_CACHE
+import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.REMOTE
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.presentation.expandimage.FullScreenImageContract.FullScreenImageView
@@ -44,7 +46,7 @@ class FullScreenImagePresenterImplTest {
   }
 
   @Test fun `should get image links on attachView call success of original image type`() {
-    `when`(fullScreenImageView.getImageLoadingType()).thenReturn(ImageLoadingType.REMOTE.ordinal)
+    `when`(fullScreenImageView.getImageLoadingType()).thenReturn(REMOTE.ordinal)
 
     fullScreenImagePresenter.attachView(fullScreenImageView)
 
@@ -56,8 +58,8 @@ class FullScreenImagePresenterImplTest {
   @Test
   fun `should show crystallized image on attachView call success of crystallized image type`() {
     `when`(fullScreenImageView.getImageLoadingType()).thenReturn(
-        ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE.ordinal)
-    `when`(imageOptionsUseCase.getCrystallizedBitmapSingle()).thenReturn(Single.just(mockBitmap))
+        CRYSTALLIZED_BITMAP_CACHE.ordinal)
+    `when`(imageOptionsUseCase.getCrystallizedImageSingle()).thenReturn(Single.just(mockBitmap))
     `when`(fullScreenImageView.getScope()).thenReturn(testScopeProvider)
 
     fullScreenImagePresenter.attachView(fullScreenImageView)
@@ -68,7 +70,27 @@ class FullScreenImagePresenterImplTest {
     verify(fullScreenImageView).showImage(mockBitmap)
     verify(fullScreenImageView).hideLoader()
     verifyNoMoreInteractions(fullScreenImageView)
-    verify(imageOptionsUseCase).getCrystallizedBitmapSingle()
+    verify(imageOptionsUseCase).getCrystallizedImageSingle()
+    verifyNoMoreInteractions(imageOptionsUseCase)
+    shouldVerifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show edited image on attachView call success of crystallized image type`() {
+    `when`(fullScreenImageView.getImageLoadingType()).thenReturn(
+        EDITED_BITMAP_CACHE.ordinal)
+    `when`(imageOptionsUseCase.getEditedImageSingle()).thenReturn(Single.just(mockBitmap))
+    `when`(fullScreenImageView.getScope()).thenReturn(testScopeProvider)
+
+    fullScreenImagePresenter.attachView(fullScreenImageView)
+
+    verify(fullScreenImageView).getImageLoadingType()
+    verify(fullScreenImageView).showLoader()
+    verify(fullScreenImageView).getScope()
+    verify(fullScreenImageView).showImage(mockBitmap)
+    verify(fullScreenImageView).hideLoader()
+    verifyNoMoreInteractions(fullScreenImageView)
+    verify(imageOptionsUseCase).getEditedImageSingle()
     verifyNoMoreInteractions(imageOptionsUseCase)
     shouldVerifyPostExecutionThreadSchedulerCall()
   }
@@ -76,8 +98,8 @@ class FullScreenImagePresenterImplTest {
   @Test
   fun `should show generic error message on attachView call error of crystallized image type`() {
     `when`(fullScreenImageView.getImageLoadingType()).thenReturn(
-        ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE.ordinal)
-    `when`(imageOptionsUseCase.getCrystallizedBitmapSingle()).thenReturn(Single.error(Exception()))
+        CRYSTALLIZED_BITMAP_CACHE.ordinal)
+    `when`(imageOptionsUseCase.getCrystallizedImageSingle()).thenReturn(Single.error(Exception()))
     `when`(fullScreenImageView.getScope()).thenReturn(testScopeProvider)
 
     fullScreenImagePresenter.attachView(fullScreenImageView)
@@ -88,13 +110,13 @@ class FullScreenImagePresenterImplTest {
     verify(fullScreenImageView).showGenericErrorMessage()
     verify(fullScreenImageView).hideLoader()
     verifyNoMoreInteractions(fullScreenImageView)
-    verify(imageOptionsUseCase).getCrystallizedBitmapSingle()
+    verify(imageOptionsUseCase).getCrystallizedImageSingle()
     verifyNoMoreInteractions(imageOptionsUseCase)
     shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should show low quality image and loader on setLowQualityImageLink call success`() {
-    `when`(fullScreenImageView.getImageLoadingType()).thenReturn(ImageLoadingType.REMOTE.ordinal)
+    `when`(fullScreenImageView.getImageLoadingType()).thenReturn(REMOTE.ordinal)
 
     fullScreenImagePresenter.attachView(fullScreenImageView)
     fullScreenImagePresenter.setLowQualityImageLink(randomString)
@@ -107,7 +129,7 @@ class FullScreenImagePresenterImplTest {
   }
 
   @Test fun `should start loading high quality image on setHighQualityImageLink call success`() {
-    `when`(fullScreenImageView.getImageLoadingType()).thenReturn(ImageLoadingType.REMOTE.ordinal)
+    `when`(fullScreenImageView.getImageLoadingType()).thenReturn(REMOTE.ordinal)
 
     fullScreenImagePresenter.attachView(fullScreenImageView)
     fullScreenImagePresenter.setHighQualityImageLink(randomString)
@@ -120,7 +142,7 @@ class FullScreenImagePresenterImplTest {
 
   @Test
   fun `should hide loader and low quality image on notifyHighQualityImageLoadingFinished call success`() {
-    `when`(fullScreenImageView.getImageLoadingType()).thenReturn(ImageLoadingType.REMOTE.ordinal)
+    `when`(fullScreenImageView.getImageLoadingType()).thenReturn(REMOTE.ordinal)
 
     fullScreenImagePresenter.attachView(fullScreenImageView)
     fullScreenImagePresenter.notifyHighQualityImageLoadingFinished()
@@ -134,7 +156,7 @@ class FullScreenImagePresenterImplTest {
 
   @Test
   fun `should hide loader and show loading error on notifyHighQualityImageLoadingFinished call error`() {
-    `when`(fullScreenImageView.getImageLoadingType()).thenReturn(ImageLoadingType.REMOTE.ordinal)
+    `when`(fullScreenImageView.getImageLoadingType()).thenReturn(REMOTE.ordinal)
 
     fullScreenImagePresenter.attachView(fullScreenImageView)
     fullScreenImagePresenter.notifyHighQualityImageLoadingFailed()
@@ -148,7 +170,7 @@ class FullScreenImagePresenterImplTest {
 
   @Test
   fun `should show status bar and navigation bar on notifyPhotoViewTapped call success with isInFullScreen set to true`() {
-    `when`(fullScreenImageView.getImageLoadingType()).thenReturn(ImageLoadingType.REMOTE.ordinal)
+    `when`(fullScreenImageView.getImageLoadingType()).thenReturn(REMOTE.ordinal)
     fullScreenImagePresenter.isInFullScreenMode = true
 
     fullScreenImagePresenter.attachView(fullScreenImageView)
@@ -162,7 +184,7 @@ class FullScreenImagePresenterImplTest {
 
   @Test
   fun `should hide status bar and navigation bar on notifyPhotoViewTapped call success with isInFullScreen set to false`() {
-    `when`(fullScreenImageView.getImageLoadingType()).thenReturn(ImageLoadingType.REMOTE.ordinal)
+    `when`(fullScreenImageView.getImageLoadingType()).thenReturn(REMOTE.ordinal)
     fullScreenImagePresenter.isInFullScreenMode = false
 
     fullScreenImagePresenter.attachView(fullScreenImageView)

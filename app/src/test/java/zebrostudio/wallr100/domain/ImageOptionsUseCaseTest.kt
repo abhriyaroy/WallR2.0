@@ -154,10 +154,18 @@ class ImageOptionsUseCaseTest {
   @Test fun `should return Single of bitmap on getCrystallizedBitmapSingle call success`() {
     `when`(wallrRepository.getCacheImageBitmap()).thenReturn(Single.just(mockBitmap))
 
-    imageOptionsUseCase.getCrystallizedBitmapSingle().test().assertValue(mockBitmap)
+    imageOptionsUseCase.getCrystallizedImageSingle().test().assertValue(mockBitmap)
 
     verify(wallrRepository).getCacheImageBitmap()
     verifyNoMoreInteractions(wallrRepository)
   }
 
+  @Test fun `should return Single of bitmap on getEditedImageSingle call success`() {
+    `when`(wallrRepository.getCacheImageBitmap()).thenReturn(Single.just(mockBitmap))
+
+    imageOptionsUseCase.getEditedImageSingle().test().assertValue(mockBitmap)
+
+    verify(wallrRepository).getCacheImageBitmap()
+    verifyNoMoreInteractions(wallrRepository)
+  }
 }

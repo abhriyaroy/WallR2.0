@@ -46,6 +46,7 @@ class DetailPresenterImpl(
   internal var wallpaperHasBeenSet = false
   internal var isSlidingPanelExpanded = false
   internal var imageHasBeenCrystallized = false
+  internal var imageHasBeenEdited = false
   private val downloadCompletedValue: Long = 100
   private val showIndefiniteLoaderAtProgressValue: Long = 99
   private val downloadStartedValue: Long = 0
@@ -316,7 +317,9 @@ class DetailPresenterImpl(
       detailView?.collapseSlidingPanel()
     } else {
       if (imageHasBeenCrystallized) {
-        detailView?.showExpandedCrystallizedImage()
+        detailView?.showCrystallizedExpandedImage()
+      } else if (imageHasBeenEdited) {
+        detailView?.showEditedExpandedImage()
       } else {
         if (imageType == SEARCH) {
           detailView?.showExpandedImage(searchImage.imageQualityUrlPresenterEntity.smallImageLink,
@@ -418,7 +421,7 @@ class DetailPresenterImpl(
               detailView?.showGenericErrorMessage()
             }
             detailView?.hideScreenBlur()
-            setAllImageOperationFlagsToFalse()
+            resetAllImageOperationFlags()
           }
         })
   }
@@ -490,7 +493,7 @@ class DetailPresenterImpl(
             detailView?.showGenericErrorMessage()
           }
           detailView?.hideScreenBlur()
-          setAllImageOperationFlagsToFalse()
+          resetAllImageOperationFlags()
         })
 
   }
@@ -547,7 +550,7 @@ class DetailPresenterImpl(
               detailView?.showGenericErrorMessage()
             }
             detailView?.hideScreenBlur()
-            setAllImageOperationFlagsToFalse()
+            resetAllImageOperationFlags()
           }
         })
   }
@@ -578,7 +581,7 @@ class DetailPresenterImpl(
           detailView?.hideScreenBlur()
         }, {
           detailView?.showGenericErrorMessage()
-          setAllImageOperationFlagsToFalse()
+          resetAllImageOperationFlags()
           detailView?.hideScreenBlur()
         })
   }
@@ -614,7 +617,7 @@ class DetailPresenterImpl(
     }
   }
 
-  private fun setAllImageOperationFlagsToFalse() {
+  private fun resetAllImageOperationFlags() {
     isImageOperationInProgress = false
     isImageOperationInProgress = false
     isDownloadInProgress = false

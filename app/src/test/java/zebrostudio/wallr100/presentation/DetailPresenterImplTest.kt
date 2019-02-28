@@ -1179,6 +1179,7 @@ class DetailPresenterImplTest {
     detailPresenterImpl.isSlidingPanelExpanded = false
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.imageHasBeenCrystallized = false
+    detailPresenterImpl.imageHasBeenEdited = false
     val wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
     detailPresenterImpl.wallpaperImage = wallpaperImage
 
@@ -1194,10 +1195,24 @@ class DetailPresenterImplTest {
     detailPresenterImpl.isSlidingPanelExpanded = false
     detailPresenterImpl.imageType = SEARCH
     detailPresenterImpl.imageHasBeenCrystallized = true
+    detailPresenterImpl.imageHasBeenEdited = false
 
     detailPresenterImpl.handleImageViewClicked()
 
-    verify(detailView).showExpandedCrystallizedImage()
+    verify(detailView).showCrystallizedExpandedImage()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show full screen edited image on handleImageViewClicked call success and image has been crystallized `() {
+    detailPresenterImpl.isSlidingPanelExpanded = false
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.imageHasBeenCrystallized = false
+    detailPresenterImpl.imageHasBeenEdited = true
+
+    detailPresenterImpl.handleImageViewClicked()
+
+    verify(detailView).showEditedExpandedImage()
     verifyNoMoreInteractions(detailView)
   }
 

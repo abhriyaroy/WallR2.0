@@ -389,13 +389,13 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should return pair on crystallize image call success`() {
-    `when`(imageHandler.convertImageToLowpoly()).thenReturn(Single.just(mockBitmap))
+    `when`(imageHandler.convertImageInCacheToLowpoly()).thenReturn(Single.just(mockBitmap))
 
     val result = wallrDataRepository.crystallizeImage().test().values()[0]
 
     assertEquals(true, result.first)
     assertEquals(mockBitmap, result.second)
-    verify(imageHandler).convertImageToLowpoly()
+    verify(imageHandler).convertImageInCacheToLowpoly()
     verifyNoMoreInteractions(imageHandler)
   }
 
