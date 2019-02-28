@@ -20,17 +20,17 @@ import kotlinx.android.synthetic.main.fragment_image_list.swipeRefreshLayout
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter
 import zebrostudio.wallr100.android.utils.GridItemDecorator
+import zebrostudio.wallr100.android.utils.checkDataConnection
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
-import zebrostudio.wallr100.android.utils.checkDataConnection
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
 import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListPresenter
 import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListView
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
-import java.util.concurrent.TimeUnit.*
+import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
 
 class ImageListFragment : Fragment(), ImageListView {

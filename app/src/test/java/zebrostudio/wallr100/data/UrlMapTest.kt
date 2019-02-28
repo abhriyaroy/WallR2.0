@@ -5,7 +5,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.data.api.UrlMap
-import java.util.UUID.*
+import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class UrlMapTest {

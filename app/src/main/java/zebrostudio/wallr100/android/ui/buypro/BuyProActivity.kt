@@ -19,7 +19,8 @@ import kotlinx.android.synthetic.main.item_buy_pro_features.view.headerTextView
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.imageView
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
-import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.*
+import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.PURCHASE
+import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.RESTORE
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.infoToast

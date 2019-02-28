@@ -4,7 +4,7 @@ import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEnt
 import zebrostudio.wallr100.presentation.search.model.UrlPresenterEntity
 import zebrostudio.wallr100.presentation.search.model.UserPresenterEntity
 import java.util.Random
-import java.util.UUID.*
+import java.util.UUID.randomUUID
 
 object SearchPicturesPresenterEntityFactory {
 

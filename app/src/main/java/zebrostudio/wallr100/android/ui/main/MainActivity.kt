@@ -30,9 +30,9 @@ import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.android.ui.collection.CollectionFragment
-import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment
 import zebrostudio.wallr100.android.ui.minimal.MinimalFragment
 import zebrostudio.wallr100.android.ui.search.SearchActivity
+import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.CATEGORIES_TAG
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.COLLECTIONS_TAG

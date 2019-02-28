@@ -14,10 +14,12 @@ import okhttp3.Response;
 
 public class URLShortenerImpl implements URLShortener {
 
-  public interface LoadingCallback {
-    void startedLoading();
+  public static void shortUrl(String longUrl, LoadingCallback loadingCallback) {
+    new AsyncLoader(longUrl, loadingCallback).execute();
+  }
 
-    void finishedLoading(@Nullable String shortUrl);
+  public static void longUrl(String shortUrl, LoadingCallback loadingCallback) {
+    new AsyncLoader2(shortUrl, loadingCallback).execute();
   }
 
   public String shortUrl(String longUrl) {
@@ -43,11 +45,9 @@ public class URLShortenerImpl implements URLShortener {
     return null;
   }
 
-  public static void shortUrl(String longUrl, LoadingCallback loadingCallback) {
-    new AsyncLoader(longUrl, loadingCallback).execute();
-  }
+  public interface LoadingCallback {
+    void startedLoading();
 
-  public static void longUrl(String shortUrl, LoadingCallback loadingCallback) {
-    new AsyncLoader2(shortUrl, loadingCallback).execute();
+    void finishedLoading(@Nullable String shortUrl);
   }
 }

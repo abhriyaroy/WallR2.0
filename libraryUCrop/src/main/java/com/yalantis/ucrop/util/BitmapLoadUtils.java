@@ -14,17 +14,12 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
-
 import com.yalantis.ucrop.callback.BitmapLoadCallback;
 import com.yalantis.ucrop.task.BitmapLoadTask;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Created by Oleksii Shliama (https://github.com/shliama).
- */
 public class BitmapLoadUtils {
 
   private static final String TAG = "BitmapLoadUtils";

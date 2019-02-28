@@ -7,21 +7,22 @@ package com.pddstudio.urlshortener.model;
  */
 public class ResponseModel {
 
-    private String kind;
-    private String id;
-    private String longUrl;
+  private String kind;
+  private String id;
+  private String longUrl;
 
-    public ResponseModel() {}
+  public ResponseModel() {
+  }
 
-    public String getKind() {
-        return kind;
-    }
+  public String getKind() {
+    return kind;
+  }
 
-    public String getId() {
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public String getLongUrl() {
-        return longUrl;
-    }
+  public String getLongUrl() {
+    return longUrl;
+  }
 }

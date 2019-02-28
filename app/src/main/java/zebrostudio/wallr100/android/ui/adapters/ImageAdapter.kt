@@ -15,10 +15,11 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.detail.DetailActivity
 import zebrostudio.wallr100.android.ui.detail.DetailActivity.Companion.imageDetails
 import zebrostudio.wallr100.android.ui.detail.DetailActivity.Companion.imageType
-import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.inflate
+import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 

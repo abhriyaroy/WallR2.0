@@ -1,17 +1,12 @@
 package com.pddstudio.urlshortener.async;
 
 import android.os.AsyncTask;
-import android.util.Log;
-
 import com.google.gson.Gson;
-import com.pddstudio.urlshortener.URLShortener;
 import com.pddstudio.urlshortener.URLShortenerImpl;
 import com.pddstudio.urlshortener.Utils;
 import com.pddstudio.urlshortener.model.RequestModel;
 import com.pddstudio.urlshortener.model.ResponseModel;
-
 import java.io.IOException;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;

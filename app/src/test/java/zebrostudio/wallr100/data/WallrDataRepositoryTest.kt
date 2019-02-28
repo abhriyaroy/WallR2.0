@@ -17,10 +17,10 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
-import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
+import org.mockito.junit.MockitoJUnitRunner
+import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
 import zebrostudio.wallr100.data.datafactory.UnsplashPictureEntityModelFactory
@@ -33,8 +33,7 @@ import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
-import java.lang.Exception
-import java.util.UUID.*
+import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class WallrDataRepositoryTest {

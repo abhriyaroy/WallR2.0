@@ -11,12 +11,8 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
 import com.yalantis.ucrop.R;
 
-/**
- * Created by Oleksii Shliama (https://github.com/shliama).
- */
 public class HorizontalProgressWheelView extends View {
 
   private final Rect mCanvasClipBounds = new Rect();

@@ -17,7 +17,6 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -25,39 +24,18 @@ import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 
 public class ExpandIconView extends View {
 
+  public static final int MORE = 0;
+  public static final int LESS = 1;
   private static final float MORE_STATE_ALPHA = -45f;
   private static final float LESS_STATE_ALPHA = 45f;
   private static final float DELTA_ALPHA = 90f;
   private static final float THICKNESS_PROPORTION = 5f / 36f;
   private static final float PADDING_PROPORTION = 4f / 24f;
   private static final long DEFAULT_ANIMATION_DURATION = 150;
-
-  @IntDef({
-      MORE,
-      LESS,
-      INTERMEDIATE
-  })
-  @Retention(RetentionPolicy.SOURCE)
-  public @interface State {
-  }
-
-  public static final int MORE = 0;
-  public static final int LESS = 1;
   private static final int INTERMEDIATE = 2;
-
-  @State
-  private int state;
-  private float alpha = MORE_STATE_ALPHA;
-  private float centerTranslation = 0f;
-  @FloatRange(from = 0.f, to = 1.f)
-  private float fraction = 0f;
   private final float animationSpeed;
-
-  private boolean switchColor = false;
-  private int color = Color.WHITE;
   private final int colorMore;
   private final int colorLess;
-
   @NonNull
   private final Paint paint;
   private final Point left = new Point();
@@ -65,14 +43,19 @@ public class ExpandIconView extends View {
   private final Point center = new Point();
   private final Point tempLeft = new Point();
   private final Point tempRight = new Point();
-
   private final boolean useDefaultPadding;
-  private int padding;
-
   private final Path path = new Path();
+  @State
+  private int state;
+  private float alpha = MORE_STATE_ALPHA;
+  private float centerTranslation = 0f;
+  @FloatRange(from = 0.f, to = 1.f)
+  private float fraction = 0f;
+  private boolean switchColor = false;
+  private int color = Color.WHITE;
+  private int padding;
   @Nullable
   private ValueAnimator arrowAnimator;
-
   public ExpandIconView(@NonNull Context context) {
     this(context, null);
   }
@@ -316,5 +299,14 @@ public class ExpandIconView extends View {
     } else {
       postInvalidateDelayed(fakeFrameTime);
     }
+  }
+
+  @IntDef({
+      MORE,
+      LESS,
+      INTERMEDIATE
+  })
+  @Retention(RetentionPolicy.SOURCE)
+  public @interface State {
   }
 }

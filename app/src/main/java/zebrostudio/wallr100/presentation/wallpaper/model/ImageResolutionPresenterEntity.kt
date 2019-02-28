@@ -8,4 +8,4 @@ data class ImageResolutionPresenterEntity(
   val medium: String,
   val large: String,
   val raw: String
-): Serializable
+) : Serializable

@@ -7,7 +7,6 @@ import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
-
 import com.yalantis.guillotine.interfaces.GuillotineListener;
 import com.yalantis.guillotine.util.ActionBarInterpolator;
 import com.yalantis.guillotine.util.GuillotineInterpolator;

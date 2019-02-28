@@ -29,7 +29,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.yalantis.ucrop.callback.BitmapCropCallback;
 import com.yalantis.ucrop.model.AspectRatio;
 import com.yalantis.ucrop.util.SelectedStateListDrawable;
@@ -40,16 +39,11 @@ import com.yalantis.ucrop.view.TransformImageView;
 import com.yalantis.ucrop.view.UCropView;
 import com.yalantis.ucrop.view.widget.AspectRatioTextView;
 import com.yalantis.ucrop.view.widget.HorizontalProgressWheelView;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-/**
- * Created by Oleksii Shliama (https://github.com/shliama).
- */
 
 @SuppressWarnings("ConstantConditions")
 public class UCropActivity extends AppCompatActivity {
@@ -61,31 +55,19 @@ public class UCropActivity extends AppCompatActivity {
   public static final int SCALE = 1;
   public static final int ROTATE = 2;
   public static final int ALL = 3;
-
-  @IntDef({NONE, SCALE, ROTATE, ALL})
-  @Retention(RetentionPolicy.SOURCE)
-  public @interface GestureTypes {
-
-  }
-
   private static final String TAG = "UCropActivity";
-
   private static final int TABS_COUNT = 3;
   private static final int SCALE_WIDGET_SENSITIVITY_COEFFICIENT = 15000;
   private static final int ROTATE_WIDGET_SENSITIVITY_COEFFICIENT = 42;
-
   private String mToolbarTitle;
-
   // Enables dynamic coloring
   private int mToolbarColor;
   private int mStatusBarColor;
   private int mActiveWidgetColor;
   private int mToolbarWidgetColor;
   private int mLogoColor;
-
   private boolean mShowBottomControls;
   private boolean mShowLoader = true;
-
   private UCropView mUCropView;
   private GestureCropImageView mGestureCropImageView;
   private OverlayView mOverlayView;
@@ -94,10 +76,46 @@ public class UCropActivity extends AppCompatActivity {
   private List<ViewGroup> mCropAspectRatioViews = new ArrayList<>();
   private TextView mTextViewRotateAngle, mTextViewScalePercent;
   private View mBlockingView;
-
   private Bitmap.CompressFormat mCompressFormat = DEFAULT_COMPRESS_FORMAT;
   private int mCompressQuality = DEFAULT_COMPRESS_QUALITY;
   private int[] mAllowedGestures = new int[] {SCALE, ROTATE, ALL};
+  private final View.OnClickListener mStateClickListener = new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+      if (!v.isSelected()) {
+        setWidgetState(v.getId());
+      }
+    }
+  };
+  private TransformImageView.TransformImageListener mImageListener =
+      new TransformImageView.TransformImageListener() {
+        @Override
+        public void onRotate(float currentAngle) {
+          setAngleText(currentAngle);
+        }
+
+        @Override
+        public void onScale(float currentScale) {
+          setScaleText(currentScale);
+        }
+
+        @Override
+        public void onLoadComplete() {
+          mUCropView.animate()
+              .alpha(1)
+              .setDuration(300)
+              .setInterpolator(new AccelerateInterpolator());
+          mBlockingView.setClickable(false);
+          mShowLoader = false;
+          supportInvalidateOptionsMenu();
+        }
+
+        @Override
+        public void onLoadFailure(@NonNull Exception e) {
+          setResultError(e);
+          finish();
+        }
+      };
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -367,36 +385,6 @@ public class UCropActivity extends AppCompatActivity {
         PorterDuff.Mode.SRC_ATOP);
   }
 
-  private TransformImageView.TransformImageListener mImageListener =
-      new TransformImageView.TransformImageListener() {
-        @Override
-        public void onRotate(float currentAngle) {
-          setAngleText(currentAngle);
-        }
-
-        @Override
-        public void onScale(float currentScale) {
-          setScaleText(currentScale);
-        }
-
-        @Override
-        public void onLoadComplete() {
-          mUCropView.animate()
-              .alpha(1)
-              .setDuration(300)
-              .setInterpolator(new AccelerateInterpolator());
-          mBlockingView.setClickable(false);
-          mShowLoader = false;
-          supportInvalidateOptionsMenu();
-        }
-
-        @Override
-        public void onLoadFailure(@NonNull Exception e) {
-          setResultError(e);
-          finish();
-        }
-      };
-
   /**
    * Use {@link #mActiveWidgetColor} for color filter
    */
@@ -576,15 +564,6 @@ public class UCropActivity extends AppCompatActivity {
     mGestureCropImageView.setImageToWrapCropBounds();
   }
 
-  private final View.OnClickListener mStateClickListener = new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-      if (!v.isSelected()) {
-        setWidgetState(v.getId());
-      }
-    }
-  };
-
   private void setInitialState() {
     if (mShowBottomControls) {
       if (mWrapperStateAspectRatio.getVisibility() == View.VISIBLE) {
@@ -675,5 +654,11 @@ public class UCropActivity extends AppCompatActivity {
 
   protected void setResultError(Throwable throwable) {
     setResult(UCrop.RESULT_ERROR, new Intent().putExtra(UCrop.EXTRA_ERROR, throwable));
+  }
+
+  @IntDef({NONE, SCALE, ROTATE, ALL})
+  @Retention(RetentionPolicy.SOURCE)
+  public @interface GestureTypes {
+
   }
 }

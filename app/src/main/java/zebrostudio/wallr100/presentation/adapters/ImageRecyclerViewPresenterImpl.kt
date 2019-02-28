@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.presentation.adapters
 
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 

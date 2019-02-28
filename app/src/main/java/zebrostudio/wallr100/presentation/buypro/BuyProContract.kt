@@ -1,7 +1,7 @@
 package zebrostudio.wallr100.presentation.buypro
 
-import zebrostudio.wallr100.presentation.BasePresenter
 import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType
+import zebrostudio.wallr100.presentation.BasePresenter
 import zebrostudio.wallr100.presentation.BaseView
 
 interface BuyProContract {

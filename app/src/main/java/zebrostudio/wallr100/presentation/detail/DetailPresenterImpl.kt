@@ -109,7 +109,7 @@ class DetailPresenterImpl(
           if (imageOptionsUseCase.isCrystallizeDescriptionDialogShown()) {
             if (!imageHasBeenCrystallized) {
               crystallizeWallpaper()
-            } else{
+            } else {
               detailView?.showImageHasAlreadyBeenCrystallizedMessage()
             }
           } else {

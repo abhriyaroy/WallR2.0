@@ -8,7 +8,8 @@ import android.os.Looper
 import android.support.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.*
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView

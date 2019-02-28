@@ -10,7 +10,6 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-
 import com.yalantis.ucrop.R;
 import com.yalantis.ucrop.callback.BitmapCropCallback;
 import com.yalantis.ucrop.callback.CropBoundsChangeListener;
@@ -19,16 +18,9 @@ import com.yalantis.ucrop.model.ImageState;
 import com.yalantis.ucrop.task.BitmapCropTask;
 import com.yalantis.ucrop.util.CubicEasing;
 import com.yalantis.ucrop.util.RectUtils;
-
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
 
-/**
- * Created by Oleksii Shliama (https://github.com/shliama).
- * <p/>
- * This class adds crop feature, methods to draw crop guidelines, and keep image in correct state.
- * Also it extends parent class methods to add checks for scale; animating zoom in/out.
- */
 public class CropImageView extends TransformImageView {
 
   public static final int DEFAULT_MAX_BITMAP_SIZE = 0;
@@ -107,19 +99,6 @@ public class CropImageView extends TransformImageView {
   }
 
   /**
-   * Updates current crop rectangle with given. Also recalculates image properties and position
-   * to fit new crop rectangle.
-   *
-   * @param cropRect - new crop rectangle
-   */
-  public void setCropRect(RectF cropRect) {
-    mCropRect.set(cropRect.left - getPaddingLeft(), cropRect.top - getPaddingTop(),
-        cropRect.right - getPaddingRight(), cropRect.bottom - getPaddingBottom());
-    calculateImageScaleBounds();
-    setImageToWrapCropBounds();
-  }
-
-  /**
    * This method sets aspect ratio for crop bounds.
    * If {@link #SOURCE_IMAGE_ASPECT_RATIO} value is passed - aspect ratio is calculated
    * based on current image width and height.
@@ -142,6 +121,19 @@ public class CropImageView extends TransformImageView {
     if (mCropBoundsChangeListener != null) {
       mCropBoundsChangeListener.onCropAspectRatioChanged(mTargetAspectRatio);
     }
+  }
+
+  /**
+   * Updates current crop rectangle with given. Also recalculates image properties and position
+   * to fit new crop rectangle.
+   *
+   * @param cropRect - new crop rectangle
+   */
+  public void setCropRect(RectF cropRect) {
+    mCropRect.set(cropRect.left - getPaddingLeft(), cropRect.top - getPaddingTop(),
+        cropRect.right - getPaddingRight(), cropRect.bottom - getPaddingBottom());
+    calculateImageScaleBounds();
+    setImageToWrapCropBounds();
   }
 
   @Nullable

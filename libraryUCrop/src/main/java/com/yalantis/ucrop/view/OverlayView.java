@@ -14,17 +14,10 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
 import com.yalantis.ucrop.R;
 import com.yalantis.ucrop.callback.OverlayViewChangeListener;
 import com.yalantis.ucrop.util.RectUtils;
 
-/**
- * Created by Oleksii Shliama (https://github.com/shliama).
- * <p/>
- * This view is used for drawing the overlay on top of the image. It may have frame, crop guidelines and dimmed area.
- * This must have LAYER_TYPE_SOFTWARE to draw itself properly.
- */
 public class OverlayView extends View {
 
   public static final boolean DEFAULT_SHOW_CROP_FRAME = true;
@@ -36,7 +29,8 @@ public class OverlayView extends View {
 
   private final RectF mCropViewRect = new RectF();
   private final RectF mTempRect = new RectF();
-
+  protected int mThisWidth, mThisHeight;
+  protected float[] mCropGridCorners;
   private int mCropGridRowCount, mCropGridColumnCount;
   private float mTargetAspectRatio;
   private float[] mGridPoints = null;
@@ -48,11 +42,7 @@ public class OverlayView extends View {
   private Paint mCropGridPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private Paint mCropFramePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private Paint mCropFrameCornersPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-  protected int mThisWidth, mThisHeight;
-
   private boolean mIsFreestyleCropEnabled = DEFAULT_FREESTYLE_CROP_ENABLED;
-  protected float[] mCropGridCorners;
   private int mCurrentTouchCornerIndex = -1;
   private int mTouchPointThreshold;
   private int mCropRectMinSize;

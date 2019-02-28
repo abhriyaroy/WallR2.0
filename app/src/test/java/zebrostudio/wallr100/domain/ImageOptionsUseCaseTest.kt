@@ -4,11 +4,9 @@ import android.graphics.Bitmap
 import android.net.Uri
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -18,12 +16,11 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
-import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsInteractor
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
-import java.util.UUID.*
+import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class ImageOptionsUseCaseTest {
