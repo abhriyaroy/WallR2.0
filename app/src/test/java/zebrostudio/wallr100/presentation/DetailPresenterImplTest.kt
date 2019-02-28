@@ -1163,6 +1163,7 @@ class DetailPresenterImplTest {
   fun `should show full screen image on handleImageViewClicked call success of search image type`() {
     detailPresenterImpl.isSlidingPanelExpanded = false
     detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.imageHasBeenCrystallized = false
     val searchImage = SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
     detailPresenterImpl.searchImage = searchImage
 
@@ -1170,6 +1171,33 @@ class DetailPresenterImplTest {
 
     verify(detailView).showExpandedImage(searchImage.imageQualityUrlPresenterEntity.smallImageLink,
         searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show full screen image on handleImageViewClicked call success of wallpaper image type`() {
+    detailPresenterImpl.isSlidingPanelExpanded = false
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.imageHasBeenCrystallized = false
+    val wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    detailPresenterImpl.wallpaperImage = wallpaperImage
+
+    detailPresenterImpl.handleImageViewClicked()
+
+    verify(detailView).showExpandedImage(wallpaperImage.imageLink.thumb,
+        wallpaperImage.imageLink.large)
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
+  fun `should show full screen crystallized image on handleImageViewClicked call success and image has been crystallized `() {
+    detailPresenterImpl.isSlidingPanelExpanded = false
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.imageHasBeenCrystallized = true
+
+    detailPresenterImpl.handleImageViewClicked()
+
+    verify(detailView).showExpandedCrystallizedImage()
     verifyNoMoreInteractions(detailView)
   }
 
