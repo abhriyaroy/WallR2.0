@@ -8,7 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.animation.Animation
@@ -196,10 +196,9 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun requestStoragePermission(actionType: ActionType) {
-    ActivityCompat.requestPermissions(this,
+    requestPermissions(this,
         arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        actionType.ordinal)
+            Manifest.permission.WRITE_EXTERNAL_STORAGE), actionType.ordinal)
   }
 
   override fun showPermissionRequiredMessage() {
