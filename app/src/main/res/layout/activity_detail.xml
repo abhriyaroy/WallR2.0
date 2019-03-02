@@ -365,8 +365,8 @@
       android:layout_width="@dimen/back_icon_width"
       android:layout_height="@dimen/back_icon_height"
       android:clickable="true"
+      android:focusable="true"
       android:src="@drawable/ic_back_arrow_white"
-      android:focusable="false"
       android:clipChildren="false"
       android:layout_marginStart="@dimen/back_icon_margin_start"
       android:layout_marginTop="@dimen/back_icon_margin_top"/>

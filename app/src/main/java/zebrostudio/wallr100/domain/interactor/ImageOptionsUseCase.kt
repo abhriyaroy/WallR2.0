@@ -56,6 +56,7 @@ class ImageOptionsInteractor(
 
   override fun getEditedImageSingle(): Single<Bitmap> {
     return wallrRepository.getCacheImageBitmap()
+        .subscribeOn(Schedulers.computation())
   }
 
   override fun getBitmapFromUriSingle(imageUri: Uri): Single<Bitmap> {

@@ -366,7 +366,7 @@
       android:layout_height="@dimen/back_icon_height"
       android:clickable="true"
       android:focusable="true"
-      android:background="?android:attr/selectableItemBackground"
+      android:foreground="?android:attr/selectableItemBackground"
       android:src="@drawable/ic_back_arrow_white"
       android:clipChildren="false"
       android:layout_marginStart="@dimen/back_icon_margin_start"

@@ -421,7 +421,7 @@ class DetailPresenterImpl(
               detailView?.showGenericErrorMessage()
             }
             detailView?.hideScreenBlur()
-            resetAllImageOperationFlags()
+            resetImageOperationAndImageDownloadFlags()
           }
         })
   }
@@ -493,7 +493,7 @@ class DetailPresenterImpl(
             detailView?.showGenericErrorMessage()
           }
           detailView?.hideScreenBlur()
-          resetAllImageOperationFlags()
+          resetImageOperationAndImageDownloadFlags()
         })
 
   }
@@ -550,7 +550,7 @@ class DetailPresenterImpl(
               detailView?.showGenericErrorMessage()
             }
             detailView?.hideScreenBlur()
-            resetAllImageOperationFlags()
+            resetImageOperationAndImageDownloadFlags()
           }
         })
   }
@@ -581,7 +581,7 @@ class DetailPresenterImpl(
           detailView?.hideScreenBlur()
         }, {
           detailView?.showGenericErrorMessage()
-          resetAllImageOperationFlags()
+          resetImageOperationAndImageDownloadFlags()
           detailView?.hideScreenBlur()
         })
   }
@@ -617,8 +617,7 @@ class DetailPresenterImpl(
     }
   }
 
-  private fun resetAllImageOperationFlags() {
-    isImageOperationInProgress = false
+  private fun resetImageOperationAndImageDownloadFlags() {
     isImageOperationInProgress = false
     isDownloadInProgress = false
   }
