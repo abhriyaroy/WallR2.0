@@ -50,7 +50,11 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
   }
 
   override fun getImageLoadingType(): Int {
-    return intent.getIntExtra(IMAGE_LOADING_TYPE_TAG, REMOTE.ordinal)
+    return if (intent.extras != null) {
+      intent.extras!!.getInt(IMAGE_LOADING_TYPE_TAG)
+    } else {
+      throw IllegalStateException()
+    }
   }
 
   override fun getImageLinksFromBundle() {
@@ -198,8 +202,27 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
     const val LOW_QUALITY_IMAGE_TAG = "LOW"
     const val HIGH_QUALITY_IMAGE_TAG = "HIGH"
 
-    fun getCallingIntent(context: Context): Intent {
+    fun getCallingIntent(context: Context, imageLoadingType: ImageLoadingType): Intent {
       return Intent(context, FullScreenImageActivity::class.java)
+          .apply {
+            putExtras(Bundle().apply {
+              putInt(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG, imageLoadingType.ordinal)
+            })
+          }
+    }
+
+    fun getCallingIntent(
+      context: Context,
+      lowQualityLink: String,
+      highQualityLink: String
+    ): Intent {
+      return Intent(context, FullScreenImageActivity::class.java).apply {
+        putExtras(Bundle().apply {
+          putInt(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG, REMOTE.ordinal)
+          putString(FullScreenImageActivity.LOW_QUALITY_IMAGE_TAG, lowQualityLink)
+          putString(FullScreenImageActivity.HIGH_QUALITY_IMAGE_TAG, highQualityLink)
+        })
+      }
     }
   }
 }

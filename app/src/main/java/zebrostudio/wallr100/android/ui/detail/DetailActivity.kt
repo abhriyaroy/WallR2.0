@@ -52,7 +52,6 @@ import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.EDITED_BITMAP_CACHE
-import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.REMOTE
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
@@ -435,28 +434,16 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showExpandedImage(lowQualityLink: String, highQualityLink: String) {
-    FullScreenImageActivity.getCallingIntent(this).apply {
-      putExtra(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG, REMOTE.ordinal)
-      putExtra(FullScreenImageActivity.LOW_QUALITY_IMAGE_TAG, lowQualityLink)
-      putExtra(FullScreenImageActivity.HIGH_QUALITY_IMAGE_TAG, highQualityLink)
-      startActivity(this)
-    }
+    startActivity(FullScreenImageActivity.getCallingIntent(this, lowQualityLink, highQualityLink))
   }
 
   override fun showCrystallizedExpandedImage() {
-    FullScreenImageActivity.getCallingIntent(this).apply {
-      putExtra(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG,
-          CRYSTALLIZED_BITMAP_CACHE.ordinal)
-      startActivity(this)
-    }
+    startActivity(FullScreenImageActivity.getCallingIntent(this, CRYSTALLIZED_BITMAP_CACHE))
   }
 
   override fun showEditedExpandedImage() {
-    FullScreenImageActivity.getCallingIntent(this).apply {
-      putExtra(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG,
-          EDITED_BITMAP_CACHE.ordinal)
-      startActivity(this)
-    }
+    System.out.println("Edited expanded")
+    startActivity(FullScreenImageActivity.getCallingIntent(this, EDITED_BITMAP_CACHE))
   }
 
   override fun collapseSlidingPanel() {

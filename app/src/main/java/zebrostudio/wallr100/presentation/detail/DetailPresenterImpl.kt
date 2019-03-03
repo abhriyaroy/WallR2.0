@@ -574,6 +574,7 @@ class DetailPresenterImpl(
           if (hasWallpaperBeenSet) {
             detailView?.showImage(it)
             detailView?.showWallpaperSetSuccessMessage()
+            imageHasBeenEdited = true
           } else {
             detailView?.showWallpaperSetErrorMessage()
           }
