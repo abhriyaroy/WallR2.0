@@ -500,7 +500,9 @@ class DetailActivity : BaseActivity(), DetailView {
     var imageType = "ImageType"
 
     fun getCallingIntent(context: Context): Intent {
-      return Intent(context, DetailActivity::class.java)
+      return Intent(context, DetailActivity::class.java).apply {
+
+      }
     }
   }
 

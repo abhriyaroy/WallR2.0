@@ -3,12 +3,8 @@ package zebrostudio.wallr100.android.ui.expandimage
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.view.WindowManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -21,8 +17,12 @@ import kotlinx.android.synthetic.main.fragment_image_list.spinkitView
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.REMOTE
+import zebrostudio.wallr100.android.utils.disableScreenshots
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
+import zebrostudio.wallr100.android.utils.hideStatusBarAndNavigationBar
+import zebrostudio.wallr100.android.utils.makeNavigationBarAndStatusBarTransparent
+import zebrostudio.wallr100.android.utils.showStatusBarAndNavigationBar
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.expandimage.FullScreenImageContract.FullScreenImagePresenter
 import zebrostudio.wallr100.presentation.expandimage.FullScreenImageContract.FullScreenImageView
@@ -142,27 +142,15 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
     lowQualityImageView.gone()
   }
 
-  override fun showStatusBarAndNavigationBar() {
-    window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      window.navigationBarColor = Color.TRANSPARENT
-      window.statusBarColor = Color.TRANSPARENT
-    }
+  override fun showStatusAndNavBar() {
+    showStatusBarAndNavigationBar()
     presenter.notifyStatusBarAndNavBarShown()
   }
 
-  override fun hideStatusBarAndNavigationBar() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-          or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-          or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-          or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-          or View.SYSTEM_UI_FLAG_FULLSCREEN
-          or View.SYSTEM_UI_FLAG_IMMERSIVE)
-      presenter.notifyStatusBarAndNavBarHidden()
-    }
+  override fun hideStatusAndNavBar() {
+    hideStatusBarAndNavigationBar()
+    presenter.notifyStatusBarAndNavBarHidden()
+
   }
 
   override fun showGenericErrorMessage() {
@@ -170,23 +158,12 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
   }
 
   private fun preventWindowFromTakingScreenshot() {
-    window.setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-        WindowManager.LayoutParams.FLAG_SECURE)
+    disableScreenshots()
   }
 
   private fun initStatusBarAndNavigationBarConfiguration() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      window.decorView.setOnSystemUiVisibilityChangeListener { visibility ->
-        if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-          showStatusBarAndNavigationBar()
-        } else {
-          hideStatusBarAndNavigationBar()
-        }
-      }
-      window.navigationBarColor = Color.TRANSPARENT
-      window.statusBarColor = Color.TRANSPARENT
-    }
-    hideStatusBarAndNavigationBar()
+    makeNavigationBarAndStatusBarTransparent()
+    hideStatusAndNavBar()
   }
 
   private fun configurePhotoView() {

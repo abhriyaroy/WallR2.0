@@ -16,8 +16,8 @@ interface FullScreenImageContract {
     fun hideLoader()
     fun showHighQualityImageLoadingError()
     fun hideLowQualityImage()
-    fun showStatusBarAndNavigationBar()
-    fun hideStatusBarAndNavigationBar()
+    fun showStatusAndNavBar()
+    fun hideStatusAndNavBar()
     fun showGenericErrorMessage()
   }
 

@@ -178,7 +178,7 @@ class FullScreenImagePresenterImplTest {
 
     verify(fullScreenImageView).getImageLoadingType()
     verify(fullScreenImageView).getImageLinksFromBundle()
-    verify(fullScreenImageView).showStatusBarAndNavigationBar()
+    verify(fullScreenImageView).showStatusAndNavBar()
     verifyNoMoreInteractions(fullScreenImageView)
   }
 
@@ -192,7 +192,7 @@ class FullScreenImagePresenterImplTest {
 
     verify(fullScreenImageView).getImageLoadingType()
     verify(fullScreenImageView).getImageLinksFromBundle()
-    verify(fullScreenImageView).hideStatusBarAndNavigationBar()
+    verify(fullScreenImageView).hideStatusAndNavBar()
     verifyNoMoreInteractions(fullScreenImageView)
   }
 

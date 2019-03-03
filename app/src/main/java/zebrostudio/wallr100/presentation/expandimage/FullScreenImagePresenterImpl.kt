@@ -53,9 +53,9 @@ class FullScreenImagePresenterImpl(
 
   override fun notifyPhotoViewTapped() {
     if (isInFullScreenMode) {
-      fullScreenView?.showStatusBarAndNavigationBar()
+      fullScreenView?.showStatusAndNavBar()
     } else {
-      fullScreenView?.hideStatusBarAndNavigationBar()
+      fullScreenView?.hideStatusAndNavBar()
     }
   }
 
