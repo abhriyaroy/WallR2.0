@@ -28,18 +28,19 @@ interface ImageHandler {
   fun saveLowPolyImageToDownloads(): Completable
 }
 
+const val BYTE_ARRAY_SIZE = 2048
+const val DOWNLOAD_PROGRESS_COMPLETED_VALUE: Long = 100
+const val READ_MODE = "r"
+const val BITMAP_COMPRESS_QUALITY = 100
+const val LOWPOLY_BYTE_ARRAY_SIZE = 1024
+const val INITIAL_SIZE = 0
+
 class ImageHandlerImpl(
   private val context: Context,
   private val fileHandler: FileHandler
 ) : ImageHandler {
 
   internal var shouldContinueFetchingImage: Boolean = true
-  private val byteArraySize = 2048
-  private val downloadProgressCompletedValue: Long = 100
-  private val readMode = "r"
-  private val bitmapCompressQuality = 100
-  private val lowpolyByteArraySize = 1024
-  private val initialSize = 0
   private var imageCacheTracker: Pair<Boolean, String> = Pair(false, "")
 
   override fun isImageCached(link: String): Boolean {
@@ -57,20 +58,20 @@ class ImageHandlerImpl(
         connection = URL(link).openConnection() as HttpURLConnection
         connection.connect()
         val length = connection.contentLength
-        if (length <= initialSize) {
+        if (length <= INITIAL_SIZE) {
           it.onError(ImageDownloadException())
         }
         inputStream = connection.inputStream
         outputStream = FileOutputStream(fileHandler.getCacheFile())
-        val data = ByteArray(byteArraySize)
+        val data = ByteArray(BYTE_ARRAY_SIZE)
         var count: Int = inputStream.read(data)
         var read: Long = 0
         while (count != -1) {
           read += count.toLong()
-          outputStream.write(data, initialSize, count)
+          outputStream.write(data, INITIAL_SIZE, count)
           if (shouldContinueFetchingImage) {
             val progress = (read * 100 / length)
-            if (progress == downloadProgressCompletedValue) {
+            if (progress == DOWNLOAD_PROGRESS_COMPLETED_VALUE) {
               imageCacheTracker = Pair(true, link)
             }
             it.onNext(progress)
@@ -117,7 +118,7 @@ class ImageHandlerImpl(
   override fun getImageUri(): Uri {
     return getImageBitmap().let { bitmap ->
       fileHandler.getCacheFile().outputStream().apply {
-        bitmap.compress(Bitmap.CompressFormat.JPEG, bitmapCompressQuality, this)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, BITMAP_COMPRESS_QUALITY, this)
         flush()
         close()
       }
@@ -127,11 +128,11 @@ class ImageHandlerImpl(
 
   override fun convertUriToBitmap(uri: Uri): Single<Bitmap> {
     return Single.create {
-      with(context.contentResolver.openFileDescriptor(uri, readMode)) {
+      with(context.contentResolver.openFileDescriptor(uri, READ_MODE)) {
         BitmapFactory.decodeFileDescriptor(fileDescriptor).let { bitmap ->
           close()
           fileHandler.getCacheFile().outputStream().apply {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, bitmapCompressQuality, this)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, BITMAP_COMPRESS_QUALITY, this)
             flush()
             close()
             it.onSuccess(bitmap)
@@ -145,7 +146,7 @@ class ImageHandlerImpl(
     return Single.create {
       LowPoly.generate(getImageBitmap()).let { bitmap ->
         fileHandler.getCacheFile().outputStream().apply {
-          bitmap.compress(Bitmap.CompressFormat.JPEG, bitmapCompressQuality, this)
+          bitmap.compress(Bitmap.CompressFormat.JPEG, BITMAP_COMPRESS_QUALITY, this)
           flush()
           close()
         }
@@ -158,10 +159,10 @@ class ImageHandlerImpl(
     return Completable.create {
       fileHandler.getCacheFile().inputStream().let { inputStream ->
         fileHandler.getDownloadFile().outputStream().let { outputStream ->
-          ByteArray(lowpolyByteArraySize).apply {
+          ByteArray(LOWPOLY_BYTE_ARRAY_SIZE).apply {
             var length = inputStream.read(this)
-            while (length > initialSize) {
-              outputStream.write(this, initialSize, length)
+            while (length > INITIAL_SIZE) {
+              outputStream.write(this, INITIAL_SIZE, length)
               length = inputStream.read(this)
             }
             it.onComplete()

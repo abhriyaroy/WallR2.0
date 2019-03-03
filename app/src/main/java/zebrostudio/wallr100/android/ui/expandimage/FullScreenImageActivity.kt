@@ -28,6 +28,8 @@ import zebrostudio.wallr100.presentation.expandimage.FullScreenImageContract.Ful
 import zebrostudio.wallr100.presentation.expandimage.FullScreenImageContract.FullScreenImageView
 import javax.inject.Inject
 
+const val ILLEGAL_STATE_EXCEPTION_MESSAGE = "Activity is not invoked using getCallingIntent methods"
+
 class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
 
   @Inject internal lateinit var presenter: FullScreenImagePresenter
@@ -53,7 +55,7 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
     return if (intent.extras != null) {
       intent.extras!!.getInt(IMAGE_LOADING_TYPE_TAG)
     } else {
-      throw IllegalStateException()
+      throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
     }
   }
 

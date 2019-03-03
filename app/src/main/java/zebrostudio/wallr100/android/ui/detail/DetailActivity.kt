@@ -68,15 +68,17 @@ import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEnt
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 import javax.inject.Inject
 
+const val SLIDING_PANEL_PARALLEL_OFFSET = 40
+const val INITIAL_LOADER_PROGRESS_VALUE = 0
+const val INITIAL_LOADER_PROGRESS_PERCENTAGE = "0%"
+const val BLUR_RADIUS: Float = 8F
+const val INITIAL_SELECTED_DOWNLOAD_OPTION = 0
+const val ILLEGAL_STATE_EXCEPTION_MESSAGE = "Activity is not invoked using getCallingIntent method"
+
 class DetailActivity : BaseActivity(), DetailView {
 
   @Inject lateinit var presenter: DetailPresenter
 
-  private val slidingPanelParallelOffset = 40
-  private val initialLoaderProgress = 0
-  private val initialLoaderProgressPercentage = "0%"
-  private val blurRadius: Float = 8F
-  private val initialSelectedDownloadOptionIndex = 0
   private var materialProgressLoader: MaterialDialog? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,8 +86,12 @@ class DetailActivity : BaseActivity(), DetailView {
     super.onCreate(savedInstanceState)
     presenter.attachView(this)
     setContentView(R.layout.activity_detail)
-    presenter.setImageType(
-        intent.getSerializableExtra(imageType) as ImageListType)
+    if (intent.extras != null) {
+      presenter.setImageType(
+          intent.extras!!.getSerializable(imageType) as ImageListType)
+    } else {
+      throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
+    }
     setUpExpandPanel()
     attachClickListeners()
     setUpBlurView()
@@ -108,11 +114,11 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun getWallpaperImageDetails(): ImagePresenterEntity {
-    return intent.getSerializableExtra(imageDetails) as ImagePresenterEntity
+    return intent.extras!!.getSerializable(imageDetails) as ImagePresenterEntity
   }
 
   override fun getSearchImageDetails(): SearchPicturesPresenterEntity {
-    return intent.getSerializableExtra(imageDetails) as SearchPicturesPresenterEntity
+    return intent.extras!!.getSerializable(imageDetails) as SearchPicturesPresenterEntity
   }
 
   override fun showAuthorDetails(name: String, profileImageLink: String) {
@@ -227,7 +233,7 @@ class DetailActivity : BaseActivity(), DetailView {
         .contentColor(colorRes(R.color.color_white))
         .content(message)
         .backgroundColor(colorRes(R.color.color_primary))
-        .progress(true, initialLoaderProgress)
+        .progress(true, INITIAL_LOADER_PROGRESS_VALUE)
         .progressIndeterminateStyle(false)
         .build()
     materialProgressLoader?.show()
@@ -255,7 +261,7 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun blurScreenAndInitializeProgressPercentage() {
     blurView.visible()
-    wallpaperDownloadProgressPercentage.text = initialLoaderProgressPercentage
+    wallpaperDownloadProgressPercentage.text = INITIAL_LOADER_PROGRESS_PERCENTAGE
     wallpaperDownloadProgressPercentage.visible()
     loadingHintBelowProgressPercentage.text =
         getString(R.string.detail_activity_grabbing_best_quality_wallpaper_message)
@@ -359,7 +365,7 @@ class DetailActivity : BaseActivity(), DetailView {
         .widgetColor(colorRes(R.color.color_accent))
         .positiveColor(colorRes(R.color.color_accent))
         .negativeColor(colorRes(R.color.color_accent))
-        .itemsCallbackSingleChoice(initialSelectedDownloadOptionIndex
+        .itemsCallbackSingleChoice(INITIAL_SELECTED_DOWNLOAD_OPTION
         ) { _, _, which, _ ->
           presenter.handleDownloadQualitySelectionEvent(SEARCH, which)
           true
@@ -383,7 +389,7 @@ class DetailActivity : BaseActivity(), DetailView {
         .widgetColor(colorRes(R.color.color_accent))
         .positiveColor(colorRes(R.color.color_accent))
         .negativeColor(colorRes(R.color.color_accent))
-        .itemsCallbackSingleChoice(initialSelectedDownloadOptionIndex
+        .itemsCallbackSingleChoice(INITIAL_SELECTED_DOWNLOAD_OPTION
         ) { _, _, which, _ ->
           presenter.handleDownloadQualitySelectionEvent(WALLPAPERS, which)
           true
@@ -442,7 +448,6 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showEditedExpandedImage() {
-    System.out.println("Edited expanded")
     startActivity(FullScreenImageActivity.getCallingIntent(this, EDITED_BITMAP_CACHE))
   }
 
@@ -457,7 +462,7 @@ class DetailActivity : BaseActivity(), DetailView {
 
   private fun setUpExpandPanel() {
     expandIconView.setState(ExpandIconView.LESS, false)
-    slidingPanel.setParallaxOffset(slidingPanelParallelOffset)
+    slidingPanel.setParallaxOffset(SLIDING_PANEL_PARALLEL_OFFSET)
     slidingPanel.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
       override fun onPanelSlide(panel: View, slideOffset: Float) {
         // Do nothing
@@ -492,16 +497,34 @@ class DetailActivity : BaseActivity(), DetailView {
 
   private fun setUpBlurView() {
     blurView.setupWith(parentFrameLayout).setBlurAlgorithm(RenderScriptBlur(this))
-        .setBlurRadius(blurRadius)
+        .setBlurRadius(BLUR_RADIUS)
   }
 
   companion object {
     var imageDetails = "ImageDetails"
     var imageType = "ImageType"
 
-    fun getCallingIntent(context: Context): Intent {
+    fun getCallingIntent(
+      context: Context,
+      searchPicturesPresenterEntity: SearchPicturesPresenterEntity
+    ): Intent {
       return Intent(context, DetailActivity::class.java).apply {
+        putExtras(Bundle().apply {
+          putExtra(imageDetails, searchPicturesPresenterEntity)
+          putExtra(imageType, SEARCH)
+        })
+      }
+    }
 
+    fun getCallingIntent(
+      context: Context,
+      imagePresenterEntity: ImagePresenterEntity
+    ): Intent {
+      return Intent(context, DetailActivity::class.java).apply {
+        putExtras(Bundle().apply {
+          putExtra(imageDetails, imagePresenterEntity)
+          putExtra(imageType, WALLPAPERS)
+        })
       }
     }
   }
