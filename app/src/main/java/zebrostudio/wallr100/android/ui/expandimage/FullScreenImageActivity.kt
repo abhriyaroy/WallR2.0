@@ -39,6 +39,7 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
     preventWindowFromTakingScreenshot()
     setContentView(R.layout.activity_full_screen_image)
     presenter.attachView(this)
+    presenter.setCalledIntent(intent)
     initStatusBarAndNavigationBarConfiguration()
     configurePhotoView()
     backIcon.setOnClickListener {
@@ -51,12 +52,8 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
     super.onDestroy()
   }
 
-  override fun getImageLoadingType(): Int {
-    return if (intent.extras != null) {
-      intent.extras!!.getInt(IMAGE_LOADING_TYPE_TAG)
-    } else {
-      throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
-    }
+  override fun throwIllegalStateException() {
+    throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
   }
 
   override fun getImageLinksFromBundle() {

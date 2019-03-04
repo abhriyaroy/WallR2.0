@@ -1,6 +1,8 @@
 package zebrostudio.wallr100.presentation.expandimage
 
+import android.content.Intent
 import com.uber.autodispose.autoDisposable
+import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.EDITED_BITMAP_CACHE
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.REMOTE
@@ -14,6 +16,7 @@ class FullScreenImagePresenterImpl(
 ) :
     FullScreenImageContract.FullScreenImagePresenter {
 
+  internal lateinit var intent: Intent
   internal var isInFullScreenMode: Boolean = false
   private var fullScreenView: FullScreenImageView? = null
   private var lowQualityImageLink: String? = null
@@ -22,12 +25,20 @@ class FullScreenImagePresenterImpl(
 
   override fun attachView(view: FullScreenImageView) {
     fullScreenView = view
-    imageLoadingTypeOrdinal = fullScreenView?.getImageLoadingType()!!
-    processImageLoadingTypeOrdinal(imageLoadingTypeOrdinal)
   }
 
   override fun detachView() {
     fullScreenView = null
+  }
+
+  override fun setCalledIntent(intent: Intent) {
+    if (intent.extras != null) {
+      imageLoadingTypeOrdinal =
+          intent.extras!!.getInt(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG)
+      processImageLoadingTypeOrdinal(imageLoadingTypeOrdinal)
+    } else {
+      fullScreenView?.throwIllegalStateException()
+    }
   }
 
   override fun setLowQualityImageLink(link: String) {

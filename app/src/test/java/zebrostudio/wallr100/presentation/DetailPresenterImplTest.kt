@@ -82,7 +82,7 @@ class DetailPresenterImplTest {
     stubPostExecutionThreadReturnsIoScheduler()
   }
 
-  @Test
+ /* @Test
   fun `should show search image details on setImageType as search call`() {
     val searchImagePresenterEntity =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
@@ -112,7 +112,7 @@ class DetailPresenterImplTest {
     verify(detailView).showImage(imagePresenterEntity.imageLink.thumb,
         imagePresenterEntity.imageLink.large)
     verifyNoMoreInteractions(detailView)
-  }
+  }*/
 
   @Test fun `should show error toast on high quality image loading failure`() {
     detailPresenterImpl.handleHighQualityImageLoadFailed()

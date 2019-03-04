@@ -12,6 +12,7 @@ import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
+import zebrostudio.wallr100.android.ui.detail.DetailActivity
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.data.exception.ImageDownloadException
@@ -41,6 +42,7 @@ class DetailPresenterImpl(
   internal lateinit var imageType: ImageListType
   internal lateinit var wallpaperImage: ImagePresenterEntity
   internal lateinit var searchImage: SearchPicturesPresenterEntity
+  internal lateinit var intent: Intent
   internal var isDownloadInProgress = false
   internal var isImageOperationInProgress = false
   internal var wallpaperHasBeenSet = false
@@ -62,14 +64,12 @@ class DetailPresenterImpl(
     detailView = null
   }
 
-  override fun setImageType(imageType: ImageListType) {
-    this.imageType = imageType
-    if (imageType == SEARCH) {
-      searchImage = detailView?.getSearchImageDetails()!!
+  override fun setCalledIntent(intent: Intent) {
+    if (intent.extras != null) {
+      setImageType(intent.extras!!.getSerializable(DetailActivity.imageType) as ImageListType)
     } else {
-      wallpaperImage = detailView?.getWallpaperImageDetails()!!
+      detailView?.throwIllegalStateException()
     }
-    decorateView()
   }
 
   override fun handleHighQualityImageLoadFailed() {
@@ -339,6 +339,16 @@ class DetailPresenterImpl(
 
   override fun setPanelStateAsCollapsed() {
     isSlidingPanelExpanded = false
+  }
+
+  private fun setImageType(imageType: ImageListType) {
+    this.imageType = imageType
+    if (imageType == SEARCH) {
+      searchImage = detailView?.getSearchImageDetails()!!
+    } else {
+      wallpaperImage = detailView?.getWallpaperImageDetails()!!
+    }
+    decorateView()
   }
 
   private fun decorateView() {

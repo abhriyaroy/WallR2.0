@@ -58,7 +58,6 @@ import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.infoToast
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
 import zebrostudio.wallr100.presentation.detail.ActionType
@@ -84,14 +83,9 @@ class DetailActivity : BaseActivity(), DetailView {
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)
     super.onCreate(savedInstanceState)
-    presenter.attachView(this)
     setContentView(R.layout.activity_detail)
-    if (intent.extras != null) {
-      presenter.setImageType(
-          intent.extras!!.getSerializable(imageType) as ImageListType)
-    } else {
-      throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
-    }
+    presenter.attachView(this)
+    presenter.setCalledIntent(intent)
     setUpExpandPanel()
     attachClickListeners()
     setUpBlurView()
@@ -111,6 +105,10 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun onBackPressed() {
     presenter.handleBackButtonClick()
+  }
+
+  override fun throwIllegalStateException() {
+    throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
   }
 
   override fun getWallpaperImageDetails(): ImagePresenterEntity {
