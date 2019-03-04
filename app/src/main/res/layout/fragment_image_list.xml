@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/wallpaper_fragment_info_text_first_line_padding_top"
-        android:textColor="@color/color_white"
+        android:textColor="@color/white"
         android:text="@string/fragment_unable_to_load_wallpapers_message"
         android:layout_gravity="center"/>
 
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:text="@string/fragment_ensure_working_internet_connection_message"
         android:paddingTop="@dimen/wallpaper_fragment_info_text_second_line_padding_top"
-        android:textColor="@color/color_white"
+        android:textColor="@color/white"
         android:layout_gravity="center"/>
 
     <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:text="@string/fragment_swipe_down_retry_message"
         android:paddingTop="@dimen/wallpaper_fragment_info_text_third_line_padding_top"
-        android:textColor="@color/color_white"
+        android:textColor="@color/white"
         android:layout_gravity="center"/>
 
   </LinearLayout>
@@ -56,7 +56,7 @@
       android:layout_height="@dimen/wallpaper_fragment_center_spinkit_height"
       android:padding="@dimen/wallpaper_fragment_center_spinkit_padding"
       android:layout_gravity="center"
-      app:SpinKit_Color="@color/color_white"
+      app:SpinKit_Color="@color/white"
       style="@style/SpinKitView.Large.FoldingCube"
       android:visibility="gone"/>
 

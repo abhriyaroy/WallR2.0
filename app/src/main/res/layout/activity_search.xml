@@ -2,7 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:background="@color/color_primary">
+    android:background="@color/primary">
 
   <android.support.design.widget.AppBarLayout
       android:id="@+id/searchAppBar"
@@ -32,7 +32,7 @@
         android:layout_gravity="center"
         android:padding="@dimen/search_activity_spinkit_view_padding"
         style="@style/SpinKitView.Large.FoldingCube"
-        app:SpinKit_Color="@color/color_white"/>
+        app:SpinKit_Color="@color/white"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -63,7 +63,7 @@
           android:layout_below="@id/infoImageView"
           android:layout_centerHorizontal="true"
           android:text="@string/search_no_result_message"
-          android:textColor="@color/color_white"
+          android:textColor="@color/white"
           android:visibility="gone"/>
 
       <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
@@ -73,7 +73,7 @@
           android:layout_below="@id/infoTextFirstLine"
           android:layout_centerHorizontal="true"
           android:text="@string/search_no_result_message"
-          android:textColor="@color/color_white"
+          android:textColor="@color/white"
           android:visibility="gone"/>
 
 
@@ -87,7 +87,7 @@
           android:padding="@dimen/search_activity_retry_button_padding"
           android:background="?android:selectableItemBackground"
           android:text="@string/search_retry_message"
-          android:textColor="@color/color_white"
+          android:textColor="@color/white"
           android:textAlignment="center"
           android:textStyle="bold"
           android:clickable="true"
@@ -102,7 +102,7 @@
         android:layout_marginBottom="@dimen/search_activity_bottom_spinkit_margin_bottom"
         android:layout_gravity="bottom|center_horizontal"
         style="@style/SpinKitView.Large.ThreeBounce"
-        app:SpinKit_Color="@color/color_white"/>
+        app:SpinKit_Color="@color/white"/>
 
 
     <View

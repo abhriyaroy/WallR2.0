@@ -1,22 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <color name="color_primary">#212121</color>
-  <color name="color_primary_dark">#151613</color>
-  <color name="color_accent">#e51c23</color>
-  <color name="color_guillotine_menu_background">#212121</color>
-  <color name="color_white">#ffffff</color>
-  <color name="color_black">#000000</color>
-  <color name="color_ripple_fab">#ec6065</color>
+
+  <!-- Color Palette -->
+  <color name="white">#ffffff</color>
+  <color name="black">#000000</color>
+  <color name="mineshaft">#212121</color>
+  <color name="log_cabin">#151613</color>
+  <color name="alizarin_crimson">#e51c23</color>
+  <color name="burnt_sienna">#ec6065</color>
+  <color name="cod_gray">#1a1a1a</color>
+  <color name="limed_spruce">#37474F</color>
+  <color name="westar">#dbd4cf</color>
+
+
+  <color name="primary">@color/mineshaft</color>
+  <color name="primary_dark">@color/log_cabin</color>
+  <color name="accent">@color/alizarin_crimson</color>
+  <color name="pre_lollipop_bar_background_color">@color/log_cabin</color>
+
+  <color name="fab_ripple">@color/burnt_sienna</color>
+  <color name="guillotine_menu_background">@color/mineshaft</color>
 
   <!-- Main -->
-  <color name="color_smart_tab_layout_overline">#4D000000</color>
+  <color name="smart_tab_layout_overline">@color/mineshaft</color>
 
   <!-- Buy Pro -->
-  <color name="color_buy_pro_background">#1a1a1a</color>
-  <color name="color_buy_pro_top_half">#37474F</color>
-  <color name="color_item_buy_pro_description_text">#dbd4cf</color>
+  <color name="buy_pro_background">@color/cod_gray</color>
+  <color name="buy_pro_top_half">@color/limed_spruce</color>
+  <color name="buy_pro_item_description_text">@color/westar</color>
 
-  <color name="black_overlay">#66000000</color>
 
 </resources>

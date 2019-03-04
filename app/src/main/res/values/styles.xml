@@ -4,8 +4,8 @@
   <style name="AppTheme" parent="BaseAppTheme"/>
 
   <style name="BaseAppTheme" parent="Theme.AppCompat.NoActionBar">
-    <item name="colorPrimaryDark">@color/color_primary_dark</item>
-    <item name="colorPrimary">@color/color_primary</item>
+    <item name="colorPrimaryDark">@color/primary_dark</item>
+    <item name="colorPrimary">@color/primary</item>
     <item name="android:windowNoTitle">true</item>
     <item name="android:windowActionBar">false</item>
   </style>
@@ -15,7 +15,7 @@
     <item name="android:layout_width">match_parent</item>
     <item name="android:minHeight">?attr/actionBarSize</item>
     <item name="android:windowNoTitle">true</item>
-    <item name="android:background">@color/color_primary</item>
+    <item name="android:background">@color/primary</item>
   </style>
 
   <style name="HamburgerImageButtonTheme" parent="Widget.AppCompat.ActionButton">
@@ -29,7 +29,7 @@
   <style name="OverflowMenuTheme" parent="Theme.AppCompat.NoActionBar">
     <item name="android:layout_gravity">center</item>
     <item name="android:textSize">@dimen/overflow_menu_text_size</item>
-    <item name="android:textColor">@color/color_white</item>
+    <item name="android:textColor">@color/white</item>
     <item name="android:ellipsize">none</item>
   </style>
 
@@ -59,7 +59,7 @@
   </style>
 
   <style name="MaterialSearchViewStyle">
-    <item name="searchBackground">@color/color_primary</item>
+    <item name="searchBackground">@color/primary</item>
     <item name="searchVoiceIcon">@drawable/ic_action_voice_search_inverted</item>
     <item name="searchCloseIcon">@drawable/ic_action_navigation_close_inverted</item>
     <item name="searchBackIcon">@drawable/ic_action_navigation_arrow_back_inverted</item>
@@ -79,7 +79,7 @@
   </style>
 
   <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
-    <item name="android:background">@color/black_overlay</item>
+    <item name="android:background">@color/pre_lollipop_bar_background_color</item>
   </style>
 
 </resources>

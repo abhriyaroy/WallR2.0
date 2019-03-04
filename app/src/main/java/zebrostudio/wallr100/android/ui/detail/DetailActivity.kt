@@ -229,10 +229,10 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun showWaitLoader(message: String) {
     materialProgressLoader = MaterialDialog.Builder(this)
-        .widgetColor(colorRes(R.color.color_accent))
-        .contentColor(colorRes(R.color.color_white))
+        .widgetColor(colorRes(R.color.accent))
+        .contentColor(colorRes(R.color.white))
         .content(message)
-        .backgroundColor(colorRes(R.color.color_primary))
+        .backgroundColor(colorRes(R.color.primary))
         .progress(true, INITIAL_LOADER_PROGRESS_VALUE)
         .progressIndeterminateStyle(false)
         .build()
@@ -358,13 +358,13 @@ class DetailActivity : BaseActivity(), DetailView {
       R.array.imageDownloadQualities
     }
     MaterialDialog.Builder(this)
-        .backgroundColor(colorRes(R.color.color_primary))
+        .backgroundColor(colorRes(R.color.primary))
         .title(R.string.detail_activity_choose_download_quality_message)
         .items(optionsArray)
-        .contentColor(colorRes(R.color.color_white))
-        .widgetColor(colorRes(R.color.color_accent))
-        .positiveColor(colorRes(R.color.color_accent))
-        .negativeColor(colorRes(R.color.color_accent))
+        .contentColor(colorRes(R.color.white))
+        .widgetColor(colorRes(R.color.accent))
+        .positiveColor(colorRes(R.color.accent))
+        .negativeColor(colorRes(R.color.accent))
         .itemsCallbackSingleChoice(INITIAL_SELECTED_DOWNLOAD_OPTION
         ) { _, _, which, _ ->
           presenter.handleDownloadQualitySelectionEvent(SEARCH, which)
@@ -382,13 +382,13 @@ class DetailActivity : BaseActivity(), DetailView {
       R.array.imageDownloadQualities
     }
     MaterialDialog.Builder(this)
-        .backgroundColor(colorRes(R.color.color_primary))
+        .backgroundColor(colorRes(R.color.primary))
         .title(R.string.detail_activity_choose_download_quality_message)
         .items(optionsArray)
-        .contentColor(colorRes(R.color.color_white))
-        .widgetColor(colorRes(R.color.color_accent))
-        .positiveColor(colorRes(R.color.color_accent))
-        .negativeColor(colorRes(R.color.color_accent))
+        .contentColor(colorRes(R.color.white))
+        .widgetColor(colorRes(R.color.accent))
+        .positiveColor(colorRes(R.color.accent))
+        .negativeColor(colorRes(R.color.accent))
         .itemsCallbackSingleChoice(INITIAL_SELECTED_DOWNLOAD_OPTION
         ) { _, _, which, _ ->
           presenter.handleDownloadQualitySelectionEvent(WALLPAPERS, which)
@@ -417,12 +417,12 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun showCrystallizeDescriptionDialog() {
     MaterialDialog.Builder(this)
-        .backgroundColor(colorRes(R.color.color_primary))
+        .backgroundColor(colorRes(R.color.primary))
         .customView(R.layout.crystallize_example_dialog_layout, false)
-        .contentColor(colorRes(R.color.color_white))
-        .widgetColor(colorRes(R.color.color_accent))
-        .positiveColor(colorRes(R.color.color_accent))
-        .negativeColor(colorRes(R.color.color_accent))
+        .contentColor(colorRes(R.color.white))
+        .widgetColor(colorRes(R.color.accent))
+        .positiveColor(colorRes(R.color.accent))
+        .negativeColor(colorRes(R.color.accent))
         .positiveText(getString(R.string.detail_activity_crystallize_dialog_positive_text))
         .negativeText(getString(R.string.detail_activity_crystallize_dialog_negative_text))
         .onPositive { _, _ ->

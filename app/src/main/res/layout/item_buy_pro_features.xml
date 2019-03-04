@@ -25,7 +25,7 @@
       android:layout_alignTop="@id/imageView"
       android:layout_toRightOf="@id/imageView"
       android:textSize="@dimen/item_buy_pro_header_text_size"
-      android:textColor="@color/color_white"/>
+      android:textColor="@color/white"/>
 
   <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
       android:id="@+id/descriptionTextView"
@@ -36,6 +36,6 @@
       android:paddingTop="@dimen/item_buy_pro_description_padding_top"
       android:paddingBottom="@dimen/item_buy_pro_description_padding_bottom"
       android:textSize="@dimen/item_buy_pro_description_text_size"
-      android:textColor="@color/color_item_buy_pro_description_text"/>
+      android:textColor="@color/buy_pro_item_description_text"/>
 
 </RelativeLayout>
