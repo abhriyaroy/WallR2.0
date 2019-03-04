@@ -11,6 +11,7 @@ import com.pddstudio.urlshortener.URLShortener
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -91,6 +92,9 @@ class WallrDataRepositoryTest {
         WallrDataRepository(remoteAuthServiceFactory, unsplashClientFactory, sharedPrefs,
             unsplashPictureEntityMapper, firebaseDatabaseHelper, firebasePictureEntityMapper,
             urlShortener, imageHandler, fileHandler, downloadHelper, executionThread)
+
+    `when`(executionThread.ioScheduler).thenReturn(Schedulers.trampoline())
+    `when`(executionThread.computationScheduler).thenReturn(Schedulers.trampoline())
   }
 
   @Test fun `should return single on server success response`() {
@@ -101,6 +105,8 @@ class WallrDataRepositoryTest {
     wallrDataRepository.authenticatePurchase(randomString, randomString, randomString)
         .test()
         .assertComplete()
+
+    `should verify io scheduler call`()
   }
 
   @Test
@@ -112,6 +118,8 @@ class WallrDataRepositoryTest {
     wallrDataRepository.authenticatePurchase(randomString, randomString, randomString)
         .test()
         .assertError(InvalidPurchaseException::class.java)
+
+    `should verify io scheduler call`()
   }
 
   @Test
@@ -127,6 +135,7 @@ class WallrDataRepositoryTest {
     verify(remoteAuthServiceFactory).verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
     verifyNoMoreInteractions(remoteAuthServiceFactory)
+    `should verify io scheduler call`()
   }
 
   @Test
@@ -142,6 +151,7 @@ class WallrDataRepositoryTest {
     verify(remoteAuthServiceFactory).verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
     verifyNoMoreInteractions(remoteAuthServiceFactory)
+    `should verify io scheduler call`()
   }
 
   @Test fun `should return true after successfully updating purchase status`() {
@@ -191,6 +201,7 @@ class WallrDataRepositoryTest {
 
     verify(unsplashClientFactory).getPicturesService(randomString)
     verifyNoMoreInteractions(unsplashClientFactory)
+    `should verify io scheduler call`()
   }
 
   @Test fun `should return unable to resolve host exception on getPictures call failure`() {
@@ -203,6 +214,7 @@ class WallrDataRepositoryTest {
 
     verify(unsplashClientFactory).getPicturesService(randomString)
     verifyNoMoreInteractions(unsplashClientFactory)
+    `should verify io scheduler call`()
   }
 
   @Test fun `should return mapped search pictures model list on getPictures call failure`() {
@@ -222,6 +234,7 @@ class WallrDataRepositoryTest {
     assertTrue(searchPicturesModelList[0] == searchPicturesResult)
     verify(unsplashClientFactory).getPicturesService(randomString)
     verifyNoMoreInteractions(unsplashClientFactory)
+    `should verify io scheduler call`()
   }
 
   @Test fun `should return explore node reference on getNodeReference call`() {
@@ -291,6 +304,7 @@ class WallrDataRepositoryTest {
     verify(imageHandler).isImageCached(randomString)
     verify(imageHandler).getImageBitmap()
     verifyNoMoreInteractions(imageHandler)
+    `should verify io scheduler call`()
   }
 
   @Test
@@ -310,6 +324,7 @@ class WallrDataRepositoryTest {
     verify(imageHandler).fetchImage(randomString)
     verify(imageHandler).isImageCached(randomString)
     verifyNoMoreInteractions(imageHandler)
+    `should verify io scheduler call`()
   }
 
   @Test
@@ -331,6 +346,7 @@ class WallrDataRepositoryTest {
     verify(imageHandler).isImageCached(randomString)
     verify(imageHandler).getImageBitmap()
     verifyNoMoreInteractions(imageHandler)
+    `should verify io scheduler call`()
   }
 
   @Test fun `should return Single of bitmap on getCacheImageBitmap call success`() {
@@ -339,6 +355,22 @@ class WallrDataRepositoryTest {
     wallrDataRepository.getCacheImageBitmap().test().assertValue(mockBitmap)
 
     verify(imageHandler).getImageBitmap()
+    verifyNoMoreInteractions(imageHandler)
+    `should verify computation scheduler call`()
+  }
+
+  @Test fun `should complete on clearImageCaches call success`() {
+    `when`(imageHandler.clearImageCache()).thenReturn(Completable.complete())
+
+    wallrDataRepository.clearImageCaches().test().assertComplete()
+
+    `should verify computation scheduler call`()
+  }
+
+  @Test fun `should invoke cancelImageFetching on cancelImageBitmapFetchOperation call success`() {
+    wallrDataRepository.cancelImageBitmapFetchOperation()
+
+    verify(imageHandler).cancelFetchingImage()
     verifyNoMoreInteractions(imageHandler)
   }
 
@@ -370,6 +402,7 @@ class WallrDataRepositoryTest {
 
     verify(imageHandler).convertUriToBitmap(mockUri)
     verifyNoMoreInteractions(imageHandler)
+    `should verify computation scheduler call`()
   }
 
   @Test fun `should complete successfully on downloadImage call success`() {
@@ -379,6 +412,7 @@ class WallrDataRepositoryTest {
 
     verify(downloadHelper).downloadImage(randomString)
     verifyNoMoreInteractions(downloadHelper)
+    `should verify io scheduler call`()
   }
 
   @Test fun `should return true on checkIfDownloadIsInProgress call success`() {
@@ -399,6 +433,7 @@ class WallrDataRepositoryTest {
     assertEquals(mockBitmap, result.second)
     verify(imageHandler).convertImageInCacheToLowpoly()
     verifyNoMoreInteractions(imageHandler)
+    `should verify computation scheduler call`()
   }
 
   @Test fun `should complete on saveCrystallizedImageToDownloads call success`() {
@@ -408,6 +443,7 @@ class WallrDataRepositoryTest {
 
     verify(imageHandler).saveLowPolyImageToDownloads()
     verifyNoMoreInteractions(imageHandler)
+    `should verify computation scheduler call`()
   }
 
   @Test fun `should return false on isCrystallizeDescriptionShown call success`() {
@@ -454,6 +490,16 @@ class WallrDataRepositoryTest {
         databaseReference)
     `when`(firebaseDatabaseHelper.getDatabase().getReference(firebaseDatabasePath)
         .child(childPath)).thenReturn(databaseReference)
+  }
+
+  private fun `should verify io scheduler call`() {
+    verify(executionThread).ioScheduler
+    verifyNoMoreInteractions(executionThread)
+  }
+
+  private fun `should verify computation scheduler call`() {
+    verify(executionThread).computationScheduler
+    verifyNoMoreInteractions(executionThread)
   }
 
 }

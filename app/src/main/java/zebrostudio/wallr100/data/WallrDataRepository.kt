@@ -170,9 +170,7 @@ class WallrDataRepository(
 
   override fun getImageBitmap(link: String): Observable<ImageDownloadModel> {
     if (!fileHandler.freeSpaceAvailable()) {
-      val observable: Observable<ImageDownloadModel> =
-          Observable.error(NotEnoughFreeSpaceException())
-      return observable.subscribeOn(executionThread.ioScheduler)
+      return Observable.error(NotEnoughFreeSpaceException())
     }
     if (imageHandler.isImageCached(link)) {
       val observable: Observable<ImageDownloadModel> = Observable.create {
@@ -194,8 +192,8 @@ class WallrDataRepository(
   }
 
   override fun getCacheImageBitmap(): Single<Bitmap> {
-    return Single.just(imageHandler.getImageBitmap())
-        .subscribeOn(executionThread.computationScheduler)
+    val single: Single<Bitmap> = Single.create { it.onSuccess(imageHandler.getImageBitmap()) }
+    return single.subscribeOn(executionThread.computationScheduler)
   }
 
   override fun getShortImageLink(link: String): Single<String> {
@@ -220,7 +218,7 @@ class WallrDataRepository(
 
   override fun getBitmapFromUri(uri: Uri): Single<Bitmap> {
     return imageHandler.convertUriToBitmap(uri)
-        .subscribeOn(executionThread.ioScheduler)
+        .subscribeOn(executionThread.computationScheduler)
   }
 
   override fun downloadImage(link: String): Completable {
