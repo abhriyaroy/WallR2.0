@@ -131,7 +131,8 @@ class AppModule {
     urlShortener: URLShortener,
     imageHandler: ImageHandler,
     fileHandler: FileHandler,
-    downloadHelper: DownloadHelper
+    downloadHelper: DownloadHelper,
+    executionThread: ExecutionThread
   ): WallrRepository = WallrDataRepository(retrofitFirebaseAuthFactory,
       unsplashClientFactory,
       sharedPrefsHelper,
@@ -141,7 +142,8 @@ class AppModule {
       urlShortener,
       imageHandler,
       fileHandler,
-      downloadHelper)
+      downloadHelper,
+      executionThread)
 
   @Provides
   @PerApplication

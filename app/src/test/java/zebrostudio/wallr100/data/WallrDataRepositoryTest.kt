@@ -33,6 +33,7 @@ import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
+import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.util.UUID.randomUUID
 
@@ -41,6 +42,7 @@ class WallrDataRepositoryTest {
 
   @get:Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
 
+  @Mock lateinit var executionThread: ExecutionThread
   @Mock lateinit var sharedPrefs: SharedPrefsHelper
   @Mock lateinit var remoteAuthServiceFactory: RemoteAuthServiceFactory
   @Mock lateinit var unsplashClientFactory: UnsplashClientFactory
@@ -88,7 +90,7 @@ class WallrDataRepositoryTest {
     wallrDataRepository =
         WallrDataRepository(remoteAuthServiceFactory, unsplashClientFactory, sharedPrefs,
             unsplashPictureEntityMapper, firebaseDatabaseHelper, firebasePictureEntityMapper,
-            urlShortener, imageHandler, fileHandler, downloadHelper)
+            urlShortener, imageHandler, fileHandler, downloadHelper, executionThread)
   }
 
   @Test fun `should return single on server success response`() {
@@ -439,7 +441,7 @@ class WallrDataRepositoryTest {
 
     wallrDataRepository.getPicturesFromFirebase(databaseReference).subscribeOn(testScheduler)
         .subscribe(testObserver)
-    testScheduler.advanceTimeBy(firebaseTimeoutDuration.toLong(), TimeUnit.SECONDS)
+    testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
     verify(firebaseDatabaseHelper).fetch(databaseReference)

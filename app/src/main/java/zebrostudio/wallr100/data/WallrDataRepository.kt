@@ -20,46 +20,50 @@ import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.firebasedatabase.FirebaseImageEntity
 import zebrostudio.wallr100.domain.WallrRepository
+import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
 import java.util.concurrent.TimeUnit.SECONDS
 
-class WallrDataRepository(
-  private var retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
-  private var unsplashClientFactory: UnsplashClientFactory,
-  private var sharedPrefsHelper: SharedPrefsHelper,
-  private var unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
-  private var firebaseDatabaseHelper: FirebaseDatabaseHelper,
-  private var firebasePictureEntityMapper: FirebasePictureEntityMapper,
-  private var urlShortener: URLShortener,
-  private var imageHandler: ImageHandler,
-  private val fileHandler: FileHandler,
-  private val downloadHelper: DownloadHelper
-) : WallrRepository {
+const val SUCCESS_STATUS = "success"
+const val ERROR_STATUS = "error"
+const val PURCHASE_PREFERENCE_NAME = "PURCHASE_PREF"
+const val PREMIUM_USER_TAG = "premium_user"
+const val IMAGE_PREFERENCE_NAME = "IMAGE_PREF"
+const val CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG = "crystallize_click_dialog"
+const val UNABLE_TO_RESOLVE_HOST_EXCEPTION_MESSAGE = "Unable to resolve host " +
+    "\"api.unsplash.com\": No address associated with hostname"
+const val FIREBASE_DATABASE_PATH = "wallr"
+const val CHILD_PATH_EXPLORE = "explore"
+const val CHILD_PATH_CATEGORIES = "categories"
+const val CHILD_PATH_TOP_PICKS = "collections"
+const val CHILD_PATH_RECENT = "recent"
+const val CHILD_PATH_POPULAR = "popular"
+const val CHILD_PATH_STANDOUT = "standout"
+const val CHILD_PATH_BUILDING = "building"
+const val CHILD_PATH_FOOD = "food"
+const val CHILD_PATH_NATURE = "nature"
+const val CHILD_PATH_OBJECT = "object"
+const val CHILD_PATH_PEOPLE = "people"
+const val CHILD_PATH_TECHNOLOGY = "technology"
+const val FIREBASE_TIMEOUT_DURATION = 15
+const val IMAGE_DOWNLOAD_FINISHED_VALUE: Long = 100
+const val IMAGE_DOWNLOAD_PROGRESS_VALUE_99: Long = 99
 
-  private val purchasePreferenceName = "PURCHASE_PREF"
-  private val premiumUserTag = "premium_user"
-  private val imagePreferenceName = "IMAGE_PREF"
-  private val crystallizeHintDialogShownBeforeTag = "crystallize_click_dialog"
-  private val unableToResolveHostExceptionMessage = "Unable to resolve host " +
-      "\"api.unsplash.com\": No address associated with hostname"
-  private val firebaseDatabasePath = "wallr"
-  private val childPathExplore = "explore"
-  private val childPathCategories = "categories"
-  private val childPathTopPicks = "collections"
-  private val childPathRecent = "recent"
-  private val childPathPopular = "popular"
-  private val childPathStandout = "standout"
-  private val childPathBuilding = "building"
-  private val childPathFood = "food"
-  private val childPathNature = "nature"
-  private val childPathObject = "object"
-  private val childPathPeople = "people"
-  private val childPathTechnology = "technology"
-  private val firebaseTimeoutDuration = 15
-  private val imageDownloadProgressFinished: Long = 100
-  private val imageDownloadProgressUpTo99: Long = 99
+class WallrDataRepository(
+  private val retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
+  private val unsplashClientFactory: UnsplashClientFactory,
+  private val sharedPrefsHelper: SharedPrefsHelper,
+  private val unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
+  private val firebaseDatabaseHelper: FirebaseDatabaseHelper,
+  private val firebasePictureEntityMapper: FirebasePictureEntityMapper,
+  private val urlShortener: URLShortener,
+  private val imageHandler: ImageHandler,
+  private val fileHandler: FileHandler,
+  private val downloadHelper: DownloadHelper,
+  private val executionThread: ExecutionThread
+) : WallrRepository {
 
   override fun authenticatePurchase(
     packageName: String,
@@ -68,10 +72,11 @@ class WallrDataRepository(
   ): Completable {
     return Completable.fromSingle(retrofitFirebaseAuthFactory.verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(packageName, skuId, purchaseToken))
+        .subscribeOn(executionThread.ioScheduler)
         .flatMap {
-          if (it.status == "success") {
+          if (it.status == SUCCESS_STATUS) {
             Single.just(true)
-          } else if (it.status == "error" && (it.errorCode == 404 || it.errorCode == 403)) {
+          } else if (it.status == ERROR_STATUS && (it.errorCode == 404 || it.errorCode == 403)) {
             Single.error(InvalidPurchaseException())
           } else {
             Single.error(UnableToVerifyPurchaseException())
@@ -79,14 +84,15 @@ class WallrDataRepository(
         })
   }
 
-  override fun updateUserPurchaseStatus() = sharedPrefsHelper.setBoolean(purchasePreferenceName,
-      premiumUserTag, true)
+  override fun updateUserPurchaseStatus() = sharedPrefsHelper.setBoolean(PURCHASE_PREFERENCE_NAME,
+      PREMIUM_USER_TAG, true)
 
-  override fun isUserPremium() = sharedPrefsHelper.getBoolean(purchasePreferenceName,
-      premiumUserTag, false)
+  override fun isUserPremium() = sharedPrefsHelper.getBoolean(PURCHASE_PREFERENCE_NAME,
+      PREMIUM_USER_TAG, false)
 
   override fun getSearchPictures(query: String): Single<List<SearchPicturesModel>> {
     return unsplashClientFactory.getPicturesService(query)
+        .subscribeOn(executionThread.ioScheduler)
         .flatMap {
           if (it.isEmpty()) {
             Single.error(NoResultFoundException())
@@ -96,7 +102,7 @@ class WallrDataRepository(
           }
         }
         .onErrorResumeNext {
-          if (it.message != null && it.message == unableToResolveHostExceptionMessage) {
+          if (it.message != null && it.message == UNABLE_TO_RESOLVE_HOST_EXCEPTION_MESSAGE) {
             Single.error(UnableToResolveHostException())
           } else {
             Single.error(it)
@@ -106,68 +112,80 @@ class WallrDataRepository(
 
   override fun getExplorePictures(): Single<List<ImageModel>> {
     return getPicturesFromFirebase(getExploreNodeReference())
+        .subscribeOn(executionThread.ioScheduler)
   }
 
   override fun getRecentPictures(): Single<List<ImageModel>> {
     return getPicturesFromFirebase(getTopPicksNodeReference()
-        .child(childPathRecent))
+        .child(CHILD_PATH_RECENT))
+        .subscribeOn(executionThread.ioScheduler)
   }
 
   override fun getPopularPictures(): Single<List<ImageModel>> {
     return getPicturesFromFirebase(getTopPicksNodeReference()
-        .child(childPathPopular))
+        .child(CHILD_PATH_POPULAR))
+        .subscribeOn(executionThread.ioScheduler)
   }
 
   override fun getStandoutPictures(): Single<List<ImageModel>> {
     return getPicturesFromFirebase(getTopPicksNodeReference()
-        .child(childPathStandout))
+        .child(CHILD_PATH_STANDOUT))
+        .subscribeOn(executionThread.ioScheduler)
   }
 
   override fun getBuildingsPictures(): Single<List<ImageModel>> {
     return getPicturesFromFirebase(getCategoriesNodeReference()
-        .child(childPathBuilding))
+        .child(CHILD_PATH_BUILDING))
+        .subscribeOn(executionThread.ioScheduler)
   }
 
   override fun getFoodPictures(): Single<List<ImageModel>> {
     return getPicturesFromFirebase(getCategoriesNodeReference()
-        .child(childPathFood))
+        .child(CHILD_PATH_FOOD))
+        .subscribeOn(executionThread.ioScheduler)
   }
 
   override fun getNaturePictures(): Single<List<ImageModel>> {
     return getPicturesFromFirebase(getCategoriesNodeReference()
-        .child(childPathNature))
+        .child(CHILD_PATH_NATURE))
   }
 
   override fun getObjectsPictures(): Single<List<ImageModel>> {
     return getPicturesFromFirebase(getCategoriesNodeReference()
-        .child(childPathObject))
+        .child(CHILD_PATH_OBJECT))
+        .subscribeOn(executionThread.ioScheduler)
   }
 
   override fun getPeoplePictures(): Single<List<ImageModel>> {
     return getPicturesFromFirebase(getCategoriesNodeReference()
-        .child(childPathPeople))
+        .child(CHILD_PATH_PEOPLE))
+        .subscribeOn(executionThread.ioScheduler)
   }
 
   override fun getTechnologyPictures(): Single<List<ImageModel>> {
     return getPicturesFromFirebase(getCategoriesNodeReference()
-        .child(childPathTechnology))
+        .child(CHILD_PATH_TECHNOLOGY))
+        .subscribeOn(executionThread.ioScheduler)
   }
 
   override fun getImageBitmap(link: String): Observable<ImageDownloadModel> {
     if (!fileHandler.freeSpaceAvailable()) {
-      return Observable.error(NotEnoughFreeSpaceException())
+      val observable: Observable<ImageDownloadModel> =
+          Observable.error(NotEnoughFreeSpaceException())
+      return observable.subscribeOn(executionThread.ioScheduler)
     }
     if (imageHandler.isImageCached(link)) {
-      return Observable.create {
-        it.onNext(ImageDownloadModel(imageDownloadProgressUpTo99, null))
-        it.onNext(ImageDownloadModel(imageDownloadProgressFinished, imageHandler.getImageBitmap()))
+      val observable: Observable<ImageDownloadModel> = Observable.create {
+        it.onNext(ImageDownloadModel(IMAGE_DOWNLOAD_PROGRESS_VALUE_99, null))
+        it.onNext(ImageDownloadModel(IMAGE_DOWNLOAD_FINISHED_VALUE, imageHandler.getImageBitmap()))
         it.onComplete()
       }
-
+      return observable.subscribeOn(executionThread.ioScheduler)
     }
     return imageHandler.fetchImage(link)
+        .subscribeOn(executionThread.ioScheduler)
         .flatMap {
-          if (it == imageDownloadProgressFinished) {
+          if (it == IMAGE_DOWNLOAD_FINISHED_VALUE) {
             Observable.just(ImageDownloadModel(it, imageHandler.getImageBitmap()))
           } else {
             Observable.just(ImageDownloadModel(it, null))
@@ -176,19 +194,20 @@ class WallrDataRepository(
   }
 
   override fun getCacheImageBitmap(): Single<Bitmap> {
-    return Single.create {
-      it.onSuccess(imageHandler.getImageBitmap())
-    }
+    return Single.just(imageHandler.getImageBitmap())
+        .subscribeOn(executionThread.computationScheduler)
   }
 
   override fun getShortImageLink(link: String): Single<String> {
-    return Single.create {
+    val single: Single<String> = Single.create {
       it.onSuccess(urlShortener.shortUrl(link))
     }
+    return single.subscribeOn(executionThread.ioScheduler)
   }
 
   override fun clearImageCaches(): Completable {
     return imageHandler.clearImageCache()
+        .subscribeOn(executionThread.computationScheduler)
   }
 
   override fun cancelImageBitmapFetchOperation() {
@@ -201,14 +220,18 @@ class WallrDataRepository(
 
   override fun getBitmapFromUri(uri: Uri): Single<Bitmap> {
     return imageHandler.convertUriToBitmap(uri)
+        .subscribeOn(executionThread.ioScheduler)
   }
 
   override fun downloadImage(link: String): Completable {
     return downloadHelper.downloadImage(link)
+        .subscribeOn(executionThread.ioScheduler)
+
   }
 
   override fun crystallizeImage(): Single<Pair<Boolean, Bitmap>> {
     return imageHandler.convertImageInCacheToLowpoly()
+        .subscribeOn(executionThread.computationScheduler)
         .map {
           Pair(true, it)
         }
@@ -216,14 +239,17 @@ class WallrDataRepository(
 
   override fun saveCrystallizedImageToDownloads(): Completable {
     return imageHandler.saveLowPolyImageToDownloads()
+        .subscribeOn(executionThread.computationScheduler)
   }
 
   override fun isCrystallizeDescriptionShown(): Boolean {
-    return sharedPrefsHelper.getBoolean(imagePreferenceName, crystallizeHintDialogShownBeforeTag)
+    return sharedPrefsHelper.getBoolean(IMAGE_PREFERENCE_NAME,
+        CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG)
   }
 
   override fun rememberCrystallizeDescriptionShown() {
-    sharedPrefsHelper.setBoolean(imagePreferenceName, crystallizeHintDialogShownBeforeTag, true)
+    sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME, CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG,
+        true)
   }
 
   override fun checkIfDownloadIsInProgress(link: String): Boolean {
@@ -231,16 +257,16 @@ class WallrDataRepository(
   }
 
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()
-      .getReference(firebaseDatabasePath)
-      .child(childPathExplore)
+      .getReference(FIREBASE_DATABASE_PATH)
+      .child(CHILD_PATH_EXPLORE)
 
   internal fun getTopPicksNodeReference() = firebaseDatabaseHelper.getDatabase()
-      .getReference(firebaseDatabasePath)
-      .child(childPathTopPicks)
+      .getReference(FIREBASE_DATABASE_PATH)
+      .child(CHILD_PATH_TOP_PICKS)
 
   internal fun getCategoriesNodeReference() = firebaseDatabaseHelper.getDatabase()
-      .getReference(firebaseDatabasePath)
-      .child(childPathCategories)
+      .getReference(FIREBASE_DATABASE_PATH)
+      .child(CHILD_PATH_CATEGORIES)
 
   internal fun getPicturesFromFirebase(firebaseDatabaseReference: DatabaseReference): Single<List<ImageModel>> {
     val imageList = mutableListOf<FirebaseImageEntity>()
@@ -254,7 +280,7 @@ class WallrDataRepository(
           val image = firebasePictureEntityMapper.mapFromEntity(imageList)
           Single.just(image)
         }
-        .timeout(firebaseTimeoutDuration.toLong(), SECONDS)
+        .timeout(FIREBASE_TIMEOUT_DURATION.toLong(), SECONDS)
   }
 
 }

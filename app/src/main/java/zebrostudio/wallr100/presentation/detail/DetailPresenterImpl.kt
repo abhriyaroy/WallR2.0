@@ -171,6 +171,7 @@ class DetailPresenterImpl(
               detailView?.hideWaitLoader()
               detailView?.shareLink(it)
             }, {
+              System.out.println(it.printStackTrace())
               detailView?.hideWaitLoader()
               detailView?.showGenericErrorMessage()
             })

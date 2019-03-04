@@ -33,17 +33,14 @@ class ImageOptionsInteractor(
 
   override fun fetchImageBitmapObservable(link: String): Observable<ImageDownloadModel> {
     return wallrRepository.getImageBitmap(link)
-        .subscribeOn(Schedulers.io())
   }
 
   override fun getImageShareableLinkSingle(link: String): Single<String> {
     return wallrRepository.getShortImageLink(link)
-        .subscribeOn(Schedulers.io())
   }
 
   override fun clearCachesCompletable(): Completable {
     return wallrRepository.clearImageCaches()
-        .subscribeOn(Schedulers.io())
   }
 
   override fun cancelFetchImageOperation() {
@@ -56,27 +53,22 @@ class ImageOptionsInteractor(
 
   override fun getEditedImageSingle(): Single<Bitmap> {
     return wallrRepository.getCacheImageBitmap()
-        .subscribeOn(Schedulers.computation())
   }
 
   override fun getBitmapFromUriSingle(imageUri: Uri): Single<Bitmap> {
     return wallrRepository.getBitmapFromUri(imageUri)
-        .subscribeOn(Schedulers.io())
   }
 
   override fun crystallizeImageSingle(): Single<Pair<Boolean, Bitmap>> {
     return wallrRepository.crystallizeImage()
-        .subscribeOn(Schedulers.computation())
   }
 
   override fun downloadImageCompletable(link: String): Completable {
     return wallrRepository.downloadImage(link)
-        .subscribeOn(Schedulers.io())
   }
 
   override fun downloadCrystallizedImageCompletable(): Completable {
     return wallrRepository.saveCrystallizedImageToDownloads()
-        .subscribeOn(Schedulers.io())
   }
 
   override fun isDownloadInProgress(link: String): Boolean {
@@ -93,6 +85,5 @@ class ImageOptionsInteractor(
 
   override fun getCrystallizedImageSingle(): Single<Bitmap> {
     return wallrRepository.getCacheImageBitmap()
-        .subscribeOn(Schedulers.io())
   }
 }
