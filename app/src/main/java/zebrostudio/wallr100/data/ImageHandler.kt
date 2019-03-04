@@ -2,12 +2,15 @@ package zebrostudio.wallr100.data
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Bitmap.CompressFormat.JPEG
 import android.graphics.BitmapFactory
 import android.net.Uri
 import com.zebrostudio.wallrcustoms.lowpoly.LowPoly
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import zebrostudio.wallr100.android.utils.compressBitmap
+import zebrostudio.wallr100.android.utils.writeInputStreamUsingByteArray
 import zebrostudio.wallr100.data.exception.ImageDownloadException
 import java.io.FileOutputStream
 import java.io.IOException
@@ -117,11 +120,8 @@ class ImageHandlerImpl(
 
   override fun getImageUri(): Uri {
     return getImageBitmap().let { bitmap ->
-      fileHandler.getCacheFile().outputStream().apply {
-        bitmap.compress(Bitmap.CompressFormat.JPEG, BITMAP_COMPRESS_QUALITY, this)
-        flush()
-        close()
-      }
+      fileHandler.getCacheFile().outputStream()
+          .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
       Uri.fromFile(fileHandler.getCacheFile())
     }
   }
@@ -130,13 +130,10 @@ class ImageHandlerImpl(
     return Single.create {
       with(context.contentResolver.openFileDescriptor(uri, READ_MODE)) {
         BitmapFactory.decodeFileDescriptor(fileDescriptor).let { bitmap ->
-          close()
-          fileHandler.getCacheFile().outputStream().apply {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, BITMAP_COMPRESS_QUALITY, this)
-            flush()
-            close()
-            it.onSuccess(bitmap)
-          }
+          this?.close()
+          fileHandler.getCacheFile().outputStream()
+              .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
+          it.onSuccess(bitmap)
         }
       }
     }
@@ -145,11 +142,8 @@ class ImageHandlerImpl(
   override fun convertImageInCacheToLowpoly(): Single<Bitmap> {
     return Single.create {
       LowPoly.generate(getImageBitmap()).let { bitmap ->
-        fileHandler.getCacheFile().outputStream().apply {
-          bitmap.compress(Bitmap.CompressFormat.JPEG, BITMAP_COMPRESS_QUALITY, this)
-          flush()
-          close()
-        }
+        fileHandler.getCacheFile().outputStream()
+            .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
         it.onSuccess(bitmap)
       }
     }
@@ -158,18 +152,9 @@ class ImageHandlerImpl(
   override fun saveLowPolyImageToDownloads(): Completable {
     return Completable.create {
       fileHandler.getCacheFile().inputStream().let { inputStream ->
-        fileHandler.getDownloadFile().outputStream().let { outputStream ->
-          ByteArray(LOWPOLY_BYTE_ARRAY_SIZE).apply {
-            var length = inputStream.read(this)
-            while (length > INITIAL_SIZE) {
-              outputStream.write(this, INITIAL_SIZE, length)
-              length = inputStream.read(this)
-            }
-            it.onComplete()
-          }
-          outputStream.flush()
-          outputStream.close()
-        }
+        fileHandler.getDownloadFile().outputStream()
+            .writeInputStreamUsingByteArray(inputStream, LOWPOLY_BYTE_ARRAY_SIZE)
+        it.onComplete()
         inputStream.close()
       }
     }
