@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Bundle
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -29,6 +30,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
+import zebrostudio.wallr100.android.ui.detail.DetailActivity
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
@@ -60,6 +62,7 @@ class DetailPresenterImplTest {
   @Mock private lateinit var postExecutionThread: PostExecutionThread
   @Mock private lateinit var mockUri: Uri
   @Mock private lateinit var mockIntent: Intent
+  @Mock private lateinit var mockBundle: Bundle
   private lateinit var detailPresenterImpl: DetailPresenterImpl
   private lateinit var testScopeProvider: TestLifecycleScopeProvider
   private val downloadProgressCompletedValue: Long = 100
@@ -82,14 +85,17 @@ class DetailPresenterImplTest {
     stubPostExecutionThreadReturnsIoScheduler()
   }
 
- /* @Test
+  @Test
   fun `should show search image details on setImageType as search call`() {
     val searchImagePresenterEntity =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(mockIntent.extras).thenReturn(mockBundle)
+    `when`(mockIntent.extras!!.getInt(DetailActivity.IMAGE_TYPE_TAG)).thenReturn(SEARCH.ordinal)
     `when`(detailView.getSearchImageDetails()).thenReturn(searchImagePresenterEntity)
 
-    detailPresenterImpl.setImageType(SEARCH)
+    detailPresenterImpl.setCalledIntent(mockIntent)
 
+    assertEquals(SEARCH, detailPresenterImpl.imageType)
     verify(detailView).getSearchImageDetails()
     verify(detailView).showAuthorDetails(searchImagePresenterEntity.userPresenterEntity.name,
         searchImagePresenterEntity.userPresenterEntity.profileImageLink)
@@ -100,19 +106,22 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show wallpaper image details on setImageType as wallpaper call`() {
+  fun `should show wallpaper image details on setIMAGE_TYPE_TAG as wallpaper call`() {
     val imagePresenterEntity = ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(mockIntent.extras).thenReturn(mockBundle)
+    `when`(mockIntent.extras!!.getInt(DetailActivity.IMAGE_TYPE_TAG)).thenReturn(WALLPAPERS.ordinal)
     `when`(detailView.getWallpaperImageDetails()).thenReturn(imagePresenterEntity)
 
-    detailPresenterImpl.setImageType(WALLPAPERS)
+    detailPresenterImpl.setCalledIntent(mockIntent)
 
+    assertEquals(WALLPAPERS, detailPresenterImpl.imageType)
     verify(detailView).getWallpaperImageDetails()
     verify(detailView).showAuthorDetails(imagePresenterEntity.author.name,
         imagePresenterEntity.author.profileImageLink)
     verify(detailView).showImage(imagePresenterEntity.imageLink.thumb,
         imagePresenterEntity.imageLink.large)
     verifyNoMoreInteractions(detailView)
-  }*/
+  }
 
   @Test fun `should show error toast on high quality image loading failure`() {
     detailPresenterImpl.handleHighQualityImageLoadFailed()

@@ -112,11 +112,11 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun getWallpaperImageDetails(): ImagePresenterEntity {
-    return intent.extras!!.getSerializable(imageDetails) as ImagePresenterEntity
+    return intent.extras!!.getSerializable(IMAGE_DETAILS_TAG) as ImagePresenterEntity
   }
 
   override fun getSearchImageDetails(): SearchPicturesPresenterEntity {
-    return intent.extras!!.getSerializable(imageDetails) as SearchPicturesPresenterEntity
+    return intent.extras!!.getSerializable(IMAGE_DETAILS_TAG) as SearchPicturesPresenterEntity
   }
 
   override fun showAuthorDetails(name: String, profileImageLink: String) {
@@ -499,8 +499,8 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   companion object {
-    var imageDetails = "ImageDetails"
-    var imageType = "ImageType"
+    const val IMAGE_DETAILS_TAG = "ImageDetails"
+    const val IMAGE_TYPE_TAG = "ImageType"
 
     fun getCallingIntent(
       context: Context,
@@ -508,8 +508,8 @@ class DetailActivity : BaseActivity(), DetailView {
     ): Intent {
       return Intent(context, DetailActivity::class.java).apply {
         putExtras(Bundle().apply {
-          putExtra(imageDetails, searchPicturesPresenterEntity)
-          putExtra(imageType, SEARCH)
+          putInt(IMAGE_TYPE_TAG, SEARCH.ordinal)
+          putExtra(IMAGE_DETAILS_TAG, searchPicturesPresenterEntity)
         })
       }
     }
@@ -520,8 +520,8 @@ class DetailActivity : BaseActivity(), DetailView {
     ): Intent {
       return Intent(context, DetailActivity::class.java).apply {
         putExtras(Bundle().apply {
-          putExtra(imageDetails, imagePresenterEntity)
-          putExtra(imageType, WALLPAPERS)
+          putInt(IMAGE_TYPE_TAG, WALLPAPERS.ordinal)
+          putExtra(IMAGE_DETAILS_TAG, imagePresenterEntity)
         })
       }
     }

@@ -22,6 +22,7 @@ import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
 import zebrostudio.wallr100.presentation.detail.ActionType.ADD_TO_COLLECTION
 import zebrostudio.wallr100.presentation.detail.ActionType.CRYSTALLIZE
 import zebrostudio.wallr100.presentation.detail.ActionType.DOWNLOAD
@@ -66,7 +67,7 @@ class DetailPresenterImpl(
 
   override fun setCalledIntent(intent: Intent) {
     if (intent.extras != null) {
-      setImageType(intent.extras!!.getSerializable(DetailActivity.imageType) as ImageListType)
+      setImageType(intent.extras!!.getInt(DetailActivity.IMAGE_TYPE_TAG))
     } else {
       detailView?.throwIllegalStateException()
     }
@@ -341,11 +342,12 @@ class DetailPresenterImpl(
     isSlidingPanelExpanded = false
   }
 
-  private fun setImageType(imageType: ImageListType) {
-    this.imageType = imageType
-    if (imageType == SEARCH) {
+  private fun setImageType(imageTypeOrdinal: Int) {
+    if (imageTypeOrdinal == SEARCH.ordinal) {
+      imageType = SEARCH
       searchImage = detailView?.getSearchImageDetails()!!
     } else {
+      imageType = WALLPAPERS
       wallpaperImage = detailView?.getWallpaperImageDetails()!!
     }
     decorateView()
