@@ -15,6 +15,5 @@ class SearchPicturesInteractor(
 
   override fun buildUseCaseSingle(query: String): Single<List<SearchPicturesModel>> {
     return wallrRepository.getSearchPictures(query)
-        .subscribeOn(Schedulers.io())
   }
 }

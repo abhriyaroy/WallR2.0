@@ -4,7 +4,7 @@
     android:id="@+id/rootLinearLayoutGuillotineMenu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_guillotine_menu_background"
+    android:background="@color/guillotine_menu_background"
     android:orientation="vertical"
     android:clickable="true">
 

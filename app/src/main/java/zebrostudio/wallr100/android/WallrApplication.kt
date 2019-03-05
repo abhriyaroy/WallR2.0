@@ -16,6 +16,11 @@ class WallrApplication : Application(), HasActivityInjector {
   @Inject
   internal lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
 
+  override fun attachBaseContext(base: Context) {
+    super.attachBaseContext(base)
+    MultiDex.install(this)
+  }
+
   override fun onCreate() {
     super.onCreate()
     DaggerAppComponent.builder()
@@ -23,11 +28,6 @@ class WallrApplication : Application(), HasActivityInjector {
         .build()
         .inject(this)
     ViewTarget.setTagId(R.id.glide_tag)
-  }
-
-  override fun attachBaseContext(base: Context) {
-    super.attachBaseContext(base)
-    MultiDex.install(this)
   }
 
   override fun activityInjector() = activityDispatchingAndroidInjector

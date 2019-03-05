@@ -8,6 +8,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -124,7 +125,7 @@ class ImageOptionsUseCaseTest {
     verifyNoMoreInteractions(wallrRepository)
   }
 
-  @Test fun `should return true on downloadCrystallizedImageCompletable call success`() {
+  @Test fun `should return true on isDownloadInProgress call success`() {
     `when`(wallrRepository.checkIfDownloadIsInProgress(randomString)).thenReturn(true)
 
     assertTrue(imageOptionsUseCase.isDownloadInProgress(randomString))
@@ -133,4 +134,38 @@ class ImageOptionsUseCaseTest {
     verifyNoMoreInteractions(wallrRepository)
   }
 
+  @Test fun `should return false on isCrystallizeDescriptionDialogShown call success`() {
+    `when`(wallrRepository.isCrystallizeDescriptionShown()).thenReturn(false)
+
+    assertFalse(imageOptionsUseCase.isCrystallizeDescriptionDialogShown())
+
+    verify(wallrRepository).isCrystallizeDescriptionShown()
+    verifyNoMoreInteractions(wallrRepository)
+  }
+
+  @Test
+  fun `should invoke rememberCrystallizeDescriptionShown on setCrystallizeDescriptionShownOnce call success`() {
+    imageOptionsUseCase.setCrystallizeDescriptionShownOnce()
+
+    verify(wallrRepository).rememberCrystallizeDescriptionShown()
+    verifyNoMoreInteractions(wallrRepository)
+  }
+
+  @Test fun `should return Single of bitmap on getCrystallizedBitmapSingle call success`() {
+    `when`(wallrRepository.getCacheImageBitmap()).thenReturn(Single.just(mockBitmap))
+
+    imageOptionsUseCase.getCrystallizedImageSingle().test().assertValue(mockBitmap)
+
+    verify(wallrRepository).getCacheImageBitmap()
+    verifyNoMoreInteractions(wallrRepository)
+  }
+
+  @Test fun `should return Single of bitmap on getEditedImageSingle call success`() {
+    `when`(wallrRepository.getCacheImageBitmap()).thenReturn(Single.just(mockBitmap))
+
+    imageOptionsUseCase.getEditedImageSingle().test().assertValue(mockBitmap)
+
+    verify(wallrRepository).getCacheImageBitmap()
+    verifyNoMoreInteractions(wallrRepository)
+  }
 }

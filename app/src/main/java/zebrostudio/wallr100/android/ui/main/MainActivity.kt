@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
 
   override fun getFragmentTagAtStackTop(): String {
     return supportFragmentManager
-        .getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name
+        .getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name!!
   }
 
   override fun getExploreFragmentTag(): String {
@@ -214,9 +214,9 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
       }
       // Make the background white and text color black for the buy pro guillotine menu item
       if (!itemIterator.hasNext()) {
-        guillotineMenuItemView.setBackgroundColor(colorRes(R.color.color_white))
+        guillotineMenuItemView.setBackgroundColor(colorRes(R.color.white))
         guillotineMenuItemView.textviewGuillotineMenuItem
-            .setTextColor(colorRes(R.color.color_black))
+            .setTextColor(colorRes(R.color.black))
         if (!presenter.shouldShowPurchaseOption()) {
           guillotineMenuItemView.gone()
         }

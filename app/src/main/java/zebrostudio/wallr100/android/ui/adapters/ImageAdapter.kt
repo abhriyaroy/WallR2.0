@@ -13,13 +13,9 @@ import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.image_recyclerview_item.view.imageView
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.detail.DetailActivity
-import zebrostudio.wallr100.android.ui.detail.DetailActivity.Companion.imageDetails
-import zebrostudio.wallr100.android.ui.detail.DetailActivity.Companion.imageType
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 
@@ -72,17 +68,11 @@ class ViewHolder(
   }
 
   override fun showSearchImageDetails(searchImage: SearchPicturesPresenterEntity) {
-    val intent = DetailActivity.getCallingIntent(context)
-    intent.putExtra(imageDetails, searchImage)
-    intent.putExtra(imageType, SEARCH)
-    context.startActivity(intent)
+    context.startActivity(DetailActivity.getCallingIntent(context, searchImage))
   }
 
   override fun showWallpaperImageDetails(wallpaperImage: ImagePresenterEntity) {
-    val intent = DetailActivity.getCallingIntent(context)
-    intent.putExtra(imageDetails, wallpaperImage)
-    intent.putExtra(imageType, WALLPAPERS)
-    context.startActivity(intent)
+    context.startActivity(DetailActivity.getCallingIntent(context, wallpaperImage))
   }
 
   private fun loadAndShowImage(link: String, options: RequestOptions) {

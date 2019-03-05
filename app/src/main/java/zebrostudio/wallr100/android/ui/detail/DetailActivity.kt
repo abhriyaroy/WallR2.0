@@ -8,7 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.animation.Animation
@@ -49,13 +49,15 @@ import kotlinx.android.synthetic.main.activity_detail.wallpaperDownloadProgressP
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
+import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
+import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE
+import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.EDITED_BITMAP_CACHE
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.infoToast
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
 import zebrostudio.wallr100.presentation.detail.ActionType
@@ -65,24 +67,25 @@ import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEnt
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 import javax.inject.Inject
 
+const val SLIDING_PANEL_PARALLEL_OFFSET = 40
+const val INITIAL_LOADER_PROGRESS_VALUE = 0
+const val INITIAL_LOADER_PROGRESS_PERCENTAGE = "0%"
+const val BLUR_RADIUS: Float = 8F
+const val INITIAL_SELECTED_DOWNLOAD_OPTION = 0
+const val ILLEGAL_STATE_EXCEPTION_MESSAGE = "Activity is not invoked using getCallingIntent method"
+
 class DetailActivity : BaseActivity(), DetailView {
 
   @Inject lateinit var presenter: DetailPresenter
 
-  private val slidingPanelParallelOffset = 40
-  private val initialLoaderProgress = 0
-  private val initialLoaderProgressPercentage = "0%"
-  private val blurRadius: Float = 8F
-  private val initialSelectedDownloadOptionIndex = 0
   private var materialProgressLoader: MaterialDialog? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)
     super.onCreate(savedInstanceState)
-    presenter.attachView(this)
     setContentView(R.layout.activity_detail)
-    presenter.setImageType(
-        intent.getSerializableExtra(imageType) as ImageListType)
+    presenter.attachView(this)
+    presenter.setCalledIntent(intent)
     setUpExpandPanel()
     attachClickListeners()
     setUpBlurView()
@@ -104,12 +107,16 @@ class DetailActivity : BaseActivity(), DetailView {
     presenter.handleBackButtonClick()
   }
 
+  override fun throwIllegalStateException() {
+    throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
+  }
+
   override fun getWallpaperImageDetails(): ImagePresenterEntity {
-    return intent.getSerializableExtra(imageDetails) as ImagePresenterEntity
+    return intent.extras!!.getSerializable(IMAGE_DETAILS_TAG) as ImagePresenterEntity
   }
 
   override fun getSearchImageDetails(): SearchPicturesPresenterEntity {
-    return intent.getSerializableExtra(imageDetails) as SearchPicturesPresenterEntity
+    return intent.extras!!.getSerializable(IMAGE_DETAILS_TAG) as SearchPicturesPresenterEntity
   }
 
   override fun showAuthorDetails(name: String, profileImageLink: String) {
@@ -172,7 +179,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showImageLoadError() {
-    errorToast(getString(R.string.detail_activity_unable_to_load_hd_image_error))
+    errorToast(getString(R.string.unable_to_load_hd_image_error))
   }
 
   override fun showNoInternetError() {
@@ -192,10 +199,9 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun requestStoragePermission(actionType: ActionType) {
-    ActivityCompat.requestPermissions(this,
+    requestPermissions(this,
         arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        actionType.ordinal)
+            Manifest.permission.WRITE_EXTERNAL_STORAGE), actionType.ordinal)
   }
 
   override fun showPermissionRequiredMessage() {
@@ -221,11 +227,11 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun showWaitLoader(message: String) {
     materialProgressLoader = MaterialDialog.Builder(this)
-        .widgetColor(colorRes(R.color.color_accent))
-        .contentColor(colorRes(R.color.color_white))
+        .widgetColor(colorRes(R.color.accent))
+        .contentColor(colorRes(R.color.white))
         .content(message)
-        .backgroundColor(colorRes(R.color.color_primary))
-        .progress(true, initialLoaderProgress)
+        .backgroundColor(colorRes(R.color.primary))
+        .progress(true, INITIAL_LOADER_PROGRESS_VALUE)
         .progressIndeterminateStyle(false)
         .build()
     materialProgressLoader?.show()
@@ -253,7 +259,7 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun blurScreenAndInitializeProgressPercentage() {
     blurView.visible()
-    wallpaperDownloadProgressPercentage.text = initialLoaderProgressPercentage
+    wallpaperDownloadProgressPercentage.text = INITIAL_LOADER_PROGRESS_PERCENTAGE
     wallpaperDownloadProgressPercentage.visible()
     loadingHintBelowProgressPercentage.text =
         getString(R.string.detail_activity_grabbing_best_quality_wallpaper_message)
@@ -350,14 +356,14 @@ class DetailActivity : BaseActivity(), DetailView {
       R.array.imageDownloadQualities
     }
     MaterialDialog.Builder(this)
-        .backgroundColor(colorRes(R.color.color_primary))
+        .backgroundColor(colorRes(R.color.primary))
         .title(R.string.detail_activity_choose_download_quality_message)
         .items(optionsArray)
-        .contentColor(colorRes(R.color.color_white))
-        .widgetColor(colorRes(R.color.color_accent))
-        .positiveColor(colorRes(R.color.color_accent))
-        .negativeColor(colorRes(R.color.color_accent))
-        .itemsCallbackSingleChoice(initialSelectedDownloadOptionIndex
+        .contentColor(colorRes(R.color.white))
+        .widgetColor(colorRes(R.color.accent))
+        .positiveColor(colorRes(R.color.accent))
+        .negativeColor(colorRes(R.color.accent))
+        .itemsCallbackSingleChoice(INITIAL_SELECTED_DOWNLOAD_OPTION
         ) { _, _, which, _ ->
           presenter.handleDownloadQualitySelectionEvent(SEARCH, which)
           true
@@ -374,14 +380,14 @@ class DetailActivity : BaseActivity(), DetailView {
       R.array.imageDownloadQualities
     }
     MaterialDialog.Builder(this)
-        .backgroundColor(colorRes(R.color.color_primary))
+        .backgroundColor(colorRes(R.color.primary))
         .title(R.string.detail_activity_choose_download_quality_message)
         .items(optionsArray)
-        .contentColor(colorRes(R.color.color_white))
-        .widgetColor(colorRes(R.color.color_accent))
-        .positiveColor(colorRes(R.color.color_accent))
-        .negativeColor(colorRes(R.color.color_accent))
-        .itemsCallbackSingleChoice(initialSelectedDownloadOptionIndex
+        .contentColor(colorRes(R.color.white))
+        .widgetColor(colorRes(R.color.accent))
+        .positiveColor(colorRes(R.color.accent))
+        .negativeColor(colorRes(R.color.accent))
+        .itemsCallbackSingleChoice(INITIAL_SELECTED_DOWNLOAD_OPTION
         ) { _, _, which, _ ->
           presenter.handleDownloadQualitySelectionEvent(WALLPAPERS, which)
           true
@@ -403,14 +409,18 @@ class DetailActivity : BaseActivity(), DetailView {
     successToast(getString(R.string.detail_activity_download_finished_message))
   }
 
-  override fun showTryCrystallizeDescriptionDialog() {
+  override fun showCrystallizedDownloadCompletedSuccessMessage() {
+    successToast(getString(R.string.detail_activity_crystallized_download_finished_message))
+  }
+
+  override fun showCrystallizeDescriptionDialog() {
     MaterialDialog.Builder(this)
-        .backgroundColor(colorRes(R.color.color_primary))
+        .backgroundColor(colorRes(R.color.primary))
         .customView(R.layout.crystallize_example_dialog_layout, false)
-        .contentColor(colorRes(R.color.color_white))
-        .widgetColor(colorRes(R.color.color_accent))
-        .positiveColor(colorRes(R.color.color_accent))
-        .negativeColor(colorRes(R.color.color_accent))
+        .contentColor(colorRes(R.color.white))
+        .widgetColor(colorRes(R.color.accent))
+        .positiveColor(colorRes(R.color.accent))
+        .negativeColor(colorRes(R.color.accent))
         .positiveText(getString(R.string.detail_activity_crystallize_dialog_positive_text))
         .negativeText(getString(R.string.detail_activity_crystallize_dialog_negative_text))
         .onPositive { _, _ ->
@@ -427,6 +437,18 @@ class DetailActivity : BaseActivity(), DetailView {
     successToast(getString(R.string.detail_activity_crystallizing_wallpaper_successful_message))
   }
 
+  override fun showExpandedImage(lowQualityLink: String, highQualityLink: String) {
+    startActivity(FullScreenImageActivity.getCallingIntent(this, lowQualityLink, highQualityLink))
+  }
+
+  override fun showCrystallizedExpandedImage() {
+    startActivity(FullScreenImageActivity.getCallingIntent(this, CRYSTALLIZED_BITMAP_CACHE))
+  }
+
+  override fun showEditedExpandedImage() {
+    startActivity(FullScreenImageActivity.getCallingIntent(this, EDITED_BITMAP_CACHE))
+  }
+
   override fun collapseSlidingPanel() {
     slidingPanel.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
   }
@@ -438,7 +460,7 @@ class DetailActivity : BaseActivity(), DetailView {
 
   private fun setUpExpandPanel() {
     expandIconView.setState(ExpandIconView.LESS, false)
-    slidingPanel.setParallaxOffset(slidingPanelParallelOffset)
+    slidingPanel.setParallaxOffset(SLIDING_PANEL_PARALLEL_OFFSET)
     slidingPanel.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
       override fun onPanelSlide(panel: View, slideOffset: Float) {
         // Do nothing
@@ -468,19 +490,40 @@ class DetailActivity : BaseActivity(), DetailView {
     addToCollectionImageLayout.setOnClickListener { presenter.handleAddToCollectionClick() }
     shareImageLayout.setOnClickListener { presenter.handleShareClick() }
     backIcon.setOnClickListener { presenter.handleBackButtonClick() }
+    imageView.setOnClickListener { presenter.handleImageViewClicked() }
   }
 
   private fun setUpBlurView() {
     blurView.setupWith(parentFrameLayout).setBlurAlgorithm(RenderScriptBlur(this))
-        .setBlurRadius(blurRadius)
+        .setBlurRadius(BLUR_RADIUS)
   }
 
   companion object {
-    var imageDetails = "ImageDetails"
-    var imageType = "ImageType"
+    const val IMAGE_DETAILS_TAG = "ImageDetails"
+    const val IMAGE_TYPE_TAG = "ImageType"
 
-    fun getCallingIntent(context: Context): Intent {
-      return Intent(context, DetailActivity::class.java)
+    fun getCallingIntent(
+      context: Context,
+      searchPicturesPresenterEntity: SearchPicturesPresenterEntity
+    ): Intent {
+      return Intent(context, DetailActivity::class.java).apply {
+        putExtras(Bundle().apply {
+          putInt(IMAGE_TYPE_TAG, SEARCH.ordinal)
+          putExtra(IMAGE_DETAILS_TAG, searchPicturesPresenterEntity)
+        })
+      }
+    }
+
+    fun getCallingIntent(
+      context: Context,
+      imagePresenterEntity: ImagePresenterEntity
+    ): Intent {
+      return Intent(context, DetailActivity::class.java).apply {
+        putExtras(Bundle().apply {
+          putInt(IMAGE_TYPE_TAG, WALLPAPERS.ordinal)
+          putExtra(IMAGE_DETAILS_TAG, imagePresenterEntity)
+        })
+      }
     }
   }
 

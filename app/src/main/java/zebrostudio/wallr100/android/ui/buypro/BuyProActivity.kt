@@ -88,7 +88,7 @@ class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
   override fun onActivityResult(
     requestCode: Int,
     resultCode: Int,
-    data: Intent
+    data: Intent?
   ) {
     if (iabHelper?.handleActivityResult(requestCode,
             resultCode, data) == false) {
@@ -137,8 +137,8 @@ class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
       RESTORE -> stringRes(R.string.buy_pro_verifying_restore_message)
     }
     materialDialog = MaterialDialog.Builder(this)
-        .widgetColor(colorRes(R.color.color_accent))
-        .contentColor(colorRes(R.color.color_white))
+        .widgetColor(colorRes(R.color.accent))
+        .contentColor(colorRes(R.color.white))
         .content(contentStringId)
         .backgroundColor(colorRes(R.color.primary_dark_material_dark))
         .progress(true, 0)

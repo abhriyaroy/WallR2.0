@@ -8,20 +8,13 @@ android {
   compileSdkVersion COMPILE_SDK_VERSION
   defaultConfig {
     applicationId "zebrostudio.wallr100"
+    multiDexEnabled true
     minSdkVersion MINIMUM_SDK_VERSION
     targetSdkVersion TARGET_SDK_VERSION
     renderscriptTargetApi RENDER_SCRIPT_VERSION
     renderscriptSupportModeEnabled true
     versionCode APP_VERSION
     versionName "$APP_VERSION_NAME"
-    dexOptions {
-      preDexLibraries = true
-      javaMaxHeapSize "2g"
-    }
-    ndk {
-      abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
-    }
-    multiDexEnabled true
   }
   buildTypes {
     release {
@@ -43,6 +36,7 @@ android {
     implementation "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
     implementation "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
     implementation "com.android.support:percent:$SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION"
     // Dagger
     implementation "com.google.dagger:dagger:$DAGGER_VERSION"
     implementation "com.google.dagger:dagger-android-support:$DAGGER_VERSION"
@@ -98,7 +92,7 @@ android {
     implementation project(':libraryExpandIcon')
     implementation project(':libraryUrlShortener')
     implementation project(':libraryUCrop')
-    implementation project(':libraryLowpoly')
+    implementation project(':libraryPhotoView')
     // Test runners
     testImplementation "junit:junit:$JUNIT_VERSION"
     testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"

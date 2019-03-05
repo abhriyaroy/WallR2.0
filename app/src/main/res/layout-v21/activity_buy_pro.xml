@@ -9,7 +9,7 @@
   <ScrollView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@color/color_buy_pro_background"
+      android:background="@color/buy_pro_background"
       android:scrollbars="none"
       android:overScrollMode="never">
 
@@ -21,7 +21,7 @@
           android:id="@+id/topHalf"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:background="@color/color_buy_pro_top_half"
+          android:background="@color/buy_pro_top_half"
           android:paddingBottom="@dimen/buy_pro_top_half_bottom_padding"
           android:layout_alignParentTop="true"
           android:layout_alignParentStart="true">
@@ -35,9 +35,9 @@
             android:layout_marginTop="@dimen/buy_pro_back_button_margin_top"
             android:elevation="@dimen/buy_pro_back_button_elevation"
             android:src="@drawable/ic_back_arrow_white"
-            android:background="?android:selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground"/>
 
         <ImageView
             android:id="@+id/proLogo"
@@ -56,8 +56,8 @@
             android:layout_marginTop="@dimen/buy_pro_fbutton_margin_top"
             android:text="@string/buy_pro_button"
             android:textAlignment="center"
-            fbutton:buttonColor="@color/color_white"
-            android:textColor="@color/color_black"
+            fbutton:buttonColor="@color/white"
+            android:textColor="@color/black"
             app:cornerRadius="@dimen/buy_pro_fbutton_radius_corner"
             app:shadowEnabled="false"
             app:shadowHeight="@dimen/buy_pro_fbutton_shadow_height"/>
@@ -71,7 +71,7 @@
             android:background="?android:selectableItemBackground"
             android:padding="@dimen/buy_pro_purchase_button_padding"
             android:text="@string/restore_button"
-            android:textColor="@color/color_white"
+            android:textColor="@color/white"
             android:textSize="@dimen/buy_pro_purchase_button_text_size"
             android:clickable="true"/>
 
@@ -95,7 +95,7 @@
               android:layout_height="wrap_content"
               android:layout_marginBottom="@dimen/buy_pro_title_text_view_margin_bottom"
               android:text="@string/pro_features_title"
-              android:textColor="@color/color_white"
+              android:textColor="@color/white"
               android:textSize="@dimen/buy_pro_title_text_size"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
@@ -103,7 +103,7 @@
               android:layout_height="wrap_content"
               android:layout_below="@id/buy_pro_title"
               android:text="@string/buy_pro_description"
-              android:textColor="@color/color_white"
+              android:textColor="@color/white"
               android:textSize="@dimen/buy_pro_subtext_text_size"/>
 
         </RelativeLayout>

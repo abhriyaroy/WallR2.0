@@ -12,6 +12,7 @@ import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 interface DetailContract {
 
   interface DetailView : BaseView {
+    fun throwIllegalStateException()
     fun getSearchImageDetails(): SearchPicturesPresenterEntity
     fun getWallpaperImageDetails(): ImagePresenterEntity
     fun showAuthorDetails(name: String, profileImageLink: String)
@@ -48,15 +49,19 @@ interface DetailContract {
     fun showDownloadStartedMessage()
     fun showDownloadAlreadyInProgressMessage()
     fun showDownloadCompletedSuccessMessage()
-    fun showTryCrystallizeDescriptionDialog()
+    fun showCrystallizedDownloadCompletedSuccessMessage()
+    fun showCrystallizeDescriptionDialog()
     fun showCrystallizeSuccessMessage()
     fun showImageHasAlreadyBeenCrystallizedMessage()
+    fun showExpandedImage(lowQualityLink: String, highQualityLink: String)
+    fun showCrystallizedExpandedImage()
+    fun showEditedExpandedImage()
     fun collapseSlidingPanel()
     fun exitView()
   }
 
   interface DetailPresenter : BasePresenter<DetailView> {
-    fun setImageType(imageType: ImageListType)
+    fun setCalledIntent(intent: Intent)
     fun handleHighQualityImageLoadFailed()
     fun handleQuickSetClick()
     fun handleDownloadClick()
@@ -72,6 +77,7 @@ interface DetailContract {
     fun handleViewResult(requestCode: Int, resultCode: Int, data: Intent?)
     fun handleDownloadQualitySelectionEvent(downloadType: ImageListType, selectedIndex: Int)
     fun handleCrystallizeDialogPositiveClick()
+    fun handleImageViewClicked()
     fun setPanelStateAsExpanded()
     fun setPanelStateAsCollapsed()
   }

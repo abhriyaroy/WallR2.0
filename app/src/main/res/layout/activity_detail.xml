@@ -24,7 +24,7 @@
           android:id="@+id/imageView"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:background="@color/color_primary"
+          android:background="@color/primary"
           android:scaleType="centerCrop"
           android:transitionName="ImageItem"/>
 
@@ -39,7 +39,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_primary"
+        android:background="@color/primary"
         android:clickable="true"
         android:focusable="false">
 
@@ -47,7 +47,7 @@
           android:id="@+id/imageInfoLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:background="@color/color_primary_dark"
+          android:background="@color/primary_dark"
           android:paddingBottom="@dimen/detail_activity_image_info_layout_padding_bottom"
           android:paddingTop="@dimen/detail_activity_image_info_layout_padding_top">
 
@@ -59,7 +59,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="@dimen/detail_activity_image_info_layout_image_view_margin_start"
             android:src="@drawable/ic_user_white"
-            app:civ_border_color="@color/color_white"
+            app:civ_border_color="@color/white"
             app:civ_border_width="@dimen/detail_activity_image_info_layout_image_view_border_width"/>
 
         <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
@@ -96,9 +96,9 @@
           android:layout_centerHorizontal="true"
           android:layout_marginTop="@dimen/detail_activity_expand_icon_view_margin_top"
           app:eiv_animationDuration="300"
-          app:eiv_color="@color/color_white"
-          app:eiv_colorLess="@color/color_white"
-          app:eiv_colorMore="@color/color_white"
+          app:eiv_color="@color/white"
+          app:eiv_colorLess="@color/white"
+          app:eiv_colorMore="@color/white"
           app:eiv_roundedCorners="false"
           app:eiv_switchColor="true"/>
 
@@ -314,7 +314,7 @@
           android:animateLayoutChanges="true"
           android:fontFamily="sans-serif-thin"
           android:text="@string/detail_activity_wallpaper_action_progress_percentage"
-          android:textColor="@color/color_white"
+          android:textColor="@color/white"
           android:textSize="80sp"
           android:typeface="sans"
           android:visibility="gone"/>
@@ -328,7 +328,7 @@
           android:layout_centerInParent="true"
           android:padding="@dimen/wallpaper_action_progress_spinkit_padding"
           android:visibility="gone"
-          app:SpinKit_Color="@color/color_white"/>
+          app:SpinKit_Color="@color/white"/>
 
       <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
           android:id="@+id/loadingHintBelowProgressPercentage"
@@ -362,14 +362,13 @@
 
   <ImageView
       android:id="@+id/backIcon"
-      android:layout_width="@dimen/detail_activity_back_icon_width"
-      android:layout_height="@dimen/detail_activity_back_icon_height"
+      android:layout_width="@dimen/back_icon_width"
+      android:layout_height="@dimen/back_icon_height"
       android:clickable="true"
-      android:foreground="?android:attr/selectableItemBackgroundBorderless"
+      android:focusable="true"
       android:src="@drawable/ic_back_arrow_white"
-      android:focusable="false"
       android:clipChildren="false"
-      android:layout_marginStart="@dimen/detail_activity_back_icon_margin_start"
-      android:layout_marginTop="@dimen/detail_activity_back_icon_margin_top"/>
+      android:layout_marginStart="@dimen/back_icon_margin_start"
+      android:layout_marginTop="@dimen/back_icon_margin_top"/>
 
 </FrameLayout>

@@ -2,8 +2,6 @@ package com.pddstudio.urlshortener;
 
 import android.support.annotation.Nullable;
 import com.google.gson.Gson;
-import com.pddstudio.urlshortener.async.AsyncLoader;
-import com.pddstudio.urlshortener.async.AsyncLoader2;
 import com.pddstudio.urlshortener.model.RequestModel;
 import com.pddstudio.urlshortener.model.ResponseModel;
 import java.io.IOException;
@@ -13,14 +11,6 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class URLShortenerImpl implements URLShortener {
-
-  public static void shortUrl(String longUrl, LoadingCallback loadingCallback) {
-    new AsyncLoader(longUrl, loadingCallback).execute();
-  }
-
-  public static void longUrl(String shortUrl, LoadingCallback loadingCallback) {
-    new AsyncLoader2(shortUrl, loadingCallback).execute();
-  }
 
   public String shortUrl(String longUrl) {
     OkHttpClient okHttpClient = new OkHttpClient();

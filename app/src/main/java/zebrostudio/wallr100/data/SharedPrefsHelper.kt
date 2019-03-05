@@ -9,7 +9,7 @@ interface SharedPrefsHelper {
   fun setBoolean(preferenceName: String, key: String, value: Boolean = false): Boolean
 }
 
-class SharedPrefsHelperImpl(private var context: Context) : SharedPrefsHelper {
+class SharedPrefsHelperImpl(private val context: Context) : SharedPrefsHelper {
 
   override fun getBoolean(
     preferenceName: String,

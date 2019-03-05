@@ -6,6 +6,7 @@ import com.pddstudio.urlshortener.URLShortener
 import com.pddstudio.urlshortener.URLShortenerImpl
 import dagger.Module
 import dagger.Provides
+import zebrostudio.wallr100.android.AndroidBackgroundThreads
 import zebrostudio.wallr100.android.AndroidMainThread
 import zebrostudio.wallr100.android.di.scopes.PerApplication
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
@@ -32,6 +33,7 @@ import zebrostudio.wallr100.data.api.UnsplashClientFactoryImpl
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.domain.WallrRepository
+import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseInteractor
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
@@ -76,6 +78,10 @@ class AppModule {
   @Provides
   @PerApplication
   fun provideAndroidMainThread(): PostExecutionThread = AndroidMainThread()
+
+  @Provides
+  @PerApplication
+  fun provideAndroidBackgroundThread(): ExecutionThread = AndroidBackgroundThreads()
 
   @Provides
   @PerApplication
@@ -125,7 +131,8 @@ class AppModule {
     urlShortener: URLShortener,
     imageHandler: ImageHandler,
     fileHandler: FileHandler,
-    downloadHelper: DownloadHelper
+    downloadHelper: DownloadHelper,
+    executionThread: ExecutionThread
   ): WallrRepository = WallrDataRepository(retrofitFirebaseAuthFactory,
       unsplashClientFactory,
       sharedPrefsHelper,
@@ -135,7 +142,8 @@ class AppModule {
       urlShortener,
       imageHandler,
       fileHandler,
-      downloadHelper)
+      downloadHelper,
+      executionThread)
 
   @Provides
   @PerApplication

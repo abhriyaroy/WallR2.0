@@ -71,7 +71,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     super.onDestroy()
   }
 
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     presenter.notifyActivityResult(requestCode, resultCode, data)
   }
 
@@ -202,13 +202,14 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   }
 
   private fun initAppbar() {
-    searchAppBar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-      if (Math.abs(verticalOffset) == appBarLayout.totalScrollRange) {
-        appBarIsCollapsed = true
-      } else if (verticalOffset == 0) {
-        appBarIsCollapsed = false
-      }
-    }
+    searchAppBar.addOnOffsetChangedListener(
+        AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+          if (Math.abs(verticalOffset) == appBarLayout.totalScrollRange) {
+            appBarIsCollapsed = true
+          } else if (verticalOffset == 0) {
+            appBarIsCollapsed = false
+          }
+        })
     searchView.backButton.setOnClickListener { onBackPressed() }
     searchView.setVoiceSearch(true)
     searchView.showSearch()

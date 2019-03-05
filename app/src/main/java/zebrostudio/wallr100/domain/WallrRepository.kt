@@ -34,6 +34,7 @@ interface WallrRepository {
   fun getTechnologyPictures(): Single<List<ImageModel>>
 
   fun getImageBitmap(link: String): Observable<ImageDownloadModel>
+  fun getCacheImageBitmap(): Single<Bitmap>
   fun getShortImageLink(link: String): Single<String>
   fun clearImageCaches(): Completable
   fun cancelImageBitmapFetchOperation()
@@ -43,11 +44,10 @@ interface WallrRepository {
 
   fun getBitmapFromUri(uri: Uri): Single<Bitmap>
   fun downloadImage(link: String): Completable
-  fun hasAnyImageBeenCrystallizedBefore(): Boolean
   fun crystallizeImage(): Single<Pair<Boolean, Bitmap>>
   fun saveCrystallizedImageToDownloads(): Completable
   fun isCrystallizeDescriptionShown(): Boolean
-  fun setCrystallizeDescriptionShown()
+  fun rememberCrystallizeDescriptionShown()
   fun checkIfDownloadIsInProgress(link: String): Boolean
 
 }

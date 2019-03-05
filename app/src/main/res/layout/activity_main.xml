@@ -11,7 +11,7 @@
       android:layout_width="match_parent"
       android:layout_height="@dimen/guillotine_actionbar_background_view_height"
       android:layout_gravity="top"
-      android:background="@color/color_primary"/>
+      android:background="@color/primary"/>
 
   <android.support.design.widget.CoordinatorLayout
       android:layout_width="match_parent"
@@ -50,15 +50,15 @@
           app:stl_indicatorThickness="@dimen/main_activity_tab_layout_indicator_thickness"
           app:stl_indicatorWidth="auto"
           app:stl_indicatorCornerRadius="@dimen/main_activity_tab_layout_corner_radius"
-          app:stl_overlineColor="@color/color_smart_tab_layout_overline"
+          app:stl_overlineColor="@color/smart_tab_layout_overline"
           app:stl_overlineThickness="@dimen/main_activity_tab_layout_overline_thickness"
-          app:stl_underlineColor="@color/color_smart_tab_layout_overline"
+          app:stl_underlineColor="@color/smart_tab_layout_overline"
           app:stl_underlineThickness="@dimen/main_activity_tab_layout_underline_thickness"
-          app:stl_dividerColor="@color/color_smart_tab_layout_overline"
+          app:stl_dividerColor="@color/smart_tab_layout_overline"
           app:stl_dividerThickness="@dimen/main_activity_tab_layout_divider_thickness"
           app:stl_defaultTabBackground="?attr/selectableItemBackground"
           app:stl_defaultTabTextAllCaps="true"
-          app:stl_defaultTabTextColor="@color/color_white"
+          app:stl_defaultTabTextColor="@color/white"
           app:stl_defaultTabTextSize="@dimen/main_activity_tab_layout_text_size"
           app:stl_defaultTabTextHorizontalPadding="@dimen/main_activity_tab_layout_text_horizontal_padding"
           app:stl_defaultTabTextMinWidth="@dimen/main_activity_tab_layout_text_min_width"
@@ -78,7 +78,7 @@
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_primary"
+        android:background="@color/primary"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
   </android.support.design.widget.CoordinatorLayout>

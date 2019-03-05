@@ -16,6 +16,7 @@ interface ImageOptionsUseCase {
   fun cancelFetchImageOperation()
   fun getCroppingSourceUri(): Uri
   fun getCroppingDestinationUri(): Uri
+  fun getEditedImageSingle(): Single<Bitmap>
   fun crystallizeImageSingle(): Single<Pair<Boolean, Bitmap>>
   fun getBitmapFromUriSingle(imageUri: Uri): Single<Bitmap>
   fun downloadImageCompletable(link: String): Completable
@@ -23,6 +24,7 @@ interface ImageOptionsUseCase {
   fun isDownloadInProgress(link: String): Boolean
   fun isCrystallizeDescriptionDialogShown(): Boolean
   fun setCrystallizeDescriptionShownOnce()
+  fun getCrystallizedImageSingle(): Single<Bitmap>
 }
 
 class ImageOptionsInteractor(
@@ -31,17 +33,14 @@ class ImageOptionsInteractor(
 
   override fun fetchImageBitmapObservable(link: String): Observable<ImageDownloadModel> {
     return wallrRepository.getImageBitmap(link)
-        .subscribeOn(Schedulers.io())
   }
 
   override fun getImageShareableLinkSingle(link: String): Single<String> {
     return wallrRepository.getShortImageLink(link)
-        .subscribeOn(Schedulers.io())
   }
 
   override fun clearCachesCompletable(): Completable {
     return wallrRepository.clearImageCaches()
-        .subscribeOn(Schedulers.io())
   }
 
   override fun cancelFetchImageOperation() {
@@ -52,24 +51,24 @@ class ImageOptionsInteractor(
 
   override fun getCroppingDestinationUri() = wallrRepository.getCacheResultUri()
 
+  override fun getEditedImageSingle(): Single<Bitmap> {
+    return wallrRepository.getCacheImageBitmap()
+  }
+
   override fun getBitmapFromUriSingle(imageUri: Uri): Single<Bitmap> {
     return wallrRepository.getBitmapFromUri(imageUri)
-        .subscribeOn(Schedulers.io())
   }
 
   override fun crystallizeImageSingle(): Single<Pair<Boolean, Bitmap>> {
     return wallrRepository.crystallizeImage()
-        .subscribeOn(Schedulers.io())
   }
 
   override fun downloadImageCompletable(link: String): Completable {
     return wallrRepository.downloadImage(link)
-        .subscribeOn(Schedulers.io())
   }
 
   override fun downloadCrystallizedImageCompletable(): Completable {
     return wallrRepository.saveCrystallizedImageToDownloads()
-        .subscribeOn(Schedulers.io())
   }
 
   override fun isDownloadInProgress(link: String): Boolean {
@@ -81,6 +80,10 @@ class ImageOptionsInteractor(
   }
 
   override fun setCrystallizeDescriptionShownOnce() {
-    wallrRepository.setCrystallizeDescriptionShown()
+    wallrRepository.rememberCrystallizeDescriptionShown()
+  }
+
+  override fun getCrystallizedImageSingle(): Single<Bitmap> {
+    return wallrRepository.getCacheImageBitmap()
   }
 }

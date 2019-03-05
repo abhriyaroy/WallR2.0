@@ -38,13 +38,13 @@ fun ViewGroup.inflate(
 @SuppressLint("ResourceType")
 fun LinearLayout.setMenuItemColorRed(context: Context) {
   this.findViewById<WallrCustomTextView>(R.id.textviewGuillotineMenuItem)
-      .setTextColor(Color.parseColor(context.getString(R.color.color_accent)))
+      .setTextColor(Color.parseColor(context.getString(R.color.accent)))
 }
 
 @SuppressLint("ResourceType")
 fun LinearLayout.setMenuItemColorWhite(context: Context) {
   this.findViewById<WallrCustomTextView>(R.id.textviewGuillotineMenuItem)
-      .setTextColor(Color.parseColor(context.getString(R.color.color_white)))
+      .setTextColor(Color.parseColor(context.getString(R.color.white)))
 }
 
 fun withDelayOnMain(delay: Long, block: () -> Unit) {
