@@ -32,9 +32,13 @@ import zebrostudio.wallr100.presentation.detail.ActionType.SHARE
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 
+const val DOWNLOAD_COMPLETED_VALUE: Long = 100
+const val SHOW_INDEFINITE_LOADER_ON_PROGRESS_VALUE_99: Long = 99
+const val DOWNLOAD_STARTED_VALUE: Long = 0
+
 class DetailPresenterImpl(
-  private var context: Context,
-  private var imageOptionsUseCase: ImageOptionsUseCase,
+  private val context: Context,
+  private val imageOptionsUseCase: ImageOptionsUseCase,
   private var userPremiumStatusUseCase: UserPremiumStatusUseCase,
   private val wallpaperSetter: WallpaperSetter,
   private val postExecutionThread: PostExecutionThread
@@ -50,9 +54,6 @@ class DetailPresenterImpl(
   internal var isSlidingPanelExpanded = false
   internal var imageHasBeenCrystallized = false
   internal var imageHasBeenEdited = false
-  private val downloadCompletedValue: Long = 100
-  private val showIndefiniteLoaderAtProgressValue: Long = 99
-  private val downloadStartedValue: Long = 0
   private var downloadProgress: Long = 0
   private var detailView: DetailContract.DetailView? = null
 
@@ -377,7 +378,7 @@ class DetailPresenterImpl(
   }
 
   private fun quickSetWallpaper() {
-    downloadProgress = downloadStartedValue
+    downloadProgress = DOWNLOAD_STARTED_VALUE
     detailView?.hideIndefiniteLoader()
     detailView?.blurScreenAndInitializeProgressPercentage()
     val imageDownloadLink = when (imageType) {
@@ -386,7 +387,7 @@ class DetailPresenterImpl(
     }
     imageOptionsUseCase.fetchImageBitmapObservable(imageDownloadLink)
         .doOnNext {
-          if (it.progress == downloadCompletedValue) {
+          if (it.progress == DOWNLOAD_COMPLETED_VALUE) {
             wallpaperHasBeenSet = wallpaperSetter.setWallpaper(it.imageBitmap)
           }
         }
@@ -404,14 +405,14 @@ class DetailPresenterImpl(
 
           override fun onNext(it: ImageDownloadModel) {
             val progress = it.progress
-            if (progress == showIndefiniteLoaderAtProgressValue) {
+            if (progress == SHOW_INDEFINITE_LOADER_ON_PROGRESS_VALUE_99) {
               isDownloadInProgress = false
               isImageOperationInProgress = true
-              detailView?.updateProgressPercentage("$downloadCompletedValue%")
+              detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
               val message =
                   context.getString(R.string.detail_activity_finalizing_wallpaper_messsage)
               detailView?.showIndefiniteLoaderWithAnimation(message)
-            } else if (progress == downloadCompletedValue) {
+            } else if (progress == DOWNLOAD_COMPLETED_VALUE) {
               val message =
                   context.getString(R.string.detail_activity_finalizing_wallpaper_messsage)
               detailView?.showIndefiniteLoader(message)
@@ -456,7 +457,7 @@ class DetailPresenterImpl(
   }
 
   private fun crystallizeWallpaper() {
-    downloadProgress = downloadStartedValue
+    downloadProgress = DOWNLOAD_STARTED_VALUE
     detailView?.hideIndefiniteLoader()
     detailView?.blurScreenAndInitializeProgressPercentage()
     val imageDownloadLink = when (imageType) {
@@ -467,14 +468,14 @@ class DetailPresenterImpl(
         .observeOn(postExecutionThread.scheduler)
         .doOnNext {
           val progress = it.progress
-          if (progress == showIndefiniteLoaderAtProgressValue) {
+          if (progress == SHOW_INDEFINITE_LOADER_ON_PROGRESS_VALUE_99) {
             isDownloadInProgress = false
             isImageOperationInProgress = true
-            detailView?.updateProgressPercentage("$downloadCompletedValue%")
+            detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
             val message =
                 context.getString(R.string.detail_activity_crystallizing_wallpaper_message)
             detailView?.showIndefiniteLoaderWithAnimation(message)
-          } else if (progress != downloadCompletedValue) {
+          } else if (progress != DOWNLOAD_COMPLETED_VALUE) {
             detailView?.updateProgressPercentage("$progress%")
           }
         }
@@ -483,7 +484,7 @@ class DetailPresenterImpl(
           wallpaperHasBeenSet = false
         }
         .flatMapSingle {
-          if (it.progress == downloadCompletedValue) {
+          if (it.progress == DOWNLOAD_COMPLETED_VALUE) {
             imageOptionsUseCase.crystallizeImageSingle()
                 .observeOn(postExecutionThread.scheduler)
           } else {
@@ -512,7 +513,7 @@ class DetailPresenterImpl(
   }
 
   private fun editSetWallpaper() {
-    downloadProgress = downloadStartedValue
+    downloadProgress = DOWNLOAD_STARTED_VALUE
     detailView?.hideIndefiniteLoader()
     detailView?.blurScreenAndInitializeProgressPercentage()
     val imageDownloadLink = when (imageType) {
@@ -521,7 +522,7 @@ class DetailPresenterImpl(
     }
     imageOptionsUseCase.fetchImageBitmapObservable(imageDownloadLink)
         .doOnNext {
-          if (it.progress == downloadCompletedValue) {
+          if (it.progress == DOWNLOAD_COMPLETED_VALUE) {
             detailView?.startCroppingActivity(
                 imageOptionsUseCase.getCroppingSourceUri(),
                 imageOptionsUseCase.getCroppingDestinationUri(),
@@ -544,10 +545,10 @@ class DetailPresenterImpl(
 
           override fun onNext(it: ImageDownloadModel) {
             val progress = it.progress
-            if (progress == showIndefiniteLoaderAtProgressValue) {
+            if (progress == SHOW_INDEFINITE_LOADER_ON_PROGRESS_VALUE_99) {
               isDownloadInProgress = false
               isImageOperationInProgress = true
-              detailView?.updateProgressPercentage("$downloadCompletedValue%")
+              detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
               val message =
                   context.getString(R.string.detail_activity_editing_tool_message)
               detailView?.showIndefiniteLoaderWithAnimation(message)

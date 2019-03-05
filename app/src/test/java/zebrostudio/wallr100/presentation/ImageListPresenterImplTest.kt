@@ -25,7 +25,7 @@ import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.util.concurrent.TimeoutException
 
 @RunWith(MockitoJUnitRunner::class)
-class ImageListPresenterTest {
+class ImageListPresenterImplTest {
 
   @get:Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
 

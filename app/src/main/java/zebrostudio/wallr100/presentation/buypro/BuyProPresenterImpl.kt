@@ -11,9 +11,9 @@ import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 
 class BuyProPresenterImpl(
-  private var authenticatePurchaseUseCase: AuthenticatePurchaseUseCase,
-  private var userPremiumStatusUseCase: UserPremiumStatusUseCase,
-  private var postExecutionThread: PostExecutionThread
+  private val authenticatePurchaseUseCase: AuthenticatePurchaseUseCase,
+  private val userPremiumStatusUseCase: UserPremiumStatusUseCase,
+  private val postExecutionThread: PostExecutionThread
 ) : BuyProContract.BuyProPresenter {
 
   private var buyProView: BuyProContract.BuyProView? = null

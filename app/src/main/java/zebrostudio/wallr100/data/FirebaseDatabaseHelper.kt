@@ -16,7 +16,7 @@ interface FirebaseDatabaseHelper {
   fun fetch(databaseReference: DatabaseReference): Single<Map<String, String>>
 }
 
-class FirebaseDatabaseHelperImpl(private var context: Context) : FirebaseDatabaseHelper {
+class FirebaseDatabaseHelperImpl(private val context: Context) : FirebaseDatabaseHelper {
 
   private var firebaseDatabase: FirebaseDatabase? = null
 

@@ -2,12 +2,12 @@ package zebrostudio.wallr100.presentation.main
 
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 
-class MainActivityPresenterImpl(
-  private var userPremiumStatusUseCase: UserPremiumStatusUseCase
+class MainPresenterImpl(
+  private val userPremiumStatusUseCase: UserPremiumStatusUseCase
 ) : MainContract.MainPresenter {
 
-  private var backPressedOnce = false
-  private var isGuillotineMenuOpen = false
+  internal var backPressedOnce = false
+  internal var isGuillotineMenuOpen = false
   private var mainView: MainContract.MainView? = null
 
   override fun attachView(view: MainContract.MainView) {
