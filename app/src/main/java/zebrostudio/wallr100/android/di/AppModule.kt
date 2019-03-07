@@ -15,6 +15,8 @@ import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.ResourceUtilsImpl
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.android.utils.WallpaperSetterImpl
+import zebrostudio.wallr100.data.DatabaseHelper
+import zebrostudio.wallr100.data.DatabaseHelperImpl
 import zebrostudio.wallr100.data.DownloadHelper
 import zebrostudio.wallr100.data.DownloadHelperImpl
 import zebrostudio.wallr100.data.FileHandler
@@ -69,6 +71,10 @@ class AppModule {
   @Provides
   @PerApplication
   fun provideSharedPrefsHelper(context: Context): SharedPrefsHelper = SharedPrefsHelperImpl(context)
+
+  @Provides
+  @PerApplication
+  fun providesDatabaseHelper(context: Context): DatabaseHelper = DatabaseHelperImpl(context)
 
   @Provides
   @PerApplication

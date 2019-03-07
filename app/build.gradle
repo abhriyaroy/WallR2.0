@@ -84,6 +84,8 @@ android {
     implementation "de.hdodenhof:circleimageview:$CIRCLE_IMAGEVIEW_VERSION"
     // BlurView
     implementation "com.eightbitlab:blurview:$BLURVIEW_VERSION"
+    // Storio Sqlite
+    implementation "com.pushtorefresh.storio3:sqlite:$STORIO_SQLITE_VERSION"
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
     implementation project(':librarySearch')
