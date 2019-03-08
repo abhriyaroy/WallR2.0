@@ -86,6 +86,10 @@ android {
     implementation "com.eightbitlab:blurview:$BLURVIEW_VERSION"
     // Storio Sqlite
     implementation "com.pushtorefresh.storio3:sqlite:$STORIO_SQLITE_VERSION"
+    implementation "com.pushtorefresh.storio3:sqlite-annotations:$STORIO_SQLITE_VERSION"
+    kapt "com.pushtorefresh.storio3:sqlite-annotations-processor:$STORIO_SQLITE_VERSION"
+    implementation "android.arch.persistence.room:runtime:$ROOM_VERSION"
+    kapt "android.arch.persistence.room:compiler:$ROOM_VERSION"
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
     implementation project(':librarySearch')

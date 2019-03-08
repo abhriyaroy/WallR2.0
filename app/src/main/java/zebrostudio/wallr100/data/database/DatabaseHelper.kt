@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.data
+package zebrostudio.wallr100.data.database
 
 import android.content.ContentValues
 import android.content.Context
@@ -17,16 +17,19 @@ interface DatabaseHelper {
 
 const val DATABASE_NAME = "wallr.db"
 const val TABLE_NAME = "collection_table"
-const val NAME_COLOMN = "NAME"
-const val TYPE_COLOMN = "TYPE"
-const val PATH_COLOMN = "PATH"
-const val DETAILS_COLOMN = "DETAILS"
+const val INDEX_COLUMN = "INDEX"
+const val NAME_COLUMN = "NAME"
+const val TYPE_COLUMN = "TYPE"
+const val PATH_COLUMN = "PATH"
+const val DETAILS_COLUMN = "DETAILS"
 const val DATABASE_VERSION = 1
 const val INSERT_FAILED_CODE: Long = -1
 
 class DatabaseHelperImpl(
   context: Context
-) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION), DatabaseHelper {
+) : SQLiteOpenHelper(context, DATABASE_NAME, null,
+    DATABASE_VERSION),
+    DatabaseHelper {
 
   override fun onCreate(db: SQLiteDatabase) {
     db.execSQL(
@@ -41,10 +44,10 @@ class DatabaseHelperImpl(
   override fun insertData(name: String, type: String, path: String, details: String): Boolean {
     writableDatabase.apply {
       val contentValues = ContentValues()
-      contentValues.put(NAME_COLOMN, name)
-      contentValues.put(TYPE_COLOMN, type)
-      contentValues.put(PATH_COLOMN, path)
-      contentValues.put(DETAILS_COLOMN, details)
+      contentValues.put(NAME_COLUMN, name)
+      contentValues.put(TYPE_COLUMN, type)
+      contentValues.put(PATH_COLUMN, path)
+      contentValues.put(DETAILS_COLUMN, details)
       val result = insert(TABLE_NAME, null, contentValues)
       return result != INSERT_FAILED_CODE
     }
@@ -57,7 +60,7 @@ class DatabaseHelperImpl(
   }
 
   override fun clearData(path: String) {
-    writableDatabase.execSQL("DELETE FROM $TABLE_NAME WHERE $PATH_COLOMN= '$path'")
+    writableDatabase.execSQL("DELETE FROM $TABLE_NAME WHERE $PATH_COLUMN= '$path'")
   }
 
   override fun clearAllData() {
