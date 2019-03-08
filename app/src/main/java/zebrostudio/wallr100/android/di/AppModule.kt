@@ -15,8 +15,6 @@ import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.ResourceUtilsImpl
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.android.utils.WallpaperSetterImpl
-import zebrostudio.wallr100.data.database.DatabaseHelper
-import zebrostudio.wallr100.data.database.DatabaseHelperImpl
 import zebrostudio.wallr100.data.DownloadHelper
 import zebrostudio.wallr100.data.DownloadHelperImpl
 import zebrostudio.wallr100.data.FileHandler
@@ -32,6 +30,8 @@ import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactoryImpl
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactoryImpl
+import zebrostudio.wallr100.data.database.DatabaseHelper
+import zebrostudio.wallr100.data.database.DatabaseHelperImpl
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.domain.WallrRepository
@@ -74,8 +74,8 @@ class AppModule {
 
   @Provides
   @PerApplication
-  fun providesDatabaseHelper(context: Context): DatabaseHelper = DatabaseHelperImpl(
-      context)
+  fun providesDatabaseHelper(context: Context): DatabaseHelper =
+      DatabaseHelperImpl(context)
 
   @Provides
   @PerApplication
@@ -106,7 +106,7 @@ class AppModule {
   fun provideFirebasePictureEntityMapper(): FirebasePictureEntityMapper = FirebasePictureEntityMapper()
 
   @Provides
-  fun provideUrlShorterner(): URLShortener = URLShortenerImpl()
+  fun provideUrlShortener(): URLShortener = URLShortenerImpl()
 
   @Provides
   fun provideFileHandler(): FileHandler = FileHandlerImpl()
