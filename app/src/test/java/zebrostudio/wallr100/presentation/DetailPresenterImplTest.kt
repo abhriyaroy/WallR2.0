@@ -21,6 +21,7 @@ import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -1198,7 +1199,7 @@ class DetailPresenterImplTest {
 
   @Test
   fun `should update progress on handleViewResult of add to collection call success of search image type`() {
-    val imageModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
@@ -1207,11 +1208,14 @@ class DetailPresenterImplTest {
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.just(imageModel))
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
 
+    assertTrue(detailPresenterImpl.isDownloadInProgress)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -1227,7 +1231,7 @@ class DetailPresenterImplTest {
 
   @Test
   fun `should update progress on handleViewResult of add to collection call success of wallpaper image type`() {
-    val imageModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
@@ -1235,11 +1239,14 @@ class DetailPresenterImplTest {
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.just(imageModel))
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
 
+    assertTrue(detailPresenterImpl.isDownloadInProgress)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -1255,7 +1262,7 @@ class DetailPresenterImplTest {
 
   @Test
   fun `should show adding to collection message on handleViewResult of add to collection call success of search image type`() {
-    val imageModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
@@ -1264,12 +1271,17 @@ class DetailPresenterImplTest {
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.just(imageModel))
-    `when`(mockContext.getString(R.string.detail_activity_adding_image_to_collections_message)).thenReturn(randomString)
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+    `when`(mockContext.getString(
+        R.string.detail_activity_adding_image_to_collections_message)).thenReturn(randomString)
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
 
+    assertFalse(detailPresenterImpl.isDownloadInProgress)
+    assertTrue(detailPresenterImpl.isImageOperationInProgress)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -1286,7 +1298,7 @@ class DetailPresenterImplTest {
 
   @Test
   fun `should show adding to collection message on handleViewResult of add to collection call success of wallpaper image type`() {
-    val imageModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
@@ -1294,12 +1306,17 @@ class DetailPresenterImplTest {
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.just(imageModel))
-    `when`(mockContext.getString(R.string.detail_activity_adding_image_to_collections_message)).thenReturn(randomString)
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+    `when`(mockContext.getString(
+        R.string.detail_activity_adding_image_to_collections_message)).thenReturn(randomString)
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
 
+    assertFalse(detailPresenterImpl.isDownloadInProgress)
+    assertTrue(detailPresenterImpl.isImageOperationInProgress)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -1316,7 +1333,7 @@ class DetailPresenterImplTest {
 
   @Test
   fun `should add image to collection on handleViewResult of add to collection type call success of search image type`() {
-    val imageModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
@@ -1325,7 +1342,9 @@ class DetailPresenterImplTest {
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.just(imageModel))
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
     `when`(gsonHelper.convertToString(detailPresenterImpl.searchImage)).thenReturn(randomString)
     `when`(imageOptionsUseCase.addImageToCollection(SEARCH.ordinal, randomString)).thenReturn(
         Completable.complete())
@@ -1333,6 +1352,7 @@ class DetailPresenterImplTest {
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
 
+    assertFalse(detailPresenterImpl.isImageOperationInProgress)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -1350,7 +1370,7 @@ class DetailPresenterImplTest {
 
   @Test
   fun `should add image to collection on handleViewResult of add to collection type call success of wallpaper image type`() {
-    val imageModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
@@ -1359,7 +1379,9 @@ class DetailPresenterImplTest {
         ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.just(imageModel))
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
     `when`(gsonHelper.convertToString(detailPresenterImpl.wallpaperImage)).thenReturn(randomString)
     `when`(imageOptionsUseCase.addImageToCollection(WALLPAPERS.ordinal, randomString)).thenReturn(
         Completable.complete())
@@ -1367,6 +1389,7 @@ class DetailPresenterImplTest {
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
 
+    assertFalse(detailPresenterImpl.isImageOperationInProgress)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
