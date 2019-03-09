@@ -5,7 +5,6 @@ import android.net.Uri
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 
@@ -25,6 +24,7 @@ interface ImageOptionsUseCase {
   fun isCrystallizeDescriptionDialogShown(): Boolean
   fun setCrystallizeDescriptionShownOnce()
   fun getCrystallizedImageSingle(): Single<Bitmap>
+  fun addImageToCollection(type: Int, details: String): Completable
 }
 
 class ImageOptionsInteractor(
@@ -85,5 +85,9 @@ class ImageOptionsInteractor(
 
   override fun getCrystallizedImageSingle(): Single<Bitmap> {
     return wallrRepository.getCacheImageBitmap()
+  }
+
+  override fun addImageToCollection(type: Int, details: String): Completable {
+    return wallrRepository.saveImageToCollections(type, details)
   }
 }

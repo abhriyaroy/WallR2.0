@@ -123,8 +123,9 @@ class AppModule {
   @Provides
   fun provideImageHandler(
     context: Context,
-    fileHandler: FileHandler
-  ): ImageHandler = ImageHandlerImpl(context, fileHandler)
+    fileHandler: FileHandler,
+    databaseHelper: DatabaseHelper
+  ): ImageHandler = ImageHandlerImpl(context, fileHandler, databaseHelper)
 
   @Provides
   @PerApplication

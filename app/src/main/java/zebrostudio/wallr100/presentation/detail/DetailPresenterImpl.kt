@@ -19,7 +19,6 @@ import zebrostudio.wallr100.data.exception.ImageDownloadException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
-import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
@@ -29,11 +28,13 @@ import zebrostudio.wallr100.presentation.detail.ActionType.DOWNLOAD
 import zebrostudio.wallr100.presentation.detail.ActionType.EDIT_SET
 import zebrostudio.wallr100.presentation.detail.ActionType.QUICK_SET
 import zebrostudio.wallr100.presentation.detail.ActionType.SHARE
+import zebrostudio.wallr100.presentation.detail.mapper.ImageDownloadPresenterEntityMapper
+import zebrostudio.wallr100.presentation.detail.model.ImageDownloadPresenterEntity
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 
 const val DOWNLOAD_COMPLETED_VALUE: Long = 100
-const val SHOW_INDEFINITE_LOADER_ON_PROGRESS_VALUE_99: Long = 99
+const val PROGRESS_VALUE_99: Long = 99
 const val DOWNLOAD_STARTED_VALUE: Long = 0
 
 class DetailPresenterImpl(
@@ -41,7 +42,9 @@ class DetailPresenterImpl(
   private val imageOptionsUseCase: ImageOptionsUseCase,
   private var userPremiumStatusUseCase: UserPremiumStatusUseCase,
   private val wallpaperSetter: WallpaperSetter,
-  private val postExecutionThread: PostExecutionThread
+  private val postExecutionThread: PostExecutionThread,
+  private val imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper,
+  private val gsonHelper: GsonHelper
 ) : DetailContract.DetailPresenter {
 
   internal lateinit var imageType: ImageListType
@@ -386,6 +389,9 @@ class DetailPresenterImpl(
       else -> wallpaperImage.imageLink.large
     }
     imageOptionsUseCase.fetchImageBitmapObservable(imageDownloadLink)
+        .map {
+          imageDownloadPresenterEntityMapper.mapToPresenterEntity(it)
+        }
         .doOnNext {
           if (it.progress == DOWNLOAD_COMPLETED_VALUE) {
             wallpaperHasBeenSet = wallpaperSetter.setWallpaper(it.imageBitmap)
@@ -393,7 +399,7 @@ class DetailPresenterImpl(
         }
         .observeOn(postExecutionThread.scheduler)
         .autoDisposable(detailView?.getScope()!!)
-        .subscribe(object : Observer<ImageDownloadModel> {
+        .subscribe(object : Observer<ImageDownloadPresenterEntity> {
           override fun onComplete() {
             isDownloadInProgress = false
           }
@@ -403,9 +409,9 @@ class DetailPresenterImpl(
             wallpaperHasBeenSet = false
           }
 
-          override fun onNext(it: ImageDownloadModel) {
+          override fun onNext(it: ImageDownloadPresenterEntity) {
             val progress = it.progress
-            if (progress == SHOW_INDEFINITE_LOADER_ON_PROGRESS_VALUE_99) {
+            if (progress == PROGRESS_VALUE_99) {
               isDownloadInProgress = false
               isImageOperationInProgress = true
               detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
@@ -465,10 +471,13 @@ class DetailPresenterImpl(
       else -> wallpaperImage.imageLink.large
     }
     imageOptionsUseCase.fetchImageBitmapObservable(imageDownloadLink)
+        .map {
+          imageDownloadPresenterEntityMapper.mapToPresenterEntity(it)
+        }
         .observeOn(postExecutionThread.scheduler)
         .doOnNext {
           val progress = it.progress
-          if (progress == SHOW_INDEFINITE_LOADER_ON_PROGRESS_VALUE_99) {
+          if (progress == PROGRESS_VALUE_99) {
             isDownloadInProgress = false
             isImageOperationInProgress = true
             detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
@@ -521,6 +530,9 @@ class DetailPresenterImpl(
       else -> wallpaperImage.imageLink.large
     }
     imageOptionsUseCase.fetchImageBitmapObservable(imageDownloadLink)
+        .map {
+          imageDownloadPresenterEntityMapper.mapToPresenterEntity(it)
+        }
         .doOnNext {
           if (it.progress == DOWNLOAD_COMPLETED_VALUE) {
             detailView?.startCroppingActivity(
@@ -533,7 +545,7 @@ class DetailPresenterImpl(
         }
         .observeOn(postExecutionThread.scheduler)
         .autoDisposable(detailView?.getScope()!!)
-        .subscribe(object : Observer<ImageDownloadModel> {
+        .subscribe(object : Observer<ImageDownloadPresenterEntity> {
           override fun onComplete() {
             isDownloadInProgress = false
           }
@@ -543,9 +555,9 @@ class DetailPresenterImpl(
             wallpaperHasBeenSet = false
           }
 
-          override fun onNext(it: ImageDownloadModel) {
+          override fun onNext(it: ImageDownloadPresenterEntity) {
             val progress = it.progress
-            if (progress == SHOW_INDEFINITE_LOADER_ON_PROGRESS_VALUE_99) {
+            if (progress == PROGRESS_VALUE_99) {
               isDownloadInProgress = false
               isImageOperationInProgress = true
               detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
@@ -570,7 +582,66 @@ class DetailPresenterImpl(
   }
 
   private fun addWallpaperToCollection() {
-    // To be implemented later
+    downloadProgress = DOWNLOAD_STARTED_VALUE
+    detailView?.hideIndefiniteLoader()
+    detailView?.blurScreenAndInitializeProgressPercentage()
+    val imageDownloadLink = when (imageType) {
+      SEARCH -> searchImage.imageQualityUrlPresenterEntity.largeImageLink
+      else -> wallpaperImage.imageLink.large
+    }
+    imageOptionsUseCase.fetchImageBitmapObservable(imageDownloadLink)
+        .map {
+          imageDownloadPresenterEntityMapper.mapToPresenterEntity(it)
+        }
+        .observeOn(postExecutionThread.scheduler)
+        .doOnNext {
+          val progress = it.progress
+          if (progress == PROGRESS_VALUE_99) {
+            isDownloadInProgress = false
+            isImageOperationInProgress = true
+            detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
+            val message =
+                context.getString(R.string.detail_activity_adding_image_to_collections_message)
+            detailView?.showIndefiniteLoaderWithAnimation(message)
+          } else if (progress != DOWNLOAD_COMPLETED_VALUE) {
+            detailView?.updateProgressPercentage("$progress%")
+          }
+        }
+        .doOnSubscribe {
+          isDownloadInProgress = true
+        }.flatMapSingle {
+          if (it.progress == DOWNLOAD_COMPLETED_VALUE) {
+            val detailsString = if (imageType == SEARCH) {
+              gsonHelper.convertToString(searchImage)
+            } else {
+              gsonHelper.convertToString(wallpaperImage)
+            }
+            imageOptionsUseCase.addImageToCollection(imageType.ordinal, detailsString)
+                .andThen(
+                    Single.just(true)
+                )
+                .observeOn(postExecutionThread.scheduler)
+          } else {
+            Single.just(false)
+          }
+        }
+        .autoDisposable(detailView?.getScope()!!)
+        .subscribe({
+          if (it == true) {
+            detailView?.hideScreenBlur()
+            detailView?.showAddTOCollectionSuccessMessage()
+            isImageOperationInProgress = false
+          }
+        }, {
+          System.out.println("collection error ${it.printStackTrace()}")
+          if (it is ImageDownloadException) {
+            detailView?.showUnableToDownloadErrorMessage()
+          } else {
+            detailView?.showGenericErrorMessage()
+          }
+          detailView?.hideScreenBlur()
+          resetImageOperationAndImageDownloadFlags()
+        })
   }
 
   private fun handleCropResult(cropResultUri: Uri) {

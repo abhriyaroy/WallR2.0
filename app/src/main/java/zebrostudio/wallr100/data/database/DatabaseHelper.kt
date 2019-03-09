@@ -7,6 +7,8 @@ interface DatabaseHelper {
   fun getDatabase(): WallrDatabase
 }
 
+const val DATABASE_NAME = "wallr.db"
+
 class DatabaseHelperImpl(private val context: Context) : DatabaseHelper {
   private var databaseInstance: WallrDatabase? = null
 

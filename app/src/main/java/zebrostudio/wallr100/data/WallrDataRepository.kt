@@ -254,6 +254,11 @@ class WallrDataRepository(
     return downloadHelper.isDownloadEnqueued(link)
   }
 
+  override fun saveImageToCollections(type: Int, details: String): Completable {
+    return imageHandler.saveImageToCollections(type, details)
+        .subscribeOn(executionThread.computationScheduler)
+  }
+
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()
       .getReference(FIREBASE_DATABASE_PATH)
       .child(CHILD_PATH_EXPLORE)

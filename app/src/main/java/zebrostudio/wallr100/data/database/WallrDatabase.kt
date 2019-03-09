@@ -5,8 +5,6 @@ import android.arch.persistence.room.RoomDatabase
 import zebrostudio.wallr100.data.database.dao.CollectionsDao
 import zebrostudio.wallr100.data.database.entity.CollectionDatabaseImageEntity
 
-const val DATABASE_NAME = "wallr.db"
-
 const val DATABASE_VERSION = 1
 
 @Database(entities = [(CollectionDatabaseImageEntity::class)], version = DATABASE_VERSION)

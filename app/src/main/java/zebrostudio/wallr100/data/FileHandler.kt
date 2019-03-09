@@ -7,32 +7,34 @@ import java.io.File
 interface FileHandler {
   fun getCacheFile(): File
   fun getCacheFileUriForCropping(): Uri
-  fun getCrystallizedCacheFile(): File
   fun getDownloadFile(): File
   fun deleteCacheFiles()
+  fun getCollectionsFile(): File
   fun freeSpaceAvailable(): Boolean
 }
 
+const val APP_DIRECTORY_NAME = "WallR"
+const val CACHE_DIRECTORY_NAME = ".cache"
+const val DOWNLOADS_DIRECTORY_NAME = "Downloads"
+const val COLLECTIONS_DIRECTORY_NAME = "Collections"
+const val JPG_EXTENSION = ".jpg"
+const val MINIMUM_FREE_STORAGE_IN_MB = 20
+const val BYTES_TO_MEGA_BYTES = 1048576
+
 class FileHandlerImpl : FileHandler {
 
-  private val appDirectoryName = "WallR"
-  private val cacheDirectoryName = ".cache"
-  private val downloadsDirectoryName = "Downloads"
   private val cacheFolder: File =
-      File(Environment.getExternalStorageDirectory().path + File.separator + appDirectoryName
-          + File.separator + cacheDirectoryName)
+      File(Environment.getExternalStorageDirectory().path + File.separator + APP_DIRECTORY_NAME
+          + File.separator + CACHE_DIRECTORY_NAME)
   private val downloadsFolder: File =
-      File(Environment.getExternalStorageDirectory().path + File.separator + appDirectoryName
-          + File.separator + downloadsDirectoryName)
+      File(Environment.getExternalStorageDirectory().path + File.separator + APP_DIRECTORY_NAME
+          + File.separator + DOWNLOADS_DIRECTORY_NAME)
+  private val collectionsFolder: File =
+      File(Environment.getExternalStorageDirectory().path + File.separator + APP_DIRECTORY_NAME
+          + File.separator + COLLECTIONS_DIRECTORY_NAME)
   private val cacheFile: File = File(cacheFolder, System.currentTimeMillis().toString())
   private val cacheCroppedFile: File =
       File(cacheFolder, System.currentTimeMillis().toString())
-  private val cacheCrystallizedFile: File =
-      File(cacheFolder, System.currentTimeMillis().toString())
-  private val downloadFile: File =
-      File(downloadsFolder, "${System.currentTimeMillis()}.jpg")
-  private val minimumFreeStorageSpaceInMb = 20
-  private val bytesToMegaBytes = 1048576
 
   override fun getCacheFile(): File {
     createCacheFolder()
@@ -50,15 +52,8 @@ class FileHandlerImpl : FileHandler {
     return Uri.fromFile(cacheCroppedFile)
   }
 
-  override fun getCrystallizedCacheFile(): File {
-    createCacheFolder()
-    if (!cacheCrystallizedFile.exists()) {
-      cacheCrystallizedFile.createNewFile()
-    }
-    return cacheCrystallizedFile
-  }
-
   override fun getDownloadFile(): File {
+    val downloadFile = File(downloadsFolder, "${System.currentTimeMillis()}$JPG_EXTENSION")
     createDownloadsFolder()
     if (!downloadFile.exists()) {
       downloadFile.createNewFile()
@@ -72,10 +67,19 @@ class FileHandlerImpl : FileHandler {
     }
   }
 
+  override fun getCollectionsFile(): File {
+    val collectionsFile = File(collectionsFolder, "${System.currentTimeMillis()}$JPG_EXTENSION")
+    createCollectionsFolder()
+    if (!collectionsFile.exists()) {
+      collectionsFile.createNewFile()
+    }
+    return collectionsFile
+  }
+
   override fun freeSpaceAvailable(): Boolean {
     val bytesAvailable = Environment.getExternalStorageDirectory().freeSpace
-    val megBytesAvailable = bytesAvailable / bytesToMegaBytes
-    return megBytesAvailable > minimumFreeStorageSpaceInMb
+    val megBytesAvailable = bytesAvailable / BYTES_TO_MEGA_BYTES
+    return megBytesAvailable > MINIMUM_FREE_STORAGE_IN_MB
   }
 
   private fun createCacheFolder() {
@@ -87,6 +91,12 @@ class FileHandlerImpl : FileHandler {
   private fun createDownloadsFolder() {
     if (!downloadsFolder.exists()) {
       downloadsFolder.mkdirs()
+    }
+  }
+
+  private fun createCollectionsFolder() {
+    if (!collectionsFolder.exists()) {
+      collectionsFolder.mkdirs()
     }
   }
 

@@ -50,4 +50,6 @@ interface WallrRepository {
   fun rememberCrystallizeDescriptionShown()
   fun checkIfDownloadIsInProgress(link: String): Boolean
 
+  fun saveImageToCollections(type: Int, details: String): Completable
+
 }

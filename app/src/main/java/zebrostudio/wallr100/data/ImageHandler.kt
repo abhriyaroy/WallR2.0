@@ -11,6 +11,8 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import zebrostudio.wallr100.android.utils.compressBitmap
 import zebrostudio.wallr100.android.utils.writeInputStreamUsingByteArray
+import zebrostudio.wallr100.data.database.DatabaseHelper
+import zebrostudio.wallr100.data.database.entity.CollectionDatabaseImageEntity
 import zebrostudio.wallr100.data.exception.ImageDownloadException
 import java.io.FileOutputStream
 import java.io.IOException
@@ -29,18 +31,19 @@ interface ImageHandler {
   fun convertUriToBitmap(uri: Uri): Single<Bitmap>
   fun convertImageInCacheToLowpoly(): Single<Bitmap>
   fun saveLowPolyImageToDownloads(): Completable
+  fun saveImageToCollections(type: Int, details: String): Completable
 }
 
 const val BYTE_ARRAY_SIZE = 2048
 const val DOWNLOAD_PROGRESS_COMPLETED_VALUE: Long = 100
 const val READ_MODE = "r"
 const val BITMAP_COMPRESS_QUALITY = 100
-const val LOWPOLY_BYTE_ARRAY_SIZE = 1024
 const val INITIAL_SIZE = 0
 
 class ImageHandlerImpl(
   private val context: Context,
-  private val fileHandler: FileHandler
+  private val fileHandler: FileHandler,
+  private val databaseHelper: DatabaseHelper
 ) : ImageHandler {
 
   internal var shouldContinueFetchingImage: Boolean = true
@@ -153,9 +156,29 @@ class ImageHandlerImpl(
     return Completable.create {
       fileHandler.getCacheFile().inputStream().let { inputStream ->
         fileHandler.getDownloadFile().outputStream()
-            .writeInputStreamUsingByteArray(inputStream, LOWPOLY_BYTE_ARRAY_SIZE)
-        it.onComplete()
+            .writeInputStreamUsingByteArray(inputStream, BYTE_ARRAY_SIZE)
         inputStream.close()
+        it.onComplete()
+      }
+    }
+  }
+
+  override fun saveImageToCollections(type: Int, details: String): Completable {
+    return Completable.create {
+      fileHandler.getCacheFile().inputStream().let { inputStream ->
+        fileHandler.getCollectionsFile().let {
+          it.outputStream()
+              .writeInputStreamUsingByteArray(inputStream, BYTE_ARRAY_SIZE)
+          databaseHelper.getDatabase().collectionsDao().insert(CollectionDatabaseImageEntity(
+              0,
+              it.name,
+              type,
+              it.path,
+              details
+          ))
+        }
+        inputStream.close()
+        it.onComplete()
       }
     }
   }
