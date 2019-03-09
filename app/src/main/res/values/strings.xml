@@ -153,11 +153,6 @@
   <string name="detail_activity_crystallize_dialog_negative_text">CANCEL</string>
   <string name="detail_activity_image_already_crystallized_message">This image has already been crystallized</string>
   <string name="detail_activity_crystallized_download_finished_message">Your crystallized wallpaper has finished downloading</string>
-
-  <string name="title_activity_fullscreen">FullscreenActivity</string>
-  <string name="dummy_button">Dummy Button</string>
-  <string name="dummy_content">DUMMY\nCONTENT</string>
   <string name="detail_activity_image_add_to_collection_success_message">Wallpaper has been added to collection!</string>
-
 
 </resources>
