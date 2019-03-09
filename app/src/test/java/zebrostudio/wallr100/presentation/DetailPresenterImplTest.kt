@@ -47,6 +47,8 @@ import zebrostudio.wallr100.presentation.detail.ActionType.QUICK_SET
 import zebrostudio.wallr100.presentation.detail.ActionType.SHARE
 import zebrostudio.wallr100.presentation.detail.DetailContract
 import zebrostudio.wallr100.presentation.detail.DetailPresenterImpl
+import zebrostudio.wallr100.presentation.detail.GsonHelper
+import zebrostudio.wallr100.presentation.detail.mapper.ImageDownloadPresenterEntityMapper
 import java.util.Random
 import java.util.UUID.randomUUID
 
@@ -60,6 +62,7 @@ class DetailPresenterImplTest {
   @Mock private lateinit var mockBitmap: Bitmap
   @Mock private lateinit var mockContext: Context
   @Mock private lateinit var postExecutionThread: PostExecutionThread
+  @Mock private lateinit var gsonHelper: GsonHelper
   @Mock private lateinit var mockUri: Uri
   @Mock private lateinit var mockIntent: Intent
   @Mock private lateinit var mockBundle: Bundle
@@ -71,12 +74,14 @@ class DetailPresenterImplTest {
   private val indefiniteLoaderMessage = "Finalizing wallpaper..."
   private var randomString = randomUUID().toString()
   private var randomInt = Random().nextInt()
+  private lateinit var imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper
 
   @Before
   fun setup() {
+    imageDownloadPresenterEntityMapper = ImageDownloadPresenterEntityMapper()
     detailPresenterImpl =
         DetailPresenterImpl(mockContext, imageOptionsUseCase, userPremiumStatusUseCase,
-            wallpaperSetter, postExecutionThread)
+            wallpaperSetter, postExecutionThread, imageDownloadPresenterEntityMapper, gsonHelper)
     detailPresenterImpl.attachView(detailView)
 
     testScopeProvider = TestLifecycleScopeProvider.createInitial(
@@ -1143,6 +1148,8 @@ class DetailPresenterImplTest {
     verifyNoMoreInteractions(userPremiumStatusUseCase)
     shouldVerifyPostExecutionThreadSchedulerCall(2)
   }
+
+
 
   @Test
   fun `should set isSlidingPanelExpanded to true on setSlidingPanelStateAsExpanded call success`() {

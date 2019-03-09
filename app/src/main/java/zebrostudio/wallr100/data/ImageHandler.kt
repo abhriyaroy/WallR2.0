@@ -39,6 +39,7 @@ const val DOWNLOAD_PROGRESS_COMPLETED_VALUE: Long = 100
 const val READ_MODE = "r"
 const val BITMAP_COMPRESS_QUALITY = 100
 const val INITIAL_SIZE = 0
+const val UID_AUTO_INCREMENT: Long = 0
 
 class ImageHandlerImpl(
   private val context: Context,
@@ -170,7 +171,7 @@ class ImageHandlerImpl(
           it.outputStream()
               .writeInputStreamUsingByteArray(inputStream, BYTE_ARRAY_SIZE)
           databaseHelper.getDatabase().collectionsDao().insert(CollectionDatabaseImageEntity(
-              0,
+              UID_AUTO_INCREMENT,
               it.name,
               type,
               it.path,
