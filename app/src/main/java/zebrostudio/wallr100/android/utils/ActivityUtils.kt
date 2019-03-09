@@ -34,7 +34,7 @@ fun Activity.showStatusBarAndNavigationBar() {
   }
 }
 
-fun Activity.disableScreenshots(){
+fun Activity.disableScreenshots() {
   window.setFlags(WindowManager.LayoutParams.FLAG_SECURE,
       WindowManager.LayoutParams.FLAG_SECURE)
 }
