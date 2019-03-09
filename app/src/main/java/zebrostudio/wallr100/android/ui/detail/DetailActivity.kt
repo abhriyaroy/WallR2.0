@@ -437,7 +437,7 @@ class DetailActivity : BaseActivity(), DetailView {
     infoToast(getString(R.string.detail_activity_image_already_crystallized_message))
   }
 
-  override fun showAddTOCollectionSuccessMessage() {
+  override fun showAddToCollectionSuccessMessage() {
     successToast(getString(R.string.detail_activity_image_add_to_collection_success_message))
   }
 

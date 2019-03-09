@@ -629,7 +629,7 @@ class DetailPresenterImpl(
         .subscribe({
           if (it == true) {
             detailView?.hideScreenBlur()
-            detailView?.showAddTOCollectionSuccessMessage()
+            detailView?.showAddToCollectionSuccessMessage()
             isImageOperationInProgress = false
           }
         }, {
