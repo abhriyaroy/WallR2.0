@@ -463,6 +463,18 @@ class WallrDataRepositoryTest {
     verifyNoMoreInteractions(sharedPrefs)
   }
 
+  @Test fun `should complete on saveImageToCollections call success`() {
+    val imageType = 1
+    `when`(imageHandler.saveImageToCollections(imageType, randomString)).thenReturn(
+        Completable.complete())
+
+    wallrDataRepository.saveImageToCollections(imageType, randomString).test().assertComplete()
+
+    verify(imageHandler).saveImageToCollections(imageType, randomString)
+    verifyNoMoreInteractions(imageHandler)
+    `should verify computation scheduler call`()
+  }
+
   /* Need to properly implement timeout for Rx Java
 
   @Test fun `should return Single of ImageModel list on getPicturesFromFirebase call success`() {
