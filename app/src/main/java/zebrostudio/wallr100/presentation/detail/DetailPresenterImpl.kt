@@ -176,7 +176,6 @@ class DetailPresenterImpl(
               detailView?.hideWaitLoader()
               detailView?.shareLink(it)
             }, {
-              System.out.println(it.printStackTrace())
               detailView?.hideWaitLoader()
               detailView?.showGenericErrorMessage()
             })
@@ -633,7 +632,6 @@ class DetailPresenterImpl(
             isImageOperationInProgress = false
           }
         }, {
-          System.out.println("collection error ${it.printStackTrace()}")
           if (it is ImageDownloadException) {
             detailView?.showUnableToDownloadErrorMessage()
           } else {

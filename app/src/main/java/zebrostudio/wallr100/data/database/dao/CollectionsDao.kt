@@ -25,7 +25,7 @@ interface CollectionsDao {
   fun getDataUsingUid(uid: Int): CollectionDatabaseImageEntity
 
   @Delete
-  fun deleteDataUsingUid(collectionDatabaseImageEntity: CollectionDatabaseImageEntity)
+  fun deleteData(collectionDatabaseImageEntity: CollectionDatabaseImageEntity)
 
   @Query(DELETE_ALL_QUERY)
   fun deleteAllData()
