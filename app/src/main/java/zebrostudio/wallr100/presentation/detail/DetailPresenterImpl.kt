@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
 import com.yalantis.ucrop.UCrop.REQUEST_CROP
+import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
@@ -380,17 +381,8 @@ class DetailPresenterImpl(
   }
 
   private fun quickSetWallpaper() {
-    downloadProgress = DOWNLOAD_STARTED_VALUE
-    detailView?.hideIndefiniteLoader()
-    detailView?.blurScreenAndInitializeProgressPercentage()
-    val imageDownloadLink = when (imageType) {
-      SEARCH -> searchImage.imageQualityUrlPresenterEntity.largeImageLink
-      else -> wallpaperImage.imageLink.large
-    }
-    imageOptionsUseCase.fetchImageBitmapObservable(imageDownloadLink)
-        .map {
-          imageDownloadPresenterEntityMapper.mapToPresenterEntity(it)
-        }
+    performPreImageFetchingRituals()
+    getImageBitmapFetchObservable()
         .doOnNext {
           if (it.progress == DOWNLOAD_COMPLETED_VALUE) {
             wallpaperHasBeenSet = wallpaperSetter.setWallpaper(it.imageBitmap)
@@ -462,17 +454,8 @@ class DetailPresenterImpl(
   }
 
   private fun crystallizeWallpaper() {
-    downloadProgress = DOWNLOAD_STARTED_VALUE
-    detailView?.hideIndefiniteLoader()
-    detailView?.blurScreenAndInitializeProgressPercentage()
-    val imageDownloadLink = when (imageType) {
-      SEARCH -> searchImage.imageQualityUrlPresenterEntity.largeImageLink
-      else -> wallpaperImage.imageLink.large
-    }
-    imageOptionsUseCase.fetchImageBitmapObservable(imageDownloadLink)
-        .map {
-          imageDownloadPresenterEntityMapper.mapToPresenterEntity(it)
-        }
+    performPreImageFetchingRituals()
+    getImageBitmapFetchObservable()
         .observeOn(postExecutionThread.scheduler)
         .doOnNext {
           val progress = it.progress
@@ -521,17 +504,8 @@ class DetailPresenterImpl(
   }
 
   private fun editSetWallpaper() {
-    downloadProgress = DOWNLOAD_STARTED_VALUE
-    detailView?.hideIndefiniteLoader()
-    detailView?.blurScreenAndInitializeProgressPercentage()
-    val imageDownloadLink = when (imageType) {
-      SEARCH -> searchImage.imageQualityUrlPresenterEntity.largeImageLink
-      else -> wallpaperImage.imageLink.large
-    }
-    imageOptionsUseCase.fetchImageBitmapObservable(imageDownloadLink)
-        .map {
-          imageDownloadPresenterEntityMapper.mapToPresenterEntity(it)
-        }
+    performPreImageFetchingRituals()
+    getImageBitmapFetchObservable()
         .doOnNext {
           if (it.progress == DOWNLOAD_COMPLETED_VALUE) {
             detailView?.startCroppingActivity(
@@ -581,17 +555,8 @@ class DetailPresenterImpl(
   }
 
   private fun addWallpaperToCollection() {
-    downloadProgress = DOWNLOAD_STARTED_VALUE
-    detailView?.hideIndefiniteLoader()
-    detailView?.blurScreenAndInitializeProgressPercentage()
-    val imageDownloadLink = when (imageType) {
-      SEARCH -> searchImage.imageQualityUrlPresenterEntity.largeImageLink
-      else -> wallpaperImage.imageLink.large
-    }
-    imageOptionsUseCase.fetchImageBitmapObservable(imageDownloadLink)
-        .map {
-          imageDownloadPresenterEntityMapper.mapToPresenterEntity(it)
-        }
+    performPreImageFetchingRituals()
+    getImageBitmapFetchObservable()
         .observeOn(postExecutionThread.scheduler)
         .doOnNext {
           val progress = it.progress
@@ -699,6 +664,26 @@ class DetailPresenterImpl(
         wallpaperImage.imageLink.small
       }
     }
+  }
+
+  private fun performPreImageFetchingRituals() {
+    downloadProgress = DOWNLOAD_STARTED_VALUE
+    detailView?.hideIndefiniteLoader()
+    detailView?.blurScreenAndInitializeProgressPercentage()
+  }
+
+  private fun getImageFetchingLink(): String {
+    return when (imageType) {
+      SEARCH -> searchImage.imageQualityUrlPresenterEntity.largeImageLink
+      else -> wallpaperImage.imageLink.large
+    }
+  }
+
+  private fun getImageBitmapFetchObservable(): Observable<ImageDownloadPresenterEntity> {
+    return imageOptionsUseCase.fetchImageBitmapObservable(getImageFetchingLink())
+        .map {
+          imageDownloadPresenterEntityMapper.mapToPresenterEntity(it)
+        }
   }
 
   private fun resetImageOperationAndImageDownloadFlags() {
