@@ -232,6 +232,14 @@ class DetailPresenterImplTest {
   }
 
   @Test
+  fun `should show purchase unsuccessful message on handleViewResult of share type call failure`() {
+    detailPresenterImpl.handleViewResult(SHARE.ordinal, UNSUCCESSFUL_PURCHASE_CODE, null)
+
+    verify(detailView).showUnsuccessfulPurchaseError()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
   fun `should show permission required message when handlePermissionRequestResult is called after permission is denied`() {
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
@@ -757,6 +765,14 @@ class DetailPresenterImplTest {
   }
 
   @Test
+  fun `should show purchase unsuccessful message on handleViewResult of download type call failure`() {
+    detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal, UNSUCCESSFUL_PURCHASE_CODE, null)
+
+    verify(detailView).showUnsuccessfulPurchaseError()
+    verifyNoMoreInteractions(detailView)
+  }
+
+  @Test
   fun `should show download complete message on handleDownloadQualitySelectionEvent call success of search image of super high quality`() {
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
@@ -1078,6 +1094,14 @@ class DetailPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyNoMoreInteractions(userPremiumStatusUseCase)
     shouldVerifyPostExecutionThreadSchedulerCall(2)
+  }
+
+  @Test
+  fun `should show purchase unsuccessful message on handleViewResult of crystallize type call failure`() {
+    detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal, UNSUCCESSFUL_PURCHASE_CODE, null)
+
+    verify(detailView).showUnsuccessfulPurchaseError()
+    verifyNoMoreInteractions(detailView)
   }
 
   @Test

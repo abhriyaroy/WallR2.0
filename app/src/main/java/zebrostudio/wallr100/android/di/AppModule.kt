@@ -49,6 +49,8 @@ import zebrostudio.wallr100.domain.interactor.WallpaperImagesInteractor
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
+import zebrostudio.wallr100.presentation.detail.GsonHelper
+import zebrostudio.wallr100.presentation.detail.GsonHelperImpl
 
 @Module
 class AppModule {
@@ -89,6 +91,10 @@ class AppModule {
   @Provides
   @PerApplication
   fun provideAndroidBackgroundThread(): ExecutionThread = AndroidBackgroundThreads()
+
+  @Provides
+  @PerApplication
+  fun providesGsonHelper(): GsonHelper = GsonHelperImpl()
 
   @Provides
   @PerApplication

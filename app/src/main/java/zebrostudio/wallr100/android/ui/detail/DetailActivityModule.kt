@@ -10,13 +10,10 @@ import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.presentation.detail.DetailContract
 import zebrostudio.wallr100.presentation.detail.DetailPresenterImpl
 import zebrostudio.wallr100.presentation.detail.GsonHelper
-import zebrostudio.wallr100.presentation.detail.GsonHelperImpl
 import zebrostudio.wallr100.presentation.detail.mapper.ImageDownloadPresenterEntityMapper
 
 @Module
 class DetailActivityModule {
-
-  @Provides fun providesGsonHelpert(): GsonHelper = GsonHelperImpl()
 
   @Provides
   fun providesImageDownloadPresenterEntityMapper(): ImageDownloadPresenterEntityMapper =

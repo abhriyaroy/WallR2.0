@@ -53,12 +53,12 @@ class FileHandlerImpl : FileHandler {
   }
 
   override fun getDownloadFile(): File {
-    val downloadFile = File(downloadsFolder, "${System.currentTimeMillis()}$JPG_EXTENSION")
-    createDownloadsFolder()
-    if (!downloadFile.exists()) {
-      downloadFile.createNewFile()
+    return File(downloadsFolder, "${System.currentTimeMillis()}$JPG_EXTENSION").apply {
+      createDownloadsFolder()
+      if (!exists()) {
+        createNewFile()
+      }
     }
-    return downloadFile
   }
 
   override fun deleteCacheFiles() {
@@ -68,12 +68,12 @@ class FileHandlerImpl : FileHandler {
   }
 
   override fun getCollectionsFile(): File {
-    val collectionsFile = File(collectionsFolder, "${System.currentTimeMillis()}$JPG_EXTENSION")
-    createCollectionsFolder()
-    if (!collectionsFile.exists()) {
-      collectionsFile.createNewFile()
+    return File(collectionsFolder, "${System.currentTimeMillis()}$JPG_EXTENSION").apply {
+      createCollectionsFolder()
+      if (!exists()) {
+        createNewFile()
+      }
     }
-    return collectionsFile
   }
 
   override fun freeSpaceAvailable(): Boolean {
