@@ -13,7 +13,7 @@ const val DETAILS_COLUMN = "DETAILS"
 @Entity(tableName = TABLE_NAME)
 data class CollectionDatabaseImageEntity(
   @PrimaryKey(autoGenerate = true)
-  var uid: Long,
+  val uid: Long,
 
   @ColumnInfo(name = NAME_COLUMN)
   val name: String,
