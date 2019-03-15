@@ -57,7 +57,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_search)
     presenter.attachView(this)
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       overridePendingTransition(R.anim.slide_in_up, emptyPendingTransitionAnimation)
     }
     initAppbar()

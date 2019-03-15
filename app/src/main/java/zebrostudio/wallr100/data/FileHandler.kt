@@ -37,7 +37,7 @@ class FileHandlerImpl : FileHandler {
       File(cacheFolder, System.currentTimeMillis().toString())
 
   override fun getCacheFile(): File {
-    createCacheFolder()
+    createCacheFolderIfNotPresent()
     if (!cacheFile.exists()) {
       cacheFile.createNewFile()
     }
@@ -45,7 +45,7 @@ class FileHandlerImpl : FileHandler {
   }
 
   override fun getCacheFileUriForCropping(): Uri {
-    createCacheFolder()
+    createCacheFolderIfNotPresent()
     if (!cacheCroppedFile.exists()) {
       cacheCroppedFile.createNewFile()
     }
@@ -53,8 +53,8 @@ class FileHandlerImpl : FileHandler {
   }
 
   override fun getDownloadFile(): File {
+    createDownloadsFolderIfNotPresent()
     return File(downloadsFolder, "${System.currentTimeMillis()}$JPG_EXTENSION").apply {
-      createDownloadsFolder()
       if (!exists()) {
         createNewFile()
       }
@@ -68,8 +68,8 @@ class FileHandlerImpl : FileHandler {
   }
 
   override fun getCollectionsFile(): File {
+    createCollectionsFolderIfNotPresent()
     return File(collectionsFolder, "${System.currentTimeMillis()}$JPG_EXTENSION").apply {
-      createCollectionsFolder()
       if (!exists()) {
         createNewFile()
       }
@@ -82,19 +82,19 @@ class FileHandlerImpl : FileHandler {
     return megBytesAvailable > MINIMUM_FREE_STORAGE_IN_MB
   }
 
-  private fun createCacheFolder() {
+  private fun createCacheFolderIfNotPresent() {
     if (!cacheFolder.exists()) {
       cacheFolder.mkdirs()
     }
   }
 
-  private fun createDownloadsFolder() {
+  private fun createDownloadsFolderIfNotPresent() {
     if (!downloadsFolder.exists()) {
       downloadsFolder.mkdirs()
     }
   }
 
-  private fun createCollectionsFolder() {
+  private fun createCollectionsFolderIfNotPresent() {
     if (!collectionsFolder.exists()) {
       collectionsFolder.mkdirs()
     }

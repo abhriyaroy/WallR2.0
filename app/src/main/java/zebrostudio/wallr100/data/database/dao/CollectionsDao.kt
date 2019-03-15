@@ -5,6 +5,8 @@ import android.arch.persistence.room.Delete
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
+import io.reactivex.Flowable
+import io.reactivex.Single
 import zebrostudio.wallr100.data.database.entity.CollectionDatabaseImageEntity
 import zebrostudio.wallr100.data.database.entity.TABLE_NAME
 
@@ -19,10 +21,10 @@ interface CollectionsDao {
   fun insert(collectionDatabaseImageEntity: CollectionDatabaseImageEntity)
 
   @Query(RETRIEVE_ALL_DATA_QUERY)
-  fun getAllData(): List<CollectionDatabaseImageEntity>
+  fun getAllData(): Flowable<List<CollectionDatabaseImageEntity>>
 
   @Query(RETRIEVE_DATA_USING_UID_QUERY)
-  fun getDataUsingUid(uid: Int): CollectionDatabaseImageEntity
+  fun getDataUsingUid(uid: Int): Single<CollectionDatabaseImageEntity>
 
   @Delete
   fun deleteData(collectionDatabaseImageEntity: CollectionDatabaseImageEntity)

@@ -3,10 +3,8 @@ package com.yalantis.guillotine.animation;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
-import android.os.Build;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
 import com.yalantis.guillotine.util.ActionBarInterpolator;
 import com.yalantis.guillotine.util.GuillotineInterpolator;
@@ -64,19 +62,8 @@ public class GuillotineAnimation {
 
   private void setUpOpeningView(final View openingView) {
     if (actionBarView != null) {
-      actionBarView.getViewTreeObserver()
-          .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                actionBarView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-              } else {
-                actionBarView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-              }
-              actionBarView.setPivotX(calculatePivotX(openingView));
-              actionBarView.setPivotY(calculatePivotY(openingView));
-            }
-          });
+      actionBarView.setPivotX(calculatePivotX(openingView));
+      actionBarView.setPivotY(calculatePivotY(openingView));
     }
     openingView.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -87,20 +74,8 @@ public class GuillotineAnimation {
   }
 
   private void setUpClosingView(final View closingView) {
-    guillotineView.getViewTreeObserver()
-        .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-          @Override
-          public void onGlobalLayout() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-              guillotineView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            } else {
-              guillotineView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-            }
-            guillotineView.setPivotX(calculatePivotX(closingView));
-            guillotineView.setPivotY(calculatePivotY(closingView));
-          }
-        });
-
+    guillotineView.setPivotX(calculatePivotX(closingView));
+    guillotineView.setPivotY(calculatePivotY(closingView));
     closingView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {

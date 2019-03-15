@@ -132,13 +132,17 @@ class ImageHandlerImpl(
 
   override fun convertUriToBitmap(uri: Uri): Single<Bitmap> {
     return Single.create {
-      with(context.contentResolver.openFileDescriptor(uri, READ_MODE)) {
-        BitmapFactory.decodeFileDescriptor(fileDescriptor).let { bitmap ->
-          this?.close()
-          fileHandler.getCacheFile().outputStream()
-              .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
-          it.onSuccess(bitmap)
+      try {
+        with(context.contentResolver.openFileDescriptor(uri, READ_MODE)) {
+          BitmapFactory.decodeFileDescriptor(fileDescriptor).let { bitmap ->
+            this?.close()
+            fileHandler.getCacheFile().outputStream()
+                .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
+            it.onSuccess(bitmap)
+          }
         }
+      } catch (exception: IOException) {
+        it.onError(exception)
       }
     }
   }
@@ -146,40 +150,52 @@ class ImageHandlerImpl(
   override fun convertImageInCacheToLowpoly(): Single<Bitmap> {
     return Single.create {
       LowPoly.generate(getImageBitmap()).let { bitmap ->
-        fileHandler.getCacheFile().outputStream()
-            .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
-        it.onSuccess(bitmap)
+        try {
+          fileHandler.getCacheFile().outputStream()
+              .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
+          it.onSuccess(bitmap)
+        } catch (exception: IOException) {
+          it.onError(exception)
+        }
       }
     }
   }
 
   override fun saveLowPolyImageToDownloads(): Completable {
     return Completable.create {
-      fileHandler.getCacheFile().inputStream().let { inputStream ->
-        fileHandler.getDownloadFile().outputStream()
-            .writeInputStreamUsingByteArray(inputStream, BYTE_ARRAY_SIZE)
-        inputStream.close()
-        it.onComplete()
+      try {
+        fileHandler.getCacheFile().inputStream().let { inputStream ->
+          fileHandler.getDownloadFile().outputStream()
+              .writeInputStreamUsingByteArray(inputStream, BYTE_ARRAY_SIZE)
+          inputStream.close()
+          it.onComplete()
+        }
+      } catch (exception: IOException) {
+        it.onError(exception)
       }
     }
   }
 
   override fun saveImageToCollections(type: Int, details: String): Completable {
     return Completable.create {
-      fileHandler.getCacheFile().inputStream().let { inputStream ->
-        fileHandler.getCollectionsFile().let {
-          it.outputStream()
-              .writeInputStreamUsingByteArray(inputStream, BYTE_ARRAY_SIZE)
-          databaseHelper.getDatabase().collectionsDao().insert(CollectionDatabaseImageEntity(
-              UID_AUTO_INCREMENT,
-              it.name,
-              type,
-              it.path,
-              details
-          ))
+      try {
+        fileHandler.getCacheFile().inputStream().let { inputStream ->
+          fileHandler.getCollectionsFile().let { file ->
+            file.outputStream()
+                .writeInputStreamUsingByteArray(inputStream, BYTE_ARRAY_SIZE)
+            databaseHelper.getDatabase().collectionsDao().insert(CollectionDatabaseImageEntity(
+                UID_AUTO_INCREMENT,
+                file.name,
+                type,
+                file.path,
+                details
+            ))
+          }
+          inputStream.close()
+          it.onComplete()
         }
-        inputStream.close()
-        it.onComplete()
+      } catch (exception: IOException) {
+        it.onError(exception)
       }
     }
   }
