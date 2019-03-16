@@ -99,6 +99,8 @@ android {
     implementation project(':libraryPhotoView')
     implementation project(':libraryDragSelectRecyclerView')
     implementation project(':libraryMaterialSpinner')
+    implementation project(':libraryMaterialCab')
+    implementation project(':libraryFloatingActionButton')
     // Test runners
     testImplementation "junit:junit:$JUNIT_VERSION"
     testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"
