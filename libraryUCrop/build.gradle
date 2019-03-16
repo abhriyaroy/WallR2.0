@@ -8,7 +8,7 @@ android {
     minSdkVersion MINIMUM_SDK_VERSION
     targetSdkVersion TARGET_SDK_VERSION
     versionCode LIBRARY_UCROP_VERSION
-    versionName "$LIBRARY_UCROP_VERSION_NAME"
+    versionName LIBRARY_UCROP_VERSION_NAME
 
     vectorDrawables.useSupportLibrary = true
   }

@@ -14,7 +14,7 @@ android {
     renderscriptTargetApi RENDER_SCRIPT_VERSION
     renderscriptSupportModeEnabled true
     versionCode APP_VERSION
-    versionName "$APP_VERSION_NAME"
+    versionName APP_VERSION_NAME
   }
   buildTypes {
     release {

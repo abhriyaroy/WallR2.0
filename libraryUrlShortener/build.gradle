@@ -9,7 +9,7 @@ android {
     minSdkVersion MINIMUM_SDK_VERSION
     targetSdkVersion TARGET_SDK_VERSION
     versionCode LIBRARY_URL_SHORTENER_VERSION
-    versionName "$LIBRARY_URL_SHORTENER_VERSION_NAME"
+    versionName LIBRARY_URL_SHORTENER_VERSION_NAME
   }
   buildTypes {
     release {

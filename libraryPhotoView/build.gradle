@@ -7,8 +7,8 @@ android {
   defaultConfig {
     minSdkVersion MINIMUM_SDK_VERSION
     targetSdkVersion TARGET_SDK_VERSION
-    versionCode 1
-    versionName "1.0"
+    versionCode LIBRARY_PHOTOVIEW_VERSION
+    versionName LIBRARY_PHOTOVIEW_VERSION_NAME
   }
 }
 
