@@ -190,6 +190,9 @@ class ImageHandlerImpl(
                 file.path,
                 details
             ))
+            databaseHelper.getDatabase().collectionsDao().getAllData().subscribe { it->
+              System.out.println(it)
+            }
           }
           inputStream.close()
           it.onComplete()

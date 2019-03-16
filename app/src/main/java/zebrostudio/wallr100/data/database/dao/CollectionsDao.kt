@@ -21,7 +21,7 @@ interface CollectionsDao {
   fun insert(collectionDatabaseImageEntity: CollectionDatabaseImageEntity)
 
   @Query(RETRIEVE_ALL_DATA_QUERY)
-  fun getAllData(): Flowable<List<CollectionDatabaseImageEntity>>
+  fun getAllData(): Single<List<CollectionDatabaseImageEntity>>
 
   @Query(RETRIEVE_DATA_USING_UID_QUERY)
   fun getDataUsingUid(uid: Int): Single<CollectionDatabaseImageEntity>
