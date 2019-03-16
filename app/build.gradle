@@ -97,6 +97,8 @@ android {
     implementation project(':libraryUrlShortener')
     implementation project(':libraryUCrop')
     implementation project(':libraryPhotoView')
+    implementation project(':libraryDragSelectRecyclerView')
+    implementation project(':libraryMaterialSpinner')
     // Test runners
     testImplementation "junit:junit:$JUNIT_VERSION"
     testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"
