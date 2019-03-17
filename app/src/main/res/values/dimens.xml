@@ -32,12 +32,17 @@
   <dimen name="main_activity_tab_layout_text_size">14sp</dimen>
   <dimen name="main_activity_tab_layout_text_horizontal_padding">16dp</dimen>
   <dimen name="main_activity_tab_layout_title_offset">24dp</dimen>
+  <dimen name="main_activity_minimal_bottom_layout_height">56dp</dimen>
+  <dimen name="main_activity_material_spinner_max_height">350dp</dimen>
 
   <dimen name="overflow_menu_text_size">12sp</dimen>
   <dimen name="back_icon_width">40dp</dimen>
   <dimen name="back_icon_height">40dp</dimen>
   <dimen name="back_icon_margin_start">8dp</dimen>
   <dimen name="back_icon_margin_top">24dp</dimen>
+  <dimen name="shadow_top_height">2dp</dimen>
+  <dimen name="wallpaper_action_progress_spinkit_height">45dp</dimen>
+  <dimen name="wallpaper_action_progress_spinkit_padding">10dp</dimen>
 
   <dimen name="buy_pro_top_half_bottom_padding">8dp</dimen>
   <dimen name="buy_pro_back_button_margin_top">10dp</dimen>
@@ -136,8 +141,6 @@
   <dimen name="detail_activity_option_text_view_text_size">12sp</dimen>
   <dimen name="detail_activity_wallpaper_actions_bar_bottom_padding">4dp</dimen>
   <dimen name="detail_activity_wallpaper_actions_bar_bottom_margin_bottom">4dp</dimen>
-  <dimen name="wallpaper_action_progress_spinkit_height">45dp</dimen>
-  <dimen name="wallpaper_action_progress_spinkit_padding">10dp</dimen>
   <dimen name="detail_activity_loading_hint_below_progress_percentage_padding_top">2dp</dimen>
   <dimen name="detail_activity_loading_hint_below_progress_percentage_text_size">16sp</dimen>
   <dimen name="detail_activity_loading_hint_below_progress_spinkit_margin_top">4dp</dimen>
@@ -157,8 +160,10 @@
   <dimen name="detail_activity_crystallize_dialog_scrollview_padding_top">8dp</dimen>
   <dimen name="detail_activity_crystallize_dialog_scrollview_padding_left">24dp</dimen>
   <dimen name="detail_activity_crystallize_dialog_scrollview_padding_right">24dp</dimen>
+
   <dimen name="full_screen_image_spinkit_margin_bottom">24dp</dimen>
   <dimen name="full_screen_image_spinkit_margin_end">8dp</dimen>
   <dimen name="full_screen_image_spinkit_margin_start">8dp</dimen>
+  <dimen name="main_activity_fab_margin_botom">15dp</dimen>
 
 </resources>

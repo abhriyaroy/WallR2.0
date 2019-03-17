@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import com.getbase.floatingactionbutton.FloatingActionButton
 import com.uber.autodispose.ScopeProvider
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
@@ -47,6 +49,7 @@ abstract class BaseFragment : Fragment(), BaseView {
 
     highlightCurrentMenuItem()
     showToolbarMenuIcon()
+    hideBottomLayout()
   }
 
   private fun highlightCurrentMenuItem() {
@@ -69,6 +72,11 @@ abstract class BaseFragment : Fragment(), BaseView {
       }
       else -> activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visible()
     }
+  }
+
+  private fun hideBottomLayout() {
+    activity?.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.gone()
+    activity?.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.gone()
   }
 
   override fun getScope(): ScopeProvider {
