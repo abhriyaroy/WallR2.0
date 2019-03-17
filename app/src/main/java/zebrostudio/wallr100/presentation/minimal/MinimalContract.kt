@@ -4,8 +4,12 @@ import zebrostudio.wallr100.presentation.BasePresenter
 
 interface MinimalContract {
 
-  interface MinimalView
+  interface MinimalView{
 
-  interface MinimalPresenter : BasePresenter<MinimalView>
+  }
+
+  interface MinimalPresenter : BasePresenter<MinimalView>{
+
+  }
 
 }

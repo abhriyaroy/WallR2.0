@@ -52,4 +52,9 @@ interface WallrRepository {
 
   fun saveImageToCollections(type: Int, details: String): Completable
 
+  fun isCustomSolidColorListPresent(): Boolean
+  fun getCustomSolidColorList(): Single<List<String>>
+  fun getDefaultSolidColorList(): Single<List<String>>
+  fun saveCustomSolidColorList(colors: List<String>): Completable
+
 }

@@ -8,9 +8,10 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.presentation.minimal.MinimalContract
+import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
 import javax.inject.Inject
 
-class MinimalFragment : BaseFragment(), MinimalContract.MinimalView {
+class MinimalFragment : BaseFragment(), MinimalView {
 
   @Inject
   internal lateinit var presenter: MinimalContract.MinimalPresenter

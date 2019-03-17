@@ -25,6 +25,8 @@ import zebrostudio.wallr100.data.ImageHandler
 import zebrostudio.wallr100.data.ImageHandlerImpl
 import zebrostudio.wallr100.data.SharedPrefsHelper
 import zebrostudio.wallr100.data.SharedPrefsHelperImpl
+import zebrostudio.wallr100.data.SolidColorHelper
+import zebrostudio.wallr100.data.SolidColorHelperImpl
 import zebrostudio.wallr100.data.WallrDataRepository
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactoryImpl
@@ -83,6 +85,10 @@ class AppModule {
   @PerApplication
   fun provideFirebaseDatabaseHelper(context: Context): FirebaseDatabaseHelper =
       FirebaseDatabaseHelperImpl(context)
+
+  @Provides
+  @PerApplication
+  fun provideSolidColorHelper(context: Context): SolidColorHelper = SolidColorHelperImpl(context)
 
   @Provides
   @PerApplication
@@ -146,6 +152,7 @@ class AppModule {
     imageHandler: ImageHandler,
     fileHandler: FileHandler,
     downloadHelper: DownloadHelper,
+    solidColorHelper: SolidColorHelper,
     executionThread: ExecutionThread
   ): WallrRepository = WallrDataRepository(retrofitFirebaseAuthFactory,
       unsplashClientFactory,
@@ -157,6 +164,7 @@ class AppModule {
       imageHandler,
       fileHandler,
       downloadHelper,
+      solidColorHelper,
       executionThread)
 
   @Provides

@@ -32,6 +32,8 @@ const val PURCHASE_PREFERENCE_NAME = "PURCHASE_PREF"
 const val PREMIUM_USER_TAG = "premium_user"
 const val IMAGE_PREFERENCE_NAME = "IMAGE_PREF"
 const val CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG = "crystallize_click_dialog"
+const val CUSTOM_SOLID_COLOR_LIST_AVAILABLE_TAG = "custom_solid_color_list_availability"
+const val CUSTOM_SOLID_COLOR_LIST_TAG = "custom_solid_color_list"
 const val UNABLE_TO_RESOLVE_HOST_EXCEPTION_MESSAGE = "Unable to resolve host " +
     "\"api.unsplash.com\": No address associated with hostname"
 const val FIREBASE_DATABASE_PATH = "wallr"
@@ -62,6 +64,7 @@ class WallrDataRepository(
   private val imageHandler: ImageHandler,
   private val fileHandler: FileHandler,
   private val downloadHelper: DownloadHelper,
+  private val solidColorHelper: SolidColorHelper,
   private val executionThread: ExecutionThread
 ) : WallrRepository {
 
@@ -257,6 +260,34 @@ class WallrDataRepository(
   override fun saveImageToCollections(type: Int, details: String): Completable {
     return imageHandler.saveImageToCollections(type, details)
         .subscribeOn(executionThread.computationScheduler)
+  }
+
+  override fun isCustomSolidColorListPresent(): Boolean {
+    return sharedPrefsHelper.getBoolean(IMAGE_PREFERENCE_NAME,
+        CUSTOM_SOLID_COLOR_LIST_AVAILABLE_TAG, false)
+  }
+
+  override fun getCustomSolidColorList(): Single<List<String>> {
+    return solidColorHelper.getCustomColors()
+        .subscribeOn(executionThread.ioScheduler)
+  }
+
+  override fun getDefaultSolidColorList(): Single<List<String>> {
+    return solidColorHelper.getDefaultColors()
+        .subscribeOn(executionThread.ioScheduler)
+  }
+
+  override fun saveCustomSolidColorList(colors: List<String>): Completable {
+    return Completable.create {
+      if (
+          sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
+              Gson().toJson(colors))
+      ) {
+        it.onComplete()
+      } else {
+        it.onError(Exception())
+      }
+    }.subscribeOn(executionThread.ioScheduler)
   }
 
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()
