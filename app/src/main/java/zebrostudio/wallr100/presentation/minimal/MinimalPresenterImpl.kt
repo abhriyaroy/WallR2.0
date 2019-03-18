@@ -74,4 +74,12 @@ class MinimalPresenterImpl(
 
   }
 
+  override fun handleDeleteMenuItemClick() {
+
+  }
+
+  override fun handleCabDestoryed() {
+
+  }
+
 }

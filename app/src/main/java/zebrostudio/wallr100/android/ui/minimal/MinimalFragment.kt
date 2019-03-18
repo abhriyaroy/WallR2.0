@@ -1,6 +1,8 @@
 package zebrostudio.wallr100.android.ui.minimal
 
+import android.graphics.Color
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -10,6 +12,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import com.afollestad.dragselectrecyclerview.DragSelectTouchListener
 import com.afollestad.dragselectrecyclerview.Mode.RANGE
+import com.afollestad.materialcab.MaterialCab
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.minimalBottomLayout
 import kotlinx.android.synthetic.main.activity_main.minimalBottomLayoutFab
@@ -80,11 +83,29 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun showCab(size: Int) {
+    MaterialCab.attach(activity as AppCompatActivity, R.id.cabStub) {
+      menuRes = R.menu.minimal
+      closeDrawableRes = R.drawable.ic_close_white
+      titleColor = Color.WHITE
+      title = getString(R.string.minimal_fragment_cab_title, size)
+
+      onSelection {
+        if (it.itemId == R.id.delete) {
+          presenter.handleDeleteMenuItemClick()
+        }
+        true
+      }
+
+      onDestroy {
+        presenter.handleCabDestoryed()
+        true
+      }
+    }
 
   }
 
   override fun hideCab() {
-
+    MaterialCab.destroy()
   }
 
   override fun showBottomPanelWithAnimation() {

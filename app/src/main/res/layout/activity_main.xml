@@ -70,11 +70,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <ViewStub
-        android:id="@+id/cabStub"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"/>
-
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"

@@ -25,6 +25,8 @@ interface MinimalContract {
     fun updateSelectionChange(index: Int, size: Int)
     fun handleItemLongClick(position: Int)
     fun handleScroll(yAxis: Int)
+    fun handleDeleteMenuItemClick()
+    fun handleCabDestoryed()
   }
 
 }
