@@ -97,7 +97,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
       }
 
       onDestroy {
-        presenter.handleCabDestoryed()
+        presenter.handleCabDestroyed()
         true
       }
     }
@@ -160,7 +160,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
         override fun onAnimationEnd(animation: Animation) {
           activity?.spinner?.isEnabled = false
-          minimalBottomLayout.gone()
+          activity?.minimalBottomLayout?.gone()
         }
 
         override fun onAnimationStart(animation: Animation) {
