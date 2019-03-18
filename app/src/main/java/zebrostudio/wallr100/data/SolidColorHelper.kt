@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.reactivex.Single
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.data.exception.UnableToGetDefaultSolidColorsException
+import zebrostudio.wallr100.data.exception.UnableToGetSolidColorsException
 
 interface SolidColorHelper {
   fun getDefaultColors(): Single<List<String>>
@@ -18,11 +18,15 @@ class SolidColorHelperImpl(
 ) : SolidColorHelper {
 
   override fun getDefaultColors(): Single<List<String>> {
+    return Single.just(context.resources.getStringArray(R.array.solidColorsArray).toList())
+  }
+
+  override fun getCustomColors(): Single<List<String>> {
     return Single.create { singleEmitter ->
       sharedPrefsHelper.getString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG)
           .let { string ->
             if (string == "") {
-              singleEmitter.onError(UnableToGetDefaultSolidColorsException())
+              singleEmitter.onError(UnableToGetSolidColorsException())
             } else {
               object : TypeToken<List<String>>() {}.type.let {
                 singleEmitter.onSuccess(Gson().fromJson(string, it))
@@ -30,10 +34,6 @@ class SolidColorHelperImpl(
             }
           }
     }
-  }
-
-  override fun getCustomColors(): Single<List<String>> {
-    return Single.just(context.resources.getStringArray(R.array.solidColorsArray).toList())
   }
 
 }

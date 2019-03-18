@@ -99,8 +99,10 @@
   <item name="recycler_view_adapter_wallpaper_image_height" type="integer">950</item>
   <item name="recycler_view_adapter_wallpaper_image_width" type="integer">880</item>
   <item name="recycler_view_span_count" type="integer">2</item>
+  <item name="minimal_image_recycler_view_span_count" type="integer">3</item>
   <item name="recycler_view_grid_spacing_px" type="integer">5</item>
   <item name="recycler_view_grid_size" type="integer">2</item>
+  <item name="minimal_image_recycler_view_grid_size" type="integer">3</item>
   <item name="swipe_refresh_rgb_wave" type="integer">33</item>
 
   <dimen name="wallpaper_fragment_info_imageview_width">50dp</dimen>

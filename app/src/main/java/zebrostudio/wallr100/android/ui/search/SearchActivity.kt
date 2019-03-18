@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.activity_search.searchView
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter
 import zebrostudio.wallr100.android.utils.EndlessScrollListener
-import zebrostudio.wallr100.android.utils.GridItemDecorator
+import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
 import zebrostudio.wallr100.android.utils.checkDataConnection
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
@@ -234,7 +234,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     val scaleInAdapter = ScaleInAnimationAdapter(recyclerviewAdapter)
     scaleInAdapter.setDuration(MILLISECONDS.toMillis(500).toInt())
     recyclerView.addItemDecoration(
-        GridItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
+        RecyclerViewItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
             integerRes(R.integer.recycler_view_grid_size)))
     recyclerView.adapter = scaleInAdapter
     imageRecyclerViewPresenter.setListType(SEARCH)

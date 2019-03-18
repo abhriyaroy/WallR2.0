@@ -155,4 +155,6 @@
   <string name="detail_activity_crystallized_download_finished_message">Your crystallized wallpaper has finished downloading</string>
   <string name="detail_activity_image_add_to_collection_success_message">Wallpaper has been added to collection!</string>
 
+  <string name="minimal_fragment_unable_to_get_colors_error_message">Unable to fetch minimal wallpapers</string>
+
 </resources>

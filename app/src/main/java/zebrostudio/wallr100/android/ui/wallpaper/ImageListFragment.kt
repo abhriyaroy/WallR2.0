@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_image_list.view.spinkitView
 import kotlinx.android.synthetic.main.fragment_image_list.view.swipeRefreshLayout
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter
-import zebrostudio.wallr100.android.utils.GridItemDecorator
+import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
 import zebrostudio.wallr100.android.utils.checkDataConnection
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
@@ -127,7 +127,7 @@ class ImageListFragment : Fragment(), ImageListView {
     val scaleInAdapter = ScaleInAnimationAdapter(recyclerviewAdapter)
     scaleInAdapter.setDuration(MILLISECONDS.toMillis(500).toInt())
     recyclerView?.addItemDecoration(
-        GridItemDecorator(context!!.integerRes(R.integer.recycler_view_grid_spacing_px),
+        RecyclerViewItemDecorator(context!!.integerRes(R.integer.recycler_view_grid_spacing_px),
             context!!.integerRes(R.integer.recycler_view_grid_size)))
     recyclerView?.adapter = scaleInAdapter
     imageRecyclerViewPresenter.setListType(WALLPAPERS)

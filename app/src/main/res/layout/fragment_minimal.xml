@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-  <com.afollestad.dragselectrecyclerview.DragSelectRecyclerView
-      android:id="@+id/minimalFragmentDragSelectRecyclerView"
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/minimalFragmentRecyclerView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:scrollbars="vertical"/>

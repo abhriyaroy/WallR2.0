@@ -43,6 +43,8 @@ import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseInteractor
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.domain.interactor.ImageOptionsInteractor
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
+import zebrostudio.wallr100.domain.interactor.MinimalImagesInteractor
+import zebrostudio.wallr100.domain.interactor.MinimalImagesUseCase
 import zebrostudio.wallr100.domain.interactor.SearchPicturesInteractor
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusInteractor
@@ -51,6 +53,8 @@ import zebrostudio.wallr100.domain.interactor.WallpaperImagesInteractor
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
+import zebrostudio.wallr100.presentation.adapters.MinimalRecyclerItemContract.MinimalRecyclerViewPresenter
+import zebrostudio.wallr100.presentation.adapters.MinimalRecyclerViewPresenterImpl
 import zebrostudio.wallr100.presentation.detail.GsonHelper
 import zebrostudio.wallr100.presentation.detail.GsonHelperImpl
 
@@ -88,7 +92,10 @@ class AppModule {
 
   @Provides
   @PerApplication
-  fun provideSolidColorHelper(context: Context): SolidColorHelper = SolidColorHelperImpl(context)
+  fun provideSolidColorHelper(
+    context: Context,
+    sharedPrefsHelper: SharedPrefsHelper
+  ): SolidColorHelper = SolidColorHelperImpl(context, sharedPrefsHelper)
 
   @Provides
   @PerApplication
@@ -196,7 +203,16 @@ class AppModule {
   ): ImageOptionsUseCase = ImageOptionsInteractor(wallrRepository)
 
   @Provides
+  fun provideMinimalImagesUseCase(
+    wallrRepository: WallrRepository
+  ): MinimalImagesUseCase = MinimalImagesInteractor(wallrRepository)
+
+  @Provides
   fun provideImageRecyclerViewPresenter()
       : ImageRecyclerItemContract.ImageRecyclerViewPresenter = ImageRecyclerViewPresenterImpl()
+
+  @Provides
+  fun provideMinimalRecyclerViewPresenter()
+      : MinimalRecyclerViewPresenter = MinimalRecyclerViewPresenterImpl()
 
 }
