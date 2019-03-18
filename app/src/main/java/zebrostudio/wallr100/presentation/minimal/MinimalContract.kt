@@ -12,6 +12,7 @@ interface MinimalContract {
     fun showGenericErrorMessage()
     fun updateViewItem(index: Int)
     fun showCab(size: Int)
+    fun hideCab()
     fun showBottomPanelWithAnimation()
     fun hideBottomLayoutWithAnimation()
     fun startSelection(position: Int)

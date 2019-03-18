@@ -11,7 +11,7 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
 
   private var minimalPresenter: MinimalPresenter? = null
   private var colorList = mutableListOf<String>()
-  private var selectedList = mutableListOf<Int>()
+  private var selectedList = HashMap<Int, Boolean>()
 
   override fun attachMinimalPresenter(presenter: MinimalPresenter) {
     minimalPresenter = presenter
@@ -67,9 +67,9 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
     position: Int,
     itemView: MinimalRecyclerItemContract.MinimalRecyclerViewItem
   ) {
-    if (!selectedList.contains(position - INITIAL_OFFSET)) {
-      minimalPresenter?.handleItemLongClick(position)
-    }
+    toggleSelected(position)
+    minimalPresenter?.handleItemLongClick(position)
+
   }
 
   override fun isItemSelectable(index: Int): Boolean {
@@ -81,9 +81,8 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
   }
 
   override fun setItemSelected(index: Int, selected: Boolean) {
-    System.out.println("Selected $index")
     if (selected) {
-      selectedList.add(index - INITIAL_OFFSET)
+      selectedList[index - INITIAL_OFFSET] = true
     } else {
       selectedList.remove(index - INITIAL_OFFSET)
     }
@@ -93,7 +92,7 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
   private fun toggleSelected(index: Int) {
     (index - INITIAL_OFFSET).let {
       if (!selectedList.contains(it)) {
-        selectedList.add(it)
+        selectedList.put(it, true)
       } else {
         selectedList.remove(it)
       }

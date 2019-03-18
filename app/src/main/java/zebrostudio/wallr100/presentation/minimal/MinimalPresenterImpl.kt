@@ -55,11 +55,15 @@ class MinimalPresenterImpl(
 
   override fun updateSelectionChange(index: Int, size: Int) {
     minimalView?.updateViewItem(index)
-    if (size == 1) {
+    if (size == 1 && !isBottomPanelEnabled) {
       isBottomPanelEnabled = true
       minimalView?.showBottomPanelWithAnimation()
+      minimalView?.showCab(size)
+    } else if (size == 0) {
+      isBottomPanelEnabled = false
+      minimalView?.hideBottomLayoutWithAnimation()
+      minimalView?.hideCab()
     }
-    minimalView?.showCab(size)
   }
 
   override fun handleItemLongClick(position: Int) {
