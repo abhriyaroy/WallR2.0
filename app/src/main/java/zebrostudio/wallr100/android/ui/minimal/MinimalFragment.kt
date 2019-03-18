@@ -68,7 +68,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun updateViewItem(index: Int) {
-    minimalImageAdapter?.notifyItemChanged(index)
+    minimalImageAdapter?.notifyDataSetChanged()
   }
 
   override fun showCab(size: Int) {
@@ -84,6 +84,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun startSelection(position: Int) {
+    System.out.println("start selection")
     touchListener?.setIsActive(true, position)
   }
 

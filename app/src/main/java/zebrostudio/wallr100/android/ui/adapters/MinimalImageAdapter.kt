@@ -36,15 +36,15 @@ class MinimalImageAdapter(private val minimalRecyclerViewPresenter: MinimalRecyc
   }
 
   override fun setSelected(index: Int, selected: Boolean) {
-
+    minimalRecyclerViewPresenter.setItemSelected(index, selected)
   }
 
   override fun isSelected(index: Int): Boolean {
-    return true
+    return minimalRecyclerViewPresenter.isItemSelected(index)
   }
 
   override fun isIndexSelectable(index: Int): Boolean {
-    return true
+    return minimalRecyclerViewPresenter.isItemSelectable(index)
   }
 
 }
@@ -69,6 +69,7 @@ class MinimalViewHolder(
   }
 
   override fun showSelectedIndicator() {
+    System.out.println("show selector indicator")
     itemView.selectedOverlay.visible()
     itemView.selectedIndicatorIcon.visible()
   }
@@ -79,12 +80,15 @@ class MinimalViewHolder(
   }
 
   override fun attachClickListener() {
+    System.out.println("attach single click listener $adapterPosition")
     itemView.setOnClickListener {
+      System.out.println("single click listener")
       minimalRecyclerViewPresenter.handleClick(adapterPosition, this)
     }
   }
 
   override fun attachLongClickListener() {
+    System.out.println("attach long click listener $adapterPosition")
     itemView.setOnLongClickListener {
       minimalRecyclerViewPresenter.handleImageLongClick(adapterPosition, this)
       true

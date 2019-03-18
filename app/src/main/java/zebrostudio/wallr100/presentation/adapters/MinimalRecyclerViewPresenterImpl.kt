@@ -41,6 +41,13 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
       holder.hideAddImageLayout()
       holder.setImageViewColor(colorList[position - INITIAL_OFFSET])
       holder.attachLongClickListener()
+      if (selectedList.size != 0) {
+        if (selectedList.contains(position - INITIAL_OFFSET)) {
+          holder.showSelectedIndicator()
+        } else {
+          holder.hideSelectedIndicator()
+        }
+      }
     }
     holder.attachClickListener()
   }
@@ -60,7 +67,9 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
     position: Int,
     itemView: MinimalRecyclerItemContract.MinimalRecyclerViewItem
   ) {
-    minimalPresenter?.handleItemLongClick(position)
+    if (!selectedList.contains(position - INITIAL_OFFSET)) {
+      minimalPresenter?.handleItemLongClick(position)
+    }
   }
 
   override fun isItemSelectable(index: Int): Boolean {
@@ -72,6 +81,7 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
   }
 
   override fun setItemSelected(index: Int, selected: Boolean) {
+    System.out.println("Selected $index")
     if (selected) {
       selectedList.add(index - INITIAL_OFFSET)
     } else {
