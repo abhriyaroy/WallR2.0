@@ -28,6 +28,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
   @Inject
   internal lateinit var recyclerAdapterPresenter: MinimalRecyclerViewPresenter
   private var minimalImageAdapter: MinimalImageAdapter? = null
+  private var touchListener: DragSelectTouchListener? = null
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -66,6 +67,26 @@ class MinimalFragment : BaseFragment(), MinimalView {
     context!!.errorToast(getString(R.string.generic_error_message))
   }
 
+  override fun updateViewItem(index: Int) {
+    minimalImageAdapter?.notifyItemChanged(index)
+  }
+
+  override fun showCab(size: Int) {
+
+  }
+
+  override fun showBottomPanelWithAnimation() {
+
+  }
+
+  override fun hideBottomLayoutWithAnimation() {
+
+  }
+
+  override fun startSelection(position: Int) {
+    touchListener?.setIsActive(true, position)
+  }
+
   private fun initRecyclerView() {
     GridLayoutManager(context,
         context!!.integerRes(R.integer.minimal_image_recycler_view_span_count)).let {
@@ -75,11 +96,10 @@ class MinimalFragment : BaseFragment(), MinimalView {
       minimalFragmentRecyclerView.layoutManager = it
       minimalImageAdapter = MinimalImageAdapter(recyclerAdapterPresenter)
       minimalFragmentRecyclerView.adapter = minimalImageAdapter
-      DragSelectTouchListener.create(context!!, minimalImageAdapter!!) {
+      touchListener = DragSelectTouchListener.create(context!!, minimalImageAdapter!!) {
         this.mode = RANGE
-      }.let { touchListener ->
-        minimalFragmentRecyclerView.addOnItemTouchListener(touchListener)
       }
+      minimalFragmentRecyclerView.addOnItemTouchListener(touchListener!!)
     }
   }
 

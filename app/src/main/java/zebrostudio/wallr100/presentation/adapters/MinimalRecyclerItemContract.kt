@@ -24,6 +24,9 @@ interface MinimalRecyclerItemContract {
     fun onBindRepositoryRowViewAtPosition(holder: MinimalViewHolder, position: Int)
     fun handleClick(position: Int, itemView: MinimalRecyclerViewItem)
     fun handleImageLongClick(position: Int, itemView: MinimalRecyclerViewItem)
+    fun isItemSelectable(index: Int): Boolean
+    fun isItemSelected(index: Int): Boolean
+    fun setItemSelected(index: Int, selected: Boolean)
   }
 
 }

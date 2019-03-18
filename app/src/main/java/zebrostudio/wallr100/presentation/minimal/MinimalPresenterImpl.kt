@@ -13,6 +13,7 @@ class MinimalPresenterImpl(
 ) : MinimalContract.MinimalPresenter {
 
   private lateinit var colorList: List<String>
+  private var isBottomPanelEnabled = false
   private var minimalView: MinimalView? = null
   private var recyclerPresenter: MinimalRecyclerViewPresenter? = null
 
@@ -38,7 +39,7 @@ class MinimalPresenterImpl(
     } else {
       minimalImagesUseCase.getDefaultColors()
     }.observeOn(postExecutionThread.scheduler)
-        .autoDisposable(minimalView?.getScope()!!)
+        .autoDisposable(minimalView!!.getScope())
         .subscribe({
           colorList = it
           recyclerPresenter?.appendList(it)
@@ -50,6 +51,23 @@ class MinimalPresenterImpl(
             minimalView?.showGenericErrorMessage()
           }
         })
+  }
+
+  override fun updateSelectionChange(index: Int, size: Int) {
+    minimalView?.updateViewItem(index)
+    if (size == 1) {
+      isBottomPanelEnabled = true
+      minimalView?.showBottomPanelWithAnimation()
+    }
+    minimalView?.showCab(size)
+  }
+
+  override fun handleItemLongClick(position: Int) {
+    minimalView?.startSelection(position)
+  }
+
+  override fun handleScroll(yAxis: Int) {
+
   }
 
 }
