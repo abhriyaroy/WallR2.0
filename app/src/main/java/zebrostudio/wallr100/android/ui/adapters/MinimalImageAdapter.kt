@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.afollestad.dragselectrecyclerview.DragSelectReceiver
-import kotlinx.android.synthetic.main.minimal_fragment_recycler_item.view.colorThumbnail
+import kotlinx.android.synthetic.main.item_recyclerview_minimal_fragment.view.colorThumbnail
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.presentation.adapters.MinimalRecyclerItemContract.MinimalRecyclerViewItem
@@ -17,7 +17,7 @@ class MinimalImageAdapter(private val minimalRecyclerViewPresenter: MinimalRecyc
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MinimalViewHolder {
     return MinimalViewHolder(parent.inflate(LayoutInflater.from(parent.context),
-        R.layout.minimal_fragment_recycler_item), minimalRecyclerViewPresenter)
+        R.layout.item_recyclerview_minimal_fragment), minimalRecyclerViewPresenter)
   }
 
   override fun getItemCount(): Int {

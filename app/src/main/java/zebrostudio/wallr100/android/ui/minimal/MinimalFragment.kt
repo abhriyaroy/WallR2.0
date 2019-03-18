@@ -38,16 +38,12 @@ class MinimalFragment : BaseFragment(), MinimalView {
     return container?.inflate(inflater, R.layout.fragment_minimal)
   }
 
-  override fun onResume() {
-    super.onResume()
-    presenter.attachView(this)
-    presenter.attachMinimalImageRecyclerViewPresenter(recyclerAdapterPresenter)
-    recyclerAdapterPresenter.attachMinimalPresenter(presenter)
-  }
-
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     initRecyclerView()
+    presenter.attachView(this)
+    presenter.attachMinimalImageRecyclerViewPresenter(recyclerAdapterPresenter)
+    recyclerAdapterPresenter.attachMinimalPresenter(presenter)
     presenter.handleViewCreated()
   }
 

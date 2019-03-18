@@ -167,5 +167,7 @@
   <dimen name="full_screen_image_spinkit_margin_end">8dp</dimen>
   <dimen name="full_screen_image_spinkit_margin_start">8dp</dimen>
   <dimen name="main_activity_fab_margin_botom">15dp</dimen>
+  <dimen name="item_recycler_minimal_fragment_add_icon_height">24dp</dimen>
+  <dimen name="item_recycler_minimal_fragment_add_icon_width">24dp</dimen>
 
 </resources>

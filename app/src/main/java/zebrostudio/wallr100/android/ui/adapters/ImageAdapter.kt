@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
-import kotlinx.android.synthetic.main.image_recyclerview_item.view.imageView
+import kotlinx.android.synthetic.main.item_recyclerview_image.view.imageView
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.detail.DetailActivity
 import zebrostudio.wallr100.android.utils.inflate
@@ -24,7 +24,7 @@ class ImageAdapter(private val presenter: ImageRecyclerItemContract.ImageRecycle
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
     return ViewHolder(parent.inflate(LayoutInflater.from(parent.context),
-        R.layout.image_recyclerview_item), parent.context, presenter)
+        R.layout.item_recyclerview_image), parent.context, presenter)
   }
 
   override fun getItemCount(): Int {
