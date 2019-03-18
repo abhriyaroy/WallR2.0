@@ -40,23 +40,25 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
   override fun onResume() {
     super.onResume()
+    presenter.attachView(this)
+    presenter.attachMinimalImageRecyclerViewPresenter(recyclerAdapterPresenter)
+    recyclerAdapterPresenter.attachMinimalPresenter(presenter)
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     initRecyclerView()
-    presenter.attachView(this)
     presenter.handleViewCreated()
   }
 
   override fun onDestroy() {
     presenter.detachView()
+    presenter.detachMinimalImageRecyclerViewPresenter()
+    recyclerAdapterPresenter.detachMinimalPresenter()
     super.onDestroy()
   }
 
-  override fun showColors(colorsList: List<String>) {
-    System.out.println("Show colours")
-    recyclerAdapterPresenter.appendList(colorsList)
+  override fun showColors() {
     minimalImageAdapter?.notifyDataSetChanged()
   }
 

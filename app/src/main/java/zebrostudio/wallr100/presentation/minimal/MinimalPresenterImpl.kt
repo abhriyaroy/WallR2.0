@@ -4,6 +4,7 @@ import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.data.exception.UnableToGetSolidColorsException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.MinimalImagesUseCase
+import zebrostudio.wallr100.presentation.adapters.MinimalRecyclerItemContract.MinimalRecyclerViewPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
 
 class MinimalPresenterImpl(
@@ -13,6 +14,7 @@ class MinimalPresenterImpl(
 
   private lateinit var colorList: List<String>
   private var minimalView: MinimalView? = null
+  private var recyclerPresenter: MinimalRecyclerViewPresenter? = null
 
   override fun attachView(view: MinimalView) {
     minimalView = view
@@ -22,8 +24,15 @@ class MinimalPresenterImpl(
     minimalView = null
   }
 
+  override fun attachMinimalImageRecyclerViewPresenter(presenter: MinimalRecyclerViewPresenter) {
+    recyclerPresenter = presenter
+  }
+
+  override fun detachMinimalImageRecyclerViewPresenter() {
+    recyclerPresenter = null
+  }
+
   override fun handleViewCreated() {
-    System.out.println("handle view called")
     if (minimalImagesUseCase.isCustomColorListPresent()) {
       minimalImagesUseCase.getCustomColors()
     } else {
@@ -31,14 +40,14 @@ class MinimalPresenterImpl(
     }.observeOn(postExecutionThread.scheduler)
         .autoDisposable(minimalView?.getScope()!!)
         .subscribe({
-          System.out.println("colour list came")
           colorList = it
-          minimalView?.showColors(it)
+          recyclerPresenter?.appendList(it)
+          minimalView?.showColors()
         }, {
           if (it is UnableToGetSolidColorsException) {
-
+            minimalView?.showUnableToGetColorsErrorMessage()
           } else {
-
+            minimalView?.showGenericErrorMessage()
           }
         })
   }

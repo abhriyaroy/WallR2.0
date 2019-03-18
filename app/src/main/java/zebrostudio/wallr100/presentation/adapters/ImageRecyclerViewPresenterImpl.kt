@@ -1,11 +1,12 @@
 package zebrostudio.wallr100.presentation.adapters
 
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract.ImageRecyclerViewPresenter
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 
-class ImageRecyclerViewPresenterImpl : ImageRecyclerItemContract.ImageRecyclerViewPresenter {
+class ImageRecyclerViewPresenterImpl : ImageRecyclerViewPresenter {
   private lateinit var imageType: ImageListType
 
   private val searchResultList = mutableListOf<SearchPicturesPresenterEntity>()
