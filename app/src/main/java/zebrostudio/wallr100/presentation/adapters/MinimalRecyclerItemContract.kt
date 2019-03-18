@@ -6,8 +6,13 @@ import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresente
 interface MinimalRecyclerItemContract {
 
   interface MinimalRecyclerViewItem {
+    fun showAddImageLayout()
+    fun hideAddImageLayout()
     fun setImageViewColor(colorHexCode: String)
-    fun attachClickListeners()
+    fun showSelectedIndicator()
+    fun hideSelectedIndicator()
+    fun attachClickListener()
+    fun attachLongClickListener()
   }
 
   interface MinimalRecyclerViewPresenter {

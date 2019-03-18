@@ -4,6 +4,8 @@ import zebrostudio.wallr100.android.ui.adapters.MinimalViewHolder
 import zebrostudio.wallr100.presentation.adapters.MinimalRecyclerItemContract.MinimalRecyclerViewPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
 
+const val INITIAL_OFFSET = 1
+
 class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
 
   private var minimalPresenter: MinimalPresenter? = null
@@ -26,12 +28,18 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
   }
 
   override fun getItemCount(): Int {
-    return colorList.size
+    return colorList.size + INITIAL_OFFSET
   }
 
   override fun onBindRepositoryRowViewAtPosition(holder: MinimalViewHolder, position: Int) {
-    holder.setImageViewColor(colorList[position])
-    holder.attachClickListeners()
+    if (position != 0) {
+      holder.showAddImageLayout()
+    } else {
+      holder.hideAddImageLayout()
+      holder.setImageViewColor(colorList[position - INITIAL_OFFSET])
+      holder.attachLongClickListener()
+    }
+    holder.attachClickListener()
   }
 
   override fun handleClick(
