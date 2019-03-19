@@ -27,6 +27,8 @@ interface MinimalRecyclerItemContract {
     fun isItemSelectable(index: Int): Boolean
     fun isItemSelected(index: Int): Boolean
     fun setItemSelected(index: Int, selected: Boolean)
+    fun clearSelectedItems()
+    fun deleteSelected()
   }
 
 }

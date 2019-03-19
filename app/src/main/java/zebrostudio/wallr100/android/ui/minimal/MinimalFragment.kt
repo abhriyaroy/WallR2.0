@@ -66,7 +66,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
     super.onDestroy()
   }
 
-  override fun showColors() {
+  override fun updateUi() {
     minimalImageAdapter?.notifyDataSetChanged()
   }
 
@@ -83,6 +83,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun showCab(size: Int) {
+    System.out.println("material cab size $size")
     MaterialCab.attach(activity as AppCompatActivity, R.id.cabStub) {
       menuRes = R.menu.minimal
       closeDrawableRes = R.drawable.ic_close_white

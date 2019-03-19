@@ -4,17 +4,17 @@ import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.data.exception.UnableToGetSolidColorsException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.MinimalImagesUseCase
+import zebrostudio.wallr100.presentation.adapters.INITIAL_SIZE
 import zebrostudio.wallr100.presentation.adapters.MinimalRecyclerItemContract.MinimalRecyclerViewPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
 
-const val MINIMUM_SCROLL_DIST = 25
+const val MINIMUM_SCROLL_DIST = 15
 
 class MinimalPresenterImpl(
   private val minimalImagesUseCase: MinimalImagesUseCase,
   private val postExecutionThread: PostExecutionThread
 ) : MinimalContract.MinimalPresenter {
 
-  private lateinit var colorList: List<String>
   private var isBottomPanelEnabled = false
   private var selectionSize = 0
   private var minimalView: MinimalView? = null
@@ -45,9 +45,8 @@ class MinimalPresenterImpl(
     }.observeOn(postExecutionThread.scheduler)
         .autoDisposable(minimalView!!.getScope())
         .subscribe({
-          colorList = it
           recyclerPresenter?.appendList(it)
-          minimalView?.showColors()
+          minimalView?.updateUi()
         }, {
           if (it is UnableToGetSolidColorsException) {
             minimalView?.showUnableToGetColorsErrorMessage()
@@ -62,12 +61,14 @@ class MinimalPresenterImpl(
     minimalView?.updateViewItem(index)
     if (size == 1) {
       minimalView?.showCab(size)
-      if (isBottomPanelEnabled){
+      if (isBottomPanelEnabled) {
         minimalView?.hideBottomLayoutWithAnimation()
       }
     } else if (size > 1 && !isBottomPanelEnabled) {
       isBottomPanelEnabled = true
       minimalView?.showBottomPanelWithAnimation()
+      minimalView?.showCab(size)
+    } else if (size > 1 && isBottomPanelEnabled) {
       minimalView?.showCab(size)
     } else if (size == 0) {
       isBottomPanelEnabled = false
@@ -97,7 +98,13 @@ class MinimalPresenterImpl(
   }
 
   override fun handleCabDestroyed() {
-
+    recyclerPresenter?.clearSelectedItems()
+    if (isBottomPanelEnabled) {
+      minimalView?.hideBottomLayoutWithAnimation()
+      isBottomPanelEnabled = false
+      selectionSize = INITIAL_SIZE
+    }
+    minimalView?.updateUi()
   }
 
 }

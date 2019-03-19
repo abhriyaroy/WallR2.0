@@ -11,7 +11,7 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
 
   private var minimalPresenter: MinimalPresenter? = null
   private var colorList = mutableListOf<String>()
-  private var selectedList = HashMap<Int, Boolean>()
+  private var selectedHashMap = HashMap<Int, Boolean>()
 
   override fun attachMinimalPresenter(presenter: MinimalPresenter) {
     minimalPresenter = presenter
@@ -41,8 +41,8 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
       holder.hideAddImageLayout()
       holder.setImageViewColor(colorList[position - INITIAL_OFFSET])
       holder.attachLongClickListener()
-      if (selectedList.size != 0) {
-        if (selectedList.contains(position - INITIAL_OFFSET)) {
+      if (selectedHashMap.size != 0) {
+        if (selectedHashMap.contains(position - INITIAL_OFFSET)) {
           holder.showSelectedIndicator()
         } else {
           holder.hideSelectedIndicator()
@@ -56,7 +56,7 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
     position: Int,
     itemView: MinimalRecyclerItemContract.MinimalRecyclerViewItem
   ) {
-    if (selectedList.size == 0) {
+    if (selectedHashMap.size == 0) {
       // open detail screen
     } else {
       toggleSelected(position)
@@ -77,27 +77,36 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
   }
 
   override fun isItemSelected(index: Int): Boolean {
-    return selectedList.contains(index - INITIAL_OFFSET)
+    return selectedHashMap.contains(index - INITIAL_OFFSET)
   }
 
   override fun setItemSelected(index: Int, selected: Boolean) {
     if (selected) {
-      selectedList[index - INITIAL_OFFSET] = true
+      selectedHashMap[index - INITIAL_OFFSET] = true
     } else {
-      selectedList.remove(index - INITIAL_OFFSET)
+      selectedHashMap.remove(index - INITIAL_OFFSET)
     }
-    minimalPresenter?.updateSelectionChange(index, selectedList.size)
+    System.out.println("hashmap size ${selectedHashMap.size}")
+    minimalPresenter?.updateSelectionChange(index, selectedHashMap.size)
+  }
+
+  override fun clearSelectedItems() {
+    selectedHashMap.clear()
+  }
+
+  override fun deleteSelected() {
+
   }
 
   private fun toggleSelected(index: Int) {
     (index - INITIAL_OFFSET).let {
-      if (!selectedList.contains(it)) {
-        selectedList.put(it, true)
+      if (!selectedHashMap.contains(it)) {
+        selectedHashMap.put(it, true)
       } else {
-        selectedList.remove(it)
+        selectedHashMap.remove(it)
       }
     }
-    minimalPresenter?.updateSelectionChange(index, selectedList.size)
+    minimalPresenter?.updateSelectionChange(index, selectedHashMap.size)
   }
 
 }
