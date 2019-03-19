@@ -10,11 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.RelativeLayout
 import com.afollestad.dragselectrecyclerview.DragSelectTouchListener
 import com.afollestad.dragselectrecyclerview.Mode.RANGE
 import com.afollestad.materialcab.MaterialCab
-import com.getbase.floatingactionbutton.FloatingActionButton
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.minimalBottomLayout
 import kotlinx.android.synthetic.main.activity_main.minimalBottomLayoutFab
@@ -28,9 +26,9 @@ import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
-import zebrostudio.wallr100.android.utils.invisible
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.visible
+import zebrostudio.wallr100.android.utils.withDelayOnMain
 import zebrostudio.wallr100.presentation.adapters.MinimalRecyclerItemContract.MinimalRecyclerViewPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
@@ -234,9 +232,8 @@ class MinimalFragment : BaseFragment(), MinimalView {
     activity?.spinner?.setOnItemSelectedListener { _, position, _, _ ->
       presenter.handleSpinnerOptionChanged(position)
     }
-    activity?.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.visible()
-    activity?.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.visible()
-    hideBottomLayoutWithAnimation()
+    showBottomPanelWithAnimation()
+    withDelayOnMain(600) { hideBottomLayoutWithAnimation() }
   }
 
   companion object {

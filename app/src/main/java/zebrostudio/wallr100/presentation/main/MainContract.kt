@@ -5,7 +5,6 @@ import zebrostudio.wallr100.presentation.BasePresenter
 interface MainContract {
 
   interface MainView {
-
     fun showExitConfirmation()
     fun exitApp()
     fun closeNavigationMenu()
@@ -13,16 +12,15 @@ interface MainContract {
     fun getFragmentTagAtStackTop(): String
     fun getExploreFragmentTag(): String
     fun startBackPressedFlagResetTimer()
-
+    fun isCabActive(): Boolean
+    fun dismissCab()
   }
 
   interface MainPresenter : BasePresenter<MainView> {
-
     fun handleBackPress()
     fun handleNavigationMenuOpened()
     fun handleNavigationMenuClosed()
     fun setBackPressedFlagToFalse()
     fun shouldShowPurchaseOption(): Boolean
-
   }
 }

@@ -31,7 +31,11 @@ class MainPresenterImpl(
           mainView?.startBackPressedFlagResetTimer()
         }
       } else {
-        mainView?.showPreviousFragment()
+        if (mainView?.isCabActive() == true) {
+          mainView?.dismissCab()
+        } else {
+          mainView?.showPreviousFragment()
+        }
       }
     }
   }
