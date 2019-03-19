@@ -91,7 +91,7 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
   }
 
   override fun clearSelectedItems() {
-    selectedHashMap.clear()
+    selectedHashMap = HashMap()
   }
 
   override fun deleteSelected() {

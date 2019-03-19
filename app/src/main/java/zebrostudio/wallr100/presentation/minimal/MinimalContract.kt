@@ -27,6 +27,7 @@ interface MinimalContract {
     fun handleScroll(yAxisMovement: Int)
     fun handleDeleteMenuItemClick()
     fun handleCabDestroyed()
+    fun handleSpinnerOptionChanged(position: Int)
   }
 
 }

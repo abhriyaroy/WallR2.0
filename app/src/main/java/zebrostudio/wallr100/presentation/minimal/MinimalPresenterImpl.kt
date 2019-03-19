@@ -7,6 +7,9 @@ import zebrostudio.wallr100.domain.interactor.MinimalImagesUseCase
 import zebrostudio.wallr100.presentation.adapters.INITIAL_SIZE
 import zebrostudio.wallr100.presentation.adapters.MinimalRecyclerItemContract.MinimalRecyclerViewPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
 
 const val MINIMUM_SCROLL_DIST = 15
 
@@ -20,6 +23,7 @@ class MinimalPresenterImpl(
   private var minimalView: MinimalView? = null
   private var recyclerPresenter: MinimalRecyclerViewPresenter? = null
   private var forceSmoothScroll: Boolean = false
+  private var multiColorImageType: MultiColorImageType? = MATERIAL
 
   override fun attachView(view: MinimalView) {
     minimalView = view
@@ -107,4 +111,18 @@ class MinimalPresenterImpl(
     minimalView?.updateUi()
   }
 
+  override fun handleSpinnerOptionChanged(position: Int) {
+    when (position) {
+      MATERIAL.ordinal -> multiColorImageType = MATERIAL
+      GRADIENT.ordinal -> multiColorImageType = GRADIENT
+      PLASMA.ordinal -> multiColorImageType = PLASMA
+    }
+  }
+
+}
+
+enum class MultiColorImageType {
+  MATERIAL,
+  GRADIENT,
+  PLASMA
 }

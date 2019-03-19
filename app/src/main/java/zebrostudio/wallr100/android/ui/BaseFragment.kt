@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import com.getbase.floatingactionbutton.FloatingActionButton
+import com.ogaclejapan.smarttablayout.SmartTabLayout
 import com.uber.autodispose.ScopeProvider
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
@@ -49,6 +50,7 @@ abstract class BaseFragment : Fragment(), BaseView {
 
     highlightCurrentMenuItem()
     showToolbarMenuIcon()
+    configureTabs()
     hideBottomLayout()
   }
 
@@ -71,6 +73,15 @@ abstract class BaseFragment : Fragment(), BaseView {
       getString(R.string.collection_fragment_tag) -> {  // Do nothing
       }
       else -> activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visible()
+    }
+  }
+
+  private fun configureTabs() {
+    if (fragmentTag == getString(R.string.categories_fragment_tag) || fragmentTag == getString(
+            R.string.top_picks_fragment_tag)) {
+      activity?.findViewById<SmartTabLayout>(R.id.tabLayout)?.visible()
+    } else {
+      activity?.findViewById<SmartTabLayout>(R.id.tabLayout)?.gone()
     }
   }
 

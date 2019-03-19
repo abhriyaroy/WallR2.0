@@ -10,9 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.RelativeLayout
 import com.afollestad.dragselectrecyclerview.DragSelectTouchListener
 import com.afollestad.dragselectrecyclerview.Mode.RANGE
 import com.afollestad.materialcab.MaterialCab
+import com.getbase.floatingactionbutton.FloatingActionButton
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.minimalBottomLayout
 import kotlinx.android.synthetic.main.activity_main.minimalBottomLayoutFab
@@ -127,7 +129,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
         override fun onAnimationStart(animation: Animation) {
           activity?.minimalBottomLayout?.isClickable = true
-          activity?.minimalBottomLayout?.invisible()
+          //activity?.minimalBottomLayout?.invisible()
         }
       })
     }.let {
@@ -148,7 +150,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
         override fun onAnimationStart(animation: Animation) {
           activity?.minimalBottomLayoutFab?.isClickable = true
-          activity?.minimalBottomLayoutFab?.invisible()
+          //activity?.minimalBottomLayoutFab?.invisible()
         }
       })
     }.let {
@@ -229,6 +231,11 @@ class MinimalFragment : BaseFragment(), MinimalView {
         context!!.stringRes(R.string.minimal_fragment_spinner_item_material),
         context!!.stringRes(R.string.minimal_fragment_spinner_item_gradient),
         context!!.stringRes(R.string.minimal_fragment_spinner_item_plasma))
+    activity?.spinner?.setOnItemSelectedListener { _, position, _, _ ->
+      presenter.handleSpinnerOptionChanged(position)
+    }
+    activity?.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.visible()
+    activity?.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.visible()
     hideBottomLayoutWithAnimation()
   }
 
