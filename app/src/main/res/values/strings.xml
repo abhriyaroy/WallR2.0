@@ -158,5 +158,8 @@
   <string name="minimal_fragment_unable_to_get_colors_error_message">Unable to fetch minimal wallpapers</string>
   <string name="menu_minimal_title_delete">Delete Wallpaper</string>
   <string name="minimal_fragment_cab_title">%1$d Selected</string>
+  <string name="minimal_fragment_spinner_item_material">Material</string>
+  <string name="minimal_fragment_spinner_item_gradient">Gradient</string>
+  <string name="minimal_fragment_spinner_item_plasma">Plasma</string>
 
 </resources>

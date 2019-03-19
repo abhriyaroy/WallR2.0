@@ -37,6 +37,7 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
   override fun onBindRepositoryRowViewAtPosition(holder: MinimalViewHolder, position: Int) {
     if (position == 0) {
       holder.showAddImageLayout()
+      holder.hideSelectedIndicator()
     } else {
       holder.hideAddImageLayout()
       holder.setImageViewColor(colorList[position - INITIAL_OFFSET])
@@ -86,7 +87,6 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
     } else {
       selectedHashMap.remove(index - INITIAL_OFFSET)
     }
-    System.out.println("hashmap size ${selectedHashMap.size}")
     minimalPresenter?.updateSelectionChange(index, selectedHashMap.size)
   }
 

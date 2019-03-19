@@ -26,6 +26,8 @@ import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
+import zebrostudio.wallr100.android.utils.invisible
+import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.MinimalRecyclerItemContract.MinimalRecyclerViewPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
@@ -53,6 +55,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     initRecyclerView()
+    initBottomPanel()
     presenter.attachView(this)
     presenter.attachMinimalImageRecyclerViewPresenter(recyclerAdapterPresenter)
     recyclerAdapterPresenter.attachMinimalPresenter(presenter)
@@ -124,6 +127,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
         override fun onAnimationStart(animation: Animation) {
           activity?.minimalBottomLayout?.isClickable = true
+          activity?.minimalBottomLayout?.invisible()
         }
       })
     }.let {
@@ -143,7 +147,8 @@ class MinimalFragment : BaseFragment(), MinimalView {
         }
 
         override fun onAnimationStart(animation: Animation) {
-
+          activity?.minimalBottomLayoutFab?.isClickable = true
+          activity?.minimalBottomLayoutFab?.invisible()
         }
       })
     }.let {
@@ -194,7 +199,6 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun startSelection(position: Int) {
-    System.out.println("start selection")
     touchListener?.setIsActive(true, position)
   }
 
@@ -218,6 +222,14 @@ class MinimalFragment : BaseFragment(), MinimalView {
         presenter.handleScroll(dy)
       }
     })
+  }
+
+  private fun initBottomPanel() {
+    activity?.spinner?.setItems(
+        context!!.stringRes(R.string.minimal_fragment_spinner_item_material),
+        context!!.stringRes(R.string.minimal_fragment_spinner_item_gradient),
+        context!!.stringRes(R.string.minimal_fragment_spinner_item_plasma))
+    hideBottomLayoutWithAnimation()
   }
 
   companion object {

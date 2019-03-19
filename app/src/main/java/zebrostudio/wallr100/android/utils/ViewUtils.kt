@@ -9,6 +9,7 @@ import android.support.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
+import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -23,6 +24,10 @@ fun View.setOnDebouncedClickListener(onClick: (v: View) -> Unit) {
 
 fun View.gone() {
   this.visibility = GONE
+}
+
+fun View.invisible() {
+  this.visibility = INVISIBLE
 }
 
 fun View.visible() {

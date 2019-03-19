@@ -582,7 +582,7 @@ public class MaterialSpinner extends TextView {
     } else if (listViewHeight == 0 && adapter.getItems().size() == 1) {
       return (int) itemHeight;
     }
-    return WindowManager.LayoutParams.WRAP_CONTENT;
+    return (int) listViewHeight;
   }
 
   /**
