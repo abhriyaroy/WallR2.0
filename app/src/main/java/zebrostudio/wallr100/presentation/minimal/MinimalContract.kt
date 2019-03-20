@@ -7,15 +7,19 @@ import zebrostudio.wallr100.presentation.adapters.MinimalRecyclerItemContract.Mi
 interface MinimalContract {
 
   interface MinimalView : BaseView {
-    fun updateUi()
+    fun updateAllItems()
     fun showUnableToGetColorsErrorMessage()
     fun showGenericErrorMessage()
-    fun updateViewItem(index: Int)
+    fun updateItemView(index: Int)
+    fun removeItemView(index: Int)
     fun showCab(size: Int)
     fun hideCab()
     fun showBottomPanelWithAnimation()
     fun hideBottomLayoutWithAnimation()
     fun startSelection(position: Int)
+    fun showDeselectBeforeDeletionMessage(numberOfItemsToBeDeselected: Int)
+    fun showDeleteColorsErrorMessage()
+    fun clearCabIfActive()
   }
 
   interface MinimalPresenter : BasePresenter<MinimalView> {

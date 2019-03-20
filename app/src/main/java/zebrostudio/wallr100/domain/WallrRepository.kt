@@ -56,5 +56,9 @@ interface WallrRepository {
   fun getCustomSolidColorList(): Single<List<String>>
   fun getDefaultSolidColorList(): Single<List<String>>
   fun saveCustomSolidColorList(colors: List<String>): Completable
+  fun modifyColorList(
+    colors: MutableList<String>,
+    selectedIndicesMap: HashMap<Int, Boolean>
+  ): Single<List<String>>
 
 }

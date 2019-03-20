@@ -6,6 +6,7 @@ import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresente
 
 const val INITIAL_SIZE = 0
 const val INITIAL_OFFSET = 1
+const val MINIMUM_COLOR_LIST_SIZE = 20
 
 class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
 
@@ -21,9 +22,12 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
     minimalPresenter = null
   }
 
-  override fun appendList(colorList: List<String>) {
-    System.out.println("append list")
-    this.colorList.addAll(colorList)
+  override fun setList(colorList: List<String>) {
+    this.colorList = colorList.toMutableList()
+  }
+
+  override fun getList(): MutableList<String> {
+    return colorList
   }
 
   override fun appendColor(color: String) {
@@ -31,11 +35,11 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
   }
 
   override fun getItemCount(): Int {
-    return colorList.size + INITIAL_OFFSET
+    return colorList.size
   }
 
   override fun onBindRepositoryRowViewAtPosition(holder: MinimalViewHolder, position: Int) {
-    if (position == 0) {
+    if (position == INITIAL_SIZE) {
       holder.showAddImageLayout()
       holder.hideSelectedIndicator()
     } else {
@@ -43,7 +47,7 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
       holder.setImageViewColor(colorList[position - INITIAL_OFFSET])
       holder.attachLongClickListener()
       if (selectedHashMap.size != 0) {
-        if (selectedHashMap.contains(position - INITIAL_OFFSET)) {
+        if (selectedHashMap.containsKey(position - INITIAL_OFFSET)) {
           holder.showSelectedIndicator()
         } else {
           holder.hideSelectedIndicator()
@@ -78,7 +82,7 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
   }
 
   override fun isItemSelected(index: Int): Boolean {
-    return selectedHashMap.contains(index - INITIAL_OFFSET)
+    return selectedHashMap.containsKey(index - INITIAL_OFFSET)
   }
 
   override fun setItemSelected(index: Int, selected: Boolean) {
@@ -91,16 +95,24 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
   }
 
   override fun clearSelectedItems() {
-    selectedHashMap = HashMap()
+    selectedHashMap.clear()
   }
 
-  override fun deleteSelected() {
+  override fun isDeletionPossible(): Int {
+    return if (colorList.size - selectedHashMap.size >= MINIMUM_COLOR_LIST_SIZE) {
+      INITIAL_SIZE
+    } else {
+      MINIMUM_COLOR_LIST_SIZE - (colorList.size - selectedHashMap.size)
+    }
+  }
 
+  override fun getSelectedMap(): HashMap<Int, Boolean> {
+    return selectedHashMap
   }
 
   private fun toggleSelected(index: Int) {
     (index - INITIAL_OFFSET).let {
-      if (!selectedHashMap.contains(it)) {
+      if (!selectedHashMap.containsKey(it)) {
         selectedHashMap.put(it, true)
       } else {
         selectedHashMap.remove(it)

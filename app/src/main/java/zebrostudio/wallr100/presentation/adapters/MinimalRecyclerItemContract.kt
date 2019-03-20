@@ -18,7 +18,8 @@ interface MinimalRecyclerItemContract {
   interface MinimalRecyclerViewPresenter {
     fun attachMinimalPresenter(presenter: MinimalPresenter)
     fun detachMinimalPresenter()
-    fun appendList(colorList: List<String>)
+    fun setList(colorList: List<String>)
+    fun getList(): MutableList<String>
     fun appendColor(color: String)
     fun getItemCount(): Int
     fun onBindRepositoryRowViewAtPosition(holder: MinimalViewHolder, position: Int)
@@ -28,7 +29,8 @@ interface MinimalRecyclerItemContract {
     fun isItemSelected(index: Int): Boolean
     fun setItemSelected(index: Int, selected: Boolean)
     fun clearSelectedItems()
-    fun deleteSelected()
+    fun isDeletionPossible(): Int
+    fun getSelectedMap(): HashMap<Int, Boolean>
   }
 
 }

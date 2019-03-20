@@ -26,6 +26,7 @@ import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
+import zebrostudio.wallr100.android.utils.invisible
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.android.utils.withDelayOnMain
@@ -69,29 +70,36 @@ class MinimalFragment : BaseFragment(), MinimalView {
     super.onDestroy()
   }
 
-  override fun updateUi() {
+  override fun updateAllItems() {
     minimalImageAdapter?.notifyDataSetChanged()
   }
 
   override fun showUnableToGetColorsErrorMessage() {
-    context!!.errorToast(getString(R.string.minimal_fragment_unable_to_get_colors_error_message))
+    context!!.let {
+      it.errorToast(it.stringRes(R.string.minimal_fragment_unable_to_get_colors_error_message))
+    }
   }
 
   override fun showGenericErrorMessage() {
-    context!!.errorToast(getString(R.string.generic_error_message))
+    context!!.let {
+      it.errorToast(it.stringRes(R.string.generic_error_message))
+    }
   }
 
-  override fun updateViewItem(index: Int) {
+  override fun updateItemView(index: Int) {
     minimalImageAdapter?.notifyItemChanged(index)
   }
 
+  override fun removeItemView(index: Int) {
+    minimalImageAdapter?.notifyItemRemoved(index)
+  }
+
   override fun showCab(size: Int) {
-    System.out.println("material cab size $size")
     MaterialCab.attach(activity as AppCompatActivity, R.id.cabStub) {
       menuRes = R.menu.minimal
       closeDrawableRes = R.drawable.ic_close_white
       titleColor = Color.WHITE
-      title = getString(R.string.minimal_fragment_cab_title, size)
+      title = context!!.stringRes(R.string.minimal_fragment_cab_title, size)
 
       onSelection {
         if (it.itemId == R.id.delete) {
@@ -123,11 +131,11 @@ class MinimalFragment : BaseFragment(), MinimalView {
         override fun onAnimationEnd(animation: Animation) {
           activity?.spinner?.isEnabled = true
           activity?.minimalBottomLayout?.visible()
+          activity?.minimalBottomLayout?.visible()
         }
 
         override fun onAnimationStart(animation: Animation) {
           activity?.minimalBottomLayout?.isClickable = true
-          //activity?.minimalBottomLayout?.invisible()
         }
       })
     }.let {
@@ -148,7 +156,6 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
         override fun onAnimationStart(animation: Animation) {
           activity?.minimalBottomLayoutFab?.isClickable = true
-          //activity?.minimalBottomLayoutFab?.invisible()
         }
       })
     }.let {
@@ -202,6 +209,31 @@ class MinimalFragment : BaseFragment(), MinimalView {
     touchListener?.setIsActive(true, position)
   }
 
+  override fun showDeselectBeforeDeletionMessage(numberOfItemsToBeDeselected: Int) {
+    context!!.let { context ->
+      if (numberOfItemsToBeDeselected == 1) {
+        context.stringRes(R.string.minimal_fragment_deselect_1_color_message)
+      } else {
+        context.stringRes(R.string.minimal_fragment_deselect_x_colors_message,
+            numberOfItemsToBeDeselected)
+      }.let {
+        context.errorToast(it)
+      }
+    }
+  }
+
+  override fun showDeleteColorsErrorMessage() {
+    context!!.let {
+      it.errorToast(it.stringRes(R.string.minimal_fragment_delete_colors_error_message))
+    }
+  }
+
+  override fun clearCabIfActive() {
+    if (MaterialCab.isActive){
+      MaterialCab.destroy()
+    }
+  }
+
   private fun initRecyclerView() {
     GridLayoutManager(context,
         context!!.integerRes(R.integer.minimal_image_recycler_view_span_count)).let {
@@ -232,8 +264,15 @@ class MinimalFragment : BaseFragment(), MinimalView {
     activity?.spinner?.setOnItemSelectedListener { _, position, _, _ ->
       presenter.handleSpinnerOptionChanged(position)
     }
-    showBottomPanelWithAnimation()
+    showBottomPanelAndFab()
     withDelayOnMain(600) { hideBottomLayoutWithAnimation() }
+  }
+
+  private fun showBottomPanelAndFab(){
+    activity?.minimalBottomLayout?.invisible()
+    activity?.minimalBottomLayout?.isClickable = false
+    activity?.minimalBottomLayoutFab?.invisible()
+    activity?.minimalBottomLayoutFab?.isClickable = false
   }
 
   companion object {

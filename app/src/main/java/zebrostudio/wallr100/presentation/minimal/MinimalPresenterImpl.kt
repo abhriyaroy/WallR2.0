@@ -6,6 +6,7 @@ import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.MinimalImagesUseCase
 import zebrostudio.wallr100.presentation.adapters.INITIAL_SIZE
 import zebrostudio.wallr100.presentation.adapters.MinimalRecyclerItemContract.MinimalRecyclerViewPresenter
+import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
@@ -16,7 +17,7 @@ const val MINIMUM_SCROLL_DIST = 15
 class MinimalPresenterImpl(
   private val minimalImagesUseCase: MinimalImagesUseCase,
   private val postExecutionThread: PostExecutionThread
-) : MinimalContract.MinimalPresenter {
+) : MinimalPresenter {
 
   private var isBottomPanelEnabled = false
   private var selectionSize = 0
@@ -49,8 +50,8 @@ class MinimalPresenterImpl(
     }.observeOn(postExecutionThread.scheduler)
         .autoDisposable(minimalView!!.getScope())
         .subscribe({
-          recyclerPresenter?.appendList(it)
-          minimalView?.updateUi()
+          recyclerPresenter?.setList(it)
+          minimalView?.updateAllItems()
         }, {
           if (it is UnableToGetSolidColorsException) {
             minimalView?.showUnableToGetColorsErrorMessage()
@@ -62,11 +63,12 @@ class MinimalPresenterImpl(
 
   override fun updateSelectionChange(index: Int, size: Int) {
     selectionSize = size
-    minimalView?.updateViewItem(index)
+    minimalView?.updateItemView(index)
     if (size == 1) {
       minimalView?.showCab(size)
       if (isBottomPanelEnabled) {
         minimalView?.hideBottomLayoutWithAnimation()
+        isBottomPanelEnabled = false
       }
     } else if (size > 1 && !isBottomPanelEnabled) {
       isBottomPanelEnabled = true
@@ -98,7 +100,32 @@ class MinimalPresenterImpl(
   }
 
   override fun handleDeleteMenuItemClick() {
-
+    recyclerPresenter?.isDeletionPossible().let {
+      if (it == INITIAL_SIZE) {
+        recyclerPresenter!!.getSelectedMap().let { map ->
+          val mapCopy = HashMap(map)
+          minimalImagesUseCase.modifyColors(
+              recyclerPresenter!!.getList(),
+              map)
+              .observeOn(postExecutionThread.scheduler)
+              .autoDisposable(minimalView!!.getScope())
+              .subscribe({ list ->
+                recyclerPresenter?.setList(list)
+                map.clear()
+                mapCopy.keys.forEach {
+                  minimalView?.removeItemView(it)
+                }
+                minimalView?.clearCabIfActive()
+              }, {
+                System.out.println(it.printStackTrace())
+                minimalView?.clearCabIfActive()
+                minimalView?.showDeleteColorsErrorMessage()
+              })
+        }
+      } else {
+        minimalView?.showDeselectBeforeDeletionMessage(it!!)
+      }
+    }
   }
 
   override fun handleCabDestroyed() {
@@ -108,7 +135,7 @@ class MinimalPresenterImpl(
       isBottomPanelEnabled = false
       selectionSize = INITIAL_SIZE
     }
-    minimalView?.updateUi()
+    minimalView?.updateAllItems()
   }
 
   override fun handleSpinnerOptionChanged(position: Int) {

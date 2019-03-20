@@ -161,5 +161,8 @@
   <string name="minimal_fragment_spinner_item_material">Material</string>
   <string name="minimal_fragment_spinner_item_gradient">Gradient</string>
   <string name="minimal_fragment_spinner_item_plasma">Plasma</string>
+  <string name="minimal_fragment_deselect_1_color_message">There should be at least 20 colors remaining after deletion. Please deselect 1 color.</string>
+  <string name="minimal_fragment_deselect_x_colors_message">There should be at least 20 colors remaining after deletion. Please deselect %1$d colors.</string>
+  <string name="minimal_fragment_delete_colors_error_message">Unable to delete colors. Please try again...</string>
 
 </resources>

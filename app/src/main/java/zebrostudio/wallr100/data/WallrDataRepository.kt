@@ -24,6 +24,7 @@ import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
+import zebrostudio.wallr100.presentation.adapters.INITIAL_OFFSET
 import java.util.concurrent.TimeUnit.SECONDS
 
 const val SUCCESS_STATUS = "success"
@@ -290,6 +291,14 @@ class WallrDataRepository(
     }.subscribeOn(executionThread.ioScheduler)
   }
 
+  override fun modifyColorList(
+    colors: MutableList<String>,
+    selectedIndicesMap: HashMap<Int, Boolean>
+  ): Single<List<String>> {
+    return removeElementsFromList(colors, selectedIndicesMap)
+        .subscribeOn(executionThread.computationScheduler)
+  }
+
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()
       .getReference(FIREBASE_DATABASE_PATH)
       .child(CHILD_PATH_EXPLORE)
@@ -315,6 +324,27 @@ class WallrDataRepository(
           Single.just(image)
         }
         .timeout(FIREBASE_TIMEOUT_DURATION.toLong(), SECONDS)
+  }
+
+  private fun removeElementsFromList(
+    colors: MutableList<String>,
+    selectedIndicesMap: HashMap<Int, Boolean>
+  ): Single<List<String>> {
+    return Single.create {
+      selectedIndicesMap.keys.forEach {
+        colors.removeAt(it - INITIAL_OFFSET)
+      }
+      if (
+          sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
+              Gson().toJson(colors))
+      ) {
+        sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_AVAILABLE_TAG,
+            true)
+        it.onSuccess(colors)
+      } else {
+        it.onError(Exception())
+      }
+    }
   }
 
 }
