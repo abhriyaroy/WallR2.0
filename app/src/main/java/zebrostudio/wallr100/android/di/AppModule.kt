@@ -53,8 +53,6 @@ import zebrostudio.wallr100.domain.interactor.WallpaperImagesInteractor
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
-import zebrostudio.wallr100.presentation.adapters.MinimalRecyclerItemContract.MinimalRecyclerViewPresenter
-import zebrostudio.wallr100.presentation.adapters.MinimalRecyclerViewPresenterImpl
 import zebrostudio.wallr100.presentation.detail.GsonHelper
 import zebrostudio.wallr100.presentation.detail.GsonHelperImpl
 
@@ -210,9 +208,5 @@ class AppModule {
   @Provides
   fun provideImageRecyclerViewPresenter()
       : ImageRecyclerItemContract.ImageRecyclerViewPresenter = ImageRecyclerViewPresenterImpl()
-
-  @Provides
-  fun provideMinimalRecyclerViewPresenter()
-      : MinimalRecyclerViewPresenter = MinimalRecyclerViewPresenterImpl()
 
 }

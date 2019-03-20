@@ -24,7 +24,7 @@ import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
-import zebrostudio.wallr100.presentation.adapters.INITIAL_OFFSET
+import zebrostudio.wallr100.presentation.minimal.INITIAL_OFFSET
 import java.util.Collections
 import java.util.TreeMap
 import java.util.concurrent.TimeUnit.SECONDS

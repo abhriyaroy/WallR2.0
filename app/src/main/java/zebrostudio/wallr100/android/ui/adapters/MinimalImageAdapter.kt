@@ -16,35 +16,35 @@ import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.visible
-import zebrostudio.wallr100.presentation.adapters.MinimalRecyclerItemContract.MinimalRecyclerViewItem
-import zebrostudio.wallr100.presentation.adapters.MinimalRecyclerItemContract.MinimalRecyclerViewPresenter
+import zebrostudio.wallr100.presentation.minimal.MinimalContract.ItemViewHolder
+import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
 
-class MinimalImageAdapter(private val minimalRecyclerViewPresenter: MinimalRecyclerViewPresenter) :
+class MinimalImageAdapter(private val presenter: MinimalPresenter) :
     RecyclerView.Adapter<MinimalViewHolder>(), DragSelectReceiver {
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MinimalViewHolder {
     return MinimalViewHolder(parent.inflate(LayoutInflater.from(parent.context),
-        R.layout.item_recyclerview_minimal_fragment), parent.context, minimalRecyclerViewPresenter)
+        R.layout.item_recyclerview_minimal_fragment), parent.context, presenter)
   }
 
   override fun getItemCount(): Int {
-    return minimalRecyclerViewPresenter.getItemCount()
+    return presenter.getItemCount()
   }
 
   override fun onBindViewHolder(holder: MinimalViewHolder, position: Int) {
-    minimalRecyclerViewPresenter.onBindRepositoryRowViewAtPosition(holder, position)
+    presenter.onBindRepositoryRowViewAtPosition(holder, position)
   }
 
   override fun setSelected(index: Int, selected: Boolean) {
-    minimalRecyclerViewPresenter.setItemSelected(index, selected)
+    presenter.setItemSelected(index, selected)
   }
 
   override fun isSelected(index: Int): Boolean {
-    return minimalRecyclerViewPresenter.isItemSelected(index)
+    return presenter.isItemSelected(index)
   }
 
   override fun isIndexSelectable(index: Int): Boolean {
-    return minimalRecyclerViewPresenter.isItemSelectable(index)
+    return presenter.isItemSelectable(index)
   }
 
 }
@@ -52,8 +52,8 @@ class MinimalImageAdapter(private val minimalRecyclerViewPresenter: MinimalRecyc
 class MinimalViewHolder(
   itemView: View,
   private val context: Context,
-  private val minimalRecyclerViewPresenter: MinimalRecyclerViewPresenter
-) : RecyclerView.ViewHolder(itemView), MinimalRecyclerViewItem {
+  private val presenter: MinimalPresenter
+) : RecyclerView.ViewHolder(itemView), ItemViewHolder {
 
   override fun showAddImageLayout() {
     itemView.colorThumbnail.setBackgroundColor(context.colorRes(R.color.black))
@@ -80,13 +80,13 @@ class MinimalViewHolder(
 
   override fun attachClickListener() {
     itemView.setOnClickListener {
-      minimalRecyclerViewPresenter.handleClick(adapterPosition, this)
+      presenter.handleClick(adapterPosition, this)
     }
   }
 
   override fun attachLongClickListener() {
     itemView.setOnLongClickListener {
-      minimalRecyclerViewPresenter.handleImageLongClick(adapterPosition, this)
+      presenter.handleImageLongClick(adapterPosition, this)
       true
     }
   }

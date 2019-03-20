@@ -31,7 +31,6 @@ import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.visible
-import zebrostudio.wallr100.presentation.adapters.MinimalRecyclerItemContract.MinimalRecyclerViewPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
 import javax.inject.Inject
@@ -40,8 +39,6 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
   @Inject
   internal lateinit var presenter: MinimalPresenter
-  @Inject
-  internal lateinit var recyclerAdapterPresenter: MinimalRecyclerViewPresenter
   private var minimalImageAdapter: MinimalImageAdapter? = null
   private var touchListener: DragSelectTouchListener? = null
   private var colorPickerDialog: MaterialDialog? = null
@@ -60,15 +57,11 @@ class MinimalFragment : BaseFragment(), MinimalView {
     initRecyclerView()
     initBottomPanel()
     presenter.attachView(this)
-    presenter.attachMinimalImageRecyclerViewPresenter(recyclerAdapterPresenter)
-    recyclerAdapterPresenter.attachMinimalPresenter(presenter)
     presenter.handleViewCreated()
   }
 
   override fun onDestroy() {
     presenter.detachView()
-    presenter.detachMinimalImageRecyclerViewPresenter()
-    recyclerAdapterPresenter.detachMinimalPresenter()
     super.onDestroy()
   }
 
@@ -270,7 +263,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
     minimalFragmentRecyclerView.addItemDecoration(
         RecyclerViewItemDecorator(context!!.integerRes(R.integer.recycler_view_grid_spacing_px),
             context!!.integerRes(R.integer.minimal_image_recycler_view_grid_size)))
-    minimalImageAdapter = MinimalImageAdapter(recyclerAdapterPresenter)
+    minimalImageAdapter = MinimalImageAdapter(presenter)
     minimalFragmentRecyclerView.adapter = minimalImageAdapter
     touchListener = DragSelectTouchListener.create(context!!, minimalImageAdapter!!) {
       this.mode = RANGE
