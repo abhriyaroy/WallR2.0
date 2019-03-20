@@ -18,6 +18,7 @@ import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.EXPLORE_TAG
 import zebrostudio.wallr100.android.utils.checkDataConnection
 import zebrostudio.wallr100.android.utils.gone
+import zebrostudio.wallr100.android.utils.invisible
 import zebrostudio.wallr100.android.utils.setMenuItemColorRed
 import zebrostudio.wallr100.android.utils.setMenuItemColorWhite
 import zebrostudio.wallr100.android.utils.visible
@@ -86,8 +87,10 @@ abstract class BaseFragment : Fragment(), BaseView {
   }
 
   private fun hideBottomLayout() {
-    activity?.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.gone()
-    activity?.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.gone()
+    activity?.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.invisible()
+    activity?.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.isClickable = false
+    activity?.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.invisible()
+    activity?.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.isClickable = false
   }
 
   override fun getScope(): ScopeProvider {

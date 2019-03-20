@@ -229,7 +229,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun clearCabIfActive() {
-    if (MaterialCab.isActive){
+    if (MaterialCab.isActive) {
       MaterialCab.destroy()
     }
   }
@@ -264,11 +264,9 @@ class MinimalFragment : BaseFragment(), MinimalView {
     activity?.spinner?.setOnItemSelectedListener { _, position, _, _ ->
       presenter.handleSpinnerOptionChanged(position)
     }
-    showBottomPanelAndFab()
-    withDelayOnMain(600) { hideBottomLayoutWithAnimation() }
   }
 
-  private fun showBottomPanelAndFab(){
+  private fun showBottomPanelAndFab() {
     activity?.minimalBottomLayout?.invisible()
     activity?.minimalBottomLayout?.isClickable = false
     activity?.minimalBottomLayoutFab?.invisible()
