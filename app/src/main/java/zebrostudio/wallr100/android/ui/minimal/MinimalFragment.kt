@@ -10,9 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.TextView
 import com.afollestad.dragselectrecyclerview.DragSelectTouchListener
 import com.afollestad.dragselectrecyclerview.Mode.RANGE
 import com.afollestad.materialcab.MaterialCab
+import com.afollestad.materialdialogs.MaterialDialog
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.minimalBottomLayout
 import kotlinx.android.synthetic.main.activity_main.minimalBottomLayoutFab
@@ -22,14 +24,13 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.ui.adapters.MinimalImageAdapter
 import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
+import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
-import zebrostudio.wallr100.android.utils.invisible
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.visible
-import zebrostudio.wallr100.android.utils.withDelayOnMain
 import zebrostudio.wallr100.presentation.adapters.MinimalRecyclerItemContract.MinimalRecyclerViewPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
@@ -43,6 +44,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
   internal lateinit var recyclerAdapterPresenter: MinimalRecyclerViewPresenter
   private var minimalImageAdapter: MinimalImageAdapter? = null
   private var touchListener: DragSelectTouchListener? = null
+  private var colorPickerDialog: MaterialDialog? = null
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -234,6 +236,32 @@ class MinimalFragment : BaseFragment(), MinimalView {
     }
   }
 
+  override fun showColorPickerDialog() {
+    context!!.let {
+      colorPickerDialog = MaterialDialog.Builder(it)
+          .backgroundColor(it.colorRes(R.color.primary))
+          .customView(R.layout.dialog_colorpicker, false)
+          .contentColor(it.colorRes(R.color.white))
+          .widgetColor(it.colorRes(R.color.accent))
+          .positiveColor(it.colorRes(R.color.accent))
+          .negativeColor(it.colorRes(R.color.accent))
+          .positiveText(it.stringRes(R.string.minimal_fragment_color_picker_positive_text))
+          .negativeText(it.stringRes(R.string.minimal_fragment_color_picker_negative_text))
+          .onPositive { dialog, _ ->
+            val colorPickerHexTextView =
+                dialog.findViewById(R.id.colorPickerHexTextView) as TextView
+            presenter.handleColorPickerPositiveClick(colorPickerHexTextView.text as String)
+          }
+          .build()
+    }
+    colorPickerDialog?.show()
+  }
+
+  override fun addAndScrollToItemView(index: Int) {
+    minimalImageAdapter?.notifyItemInserted(index)
+    minimalFragmentRecyclerView.scrollToPosition(index)
+  }
+
   private fun initRecyclerView() {
     GridLayoutManager(context,
         context!!.integerRes(R.integer.minimal_image_recycler_view_span_count)).let {
@@ -264,13 +292,6 @@ class MinimalFragment : BaseFragment(), MinimalView {
     activity?.spinner?.setOnItemSelectedListener { _, position, _, _ ->
       presenter.handleSpinnerOptionChanged(position)
     }
-  }
-
-  private fun showBottomPanelAndFab() {
-    activity?.minimalBottomLayout?.invisible()
-    activity?.minimalBottomLayout?.isClickable = false
-    activity?.minimalBottomLayoutFab?.invisible()
-    activity?.minimalBottomLayoutFab?.isClickable = false
   }
 
   companion object {

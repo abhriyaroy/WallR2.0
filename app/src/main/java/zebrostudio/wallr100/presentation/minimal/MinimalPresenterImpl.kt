@@ -11,6 +11,8 @@ import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
+import java.util.Collections
+import java.util.TreeMap
 
 const val MINIMUM_SCROLL_DIST = 15
 
@@ -103,16 +105,20 @@ class MinimalPresenterImpl(
     recyclerPresenter?.isDeletionPossible().let {
       if (it == INITIAL_SIZE) {
         recyclerPresenter!!.getSelectedMap().let { map ->
-          val mapCopy = HashMap(map)
+          var reversedSelectedItems = TreeMap<Int, Boolean>(Collections.reverseOrder())
           minimalImagesUseCase.modifyColors(
               recyclerPresenter!!.getList(),
               map)
+              .doOnSuccess {
+                reversedSelectedItems.putAll(map)
+                recyclerPresenter?.clearSelectedItems()
+                recyclerPresenter?.setList(it)
+              }
               .observeOn(postExecutionThread.scheduler)
               .autoDisposable(minimalView!!.getScope())
-              .subscribe({ list ->
-                recyclerPresenter?.setList(list)
-                map.clear()
-                mapCopy.keys.forEach {
+              .subscribe({
+                reversedSelectedItems.keys.forEach {
+                  System.out.println("remove item $it")
                   minimalView?.removeItemView(it)
                 }
                 minimalView?.clearCabIfActive()
@@ -144,6 +150,10 @@ class MinimalPresenterImpl(
       GRADIENT.ordinal -> multiColorImageType = GRADIENT
       PLASMA.ordinal -> multiColorImageType = PLASMA
     }
+  }
+
+  override fun handleColorPickerPositiveClick(text: String) {
+
   }
 
 }

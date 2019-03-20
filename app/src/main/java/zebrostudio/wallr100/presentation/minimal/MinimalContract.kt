@@ -12,6 +12,7 @@ interface MinimalContract {
     fun showGenericErrorMessage()
     fun updateItemView(index: Int)
     fun removeItemView(index: Int)
+    fun addAndScrollToItemView(index: Int)
     fun showCab(size: Int)
     fun hideCab()
     fun showBottomPanelWithAnimation()
@@ -20,6 +21,7 @@ interface MinimalContract {
     fun showDeselectBeforeDeletionMessage(numberOfItemsToBeDeselected: Int)
     fun showDeleteColorsErrorMessage()
     fun clearCabIfActive()
+    fun showColorPickerDialog()
   }
 
   interface MinimalPresenter : BasePresenter<MinimalView> {
@@ -32,6 +34,7 @@ interface MinimalContract {
     fun handleDeleteMenuItemClick()
     fun handleCabDestroyed()
     fun handleSpinnerOptionChanged(position: Int)
+    fun handleColorPickerPositiveClick(text: String)
   }
 
 }

@@ -62,7 +62,7 @@ class MinimalRecyclerViewPresenterImpl : MinimalRecyclerViewPresenter {
     itemView: MinimalRecyclerItemContract.MinimalRecyclerViewItem
   ) {
     if (selectedHashMap.size == 0) {
-      // open detail screen
+      
     } else {
       toggleSelected(position)
     }

@@ -25,6 +25,8 @@ import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
 import zebrostudio.wallr100.presentation.adapters.INITIAL_OFFSET
+import java.util.Collections
+import java.util.TreeMap
 import java.util.concurrent.TimeUnit.SECONDS
 
 const val SUCCESS_STATUS = "success"
@@ -331,8 +333,11 @@ class WallrDataRepository(
     selectedIndicesMap: HashMap<Int, Boolean>
   ): Single<List<String>> {
     return Single.create {
-      selectedIndicesMap.keys.forEach {
-        colors.removeAt(it - INITIAL_OFFSET)
+      TreeMap<Int, Boolean>(Collections.reverseOrder()).let {
+        it.putAll(selectedIndicesMap)
+        it.keys.forEach {
+          colors.removeAt(it - INITIAL_OFFSET)
+        }
       }
       if (
           sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
