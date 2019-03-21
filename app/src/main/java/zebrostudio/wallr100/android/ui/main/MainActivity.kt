@@ -17,6 +17,7 @@ import com.yalantis.guillotine.interfaces.GuillotineListener
 import dagger.android.AndroidInjection
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import kotlinx.android.synthetic.main.activity_main.appbar
 import kotlinx.android.synthetic.main.activity_main.fragmentContainer
 import kotlinx.android.synthetic.main.activity_main.rootFrameLayout
 import kotlinx.android.synthetic.main.activity_main.toolbar
@@ -129,6 +130,10 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
 
   override fun dismissCab() {
     MaterialCab.destroy()
+  }
+
+  override fun showAppBar() {
+    appbar.setExpanded(true, true)
   }
 
   private inline fun <reified T : BaseFragment> addFragment(

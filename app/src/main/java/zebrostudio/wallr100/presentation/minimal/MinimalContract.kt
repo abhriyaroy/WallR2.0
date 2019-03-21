@@ -7,6 +7,7 @@ import zebrostudio.wallr100.presentation.BaseView
 interface MinimalContract {
 
   interface MinimalView : BaseView {
+    fun showAppBar()
     fun updateAllItems()
     fun showUnableToGetColorsErrorMessage()
     fun showGenericErrorMessage()
@@ -29,8 +30,7 @@ interface MinimalContract {
 
   interface MinimalPresenter : BasePresenter<MinimalView> {
     fun handleViewCreated()
-    fun updateSelectionChange(index: Int, size: Int)
-    fun handleScroll(yAxisMovement: Int)
+    fun handleOnScrolled(yAxisMovement: Int)
     fun handleDeleteMenuItemClick()
     fun handleCabDestroyed(updateEntireView: Boolean)
     fun handleSpinnerOptionChanged(position: Int)

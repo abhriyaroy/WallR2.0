@@ -2,6 +2,7 @@ package zebrostudio.wallr100.android.ui.minimal
 
 import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -68,8 +69,11 @@ class MinimalFragment : BaseFragment(), MinimalView {
     super.onDestroy()
   }
 
+  override fun showAppBar() {
+    activity!!.findViewById<AppBarLayout>(R.id.appbar).setExpanded(true, true)
+  }
+
   override fun updateAllItems() {
-    System.out.println("Update all items call")
     minimalImageAdapter?.notifyDataSetChanged()
   }
 
@@ -307,7 +311,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
     minimalFragmentRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
       override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
-        presenter.handleScroll(dy)
+        presenter.handleOnScrolled(dy)
       }
     })
   }

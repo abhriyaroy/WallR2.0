@@ -31,6 +31,7 @@ class MainPresenterImpl(
           mainView?.startBackPressedFlagResetTimer()
         }
       } else {
+        mainView?.showAppBar()
         if (mainView?.isCabActive() == true) {
           mainView?.dismissCab()
         } else {

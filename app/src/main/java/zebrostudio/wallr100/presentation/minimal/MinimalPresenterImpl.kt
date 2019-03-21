@@ -60,29 +60,7 @@ class MinimalPresenterImpl(
         })
   }
 
-  override fun updateSelectionChange(index: Int, size: Int) {
-    selectionSize = size
-    minimalView?.updateItemView(index)
-    if (selectionSize == FIRST_ELEMENT_INDEX) {
-      minimalView?.showCab(selectionSize)
-      if (isBottomPanelEnabled) {
-        minimalView?.hideBottomLayoutWithAnimation()
-        isBottomPanelEnabled = false
-      }
-    } else if (selectionSize > FIRST_ELEMENT_INDEX && !isBottomPanelEnabled) {
-      isBottomPanelEnabled = true
-      minimalView?.showBottomPanelWithAnimation()
-      minimalView?.showCab(selectionSize)
-    } else if (selectionSize > FIRST_ELEMENT_INDEX && isBottomPanelEnabled) {
-      minimalView?.showCab(selectionSize)
-    } else if (selectionSize == INITIAL_SIZE) {
-      isBottomPanelEnabled = false
-      minimalView?.hideBottomLayoutWithAnimation()
-      minimalView?.hideCab()
-    }
-  }
-
-  override fun handleScroll(yAxisMovement: Int) {
+  override fun handleOnScrolled(yAxisMovement: Int) {
     if (isBottomPanelEnabled && yAxisMovement > MINIMUM_SCROLL_DIST && !forceSmoothScroll) {
       minimalView?.hideBottomLayoutWithAnimation()
       isBottomPanelEnabled = false
@@ -204,8 +182,10 @@ class MinimalPresenterImpl(
     position: Int,
     itemView: ItemViewHolder
   ) {
-    toggleSelected(position)
-    minimalView?.startSelection(position)
+    if (position != INITIAL_SIZE) {
+      toggleSelected(position)
+      minimalView?.startSelection(position)
+    }
   }
 
   override fun isItemSelectable(index: Int): Boolean {
@@ -217,12 +197,14 @@ class MinimalPresenterImpl(
   }
 
   override fun setItemSelected(index: Int, selected: Boolean) {
-    if (selected) {
-      selectedHashMap[index - INITIAL_OFFSET] = true
-    } else {
-      selectedHashMap.remove(index - INITIAL_OFFSET)
+    if (index != INITIAL_SIZE) {
+      if (selected) {
+        selectedHashMap[index - INITIAL_OFFSET] = true
+      } else {
+        selectedHashMap.remove(index - INITIAL_OFFSET)
+      }
+      updateSelectionChange(index, selectedHashMap.size)
     }
-    updateSelectionChange(index, selectedHashMap.size)
   }
 
   override fun numberOfItemsToBeDeselectedToStartDeletion(): Int {
@@ -242,6 +224,24 @@ class MinimalPresenterImpl(
       }
     }
     updateSelectionChange(index, selectedHashMap.size)
+  }
+
+  private fun updateSelectionChange(index: Int, size: Int) {
+    selectionSize = size
+    minimalView?.updateItemView(index)
+    minimalView?.showAppBar()
+    minimalView?.showCab(selectionSize)
+    if (selectionSize == FIRST_ELEMENT_INDEX && isBottomPanelEnabled) {
+      minimalView?.hideBottomLayoutWithAnimation()
+      isBottomPanelEnabled = false
+    } else if (selectionSize > FIRST_ELEMENT_INDEX && !isBottomPanelEnabled) {
+      isBottomPanelEnabled = true
+      minimalView?.showBottomPanelWithAnimation()
+    } else if (selectionSize == INITIAL_SIZE) {
+      isBottomPanelEnabled = false
+      minimalView?.hideBottomLayoutWithAnimation()
+      minimalView?.hideCab()
+    }
   }
 }
 

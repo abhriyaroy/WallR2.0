@@ -14,6 +14,7 @@ interface MainContract {
     fun startBackPressedFlagResetTimer()
     fun isCabActive(): Boolean
     fun dismissCab()
+    fun showAppBar()
   }
 
   interface MainPresenter : BasePresenter<MainView> {
