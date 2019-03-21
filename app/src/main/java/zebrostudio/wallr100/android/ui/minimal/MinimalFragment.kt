@@ -29,6 +29,7 @@ import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
+import zebrostudio.wallr100.android.utils.infoToast
 import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
@@ -281,6 +282,12 @@ class MinimalFragment : BaseFragment(), MinimalView {
       it.errorToast(it.stringRes(R.string.minimal_fragment_color_alreaady_present_error_message))
     }
     minimalFragmentRecyclerView?.smoothScrollToPosition(position)
+  }
+
+  override fun showExitSelectionModeToAddColorMessage() {
+    context!!.let {
+      it.infoToast(it.stringRes(R.string.minimal_fragment_exit_selection_before_adding_message))
+    }
   }
 
   private fun initRecyclerView() {

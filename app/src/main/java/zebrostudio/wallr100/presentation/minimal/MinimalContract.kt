@@ -24,6 +24,7 @@ interface MinimalContract {
     fun clearCabIfActive(renewView : Boolean)
     fun showColorPickerDialogAndAttachColorPickerListener()
     fun showColorAlreadyPresentErrorMessage(position: Int)
+    fun showExitSelectionModeToAddColorMessage()
   }
 
   interface MinimalPresenter : BasePresenter<MinimalView> {

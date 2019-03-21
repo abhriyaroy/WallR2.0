@@ -105,9 +105,7 @@ class MinimalPresenterImpl(
             .observeOn(postExecutionThread.scheduler)
             .autoDisposable(minimalView!!.getScope())
             .subscribe({
-              System.out.println("Selected : ${selectedHashMap.keys}")
               reversedSelectedItems.keys.forEach {
-                System.out.println("deleted : $it")
                 minimalView?.removeItemView(it + INITIAL_OFFSET)
               }
               minimalView?.clearCabIfActive(false)
@@ -194,7 +192,11 @@ class MinimalPresenterImpl(
 
       }
     } else {
-      toggleSelected(position)
+      if (position != INITIAL_SIZE) {
+        toggleSelected(position)
+      } else {
+        minimalView?.showExitSelectionModeToAddColorMessage()
+      }
     }
   }
 
@@ -241,7 +243,6 @@ class MinimalPresenterImpl(
     }
     updateSelectionChange(index, selectedHashMap.size)
   }
-
 }
 
 enum class MultiColorImageType {
