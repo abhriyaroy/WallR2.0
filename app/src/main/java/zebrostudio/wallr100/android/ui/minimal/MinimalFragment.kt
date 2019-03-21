@@ -15,6 +15,7 @@ import com.afollestad.dragselectrecyclerview.DragSelectTouchListener
 import com.afollestad.dragselectrecyclerview.Mode.RANGE
 import com.afollestad.materialcab.MaterialCab
 import com.afollestad.materialdialogs.MaterialDialog
+import com.skydoves.colorpickerview.ColorPickerView
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.minimalBottomLayout
 import kotlinx.android.synthetic.main.activity_main.minimalBottomLayoutFab
@@ -30,6 +31,7 @@ import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.stringRes
+import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
@@ -66,6 +68,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun updateAllItems() {
+    System.out.println("Update all items call")
     minimalImageAdapter?.notifyDataSetChanged()
   }
 
@@ -104,7 +107,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
       }
 
       onDestroy {
-        presenter.handleCabDestroyed()
+        presenter.handleCabDestroyed(true)
         true
       }
     }
@@ -223,13 +226,13 @@ class MinimalFragment : BaseFragment(), MinimalView {
     }
   }
 
-  override fun clearCabIfActive() {
+  override fun clearCabIfActive(renewView: Boolean) {
     if (MaterialCab.isActive) {
       MaterialCab.destroy()
     }
   }
 
-  override fun showColorPickerDialog() {
+  override fun showColorPickerDialogAndAttachColorPickerListener() {
     context!!.let {
       colorPickerDialog = MaterialDialog.Builder(it)
           .backgroundColor(it.colorRes(R.color.primary))
@@ -248,11 +251,36 @@ class MinimalFragment : BaseFragment(), MinimalView {
           .build()
     }
     colorPickerDialog?.show()
+
+    colorPickerDialog?.customView?.apply {
+      findViewById<ColorPickerView>(R.id.colorPickerView).let { colorPickerView ->
+        colorPickerView.setColorListener {
+          findViewById<TextView>(R.id.colorPickerHexTextView).text = "#${colorPickerView.colorHtml}"
+          findViewById<View>(R.id.sampleColorView).setBackgroundColor(it)
+        }
+      }
+    }
   }
 
-  override fun addAndScrollToItemView(index: Int) {
+  override fun addColorAndScrollToItemView(index: Int) {
+    if (colorPickerDialog?.isShowing == true) {
+      colorPickerDialog?.dismiss()
+    }
     minimalImageAdapter?.notifyItemInserted(index)
-    minimalFragmentRecyclerView.scrollToPosition(index)
+    minimalFragmentRecyclerView.smoothScrollToPosition(index)
+  }
+
+  override fun showAddColorSuccessMessage() {
+    context!!.let {
+      it.successToast(it.stringRes(R.string.minimal_fragment_add_color_success_message))
+    }
+  }
+
+  override fun showColorAlreadyPresentErrorMessage(position: Int) {
+    context!!.let {
+      it.errorToast(it.stringRes(R.string.minimal_fragment_color_alreaady_present_error_message))
+    }
+    minimalFragmentRecyclerView?.smoothScrollToPosition(position)
   }
 
   private fun initRecyclerView() {

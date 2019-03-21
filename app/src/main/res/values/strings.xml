@@ -166,5 +166,7 @@
   <string name="minimal_fragment_delete_colors_error_message">Unable to delete colors. Please try again...</string>
   <string name="minimal_fragment_color_picker_positive_text">SELECT</string>
   <string name="minimal_fragment_color_picker_negative_text">CANCEL</string>
+  <string name="minimal_fragment_color_alreaady_present_error_message">This color is already present</string>
+  <string name="minimal_fragment_add_color_success_message">Your color has been successfully added</string>
 
 </resources>

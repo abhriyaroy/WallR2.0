@@ -21,8 +21,8 @@
       android:layout_marginTop="24dp"
       android:layout_centerHorizontal="true">
 
-    <RelativeLayout
-        android:id="@+id/show_color_linearlayout"
+    <View
+        android:id="@+id/sampleColorView"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:background="@color/white"/>
@@ -35,7 +35,7 @@
         android:layout_marginLeft="24dp"
         android:layout_centerVertical="true"
         android:textSize="18sp"
-        android:layout_toRightOf="@id/show_color_linearlayout"
+        android:layout_toRightOf="@id/sampleColorView"
         android:text="@color/white"/>
 
   </RelativeLayout>

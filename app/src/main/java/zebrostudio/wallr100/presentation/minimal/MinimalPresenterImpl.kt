@@ -82,10 +82,6 @@ class MinimalPresenterImpl(
     }
   }
 
-  override fun handleItemLongClick(position: Int) {
-    minimalView?.startSelection(position)
-  }
-
   override fun handleScroll(yAxisMovement: Int) {
     if (isBottomPanelEnabled && yAxisMovement > MINIMUM_SCROLL_DIST && !forceSmoothScroll) {
       minimalView?.hideBottomLayoutWithAnimation()
@@ -103,19 +99,21 @@ class MinimalPresenterImpl(
         minimalImagesUseCase.modifyColors(colorList, selectedHashMap)
             .doOnSuccess {
               reversedSelectedItems.putAll(selectedHashMap)
-              clearSelectedItems()
+              selectedHashMap.clear()
               colorList = it.toMutableList()
             }
             .observeOn(postExecutionThread.scheduler)
             .autoDisposable(minimalView!!.getScope())
             .subscribe({
+              System.out.println("Selected : ${selectedHashMap.keys}")
               reversedSelectedItems.keys.forEach {
-                minimalView?.removeItemView(it)
+                System.out.println("deleted : $it")
+                minimalView?.removeItemView(it + INITIAL_OFFSET)
               }
-              minimalView?.clearCabIfActive()
+              minimalView?.clearCabIfActive(false)
             }, {
               System.out.println(it.printStackTrace())
-              minimalView?.clearCabIfActive()
+              minimalView?.clearCabIfActive(true)
               minimalView?.showDeleteColorsErrorMessage()
             })
       } else {
@@ -124,14 +122,16 @@ class MinimalPresenterImpl(
     }
   }
 
-  override fun handleCabDestroyed() {
-    clearSelectedItems()
+  override fun handleCabDestroyed(updateEntireView: Boolean) {
+    selectedHashMap.clear()
     if (isBottomPanelEnabled) {
       minimalView?.hideBottomLayoutWithAnimation()
       isBottomPanelEnabled = false
       selectionSize = INITIAL_SIZE
     }
-    minimalView?.updateAllItems()
+    if (updateEntireView) {
+      minimalView?.updateAllItems()
+    }
   }
 
   override fun handleSpinnerOptionChanged(position: Int) {
@@ -143,14 +143,29 @@ class MinimalPresenterImpl(
   }
 
   override fun handleColorPickerPositiveClick(text: String) {
-
+    if (!colorList.contains(text)) {
+      minimalImagesUseCase.addCustomColor(colorList)
+          .doOnSubscribe {
+            colorList.add(text)
+          }.observeOn(postExecutionThread.scheduler)
+          .autoDisposable(minimalView!!.getScope())
+          .subscribe({
+            minimalView?.addColorAndScrollToItemView(colorList.size)
+            minimalView?.showAddColorSuccessMessage()
+          }, {
+            minimalView?.showGenericErrorMessage()
+          })
+    } else {
+      minimalView?.showColorAlreadyPresentErrorMessage(colorList.indexOf(text) + INITIAL_OFFSET)
+    }
   }
 
   override fun getItemCount(): Int {
-    return colorList.size
+    return colorList.size + INITIAL_OFFSET
   }
 
   override fun onBindRepositoryRowViewAtPosition(holder: MinimalViewHolder, position: Int) {
+    System.out.println("selected map size ${selectedHashMap.size}")
     if (position == INITIAL_SIZE) {
       holder.showAddImageLayout()
       holder.hideSelectedIndicator()
@@ -158,11 +173,10 @@ class MinimalPresenterImpl(
       holder.hideAddImageLayout()
       holder.setImageViewColor(colorList[position - INITIAL_OFFSET])
       holder.attachLongClickListener()
+      holder.hideSelectedIndicator()
       if (selectedHashMap.size != 0) {
         if (selectedHashMap.containsKey(position - INITIAL_OFFSET)) {
           holder.showSelectedIndicator()
-        } else {
-          holder.hideSelectedIndicator()
         }
       }
     }
@@ -173,8 +187,12 @@ class MinimalPresenterImpl(
     position: Int,
     itemView: ItemViewHolder
   ) {
-    if (selectedHashMap.size == 0) {
+    if (selectedHashMap.size == INITIAL_SIZE) {
+      if (position == INITIAL_SIZE) {
+        minimalView?.showColorPickerDialogAndAttachColorPickerListener()
+      } else {
 
+      }
     } else {
       toggleSelected(position)
     }
@@ -185,8 +203,7 @@ class MinimalPresenterImpl(
     itemView: ItemViewHolder
   ) {
     toggleSelected(position)
-    handleItemLongClick(position)
-
+    minimalView?.startSelection(position)
   }
 
   override fun isItemSelectable(index: Int): Boolean {
@@ -204,10 +221,6 @@ class MinimalPresenterImpl(
       selectedHashMap.remove(index - INITIAL_OFFSET)
     }
     updateSelectionChange(index, selectedHashMap.size)
-  }
-
-  override fun clearSelectedItems() {
-    selectedHashMap.clear()
   }
 
   override fun numberOfItemsToBeDeselectedToStartDeletion(): Int {
