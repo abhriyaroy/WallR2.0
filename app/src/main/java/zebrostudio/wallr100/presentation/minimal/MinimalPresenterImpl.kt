@@ -32,6 +32,7 @@ class MinimalPresenterImpl(
   private var multiColorImageType: MultiColorImageType? = MATERIAL
   private var colorList = mutableListOf<String>()
   private var selectedHashMap = HashMap<Int, Boolean>()
+  private var shouldUpdateAllItems = true
 
   override fun attachView(view: MinimalView) {
     minimalView = view
@@ -86,10 +87,12 @@ class MinimalPresenterImpl(
               reversedSelectedItems.keys.forEach {
                 minimalView?.removeItemView(it + INITIAL_OFFSET)
               }
-              minimalView?.clearCabIfActive(false)
+              shouldUpdateAllItems = false
+              minimalView?.clearCabIfActive()
             }, {
               System.out.println(it.printStackTrace())
-              minimalView?.clearCabIfActive(true)
+              shouldUpdateAllItems = true
+              minimalView?.clearCabIfActive()
               minimalView?.showDeleteColorsErrorMessage()
             })
       } else {
@@ -98,16 +101,17 @@ class MinimalPresenterImpl(
     }
   }
 
-  override fun handleCabDestroyed(updateEntireView: Boolean) {
+  override fun handleCabDestroyed() {
     selectedHashMap.clear()
     if (isBottomPanelEnabled) {
       minimalView?.hideBottomLayoutWithAnimation()
       isBottomPanelEnabled = false
       selectionSize = INITIAL_SIZE
     }
-    if (updateEntireView) {
+    if (shouldUpdateAllItems) {
       minimalView?.updateAllItems()
     }
+    shouldUpdateAllItems = true
   }
 
   override fun handleSpinnerOptionChanged(position: Int) {

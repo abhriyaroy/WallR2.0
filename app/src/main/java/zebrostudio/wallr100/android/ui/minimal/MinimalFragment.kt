@@ -112,7 +112,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
       }
 
       onDestroy {
-        presenter.handleCabDestroyed(true)
+        presenter.handleCabDestroyed()
         true
       }
     }
@@ -231,7 +231,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
     }
   }
 
-  override fun clearCabIfActive(renewView: Boolean) {
+  override fun clearCabIfActive() {
     if (MaterialCab.isActive) {
       MaterialCab.destroy()
     }

@@ -22,7 +22,7 @@ interface MinimalContract {
     fun startSelection(position: Int)
     fun showDeselectBeforeDeletionMessage(numberOfItemsToBeDeselected: Int)
     fun showDeleteColorsErrorMessage()
-    fun clearCabIfActive(renewView : Boolean)
+    fun clearCabIfActive()
     fun showColorPickerDialogAndAttachColorPickerListener()
     fun showColorAlreadyPresentErrorMessage(position: Int)
     fun showExitSelectionModeToAddColorMessage()
@@ -32,7 +32,7 @@ interface MinimalContract {
     fun handleViewCreated()
     fun handleOnScrolled(yAxisMovement: Int)
     fun handleDeleteMenuItemClick()
-    fun handleCabDestroyed(updateEntireView: Boolean)
+    fun handleCabDestroyed()
     fun handleSpinnerOptionChanged(position: Int)
     fun handleColorPickerPositiveClick(text: String)
 

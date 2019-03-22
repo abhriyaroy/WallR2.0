@@ -54,6 +54,7 @@ class WallrDataRepositoryTest {
   @Mock lateinit var imageHandler: ImageHandler
   @Mock lateinit var fileHandler: FileHandler
   @Mock lateinit var downloadHelper: DownloadHelper
+  @Mock lateinit var solidColorHelper: SolidColorHelper
   @Mock lateinit var mockBitmap: Bitmap
   @Mock lateinit var mockUri: Uri
   private lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
@@ -91,7 +92,8 @@ class WallrDataRepositoryTest {
     wallrDataRepository =
         WallrDataRepository(remoteAuthServiceFactory, unsplashClientFactory, sharedPrefs,
             unsplashPictureEntityMapper, firebaseDatabaseHelper, firebasePictureEntityMapper,
-            urlShortener, imageHandler, fileHandler, downloadHelper, executionThread)
+            urlShortener, imageHandler, fileHandler, downloadHelper, solidColorHelper,
+            executionThread)
 
     `when`(executionThread.ioScheduler).thenReturn(Schedulers.trampoline())
     `when`(executionThread.computationScheduler).thenReturn(Schedulers.trampoline())
