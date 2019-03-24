@@ -180,6 +180,9 @@ class DragSelectTouchListener private constructor(
       }
     }
 
+    if (result && event.action == ACTION_UP) {
+      onDragSelectionStop()
+    }
     return result
   }
 
@@ -194,11 +197,7 @@ class DragSelectTouchListener private constructor(
 
     when (action) {
       ACTION_UP -> {
-        dragSelectActive = false
-        inTopHotspot = false
-        inBottomHotspot = false
-        autoScrollHandler.removeCallbacks(autoScrollRunnable)
-        this.notifyAutoScrollListener(false)
+        onDragSelectionStop()
         return
       }
       ACTION_MOVE -> {
@@ -274,6 +273,14 @@ class DragSelectTouchListener private constructor(
         return
       }
     }
+  }
+
+  private fun onDragSelectionStop() {
+    dragSelectActive = false
+    inTopHotspot = false
+    inBottomHotspot = false
+    autoScrollHandler.removeCallbacks(autoScrollRunnable)
+    this.notifyAutoScrollListener(false)
   }
 
   @RestrictTo(LIBRARY_GROUP)
