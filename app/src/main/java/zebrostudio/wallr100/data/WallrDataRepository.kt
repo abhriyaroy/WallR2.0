@@ -293,10 +293,10 @@ class WallrDataRepository(
   }
 
   override fun modifyColorList(
-    colors: MutableList<String>,
+    colors: List<String>,
     selectedIndicesMap: HashMap<Int, Boolean>
   ): Single<List<String>> {
-    return removeElementsFromList(colors, selectedIndicesMap)
+    return removeElementsFromList(colors.toMutableList(), selectedIndicesMap)
         .subscribeOn(executionThread.computationScheduler)
   }
 

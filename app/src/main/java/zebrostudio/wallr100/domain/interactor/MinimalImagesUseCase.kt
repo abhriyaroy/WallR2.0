@@ -9,7 +9,7 @@ interface MinimalImagesUseCase {
   fun getDefaultColors(): Single<List<String>>
   fun getCustomColors(): Single<List<String>>
   fun modifyColors(
-    colorList: MutableList<String>,
+    colorList: List<String>,
     selectedIndicesMap: HashMap<Int, Boolean>
   ): Single<List<String>>
 
@@ -31,7 +31,7 @@ class MinimalImagesInteractor(private val wallrRepository: WallrRepository) : Mi
   }
 
   override fun modifyColors(
-    colorList: MutableList<String>,
+    colorList: List<String>,
     selectedIndicesMap: HashMap<Int, Boolean>
   ): Single<List<String>> {
     return wallrRepository.modifyColorList(colorList, selectedIndicesMap)

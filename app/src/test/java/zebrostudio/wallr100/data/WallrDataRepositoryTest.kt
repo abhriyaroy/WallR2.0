@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.gson.Gson
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -11,12 +12,13 @@ import com.pddstudio.urlshortener.URLShortener
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.schedulers.TestScheduler
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -25,6 +27,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
+import zebrostudio.wallr100.data.datafactory.FirebaseImageEntityModelFactory
 import zebrostudio.wallr100.data.datafactory.UnsplashPictureEntityModelFactory
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.NoResultFoundException
@@ -35,13 +38,11 @@ import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 import zebrostudio.wallr100.domain.executor.ExecutionThread
-import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.util.UUID.randomUUID
+import java.util.concurrent.TimeUnit
 
 @RunWith(MockitoJUnitRunner::class)
 class WallrDataRepositoryTest {
-
-  @get:Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
 
   @Mock lateinit var executionThread: ExecutionThread
   @Mock lateinit var sharedPrefs: SharedPrefsHelper
@@ -477,9 +478,7 @@ class WallrDataRepositoryTest {
     `should verify computation scheduler call`()
   }
 
-  /* Need to properly implement timeout for Rx Java
-
-  @Test fun `should return Single of ImageModel list on getPicturesFromFirebase call success`() {
+  @Test fun `should return Single of ImageModel list on getExplorePictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
@@ -487,16 +486,21 @@ class WallrDataRepositoryTest {
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     map[randomString] = Gson().toJson(firebaseImageEntity)
+    `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
+    `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
+    `when`(databaseReference.child(
+        CHILD_PATH_EXPLORE)).thenReturn(databaseReference)
     `when`(firebaseDatabaseHelper.fetch(databaseReference)).thenReturn(Single.just(map))
 
-    wallrDataRepository.getPicturesFromFirebase(databaseReference).subscribeOn(testScheduler)
+    wallrDataRepository.getExplorePictures().subscribeOn(testScheduler)
         .subscribe(testObserver)
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
+    verify(firebaseDatabaseHelper).getDatabase()
     verify(firebaseDatabaseHelper).fetch(databaseReference)
     verifyNoMoreInteractions(firebaseDatabaseHelper)
-  }*/
+  }
 
   private fun stubFirebaseDatabaseNode(childPath: String) {
     `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)

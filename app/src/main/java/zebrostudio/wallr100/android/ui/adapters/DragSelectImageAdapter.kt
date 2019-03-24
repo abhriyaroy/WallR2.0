@@ -16,44 +16,80 @@ import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.visible
-import zebrostudio.wallr100.presentation.minimal.MinimalContract.ItemViewHolder
-import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
+import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.DragSelectItemPresenter
+import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.DragSelectItemViewHolder
 
-class MinimalImageAdapter(private val presenter: MinimalPresenter) :
-    RecyclerView.Adapter<MinimalViewHolder>(), DragSelectReceiver {
+interface DragSelectImageAdapterCallbacks {
+  fun setItemSelected(index: Int, selected: Boolean)
+  fun isItemSelected(index: Int): Boolean
+  fun isItemSelectable(index: Int): Boolean
+  fun handleClick(index: Int)
+  fun handleLongClick(index: Int): Boolean
+}
+
+class DragSelectImageAdapter(
+  private val callback: DragSelectImageAdapterCallbacks,
+  private val presenter: DragSelectItemPresenter
+) : RecyclerView.Adapter<MinimalViewHolder>(), DragSelectReceiver {
+
+  private var colorList = mutableListOf<String>()
+  private var selectedHashMap = HashMap<Int, Boolean>()
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MinimalViewHolder {
     return MinimalViewHolder(parent.inflate(LayoutInflater.from(parent.context),
-        R.layout.item_recyclerview_minimal_fragment), parent.context, presenter)
+        R.layout.item_recyclerview_minimal_fragment), parent.context, callback)
   }
 
   override fun getItemCount(): Int {
-    return presenter.getItemCount()
+    return presenter.getItemCount(colorList)
   }
 
   override fun onBindViewHolder(holder: MinimalViewHolder, position: Int) {
-    presenter.onBindRepositoryRowViewAtPosition(holder, position)
+    presenter.onBindRepositoryRowViewAtPosition(holder.getDragSelectItemViewHolder(), colorList,
+        selectedHashMap, position)
   }
 
   override fun setSelected(index: Int, selected: Boolean) {
-    presenter.setItemSelected(index, selected)
+    callback.setItemSelected(index, selected)
   }
 
   override fun isSelected(index: Int): Boolean {
-    return presenter.isItemSelected(index)
+    return callback.isItemSelected(index)
   }
 
   override fun isIndexSelectable(index: Int): Boolean {
-    return presenter.isItemSelectable(index)
+    return callback.isItemSelectable(index)
   }
+
+  fun getColorList() = colorList
+
+  fun setColorList(list: List<String>) {
+    colorList = list.toMutableList()
+  }
+
+  fun addColorToList(hexValue: String) {
+    colorList.add(hexValue)
+  }
+
+  fun getSelectedItemsMap() = selectedHashMap
+
+  fun addToSelectedItemsMap(itemPosition: Int) {
+    selectedHashMap[itemPosition] = true
+  }
+
+  fun removeItemFromSelectedItemsMap(itemPosition: Int) {
+    selectedHashMap.remove(itemPosition)
+  }
+
+  fun clearSelectedItemsMap() = selectedHashMap.clear()
 
 }
 
 class MinimalViewHolder(
   itemView: View,
   private val context: Context,
-  private val presenter: MinimalPresenter
-) : RecyclerView.ViewHolder(itemView), ItemViewHolder {
+  private val callback: DragSelectImageAdapterCallbacks
+) : RecyclerView.ViewHolder(itemView), DragSelectItemViewHolder {
 
   override fun showAddImageLayout() {
     itemView.colorThumbnail.setBackgroundColor(context.colorRes(R.color.black))
@@ -80,15 +116,18 @@ class MinimalViewHolder(
 
   override fun attachClickListener() {
     itemView.setOnClickListener {
-      presenter.handleClick(adapterPosition, this)
+      callback.handleClick(adapterPosition)
     }
   }
 
   override fun attachLongClickListener() {
     itemView.setOnLongClickListener {
-      presenter.handleImageLongClick(adapterPosition, this)
-      true
+      callback.handleLongClick(adapterPosition)
     }
+  }
+
+  fun getDragSelectItemViewHolder(): DragSelectItemViewHolder {
+    return this
   }
 
 }

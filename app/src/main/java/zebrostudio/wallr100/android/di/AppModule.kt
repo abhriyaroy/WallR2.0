@@ -51,6 +51,8 @@ import zebrostudio.wallr100.domain.interactor.UserPremiumStatusInteractor
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesInteractor
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
+import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.DragSelectItemPresenter
+import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerIPresenterImpl
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
 import zebrostudio.wallr100.presentation.detail.GsonHelper
@@ -208,5 +210,8 @@ class AppModule {
   @Provides
   fun provideImageRecyclerViewPresenter()
       : ImageRecyclerItemContract.ImageRecyclerViewPresenter = ImageRecyclerViewPresenterImpl()
+
+  @Provides
+  fun provideDragSelectRecyclerItemPresenter(): DragSelectItemPresenter = DragSelectRecyclerIPresenterImpl()
 
 }

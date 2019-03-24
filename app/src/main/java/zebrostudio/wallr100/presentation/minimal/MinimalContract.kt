@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.presentation.minimal
 
-import zebrostudio.wallr100.android.ui.adapters.MinimalViewHolder
 import zebrostudio.wallr100.presentation.BasePresenter
 import zebrostudio.wallr100.presentation.BaseView
 
@@ -26,34 +25,31 @@ interface MinimalContract {
     fun showColorPickerDialogAndAttachColorPickerListener()
     fun showColorAlreadyPresentErrorMessage(position: Int)
     fun showExitSelectionModeToAddColorMessage()
+
+    fun addToSelectedItemsMap(position: Int)
+    fun removeFromSelectedItemsMap(item: Int)
+    fun clearSelectedItemsMap()
+    fun setColorList(list: List<String>)
+    fun addColorToList(hexValue: String)
   }
 
   interface MinimalPresenter : BasePresenter<MinimalView> {
     fun handleViewCreated()
     fun handleOnScrolled(yAxisMovement: Int)
-    fun handleDeleteMenuItemClick()
+    fun handleDeleteMenuItemClick(colorList: List<String>, selectedItemsMap: HashMap<Int, Boolean>)
     fun handleCabDestroyed()
     fun handleSpinnerOptionChanged(position: Int)
-    fun handleColorPickerPositiveClick(text: String)
+    fun handleColorPickerPositiveClick(hexValue: String, colorList: List<String>)
 
-    fun getItemCount(): Int
-    fun onBindRepositoryRowViewAtPosition(holder: MinimalViewHolder, position: Int)
-    fun handleClick(position: Int, itemView: ItemViewHolder)
-    fun handleImageLongClick(position: Int, itemView: ItemViewHolder)
+    fun handleClick(position: Int, selectedItemsMap: HashMap<Int, Boolean>)
+    fun handleImageLongClick(position: Int, selectedItemsMap: HashMap<Int, Boolean>): Boolean
     fun isItemSelectable(index: Int): Boolean
-    fun isItemSelected(index: Int): Boolean
-    fun setItemSelected(index: Int, selected: Boolean)
-    fun numberOfItemsToBeDeselectedToStartDeletion(): Int
-  }
-
-  interface ItemViewHolder {
-    fun showAddImageLayout()
-    fun hideAddImageLayout()
-    fun setImageViewColor(colorHexCode: String)
-    fun showSelectedIndicator()
-    fun hideSelectedIndicator()
-    fun attachClickListener()
-    fun attachLongClickListener()
+    fun isItemSelected(index: Int, selectedItemsMap: HashMap<Int, Boolean>): Boolean
+    fun setItemSelected(index: Int, selected: Boolean, selectedItemsMap: HashMap<Int, Boolean>)
+    fun numberOfItemsToBeDeselectedToStartDeletion(
+      colorList: List<String>,
+      selectedItemsMap: HashMap<Int, Boolean>
+    ): Int
   }
 
 }

@@ -24,7 +24,8 @@ import kotlinx.android.synthetic.main.activity_main.spinner
 import kotlinx.android.synthetic.main.fragment_minimal.minimalFragmentRecyclerView
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
-import zebrostudio.wallr100.android.ui.adapters.MinimalImageAdapter
+import zebrostudio.wallr100.android.ui.adapters.DragSelectImageAdapter
+import zebrostudio.wallr100.android.ui.adapters.DragSelectImageAdapterCallbacks
 import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
@@ -35,15 +36,16 @@ import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
+import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.DragSelectItemPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
 import javax.inject.Inject
 
 class MinimalFragment : BaseFragment(), MinimalView {
 
-  @Inject
-  internal lateinit var presenter: MinimalPresenter
-  private var minimalImageAdapter: MinimalImageAdapter? = null
+  @Inject internal lateinit var presenter: MinimalPresenter
+  @Inject internal lateinit var recyclerPresenter: DragSelectItemPresenter
+  private var dragSelectImageAdapter: DragSelectImageAdapter? = null
   private var touchListener: DragSelectTouchListener? = null
   private var colorPickerDialog: MaterialDialog? = null
 
@@ -74,7 +76,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun updateAllItems() {
-    minimalImageAdapter?.notifyDataSetChanged()
+    dragSelectImageAdapter?.notifyDataSetChanged()
   }
 
   override fun showUnableToGetColorsErrorMessage() {
@@ -90,11 +92,11 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun updateItemView(index: Int) {
-    minimalImageAdapter?.notifyItemChanged(index)
+    dragSelectImageAdapter?.notifyItemChanged(index)
   }
 
   override fun removeItemView(index: Int) {
-    minimalImageAdapter?.notifyItemRemoved(index)
+    dragSelectImageAdapter?.notifyItemRemoved(index)
   }
 
   override fun showCab(size: Int) {
@@ -106,7 +108,8 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
       onSelection {
         if (it.itemId == R.id.delete) {
-          presenter.handleDeleteMenuItemClick()
+          presenter.handleDeleteMenuItemClick(dragSelectImageAdapter!!.getColorList(),
+              dragSelectImageAdapter!!.getSelectedItemsMap())
         }
         true
       }
@@ -251,7 +254,8 @@ class MinimalFragment : BaseFragment(), MinimalView {
           .onPositive { dialog, _ ->
             val colorPickerHexTextView =
                 dialog.findViewById(R.id.colorPickerHexTextView) as TextView
-            presenter.handleColorPickerPositiveClick(colorPickerHexTextView.text as String)
+            presenter.handleColorPickerPositiveClick(colorPickerHexTextView.text as String,
+                dragSelectImageAdapter!!.getColorList())
           }
           .build()
     }
@@ -271,7 +275,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
     if (colorPickerDialog?.isShowing == true) {
       colorPickerDialog?.dismiss()
     }
-    minimalImageAdapter?.notifyItemInserted(index)
+    dragSelectImageAdapter?.notifyItemInserted(index)
     minimalFragmentRecyclerView.smoothScrollToPosition(index)
   }
 
@@ -294,6 +298,26 @@ class MinimalFragment : BaseFragment(), MinimalView {
     }
   }
 
+  override fun addToSelectedItemsMap(position: Int) {
+    dragSelectImageAdapter?.addToSelectedItemsMap(position)
+  }
+
+  override fun removeFromSelectedItemsMap(item: Int) {
+    dragSelectImageAdapter?.removeItemFromSelectedItemsMap(item)
+  }
+
+  override fun clearSelectedItemsMap() {
+    dragSelectImageAdapter?.clearSelectedItemsMap()
+  }
+
+  override fun setColorList(list: List<String>) {
+    dragSelectImageAdapter?.setColorList(list)
+  }
+
+  override fun addColorToList(hexValue: String) {
+    dragSelectImageAdapter?.addColorToList(hexValue)
+  }
+
   private fun initRecyclerView() {
     GridLayoutManager(context,
         context!!.integerRes(R.integer.minimal_image_recycler_view_span_count)).let {
@@ -302,9 +326,10 @@ class MinimalFragment : BaseFragment(), MinimalView {
     minimalFragmentRecyclerView.addItemDecoration(
         RecyclerViewItemDecorator(context!!.integerRes(R.integer.recycler_view_grid_spacing_px),
             context!!.integerRes(R.integer.minimal_image_recycler_view_grid_size)))
-    minimalImageAdapter = MinimalImageAdapter(presenter)
-    minimalFragmentRecyclerView.adapter = minimalImageAdapter
-    touchListener = DragSelectTouchListener.create(context!!, minimalImageAdapter!!) {
+    dragSelectImageAdapter =
+        DragSelectImageAdapter(getDragSelectRecyclerViewCallback(), recyclerPresenter)
+    minimalFragmentRecyclerView.adapter = dragSelectImageAdapter
+    touchListener = DragSelectTouchListener.create(context!!, dragSelectImageAdapter!!) {
       this.mode = RANGE
     }
     minimalFragmentRecyclerView.addOnItemTouchListener(touchListener!!)
@@ -324,6 +349,29 @@ class MinimalFragment : BaseFragment(), MinimalView {
     activity?.spinner?.setOnItemSelectedListener { _, position, _, _ ->
       presenter.handleSpinnerOptionChanged(position)
     }
+  }
+
+  private fun getDragSelectRecyclerViewCallback() = object : DragSelectImageAdapterCallbacks {
+    override fun setItemSelected(index: Int, selected: Boolean) {
+      presenter.setItemSelected(index, selected, dragSelectImageAdapter!!.getSelectedItemsMap())
+    }
+
+    override fun isItemSelected(index: Int): Boolean {
+      return presenter.isItemSelected(index, dragSelectImageAdapter!!.getSelectedItemsMap())
+    }
+
+    override fun isItemSelectable(index: Int): Boolean {
+      return presenter.isItemSelectable(index)
+    }
+
+    override fun handleClick(index: Int) {
+      return presenter.handleClick(index, dragSelectImageAdapter!!.getSelectedItemsMap())
+    }
+
+    override fun handleLongClick(index: Int): Boolean {
+      return presenter.handleImageLongClick(index, dragSelectImageAdapter!!.getSelectedItemsMap())
+    }
+
   }
 
   companion object {
