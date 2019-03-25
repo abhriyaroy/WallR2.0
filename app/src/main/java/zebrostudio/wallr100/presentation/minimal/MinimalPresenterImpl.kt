@@ -11,6 +11,7 @@ import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
 import zebrostudio.wallr100.presentation.minimal.mapper.RestoreColorsPresenterEntityMapper
 import java.util.Collections
+import java.util.Random
 import java.util.TreeMap
 
 const val MINIMUM_SCROLL_DIST = 15
@@ -18,6 +19,8 @@ const val INITIAL_SIZE = 0
 const val INITIAL_OFFSET = 1
 const val MINIMUM_COLOR_LIST_SIZE = 20
 const val FIRST_ELEMENT_INDEX = 1
+const val INCREMENT_BY_1 = 1
+const val INCREMENT_BY_2 = 2
 
 class MinimalPresenterImpl(
   private val minimalImagesUseCase: MinimalImagesUseCase,
@@ -155,6 +158,16 @@ class MinimalPresenterImpl(
         }, {
           minimalView?.showUnableToRestoreColorsMessage()
         })
+  }
+
+  override fun handleMultiSelectMenuClick() {
+    minimalView!!.getTopAndBottomVisiblePositions().let { pair ->
+      (Random().nextInt(pair.second - pair.first + INITIAL_OFFSET) + pair.first).let {
+        minimalView?.selectItem(it)
+        minimalView?.selectItem(it + INCREMENT_BY_1)
+        minimalView?.selectItem(it + INCREMENT_BY_2)
+      }
+    }
   }
 
   override fun handleClick(

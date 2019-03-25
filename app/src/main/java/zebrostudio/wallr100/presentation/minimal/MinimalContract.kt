@@ -29,12 +29,14 @@ interface MinimalContract {
     fun showUndoDeletionOption(size: Int)
     fun showUnableToRestoreColorsMessage()
     fun showRestoreColorsSuccessMessage()
+    fun getTopAndBottomVisiblePositions(): Pair<Int, Int>
 
     fun addToSelectedItemsMap(position: Int, hexValue: String)
     fun removeFromSelectedItemsMap(item: Int)
     fun clearSelectedItemsMap()
     fun setColorList(list: List<String>)
     fun addColorToList(hexValue: String)
+    fun selectItem(position: Int)
   }
 
   interface MinimalPresenter : BasePresenter<MinimalView> {
@@ -45,6 +47,7 @@ interface MinimalContract {
     fun handleSpinnerOptionChanged(position: Int)
     fun handleColorPickerPositiveClick(hexValue: String, colorList: List<String>)
     fun handleUndoDeletionOptionClick()
+    fun handleMultiSelectMenuClick()
 
     fun handleClick(position: Int, colorList: List<String>, selectedItemsMap: HashMap<Int, String>)
     fun handleImageLongClick(

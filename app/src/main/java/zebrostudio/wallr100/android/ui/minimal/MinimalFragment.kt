@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.activity_main.minimalBottomLayoutFab
 import kotlinx.android.synthetic.main.activity_main.spinner
 import kotlinx.android.synthetic.main.fragment_minimal.minimalFragmentRecyclerView
 import kotlinx.android.synthetic.main.fragment_minimal.minimalFragmentRootLayout
+import kotlinx.android.synthetic.main.toolbar_layout.toolbarMultiSelectIcon
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.ui.adapters.DragSelectImageAdapter
@@ -44,6 +45,7 @@ import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
 import javax.inject.Inject
 
 const val SINGLE_ITEM_SIZE = 1
+const val BOTTOM_OFFSET = 3
 
 class MinimalFragment : BaseFragment(), MinimalView {
 
@@ -66,6 +68,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
     super.onViewCreated(view, savedInstanceState)
     initRecyclerView()
     initBottomPanel()
+    attachMultiSelectClickListener()
     presenter.attachView(this)
     presenter.handleViewCreated()
   }
@@ -336,6 +339,13 @@ class MinimalFragment : BaseFragment(), MinimalView {
     }
   }
 
+  override fun getTopAndBottomVisiblePositions(): Pair<Int, Int> {
+    return (minimalFragmentRecyclerView.layoutManager as GridLayoutManager).let {
+      Pair(it.findFirstCompletelyVisibleItemPosition(),
+          it.findLastCompletelyVisibleItemPosition() - BOTTOM_OFFSET)
+    }
+  }
+
   override fun addToSelectedItemsMap(position: Int, hexValue: String) {
     dragSelectImageAdapter?.addToSelectedItemsMap(position, hexValue)
   }
@@ -354,6 +364,10 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
   override fun addColorToList(hexValue: String) {
     dragSelectImageAdapter?.addColorToList(hexValue)
+  }
+
+  override fun selectItem(position: Int) {
+    dragSelectImageAdapter?.setSelected(position, true)
   }
 
   private fun initRecyclerView() {
@@ -386,6 +400,12 @@ class MinimalFragment : BaseFragment(), MinimalView {
         context!!.stringRes(R.string.minimal_fragment_spinner_item_plasma))
     activity?.spinner?.setOnItemSelectedListener { _, position, _, _ ->
       presenter.handleSpinnerOptionChanged(position)
+    }
+  }
+
+  private fun attachMultiSelectClickListener() {
+    activity!!.toolbarMultiSelectIcon.setOnClickListener {
+      presenter.handleMultiSelectMenuClick()
     }
   }
 
