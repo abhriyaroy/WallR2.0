@@ -28,6 +28,7 @@ interface MinimalContract {
     fun showExitSelectionModeToAddColorMessage()
     fun showUndoDeletionOption(size: Int)
     fun showUnableToRestoreColorsMessage()
+    fun showRestoreColorsSuccessMessage()
 
     fun addToSelectedItemsMap(position: Int, hexValue: String)
     fun removeFromSelectedItemsMap(item: Int)

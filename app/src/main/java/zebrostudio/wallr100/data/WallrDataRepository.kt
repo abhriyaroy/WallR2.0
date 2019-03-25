@@ -11,6 +11,7 @@ import io.reactivex.Single
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
+import zebrostudio.wallr100.data.exception.EmptyRecentlyDeletedMapException
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.NotEnoughFreeSpaceException
@@ -71,7 +72,7 @@ class WallrDataRepository(
   private val executionThread: ExecutionThread
 ) : WallrRepository {
 
-  private var recentlyDeletedColorsMap = HashMap<Int, String>()
+  private var recentlyDeletedColorsMap = TreeMap<Int, String>()
 
   override fun authenticatePurchase(
     packageName: String,
@@ -307,14 +308,19 @@ class WallrDataRepository(
     return solidColorHelper.getCustomColors()
         .subscribeOn(executionThread.ioScheduler)
         .subscribeOn(executionThread.computationScheduler)
-        .map { list ->
-          list.toMutableList().let { mutableList ->
-            recentlyDeletedColorsMap.keys.forEach {
-              mutableList.add(it, recentlyDeletedColorsMap[it]!!)
+        .flatMap { list ->
+          if (recentlyDeletedColorsMap.isEmpty()) {
+            Single.error(EmptyRecentlyDeletedMapException())
+          } else {
+            list.toMutableList().let { mutableList ->
+              recentlyDeletedColorsMap.keys.forEach {
+                System.out.println("Restored data $it")
+                mutableList.add(it, recentlyDeletedColorsMap[it]!!)
+              }
+              sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
+                  Gson().toJson(mutableList))
+              Single.just(RestoreColorsModel(mutableList, recentlyDeletedColorsMap))
             }
-            sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
-                Gson().toJson(mutableList))
-            RestoreColorsModel(mutableList, recentlyDeletedColorsMap)
           }
         }
   }
@@ -360,8 +366,7 @@ class WallrDataRepository(
       }
       if (
           sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
-              Gson().toJson(colors))
-      ) {
+              Gson().toJson(colors))) {
         sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_AVAILABLE_TAG,
             true)
         it.onSuccess(colors)

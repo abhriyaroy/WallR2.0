@@ -143,7 +143,7 @@ class MinimalPresenterImpl(
   override fun handleUndoDeletionOptionClick() {
     minimalImagesUseCase.restoreColors()
         .map {
-          RestoreColorsPresenterEntityMapper().mapToPresnterEntity(it)
+          RestoreColorsPresenterEntityMapper().mapToPresenterEntity(it)
         }.observeOn(postExecutionThread.scheduler)
         .autoDisposable(minimalView!!.getScope())
         .subscribe({
@@ -151,6 +151,7 @@ class MinimalPresenterImpl(
           it.selectedItemsMap.keys.forEach {
             minimalView?.addItemView(it + INITIAL_OFFSET)
           }
+          minimalView?.showRestoreColorsSuccessMessage()
         }, {
           minimalView?.showUnableToRestoreColorsMessage()
         })

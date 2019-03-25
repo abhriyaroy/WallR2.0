@@ -100,10 +100,12 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun removeItemView(index: Int) {
+    System.out.println("item removed $index")
     dragSelectImageAdapter?.notifyItemRemoved(index)
   }
 
   override fun addItemView(index: Int) {
+    System.out.println("item inserted $index")
     dragSelectImageAdapter?.notifyItemInserted(index)
   }
 
@@ -325,6 +327,12 @@ class MinimalFragment : BaseFragment(), MinimalView {
   override fun showUnableToRestoreColorsMessage() {
     context!!.let {
       it.errorToast(it.stringRes(R.string.minimal_fragment_unable_to_restore_colors_error_message))
+    }
+  }
+
+  override fun showRestoreColorsSuccessMessage() {
+    context!!.let {
+      it.successToast(it.stringRes(R.string.minimal_fragment_restore_colors_success_message))
     }
   }
 
