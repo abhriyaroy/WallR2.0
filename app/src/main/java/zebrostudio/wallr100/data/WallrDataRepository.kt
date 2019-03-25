@@ -21,6 +21,7 @@ import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.firebasedatabase.FirebaseImageEntity
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.ExecutionThread
+import zebrostudio.wallr100.domain.model.RestoreColorsModel
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
@@ -69,6 +70,8 @@ class WallrDataRepository(
   private val solidColorHelper: SolidColorHelper,
   private val executionThread: ExecutionThread
 ) : WallrRepository {
+
+  private var recentlyDeletedColorsMap = HashMap<Int, String>()
 
   override fun authenticatePurchase(
     packageName: String,
@@ -294,10 +297,26 @@ class WallrDataRepository(
 
   override fun modifyColorList(
     colors: List<String>,
-    selectedIndicesMap: HashMap<Int, Boolean>
+    selectedIndicesMap: HashMap<Int, String>
   ): Single<List<String>> {
     return removeElementsFromList(colors.toMutableList(), selectedIndicesMap)
         .subscribeOn(executionThread.computationScheduler)
+  }
+
+  override fun restoreDeltedColors(): Single<RestoreColorsModel> {
+    return solidColorHelper.getCustomColors()
+        .subscribeOn(executionThread.ioScheduler)
+        .subscribeOn(executionThread.computationScheduler)
+        .map { list ->
+          list.toMutableList().let { mutableList ->
+            recentlyDeletedColorsMap.keys.forEach {
+              mutableList.add(it, recentlyDeletedColorsMap[it]!!)
+            }
+            sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
+                Gson().toJson(mutableList))
+            RestoreColorsModel(mutableList, recentlyDeletedColorsMap)
+          }
+        }
   }
 
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()
@@ -329,10 +348,11 @@ class WallrDataRepository(
 
   private fun removeElementsFromList(
     colors: MutableList<String>,
-    selectedIndicesMap: HashMap<Int, Boolean>
+    selectedIndicesMap: HashMap<Int, String>
   ): Single<List<String>> {
     return Single.create {
-      TreeMap<Int, Boolean>(Collections.reverseOrder()).let {
+      recentlyDeletedColorsMap.putAll(selectedIndicesMap)
+      TreeMap<Int, String>(Collections.reverseOrder()).let {
         it.putAll(selectedIndicesMap)
         it.keys.forEach {
           colors.removeAt(it)

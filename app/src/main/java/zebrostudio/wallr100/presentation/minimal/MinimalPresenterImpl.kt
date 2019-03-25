@@ -9,6 +9,7 @@ import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
+import zebrostudio.wallr100.presentation.minimal.mapper.RestoreColorsPresenterEntityMapper
 import java.util.Collections
 import java.util.TreeMap
 
@@ -69,11 +70,11 @@ class MinimalPresenterImpl(
 
   override fun handleDeleteMenuItemClick(
     colorList: List<String>,
-    selectedItemsMap: HashMap<Int, Boolean>
+    selectedItemsMap: HashMap<Int, String>
   ) {
     numberOfItemsToBeDeselectedToStartDeletion(colorList, selectedItemsMap).let {
       if (it == INITIAL_SIZE) {
-        val reversedSelectedItems = TreeMap<Int, Boolean>(Collections.reverseOrder())
+        val reversedSelectedItems = TreeMap<Int, String>(Collections.reverseOrder())
         minimalImagesUseCase.modifyColors(colorList, selectedItemsMap)
             .doOnSuccess {
               reversedSelectedItems.putAll(selectedItemsMap)
@@ -86,10 +87,10 @@ class MinimalPresenterImpl(
               reversedSelectedItems.keys.forEach {
                 minimalView?.removeItemView(it + INITIAL_OFFSET)
               }
+              minimalView?.showUndoDeletionOption(reversedSelectedItems.size)
               shouldUpdateAllItems = false
               minimalView?.clearCabIfActive()
             }, {
-              System.out.println(it.printStackTrace())
               shouldUpdateAllItems = true
               minimalView?.clearCabIfActive()
               minimalView?.showDeleteColorsErrorMessage()
@@ -139,9 +140,26 @@ class MinimalPresenterImpl(
     }
   }
 
+  override fun handleUndoDeletionOptionClick() {
+    minimalImagesUseCase.restoreColors()
+        .map {
+          RestoreColorsPresenterEntityMapper().mapToPresnterEntity(it)
+        }.observeOn(postExecutionThread.scheduler)
+        .autoDisposable(minimalView!!.getScope())
+        .subscribe({
+          minimalView?.setColorList(it.colorsList)
+          it.selectedItemsMap.keys.forEach {
+            minimalView?.addItemView(it + INITIAL_OFFSET)
+          }
+        }, {
+          minimalView?.showUnableToRestoreColorsMessage()
+        })
+  }
+
   override fun handleClick(
     position: Int,
-    selectedItemsMap: HashMap<Int, Boolean>
+    colorList: List<String>,
+    selectedItemsMap: HashMap<Int, String>
   ) {
     if (selectedItemsMap.size == INITIAL_SIZE) {
       if (position == INITIAL_SIZE) {
@@ -151,7 +169,7 @@ class MinimalPresenterImpl(
       }
     } else {
       if (position != INITIAL_SIZE) {
-        toggleSelected(position, selectedItemsMap)
+        toggleSelected(position, colorList, selectedItemsMap)
       } else {
         minimalView?.showExitSelectionModeToAddColorMessage()
       }
@@ -159,10 +177,10 @@ class MinimalPresenterImpl(
   }
 
   override fun handleImageLongClick(
-    position: Int, selectedItemsMap: HashMap<Int, Boolean>
-  ) : Boolean {
+    position: Int, colorList: List<String>, selectedItemsMap: HashMap<Int, String>
+  ): Boolean {
     if (position != INITIAL_SIZE) {
-      toggleSelected(position, selectedItemsMap)
+      toggleSelected(position, colorList, selectedItemsMap)
       minimalView?.startSelection(position)
     }
     return false
@@ -172,20 +190,23 @@ class MinimalPresenterImpl(
     return index != INITIAL_SIZE
   }
 
-  override fun isItemSelected(index: Int, selectedItemsMap: HashMap<Int, Boolean>): Boolean {
+  override fun isItemSelected(index: Int, selectedItemsMap: HashMap<Int, String>): Boolean {
     return selectedItemsMap.containsKey(index - INITIAL_OFFSET)
   }
 
   override fun setItemSelected(
     index: Int,
     selected: Boolean,
-    selectedItemsMap: HashMap<Int, Boolean>
+    colorList: List<String>,
+    selectedItemsMap: HashMap<Int, String>
   ) {
     if (index != INITIAL_SIZE) {
-      if (selected) {
-        selectedItemsMap[index - INITIAL_OFFSET] = true
-      } else {
-        selectedItemsMap.remove(index - INITIAL_OFFSET)
+      (index - INITIAL_OFFSET).let {
+        if (selected) {
+          selectedItemsMap[it] = colorList[it]
+        } else {
+          selectedItemsMap.remove(it)
+        }
       }
       updateSelectionChange(index, selectedItemsMap.size)
     }
@@ -193,7 +214,7 @@ class MinimalPresenterImpl(
 
   override fun numberOfItemsToBeDeselectedToStartDeletion(
     colorList: List<String>,
-    selectedItemsMap: HashMap<Int, Boolean>
+    selectedItemsMap: HashMap<Int, String>
   ): Int {
     return if (colorList.size - selectedItemsMap.size >= MINIMUM_COLOR_LIST_SIZE) {
       INITIAL_SIZE
@@ -204,11 +225,12 @@ class MinimalPresenterImpl(
 
   private fun toggleSelected(
     index: Int,
-    selectedItemsMap: HashMap<Int, Boolean>
+    colorList: List<String>,
+    selectedItemsMap: HashMap<Int, String>
   ) {
     (index - INITIAL_OFFSET).let {
       if (!selectedItemsMap.containsKey(it)) {
-        minimalView?.addToSelectedItemsMap(it)
+        minimalView?.addToSelectedItemsMap(it, colorList[it])
       } else {
         minimalView?.removeFromSelectedItemsMap(it)
       }

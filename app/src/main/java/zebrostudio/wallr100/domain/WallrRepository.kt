@@ -5,6 +5,7 @@ import android.net.Uri
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import zebrostudio.wallr100.domain.model.RestoreColorsModel
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
@@ -58,7 +59,9 @@ interface WallrRepository {
   fun saveCustomSolidColorList(colors: List<String>): Completable
   fun modifyColorList(
     colors: List<String>,
-    selectedIndicesMap: HashMap<Int, Boolean>
+    selectedIndicesMap: HashMap<Int, String>
   ): Single<List<String>>
+
+  fun restoreDeltedColors(): Single<RestoreColorsModel>
 
 }

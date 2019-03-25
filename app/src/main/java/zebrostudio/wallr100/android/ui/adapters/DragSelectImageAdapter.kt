@@ -33,7 +33,7 @@ class DragSelectImageAdapter(
 ) : RecyclerView.Adapter<MinimalViewHolder>(), DragSelectReceiver {
 
   private var colorList = mutableListOf<String>()
-  private var selectedHashMap = HashMap<Int, Boolean>()
+  private var selectedHashMap = HashMap<Int, String>()
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MinimalViewHolder {
     return MinimalViewHolder(parent.inflate(LayoutInflater.from(parent.context),
@@ -73,8 +73,8 @@ class DragSelectImageAdapter(
 
   fun getSelectedItemsMap() = selectedHashMap
 
-  fun addToSelectedItemsMap(itemPosition: Int) {
-    selectedHashMap[itemPosition] = true
+  fun addToSelectedItemsMap(itemPosition: Int, hexValue: String) {
+    selectedHashMap[itemPosition] = hexValue
   }
 
   fun removeItemFromSelectedItemsMap(itemPosition: Int) {

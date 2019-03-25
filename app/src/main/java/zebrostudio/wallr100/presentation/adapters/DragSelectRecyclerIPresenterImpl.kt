@@ -14,7 +14,7 @@ class DragSelectRecyclerIPresenterImpl : DragSelectItemPresenter {
   override fun onBindRepositoryRowViewAtPosition(
     dragSelectItemViewHolder: DragSelectItemViewHolder,
     colorList: List<String>,
-    selectedItemsMap: HashMap<Int, Boolean>,
+    selectedItemsMap: HashMap<Int, String>,
     position: Int
   ) {
     if (position == INITIAL_SIZE) {

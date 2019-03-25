@@ -17,7 +17,7 @@ interface DragSelectRecyclerContract {
     fun onBindRepositoryRowViewAtPosition(
       dragSelectItemViewHolder: DragSelectItemViewHolder,
       colorList: List<String>,
-      selectedItemsMap: HashMap<Int, Boolean>,
+      selectedItemsMap: HashMap<Int, String>,
       position: Int
     )
   }

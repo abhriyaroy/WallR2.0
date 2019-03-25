@@ -3,6 +3,7 @@ package zebrostudio.wallr100.android.ui.minimal
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -22,6 +23,7 @@ import kotlinx.android.synthetic.main.activity_main.minimalBottomLayout
 import kotlinx.android.synthetic.main.activity_main.minimalBottomLayoutFab
 import kotlinx.android.synthetic.main.activity_main.spinner
 import kotlinx.android.synthetic.main.fragment_minimal.minimalFragmentRecyclerView
+import kotlinx.android.synthetic.main.fragment_minimal.minimalFragmentRootLayout
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.ui.adapters.DragSelectImageAdapter
@@ -40,6 +42,8 @@ import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.Dra
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
 import javax.inject.Inject
+
+const val SINGLE_ITEM_SIZE = 1
 
 class MinimalFragment : BaseFragment(), MinimalView {
 
@@ -97,6 +101,10 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
   override fun removeItemView(index: Int) {
     dragSelectImageAdapter?.notifyItemRemoved(index)
+  }
+
+  override fun addItemView(index: Int) {
+    dragSelectImageAdapter?.notifyItemInserted(index)
   }
 
   override fun showCab(size: Int) {
@@ -298,8 +306,30 @@ class MinimalFragment : BaseFragment(), MinimalView {
     }
   }
 
-  override fun addToSelectedItemsMap(position: Int) {
-    dragSelectImageAdapter?.addToSelectedItemsMap(position)
+  override fun showUndoDeletionOption(size: Int) {
+    if (size == SINGLE_ITEM_SIZE) {
+      context!!.stringRes(R.string.minimal_fragment_single_item_deletion_successful_message)
+    } else {
+      context!!.stringRes(R.string.minimal_fragment_multiple_item_deletion_successful_message, size)
+    }.let {
+      Snackbar.make(minimalFragmentRootLayout, it, Snackbar.LENGTH_INDEFINITE).apply {
+        setAction(context.stringRes(R.string.minimal_fragment_deletion_undo_action_text)
+        ) {
+          presenter.handleUndoDeletionOptionClick()
+          dismiss()
+        }
+      }.show()
+    }
+  }
+
+  override fun showUnableToRestoreColorsMessage() {
+    context!!.let {
+      it.errorToast(it.stringRes(R.string.minimal_fragment_unable_to_restore_colors_error_message))
+    }
+  }
+
+  override fun addToSelectedItemsMap(position: Int, hexValue: String) {
+    dragSelectImageAdapter?.addToSelectedItemsMap(position, hexValue)
   }
 
   override fun removeFromSelectedItemsMap(item: Int) {
@@ -353,7 +383,8 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
   private fun getDragSelectRecyclerViewCallback() = object : DragSelectImageAdapterCallbacks {
     override fun setItemSelected(index: Int, selected: Boolean) {
-      presenter.setItemSelected(index, selected, dragSelectImageAdapter!!.getSelectedItemsMap())
+      presenter.setItemSelected(index, selected, dragSelectImageAdapter!!.getColorList(),
+          dragSelectImageAdapter!!.getSelectedItemsMap())
     }
 
     override fun isItemSelected(index: Int): Boolean {
@@ -365,11 +396,13 @@ class MinimalFragment : BaseFragment(), MinimalView {
     }
 
     override fun handleClick(index: Int) {
-      return presenter.handleClick(index, dragSelectImageAdapter!!.getSelectedItemsMap())
+      return presenter.handleClick(index, dragSelectImageAdapter!!.getColorList(),
+          dragSelectImageAdapter!!.getSelectedItemsMap())
     }
 
     override fun handleLongClick(index: Int): Boolean {
-      return presenter.handleImageLongClick(index, dragSelectImageAdapter!!.getSelectedItemsMap())
+      return presenter.handleImageLongClick(index, dragSelectImageAdapter!!.getColorList(),
+          dragSelectImageAdapter!!.getSelectedItemsMap())
     }
 
   }

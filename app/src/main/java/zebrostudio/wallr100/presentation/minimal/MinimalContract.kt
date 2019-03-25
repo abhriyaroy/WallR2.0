@@ -12,6 +12,7 @@ interface MinimalContract {
     fun showGenericErrorMessage()
     fun updateItemView(index: Int)
     fun removeItemView(index: Int)
+    fun addItemView(index: Int)
     fun addColorAndScrollToItemView(index: Int)
     fun showAddColorSuccessMessage()
     fun showCab(size: Int)
@@ -25,8 +26,10 @@ interface MinimalContract {
     fun showColorPickerDialogAndAttachColorPickerListener()
     fun showColorAlreadyPresentErrorMessage(position: Int)
     fun showExitSelectionModeToAddColorMessage()
+    fun showUndoDeletionOption(size: Int)
+    fun showUnableToRestoreColorsMessage()
 
-    fun addToSelectedItemsMap(position: Int)
+    fun addToSelectedItemsMap(position: Int, hexValue: String)
     fun removeFromSelectedItemsMap(item: Int)
     fun clearSelectedItemsMap()
     fun setColorList(list: List<String>)
@@ -36,19 +39,31 @@ interface MinimalContract {
   interface MinimalPresenter : BasePresenter<MinimalView> {
     fun handleViewCreated()
     fun handleOnScrolled(yAxisMovement: Int)
-    fun handleDeleteMenuItemClick(colorList: List<String>, selectedItemsMap: HashMap<Int, Boolean>)
+    fun handleDeleteMenuItemClick(colorList: List<String>, selectedItemsMap: HashMap<Int, String>)
     fun handleCabDestroyed()
     fun handleSpinnerOptionChanged(position: Int)
     fun handleColorPickerPositiveClick(hexValue: String, colorList: List<String>)
+    fun handleUndoDeletionOptionClick()
 
-    fun handleClick(position: Int, selectedItemsMap: HashMap<Int, Boolean>)
-    fun handleImageLongClick(position: Int, selectedItemsMap: HashMap<Int, Boolean>): Boolean
+    fun handleClick(position: Int, colorList: List<String>, selectedItemsMap: HashMap<Int, String>)
+    fun handleImageLongClick(
+      position: Int,
+      colorList: List<String>,
+      selectedItemsMap: HashMap<Int, String>
+    ): Boolean
+
     fun isItemSelectable(index: Int): Boolean
-    fun isItemSelected(index: Int, selectedItemsMap: HashMap<Int, Boolean>): Boolean
-    fun setItemSelected(index: Int, selected: Boolean, selectedItemsMap: HashMap<Int, Boolean>)
+    fun isItemSelected(index: Int, selectedItemsMap: HashMap<Int, String>): Boolean
+    fun setItemSelected(
+      index: Int,
+      selected: Boolean,
+      colorList: List<String>,
+      selectedItemsMap: HashMap<Int, String>
+    )
+
     fun numberOfItemsToBeDeselectedToStartDeletion(
       colorList: List<String>,
-      selectedItemsMap: HashMap<Int, Boolean>
+      selectedItemsMap: HashMap<Int, String>
     ): Int
   }
 
