@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.TextView
+import android.widget.Toast
 import com.afollestad.dragselectrecyclerview.DragSelectTouchListener
 import com.afollestad.dragselectrecyclerview.Mode.RANGE
 import com.afollestad.materialcab.MaterialCab
@@ -36,10 +37,12 @@ import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.infoToast
 import zebrostudio.wallr100.android.utils.integerRes
+import zebrostudio.wallr100.android.utils.positionToast
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.DragSelectItemPresenter
+import zebrostudio.wallr100.presentation.minimal.INITIAL_OFFSET
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
 import javax.inject.Inject
@@ -406,6 +409,17 @@ class MinimalFragment : BaseFragment(), MinimalView {
   private fun attachMultiSelectClickListener() {
     activity!!.toolbarMultiSelectIcon.setOnClickListener {
       presenter.handleMultiSelectMenuClick()
+    }
+
+    activity!!.toolbarMultiSelectIcon.setOnLongClickListener { view ->
+      Toast.makeText(context,
+          getString(R.string.minimal_fragment_toolbar_menu_multiselect_title), Toast.LENGTH_SHORT)
+          .let {
+            view.positionToast(it, activity!!.window, resources.getDimensionPixelSize(R.dimen.toolbar_menu_toast_x_axis_offset),
+                resources.getDimensionPixelSize(R.dimen.toolbar_menu_toast_y_axis_offset))
+            it.show()
+          }
+      true
     }
   }
 

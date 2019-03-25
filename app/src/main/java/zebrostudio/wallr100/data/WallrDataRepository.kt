@@ -72,8 +72,6 @@ class WallrDataRepository(
   private val executionThread: ExecutionThread
 ) : WallrRepository {
 
-  private var recentlyDeletedColorsMap = TreeMap<Int, String>()
-
   override fun authenticatePurchase(
     packageName: String,
     skuId: String,
@@ -307,22 +305,26 @@ class WallrDataRepository(
   override fun restoreDeltedColors(): Single<RestoreColorsModel> {
     return solidColorHelper.getCustomColors()
         .subscribeOn(executionThread.ioScheduler)
-        .subscribeOn(executionThread.computationScheduler)
         .flatMap { list ->
-          if (recentlyDeletedColorsMap.isEmpty()) {
-            Single.error(EmptyRecentlyDeletedMapException())
-          } else {
-            list.toMutableList().let { mutableList ->
-              recentlyDeletedColorsMap.keys.forEach {
-                System.out.println("Restored data $it")
-                mutableList.add(it, recentlyDeletedColorsMap[it]!!)
+          solidColorHelper.getDeletedItemsFromCache()
+              .flatMap { map ->
+                if (map.isEmpty()) {
+                  Single.error(EmptyRecentlyDeletedMapException())
+                } else {
+                  list.toMutableList().let { mutableList ->
+                    map.keys.forEach {
+                      System.out.println("Restored data $it")
+                      mutableList.add(it, map[it]!!)
+                    }
+                    sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME,
+                        CUSTOM_SOLID_COLOR_LIST_TAG,
+                        Gson().toJson(mutableList))
+                    Single.just(RestoreColorsModel(mutableList, map))
+                  }
+                }
               }
-              sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
-                  Gson().toJson(mutableList))
-              Single.just(RestoreColorsModel(mutableList, recentlyDeletedColorsMap))
-            }
-          }
         }
+        .subscribeOn(executionThread.computationScheduler)
   }
 
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()
@@ -356,24 +358,25 @@ class WallrDataRepository(
     colors: MutableList<String>,
     selectedIndicesMap: HashMap<Int, String>
   ): Single<List<String>> {
-    return Single.create {
-      recentlyDeletedColorsMap.putAll(selectedIndicesMap)
-      TreeMap<Int, String>(Collections.reverseOrder()).let {
-        it.putAll(selectedIndicesMap)
-        it.keys.forEach {
-          colors.removeAt(it)
-        }
-      }
-      if (
-          sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
-              Gson().toJson(colors))) {
-        sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_AVAILABLE_TAG,
-            true)
-        it.onSuccess(colors)
-      } else {
-        it.onError(Exception())
-      }
-    }
+    return solidColorHelper.cacheDeletedItems(selectedIndicesMap)
+        .andThen(Single.create {
+          TreeMap<Int, String>(Collections.reverseOrder()).let {
+            it.putAll(selectedIndicesMap)
+            it.keys.forEach {
+              colors.removeAt(it)
+            }
+          }
+          if (
+              sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
+                  Gson().toJson(colors))) {
+            sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME,
+                CUSTOM_SOLID_COLOR_LIST_AVAILABLE_TAG,
+                true)
+            it.onSuccess(colors)
+          } else {
+            it.onError(Exception())
+          }
+        })
   }
 
 }

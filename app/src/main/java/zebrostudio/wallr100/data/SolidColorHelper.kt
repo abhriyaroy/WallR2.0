@@ -3,19 +3,25 @@ package zebrostudio.wallr100.data
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import io.reactivex.Completable
 import io.reactivex.Single
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.data.exception.UnableToGetSolidColorsException
+import java.util.TreeMap
 
 interface SolidColorHelper {
   fun getDefaultColors(): Single<List<String>>
   fun getCustomColors(): Single<List<String>>
+  fun cacheDeletedItems(map: HashMap<Int, String>): Completable
+  fun getDeletedItemsFromCache(): Single<TreeMap<Int, String>>
 }
 
 class SolidColorHelperImpl(
   private val context: Context,
   private val sharedPrefsHelper: SharedPrefsHelper
 ) : SolidColorHelper {
+
+  private var recentlyDeletedColorsMap = TreeMap<Int, String>()
 
   override fun getDefaultColors(): Single<List<String>> {
     return Single.just(context.resources.getStringArray(R.array.solidColorsArray).toList())
@@ -34,6 +40,18 @@ class SolidColorHelperImpl(
             }
           }
     }
+  }
+
+  override fun cacheDeletedItems(map: HashMap<Int, String>): Completable {
+    return Completable.create {
+      recentlyDeletedColorsMap.clear()
+      recentlyDeletedColorsMap.putAll(map)
+      it.onComplete()
+    }
+  }
+
+  override fun getDeletedItemsFromCache(): Single<TreeMap<Int, String>> {
+    return Single.just(recentlyDeletedColorsMap)
   }
 
 }

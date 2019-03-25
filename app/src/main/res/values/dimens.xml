@@ -43,6 +43,8 @@
   <dimen name="shadow_top_height">2dp</dimen>
   <dimen name="wallpaper_action_progress_spinkit_height">45dp</dimen>
   <dimen name="wallpaper_action_progress_spinkit_padding">10dp</dimen>
+  <dimen name="toolbar_menu_toast_x_axis_offset">8dp</dimen>
+  <dimen name="toolbar_menu_toast_y_axis_offset">20dp</dimen>
 
   <dimen name="buy_pro_top_half_bottom_padding">8dp</dimen>
   <dimen name="buy_pro_back_button_margin_top">10dp</dimen>
