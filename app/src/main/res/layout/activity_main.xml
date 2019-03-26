@@ -109,7 +109,6 @@
 
       <View
           android:id="@+id/spinnerStubView"
-          app:ms_dropdown_height="wrap_content"
           app:layout_widthPercent="25%"
           android:clickable="false"/>
 

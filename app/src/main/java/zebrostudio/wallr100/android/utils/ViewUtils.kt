@@ -39,7 +39,7 @@ fun View.visible() {
   this.visibility = VISIBLE
 }
 
-fun View.positionToast(
+fun View.menuTitleToast(
   toast: Toast, window: Window, offsetX: Int,
   offsetY: Int
 ) {

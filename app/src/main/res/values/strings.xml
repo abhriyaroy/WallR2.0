@@ -33,6 +33,7 @@
   <!-- Main activity strings -->
   <string name="main_activity_no_email_client_error">There is no email client installed</string>
   <string name="main_activity_exit_confirmation_message">Press back again to exit</string>
+  <string name="search_menu_title">search</string>
 
   <!-- Fragment strings -->
   <string name="fragment_unable_to_load_wallpapers_message">Oops. Unable to load wallpapers</string>

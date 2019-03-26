@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.android.ui.minimal
 
-import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.Snackbar
@@ -37,12 +36,11 @@ import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.infoToast
 import zebrostudio.wallr100.android.utils.integerRes
-import zebrostudio.wallr100.android.utils.positionToast
+import zebrostudio.wallr100.android.utils.menuTitleToast
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.DragSelectItemPresenter
-import zebrostudio.wallr100.presentation.minimal.INITIAL_OFFSET
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
 import javax.inject.Inject
@@ -119,8 +117,11 @@ class MinimalFragment : BaseFragment(), MinimalView {
     MaterialCab.attach(activity as AppCompatActivity, R.id.cabStub) {
       menuRes = R.menu.minimal
       closeDrawableRes = R.drawable.ic_close_white
-      titleColor = Color.WHITE
+      titleColor = context!!.colorRes(R.color.white)
       title = context!!.stringRes(R.string.minimal_fragment_cab_title, size)
+      backgroundColor = context!!.colorRes(R.color.primary)
+      backgroundColorRes(R.color.primary)
+
 
       onSelection {
         if (it.itemId == R.id.delete) {
@@ -415,7 +416,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
       Toast.makeText(context,
           getString(R.string.minimal_fragment_toolbar_menu_multiselect_title), Toast.LENGTH_SHORT)
           .let {
-            view.positionToast(it, activity!!.window, resources.getDimensionPixelSize(R.dimen.toolbar_menu_toast_x_axis_offset),
+            view.menuTitleToast(it, activity!!.window, resources.getDimensionPixelSize(R.dimen.toolbar_menu_toast_x_axis_offset),
                 resources.getDimensionPixelSize(R.dimen.toolbar_menu_toast_y_axis_offset))
             it.show()
           }
