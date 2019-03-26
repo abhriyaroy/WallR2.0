@@ -13,7 +13,6 @@ interface MinimalImagesUseCase {
     colorList: List<String>,
     selectedIndicesMap: HashMap<Int, String>
   ): Single<List<String>>
-
   fun addCustomColor(colorList: List<String>): Completable
   fun restoreColors(): Single<RestoreColorsModel>
 }
