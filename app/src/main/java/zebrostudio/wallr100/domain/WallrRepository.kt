@@ -62,6 +62,6 @@ interface WallrRepository {
     selectedIndicesMap: HashMap<Int, String>
   ): Single<List<String>>
 
-  fun restoreDeltedColors(): Single<RestoreColorsModel>
+  fun restoreDeletedColors(): Single<RestoreColorsModel>
 
 }

@@ -155,6 +155,7 @@ class WallrDataRepository(
   override fun getNaturePictures(): Single<List<ImageModel>> {
     return getPicturesFromFirebase(getCategoriesNodeReference()
         .child(CHILD_PATH_NATURE))
+        .subscribeOn(executionThread.ioScheduler)
   }
 
   override fun getObjectsPictures(): Single<List<ImageModel>> {
@@ -302,9 +303,8 @@ class WallrDataRepository(
         .subscribeOn(executionThread.computationScheduler)
   }
 
-  override fun restoreDeltedColors(): Single<RestoreColorsModel> {
+  override fun restoreDeletedColors(): Single<RestoreColorsModel> {
     return solidColorHelper.getCustomColors()
-        .subscribeOn(executionThread.ioScheduler)
         .flatMap { list ->
           solidColorHelper.getDeletedItemsFromCache()
               .flatMap { map ->
@@ -362,8 +362,8 @@ class WallrDataRepository(
         .andThen(Single.create {
           TreeMap<Int, String>(Collections.reverseOrder()).let {
             it.putAll(selectedIndicesMap)
-            it.keys.forEach {
-              colors.removeAt(it)
+            it.keys.forEach { position ->
+              colors.removeAt(position)
             }
           }
           if (

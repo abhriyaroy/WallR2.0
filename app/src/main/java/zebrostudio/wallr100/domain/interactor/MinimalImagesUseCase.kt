@@ -44,7 +44,7 @@ class MinimalImagesInteractor(private val wallrRepository: WallrRepository) : Mi
   }
 
   override fun restoreColors(): Single<RestoreColorsModel> {
-    return wallrRepository.restoreDeltedColors()
+    return wallrRepository.restoreDeletedColors()
   }
 
 }
