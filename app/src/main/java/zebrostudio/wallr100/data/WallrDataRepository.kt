@@ -36,8 +36,8 @@ const val PURCHASE_PREFERENCE_NAME = "PURCHASE_PREF"
 const val PREMIUM_USER_TAG = "premium_user"
 const val IMAGE_PREFERENCE_NAME = "IMAGE_PREF"
 const val CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG = "crystallize_click_dialog"
-const val CUSTOM_SOLID_COLOR_LIST_AVAILABLE_TAG = "custom_solid_color_list_availability"
-const val CUSTOM_SOLID_COLOR_LIST_TAG = "custom_solid_color_list"
+const val CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG = "custom_minimal_color_list_availability"
+const val CUSTOM_MINIMAL_COLOR_LIST_TAG = "custom_solid_color_list"
 const val UNABLE_TO_RESOLVE_HOST_EXCEPTION_MESSAGE = "Unable to resolve host " +
     "\"api.unsplash.com\": No address associated with hostname"
 const val FIREBASE_DATABASE_PATH = "wallr"
@@ -68,7 +68,7 @@ class WallrDataRepository(
   private val imageHandler: ImageHandler,
   private val fileHandler: FileHandler,
   private val downloadHelper: DownloadHelper,
-  private val solidColorHelper: SolidColorHelper,
+  private val minimalColorHelper: MinimalColorHelper,
   private val executionThread: ExecutionThread
 ) : WallrRepository {
 
@@ -267,25 +267,25 @@ class WallrDataRepository(
         .subscribeOn(executionThread.computationScheduler)
   }
 
-  override fun isCustomSolidColorListPresent(): Boolean {
+  override fun isCustomMinimalColorListPresent(): Boolean {
     return sharedPrefsHelper.getBoolean(IMAGE_PREFERENCE_NAME,
-        CUSTOM_SOLID_COLOR_LIST_AVAILABLE_TAG, false)
+        CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG, false)
   }
 
-  override fun getCustomSolidColorList(): Single<List<String>> {
-    return solidColorHelper.getCustomColors()
+  override fun getCustomMinimalColorList(): Single<List<String>> {
+    return minimalColorHelper.getCustomColors()
         .subscribeOn(executionThread.ioScheduler)
   }
 
-  override fun getDefaultSolidColorList(): Single<List<String>> {
-    return solidColorHelper.getDefaultColors()
+  override fun getDefaultMinimalColorList(): Single<List<String>> {
+    return minimalColorHelper.getDefaultColors()
         .subscribeOn(executionThread.ioScheduler)
   }
 
-  override fun saveCustomSolidColorList(colors: List<String>): Completable {
+  override fun saveCustomMinimalColorList(colors: List<String>): Completable {
     return Completable.create {
       if (
-          sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
+          sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
               Gson().toJson(colors))
       ) {
         it.onComplete()
@@ -304,9 +304,9 @@ class WallrDataRepository(
   }
 
   override fun restoreDeletedColors(): Single<RestoreColorsModel> {
-    return solidColorHelper.getCustomColors()
+    return minimalColorHelper.getCustomColors()
         .flatMap { list ->
-          solidColorHelper.getDeletedItemsFromCache()
+          minimalColorHelper.getDeletedItemsFromCache()
               .flatMap { map ->
                 if (map.isEmpty()) {
                   Single.error(EmptyRecentlyDeletedMapException())
@@ -317,7 +317,7 @@ class WallrDataRepository(
                       mutableList.add(it, map[it]!!)
                     }
                     sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME,
-                        CUSTOM_SOLID_COLOR_LIST_TAG,
+                        CUSTOM_MINIMAL_COLOR_LIST_TAG,
                         Gson().toJson(mutableList))
                     Single.just(RestoreColorsModel(mutableList, map))
                   }
@@ -358,7 +358,7 @@ class WallrDataRepository(
     colors: MutableList<String>,
     selectedIndicesMap: HashMap<Int, String>
   ): Single<List<String>> {
-    return solidColorHelper.cacheDeletedItems(selectedIndicesMap)
+    return minimalColorHelper.cacheDeletedItems(selectedIndicesMap)
         .andThen(Single.create {
           TreeMap<Int, String>(Collections.reverseOrder()).let {
             it.putAll(selectedIndicesMap)
@@ -367,10 +367,10 @@ class WallrDataRepository(
             }
           }
           if (
-              sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
+              sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
                   Gson().toJson(colors))) {
             sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME,
-                CUSTOM_SOLID_COLOR_LIST_AVAILABLE_TAG,
+                CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG,
                 true)
             it.onSuccess(colors)
           } else {

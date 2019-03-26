@@ -58,7 +58,7 @@ class WallrDataRepositoryTest {
   @Mock lateinit var imageHandler: ImageHandler
   @Mock lateinit var fileHandler: FileHandler
   @Mock lateinit var downloadHelper: DownloadHelper
-  @Mock lateinit var solidColorHelper: SolidColorHelper
+  @Mock lateinit var minimalColorHelper: MinimalColorHelper
   @Mock lateinit var mockBitmap: Bitmap
   @Mock lateinit var mockUri: Uri
   private lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
@@ -75,7 +75,7 @@ class WallrDataRepositoryTest {
     wallrDataRepository =
         WallrDataRepository(remoteAuthServiceFactory, unsplashClientFactory, sharedPrefs,
             unsplashPictureEntityMapper, firebaseDatabaseHelper, firebasePictureEntityMapper,
-            urlShortener, imageHandler, fileHandler, downloadHelper, solidColorHelper,
+            urlShortener, imageHandler, fileHandler, downloadHelper, minimalColorHelper,
             executionThread)
 
     `when`(executionThread.ioScheduler).thenReturn(Schedulers.trampoline())
@@ -460,7 +460,7 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get imagemodel`()
+    `should verify firebase database helper calls to get image model`()
     `should verify io scheduler call`()
   }
 
@@ -483,7 +483,7 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get imagemodel`()
+    `should verify firebase database helper calls to get image model`()
     `should verify io scheduler call`()
   }
 
@@ -506,7 +506,7 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get imagemodel`()
+    `should verify firebase database helper calls to get image model`()
     `should verify io scheduler call`()
   }
 
@@ -529,7 +529,7 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get imagemodel`()
+    `should verify firebase database helper calls to get image model`()
     `should verify io scheduler call`()
   }
 
@@ -552,7 +552,7 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get imagemodel`()
+    `should verify firebase database helper calls to get image model`()
     `should verify io scheduler call`()
   }
 
@@ -575,7 +575,7 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get imagemodel`()
+    `should verify firebase database helper calls to get image model`()
     `should verify io scheduler call`()
   }
 
@@ -598,7 +598,7 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get imagemodel`()
+    `should verify firebase database helper calls to get image model`()
     `should verify io scheduler call`()
   }
 
@@ -621,7 +621,7 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get imagemodel`()
+    `should verify firebase database helper calls to get image model`()
     `should verify io scheduler call`()
   }
 
@@ -644,7 +644,7 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get imagemodel`()
+    `should verify firebase database helper calls to get image model`()
     `should verify io scheduler call`()
   }
 
@@ -667,50 +667,50 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get imagemodel`()
+    `should verify firebase database helper calls to get image model`()
     `should verify io scheduler call`()
   }
 
-  @Test fun `should return true on isCustomSolidColorListPresent call success`() {
+  @Test fun `should return true on isCustomColorListPresent call success`() {
     `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME,
-        CUSTOM_SOLID_COLOR_LIST_AVAILABLE_TAG)).thenReturn(true)
+        CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG)).thenReturn(true)
 
-    assertTrue(wallrDataRepository.isCustomSolidColorListPresent())
+    assertTrue(wallrDataRepository.isCustomMinimalColorListPresent())
 
-    verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_AVAILABLE_TAG)
+    verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG)
     verifyNoMoreInteractions(sharedPrefs)
   }
 
-  @Test fun `should return single of list of string on getCustomSolidColorList call success`() {
+  @Test fun `should return single of list of string on getCustomColorList call success`() {
     val list = listOf(randomString)
-    `when`(solidColorHelper.getCustomColors()).thenReturn(Single.just(list))
+    `when`(minimalColorHelper.getCustomColors()).thenReturn(Single.just(list))
 
-    wallrDataRepository.getCustomSolidColorList().test().assertValue(list)
+    wallrDataRepository.getCustomMinimalColorList().test().assertValue(list)
 
-    verify(solidColorHelper).getCustomColors()
-    verifyNoMoreInteractions(solidColorHelper)
+    verify(minimalColorHelper).getCustomColors()
+    verifyNoMoreInteractions(minimalColorHelper)
     `should verify io scheduler call`()
   }
 
-  @Test fun `should return single of list of string on getDefaultSolidColorList call success`() {
+  @Test fun `should return single of list of string on getDefaultColorList call success`() {
     val list = listOf(randomString)
-    `when`(solidColorHelper.getDefaultColors()).thenReturn(Single.just(list))
+    `when`(minimalColorHelper.getDefaultColors()).thenReturn(Single.just(list))
 
-    wallrDataRepository.getDefaultSolidColorList().test().assertValue(list)
+    wallrDataRepository.getDefaultMinimalColorList().test().assertValue(list)
 
-    verify(solidColorHelper).getDefaultColors()
-    verifyNoMoreInteractions(solidColorHelper)
+    verify(minimalColorHelper).getDefaultColors()
+    verifyNoMoreInteractions(minimalColorHelper)
     `should verify io scheduler call`()
   }
 
-  @Test fun `should complete saveCustomSolidColorList call success`() {
+  @Test fun `should complete saveCustomMinimalColorList call success`() {
     val list = listOf(randomString)
-    `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
+    `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
         Gson().toJson(list))).thenReturn(true)
 
-    wallrDataRepository.saveCustomSolidColorList(list).test().assertComplete()
+    wallrDataRepository.saveCustomMinimalColorList(list).test().assertComplete()
 
-    verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
+    verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
         Gson().toJson(list))
     verifyNoMoreInteractions(sharedPrefs)
     `should verify io scheduler call`()
@@ -720,18 +720,18 @@ class WallrDataRepositoryTest {
     val list = listOf(randomString, randomString)
     val modifiedList = listOf(randomString)
     val selectedIndices = hashMapOf(Pair(firstElementIndex, randomString))
-    `when`(solidColorHelper.cacheDeletedItems(selectedIndices)).thenReturn(Completable.complete())
-    `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
+    `when`(minimalColorHelper.cacheDeletedItems(selectedIndices)).thenReturn(Completable.complete())
+    `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
         Gson().toJson(modifiedList))).thenReturn(true)
 
     wallrDataRepository.modifyColorList(list, selectedIndices).test().assertValue(modifiedList)
 
-    verify(solidColorHelper).cacheDeletedItems(selectedIndices)
-    verifyNoMoreInteractions(solidColorHelper)
-    verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
+    verify(minimalColorHelper).cacheDeletedItems(selectedIndices)
+    verifyNoMoreInteractions(minimalColorHelper)
+    verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
         Gson().toJson(modifiedList))
     verify(sharedPrefs).setBoolean(IMAGE_PREFERENCE_NAME,
-        CUSTOM_SOLID_COLOR_LIST_AVAILABLE_TAG, true)
+        CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG, true)
     verifyNoMoreInteractions(sharedPrefs)
     `should verify computation scheduler call`()
   }
@@ -740,16 +740,16 @@ class WallrDataRepositoryTest {
     val list = listOf(randomString, randomString)
     val modifiedList = listOf(randomString)
     val selectedIndices = hashMapOf(Pair(firstElementIndex, randomString))
-    `when`(solidColorHelper.cacheDeletedItems(selectedIndices)).thenReturn(Completable.complete())
-    `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
+    `when`(minimalColorHelper.cacheDeletedItems(selectedIndices)).thenReturn(Completable.complete())
+    `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
         Gson().toJson(modifiedList))).thenReturn(false)
 
     wallrDataRepository.modifyColorList(list, selectedIndices).test()
         .assertError(Exception::class.java)
 
-    verify(solidColorHelper).cacheDeletedItems(selectedIndices)
-    verifyNoMoreInteractions(solidColorHelper)
-    verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG,
+    verify(minimalColorHelper).cacheDeletedItems(selectedIndices)
+    verifyNoMoreInteractions(minimalColorHelper)
+    verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
         Gson().toJson(modifiedList))
     verifyNoMoreInteractions(sharedPrefs)
     `should verify computation scheduler call`()
@@ -761,14 +761,14 @@ class WallrDataRepositoryTest {
     val modifiedList = listOf(randomString, randomString)
     val selectedIndices = TreeMap<Int, String>(mapOf(Pair(firstElementIndex, randomString)))
     val restoreColorsModel = RestoreColorsModel(modifiedList, selectedIndices)
-    `when`(solidColorHelper.getCustomColors()).thenReturn(Single.just(list))
-    `when`(solidColorHelper.getDeletedItemsFromCache()).thenReturn(Single.just(selectedIndices))
+    `when`(minimalColorHelper.getCustomColors()).thenReturn(Single.just(list))
+    `when`(minimalColorHelper.getDeletedItemsFromCache()).thenReturn(Single.just(selectedIndices))
 
     wallrDataRepository.restoreDeletedColors().test().assertValue(restoreColorsModel)
 
-    verify(solidColorHelper).getCustomColors()
-    verify(solidColorHelper).getDeletedItemsFromCache()
-    verifyNoMoreInteractions(solidColorHelper)
+    verify(minimalColorHelper).getCustomColors()
+    verify(minimalColorHelper).getDeletedItemsFromCache()
+    verifyNoMoreInteractions(minimalColorHelper)
     `should verify computation scheduler call`()
   }
 
@@ -776,15 +776,15 @@ class WallrDataRepositoryTest {
   fun `should return EmptyRecentlyDeletedMapException on restoreDeletedColors call failure due to empty selected map `() {
     val list = listOf(randomString)
     val selectedIndices = TreeMap<Int, String>()
-    `when`(solidColorHelper.getCustomColors()).thenReturn(Single.just(list))
-    `when`(solidColorHelper.getDeletedItemsFromCache()).thenReturn(Single.just(selectedIndices))
+    `when`(minimalColorHelper.getCustomColors()).thenReturn(Single.just(list))
+    `when`(minimalColorHelper.getDeletedItemsFromCache()).thenReturn(Single.just(selectedIndices))
 
     wallrDataRepository.restoreDeletedColors().test()
         .assertError(EmptyRecentlyDeletedMapException::class.java)
 
-    verify(solidColorHelper).getCustomColors()
-    verify(solidColorHelper).getDeletedItemsFromCache()
-    verifyNoMoreInteractions(solidColorHelper)
+    verify(minimalColorHelper).getCustomColors()
+    verify(minimalColorHelper).getDeletedItemsFromCache()
+    verifyNoMoreInteractions(minimalColorHelper)
     `should verify computation scheduler call`()
   }
 
@@ -806,7 +806,7 @@ class WallrDataRepositoryTest {
     verifyNoMoreInteractions(executionThread)
   }
 
-  private fun `should verify firebase database helper calls to get imagemodel`() {
+  private fun `should verify firebase database helper calls to get image model`() {
     verify(firebaseDatabaseHelper).getDatabase()
     verify(firebaseDatabaseHelper).fetch(databaseReference)
     verifyNoMoreInteractions(firebaseDatabaseHelper)

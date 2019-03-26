@@ -21,15 +21,15 @@ interface MinimalImagesUseCase {
 class MinimalImagesInteractor(private val wallrRepository: WallrRepository) : MinimalImagesUseCase {
 
   override fun isCustomColorListPresent(): Boolean {
-    return wallrRepository.isCustomSolidColorListPresent()
+    return wallrRepository.isCustomMinimalColorListPresent()
   }
 
   override fun getDefaultColors(): Single<List<String>> {
-    return wallrRepository.getDefaultSolidColorList()
+    return wallrRepository.getDefaultMinimalColorList()
   }
 
   override fun getCustomColors(): Single<List<String>> {
-    return wallrRepository.getCustomSolidColorList()
+    return wallrRepository.getCustomMinimalColorList()
   }
 
   override fun modifyColors(
@@ -40,7 +40,7 @@ class MinimalImagesInteractor(private val wallrRepository: WallrRepository) : Mi
   }
 
   override fun addCustomColor(colorList: List<String>): Completable {
-    return wallrRepository.saveCustomSolidColorList(colorList)
+    return wallrRepository.saveCustomMinimalColorList(colorList)
   }
 
   override fun restoreColors(): Single<RestoreColorsModel> {

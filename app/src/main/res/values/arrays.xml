@@ -17,7 +17,7 @@
     <item>Crystallized Version</item>
   </string-array>
 
-  <string-array name="solidColorsArray" translatable="false">
+  <string-array name="minimalColorsArray" translatable="false">
     <item>#F44336</item>
     <item>#E91E63</item>
     <item>#9C27B0</item>

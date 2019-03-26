@@ -6,33 +6,33 @@ import com.google.gson.reflect.TypeToken
 import io.reactivex.Completable
 import io.reactivex.Single
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.data.exception.UnableToGetSolidColorsException
+import zebrostudio.wallr100.data.exception.UnableToGetMinimalColorsException
 import java.util.TreeMap
 
-interface SolidColorHelper {
+interface MinimalColorHelper {
   fun getDefaultColors(): Single<List<String>>
   fun getCustomColors(): Single<List<String>>
   fun cacheDeletedItems(map: HashMap<Int, String>): Completable
   fun getDeletedItemsFromCache(): Single<TreeMap<Int, String>>
 }
 
-class SolidColorHelperImpl(
+class MinimalColorsHelperImpl(
   private val context: Context,
   private val sharedPrefsHelper: SharedPrefsHelper
-) : SolidColorHelper {
+) : MinimalColorHelper {
 
   private var recentlyDeletedColorsMap = TreeMap<Int, String>()
 
   override fun getDefaultColors(): Single<List<String>> {
-    return Single.just(context.resources.getStringArray(R.array.solidColorsArray).toList())
+    return Single.just(context.resources.getStringArray(R.array.minimalColorsArray).toList())
   }
 
   override fun getCustomColors(): Single<List<String>> {
     return Single.create { singleEmitter ->
-      sharedPrefsHelper.getString(IMAGE_PREFERENCE_NAME, CUSTOM_SOLID_COLOR_LIST_TAG)
+      sharedPrefsHelper.getString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG)
           .let { string ->
             if (string == "") {
-              singleEmitter.onError(UnableToGetSolidColorsException())
+              singleEmitter.onError(UnableToGetMinimalColorsException())
             } else {
               object : TypeToken<List<String>>() {}.type.let {
                 singleEmitter.onSuccess(Gson().fromJson(string, it))
