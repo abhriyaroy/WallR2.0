@@ -27,12 +27,11 @@ class MinimalPresenterImpl(
   private val postExecutionThread: PostExecutionThread
 ) : MinimalPresenter {
 
-  private var isBottomPanelEnabled = false
-  private var selectionSize = INITIAL_SIZE
-  private var minimalView: MinimalView? = null
-  private var forceSmoothScroll: Boolean = false
-  private var multiColorImageType: MultiColorImageType? = MATERIAL
-  private var shouldUpdateAllItems = true
+  internal var isBottomPanelEnabled = false
+  internal var selectionSize = INITIAL_SIZE
+  internal var minimalView: MinimalView? = null
+  internal var multiColorImageType: MultiColorImageType? = MATERIAL
+  internal var shouldUpdateAllItems = true
 
   override fun attachView(view: MinimalView) {
     minimalView = view
@@ -62,12 +61,10 @@ class MinimalPresenterImpl(
   }
 
   override fun handleOnScrolled(yAxisMovement: Int) {
-    if (isBottomPanelEnabled && yAxisMovement > MINIMUM_SCROLL_DIST && !forceSmoothScroll) {
-      minimalView?.hideBottomLayoutWithAnimation()
-      isBottomPanelEnabled = false
+    if (isBottomPanelEnabled && yAxisMovement > MINIMUM_SCROLL_DIST) {
+      hideBottomPanelWithAnimationInView()
     } else if (!isBottomPanelEnabled && yAxisMovement < -MINIMUM_SCROLL_DIST && selectionSize > 1) {
-      minimalView?.showBottomPanelWithAnimation()
-      isBottomPanelEnabled = true
+      showBottomPanelWithAnimationInView()
     }
   }
 
@@ -107,8 +104,7 @@ class MinimalPresenterImpl(
   override fun handleCabDestroyed() {
     minimalView?.clearSelectedItemsMap()
     if (isBottomPanelEnabled) {
-      minimalView?.hideBottomLayoutWithAnimation()
-      isBottomPanelEnabled = false
+      hideBottomPanelWithAnimationInView()
       selectionSize = INITIAL_SIZE
     }
     if (shouldUpdateAllItems) {
@@ -127,19 +123,23 @@ class MinimalPresenterImpl(
 
   override fun handleColorPickerPositiveClick(hexValue: String, colorList: List<String>) {
     if (!colorList.contains(hexValue)) {
-      minimalImagesUseCase.addCustomColor(colorList)
-          .doOnSubscribe {
-            minimalView?.addColorToList(hexValue)
-          }.observeOn(postExecutionThread.scheduler)
-          .autoDisposable(minimalView!!.getScope())
-          .subscribe({
-            minimalView?.addColorAndScrollToItemView(colorList.size)
-            minimalView?.showAddColorSuccessMessage()
-          }, {
-            minimalView?.showGenericErrorMessage()
-          })
+      colorList.toMutableList().apply {
+        add(hexValue)
+        minimalImagesUseCase.addCustomColor(this.toList())
+            .doOnComplete {
+              minimalView?.addColorToList(hexValue)
+            }.observeOn(postExecutionThread.scheduler)
+            .autoDisposable(minimalView!!.getScope())
+            .subscribe({
+              minimalView?.insertItemAndScrollToItemView(size)
+              minimalView?.showAddColorSuccessMessage()
+            }, {
+              minimalView?.showGenericErrorMessage()
+            })
+      }
     } else {
-      minimalView?.showColorAlreadyPresentErrorMessage(colorList.indexOf(hexValue) + INITIAL_OFFSET)
+      minimalView?.showColorAlreadyPresentErrorMessageAndScrollToPosition(
+          colorList.indexOf(hexValue) + INITIAL_OFFSET)
     }
   }
 
@@ -179,7 +179,7 @@ class MinimalPresenterImpl(
       if (position == INITIAL_SIZE) {
         minimalView?.showColorPickerDialogAndAttachColorPickerListener()
       } else {
-
+        IllegalStateException("Feature not implemented yet")
       }
     } else {
       if (position != INITIAL_SIZE) {
@@ -226,7 +226,7 @@ class MinimalPresenterImpl(
     }
   }
 
-  override fun numberOfItemsToBeDeselectedToStartDeletion(
+  private fun numberOfItemsToBeDeselectedToStartDeletion(
     colorList: List<String>,
     selectedItemsMap: HashMap<Int, String>
   ): Int {
@@ -258,16 +258,23 @@ class MinimalPresenterImpl(
     minimalView?.showAppBar()
     minimalView?.showCab(selectionSize)
     if (selectionSize == FIRST_ELEMENT_INDEX && isBottomPanelEnabled) {
-      minimalView?.hideBottomLayoutWithAnimation()
-      isBottomPanelEnabled = false
+      hideBottomPanelWithAnimationInView()
     } else if (selectionSize > FIRST_ELEMENT_INDEX && !isBottomPanelEnabled) {
-      isBottomPanelEnabled = true
-      minimalView?.showBottomPanelWithAnimation()
+      showBottomPanelWithAnimationInView()
     } else if (selectionSize == INITIAL_SIZE) {
-      isBottomPanelEnabled = false
-      minimalView?.hideBottomLayoutWithAnimation()
+      hideBottomPanelWithAnimationInView()
       minimalView?.hideCab()
     }
+  }
+
+  private fun showBottomPanelWithAnimationInView() {
+    minimalView?.showBottomPanelWithAnimation()
+    isBottomPanelEnabled = true
+  }
+
+  private fun hideBottomPanelWithAnimationInView() {
+    minimalView?.hideBottomLayoutWithAnimation()
+    isBottomPanelEnabled = false
   }
 }
 

@@ -288,7 +288,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
     }
   }
 
-  override fun addColorAndScrollToItemView(index: Int) {
+  override fun insertItemAndScrollToItemView(index: Int) {
     if (colorPickerDialog?.isShowing == true) {
       colorPickerDialog?.dismiss()
     }
@@ -302,7 +302,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
     }
   }
 
-  override fun showColorAlreadyPresentErrorMessage(position: Int) {
+  override fun showColorAlreadyPresentErrorMessageAndScrollToPosition(position: Int) {
     context!!.let {
       it.errorToast(it.stringRes(R.string.minimal_fragment_color_alreaady_present_error_message))
     }

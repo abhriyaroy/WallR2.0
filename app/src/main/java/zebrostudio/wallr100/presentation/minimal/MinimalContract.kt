@@ -13,7 +13,7 @@ interface MinimalContract {
     fun updateItemView(index: Int)
     fun removeItemView(index: Int)
     fun addItemView(index: Int)
-    fun addColorAndScrollToItemView(index: Int)
+    fun insertItemAndScrollToItemView(index: Int)
     fun showAddColorSuccessMessage()
     fun showCab(size: Int)
     fun hideCab()
@@ -24,7 +24,7 @@ interface MinimalContract {
     fun showDeleteColorsErrorMessage()
     fun clearCabIfActive()
     fun showColorPickerDialogAndAttachColorPickerListener()
-    fun showColorAlreadyPresentErrorMessage(position: Int)
+    fun showColorAlreadyPresentErrorMessageAndScrollToPosition(position: Int)
     fun showExitSelectionModeToAddColorMessage()
     fun showUndoDeletionOption(size: Int)
     fun showUnableToRestoreColorsMessage()
@@ -64,11 +64,6 @@ interface MinimalContract {
       colorList: List<String>,
       selectedItemsMap: HashMap<Int, String>
     )
-
-    fun numberOfItemsToBeDeselectedToStartDeletion(
-      colorList: List<String>,
-      selectedItemsMap: HashMap<Int, String>
-    ): Int
   }
 
 }
