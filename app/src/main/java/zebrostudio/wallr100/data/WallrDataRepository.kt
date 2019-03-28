@@ -313,7 +313,6 @@ class WallrDataRepository(
                 } else {
                   list.toMutableList().let { mutableList ->
                     map.keys.forEach {
-                      System.out.println("Restored data $it")
                       mutableList.add(it, map[it]!!)
                     }
                     sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME,

@@ -104,12 +104,10 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun removeItemView(index: Int) {
-    System.out.println("item removed $index")
     dragSelectImageAdapter?.notifyItemRemoved(index)
   }
 
   override fun addItemView(index: Int) {
-    System.out.println("item inserted $index")
     dragSelectImageAdapter?.notifyItemInserted(index)
   }
 
