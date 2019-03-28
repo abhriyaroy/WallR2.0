@@ -56,6 +56,7 @@ import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.infoToast
+import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
@@ -179,11 +180,11 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showImageLoadError() {
-    errorToast(getString(R.string.unable_to_load_hd_image_error))
+    errorToast(stringRes(R.string.unable_to_load_hd_image_error))
   }
 
   override fun showNoInternetError() {
-    errorToast(getString(R.string.no_internet_message))
+    errorToast(stringRes(R.string.no_internet_message))
   }
 
   override fun hasStoragePermission(): Boolean {

@@ -21,6 +21,7 @@ import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.invisible
 import zebrostudio.wallr100.android.utils.setMenuItemColorRed
 import zebrostudio.wallr100.android.utils.setMenuItemColorWhite
+import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.BaseView
 import javax.inject.Inject
@@ -57,7 +58,7 @@ abstract class BaseFragment : Fragment(), BaseView {
 
   private fun highlightCurrentMenuItem() {
     for (menuItem in menuItemIdList) {
-      if (getString(menuItem) == fragmentTag) {
+      if (stringRes(menuItem) == fragmentTag) {
         activity?.findViewById<LinearLayout>(menuItem)?.setMenuItemColorRed(this.context!!)
       } else {
         activity?.findViewById<LinearLayout>(menuItem)?.setMenuItemColorWhite(this.context!!)
@@ -69,17 +70,17 @@ abstract class BaseFragment : Fragment(), BaseView {
     activity?.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.gone()
     activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.gone()
     when (fragmentTag) {
-      getString(R.string.minimal_fragment_tag) ->
+      stringRes(R.string.minimal_fragment_tag) ->
         activity?.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.visible()
-      getString(R.string.collection_fragment_tag) -> {  // Do nothing
+      stringRes(R.string.collection_fragment_tag) -> {  // Do nothing
       }
       else -> activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visible()
     }
   }
 
   private fun configureTabs() {
-    if (fragmentTag == getString(R.string.categories_fragment_tag) || fragmentTag == getString(
-            R.string.top_picks_fragment_tag)) {
+    if (fragmentTag == stringRes(R.string.categories_fragment_tag) ||
+        fragmentTag == stringRes(R.string.top_picks_fragment_tag)) {
       activity?.findViewById<SmartTabLayout>(R.id.tabLayout)?.visible()
     } else {
       activity?.findViewById<SmartTabLayout>(R.id.tabLayout)?.gone()

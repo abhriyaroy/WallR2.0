@@ -154,7 +154,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   }
 
   override fun showNoInternetToast() {
-    errorToast(getString(R.string.no_internet_message))
+    errorToast(stringRes(R.string.no_internet_message))
   }
 
   override fun showGenericErrorView() {

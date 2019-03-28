@@ -11,8 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.ArrayAdapter
-import android.widget.ListAdapter
 import android.widget.TextView
 import android.widget.Toast
 import com.afollestad.dragselectrecyclerview.DragSelectTouchListener
@@ -90,15 +88,11 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun showUnableToGetColorsErrorMessage() {
-    context!!.let {
-      it.errorToast(it.stringRes(R.string.minimal_fragment_unable_to_get_colors_error_message))
-    }
+    errorToast(stringRes(R.string.minimal_fragment_unable_to_get_colors_error_message))
   }
 
   override fun showGenericErrorMessage() {
-    context!!.let {
-      it.errorToast(it.stringRes(R.string.generic_error_message))
-    }
+    errorToast(stringRes(R.string.generic_error_message))
   }
 
   override fun updateItemView(index: Int) {
@@ -117,9 +111,9 @@ class MinimalFragment : BaseFragment(), MinimalView {
     MaterialCab.attach(activity as AppCompatActivity, R.id.cabStub) {
       menuRes = R.menu.minimal
       closeDrawableRes = R.drawable.ic_close_white
-      titleColor = context!!.colorRes(R.color.white)
-      title = context!!.stringRes(R.string.minimal_fragment_cab_title, size)
-      backgroundColor = context!!.colorRes(R.color.primary)
+      titleColor = colorRes(R.color.white)
+      title = stringRes(R.string.minimal_fragment_cab_title, size)
+      backgroundColor = colorRes(R.color.primary)
       backgroundColorRes(R.color.primary)
 
 
@@ -233,22 +227,18 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun showDeselectBeforeDeletionMessage(numberOfItemsToBeDeselected: Int) {
-    context!!.let { context ->
-      if (numberOfItemsToBeDeselected == 1) {
-        context.stringRes(R.string.minimal_fragment_deselect_1_color_message)
-      } else {
-        context.stringRes(R.string.minimal_fragment_deselect_x_colors_message,
-            numberOfItemsToBeDeselected)
-      }.let {
-        context.errorToast(it)
-      }
+    if (numberOfItemsToBeDeselected == 1) {
+      stringRes(R.string.minimal_fragment_deselect_1_color_message)
+    } else {
+      stringRes(R.string.minimal_fragment_deselect_x_colors_message,
+          numberOfItemsToBeDeselected)
+    }.let {
+      errorToast(it)
     }
   }
 
   override fun showDeleteColorsErrorMessage() {
-    context!!.let {
-      it.errorToast(it.stringRes(R.string.minimal_fragment_delete_colors_error_message))
-    }
+    errorToast(stringRes(R.string.minimal_fragment_delete_colors_error_message))
   }
 
   override fun clearCabIfActive() {
@@ -258,24 +248,22 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun showColorPickerDialogAndAttachColorPickerListener() {
-    context!!.let {
-      colorPickerDialog = MaterialDialog.Builder(it)
-          .backgroundColor(it.colorRes(R.color.primary))
-          .customView(R.layout.dialog_colorpicker, false)
-          .contentColor(it.colorRes(R.color.white))
-          .widgetColor(it.colorRes(R.color.accent))
-          .positiveColor(it.colorRes(R.color.accent))
-          .negativeColor(it.colorRes(R.color.accent))
-          .positiveText(it.stringRes(R.string.minimal_fragment_color_picker_positive_text))
-          .negativeText(it.stringRes(R.string.minimal_fragment_color_picker_negative_text))
-          .onPositive { dialog, _ ->
-            val colorPickerHexTextView =
-                dialog.findViewById(R.id.colorPickerHexTextView) as TextView
-            presenter.handleColorPickerPositiveClick(colorPickerHexTextView.text as String,
-                dragSelectImageAdapter!!.getColorList())
-          }
-          .build()
-    }
+    colorPickerDialog = MaterialDialog.Builder(context!!)
+        .backgroundColor(colorRes(R.color.primary))
+        .customView(R.layout.dialog_colorpicker, false)
+        .contentColor(colorRes(R.color.white))
+        .widgetColor(colorRes(R.color.accent))
+        .positiveColor(colorRes(R.color.accent))
+        .negativeColor(colorRes(R.color.accent))
+        .positiveText(stringRes(R.string.minimal_fragment_color_picker_positive_text))
+        .negativeText(stringRes(R.string.minimal_fragment_color_picker_negative_text))
+        .onPositive { dialog, _ ->
+          val colorPickerHexTextView =
+              dialog.findViewById(R.id.colorPickerHexTextView) as TextView
+          presenter.handleColorPickerPositiveClick(colorPickerHexTextView.text as String,
+              dragSelectImageAdapter!!.getColorList())
+        }
+        .build()
     colorPickerDialog?.show()
 
     colorPickerDialog?.customView?.apply {
@@ -297,29 +285,23 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun showAddColorSuccessMessage() {
-    context!!.let {
-      it.successToast(it.stringRes(R.string.minimal_fragment_add_color_success_message))
-    }
+    successToast(stringRes(R.string.minimal_fragment_add_color_success_message))
   }
 
   override fun showColorAlreadyPresentErrorMessageAndScrollToPosition(position: Int) {
-    context!!.let {
-      it.errorToast(it.stringRes(R.string.minimal_fragment_color_alreaady_present_error_message))
-    }
+    errorToast(stringRes(R.string.minimal_fragment_color_alreaady_present_error_message))
     minimalFragmentRecyclerView?.smoothScrollToPosition(position)
   }
 
   override fun showExitSelectionModeToAddColorMessage() {
-    context!!.let {
-      it.infoToast(it.stringRes(R.string.minimal_fragment_exit_selection_before_adding_message))
-    }
+    infoToast(stringRes(R.string.minimal_fragment_exit_selection_before_adding_message))
   }
 
   override fun showUndoDeletionOption(size: Int) {
     if (size == SINGLE_ITEM_SIZE) {
-      context!!.stringRes(R.string.minimal_fragment_single_item_deletion_successful_message)
+      stringRes(R.string.minimal_fragment_single_item_deletion_successful_message)
     } else {
-      context!!.stringRes(R.string.minimal_fragment_multiple_item_deletion_successful_message, size)
+      stringRes(R.string.minimal_fragment_multiple_item_deletion_successful_message, size)
     }.let {
       Snackbar.make(minimalFragmentRootLayout, it, Snackbar.LENGTH_INDEFINITE).apply {
         setAction(context.stringRes(R.string.minimal_fragment_deletion_undo_action_text)
@@ -332,15 +314,11 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun showUnableToRestoreColorsMessage() {
-    context!!.let {
-      it.errorToast(it.stringRes(R.string.minimal_fragment_unable_to_restore_colors_error_message))
-    }
+    errorToast(stringRes(R.string.minimal_fragment_unable_to_restore_colors_error_message))
   }
 
   override fun showRestoreColorsSuccessMessage() {
-    context!!.let {
-      it.successToast(it.stringRes(R.string.minimal_fragment_restore_colors_success_message))
-    }
+    successToast(stringRes(R.string.minimal_fragment_restore_colors_success_message))
   }
 
   override fun getTopAndBottomVisiblePositions(): Pair<Int, Int> {
@@ -376,12 +354,12 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
   private fun initRecyclerView() {
     GridLayoutManager(context,
-        context!!.integerRes(R.integer.minimal_image_recycler_view_span_count)).let {
+        integerRes(R.integer.minimal_image_recycler_view_span_count)).let {
       minimalFragmentRecyclerView.layoutManager = it
     }
     minimalFragmentRecyclerView.addItemDecoration(
-        RecyclerViewItemDecorator(context!!.integerRes(R.integer.recycler_view_grid_spacing_px),
-            context!!.integerRes(R.integer.minimal_image_recycler_view_grid_size)))
+        RecyclerViewItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
+            integerRes(R.integer.minimal_image_recycler_view_grid_size)))
     dragSelectImageAdapter =
         DragSelectImageAdapter(getDragSelectRecyclerViewCallback(), recyclerPresenter)
     minimalFragmentRecyclerView.adapter = dragSelectImageAdapter
@@ -399,9 +377,9 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
   private fun initBottomPanel() {
     activity?.spinner?.setItems(
-        context!!.stringRes(R.string.minimal_fragment_spinner_item_material),
-        context!!.stringRes(R.string.minimal_fragment_spinner_item_gradient),
-        context!!.stringRes(R.string.minimal_fragment_spinner_item_plasma))
+        stringRes(R.string.minimal_fragment_spinner_item_material),
+        stringRes(R.string.minimal_fragment_spinner_item_gradient),
+        stringRes(R.string.minimal_fragment_spinner_item_plasma))
     // To guarantee popup opening upward
     activity?.spinner?.setDropdownHeight(Int.MAX_VALUE)
     activity?.spinner?.setOnItemSelectedListener { _, position, _, _ ->
@@ -416,9 +394,10 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
     activity!!.toolbarMultiSelectIcon.setOnLongClickListener { view ->
       Toast.makeText(context,
-          getString(R.string.minimal_fragment_toolbar_menu_multiselect_title), Toast.LENGTH_SHORT)
+          stringRes(R.string.minimal_fragment_toolbar_menu_multiselect_title), Toast.LENGTH_SHORT)
           .let {
-            view.menuTitleToast(it, activity!!.window, resources.getDimensionPixelSize(R.dimen.toolbar_menu_toast_x_axis_offset),
+            view.menuTitleToast(it, activity!!.window,
+                resources.getDimensionPixelSize(R.dimen.toolbar_menu_toast_x_axis_offset),
                 resources.getDimensionPixelSize(R.dimen.toolbar_menu_toast_y_axis_offset))
             it.show()
           }
