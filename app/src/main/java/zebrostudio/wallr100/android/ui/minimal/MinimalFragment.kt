@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.ArrayAdapter
+import android.widget.ListAdapter
 import android.widget.TextView
 import android.widget.Toast
 import com.afollestad.dragselectrecyclerview.DragSelectTouchListener
@@ -400,6 +402,8 @@ class MinimalFragment : BaseFragment(), MinimalView {
         context!!.stringRes(R.string.minimal_fragment_spinner_item_material),
         context!!.stringRes(R.string.minimal_fragment_spinner_item_gradient),
         context!!.stringRes(R.string.minimal_fragment_spinner_item_plasma))
+    // To guarantee popup opening upward
+    activity?.spinner?.setDropdownHeight(Int.MAX_VALUE)
     activity?.spinner?.setOnItemSelectedListener { _, position, _, _ ->
       presenter.handleSpinnerOptionChanged(position)
     }
