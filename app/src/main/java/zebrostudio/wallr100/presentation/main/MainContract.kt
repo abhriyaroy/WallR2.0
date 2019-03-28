@@ -11,6 +11,7 @@ interface MainContract {
     fun showPreviousFragment()
     fun getFragmentTagAtStackTop(): String
     fun getExploreFragmentTag(): String
+    fun getMinimalFragmentTag(): String
     fun startBackPressedFlagResetTimer()
     fun isCabActive(): Boolean
     fun dismissCab()

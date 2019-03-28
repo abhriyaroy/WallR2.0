@@ -23,10 +23,10 @@ import zebrostudio.wallr100.data.FirebaseDatabaseHelper
 import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl
 import zebrostudio.wallr100.data.ImageHandler
 import zebrostudio.wallr100.data.ImageHandlerImpl
-import zebrostudio.wallr100.data.SharedPrefsHelper
-import zebrostudio.wallr100.data.SharedPrefsHelperImpl
 import zebrostudio.wallr100.data.MinimalColorHelper
 import zebrostudio.wallr100.data.MinimalColorsHelperImpl
+import zebrostudio.wallr100.data.SharedPrefsHelper
+import zebrostudio.wallr100.data.SharedPrefsHelperImpl
 import zebrostudio.wallr100.data.WallrDataRepository
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactoryImpl

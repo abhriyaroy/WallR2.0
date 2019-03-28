@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.presentation
 
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.After
@@ -48,11 +49,14 @@ class MainPresenterImplTest {
     mainPresenter.isGuillotineMenuOpen = false
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(TOP_PICKS_TAG)
     `when`(mainView.getExploreFragmentTag()).thenReturn(EXPLORE_TAG)
+    `when`(mainView.getMinimalFragmentTag()).thenReturn(MINIMAL_TAG)
 
     mainPresenter.handleBackPress()
 
-    verify(mainView).getFragmentTagAtStackTop()
+    verify(mainView, times(2)).getFragmentTagAtStackTop()
     verify(mainView).getExploreFragmentTag()
+    verify(mainView).getMinimalFragmentTag()
+    verify(mainView).showAppBar()
     verify(mainView).showPreviousFragment()
     verifyNoMoreInteractions(mainView)
   }
@@ -62,12 +66,34 @@ class MainPresenterImplTest {
     mainPresenter.isGuillotineMenuOpen = false
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(CATEGORIES_TAG)
     `when`(mainView.getExploreFragmentTag()).thenReturn(EXPLORE_TAG)
+    `when`(mainView.getMinimalFragmentTag()).thenReturn(MINIMAL_TAG)
 
     mainPresenter.handleBackPress()
 
-    verify(mainView).getFragmentTagAtStackTop()
+    verify(mainView, times(2)).getFragmentTagAtStackTop()
     verify(mainView).getExploreFragmentTag()
+    verify(mainView).getMinimalFragmentTag()
+    verify(mainView).showAppBar()
     verify(mainView).showPreviousFragment()
+    verifyNoMoreInteractions(mainView)
+  }
+
+  @Test
+  fun `should dismiss cab on handleBackPress call success with minimal fragment on stack top and cab in active state`() {
+    mainPresenter.isGuillotineMenuOpen = false
+    `when`(mainView.getFragmentTagAtStackTop()).thenReturn(MINIMAL_TAG)
+    `when`(mainView.getExploreFragmentTag()).thenReturn(EXPLORE_TAG)
+    `when`(mainView.getMinimalFragmentTag()).thenReturn(MINIMAL_TAG)
+    `when`(mainView.isCabActive()).thenReturn(true)
+
+    mainPresenter.handleBackPress()
+
+    verify(mainView, times(2)).getFragmentTagAtStackTop()
+    verify(mainView).getExploreFragmentTag()
+    verify(mainView).getMinimalFragmentTag()
+    verify(mainView).showAppBar()
+    verify(mainView).isCabActive()
+    verify(mainView).dismissCab()
     verifyNoMoreInteractions(mainView)
   }
 
@@ -76,11 +102,16 @@ class MainPresenterImplTest {
     mainPresenter.isGuillotineMenuOpen = false
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(MINIMAL_TAG)
     `when`(mainView.getExploreFragmentTag()).thenReturn(EXPLORE_TAG)
+    `when`(mainView.getMinimalFragmentTag()).thenReturn(MINIMAL_TAG)
+    `when`(mainView.isCabActive()).thenReturn(false)
 
     mainPresenter.handleBackPress()
 
-    verify(mainView).getFragmentTagAtStackTop()
+    verify(mainView, times(2)).getFragmentTagAtStackTop()
     verify(mainView).getExploreFragmentTag()
+    verify(mainView).getMinimalFragmentTag()
+    verify(mainView).showAppBar()
+    verify(mainView).isCabActive()
     verify(mainView).showPreviousFragment()
     verifyNoMoreInteractions(mainView)
   }
@@ -90,11 +121,14 @@ class MainPresenterImplTest {
     mainPresenter.isGuillotineMenuOpen = false
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(COLLECTIONS_TAG)
     `when`(mainView.getExploreFragmentTag()).thenReturn(EXPLORE_TAG)
+    `when`(mainView.getMinimalFragmentTag()).thenReturn(MINIMAL_TAG)
 
     mainPresenter.handleBackPress()
 
-    verify(mainView).getFragmentTagAtStackTop()
+    verify(mainView, times(2)).getFragmentTagAtStackTop()
     verify(mainView).getExploreFragmentTag()
+    verify(mainView).getMinimalFragmentTag()
+    verify(mainView).showAppBar()
     verify(mainView).showPreviousFragment()
     verifyNoMoreInteractions(mainView)
   }

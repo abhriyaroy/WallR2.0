@@ -32,7 +32,8 @@ class MainPresenterImpl(
         }
       } else {
         mainView?.showAppBar()
-        if (mainView?.isCabActive() == true) {
+        if (mainView?.getFragmentTagAtStackTop() == mainView?.getMinimalFragmentTag() &&
+            mainView?.isCabActive() == true) {
           mainView?.dismissCab()
         } else {
           mainView?.showPreviousFragment()

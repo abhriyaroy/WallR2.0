@@ -50,9 +50,10 @@ import zebrostudio.wallr100.android.utils.setOnDebouncedClickListener
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.withDelayOnMain
 import zebrostudio.wallr100.presentation.main.MainContract
+import zebrostudio.wallr100.presentation.main.MainContract.MainView
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragmentInjector {
+class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
 
   @Inject
   internal lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
@@ -122,6 +123,10 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
 
   override fun getExploreFragmentTag(): String {
     return fragmentNameTagFetcher.getFragmentName(EXPLORE_TAG)
+  }
+
+  override fun getMinimalFragmentTag(): String {
+    return fragmentNameTagFetcher.getFragmentName(MINIMAL_TAG)
   }
 
   override fun isCabActive(): Boolean {
