@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.presentation.adapters
 
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract.ImageRecyclerItemView
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract.ImageRecyclerViewPresenter
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
@@ -7,10 +8,10 @@ import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEnt
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 
 class ImageRecyclerViewPresenterImpl : ImageRecyclerViewPresenter {
-  private lateinit var imageType: ImageListType
 
-  private val searchResultList = mutableListOf<SearchPicturesPresenterEntity>()
-  private val wallpaperImageList = mutableListOf<ImagePresenterEntity>()
+  internal lateinit var imageType: ImageListType
+  internal val searchResultList = mutableListOf<SearchPicturesPresenterEntity>()
+  internal val wallpaperImageList = mutableListOf<ImagePresenterEntity>()
 
   override fun setListType(imageListType: ImageListType) {
     imageType = imageListType
@@ -32,7 +33,7 @@ class ImageRecyclerViewPresenterImpl : ImageRecyclerViewPresenter {
 
   override fun onBindRepositoryRowViewAtPosition(
     position: Int,
-    rowView: ImageRecyclerItemContract.ImageRecyclerItemView
+    rowView: ImageRecyclerItemView
   ) {
     when (imageType) {
       SEARCH -> {
@@ -46,7 +47,6 @@ class ImageRecyclerViewPresenterImpl : ImageRecyclerViewPresenter {
         rowView.setWallpaperImage(wallpaperImageList[position].imageLink.thumb)
       }
     }
-
   }
 
   override fun getItemCount(): Int {
@@ -62,7 +62,7 @@ class ImageRecyclerViewPresenterImpl : ImageRecyclerViewPresenter {
 
   override fun handleImageClicked(
     position: Int,
-    rowView: ImageRecyclerItemContract.ImageRecyclerItemView
+    rowView: ImageRecyclerItemView
   ) {
     when (imageType) {
       SEARCH -> rowView.showSearchImageDetails(searchResultList[position])
