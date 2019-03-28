@@ -17,14 +17,13 @@ class DragSelectRecyclerIPresenterImpl : DragSelectItemPresenter {
     selectedItemsMap: HashMap<Int, String>,
     position: Int
   ) {
+    dragSelectItemViewHolder.hideSelectedIndicator()
     if (position == INITIAL_SIZE) {
       dragSelectItemViewHolder.showAddImageLayout()
-      dragSelectItemViewHolder.hideSelectedIndicator()
     } else {
       dragSelectItemViewHolder.hideAddImageLayout()
       dragSelectItemViewHolder.setImageViewColor(colorList[position - INITIAL_OFFSET])
       dragSelectItemViewHolder.attachLongClickListener()
-      dragSelectItemViewHolder.hideSelectedIndicator()
       if (selectedItemsMap.size != INITIAL_SIZE) {
         if (selectedItemsMap.containsKey(position - INITIAL_OFFSET)) {
           dragSelectItemViewHolder.showSelectedIndicator()
