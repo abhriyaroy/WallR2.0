@@ -196,6 +196,8 @@ class MinimalPresenterImpl(
     if (position != INITIAL_SIZE) {
       toggleSelected(position, colorList, selectedItemsMap)
       minimalView?.startSelection(position)
+    } else {
+      minimalView?.showExitSelectionModeToAddColorMessage()
     }
     return false
   }
@@ -217,9 +219,9 @@ class MinimalPresenterImpl(
     if (index != INITIAL_SIZE) {
       (index - INITIAL_OFFSET).let {
         if (selected) {
-          selectedItemsMap[it] = colorList[it]
+          minimalView?.addToSelectedItemsMap(it, colorList[it])
         } else {
-          selectedItemsMap.remove(it)
+          minimalView?.removeFromSelectedItemsMap(it)
         }
       }
       updateSelectionChange(index, selectedItemsMap.size)

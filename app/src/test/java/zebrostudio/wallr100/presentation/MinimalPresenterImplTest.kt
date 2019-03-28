@@ -410,7 +410,8 @@ class MinimalPresenterImplTest {
     verifyNoMoreInteractions(minimalView)
   }
 
-  @Test fun `should add to selected items map without show bottom panel on handleClick call success`() {
+  @Test
+  fun `should add to selected items map without show bottom panel on handleClick call success`() {
     val position = 1
     val list = mutableListOf<String>()
     list.add(randomString)
@@ -463,6 +464,219 @@ class MinimalPresenterImplTest {
     minimalPresenter.isBottomPanelEnabled = true
 
     minimalPresenter.handleClick(position, list, map)
+
+    assertTrue(minimalPresenter.isBottomPanelEnabled)
+    verify(minimalView).removeFromSelectedItemsMap(position - INITIAL_OFFSET)
+    verify(minimalView).updateItemView(position)
+    verify(minimalView).showAppBar()
+    verify(minimalView).showCab(map.size)
+    verifyNoMoreInteractions(minimalView)
+  }
+
+  @Test fun `should show exit selection mode message on handleImageLongClick call success`() {
+    val position = 0
+    val list = listOf<String>()
+    val map = hashMapOf<Int, String>()
+    map[1] = randomString
+
+    minimalPresenter.handleImageLongClick(position, list, map)
+
+    verify(minimalView).showExitSelectionModeToAddColorMessage()
+    verifyNoMoreInteractions(minimalView)
+  }
+
+  @Test
+  fun `should add to selected items map and show bottom panel on handleImageLongClick call success`() {
+    val position = 1
+    val list = mutableListOf<String>()
+    list.add(randomString)
+    val map = hashMapOf<Int, String>()
+    map[1] = randomString
+    minimalPresenter.isBottomPanelEnabled = false
+    `when`(minimalView.addToSelectedItemsMap(0, randomString)).then {
+      map[0] = randomString
+      true
+    }
+
+    minimalPresenter.handleImageLongClick(position, list, map)
+
+    assertTrue(minimalPresenter.isBottomPanelEnabled)
+    verify(minimalView).startSelection(position)
+    verify(minimalView).addToSelectedItemsMap(0, randomString)
+    verify(minimalView).updateItemView(position)
+    verify(minimalView).showAppBar()
+    verify(minimalView).showCab(map.size)
+    verify(minimalView).showBottomPanelWithAnimation()
+    verifyNoMoreInteractions(minimalView)
+  }
+
+  @Test
+  fun `should add to selected items map without show bottom panel on handleImageLongClick call success`() {
+    val position = 1
+    val list = mutableListOf<String>()
+    list.add(randomString)
+    val map = hashMapOf<Int, String>()
+    map[1] = randomString
+    minimalPresenter.isBottomPanelEnabled = true
+    `when`(minimalView.addToSelectedItemsMap(0, randomString)).then {
+      map[0] = randomString
+      true
+    }
+
+    minimalPresenter.handleImageLongClick(position, list, map)
+
+    assertTrue(minimalPresenter.isBottomPanelEnabled)
+    verify(minimalView).startSelection(position)
+    verify(minimalView).addToSelectedItemsMap(0, randomString)
+    verify(minimalView).updateItemView(position)
+    verify(minimalView).showAppBar()
+    verify(minimalView).showCab(map.size)
+    verifyNoMoreInteractions(minimalView)
+  }
+
+  @Test
+  fun `should remove from selected items map and hide bottom panel on handleImageLongClick call success`() {
+    val position = 1
+    val list = mutableListOf<String>()
+    list.add(randomString)
+    val map = hashMapOf<Int, String>()
+    map[0] = randomString
+    minimalPresenter.isBottomPanelEnabled = true
+
+    minimalPresenter.handleImageLongClick(position, list, map)
+
+    assertFalse(minimalPresenter.isBottomPanelEnabled)
+    verify(minimalView).startSelection(position)
+    verify(minimalView).removeFromSelectedItemsMap(position - INITIAL_OFFSET)
+    verify(minimalView).updateItemView(position)
+    verify(minimalView).showAppBar()
+    verify(minimalView).showCab(map.size)
+    verify(minimalView).hideBottomLayoutWithAnimation()
+    verifyNoMoreInteractions(minimalView)
+  }
+
+  @Test
+  fun `should remove from selected items map without hiding bottom panel on handleImageLongClick call success`() {
+    val position = 1
+    val list = mutableListOf<String>()
+    list.add(randomString)
+    val map = hashMapOf<Int, String>()
+    map[0] = randomString
+    map[1] = randomString
+    minimalPresenter.isBottomPanelEnabled = true
+
+    minimalPresenter.handleImageLongClick(position, list, map)
+
+    assertTrue(minimalPresenter.isBottomPanelEnabled)
+    verify(minimalView).startSelection(position)
+    verify(minimalView).removeFromSelectedItemsMap(position - INITIAL_OFFSET)
+    verify(minimalView).updateItemView(position)
+    verify(minimalView).showAppBar()
+    verify(minimalView).showCab(map.size)
+    verifyNoMoreInteractions(minimalView)
+  }
+
+  @Test fun `should return false on isItemSelectable call success when index is zero`() {
+    assertFalse(minimalPresenter.isItemSelectable(0))
+  }
+
+  @Test fun `should return true on isItemSelectable call success when index is not zero`() {
+    assertTrue(minimalPresenter.isItemSelectable(1))
+  }
+
+  @Test fun `should return false on isItemSelected call when index is not present in map`() {
+    val position = 1
+    val map = hashMapOf<Int, String>()
+
+    assertFalse(minimalPresenter.isItemSelected(position, map))
+  }
+
+  @Test fun `should return true on isItemSelected call when index is present in map`() {
+    val position = 1
+    val map = hashMapOf<Int, String>()
+    map[position - INITIAL_OFFSET] = randomString
+
+    assertTrue(minimalPresenter.isItemSelected(position, map))
+  }
+
+  @Test
+  fun `should add to selected items map and show bottom panel on setItemSelected call success with selected as true`() {
+    val position = 1
+    val list = mutableListOf<String>()
+    list.add(randomString)
+    val map = hashMapOf<Int, String>()
+    map[1] = randomString
+    minimalPresenter.isBottomPanelEnabled = false
+    `when`(minimalView.addToSelectedItemsMap(0, randomString)).then {
+      map[0] = randomString
+      true
+    }
+
+    minimalPresenter.setItemSelected(position, true, list, map)
+
+    assertTrue(minimalPresenter.isBottomPanelEnabled)
+    verify(minimalView).addToSelectedItemsMap(0, randomString)
+    verify(minimalView).updateItemView(position)
+    verify(minimalView).showAppBar()
+    verify(minimalView).showCab(map.size)
+    verify(minimalView).showBottomPanelWithAnimation()
+    verifyNoMoreInteractions(minimalView)
+  }
+
+  @Test
+  fun `should add to selected items map without show bottom panel on setItemSelected call success with selected as true`() {
+    val position = 1
+    val list = mutableListOf<String>()
+    list.add(randomString)
+    val map = hashMapOf<Int, String>()
+    map[1] = randomString
+    minimalPresenter.isBottomPanelEnabled = true
+    `when`(minimalView.addToSelectedItemsMap(0, randomString)).then {
+      map[0] = randomString
+      true
+    }
+
+    minimalPresenter.setItemSelected(position, true, list, map)
+
+    assertTrue(minimalPresenter.isBottomPanelEnabled)
+    verify(minimalView).addToSelectedItemsMap(0, randomString)
+    verify(minimalView).updateItemView(position)
+    verify(minimalView).showAppBar()
+    verify(minimalView).showCab(map.size)
+    verifyNoMoreInteractions(minimalView)
+  }
+
+  @Test
+  fun `should remove from selected items map and hide bottom panel on setItemSelected call success with selected as false`() {
+    val position = 1
+    val list = mutableListOf<String>()
+    list.add(randomString)
+    val map = hashMapOf<Int, String>()
+    map[0] = randomString
+    minimalPresenter.isBottomPanelEnabled = true
+
+    minimalPresenter.setItemSelected(position, false, list, map)
+
+    assertFalse(minimalPresenter.isBottomPanelEnabled)
+    verify(minimalView).removeFromSelectedItemsMap(position - INITIAL_OFFSET)
+    verify(minimalView).updateItemView(position)
+    verify(minimalView).showAppBar()
+    verify(minimalView).showCab(map.size)
+    verify(minimalView).hideBottomLayoutWithAnimation()
+    verifyNoMoreInteractions(minimalView)
+  }
+
+  @Test
+  fun `should remove from selected items map without hiding bottom panel on setItemSelected call success with selected as false`() {
+    val position = 1
+    val list = mutableListOf<String>()
+    list.add(randomString)
+    val map = hashMapOf<Int, String>()
+    map[0] = randomString
+    map[1] = randomString
+    minimalPresenter.isBottomPanelEnabled = true
+
+    minimalPresenter.setItemSelected(position, false, list, map)
 
     assertTrue(minimalPresenter.isBottomPanelEnabled)
     verify(minimalView).removeFromSelectedItemsMap(position - INITIAL_OFFSET)
