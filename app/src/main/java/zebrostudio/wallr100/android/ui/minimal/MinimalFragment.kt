@@ -147,12 +147,14 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
         override fun onAnimationEnd(animation: Animation) {
           activity?.spinner?.isEnabled = true
-          activity?.minimalBottomLayout?.visible()
-          activity?.minimalBottomLayout?.visible()
+          activity?.minimalBottomLayout?.apply {
+            visible()
+            isClickable = true
+          }
         }
 
         override fun onAnimationStart(animation: Animation) {
-          activity?.minimalBottomLayout?.isClickable = true
+
         }
       })
     }.let {
@@ -167,8 +169,10 @@ class MinimalFragment : BaseFragment(), MinimalView {
         }
 
         override fun onAnimationEnd(animation: Animation) {
-          activity?.minimalBottomLayoutFab?.visible()
-          activity?.minimalBottomLayoutFab?.isClickable = true
+          activity?.minimalBottomLayoutFab?.apply {
+            visible()
+            isClickable = true
+          }
         }
 
         override fun onAnimationStart(animation: Animation) {
@@ -209,8 +213,10 @@ class MinimalFragment : BaseFragment(), MinimalView {
         }
 
         override fun onAnimationEnd(animation: Animation) {
-          activity?.minimalBottomLayoutFab?.gone()
-          activity?.minimalBottomLayoutFab?.isClickable = false
+          activity?.minimalBottomLayoutFab?.apply {
+            gone()
+            isClickable = false
+          }
         }
 
         override fun onAnimationStart(animation: Animation) {
@@ -376,14 +382,16 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   private fun initBottomPanel() {
-    activity?.spinner?.setItems(
-        stringRes(R.string.minimal_fragment_spinner_item_material),
-        stringRes(R.string.minimal_fragment_spinner_item_gradient),
-        stringRes(R.string.minimal_fragment_spinner_item_plasma))
-    // To guarantee popup opening upward
-    activity?.spinner?.setDropdownHeight(Int.MAX_VALUE)
-    activity?.spinner?.setOnItemSelectedListener { _, position, _, _ ->
-      presenter.handleSpinnerOptionChanged(position)
+    activity?.spinner?.apply {
+      setItems(
+          stringRes(R.string.minimal_fragment_spinner_item_material),
+          stringRes(R.string.minimal_fragment_spinner_item_gradient),
+          stringRes(R.string.minimal_fragment_spinner_item_plasma))
+      // To guarantee popup opening upward
+      setDropdownHeight(Int.MAX_VALUE)
+      setOnItemSelectedListener { _, position, _, _ ->
+        presenter.handleSpinnerOptionChanged(position)
+      }
     }
   }
 
