@@ -387,7 +387,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
           stringRes(R.string.minimal_fragment_spinner_item_material),
           stringRes(R.string.minimal_fragment_spinner_item_gradient),
           stringRes(R.string.minimal_fragment_spinner_item_plasma))
-      // To guarantee popup opening upward
+      // To guarantee popup opening upwards
       setDropdownHeight(Int.MAX_VALUE)
       setOnItemSelectedListener { _, position, _, _ ->
         presenter.handleSpinnerOptionChanged(position)
