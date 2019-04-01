@@ -61,6 +61,7 @@ class WallrDataRepositoryTest {
   @Mock lateinit var minimalColorHelper: MinimalColorHelper
   @Mock lateinit var mockBitmap: Bitmap
   @Mock lateinit var mockUri: Uri
+  @Mock lateinit var gsonDataHelper: GsonDataHelper
   private lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
   private lateinit var firebasePictureEntityMapper: FirebasePictureEntityMapper
   private lateinit var wallrDataRepository: WallrDataRepository
@@ -74,9 +75,9 @@ class WallrDataRepositoryTest {
     firebasePictureEntityMapper = FirebasePictureEntityMapper()
     wallrDataRepository =
         WallrDataRepository(remoteAuthServiceFactory, unsplashClientFactory, sharedPrefs,
-            unsplashPictureEntityMapper, firebaseDatabaseHelper, firebasePictureEntityMapper,
-            urlShortener, imageHandler, fileHandler, downloadHelper, minimalColorHelper,
-            executionThread)
+            gsonDataHelper, unsplashPictureEntityMapper, firebaseDatabaseHelper,
+            firebasePictureEntityMapper, urlShortener, imageHandler, fileHandler, downloadHelper,
+            minimalColorHelper, executionThread)
 
     `when`(executionThread.ioScheduler).thenReturn(Schedulers.trampoline())
     `when`(executionThread.computationScheduler).thenReturn(Schedulers.trampoline())

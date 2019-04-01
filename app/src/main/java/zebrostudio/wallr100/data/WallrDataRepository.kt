@@ -3,7 +3,6 @@ package zebrostudio.wallr100.data
 import android.graphics.Bitmap
 import android.net.Uri
 import com.google.firebase.database.DatabaseReference
-import com.google.gson.Gson
 import com.pddstudio.urlshortener.URLShortener
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -61,6 +60,7 @@ class WallrDataRepository(
   private val retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
   private val unsplashClientFactory: UnsplashClientFactory,
   private val sharedPrefsHelper: SharedPrefsHelper,
+  private val gsonDataHelper: GsonDataHelper,
   private val unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
   private val firebaseDatabaseHelper: FirebaseDatabaseHelper,
   private val firebasePictureEntityMapper: FirebasePictureEntityMapper,
@@ -286,7 +286,7 @@ class WallrDataRepository(
     return Completable.create {
       if (
           sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
-              Gson().toJson(colors))
+              gsonDataHelper.getString(colors))
       ) {
         it.onComplete()
       } else {
@@ -317,7 +317,7 @@ class WallrDataRepository(
                     }
                     sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME,
                         CUSTOM_MINIMAL_COLOR_LIST_TAG,
-                        Gson().toJson(mutableList))
+                        gsonDataHelper.getString(mutableList))
                     Single.just(RestoreColorsModel(mutableList, map))
                   }
                 }
@@ -344,7 +344,7 @@ class WallrDataRepository(
         .fetch(firebaseDatabaseReference)
         .flatMap {
           it.values.forEach { jsonString ->
-            imageList.add(Gson().fromJson(jsonString, FirebaseImageEntity::class.java))
+            imageList.add(gsonDataHelper.getImageEntity(jsonString))
           }
           imageList.reverse()
           val image = firebasePictureEntityMapper.mapFromEntity(imageList)
@@ -367,7 +367,7 @@ class WallrDataRepository(
           }
           if (
               sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
-                  Gson().toJson(colors))) {
+                  gsonDataHelper.getString(colors))) {
             sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME,
                 CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG,
                 true)

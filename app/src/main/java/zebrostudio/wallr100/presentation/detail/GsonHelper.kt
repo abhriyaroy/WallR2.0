@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.presentation.detail
 
 import com.google.gson.Gson
+import zebrostudio.wallr100.data.model.firebasedatabase.FirebaseImageEntity
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 
@@ -8,6 +9,7 @@ interface GsonHelper {
   fun convertToString(element: Any): String
   fun getSearchPicturesPresenterEntity(string: String): SearchPicturesPresenterEntity
   fun getImagePresenterEntity(string: String): ImagePresenterEntity
+
 }
 
 class GsonHelperImpl : GsonHelper {
