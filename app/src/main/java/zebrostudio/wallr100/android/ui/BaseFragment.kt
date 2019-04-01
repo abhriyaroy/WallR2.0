@@ -67,31 +67,37 @@ abstract class BaseFragment : Fragment(), BaseView {
   }
 
   private fun showToolbarMenuIcon() {
-    activity?.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.gone()
-    activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.gone()
-    when (fragmentTag) {
-      stringRes(R.string.minimal_fragment_tag) ->
-        activity?.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.visible()
-      stringRes(R.string.collection_fragment_tag) -> {  // Do nothing
+    activity?.let {
+      it.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.gone()
+      it.findViewById<ImageView>(R.id.toolbarSearchIcon)?.gone()
+      when (fragmentTag) {
+        stringRes(R.string.minimal_fragment_tag) ->
+          it.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.visible()
+        stringRes(R.string.collection_fragment_tag) -> {  // Do nothing
+        }
+        else -> it.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visible()
       }
-      else -> activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visible()
     }
   }
 
   private fun configureTabs() {
-    if (fragmentTag == stringRes(R.string.categories_fragment_tag) ||
-        fragmentTag == stringRes(R.string.top_picks_fragment_tag)) {
-      activity?.findViewById<SmartTabLayout>(R.id.tabLayout)?.visible()
-    } else {
-      activity?.findViewById<SmartTabLayout>(R.id.tabLayout)?.gone()
+    activity?.let {
+      if (fragmentTag == stringRes(R.string.categories_fragment_tag) ||
+          fragmentTag == stringRes(R.string.top_picks_fragment_tag)) {
+        it.findViewById<SmartTabLayout>(R.id.tabLayout)?.visible()
+      } else {
+        it.findViewById<SmartTabLayout>(R.id.tabLayout)?.gone()
+      }
     }
   }
 
   private fun hideBottomLayout() {
-    activity?.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.invisible()
-    activity?.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.isClickable = false
-    activity?.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.invisible()
-    activity?.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.isClickable = false
+    activity?.let {
+      it.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.invisible()
+      it.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.isClickable = false
+      it.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.invisible()
+      it.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.isClickable = false
+    }
   }
 
   override fun getScope(): ScopeProvider {

@@ -9,8 +9,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.TextView
 import android.widget.Toast
 import com.afollestad.dragselectrecyclerview.DragSelectTouchListener
@@ -37,6 +35,7 @@ import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.infoToast
 import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.menuTitleToast
+import zebrostudio.wallr100.android.utils.showAnimation
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
@@ -80,7 +79,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun showAppBar() {
-    activity!!.findViewById<AppBarLayout>(R.id.appbar).setExpanded(true, true)
+    activity?.findViewById<AppBarLayout>(R.id.appbar)?.setExpanded(true, true)
   }
 
   override fun updateAllItems() {
@@ -138,93 +137,41 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun showBottomPanelWithAnimation() {
-    AnimationUtils.loadAnimation(context, R.anim.slide_up).apply {
-      fillAfter = true
-      setAnimationListener(object : Animation.AnimationListener {
-        override fun onAnimationRepeat(animation: Animation) {
-
-        }
-
-        override fun onAnimationEnd(animation: Animation) {
-          activity?.spinner?.isEnabled = true
-          activity?.minimalBottomLayout?.apply {
-            visible()
-            isClickable = true
-          }
-        }
-
-        override fun onAnimationStart(animation: Animation) {
-
+    activity?.let {
+      it.minimalBottomLayout?.showAnimation(R.anim.slide_up, onAnimationEnd = {
+        it.spinner?.isEnabled = true
+        it.minimalBottomLayout?.apply {
+          visible()
+          isClickable = true
         }
       })
-    }.let {
-      activity?.minimalBottomLayout?.startAnimation(it)
-    }
 
-    AnimationUtils.loadAnimation(context, R.anim.grow_circular_reveal).apply {
-      fillAfter = true
-      setAnimationListener(object : Animation.AnimationListener {
-        override fun onAnimationRepeat(animation: Animation) {
-
-        }
-
-        override fun onAnimationEnd(animation: Animation) {
-          activity?.minimalBottomLayoutFab?.apply {
-            visible()
-            isClickable = true
-          }
-        }
-
-        override fun onAnimationStart(animation: Animation) {
-          activity?.minimalBottomLayoutFab?.isClickable = true
+      it.minimalBottomLayoutFab?.showAnimation(R.anim.grow_circular_reveal, onAnimationEnd = {
+        it.minimalBottomLayoutFab?.apply {
+          visible()
+          isClickable = true
         }
       })
-    }.let {
-      activity?.minimalBottomLayoutFab?.startAnimation(it)
     }
+
   }
 
   override fun hideBottomLayoutWithAnimation() {
-    AnimationUtils.loadAnimation(context, R.anim.slide_down).apply {
-      fillAfter = true
-      setAnimationListener(object : Animation.AnimationListener {
-        override fun onAnimationRepeat(animation: Animation) {
-
-        }
-
-        override fun onAnimationEnd(animation: Animation) {
-          activity?.spinner?.isEnabled = false
-          activity?.minimalBottomLayout?.gone()
-        }
-
-        override fun onAnimationStart(animation: Animation) {
-          activity?.minimalBottomLayout?.isClickable = false
-        }
+    activity?.let {
+      it.minimalBottomLayout?.showAnimation(R.anim.slide_down, onAnimationStart = {
+        it.minimalBottomLayout?.isClickable = false
+      }, onAnimationEnd = {
+        it.spinner?.isEnabled = false
+        it.minimalBottomLayout?.gone()
       })
-    }.let {
-      activity?.minimalBottomLayout?.startAnimation(it)
-    }
 
-    AnimationUtils.loadAnimation(context, R.anim.shrink_reverse_circular_reveal).apply {
-      fillAfter = true
-      setAnimationListener(object : Animation.AnimationListener {
-        override fun onAnimationRepeat(animation: Animation) {
-
-        }
-
-        override fun onAnimationEnd(animation: Animation) {
-          activity?.minimalBottomLayoutFab?.apply {
-            gone()
-            isClickable = false
-          }
-        }
-
-        override fun onAnimationStart(animation: Animation) {
-
-        }
-      })
-    }.let {
-      activity?.minimalBottomLayoutFab?.startAnimation(it)
+      it.minimalBottomLayoutFab?.showAnimation(R.anim.shrink_reverse_circular_reveal,
+          onAnimationEnd = {
+            it.minimalBottomLayoutFab?.apply {
+              gone()
+              isClickable = false
+            }
+          })
     }
   }
 
