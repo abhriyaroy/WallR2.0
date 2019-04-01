@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.activity_main.rootFrameLayout
 import kotlinx.android.synthetic.main.activity_main.toolbar
 import kotlinx.android.synthetic.main.guillotine_menu_layout.rootLinearLayoutGuillotineMenu
 import kotlinx.android.synthetic.main.guillotine_menu_layout.view.hamburgerGuillotineMenu
+import kotlinx.android.synthetic.main.guillotine_menu_layout.view.proBadgeGuillotineMenu
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.imageviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.textviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
@@ -46,6 +47,7 @@ import zebrostudio.wallr100.android.utils.drawableRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.infoToast
+import zebrostudio.wallr100.android.utils.menuTitleToast
 import zebrostudio.wallr100.android.utils.setOnDebouncedClickListener
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.withDelayOnMain
@@ -226,6 +228,9 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
       val guillotineMenuItemView = layoutInflater
           .inflate(R.layout.item_guillotine_menu, null)
       rootLinearLayoutGuillotineMenu?.addView(guillotineMenuItemView)
+      if (presenter.shouldShowPurchaseOption()) {
+        rootLinearLayoutGuillotineMenu.proBadgeGuillotineMenu.gone()
+      }
       with(guillotineMenuItemView) {
         id = it.first
         textviewGuillotineMenuItem.text = stringRes(it.first)
@@ -233,11 +238,13 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
       }
       // Make the background white and text color black for the buy pro guillotine menu item
       if (!itemIterator.hasNext()) {
-        guillotineMenuItemView.setBackgroundColor(colorRes(R.color.white))
-        guillotineMenuItemView.textviewGuillotineMenuItem
-            .setTextColor(colorRes(R.color.black))
-        if (!presenter.shouldShowPurchaseOption()) {
-          guillotineMenuItemView.gone()
+        guillotineMenuItemView.apply {
+          setBackgroundColor(colorRes(R.color.white))
+          textviewGuillotineMenuItem
+              .setTextColor(colorRes(R.color.black))
+          if (!presenter.shouldShowPurchaseOption()) {
+            gone()
+          }
         }
         buyProMenuItem = guillotineMenuItemView
       }
@@ -304,7 +311,8 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
       emailIntent.putExtra(Intent.EXTRA_SUBJECT,
           "Feedback/Report about WallR  $emailSubject")
       try {
-        startActivityForResult(Intent.createChooser(emailIntent, "Contact using"), 0)
+        startActivityForResult(Intent.createChooser(emailIntent,
+            stringRes(R.string.main_activity_feedback_contact_using_message)), 0)
       } catch (e: ActivityNotFoundException) {
         errorToast(stringRes(R.string.main_activity_no_email_client_error))
       }
@@ -312,14 +320,26 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
   }
 
   private fun attachToolbarItemClickListeners() {
-    toolbarSearchIcon.setOnClickListener {
-      val searchActivityIntent = Intent(this, SearchActivity::class.java)
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, it,
-            stringRes(R.string.search_view_transition_name))
-        startActivity(searchActivityIntent, options.toBundle())
-      } else {
-        startActivity(searchActivityIntent)
+    toolbarSearchIcon.let { searchIcon ->
+      searchIcon.setOnClickListener {
+        val searchActivityIntent = Intent(this, SearchActivity::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+          val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, it,
+              stringRes(R.string.search_view_transition_name))
+          startActivity(searchActivityIntent, options.toBundle())
+        } else {
+          startActivity(searchActivityIntent)
+        }
+      }
+
+      searchIcon.setOnLongClickListener { view ->
+        Toast.makeText(this,
+            stringRes(R.string.minimal_fragment_toolbar_menu_multiselect_title), Toast.LENGTH_SHORT)
+            .let {
+              view.menuTitleToast(this, it, window)
+              it.show()
+              true
+            }
       }
     }
   }

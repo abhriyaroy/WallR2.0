@@ -40,8 +40,11 @@ fun View.visible() {
 }
 
 fun View.menuTitleToast(
-  toast: Toast, window: Window, offsetX: Int,
-  offsetY: Int
+  context: Context,
+  toast: Toast,
+  window: Window,
+  offsetX: Int = context.getDimensionInPixelSize(R.dimen.toolbar_menu_toast_x_axis_offset),
+  offsetY: Int = context.getDimensionInPixelSize(R.dimen.toolbar_menu_toast_y_axis_offset)
 ) {
   Rect().let { rect ->
     window.decorView.getWindowVisibleDisplayFrame(rect)

@@ -11,7 +11,7 @@ import es.dmoral.toasty.Toasty
 
 fun Context.stringRes(@StringRes id: Int) = getString(id)!!
 
-fun Context.stringRes(@StringRes id: Int, value: Int) = getString(id,value)!!
+fun Context.stringRes(@StringRes id: Int, value: Int) = getString(id, value)!!
 
 fun Context.integerRes(@IntegerRes id: Int) = resources.getInteger(id)
 
@@ -37,3 +37,5 @@ fun Context.checkDataConnection(): Boolean {
   val activeNetworkInfo = connectivityManager?.activeNetworkInfo
   return activeNetworkInfo != null && activeNetworkInfo.isConnected
 }
+
+fun Context.getDimensionInPixelSize(id: Int) = resources.getDimensionPixelSize(id)

@@ -299,7 +299,7 @@ class WallrDataRepository(
     colors: List<String>,
     selectedIndicesMap: HashMap<Int, String>
   ): Single<List<String>> {
-    return modifyAndCacheList(colors.toMutableList(), selectedIndicesMap)
+    return modifyAndSaveList(colors.toMutableList(), selectedIndicesMap)
         .subscribeOn(executionThread.computationScheduler)
   }
 
@@ -353,7 +353,7 @@ class WallrDataRepository(
         .timeout(FIREBASE_TIMEOUT_DURATION.toLong(), SECONDS)
   }
 
-  private fun modifyAndCacheList(
+  private fun modifyAndSaveList(
     colors: MutableList<String>,
     selectedIndicesMap: HashMap<Int, String>
   ): Single<List<String>> {

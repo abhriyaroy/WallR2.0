@@ -256,7 +256,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
     } else {
       stringRes(R.string.minimal_fragment_multiple_item_deletion_successful_message, size)
     }.let {
-      Snackbar.make(minimalFragmentRootLayout, it, Snackbar.LENGTH_INDEFINITE).apply {
+      Snackbar.make(minimalFragmentRootLayout, it, Snackbar.LENGTH_LONG).apply {
         setAction(context.stringRes(R.string.minimal_fragment_deletion_undo_action_text)
         ) {
           presenter.handleUndoDeletionOptionClick()
@@ -353,9 +353,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
       Toast.makeText(context,
           stringRes(R.string.minimal_fragment_toolbar_menu_multiselect_title), Toast.LENGTH_SHORT)
           .let {
-            view.menuTitleToast(it, activity!!.window,
-                resources.getDimensionPixelSize(R.dimen.toolbar_menu_toast_x_axis_offset),
-                resources.getDimensionPixelSize(R.dimen.toolbar_menu_toast_y_axis_offset))
+            view.menuTitleToast(context!!, it, activity!!.window)
             it.show()
           }
       true
