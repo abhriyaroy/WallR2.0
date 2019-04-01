@@ -299,29 +299,29 @@ class WallrDataRepository(
     colors: List<String>,
     selectedIndicesMap: HashMap<Int, String>
   ): Single<List<String>> {
-    return removeElementsFromList(colors.toMutableList(), selectedIndicesMap)
+    return modifyAndCacheList(colors.toMutableList(), selectedIndicesMap)
         .subscribeOn(executionThread.computationScheduler)
   }
 
   override fun restoreDeletedColors(): Single<RestoreColorsModel> {
+    val list = mutableListOf<String>()
     return minimalColorHelper.getCustomColors()
-        .flatMap { list ->
+        .flatMap {
+          list.clear()
+          list.addAll(it)
           minimalColorHelper.getDeletedItemsFromCache()
-              .flatMap { map ->
-                if (map.isEmpty()) {
-                  Single.error(EmptyRecentlyDeletedMapException())
-                } else {
-                  list.toMutableList().let { mutableList ->
-                    map.keys.forEach {
-                      mutableList.add(it, map[it]!!)
-                    }
-                    sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME,
-                        CUSTOM_MINIMAL_COLOR_LIST_TAG,
-                        gsonDataHelper.getString(mutableList))
-                    Single.just(RestoreColorsModel(mutableList, map))
-                  }
-                }
-              }
+        }.flatMap { map ->
+          if (map.isEmpty()) {
+            Single.error(EmptyRecentlyDeletedMapException())
+          } else {
+            map.keys.forEach {
+              list.add(it, map[it]!!)
+            }
+            sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME,
+                CUSTOM_MINIMAL_COLOR_LIST_TAG,
+                gsonDataHelper.getString(list))
+            Single.just(RestoreColorsModel(list, map))
+          }
         }
         .subscribeOn(executionThread.computationScheduler)
   }
@@ -330,15 +330,15 @@ class WallrDataRepository(
       .getReference(FIREBASE_DATABASE_PATH)
       .child(CHILD_PATH_EXPLORE)
 
-  internal fun getTopPicksNodeReference() = firebaseDatabaseHelper.getDatabase()
+  private fun getTopPicksNodeReference() = firebaseDatabaseHelper.getDatabase()
       .getReference(FIREBASE_DATABASE_PATH)
       .child(CHILD_PATH_TOP_PICKS)
 
-  internal fun getCategoriesNodeReference() = firebaseDatabaseHelper.getDatabase()
+  private fun getCategoriesNodeReference() = firebaseDatabaseHelper.getDatabase()
       .getReference(FIREBASE_DATABASE_PATH)
       .child(CHILD_PATH_CATEGORIES)
 
-  internal fun getPicturesFromFirebase(firebaseDatabaseReference: DatabaseReference): Single<List<ImageModel>> {
+  private fun getPicturesFromFirebase(firebaseDatabaseReference: DatabaseReference): Single<List<ImageModel>> {
     val imageList = mutableListOf<FirebaseImageEntity>()
     return firebaseDatabaseHelper
         .fetch(firebaseDatabaseReference)
@@ -353,29 +353,45 @@ class WallrDataRepository(
         .timeout(FIREBASE_TIMEOUT_DURATION.toLong(), SECONDS)
   }
 
-  private fun removeElementsFromList(
+  private fun modifyAndCacheList(
     colors: MutableList<String>,
     selectedIndicesMap: HashMap<Int, String>
   ): Single<List<String>> {
     return minimalColorHelper.cacheDeletedItems(selectedIndicesMap)
-        .andThen(Single.create {
-          TreeMap<Int, String>(Collections.reverseOrder()).let {
-            it.putAll(selectedIndicesMap)
-            it.keys.forEach { position ->
-              colors.removeAt(position)
-            }
-          }
-          if (
-              sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
-                  gsonDataHelper.getString(colors))) {
-            sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME,
-                CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG,
-                true)
-            it.onSuccess(colors)
-          } else {
-            it.onError(Exception())
-          }
-        })
+        .andThen(removeElementsFromList(colors, selectedIndicesMap))
+        .andThen(saveModifiedColors(colors))
+  }
+
+  private fun removeElementsFromList(
+    colors: MutableList<String>,
+    selectedIndicesMap: HashMap<Int, String>
+  ): Completable {
+    return Completable.create { emitter ->
+      TreeMap<Int, String>(Collections.reverseOrder()).let {
+        it.putAll(selectedIndicesMap)
+        it.keys.forEach { position ->
+          colors.removeAt(position)
+        }
+        emitter.onComplete()
+      }
+    }
+  }
+
+  private fun saveModifiedColors(
+    colors: List<String>
+  ): Single<List<String>> {
+    return Single.create {
+      if (
+          sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
+              gsonDataHelper.getString(colors))) {
+        sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME,
+            CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG,
+            true)
+        it.onSuccess(colors)
+      } else {
+        it.onError(Exception())
+      }
+    }
   }
 
 }

@@ -171,7 +171,7 @@
   <string name="minimal_fragment_add_color_success_message">Your color has been successfully added</string>
   <string name="minimal_fragment_exit_selection_before_adding_message">Please exit selection mode before adding new colors</string>
   <string name="minimal_fragment_single_item_deletion_successful_message">1 color deleted</string>
-  <string name="minimal_fragment_multiple_item_deletion_successful_message">%1$d color deleted</string>
+  <string name="minimal_fragment_multiple_item_deletion_successful_message">%1$d colors deleted</string>
   <string name="minimal_fragment_deletion_undo_action_text">UNDO</string>
   <string name="minimal_fragment_unable_to_restore_colors_error_message">Unable to restore deleted colors</string>
   <string name="minimal_fragment_restore_colors_success_message">Successfully restored deleted colors</string>
