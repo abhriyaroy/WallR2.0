@@ -1,7 +1,6 @@
 package zebrostudio.wallr100.presentation.detail
 
 import com.google.gson.Gson
-import zebrostudio.wallr100.data.model.firebasedatabase.FirebaseImageEntity
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 

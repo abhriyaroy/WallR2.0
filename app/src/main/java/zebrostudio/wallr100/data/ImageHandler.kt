@@ -190,7 +190,7 @@ class ImageHandlerImpl(
                 file.path,
                 details
             ))
-            databaseHelper.getDatabase().collectionsDao().getAllData().subscribe { it->
+            databaseHelper.getDatabase().collectionsDao().getAllData().subscribe { it ->
             }
           }
           inputStream.close()

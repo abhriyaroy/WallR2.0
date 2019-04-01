@@ -5,7 +5,6 @@ import android.arch.persistence.room.Delete
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
-import io.reactivex.Flowable
 import io.reactivex.Single
 import zebrostudio.wallr100.data.database.entity.CollectionDatabaseImageEntity
 import zebrostudio.wallr100.data.database.entity.TABLE_NAME
