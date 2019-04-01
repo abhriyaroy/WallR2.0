@@ -33,6 +33,8 @@
   <!-- Main activity strings -->
   <string name="main_activity_no_email_client_error">There is no email client installed</string>
   <string name="main_activity_exit_confirmation_message">Press back again to exit</string>
+  <string name="main_activity_feedback_contact_using_message">Contact using</string>
+  <string name="search_menu_title">search</string>
 
   <!-- Fragment strings -->
   <string name="fragment_unable_to_load_wallpapers_message">Oops. Unable to load wallpapers</string>
@@ -154,5 +156,26 @@
   <string name="detail_activity_image_already_crystallized_message">This image has already been crystallized</string>
   <string name="detail_activity_crystallized_download_finished_message">Your crystallized wallpaper has finished downloading</string>
   <string name="detail_activity_image_add_to_collection_success_message">Wallpaper has been added to collection!</string>
+
+  <string name="minimal_fragment_unable_to_get_colors_error_message">Unable to fetch minimal wallpapers</string>
+  <string name="menu_minimal_title_delete">Delete Wallpaper</string>
+  <string name="minimal_fragment_cab_title">%1$d Selected</string>
+  <string name="minimal_fragment_spinner_item_material">Material</string>
+  <string name="minimal_fragment_spinner_item_gradient">Gradient</string>
+  <string name="minimal_fragment_spinner_item_plasma">Plasma</string>
+  <string name="minimal_fragment_deselect_1_color_message">There should be at least 20 colors remaining after deletion. Please deselect 1 color.</string>
+  <string name="minimal_fragment_deselect_x_colors_message">There should be at least 20 colors remaining after deletion. Please deselect %1$d colors.</string>
+  <string name="minimal_fragment_delete_colors_error_message">Unable to delete colors. Please try again...</string>
+  <string name="minimal_fragment_color_picker_positive_text">SELECT</string>
+  <string name="minimal_fragment_color_picker_negative_text">CANCEL</string>
+  <string name="minimal_fragment_color_alreaady_present_error_message">This color is already present</string>
+  <string name="minimal_fragment_add_color_success_message">Your color has been successfully added</string>
+  <string name="minimal_fragment_exit_selection_before_adding_message">Please exit selection mode before adding new colors</string>
+  <string name="minimal_fragment_single_item_deletion_successful_message">1 color deleted</string>
+  <string name="minimal_fragment_multiple_item_deletion_successful_message">%1$d colors deleted</string>
+  <string name="minimal_fragment_deletion_undo_action_text">UNDO</string>
+  <string name="minimal_fragment_unable_to_restore_colors_error_message">Unable to restore deleted colors</string>
+  <string name="minimal_fragment_restore_colors_success_message">Successfully restored deleted colors</string>
+  <string name="minimal_fragment_toolbar_menu_multiselect_title">Multi-select</string>
 
 </resources>

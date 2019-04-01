@@ -32,12 +32,19 @@
   <dimen name="main_activity_tab_layout_text_size">14sp</dimen>
   <dimen name="main_activity_tab_layout_text_horizontal_padding">16dp</dimen>
   <dimen name="main_activity_tab_layout_title_offset">24dp</dimen>
+  <dimen name="main_activity_minimal_bottom_layout_height">56dp</dimen>
+  <dimen name="main_activity_material_spinner_max_height">350dp</dimen>
 
   <dimen name="overflow_menu_text_size">12sp</dimen>
   <dimen name="back_icon_width">40dp</dimen>
   <dimen name="back_icon_height">40dp</dimen>
   <dimen name="back_icon_margin_start">8dp</dimen>
   <dimen name="back_icon_margin_top">24dp</dimen>
+  <dimen name="shadow_top_height">2dp</dimen>
+  <dimen name="wallpaper_action_progress_spinkit_height">45dp</dimen>
+  <dimen name="wallpaper_action_progress_spinkit_padding">10dp</dimen>
+  <dimen name="toolbar_menu_toast_x_axis_offset">8dp</dimen>
+  <dimen name="toolbar_menu_toast_y_axis_offset">20dp</dimen>
 
   <dimen name="buy_pro_top_half_bottom_padding">8dp</dimen>
   <dimen name="buy_pro_back_button_margin_top">10dp</dimen>
@@ -94,8 +101,10 @@
   <item name="recycler_view_adapter_wallpaper_image_height" type="integer">950</item>
   <item name="recycler_view_adapter_wallpaper_image_width" type="integer">880</item>
   <item name="recycler_view_span_count" type="integer">2</item>
+  <item name="minimal_image_recycler_view_span_count" type="integer">3</item>
   <item name="recycler_view_grid_spacing_px" type="integer">5</item>
   <item name="recycler_view_grid_size" type="integer">2</item>
+  <item name="minimal_image_recycler_view_grid_size" type="integer">3</item>
   <item name="swipe_refresh_rgb_wave" type="integer">33</item>
 
   <dimen name="wallpaper_fragment_info_imageview_width">50dp</dimen>
@@ -136,8 +145,6 @@
   <dimen name="detail_activity_option_text_view_text_size">12sp</dimen>
   <dimen name="detail_activity_wallpaper_actions_bar_bottom_padding">4dp</dimen>
   <dimen name="detail_activity_wallpaper_actions_bar_bottom_margin_bottom">4dp</dimen>
-  <dimen name="wallpaper_action_progress_spinkit_height">45dp</dimen>
-  <dimen name="wallpaper_action_progress_spinkit_padding">10dp</dimen>
   <dimen name="detail_activity_loading_hint_below_progress_percentage_padding_top">2dp</dimen>
   <dimen name="detail_activity_loading_hint_below_progress_percentage_text_size">16sp</dimen>
   <dimen name="detail_activity_loading_hint_below_progress_spinkit_margin_top">4dp</dimen>
@@ -157,8 +164,12 @@
   <dimen name="detail_activity_crystallize_dialog_scrollview_padding_top">8dp</dimen>
   <dimen name="detail_activity_crystallize_dialog_scrollview_padding_left">24dp</dimen>
   <dimen name="detail_activity_crystallize_dialog_scrollview_padding_right">24dp</dimen>
+
   <dimen name="full_screen_image_spinkit_margin_bottom">24dp</dimen>
   <dimen name="full_screen_image_spinkit_margin_end">8dp</dimen>
   <dimen name="full_screen_image_spinkit_margin_start">8dp</dimen>
+  <dimen name="main_activity_fab_margin_botom">15dp</dimen>
+  <dimen name="item_recycler_minimal_fragment_add_icon_height">24dp</dimen>
+  <dimen name="item_recycler_minimal_fragment_add_icon_width">24dp</dimen>
 
 </resources>

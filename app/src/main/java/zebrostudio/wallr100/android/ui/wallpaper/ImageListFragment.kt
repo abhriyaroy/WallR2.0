@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_image_list.view.spinkitView
 import kotlinx.android.synthetic.main.fragment_image_list.view.swipeRefreshLayout
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter
-import zebrostudio.wallr100.android.utils.GridItemDecorator
+import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
 import zebrostudio.wallr100.android.utils.checkDataConnection
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
@@ -121,23 +121,23 @@ class ImageListFragment : Fragment(), ImageListView {
 
   private fun initRecyclerView() {
     val layoutManager =
-        GridLayoutManager(context, context!!.integerRes(R.integer.recycler_view_span_count))
+        GridLayoutManager(context, integerRes(R.integer.recycler_view_span_count))
     recyclerView?.layoutManager = layoutManager
     recyclerviewAdapter = ImageAdapter(imageRecyclerViewPresenter)
     val scaleInAdapter = ScaleInAnimationAdapter(recyclerviewAdapter)
     scaleInAdapter.setDuration(MILLISECONDS.toMillis(500).toInt())
     recyclerView?.addItemDecoration(
-        GridItemDecorator(context!!.integerRes(R.integer.recycler_view_grid_spacing_px),
-            context!!.integerRes(R.integer.recycler_view_grid_size)))
+        RecyclerViewItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
+            integerRes(R.integer.recycler_view_grid_size)))
     recyclerView?.adapter = scaleInAdapter
     imageRecyclerViewPresenter.setListType(WALLPAPERS)
   }
 
   private fun configureSwipeRefreshLayout() {
     swipeRefreshLayout?.setColorSchemeColors(Color.WHITE, Color.WHITE)
-    swipeRefreshLayout?.setWaveRGBColor(context!!.integerRes(R.integer.swipe_refresh_rgb_wave),
-        context!!.integerRes(R.integer.swipe_refresh_rgb_wave),
-        context!!.integerRes(R.integer.swipe_refresh_rgb_wave))
+    swipeRefreshLayout?.setWaveRGBColor(integerRes(R.integer.swipe_refresh_rgb_wave),
+        integerRes(R.integer.swipe_refresh_rgb_wave),
+        integerRes(R.integer.swipe_refresh_rgb_wave))
     if (swipeRefreshLayout?.isRefreshing == false) {
       swipeRefreshLayout?.setOnRefreshListener {
         presenter.fetchImages(true)

@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import com.getbase.floatingactionbutton.FloatingActionButton
+import com.ogaclejapan.smarttablayout.SmartTabLayout
 import com.uber.autodispose.ScopeProvider
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
@@ -15,8 +18,10 @@ import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.EXPLORE_TAG
 import zebrostudio.wallr100.android.utils.checkDataConnection
 import zebrostudio.wallr100.android.utils.gone
+import zebrostudio.wallr100.android.utils.invisible
 import zebrostudio.wallr100.android.utils.setMenuItemColorRed
 import zebrostudio.wallr100.android.utils.setMenuItemColorWhite
+import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.BaseView
 import javax.inject.Inject
@@ -47,11 +52,13 @@ abstract class BaseFragment : Fragment(), BaseView {
 
     highlightCurrentMenuItem()
     showToolbarMenuIcon()
+    configureTabs()
+    hideBottomLayout()
   }
 
   private fun highlightCurrentMenuItem() {
     for (menuItem in menuItemIdList) {
-      if (getString(menuItem) == fragmentTag) {
+      if (stringRes(menuItem) == fragmentTag) {
         activity?.findViewById<LinearLayout>(menuItem)?.setMenuItemColorRed(this.context!!)
       } else {
         activity?.findViewById<LinearLayout>(menuItem)?.setMenuItemColorWhite(this.context!!)
@@ -60,14 +67,36 @@ abstract class BaseFragment : Fragment(), BaseView {
   }
 
   private fun showToolbarMenuIcon() {
-    activity?.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.gone()
-    activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.gone()
-    when (fragmentTag) {
-      getString(R.string.minimal_fragment_tag) ->
-        activity?.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.visible()
-      getString(R.string.collection_fragment_tag) -> {  // Do nothing
+    activity?.let {
+      it.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.gone()
+      it.findViewById<ImageView>(R.id.toolbarSearchIcon)?.gone()
+      when (fragmentTag) {
+        stringRes(R.string.minimal_fragment_tag) ->
+          it.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.visible()
+        stringRes(R.string.collection_fragment_tag) -> {  // Do nothing
+        }
+        else -> it.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visible()
       }
-      else -> activity?.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visible()
+    }
+  }
+
+  private fun configureTabs() {
+    activity?.let {
+      if (fragmentTag == stringRes(R.string.categories_fragment_tag) ||
+          fragmentTag == stringRes(R.string.top_picks_fragment_tag)) {
+        it.findViewById<SmartTabLayout>(R.id.tabLayout)?.visible()
+      } else {
+        it.findViewById<SmartTabLayout>(R.id.tabLayout)?.gone()
+      }
+    }
+  }
+
+  private fun hideBottomLayout() {
+    activity?.let {
+      it.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.invisible()
+      it.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.isClickable = false
+      it.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.invisible()
+      it.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.isClickable = false
     }
   }
 

@@ -3,7 +3,6 @@ package zebrostudio.wallr100.data
 import android.graphics.Bitmap
 import android.net.Uri
 import com.google.firebase.database.DatabaseReference
-import com.google.gson.Gson
 import com.pddstudio.urlshortener.URLShortener
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -11,6 +10,7 @@ import io.reactivex.Single
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
+import zebrostudio.wallr100.data.exception.EmptyRecentlyDeletedMapException
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.NotEnoughFreeSpaceException
@@ -21,9 +21,12 @@ import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.firebasedatabase.FirebaseImageEntity
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.ExecutionThread
+import zebrostudio.wallr100.domain.model.RestoreColorsModel
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
+import java.util.Collections
+import java.util.TreeMap
 import java.util.concurrent.TimeUnit.SECONDS
 
 const val SUCCESS_STATUS = "success"
@@ -32,6 +35,8 @@ const val PURCHASE_PREFERENCE_NAME = "PURCHASE_PREF"
 const val PREMIUM_USER_TAG = "premium_user"
 const val IMAGE_PREFERENCE_NAME = "IMAGE_PREF"
 const val CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG = "crystallize_click_dialog"
+const val CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG = "custom_minimal_color_list_availability"
+const val CUSTOM_MINIMAL_COLOR_LIST_TAG = "custom_solid_color_list"
 const val UNABLE_TO_RESOLVE_HOST_EXCEPTION_MESSAGE = "Unable to resolve host " +
     "\"api.unsplash.com\": No address associated with hostname"
 const val FIREBASE_DATABASE_PATH = "wallr"
@@ -55,6 +60,7 @@ class WallrDataRepository(
   private val retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
   private val unsplashClientFactory: UnsplashClientFactory,
   private val sharedPrefsHelper: SharedPrefsHelper,
+  private val gsonDataHelper: GsonDataHelper,
   private val unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
   private val firebaseDatabaseHelper: FirebaseDatabaseHelper,
   private val firebasePictureEntityMapper: FirebasePictureEntityMapper,
@@ -62,6 +68,7 @@ class WallrDataRepository(
   private val imageHandler: ImageHandler,
   private val fileHandler: FileHandler,
   private val downloadHelper: DownloadHelper,
+  private val minimalColorHelper: MinimalColorHelper,
   private val executionThread: ExecutionThread
 ) : WallrRepository {
 
@@ -148,6 +155,7 @@ class WallrDataRepository(
   override fun getNaturePictures(): Single<List<ImageModel>> {
     return getPicturesFromFirebase(getCategoriesNodeReference()
         .child(CHILD_PATH_NATURE))
+        .subscribeOn(executionThread.ioScheduler)
   }
 
   override fun getObjectsPictures(): Single<List<ImageModel>> {
@@ -259,31 +267,131 @@ class WallrDataRepository(
         .subscribeOn(executionThread.computationScheduler)
   }
 
+  override fun isCustomMinimalColorListPresent(): Boolean {
+    return sharedPrefsHelper.getBoolean(IMAGE_PREFERENCE_NAME,
+        CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG, false)
+  }
+
+  override fun getCustomMinimalColorList(): Single<List<String>> {
+    return minimalColorHelper.getCustomColors()
+        .subscribeOn(executionThread.ioScheduler)
+  }
+
+  override fun getDefaultMinimalColorList(): Single<List<String>> {
+    return minimalColorHelper.getDefaultColors()
+        .subscribeOn(executionThread.ioScheduler)
+  }
+
+  override fun saveCustomMinimalColorList(colors: List<String>): Completable {
+    return Completable.create {
+      if (
+          sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
+              gsonDataHelper.getString(colors))
+      ) {
+        it.onComplete()
+      } else {
+        it.onError(Exception())
+      }
+    }.subscribeOn(executionThread.ioScheduler)
+  }
+
+  override fun modifyColorList(
+    colors: List<String>,
+    selectedIndicesMap: HashMap<Int, String>
+  ): Single<List<String>> {
+    return modifyAndSaveList(colors.toMutableList(), selectedIndicesMap)
+        .subscribeOn(executionThread.computationScheduler)
+  }
+
+  override fun restoreDeletedColors(): Single<RestoreColorsModel> {
+    val list = mutableListOf<String>()
+    return minimalColorHelper.getCustomColors()
+        .flatMap {
+          list.clear()
+          list.addAll(it)
+          minimalColorHelper.getDeletedItemsFromCache()
+        }.flatMap { map ->
+          if (map.isEmpty()) {
+            Single.error(EmptyRecentlyDeletedMapException())
+          } else {
+            map.keys.forEach {
+              list.add(it, map[it]!!)
+            }
+            sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME,
+                CUSTOM_MINIMAL_COLOR_LIST_TAG,
+                gsonDataHelper.getString(list))
+            Single.just(RestoreColorsModel(list, map))
+          }
+        }
+        .subscribeOn(executionThread.computationScheduler)
+  }
+
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()
       .getReference(FIREBASE_DATABASE_PATH)
       .child(CHILD_PATH_EXPLORE)
 
-  internal fun getTopPicksNodeReference() = firebaseDatabaseHelper.getDatabase()
+  private fun getTopPicksNodeReference() = firebaseDatabaseHelper.getDatabase()
       .getReference(FIREBASE_DATABASE_PATH)
       .child(CHILD_PATH_TOP_PICKS)
 
-  internal fun getCategoriesNodeReference() = firebaseDatabaseHelper.getDatabase()
+  private fun getCategoriesNodeReference() = firebaseDatabaseHelper.getDatabase()
       .getReference(FIREBASE_DATABASE_PATH)
       .child(CHILD_PATH_CATEGORIES)
 
-  internal fun getPicturesFromFirebase(firebaseDatabaseReference: DatabaseReference): Single<List<ImageModel>> {
+  private fun getPicturesFromFirebase(firebaseDatabaseReference: DatabaseReference): Single<List<ImageModel>> {
     val imageList = mutableListOf<FirebaseImageEntity>()
     return firebaseDatabaseHelper
         .fetch(firebaseDatabaseReference)
         .flatMap {
           it.values.forEach { jsonString ->
-            imageList.add(Gson().fromJson(jsonString, FirebaseImageEntity::class.java))
+            imageList.add(gsonDataHelper.getImageEntity(jsonString))
           }
           imageList.reverse()
           val image = firebasePictureEntityMapper.mapFromEntity(imageList)
           Single.just(image)
         }
         .timeout(FIREBASE_TIMEOUT_DURATION.toLong(), SECONDS)
+  }
+
+  private fun modifyAndSaveList(
+    colors: MutableList<String>,
+    selectedIndicesMap: HashMap<Int, String>
+  ): Single<List<String>> {
+    return minimalColorHelper.cacheDeletedItems(selectedIndicesMap)
+        .andThen(removeElementsFromList(colors, selectedIndicesMap))
+        .andThen(saveModifiedColors(colors))
+  }
+
+  private fun removeElementsFromList(
+    colors: MutableList<String>,
+    selectedIndicesMap: HashMap<Int, String>
+  ): Completable {
+    return Completable.create { emitter ->
+      TreeMap<Int, String>(Collections.reverseOrder()).let {
+        it.putAll(selectedIndicesMap)
+        it.keys.forEach { position ->
+          colors.removeAt(position)
+        }
+        emitter.onComplete()
+      }
+    }
+  }
+
+  private fun saveModifiedColors(
+    colors: List<String>
+  ): Single<List<String>> {
+    return Single.create {
+      if (
+          sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
+              gsonDataHelper.getString(colors))) {
+        sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME,
+            CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG,
+            true)
+        it.onSuccess(colors)
+      } else {
+        it.onError(Exception())
+      }
+    }
   }
 
 }

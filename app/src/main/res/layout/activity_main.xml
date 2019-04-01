@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootFrameLayout"
     android:layout_width="match_parent"
@@ -69,11 +70,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <ViewStub
-        android:id="@+id/cabStub"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"/>
-
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
@@ -82,5 +78,55 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
   </android.support.design.widget.CoordinatorLayout>
+
+  <RelativeLayout
+      android:id="@+id/minimalBottomLayout"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/main_activity_minimal_bottom_layout_height"
+      android:layout_gravity="bottom">
+
+    <View
+        android:id="@+id/shadow_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_top_height"
+        android:background="@drawable/shadow_top"
+        android:layout_alignParentTop="true"/>
+
+    <android.support.percent.PercentRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/shadow_spinner"
+        android:background="@color/primary_dark">
+
+      <com.jaredrummler.materialspinner.MaterialSpinner
+          android:id="@+id/spinner"
+          android:layout_height="wrap_content"
+          app:layout_widthPercent="35%"
+          app:ms_dropdown_max_height="@dimen/main_activity_material_spinner_max_height"
+          app:ms_dropdown_height="wrap_content"
+          app:ms_background_color="@color/primary_dark"/>
+
+      <View
+          android:id="@+id/spinnerStubView"
+          app:layout_widthPercent="25%"
+          android:clickable="false"/>
+
+    </android.support.percent.PercentRelativeLayout>
+
+  </RelativeLayout>
+
+  <com.getbase.floatingactionbutton.FloatingActionButton
+      android:id="@+id/minimalBottomLayoutFab"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="11dp"
+      fab:fab_colorNormal="@color/accent"
+      fab:fab_colorPressed="@color/fab_ripple"
+      fab:fab_icon="@drawable/ic_arrow_forward_white_small"
+      android:layout_gravity="bottom|end"
+      android:layout_marginBottom="@dimen/main_activity_fab_margin_botom"
+      android:elevation="8dp"
+      android:visibility="visible"/>
 
 </FrameLayout>

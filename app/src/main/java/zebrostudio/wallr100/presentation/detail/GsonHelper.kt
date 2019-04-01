@@ -8,6 +8,7 @@ interface GsonHelper {
   fun convertToString(element: Any): String
   fun getSearchPicturesPresenterEntity(string: String): SearchPicturesPresenterEntity
   fun getImagePresenterEntity(string: String): ImagePresenterEntity
+
 }
 
 class GsonHelperImpl : GsonHelper {

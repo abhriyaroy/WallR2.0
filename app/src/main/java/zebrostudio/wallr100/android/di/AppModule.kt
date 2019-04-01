@@ -8,7 +8,6 @@ import dagger.Module
 import dagger.Provides
 import zebrostudio.wallr100.android.AndroidBackgroundThreads
 import zebrostudio.wallr100.android.AndroidMainThread
-import zebrostudio.wallr100.android.di.scopes.PerApplication
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcherImpl
 import zebrostudio.wallr100.android.utils.ResourceUtils
@@ -21,8 +20,12 @@ import zebrostudio.wallr100.data.FileHandler
 import zebrostudio.wallr100.data.FileHandlerImpl
 import zebrostudio.wallr100.data.FirebaseDatabaseHelper
 import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl
+import zebrostudio.wallr100.data.GsonDataHelper
+import zebrostudio.wallr100.data.GsonDataHelperImpl
 import zebrostudio.wallr100.data.ImageHandler
 import zebrostudio.wallr100.data.ImageHandlerImpl
+import zebrostudio.wallr100.data.MinimalColorHelper
+import zebrostudio.wallr100.data.MinimalColorsHelperImpl
 import zebrostudio.wallr100.data.SharedPrefsHelper
 import zebrostudio.wallr100.data.SharedPrefsHelperImpl
 import zebrostudio.wallr100.data.WallrDataRepository
@@ -41,68 +44,84 @@ import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseInteractor
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.domain.interactor.ImageOptionsInteractor
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
+import zebrostudio.wallr100.domain.interactor.MinimalImagesInteractor
+import zebrostudio.wallr100.domain.interactor.MinimalImagesUseCase
 import zebrostudio.wallr100.domain.interactor.SearchPicturesInteractor
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusInteractor
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesInteractor
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
+import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.DragSelectItemPresenter
+import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerIPresenterImpl
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
 import zebrostudio.wallr100.presentation.detail.GsonHelper
 import zebrostudio.wallr100.presentation.detail.GsonHelperImpl
+import javax.inject.Singleton
 
 @Module
 class AppModule {
 
   @Provides
-  @PerApplication
+  @Singleton
   fun provideContext(application: Application): Context {
     return application
   }
 
   @Provides
-  @PerApplication
+  @Singleton
   fun provideResourceUtils(context: Context): ResourceUtils = ResourceUtilsImpl(context)
 
   @Provides
-  @PerApplication
+  @Singleton
   fun provideFragmentTag(resourceUtils: ResourceUtils): FragmentNameTagFetcher = FragmentNameTagFetcherImpl(
       resourceUtils)
 
   @Provides
-  @PerApplication
+  @Singleton
   fun provideSharedPrefsHelper(context: Context): SharedPrefsHelper = SharedPrefsHelperImpl(context)
 
   @Provides
-  @PerApplication
+  @Singleton
   fun providesDatabaseHelper(context: Context): DatabaseHelper =
       DatabaseHelperImpl(context)
 
   @Provides
-  @PerApplication
+  @Singleton
   fun provideFirebaseDatabaseHelper(context: Context): FirebaseDatabaseHelper =
       FirebaseDatabaseHelperImpl(context)
 
   @Provides
-  @PerApplication
+  @Singleton
+  fun provideMinimalColorHelper(
+    context: Context,
+    sharedPrefsHelper: SharedPrefsHelper
+  ): MinimalColorHelper = MinimalColorsHelperImpl(context, sharedPrefsHelper)
+
+  @Provides
+  @Singleton
+  fun provideGsonDataHelper(): GsonDataHelper = GsonDataHelperImpl()
+
+  @Provides
+  @Singleton
   fun provideAndroidMainThread(): PostExecutionThread = AndroidMainThread()
 
   @Provides
-  @PerApplication
+  @Singleton
   fun provideAndroidBackgroundThread(): ExecutionThread = AndroidBackgroundThreads()
 
   @Provides
-  @PerApplication
+  @Singleton
   fun providesGsonHelper(): GsonHelper = GsonHelperImpl()
 
   @Provides
-  @PerApplication
+  @Singleton
   fun provideRemoteAuthServiceFactory(): RemoteAuthServiceFactory =
       RemoteAuthServiceFactoryImpl()
 
   @Provides
-  @PerApplication
+  @Singleton
   fun provideUnsplashClientFactory(): UnsplashClientFactory = UnsplashClientFactoryImpl()
 
   @Provides
@@ -134,11 +153,12 @@ class AppModule {
   ): ImageHandler = ImageHandlerImpl(context, fileHandler, databaseHelper)
 
   @Provides
-  @PerApplication
+  @Singleton
   fun provideWallrRepository(
     retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
     unsplashClientFactory: UnsplashClientFactory,
     sharedPrefsHelper: SharedPrefsHelper,
+    gsonDataHelper: GsonDataHelper,
     unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
     firebaseDatabaseHelper: FirebaseDatabaseHelper,
     firebasePictureEntityMapper: FirebasePictureEntityMapper,
@@ -146,10 +166,12 @@ class AppModule {
     imageHandler: ImageHandler,
     fileHandler: FileHandler,
     downloadHelper: DownloadHelper,
+    minimalColorHelper: MinimalColorHelper,
     executionThread: ExecutionThread
   ): WallrRepository = WallrDataRepository(retrofitFirebaseAuthFactory,
       unsplashClientFactory,
       sharedPrefsHelper,
+      gsonDataHelper,
       unsplashPictureEntityMapper,
       firebaseDatabaseHelper,
       firebasePictureEntityMapper,
@@ -157,22 +179,23 @@ class AppModule {
       imageHandler,
       fileHandler,
       downloadHelper,
+      minimalColorHelper,
       executionThread)
 
   @Provides
-  @PerApplication
+  @Singleton
   fun provideAuthenticatePurchaseUseCase(
     wallrRepository: WallrRepository
   ): AuthenticatePurchaseUseCase = AuthenticatePurchaseInteractor(wallrRepository)
 
   @Provides
-  @PerApplication
+  @Singleton
   fun provideUserPremiumStatusUseCase(
     wallrRepository: WallrRepository
   ): UserPremiumStatusUseCase = UserPremiumStatusInteractor(wallrRepository)
 
   @Provides
-  @PerApplication
+  @Singleton
   fun provideSearchPicturesUseCase(
     wallrRepository: WallrRepository
   ): SearchPicturesUseCase = SearchPicturesInteractor(wallrRepository)
@@ -188,7 +211,15 @@ class AppModule {
   ): ImageOptionsUseCase = ImageOptionsInteractor(wallrRepository)
 
   @Provides
+  fun provideMinimalImagesUseCase(
+    wallrRepository: WallrRepository
+  ): MinimalImagesUseCase = MinimalImagesInteractor(wallrRepository)
+
+  @Provides
   fun provideImageRecyclerViewPresenter()
       : ImageRecyclerItemContract.ImageRecyclerViewPresenter = ImageRecyclerViewPresenterImpl()
+
+  @Provides
+  fun provideDragSelectRecyclerItemPresenter(): DragSelectItemPresenter = DragSelectRecyclerIPresenterImpl()
 
 }

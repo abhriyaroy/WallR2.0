@@ -5,6 +5,7 @@ import android.net.Uri
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import zebrostudio.wallr100.domain.model.RestoreColorsModel
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
@@ -51,5 +52,16 @@ interface WallrRepository {
   fun checkIfDownloadIsInProgress(link: String): Boolean
 
   fun saveImageToCollections(type: Int, details: String): Completable
+
+  fun isCustomMinimalColorListPresent(): Boolean
+  fun getCustomMinimalColorList(): Single<List<String>>
+  fun getDefaultMinimalColorList(): Single<List<String>>
+  fun saveCustomMinimalColorList(colors: List<String>): Completable
+  fun modifyColorList(
+    colors: List<String>,
+    selectedIndicesMap: HashMap<Int, String>
+  ): Single<List<String>>
+
+  fun restoreDeletedColors(): Single<RestoreColorsModel>
 
 }

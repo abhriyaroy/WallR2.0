@@ -9,6 +9,6 @@ interface ResourceUtils {
 
 class ResourceUtilsImpl(private val context: Context) : ResourceUtils {
 
-  override fun getStringResource(@StringRes id: Int) = context.getString(id)
+  override fun getStringResource(@StringRes id: Int) = context.getString(id)!!
 
 }
