@@ -306,26 +306,28 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   private fun initRecyclerView() {
-    GridLayoutManager(context,
-        integerRes(R.integer.minimal_image_recycler_view_span_count)).let {
-      minimalFragmentRecyclerView.layoutManager = it
-    }
-    minimalFragmentRecyclerView.addItemDecoration(
-        RecyclerViewItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
-            integerRes(R.integer.minimal_image_recycler_view_grid_size)))
-    dragSelectImageAdapter =
-        DragSelectImageAdapter(getDragSelectRecyclerViewCallback(), recyclerPresenter)
-    minimalFragmentRecyclerView.adapter = dragSelectImageAdapter
-    touchListener = DragSelectTouchListener.create(context!!, dragSelectImageAdapter!!) {
-      this.mode = RANGE
-    }
-    minimalFragmentRecyclerView.addOnItemTouchListener(touchListener!!)
-    minimalFragmentRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-      override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-        super.onScrolled(recyclerView, dx, dy)
-        presenter.handleOnScrolled(dy)
+    minimalFragmentRecyclerView?.apply {
+      GridLayoutManager(context,
+          integerRes(R.integer.minimal_image_recycler_view_span_count)).let {
+        layoutManager = it
       }
-    })
+      addItemDecoration(
+          RecyclerViewItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
+              integerRes(R.integer.minimal_image_recycler_view_grid_size)))
+      dragSelectImageAdapter =
+          DragSelectImageAdapter(getDragSelectRecyclerViewCallback(), recyclerPresenter)
+      adapter = dragSelectImageAdapter
+      touchListener = DragSelectTouchListener.create(context!!, dragSelectImageAdapter!!) {
+        this.mode = RANGE
+      }
+      addOnItemTouchListener(touchListener!!)
+      addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+          super.onScrolled(recyclerView, dx, dy)
+          presenter.handleOnScrolled(dy)
+        }
+      })
+    }
   }
 
   private fun initBottomPanel() {
