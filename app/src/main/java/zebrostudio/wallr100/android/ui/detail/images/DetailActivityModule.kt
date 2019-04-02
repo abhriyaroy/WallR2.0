@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.android.ui.detail
+package zebrostudio.wallr100.android.ui.detail.images
 
 import android.content.Context
 import dagger.Module
@@ -7,10 +7,10 @@ import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
-import zebrostudio.wallr100.presentation.detail.DetailContract
-import zebrostudio.wallr100.presentation.detail.DetailPresenterImpl
-import zebrostudio.wallr100.presentation.detail.GsonHelper
-import zebrostudio.wallr100.presentation.detail.mapper.ImageDownloadPresenterEntityMapper
+import zebrostudio.wallr100.presentation.detail.images.DetailContract
+import zebrostudio.wallr100.presentation.detail.images.DetailPresenterImpl
+import zebrostudio.wallr100.android.utils.GsonProvider
+import zebrostudio.wallr100.presentation.detail.images.mapper.ImageDownloadPresenterEntityMapper
 
 @Module
 class DetailActivityModule {
@@ -27,8 +27,9 @@ class DetailActivityModule {
     wallpaperSetter: WallpaperSetter,
     postExecutionThread: PostExecutionThread,
     imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper,
-    gsonHelper: GsonHelper
-  ): DetailContract.DetailPresenter = DetailPresenterImpl(context,
+    gsonHelper: GsonProvider
+  ): DetailContract.DetailPresenter = DetailPresenterImpl(
+      context,
       imageOptionsUseCase,
       userPremiumStatusUseCase,
       wallpaperSetter,

@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.presentation.detail
+package zebrostudio.wallr100.presentation.detail.images
 
 import android.app.Activity.RESULT_OK
 import android.content.Context
@@ -13,7 +13,8 @@ import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
-import zebrostudio.wallr100.android.ui.detail.DetailActivity
+import zebrostudio.wallr100.android.ui.detail.images.DetailActivity
+import zebrostudio.wallr100.android.utils.GsonProvider
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.data.exception.ImageDownloadException
@@ -23,14 +24,14 @@ import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
-import zebrostudio.wallr100.presentation.detail.ActionType.ADD_TO_COLLECTION
-import zebrostudio.wallr100.presentation.detail.ActionType.CRYSTALLIZE
-import zebrostudio.wallr100.presentation.detail.ActionType.DOWNLOAD
-import zebrostudio.wallr100.presentation.detail.ActionType.EDIT_SET
-import zebrostudio.wallr100.presentation.detail.ActionType.QUICK_SET
-import zebrostudio.wallr100.presentation.detail.ActionType.SHARE
-import zebrostudio.wallr100.presentation.detail.mapper.ImageDownloadPresenterEntityMapper
-import zebrostudio.wallr100.presentation.detail.model.ImageDownloadPresenterEntity
+import zebrostudio.wallr100.presentation.detail.images.ActionType.ADD_TO_COLLECTION
+import zebrostudio.wallr100.presentation.detail.images.ActionType.CRYSTALLIZE
+import zebrostudio.wallr100.presentation.detail.images.ActionType.DOWNLOAD
+import zebrostudio.wallr100.presentation.detail.images.ActionType.EDIT_SET
+import zebrostudio.wallr100.presentation.detail.images.ActionType.QUICK_SET
+import zebrostudio.wallr100.presentation.detail.images.ActionType.SHARE
+import zebrostudio.wallr100.presentation.detail.images.mapper.ImageDownloadPresenterEntityMapper
+import zebrostudio.wallr100.presentation.detail.images.model.ImageDownloadPresenterEntity
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 
@@ -45,7 +46,7 @@ class DetailPresenterImpl(
   private val wallpaperSetter: WallpaperSetter,
   private val postExecutionThread: PostExecutionThread,
   private val imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper,
-  private val gsonHelper: GsonHelper
+  private val gsonProvider: GsonProvider
 ) : DetailContract.DetailPresenter {
 
   internal lateinit var imageType: ImageListType
@@ -72,7 +73,8 @@ class DetailPresenterImpl(
 
   override fun setCalledIntent(intent: Intent) {
     if (intent.extras != null) {
-      setImageType(intent.extras!!.getInt(DetailActivity.IMAGE_TYPE_TAG))
+      setImageType(intent.extras!!.getInt(
+          DetailActivity.IMAGE_TYPE_TAG))
     } else {
       detailView?.throwIllegalStateException()
     }
@@ -576,9 +578,9 @@ class DetailPresenterImpl(
         }.flatMapSingle {
           if (it.progress == DOWNLOAD_COMPLETED_VALUE) {
             val detailsString = if (imageType == SEARCH) {
-              gsonHelper.convertToString(searchImage)
+              gsonProvider.getGson().toJson(searchImage)
             } else {
-              gsonHelper.convertToString(wallpaperImage)
+              gsonProvider.getGson().toJson(wallpaperImage)
             }
             imageOptionsUseCase.addImageToCollection(imageType.ordinal, detailsString)
                 .andThen(

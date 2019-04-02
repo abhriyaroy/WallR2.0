@@ -174,8 +174,6 @@ public class MaterialSpinner extends TextView {
             && position < adapter.getCount()
             && adapter.getItems().size() != 1
             && TextUtils.isEmpty(hintText)) {
-          System.out.println("spinner position" + position);
-          System.out.println("spinner selected index" + selectedIndex);
           position++;
         }
         selectedIndex = position;
