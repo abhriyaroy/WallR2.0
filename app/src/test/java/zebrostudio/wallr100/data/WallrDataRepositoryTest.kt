@@ -432,13 +432,12 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should complete on saveImageToCollections call success`() {
-    val imageType = 1
-    `when`(imageHandler.saveImageToCollections(imageType, randomString)).thenReturn(
+    `when`(imageHandler.saveImageToCollections()).thenReturn(
         Completable.complete())
 
-    wallrDataRepository.saveImageToCollections(imageType, randomString).test().assertComplete()
+    wallrDataRepository.saveImageToCollections().test().assertComplete()
 
-    verify(imageHandler).saveImageToCollections(imageType, randomString)
+    verify(imageHandler).saveImageToCollections()
     verifyNoMoreInteractions(imageHandler)
     `should verify computation scheduler call`()
   }

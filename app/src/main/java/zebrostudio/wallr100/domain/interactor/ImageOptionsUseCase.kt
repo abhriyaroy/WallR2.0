@@ -24,7 +24,7 @@ interface ImageOptionsUseCase {
   fun isCrystallizeDescriptionDialogShown(): Boolean
   fun setCrystallizeDescriptionShownOnce()
   fun getCrystallizedImageSingle(): Single<Bitmap>
-  fun addImageToCollection(type: Int, details: String): Completable
+  fun addImageToCollection(): Completable
 }
 
 class ImageOptionsInteractor(
@@ -87,7 +87,7 @@ class ImageOptionsInteractor(
     return wallrRepository.getCacheImageBitmap()
   }
 
-  override fun addImageToCollection(type: Int, details: String): Completable {
-    return wallrRepository.saveImageToCollections(type, details)
+  override fun addImageToCollection(): Completable {
+    return wallrRepository.saveImageToCollections()
   }
 }

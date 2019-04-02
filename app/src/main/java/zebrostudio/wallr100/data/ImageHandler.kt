@@ -31,7 +31,7 @@ interface ImageHandler {
   fun convertUriToBitmap(uri: Uri): Single<Bitmap>
   fun convertImageInCacheToLowpoly(): Single<Bitmap>
   fun saveLowPolyImageToDownloads(): Completable
-  fun saveImageToCollections(type: Int, details: String): Completable
+  fun saveImageToCollections(): Completable
 }
 
 const val BYTE_ARRAY_SIZE = 2048
@@ -176,7 +176,7 @@ class ImageHandlerImpl(
     }
   }
 
-  override fun saveImageToCollections(type: Int, details: String): Completable {
+  override fun saveImageToCollections(): Completable {
     return Completable.create {
       try {
         fileHandler.getCacheFile().inputStream().let { inputStream ->
@@ -186,12 +186,8 @@ class ImageHandlerImpl(
             databaseHelper.getDatabase().collectionsDao().insert(CollectionDatabaseImageEntity(
                 UID_AUTO_INCREMENT,
                 file.name,
-                type,
-                file.path,
-                details
+                file.path
             ))
-            databaseHelper.getDatabase().collectionsDao().getAllData().subscribe { it ->
-            }
           }
           inputStream.close()
           it.onComplete()

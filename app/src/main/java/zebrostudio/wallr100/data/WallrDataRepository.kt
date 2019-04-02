@@ -263,8 +263,8 @@ class WallrDataRepository(
     return downloadHelper.isDownloadEnqueued(link)
   }
 
-  override fun saveImageToCollections(type: Int, details: String): Completable {
-    return imageHandler.saveImageToCollections(type, details)
+  override fun saveImageToCollections(): Completable {
+    return imageHandler.saveImageToCollections()
         .subscribeOn(executionThread.computationScheduler)
   }
 

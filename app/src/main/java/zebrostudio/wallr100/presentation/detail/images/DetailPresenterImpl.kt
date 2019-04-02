@@ -582,7 +582,7 @@ class DetailPresenterImpl(
             } else {
               gsonProvider.getGson().toJson(wallpaperImage)
             }
-            imageOptionsUseCase.addImageToCollection(imageType.ordinal, detailsString)
+            imageOptionsUseCase.addImageToCollection()
                 .andThen(
                     Single.just(true)
                 )

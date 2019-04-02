@@ -1374,7 +1374,7 @@ class DetailPresenterImplTest {
           it.onNext(imageDownloadModel)
         })
     `when`(gsonProvider.getGson()).thenReturn(Gson())
-    `when`(imageOptionsUseCase.addImageToCollection(SEARCH.ordinal, jsonString)).thenReturn(
+    `when`(imageOptionsUseCase.addImageToCollection()).thenReturn(
         Completable.complete())
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
@@ -1391,7 +1391,7 @@ class DetailPresenterImplTest {
     verifyNoMoreInteractions(detailView)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
-    verify(imageOptionsUseCase).addImageToCollection(SEARCH.ordinal, jsonString)
+    verify(imageOptionsUseCase).addImageToCollection()
     verifyNoMoreInteractions(imageOptionsUseCase)
     shouldVerifyPostExecutionThreadSchedulerCall(2)
   }
@@ -1412,7 +1412,7 @@ class DetailPresenterImplTest {
           it.onNext(imageDownloadModel)
         })
     `when`(gsonProvider.getGson()).thenReturn(Gson())
-    `when`(imageOptionsUseCase.addImageToCollection(WALLPAPERS.ordinal, jsonString)).thenReturn(
+    `when`(imageOptionsUseCase.addImageToCollection()).thenReturn(
         Completable.complete())
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
@@ -1429,7 +1429,7 @@ class DetailPresenterImplTest {
     verifyNoMoreInteractions(detailView)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
         detailPresenterImpl.wallpaperImage.imageLink.large)
-    verify(imageOptionsUseCase).addImageToCollection(WALLPAPERS.ordinal, jsonString)
+    verify(imageOptionsUseCase).addImageToCollection()
     verifyNoMoreInteractions(imageOptionsUseCase)
     shouldVerifyPostExecutionThreadSchedulerCall(2)
   }

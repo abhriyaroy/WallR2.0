@@ -171,12 +171,12 @@ class ImageOptionsUseCaseTest {
 
   @Test fun `should complete on addImageToCollection call success`() {
     val imageType = 1
-    `when`(wallrRepository.saveImageToCollections(imageType, randomString)).thenReturn(
+    `when`(wallrRepository.saveImageToCollections()).thenReturn(
         Completable.complete())
 
-    imageOptionsUseCase.addImageToCollection(imageType, randomString).test().assertComplete()
+    imageOptionsUseCase.addImageToCollection().test().assertComplete()
 
-    verify(wallrRepository).saveImageToCollections(imageType, randomString)
+    verify(wallrRepository).saveImageToCollections()
     verifyNoMoreInteractions(wallrRepository)
   }
 }
