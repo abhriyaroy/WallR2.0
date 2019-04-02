@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 const val COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG = "colors_hex_list"
 const val COLORS_DETAIL_MODE_INTENT_EXTRA_TAG = "colors_mode"
-const val COLORS_DETAIL_TYPE_INTENT_EXTRA_TAG = "colors_type"
+const val COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG = "colors_type"
 
 class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
@@ -25,6 +25,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     setContentView(R.layout.activity_colors_detail)
     AndroidInjection.inject(this)
     presenter.attachView(this)
+    presenter.setCalledIntent(intent)
   }
 
   override fun onDestroy() {
@@ -45,7 +46,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
             hexValueList as ArrayList<String>)
         putExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG, colorsDetailMode.ordinal)
         multiColorImageType?.let {
-          putExtra(COLORS_DETAIL_TYPE_INTENT_EXTRA_TAG, it.ordinal)
+          putExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG, it.ordinal)
         }
       }
     }

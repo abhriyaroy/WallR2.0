@@ -10,6 +10,7 @@ import zebrostudio.wallr100.domain.model.RestoreColorsModel
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
 
 interface WallrRepository {
 
@@ -64,5 +65,7 @@ interface WallrRepository {
   ): Single<List<String>>
 
   fun restoreDeletedColors(): Single<RestoreColorsModel>
+  fun getSingleColorBitmap(hexValue: String): Single<Bitmap>
+  fun getMultiColorBitmap(hexValueList: List<String>, multiColorImageType: MultiColorImageType) : Single<Bitmap>
 
 }
