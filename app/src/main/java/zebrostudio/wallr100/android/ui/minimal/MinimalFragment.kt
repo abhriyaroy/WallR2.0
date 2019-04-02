@@ -305,6 +305,10 @@ class MinimalFragment : BaseFragment(), MinimalView {
     dragSelectImageAdapter?.setSelected(position, true)
   }
 
+  override fun showColorDetails(hexValue: String) {
+
+  }
+
   private fun initRecyclerView() {
     minimalFragmentRecyclerView?.apply {
       GridLayoutManager(context,

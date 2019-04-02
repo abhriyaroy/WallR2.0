@@ -37,6 +37,7 @@ interface MinimalContract {
     fun setColorList(list: List<String>)
     fun addColorToList(hexValue: String)
     fun selectItem(position: Int)
+    fun showColorDetails(hexValue: String)
   }
 
   interface MinimalPresenter : BasePresenter<MinimalView> {

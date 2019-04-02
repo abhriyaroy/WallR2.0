@@ -29,9 +29,9 @@ class MinimalPresenterImpl(
 
   internal var isBottomPanelEnabled = false
   internal var selectionSize = INITIAL_SIZE
-  internal var minimalView: MinimalView? = null
   internal var multiColorImageType: MultiColorImageType? = MATERIAL
   internal var shouldUpdateAllItems = true
+  private var minimalView: MinimalView? = null
 
   override fun attachView(view: MinimalView) {
     minimalView = view
@@ -179,7 +179,7 @@ class MinimalPresenterImpl(
       if (position == INITIAL_SIZE) {
         minimalView?.showColorPickerDialogAndAttachColorPickerListener()
       } else {
-        IllegalStateException("Feature not implemented yet")
+        minimalView?.showColorDetails(colorList[position - INITIAL_OFFSET])
       }
     } else {
       if (position != INITIAL_SIZE) {
