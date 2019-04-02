@@ -7,6 +7,7 @@
     <item name="android:layout_gravity">center</item>
     <item name="android:scaleType">fitCenter</item>
     <item name="android:duplicateParentState">true</item>
+    <item name="android:tint">@color/ucrop_white</item>
   </style>
 
   <style name="ucrop_WrapperIconState">
@@ -15,6 +16,7 @@
     <item name="android:layout_weight">1</item>
     <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:clickable">true</item>
+    <item name="android:tint">@color/ucrop_white</item>
   </style>
 
   <style name="ucrop_WrapperRotateButton">
@@ -22,6 +24,7 @@
     <item name="android:layout_height">@dimen/ucrop_size_wrapper_rotate_button</item>
     <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     <item name="android:clickable">true</item>
+    <item name="android:tint">@color/ucrop_white</item>
   </style>
 
   <style name="ucrop_TextViewCropAspectRatio">
@@ -30,6 +33,7 @@
     <item name="android:layout_gravity">center</item>
     <item name="android:duplicateParentState">true</item>
     <item name="android:textColor">@color/ucrop_scale_text_view_selector</item>
+    <item name="android:tint">@color/ucrop_white</item>
   </style>
 
   <style name="ucrop_TextViewWidgetText">
@@ -39,6 +43,7 @@
     <item name="android:layout_marginTop">@dimen/ucrop_margit_top_widget_text</item>
     <item name="android:textColor">@color/ucrop_color_widget_text</item>
     <item name="android:textSize">@dimen/ucrop_text_size_widget_text</item>
+    <item name="android:tint">@color/ucrop_white</item>
   </style>
 
 </resources>

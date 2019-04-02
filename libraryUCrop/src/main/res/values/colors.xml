@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+  <color name="ucrop_white">#fff</color>
+
   <!--uCrop Activity-->
   <color name="ucrop_color_toolbar">#212121</color>
   <color name="ucrop_color_statusbar">#151613</color>
