@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import com.google.gson.Gson
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -31,7 +32,8 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
-import zebrostudio.wallr100.android.ui.detail.DetailActivity
+import zebrostudio.wallr100.android.ui.detail.images.DetailActivity
+import zebrostudio.wallr100.android.utils.GsonProvider
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
@@ -41,16 +43,15 @@ import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
 import zebrostudio.wallr100.presentation.datafactory.ImagePresenterEntityFactory
 import zebrostudio.wallr100.presentation.datafactory.SearchPicturesPresenterEntityFactory
-import zebrostudio.wallr100.presentation.detail.ActionType.ADD_TO_COLLECTION
-import zebrostudio.wallr100.presentation.detail.ActionType.CRYSTALLIZE
-import zebrostudio.wallr100.presentation.detail.ActionType.DOWNLOAD
-import zebrostudio.wallr100.presentation.detail.ActionType.EDIT_SET
-import zebrostudio.wallr100.presentation.detail.ActionType.QUICK_SET
-import zebrostudio.wallr100.presentation.detail.ActionType.SHARE
-import zebrostudio.wallr100.presentation.detail.DetailContract
-import zebrostudio.wallr100.presentation.detail.DetailPresenterImpl
-import zebrostudio.wallr100.presentation.detail.GsonHelper
-import zebrostudio.wallr100.presentation.detail.mapper.ImageDownloadPresenterEntityMapper
+import zebrostudio.wallr100.presentation.detail.images.ActionType.ADD_TO_COLLECTION
+import zebrostudio.wallr100.presentation.detail.images.ActionType.CRYSTALLIZE
+import zebrostudio.wallr100.presentation.detail.images.ActionType.DOWNLOAD
+import zebrostudio.wallr100.presentation.detail.images.ActionType.EDIT_SET
+import zebrostudio.wallr100.presentation.detail.images.ActionType.QUICK_SET
+import zebrostudio.wallr100.presentation.detail.images.ActionType.SHARE
+import zebrostudio.wallr100.presentation.detail.images.DetailContract
+import zebrostudio.wallr100.presentation.detail.images.DetailPresenterImpl
+import zebrostudio.wallr100.presentation.detail.images.mapper.ImageDownloadPresenterEntityMapper
 import java.util.Random
 import java.util.UUID.randomUUID
 
@@ -66,7 +67,7 @@ class DetailPresenterImplTest {
   @Mock private lateinit var mockBitmap: Bitmap
   @Mock private lateinit var mockContext: Context
   @Mock private lateinit var postExecutionThread: PostExecutionThread
-  @Mock private lateinit var gsonHelper: GsonHelper
+  @Mock private lateinit var gsonProvider: GsonProvider
   @Mock private lateinit var mockUri: Uri
   @Mock private lateinit var mockIntent: Intent
   @Mock private lateinit var mockBundle: Bundle
@@ -82,10 +83,12 @@ class DetailPresenterImplTest {
 
   @Before
   fun setup() {
-    imageDownloadPresenterEntityMapper = ImageDownloadPresenterEntityMapper()
+    imageDownloadPresenterEntityMapper =
+        ImageDownloadPresenterEntityMapper()
     detailPresenterImpl =
-        DetailPresenterImpl(mockContext, imageOptionsUseCase, userPremiumStatusUseCase,
-            wallpaperSetter, postExecutionThread, imageDownloadPresenterEntityMapper, gsonHelper)
+        DetailPresenterImpl(mockContext,
+            imageOptionsUseCase, userPremiumStatusUseCase,
+            wallpaperSetter, postExecutionThread, imageDownloadPresenterEntityMapper, gsonProvider)
     detailPresenterImpl.attachView(detailView)
 
     testScopeProvider = TestLifecycleScopeProvider.createInitial(
@@ -1358,19 +1361,20 @@ class DetailPresenterImplTest {
   @Test
   fun `should add image to collection on handleViewResult of add to collection type call success of search image type`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
-    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(detailView.hasStoragePermission()).thenReturn(true)
-    `when`(detailView.internetAvailability()).thenReturn(true)
     detailPresenterImpl.imageType = SEARCH
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    val jsonString = Gson().toJson(detailPresenterImpl.searchImage)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(gsonHelper.convertToString(detailPresenterImpl.searchImage)).thenReturn(randomString)
-    `when`(imageOptionsUseCase.addImageToCollection(SEARCH.ordinal, randomString)).thenReturn(
+    `when`(gsonProvider.getGson()).thenReturn(Gson())
+    `when`(imageOptionsUseCase.addImageToCollection(SEARCH.ordinal, jsonString)).thenReturn(
         Completable.complete())
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
@@ -1387,7 +1391,7 @@ class DetailPresenterImplTest {
     verifyNoMoreInteractions(detailView)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
-    verify(imageOptionsUseCase).addImageToCollection(SEARCH.ordinal, randomString)
+    verify(imageOptionsUseCase).addImageToCollection(SEARCH.ordinal, jsonString)
     verifyNoMoreInteractions(imageOptionsUseCase)
     shouldVerifyPostExecutionThreadSchedulerCall(2)
   }
@@ -1395,19 +1399,20 @@ class DetailPresenterImplTest {
   @Test
   fun `should add image to collection on handleViewResult of add to collection type call success of wallpaper image type`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
-    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(detailView.hasStoragePermission()).thenReturn(true)
-    `when`(detailView.internetAvailability()).thenReturn(true)
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage =
         ImagePresenterEntityFactory.getImagePresenterEntity()
+    val jsonString = Gson().toJson(detailPresenterImpl.wallpaperImage)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(gsonHelper.convertToString(detailPresenterImpl.wallpaperImage)).thenReturn(randomString)
-    `when`(imageOptionsUseCase.addImageToCollection(WALLPAPERS.ordinal, randomString)).thenReturn(
+    `when`(gsonProvider.getGson()).thenReturn(Gson())
+    `when`(imageOptionsUseCase.addImageToCollection(WALLPAPERS.ordinal, jsonString)).thenReturn(
         Completable.complete())
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
@@ -1424,7 +1429,7 @@ class DetailPresenterImplTest {
     verifyNoMoreInteractions(detailView)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
         detailPresenterImpl.wallpaperImage.imageLink.large)
-    verify(imageOptionsUseCase).addImageToCollection(WALLPAPERS.ordinal, randomString)
+    verify(imageOptionsUseCase).addImageToCollection(WALLPAPERS.ordinal, jsonString)
     verifyNoMoreInteractions(imageOptionsUseCase)
     shouldVerifyPostExecutionThreadSchedulerCall(2)
   }

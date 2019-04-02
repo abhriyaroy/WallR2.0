@@ -171,5 +171,9 @@
   <dimen name="main_activity_fab_margin_botom">15dp</dimen>
   <dimen name="item_recycler_minimal_fragment_add_icon_height">24dp</dimen>
   <dimen name="item_recycler_minimal_fragment_add_icon_width">24dp</dimen>
+  <dimen name="colors_detail_activity_spinkit_height">30dp</dimen>
+  <dimen name="colors_detail_activity_colors_style_name_text_view_width">230dp</dimen>
+  <dimen name="colors_detail_activity_colors_style_name_text_view_padding_left">24dp</dimen>
+  <dimen name="colors_detail_activity_colors_style_name_text_view_text_size">20sp</dimen>
 
 </resources>

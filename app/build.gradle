@@ -85,7 +85,7 @@ android {
     // BlurView
     implementation "com.eightbitlab:blurview:$BLURVIEW_VERSION"
     // Room
-    implementation  "android.arch.persistence.room:runtime:$ROOM_VERSION"
+    implementation "android.arch.persistence.room:runtime:$ROOM_VERSION"
     implementation "android.arch.persistence.room:rxjava2:$ROOM_VERSION"
     kapt "android.arch.persistence.room:compiler:$ROOM_VERSION"
     // Color picker view

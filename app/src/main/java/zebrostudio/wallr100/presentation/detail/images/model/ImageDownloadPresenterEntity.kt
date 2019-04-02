@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.presentation.detail.model
+package zebrostudio.wallr100.presentation.detail.images.model
 
 import android.graphics.Bitmap
 

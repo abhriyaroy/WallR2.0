@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.android.ui.detail
+package zebrostudio.wallr100.android.ui.detail.images
 
 import android.Manifest
 import android.content.Context
@@ -61,9 +61,9 @@ import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
-import zebrostudio.wallr100.presentation.detail.ActionType
-import zebrostudio.wallr100.presentation.detail.DetailContract.DetailPresenter
-import zebrostudio.wallr100.presentation.detail.DetailContract.DetailView
+import zebrostudio.wallr100.presentation.detail.images.ActionType
+import zebrostudio.wallr100.presentation.detail.images.DetailContract.DetailPresenter
+import zebrostudio.wallr100.presentation.detail.images.DetailContract.DetailView
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 import javax.inject.Inject
@@ -109,15 +109,18 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun throwIllegalStateException() {
-    throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
+    throw IllegalStateException(
+        ILLEGAL_STATE_EXCEPTION_MESSAGE)
   }
 
   override fun getWallpaperImageDetails(): ImagePresenterEntity {
-    return intent.extras!!.getSerializable(IMAGE_DETAILS_TAG) as ImagePresenterEntity
+    return intent.extras!!.getSerializable(
+        IMAGE_DETAILS_TAG) as ImagePresenterEntity
   }
 
   override fun getSearchImageDetails(): SearchPicturesPresenterEntity {
-    return intent.extras!!.getSerializable(IMAGE_DETAILS_TAG) as SearchPicturesPresenterEntity
+    return intent.extras!!.getSerializable(
+        IMAGE_DETAILS_TAG) as SearchPicturesPresenterEntity
   }
 
   override fun showAuthorDetails(name: String, profileImageLink: String) {
@@ -260,7 +263,8 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun blurScreenAndInitializeProgressPercentage() {
     blurView.visible()
-    wallpaperDownloadProgressPercentage.text = INITIAL_LOADER_PROGRESS_PERCENTAGE
+    wallpaperDownloadProgressPercentage.text =
+        INITIAL_LOADER_PROGRESS_PERCENTAGE
     wallpaperDownloadProgressPercentage.visible()
     loadingHintBelowProgressPercentage.text =
         getString(R.string.detail_activity_grabbing_best_quality_wallpaper_message)
@@ -364,7 +368,8 @@ class DetailActivity : BaseActivity(), DetailView {
         .widgetColor(colorRes(R.color.accent))
         .positiveColor(colorRes(R.color.accent))
         .negativeColor(colorRes(R.color.accent))
-        .itemsCallbackSingleChoice(INITIAL_SELECTED_DOWNLOAD_OPTION
+        .itemsCallbackSingleChoice(
+            INITIAL_SELECTED_DOWNLOAD_OPTION
         ) { _, _, which, _ ->
           presenter.handleDownloadQualitySelectionEvent(SEARCH, which)
           true
@@ -388,7 +393,8 @@ class DetailActivity : BaseActivity(), DetailView {
         .widgetColor(colorRes(R.color.accent))
         .positiveColor(colorRes(R.color.accent))
         .negativeColor(colorRes(R.color.accent))
-        .itemsCallbackSingleChoice(INITIAL_SELECTED_DOWNLOAD_OPTION
+        .itemsCallbackSingleChoice(
+            INITIAL_SELECTED_DOWNLOAD_OPTION
         ) { _, _, which, _ ->
           presenter.handleDownloadQualitySelectionEvent(WALLPAPERS, which)
           true
@@ -465,7 +471,8 @@ class DetailActivity : BaseActivity(), DetailView {
 
   private fun setUpExpandPanel() {
     expandIconView.setState(ExpandIconView.LESS, false)
-    slidingPanel.setParallaxOffset(SLIDING_PANEL_PARALLEL_OFFSET)
+    slidingPanel.setParallaxOffset(
+        SLIDING_PANEL_PARALLEL_OFFSET)
     slidingPanel.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
       override fun onPanelSlide(panel: View, slideOffset: Float) {
         // Do nothing
@@ -513,8 +520,10 @@ class DetailActivity : BaseActivity(), DetailView {
     ): Intent {
       return Intent(context, DetailActivity::class.java).apply {
         putExtras(Bundle().apply {
-          putInt(IMAGE_TYPE_TAG, SEARCH.ordinal)
-          putExtra(IMAGE_DETAILS_TAG, searchPicturesPresenterEntity)
+          putInt(
+              IMAGE_TYPE_TAG, SEARCH.ordinal)
+          putExtra(
+              IMAGE_DETAILS_TAG, searchPicturesPresenterEntity)
         })
       }
     }
@@ -525,8 +534,10 @@ class DetailActivity : BaseActivity(), DetailView {
     ): Intent {
       return Intent(context, DetailActivity::class.java).apply {
         putExtras(Bundle().apply {
-          putInt(IMAGE_TYPE_TAG, WALLPAPERS.ordinal)
-          putExtra(IMAGE_DETAILS_TAG, imagePresenterEntity)
+          putInt(
+              IMAGE_TYPE_TAG, WALLPAPERS.ordinal)
+          putExtra(
+              IMAGE_DETAILS_TAG, imagePresenterEntity)
         })
       }
     }

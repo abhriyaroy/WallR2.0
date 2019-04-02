@@ -7,6 +7,7 @@ import com.pddstudio.urlshortener.URLShortener
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import zebrostudio.wallr100.android.utils.GsonProvider
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
@@ -60,7 +61,7 @@ class WallrDataRepository(
   private val retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
   private val unsplashClientFactory: UnsplashClientFactory,
   private val sharedPrefsHelper: SharedPrefsHelper,
-  private val gsonDataHelper: GsonDataHelper,
+  private val gsonProvider: GsonProvider,
   private val unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
   private val firebaseDatabaseHelper: FirebaseDatabaseHelper,
   private val firebasePictureEntityMapper: FirebasePictureEntityMapper,
@@ -286,7 +287,7 @@ class WallrDataRepository(
     return Completable.create {
       if (
           sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
-              gsonDataHelper.getString(colors))
+              gsonProvider.getGson().toJson(colors))
       ) {
         it.onComplete()
       } else {
@@ -319,7 +320,7 @@ class WallrDataRepository(
             }
             sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME,
                 CUSTOM_MINIMAL_COLOR_LIST_TAG,
-                gsonDataHelper.getString(list))
+                gsonProvider.getGson().toJson(list))
             Single.just(RestoreColorsModel(list, map))
           }
         }
@@ -344,7 +345,8 @@ class WallrDataRepository(
         .fetch(firebaseDatabaseReference)
         .flatMap {
           it.values.forEach { jsonString ->
-            imageList.add(gsonDataHelper.getImageEntity(jsonString))
+            imageList.add(
+                gsonProvider.getGson().fromJson(jsonString, FirebaseImageEntity::class.java))
           }
           imageList.reverse()
           val image = firebasePictureEntityMapper.mapFromEntity(imageList)
@@ -383,7 +385,7 @@ class WallrDataRepository(
     return Single.create {
       if (
           sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
-              gsonDataHelper.getString(colors))) {
+              gsonProvider.getGson().toJson(colors))) {
         sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME,
             CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG,
             true)

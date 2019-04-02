@@ -10,6 +10,8 @@ import zebrostudio.wallr100.android.AndroidBackgroundThreads
 import zebrostudio.wallr100.android.AndroidMainThread
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcherImpl
+import zebrostudio.wallr100.android.utils.GsonProvider
+import zebrostudio.wallr100.android.utils.GsonProviderImpl
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.ResourceUtilsImpl
 import zebrostudio.wallr100.android.utils.WallpaperSetter
@@ -20,8 +22,6 @@ import zebrostudio.wallr100.data.FileHandler
 import zebrostudio.wallr100.data.FileHandlerImpl
 import zebrostudio.wallr100.data.FirebaseDatabaseHelper
 import zebrostudio.wallr100.data.FirebaseDatabaseHelperImpl
-import zebrostudio.wallr100.data.GsonDataHelper
-import zebrostudio.wallr100.data.GsonDataHelperImpl
 import zebrostudio.wallr100.data.ImageHandler
 import zebrostudio.wallr100.data.ImageHandlerImpl
 import zebrostudio.wallr100.data.MinimalColorHelper
@@ -56,8 +56,6 @@ import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.Dra
 import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerIPresenterImpl
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
-import zebrostudio.wallr100.presentation.detail.GsonHelper
-import zebrostudio.wallr100.presentation.detail.GsonHelperImpl
 import javax.inject.Singleton
 
 @Module
@@ -101,7 +99,7 @@ class AppModule {
 
   @Provides
   @Singleton
-  fun provideGsonDataHelper(): GsonDataHelper = GsonDataHelperImpl()
+  fun provideGson(): GsonProvider = GsonProviderImpl()
 
   @Provides
   @Singleton
@@ -110,10 +108,6 @@ class AppModule {
   @Provides
   @Singleton
   fun provideAndroidBackgroundThread(): ExecutionThread = AndroidBackgroundThreads()
-
-  @Provides
-  @Singleton
-  fun providesGsonHelper(): GsonHelper = GsonHelperImpl()
 
   @Provides
   @Singleton
@@ -158,7 +152,7 @@ class AppModule {
     retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
     unsplashClientFactory: UnsplashClientFactory,
     sharedPrefsHelper: SharedPrefsHelper,
-    gsonDataHelper: GsonDataHelper,
+    gsonProvider: GsonProvider,
     unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
     firebaseDatabaseHelper: FirebaseDatabaseHelper,
     firebasePictureEntityMapper: FirebasePictureEntityMapper,
@@ -171,7 +165,7 @@ class AppModule {
   ): WallrRepository = WallrDataRepository(retrofitFirebaseAuthFactory,
       unsplashClientFactory,
       sharedPrefsHelper,
-      gsonDataHelper,
+      gsonProvider,
       unsplashPictureEntityMapper,
       firebaseDatabaseHelper,
       firebasePictureEntityMapper,

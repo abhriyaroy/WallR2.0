@@ -24,6 +24,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
+import zebrostudio.wallr100.android.utils.GsonProvider
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
@@ -61,7 +62,7 @@ class WallrDataRepositoryTest {
   @Mock lateinit var minimalColorHelper: MinimalColorHelper
   @Mock lateinit var mockBitmap: Bitmap
   @Mock lateinit var mockUri: Uri
-  @Mock lateinit var gsonDataHelper: GsonDataHelper
+  @Mock lateinit var gsonProvider: GsonProvider
   private lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
   private lateinit var firebasePictureEntityMapper: FirebasePictureEntityMapper
   private lateinit var wallrDataRepository: WallrDataRepository
@@ -75,7 +76,7 @@ class WallrDataRepositoryTest {
     firebasePictureEntityMapper = FirebasePictureEntityMapper()
     wallrDataRepository =
         WallrDataRepository(remoteAuthServiceFactory, unsplashClientFactory, sharedPrefs,
-            gsonDataHelper, unsplashPictureEntityMapper, firebaseDatabaseHelper,
+            gsonProvider, unsplashPictureEntityMapper, firebaseDatabaseHelper,
             firebasePictureEntityMapper, urlShortener, imageHandler, fileHandler, downloadHelper,
             minimalColorHelper, executionThread)
 
@@ -449,9 +450,10 @@ class WallrDataRepositoryTest {
     val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
-    val gsonString = Gson().toJson(firebaseImageEntity)
+    val gson = Gson()
+    val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
-    `when`(gsonDataHelper.getImageEntity(gsonString)).thenReturn(firebaseImageEntity)
+    `when`(gsonProvider.getGson()).thenReturn(gson)
     `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
     `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
     `when`(databaseReference.child(
@@ -474,9 +476,10 @@ class WallrDataRepositoryTest {
     val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
-    val gsonString = Gson().toJson(firebaseImageEntity)
+    val gson = Gson()
+    val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
-    `when`(gsonDataHelper.getImageEntity(gsonString)).thenReturn(firebaseImageEntity)
+    `when`(gsonProvider.getGson()).thenReturn(gson)
     `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
     `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
     `when`(databaseReference.child(CHILD_PATH_TOP_PICKS)).thenReturn(databaseReference)
@@ -499,9 +502,10 @@ class WallrDataRepositoryTest {
     val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
-    val gsonString = Gson().toJson(firebaseImageEntity)
+    val gson = Gson()
+    val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
-    `when`(gsonDataHelper.getImageEntity(gsonString)).thenReturn(firebaseImageEntity)
+    `when`(gsonProvider.getGson()).thenReturn(gson)
     `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
     `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
     `when`(databaseReference.child(CHILD_PATH_TOP_PICKS)).thenReturn(databaseReference)
@@ -524,9 +528,10 @@ class WallrDataRepositoryTest {
     val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
-    val gsonString = Gson().toJson(firebaseImageEntity)
+    val gson = Gson()
+    val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
-    `when`(gsonDataHelper.getImageEntity(gsonString)).thenReturn(firebaseImageEntity)
+    `when`(gsonProvider.getGson()).thenReturn(gson)
     `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
     `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
     `when`(databaseReference.child(CHILD_PATH_TOP_PICKS)).thenReturn(databaseReference)
@@ -549,9 +554,10 @@ class WallrDataRepositoryTest {
     val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
-    val gsonString = Gson().toJson(firebaseImageEntity)
+    val gson = Gson()
+    val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
-    `when`(gsonDataHelper.getImageEntity(gsonString)).thenReturn(firebaseImageEntity)
+    `when`(gsonProvider.getGson()).thenReturn(gson)
     `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
     `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
     `when`(databaseReference.child(CHILD_PATH_CATEGORIES)).thenReturn(databaseReference)
@@ -574,9 +580,10 @@ class WallrDataRepositoryTest {
     val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
-    val gsonString = Gson().toJson(firebaseImageEntity)
+    val gson = Gson()
+    val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
-    `when`(gsonDataHelper.getImageEntity(gsonString)).thenReturn(firebaseImageEntity)
+    `when`(gsonProvider.getGson()).thenReturn(gson)
     `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
     `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
     `when`(databaseReference.child(CHILD_PATH_CATEGORIES)).thenReturn(databaseReference)
@@ -599,9 +606,10 @@ class WallrDataRepositoryTest {
     val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
-    val gsonString = Gson().toJson(firebaseImageEntity)
+    val gson = Gson()
+    val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
-    `when`(gsonDataHelper.getImageEntity(gsonString)).thenReturn(firebaseImageEntity)
+    `when`(gsonProvider.getGson()).thenReturn(gson)
     `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
     `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
     `when`(databaseReference.child(CHILD_PATH_CATEGORIES)).thenReturn(databaseReference)
@@ -624,9 +632,10 @@ class WallrDataRepositoryTest {
     val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
-    val gsonString = Gson().toJson(firebaseImageEntity)
+    val gson = Gson()
+    val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
-    `when`(gsonDataHelper.getImageEntity(gsonString)).thenReturn(firebaseImageEntity)
+    `when`(gsonProvider.getGson()).thenReturn(gson)
     `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
     `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
     `when`(databaseReference.child(CHILD_PATH_CATEGORIES)).thenReturn(databaseReference)
@@ -649,9 +658,10 @@ class WallrDataRepositoryTest {
     val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
-    val gsonString = Gson().toJson(firebaseImageEntity)
+    val gson = Gson()
+    val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
-    `when`(gsonDataHelper.getImageEntity(gsonString)).thenReturn(firebaseImageEntity)
+    `when`(gsonProvider.getGson()).thenReturn(gson)
     `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
     `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
     `when`(databaseReference.child(CHILD_PATH_CATEGORIES)).thenReturn(databaseReference)
@@ -674,9 +684,10 @@ class WallrDataRepositoryTest {
     val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
-    val gsonString = Gson().toJson(firebaseImageEntity)
+    val gson = Gson()
+    val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
-    `when`(gsonDataHelper.getImageEntity(gsonString)).thenReturn(firebaseImageEntity)
+    `when`(gsonProvider.getGson()).thenReturn(gson)
     `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
     `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
     `when`(databaseReference.child(CHILD_PATH_CATEGORIES)).thenReturn(databaseReference)
@@ -727,9 +738,9 @@ class WallrDataRepositoryTest {
   @Test fun `should complete saveCustomMinimalColorList call success`() {
     val list = listOf(randomString)
     val gsonString = Gson().toJson(list)
-    `when`(gsonDataHelper.getString(list)).thenReturn(gsonString)
+    `when`(gsonProvider.getGson()).thenReturn(Gson())
     `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
-        gsonDataHelper.getString(list))).thenReturn(true)
+        gsonProvider.getGson().toJson(list))).thenReturn(true)
 
     wallrDataRepository.saveCustomMinimalColorList(list).test().assertComplete()
 
@@ -744,7 +755,7 @@ class WallrDataRepositoryTest {
     val modifiedList = listOf(randomString)
     val gsonString = Gson().toJson(modifiedList)
     val selectedIndices = hashMapOf(Pair(firstElementIndex, randomString))
-    `when`(gsonDataHelper.getString(modifiedList)).thenReturn(gsonString)
+    `when`(gsonProvider.getGson()).thenReturn(Gson())
     `when`(minimalColorHelper.cacheDeletedItems(selectedIndices)).thenReturn(Completable.complete())
     `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
         gsonString)).thenReturn(true)
@@ -766,7 +777,7 @@ class WallrDataRepositoryTest {
     val modifiedList = listOf(randomString)
     val gsonString = Gson().toJson(modifiedList)
     val selectedIndices = hashMapOf(Pair(firstElementIndex, randomString))
-    `when`(gsonDataHelper.getString(modifiedList)).thenReturn(gsonString)
+    `when`(gsonProvider.getGson()).thenReturn(Gson())
     `when`(minimalColorHelper.cacheDeletedItems(selectedIndices)).thenReturn(Completable.complete())
     `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
         gsonString)).thenReturn(false)
@@ -788,6 +799,7 @@ class WallrDataRepositoryTest {
     val modifiedList = listOf(randomString, randomString)
     val selectedIndices = TreeMap<Int, String>(mapOf(Pair(firstElementIndex, randomString)))
     val restoreColorsModel = RestoreColorsModel(modifiedList, selectedIndices)
+    `when`(gsonProvider.getGson()).thenReturn(Gson())
     `when`(minimalColorHelper.getCustomColors()).thenReturn(Single.just(list))
     `when`(minimalColorHelper.getDeletedItemsFromCache()).thenReturn(Single.just(selectedIndices))
 

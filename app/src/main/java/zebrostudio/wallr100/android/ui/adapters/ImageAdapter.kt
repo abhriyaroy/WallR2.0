@@ -12,7 +12,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.item_recyclerview_image.view.imageView
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.ui.detail.DetailActivity
+import zebrostudio.wallr100.android.ui.detail.images.DetailActivity
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract

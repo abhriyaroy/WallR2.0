@@ -178,4 +178,9 @@
   <string name="minimal_fragment_restore_colors_success_message">Successfully restored deleted colors</string>
   <string name="minimal_fragment_toolbar_menu_multiselect_title">Multi-select</string>
 
+  <string name="colors_detail_activity_colors_style_name_solid">Style : Solid</string>
+  <string name="colors_detail_activity_colors_style_name_material">Style : Material</string>
+  <string name="colors_detail_activity_colors_style_name_gradient">Style : Gradient</string>
+  <string name="colors_detail_activity_colors_style_name_plasma">Style : Plasma</string>
+
 </resources>
