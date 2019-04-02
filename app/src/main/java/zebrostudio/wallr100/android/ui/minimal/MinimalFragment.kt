@@ -27,6 +27,8 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.ui.adapters.DragSelectImageAdapter
 import zebrostudio.wallr100.android.ui.adapters.DragSelectImageAdapterCallbacks
+import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailActivity
+import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.SINGLE
 import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
@@ -306,7 +308,9 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun showColorDetails(hexValue: String) {
-
+    context?.let {
+      ColorsDetailActivity.getCallingIntent(it, listOf(hexValue), SINGLE)
+    }
   }
 
   private fun initRecyclerView() {
