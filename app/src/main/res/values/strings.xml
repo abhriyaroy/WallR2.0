@@ -184,5 +184,6 @@
   <string name="colors_detail_activity_colors_style_name_gradient">Style : Gradient</string>
   <string name="colors_detail_activity_colors_style_name_plasma">Style : Plasma</string>
   <string name="colors_detail_activity_image_load_error_message">Unable to load minimal image</string>
+  <string name="colors_detail_activity_color_operations_disabled_message">Please wait for the image to finish loading</string>
 
 </resources>

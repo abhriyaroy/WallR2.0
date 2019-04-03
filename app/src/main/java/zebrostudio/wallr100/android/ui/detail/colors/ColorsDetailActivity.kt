@@ -8,30 +8,51 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.ContextCompat
+import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
+import com.github.zagum.expandicon.ExpandIconView
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.android.AndroidInjection
 import eightbitlab.com.blurview.RenderScriptBlur
 import kotlinx.android.synthetic.main.activity_colors_detail.addColorToCollectionLayout
+import kotlinx.android.synthetic.main.activity_colors_detail.addToCollectionImageView
+import kotlinx.android.synthetic.main.activity_colors_detail.addToCollectionTextView
 import kotlinx.android.synthetic.main.activity_colors_detail.blurView
 import kotlinx.android.synthetic.main.activity_colors_detail.colorActionHintTextView
 import kotlinx.android.synthetic.main.activity_colors_detail.colorActionProgressSpinkit
+import kotlinx.android.synthetic.main.activity_colors_detail.colorStyleNameTextView
 import kotlinx.android.synthetic.main.activity_colors_detail.downloadColorLayout
+import kotlinx.android.synthetic.main.activity_colors_detail.downloadImageView
+import kotlinx.android.synthetic.main.activity_colors_detail.downloadRawSizeImageView
+import kotlinx.android.synthetic.main.activity_colors_detail.downloadRawSizeTextView
+import kotlinx.android.synthetic.main.activity_colors_detail.downloadTextView
 import kotlinx.android.synthetic.main.activity_colors_detail.editAndSetColorLayout
+import kotlinx.android.synthetic.main.activity_colors_detail.editAndSetImageView
+import kotlinx.android.synthetic.main.activity_colors_detail.editSetTextView
+import kotlinx.android.synthetic.main.activity_colors_detail.expandIconView
 import kotlinx.android.synthetic.main.activity_colors_detail.setColorWallpaperLayout
+import kotlinx.android.synthetic.main.activity_colors_detail.setWallpaperImageView
+import kotlinx.android.synthetic.main.activity_colors_detail.setWallpaperTextView
 import kotlinx.android.synthetic.main.activity_colors_detail.shareColorLayout
+import kotlinx.android.synthetic.main.activity_colors_detail.slidingPanel
 import kotlinx.android.synthetic.main.activity_colors_detail.spinkitView
 import kotlinx.android.synthetic.main.activity_detail.imageView
 import kotlinx.android.synthetic.main.activity_detail.parentFrameLayout
+import kotlinx.android.synthetic.main.activity_detail.setWallpaperImageLayout
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.ui.detail.images.BLUR_RADIUS
 import zebrostudio.wallr100.android.ui.detail.images.ILLEGAL_STATE_EXCEPTION_MESSAGE
+import zebrostudio.wallr100.android.ui.detail.images.SLIDING_PANEL_PARALLEL_OFFSET
+import zebrostudio.wallr100.android.utils.disable
+import zebrostudio.wallr100.android.utils.enable
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
+import zebrostudio.wallr100.android.utils.infoToast
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
@@ -57,6 +78,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     presenter.attachView(this)
     attachClickListeners()
     setUpBlurView()
+    setUpExpandPanel()
     presenter.setCalledIntent(intent)
   }
 
@@ -81,9 +103,8 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
         ILLEGAL_STATE_EXCEPTION_MESSAGE)
   }
 
-  override fun exitView() {
-    overridePendingTransition(R.anim.no_change, R.anim.slide_to_right)
-    finish()
+  override fun showImageTypeText(text: String) {
+    colorStyleNameTextView.text = text
   }
 
   override fun hasStoragePermission(): Boolean {
@@ -164,6 +185,43 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     successToast(getString(R.string.detail_activity_set_wallpaper_success_message))
   }
 
+  override fun collapsePanel() {
+    slidingPanel.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+  }
+
+  override fun disableColorOperations() {
+    setWallpaperImageLayout.disable(this, setWallpaperImageView, setWallpaperTextView)
+
+    downloadColorLayout.disable(this, downloadImageView, downloadTextView)
+
+    editAndSetColorLayout.disable(this, editAndSetImageView, editSetTextView)
+
+    addColorToCollectionLayout.disable(this, addToCollectionImageView, addToCollectionTextView)
+
+    shareColorLayout.disable(this, downloadRawSizeImageView, downloadRawSizeTextView)
+  }
+
+  override fun enableColorOperations() {
+    setWallpaperImageLayout.enable(this, setWallpaperImageView, setWallpaperTextView)
+
+    downloadColorLayout.enable(this, downloadImageView, downloadTextView)
+
+    editAndSetColorLayout.enable(this, editAndSetImageView, editSetTextView)
+
+    addColorToCollectionLayout.enable(this, addToCollectionImageView, addToCollectionTextView)
+
+    shareColorLayout.enable(this, downloadRawSizeImageView, downloadRawSizeTextView)
+  }
+
+  override fun showColorOperationsDisbaledMessage() {
+    infoToast(stringRes(R.string.colors_detail_activity_color_operations_disabled_message))
+  }
+
+  override fun exitView() {
+    overridePendingTransition(R.anim.no_change, R.anim.slide_to_right)
+    finish()
+  }
+
   private fun attachClickListeners() {
     setColorWallpaperLayout.setOnClickListener {
       presenter.handleQuickSetClick()
@@ -189,6 +247,31 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   private fun setUpBlurView() {
     blurView.setupWith(parentFrameLayout).setBlurAlgorithm(RenderScriptBlur(this))
         .setBlurRadius(BLUR_RADIUS)
+  }
+
+  private fun setUpExpandPanel() {
+    expandIconView.setState(ExpandIconView.LESS, false)
+    slidingPanel.setParallaxOffset(
+        SLIDING_PANEL_PARALLEL_OFFSET)
+    slidingPanel.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
+      override fun onPanelSlide(panel: View, slideOffset: Float) {
+        // Do nothing
+      }
+
+      override fun onPanelStateChanged(
+        panel: View,
+        previousState: SlidingUpPanelLayout.PanelState,
+        newState: SlidingUpPanelLayout.PanelState
+      ) {
+        if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+          expandIconView.setState(ExpandIconView.MORE, true)
+          presenter.setPanelStateAsExpanded()
+        } else if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+          expandIconView.setState(ExpandIconView.LESS, true)
+          presenter.setPanelStateAsCollapsed()
+        }
+      }
+    })
   }
 
   companion object {

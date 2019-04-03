@@ -12,6 +12,7 @@
   <color name="cod_gray">#1a1a1a</color>
   <color name="limed_spruce">#37474F</color>
   <color name="westar">#dbd4cf</color>
+  <color name="dove_gray">#717171</color>
 
 
   <color name="primary">@color/mineshaft</color>
