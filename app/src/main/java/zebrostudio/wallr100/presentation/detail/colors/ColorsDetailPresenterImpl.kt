@@ -41,6 +41,8 @@ class ColorsDetailPresenterImpl(
   internal var colorsDetailMode: ColorsDetailMode = SINGLE
   internal var multiColorImageType: MultiColorImageType? = null
   internal var colorList = mutableListOf<String>()
+  internal var isPanelExpanded: Boolean = false
+  internal var areColorOperationsDisabled: Boolean = false
   private var view: ColorsDetailView? = null
 
   override fun attachView(view: ColorsDetailView) {
@@ -55,6 +57,7 @@ class ColorsDetailPresenterImpl(
     if (intent.extras != null) {
       processIntent(intent)
       if (view?.hasStoragePermission() == true) {
+        setImageTypeText()
         loadImage()
       } else {
         view?.requestStoragePermission(LOAD_COLOR_WALLPAPER)
@@ -62,6 +65,14 @@ class ColorsDetailPresenterImpl(
     } else {
       view?.throwIllegalStateException()
     }
+  }
+
+  override fun setPanelStateAsExpanded() {
+    isPanelExpanded = true
+  }
+
+  override fun setPanelStateAsCollapsed() {
+    isPanelExpanded = false
   }
 
   override fun handlePermissionRequestResult(
@@ -88,52 +99,80 @@ class ColorsDetailPresenterImpl(
   }
 
   override fun handleBackButtonClick() {
-    view?.exitView()
+    if (isPanelExpanded) {
+      view?.collapsePanel()
+    } else {
+      view?.exitView()
+    }
   }
 
   override fun handleQuickSetClick() {
-    if (view?.hasStoragePermission() == true) {
-      colorsDetailsUseCase.getBitmapSingle()
-          .observeOn(postExecutionThread.scheduler)
-          .doOnSubscribe {
-            view?.showIndefiniteWaitLoader(
-                context.stringRes(R.string.finalizing_wallpaper_wait_message))
-          }
-          .autoDisposable(view!!.getScope())
-          .subscribe({
-            view?.hideIndefiniteWaitLoader()
-            view?.showWallpaperSetSuccessMessage()
-          }, {
-            view?.hideIndefiniteWaitLoader()
-            view?.showWallpaperSetErrorMessage()
-          })
+    if (!areColorOperationsDisabled) {
+      if (view?.hasStoragePermission() == true) {
+        colorsDetailsUseCase.getBitmapSingle()
+            .doOnSuccess {
+              wallpaperSetter.setWallpaper(it)
+            }
+            .observeOn(postExecutionThread.scheduler)
+            .doOnSubscribe {
+              view?.showIndefiniteWaitLoader(
+                  context.stringRes(R.string.finalizing_wallpaper_wait_message))
+              view?.disableColorOperations()
+            }
+            .autoDisposable(view!!.getScope())
+            .subscribe({
+              view?.hideIndefiniteWaitLoader()
+              view?.showWallpaperSetSuccessMessage()
+            }, {
+              view?.hideIndefiniteWaitLoader()
+              view?.showWallpaperSetErrorMessage()
+            })
+      } else {
+        view?.requestStoragePermission(QUICK_SET)
+      }
     } else {
-      view?.requestStoragePermission(QUICK_SET)
+      view?.showColorOperationsDisbaledMessage()
     }
   }
 
   override fun handleDownloadClick() {
-    if (userPremiumStatusUseCase.isUserPremium()) {
-      if (view?.hasStoragePermission() == true) {
+    if (!areColorOperationsDisabled) {
+      if (userPremiumStatusUseCase.isUserPremium()) {
+        if (view?.hasStoragePermission() == true) {
 
+        } else {
+          view?.requestStoragePermission(DOWNLOAD)
+        }
       } else {
-        view?.requestStoragePermission(DOWNLOAD)
+        view?.redirectToBuyPro(DOWNLOAD.ordinal)
       }
     } else {
-      view?.redirectToBuyPro(DOWNLOAD.ordinal)
+      view?.showColorOperationsDisbaledMessage()
     }
   }
 
   override fun handleEditSetClick() {
+    if (!areColorOperationsDisabled) {
 
+    } else {
+      view?.showColorOperationsDisbaledMessage()
+    }
   }
 
   override fun handleAddToCollectionClick() {
+    if (!areColorOperationsDisabled) {
 
+    } else {
+      view?.showColorOperationsDisbaledMessage()
+    }
   }
 
   override fun handleShareClick() {
+    if (!areColorOperationsDisabled) {
 
+    } else {
+      view?.showColorOperationsDisbaledMessage()
+    }
   }
 
   private fun handlePermissionGranted(requestCode: Int) {
@@ -166,6 +205,18 @@ class ColorsDetailPresenterImpl(
     colorList = intent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)
   }
 
+  private fun setImageTypeText() {
+    if (colorsDetailMode == SINGLE) {
+      context.stringRes(R.string.colors_detail_activity_colors_style_name_solid)
+    } else when (multiColorImageType) {
+      MATERIAL -> context.stringRes(R.string.colors_detail_activity_colors_style_name_material)
+      GRADIENT -> context.stringRes(R.string.colors_detail_activity_colors_style_name_solid)
+      else -> context.stringRes(R.string.colors_detail_activity_colors_style_name_solid)
+    }.let {
+      view?.showImageTypeText(it)
+    }
+  }
+
   private fun loadImage() {
     if (colorsDetailMode == SINGLE) {
       colorsDetailsUseCase.getColorBitmapSingle(colorList[FIRST_ELEMENT_POSITION])
@@ -184,7 +235,6 @@ class ColorsDetailPresenterImpl(
           view?.showImageLoadError()
         })
   }
-
 }
 
 enum class ColorsActionType {

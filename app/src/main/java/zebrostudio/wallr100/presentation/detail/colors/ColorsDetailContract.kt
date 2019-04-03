@@ -9,7 +9,7 @@ interface ColorsDetailContract {
 
   interface ColorsDetailView : BaseView {
     fun throwIllegalStateException()
-    fun exitView()
+    fun showImageTypeText(text: String)
     fun hasStoragePermission(): Boolean
     fun requestStoragePermission(colorsActionType: ColorsActionType)
     fun showPermissionRequiredMessage()
@@ -24,10 +24,17 @@ interface ColorsDetailContract {
     fun hideIndefiniteWaitLoader()
     fun showWallpaperSetErrorMessage()
     fun showWallpaperSetSuccessMessage()
+    fun collapsePanel()
+    fun disableColorOperations()
+    fun enableColorOperations()
+    fun showColorOperationsDisbaledMessage()
+    fun exitView()
   }
 
   interface ColorsDetailPresenter : BasePresenter<ColorsDetailView> {
     fun setCalledIntent(intent: Intent)
+    fun setPanelStateAsExpanded()
+    fun setPanelStateAsCollapsed()
     fun handlePermissionRequestResult(
       requestCode: Int, permissions: Array<String>, grantResults: IntArray
     )

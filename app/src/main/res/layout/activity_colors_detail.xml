@@ -114,6 +114,7 @@
               android:src="@drawable/ic_set_wallpaper"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+              android:id="@+id/setWallpaperTextView"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_below="@id/setWallpaperImageView"
@@ -141,6 +142,7 @@
               android:src="@drawable/ic_download_wallpaper"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+              android:id="@+id/downloadTextView"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_below="@id/downloadImageView"
@@ -168,6 +170,7 @@
               android:src="@drawable/ic_edit_set_wallpaper"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+              android:id="@+id/editSetTextView"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_alignParentBottom="true"
@@ -208,6 +211,7 @@
               android:src="@drawable/ic_add_to_gallery_white"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+              android:id="@+id/addToCollectionTextView"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_alignParentBottom="true"
@@ -236,6 +240,7 @@
               android:src="@drawable/ic_share_white_small"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+              android:id="@+id/downloadRawSizeTextView"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_alignParentBottom="true"

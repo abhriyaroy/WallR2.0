@@ -16,7 +16,10 @@ import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
 import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
 import zebrostudio.wallr100.R
@@ -81,6 +84,16 @@ fun LinearLayout.setMenuItemColorRed(context: Context) {
 fun LinearLayout.setMenuItemColorWhite(context: Context) {
   this.findViewById<WallrCustomTextView>(R.id.textviewGuillotineMenuItem)
       .setTextColor(Color.parseColor(context.getString(R.color.white)))
+}
+
+fun RelativeLayout.disable(context: Context, imageView: ImageView, textView: TextView) {
+  imageView.alpha = 0.3f
+  textView.setTextColor(context.colorRes(R.color.dove_gray))
+}
+
+fun RelativeLayout.enable(context: Context, imageView: ImageView, textView: TextView) {
+  imageView.alpha = 1f
+  textView.setTextColor(context.colorRes(R.color.white))
 }
 
 fun withDelayOnMain(delay: Long, block: () -> Unit) {
