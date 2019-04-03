@@ -36,6 +36,7 @@ interface WallrRepository {
   fun getPeoplePictures(): Single<List<ImageModel>>
   fun getTechnologyPictures(): Single<List<ImageModel>>
 
+  fun getImageBitmap(): Single<Bitmap>
   fun getImageBitmap(link: String): Observable<ImageDownloadModel>
   fun getCacheImageBitmap(): Single<Bitmap>
   fun getShortImageLink(link: String): Single<String>
@@ -66,6 +67,9 @@ interface WallrRepository {
 
   fun restoreDeletedColors(): Single<RestoreColorsModel>
   fun getSingleColorBitmap(hexValue: String): Single<Bitmap>
-  fun getMultiColorBitmap(hexValueList: List<String>, multiColorImageType: MultiColorImageType) : Single<Bitmap>
+  fun getMultiColorBitmap(
+    hexValueList: List<String>,
+    multiColorImageType: MultiColorImageType
+  ): Single<Bitmap>
 
 }

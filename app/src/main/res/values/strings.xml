@@ -33,6 +33,7 @@
     Storage permission is required to continue using this app. Please GRANT the permission when asked for</string>
   <string name="unsuccessful_purchase_error">Purchase not successful. Please try again</string>
   <string name="already_present_in_collection_error_message">Wallpaper is already present in the collection</string>
+  <string name="finalizing_wallpaper_wait_message">Finalizing stuff. Please wait...</string>
 
   <!-- Main activity strings -->
   <string name="main_activity_no_email_client_error">There is no email client installed</string>
@@ -142,7 +143,6 @@
   <string name="detail_activity_set_wallpaper_error_message">Couldn\'t set wallpaper</string>
   <string name="detail_activity_fetch_wallpaper_error_message">
     Unable to fetch wallpaper. Please try again</string>
-  <string name="detail_activity_finalizing_stuff_wait_message">Finalizing stuff. Please wait...</string>
   <string name="detail_activity_wallpaper_download_cancelled_message">Wallpaper download cancelled</string>
   <string name="detail_activity_download_notification_title_text">Downloading wallpaper</string>
   <string name="detail_activity_download_started_message">Your wallpaper download has been started</string>
