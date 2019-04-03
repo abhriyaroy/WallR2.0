@@ -4,12 +4,18 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat.JPEG
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Paint
+import android.graphics.Shader
 import android.net.Uri
 import com.zebrostudio.wallrcustoms.lowpoly.LowPoly
 import io.reactivex.Completable
 import io.reactivex.CompletableEmitter
 import io.reactivex.Observable
 import io.reactivex.Single
+import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.android.utils.compressBitmap
 import zebrostudio.wallr100.android.utils.writeInputStreamUsingByteArray
 import zebrostudio.wallr100.data.database.DatabaseHelper
@@ -18,12 +24,18 @@ import zebrostudio.wallr100.data.database.DatabaseImageType.EDITED
 import zebrostudio.wallr100.data.database.entity.CollectionDatabaseImageEntity
 import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
 import zebrostudio.wallr100.data.exception.ImageDownloadException
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.ArrayList
+import java.util.Random
 
 interface ImageHandler {
   fun isImageCached(link: String): Boolean
@@ -36,6 +48,12 @@ interface ImageHandler {
   fun convertImageInCacheToLowpoly(): Single<Bitmap>
   fun saveLowPolyImageToDownloads(): Completable
   fun saveImageToCollections(data: String, type: DatabaseImageType): Completable
+  fun saveImageToCollections(): Completable
+  fun getSingleColorBitmap(hexValue: String): Single<Bitmap>
+  fun getMultiColorBitmap(
+    hexValueList: List<String>,
+    multiColorImageType: MultiColorImageType
+  ): Single<Bitmap>
 }
 
 const val BYTE_ARRAY_SIZE = 2048
@@ -44,11 +62,13 @@ const val READ_MODE = "r"
 const val BITMAP_COMPRESS_QUALITY = 100
 const val INITIAL_SIZE = 0
 const val UID_AUTO_INCREMENT: Long = 0
+const val COLOR_BITMAP_SIZE: Int = 512
 
 class ImageHandlerImpl(
   private val context: Context,
   private val fileHandler: FileHandler,
-  private val databaseHelper: DatabaseHelper
+  private val databaseHelper: DatabaseHelper,
+  private val wallpaperSetter: WallpaperSetter
 ) : ImageHandler {
 
   internal var shouldContinueFetchingImage: Boolean = true
@@ -222,6 +242,144 @@ class ImageHandlerImpl(
       inputStream.close()
       emitter.onComplete()
     }
+  }
+
+  override fun getSingleColorBitmap(hexValue: String): Single<Bitmap> {
+    return Single.create {
+      (COLOR_BITMAP_SIZE * COLOR_BITMAP_SIZE).let {
+        val bitmapArray = IntArray(it)
+        val colorValue = Color.parseColor(hexValue)
+        for (i in 0 until it) {
+          bitmapArray[i] = colorValue
+        }
+        Bitmap.createBitmap(bitmapArray, COLOR_BITMAP_SIZE, COLOR_BITMAP_SIZE,
+            Bitmap.Config.ARGB_8888)
+      }.let { bitmap ->
+        fileHandler.getCacheFile().outputStream()
+            .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
+        it.onSuccess(bitmap)
+      }
+    }
+  }
+
+  override fun getMultiColorBitmap(
+    hexValueList: List<String>,
+    multiColorImageType: MultiColorImageType
+  ): Single<Bitmap> {
+    return Single.create { emitter ->
+      when (multiColorImageType) {
+        MATERIAL -> createMaterialBitmap(hexValueList as ArrayList<String>)
+        GRADIENT -> createGradientBitmap(hexValueList as ArrayList<String>)
+        PLASMA -> createPlasmaBitmap(hexValueList as ArrayList<String>)
+      }.let {
+        emitter.onSuccess(it)
+      }
+    }
+  }
+
+  private fun createMaterialBitmap(colors: ArrayList<String>): Bitmap {
+    val smallHeight = wallpaperSetter.getDesiredMinimumHeight()
+    val bigHeight = 2 * smallHeight
+    val middleHeight = (2 * smallHeight / Math.sqrt(2.0)).toInt()
+    val offset = (bigHeight - middleHeight) / 2
+    val bigBitmap = Bitmap.createBitmap(bigHeight, bigHeight, Bitmap.Config.ARGB_8888)
+    val colorsInt = IntArray(colors.size)
+    for (i in colors.indices) {
+      colorsInt[i] = Color.parseColor(colors[i])
+    }
+    val c = Canvas(bigBitmap)
+    c.save()
+    c.rotate(-45f, (c.width / 2).toFloat(), (c.height / 2).toFloat())
+    val paint = Paint()
+    val initStripeHeight = (middleHeight / colors.size).toFloat()
+    val initShadowHeight = (middleHeight * 0.012).toFloat()
+    val stripeSpread = (initStripeHeight * 0.25).toInt()  // Vary stripe height a bit.
+    val shadowSpread = initShadowHeight * 0.5f  // Vary shadow thickness too.
+    for (i in colors.indices.reversed()) {  // Going upwards.
+      var stripeHeight: Int
+      val shadowThickness: Float
+      if (i == colors.size - 1) {  // Fill whole canvas with last color.
+        stripeHeight = bigHeight
+        shadowThickness = 0f
+      } else {
+        stripeHeight = Math.round((i + 1) * initStripeHeight)
+        val dh = (stripeSpread * Math.random() - stripeSpread / 2).toInt()
+        stripeHeight += offset + dh
+        if (stripeHeight < 0) stripeHeight = 0
+        if (stripeHeight > bigHeight) stripeHeight = bigHeight
+        val ds = (shadowSpread * Math.random() - shadowSpread / 2).toFloat()
+        shadowThickness = Math.max(1f, initShadowHeight + ds)
+      }
+      paint.color = colorsInt[i]
+      paint.style = Paint.Style.FILL
+      paint.setShadowLayer(shadowThickness, 0.0f, 0.0f, -0x1000000)
+      c.drawRect(0f, 0f, bigHeight.toFloat(), stripeHeight.toFloat(), paint)
+    }
+    c.restore()
+    val x = (c.width - smallHeight) / 2
+    val y = (c.height - smallHeight) / 2
+    return Bitmap.createBitmap(bigBitmap, x, y, smallHeight, smallHeight)
+  }
+
+  private fun createGradientBitmap(colors: ArrayList<String>): Bitmap {
+    val height = wallpaperSetter.getDesiredMinimumHeight()
+    val wallpaperBitmap = Bitmap.createBitmap(height, height, Bitmap.Config.ARGB_8888)
+    val colorsInt = IntArray(colors.size)
+    for (i in colors.indices) {
+      colorsInt[i] = Color.parseColor(colors[i])
+    }
+    val paint = Paint()
+    val gradientShader = LinearGradient(0f, 0f, height.toFloat(), height.toFloat(), colorsInt, null,
+        Shader.TileMode.CLAMP)
+    val c = Canvas(wallpaperBitmap)
+    paint.shader = gradientShader
+    c.drawRect(0f, 0f, height.toFloat(), height.toFloat(), paint)
+    return wallpaperBitmap
+  }
+
+  private fun createPlasmaBitmap(colors: ArrayList<String>): Bitmap {
+    val height = wallpaperSetter.getDesiredMinimumHeight() / 4
+    val wallpaperBitmap = Bitmap.createBitmap(height, height, Bitmap.Config.ARGB_8888)
+    val colorsInt = IntArray(colors.size)
+    for (i in colors.indices) {
+      colorsInt[i] = Color.parseColor(colors[i])
+    }
+    val paint = Paint()
+    val gradientBitmap = Bitmap.createBitmap(256, 1, Bitmap.Config.ARGB_8888)
+    val gradientShader = LinearGradient(0f, 0f, 255f, 0f, colorsInt, null, Shader.TileMode.MIRROR)
+    val c = Canvas(gradientBitmap)
+    paint.shader = gradientShader
+    c.drawRect(0f, 0f, 256f, 1f, paint)
+    val palette = IntArray(256)
+    for (x in 0..255) {
+      palette[x] = gradientBitmap.getPixel(x, 0)
+    }
+    gradientBitmap.recycle()
+
+    val plasma = Array(height) { IntArray(height) }
+    val random = Random()
+    val n = 1.3  // Number of periods per wallpaper width.
+    val period = height / (n * 2.0 * 3.14)
+    val spread = period * 0.3
+    val period1 = period - spread + spread * random.nextFloat()
+    val period2 = period - spread + spread * random.nextFloat()
+    val period3 = period - spread + spread * random.nextFloat()
+    for (x in 0 until height)
+      for (y in 0 until height) {
+        // Adding sines to get plasma value.
+        val value = (128.0 + 128.0 * Math.sin(x / period1)
+            + 128.0 + 128.0 * Math.sin(y / period2)
+            + 128.0 + 128.0 * Math.sin((x + y) / period1)
+            + 128.0 + 128.0 * Math.sin(Math.sqrt((x * x + y * y).toDouble()) / period3)).toInt() / 4
+        plasma[x][y] = value
+      }
+    for (x in 0 until height)
+      for (y in 0 until height) {
+        val color = palette[plasma[x][y] % 256]
+        wallpaperBitmap.setPixel(x, y, color)
+      }
+    return Bitmap.createScaledBitmap(wallpaperBitmap, wallpaperSetter.getDesiredMinimumWidth(),
+        wallpaperSetter.getDesiredMinimumHeight(), true)
   }
 
 }

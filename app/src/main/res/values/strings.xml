@@ -29,6 +29,10 @@
   <string name="cancel_text">Cancel</string>
   <string name="unable_to_load_hd_image_error">
     Unable to load high-definition preview. Please ensure you have a working internet connection</string>
+  <string name="storage_permission_denied_error">
+    Storage permission is required to continue using this app. Please GRANT the permission when asked for</string>
+  <string name="unsuccessful_purchase_error">Purchase not successful. Please try again</string>
+  <string name="already_present_in_collection_error_message">Wallpaper is already present in the collection</string>
 
   <!-- Main activity strings -->
   <string name="main_activity_no_email_client_error">There is no email client installed</string>
@@ -130,13 +134,10 @@
   <string name="detail_activity_options_crystallize">CRYSTALLIZE</string>
   <string name="detail_activity_website_referral_unsplash">www.unsplash.com</string>
   <string name="detail_activity_wallpaper_action_progress_percentage">0%</string>
-  <string name="detail_activity_storage_permission_denied_error">
-    Storage permission is required to continue using this app. Please GRANT the permission when asked for</string>
   <string name="detail_activity_share_error">
     Unable to fetch shareable link. Please ensure you have a working internet connection</string>
   <string name="share_intent_message">Get high-quality wallpapers for your Android device - WallR</string>
   <string name="share_link_using">Share link using</string>
-  <string name="detail_activity_unsuccessful_purchase_error">Purchase not successful. Please try again</string>
   <string name="detail_activity_set_wallpaper_success_message">Your wallpaper has been set!</string>
   <string name="detail_activity_set_wallpaper_error_message">Couldn\'t set wallpaper</string>
   <string name="detail_activity_fetch_wallpaper_error_message">
@@ -182,6 +183,6 @@
   <string name="colors_detail_activity_colors_style_name_material">Style : Material</string>
   <string name="colors_detail_activity_colors_style_name_gradient">Style : Gradient</string>
   <string name="colors_detail_activity_colors_style_name_plasma">Style : Plasma</string>
-  <string name="already_present_in_collection_error_message">Wallpaper is already present in the collection</string>
+  <string name="colors_detail_activity_image_load_error_message">Unable to load minimal image</string>
 
 </resources>

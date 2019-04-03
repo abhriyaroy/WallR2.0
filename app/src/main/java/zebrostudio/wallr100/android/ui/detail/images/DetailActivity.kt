@@ -209,7 +209,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showPermissionRequiredMessage() {
-    errorToast(stringRes(R.string.detail_activity_storage_permission_denied_error))
+    errorToast(getString(R.string.storage_permission_denied_error))
   }
 
   override fun showNoInternetToShareError() {
@@ -217,7 +217,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showUnsuccessfulPurchaseError() {
-    errorToast(stringRes(R.string.detail_activity_unsuccessful_purchase_error))
+    errorToast(getString(R.string.unsuccessful_purchase_error))
   }
 
   override fun shareLink(shortLink: String) {
