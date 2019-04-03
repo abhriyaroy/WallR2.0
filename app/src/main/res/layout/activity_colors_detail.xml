@@ -106,7 +106,7 @@
             android:clickable="true">
 
           <ImageView
-              android:id="@+id/setWallpaperImageView"
+              android:id="@+id/operationImageView"
               android:layout_width="@dimen/detail_activity_option_image_view_width"
               android:layout_height="@dimen/detail_activity_option_image_view_height"
               android:layout_centerHorizontal="true"
@@ -114,10 +114,11 @@
               android:src="@drawable/ic_set_wallpaper"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-              android:id="@+id/setWallpaperTextView"
+              android:id="@+id/operationTextView"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_below="@id/setWallpaperImageView"
+              android:layout_alignParentBottom="true"
+              android:layout_alignParentStart="true"
               android:paddingBottom="@dimen/detail_activity_option_text_view_padding_bottom"
               android:text="@string/detail_activity_options_quick_set"
               android:gravity="center"
@@ -134,7 +135,7 @@
             android:clickable="true">
 
           <ImageView
-              android:id="@+id/downloadImageView"
+              android:id="@+id/operationImageView"
               android:layout_width="@dimen/detail_activity_option_image_view_width"
               android:layout_height="@dimen/detail_activity_option_image_view_height"
               android:layout_centerHorizontal="true"
@@ -142,10 +143,11 @@
               android:src="@drawable/ic_download_wallpaper"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-              android:id="@+id/downloadTextView"
+              android:id="@+id/operationTextView"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_below="@id/downloadImageView"
+              android:layout_alignParentBottom="true"
+              android:layout_alignParentStart="true"
               android:paddingBottom="@dimen/detail_activity_option_text_view_padding_bottom"
               android:text="@string/detail_activity_options_download"
               android:gravity="center"
@@ -162,7 +164,7 @@
             android:clickable="true">
 
           <ImageView
-              android:id="@+id/editAndSetImageView"
+              android:id="@+id/operationImageView"
               android:layout_width="@dimen/detail_activity_option_image_view_width"
               android:layout_height="@dimen/detail_activity_option_image_view_height"
               android:layout_centerHorizontal="true"
@@ -170,7 +172,7 @@
               android:src="@drawable/ic_edit_set_wallpaper"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-              android:id="@+id/editSetTextView"
+              android:id="@+id/operationTextView"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_alignParentBottom="true"
@@ -203,7 +205,7 @@
             android:clickable="true">
 
           <ImageView
-              android:id="@+id/addToCollectionImageView"
+              android:id="@+id/operationImageView"
               android:layout_width="@dimen/detail_activity_option_image_view_width"
               android:layout_height="@dimen/detail_activity_option_image_view_height"
               android:layout_centerHorizontal="true"
@@ -211,7 +213,7 @@
               android:src="@drawable/ic_add_to_gallery_white"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-              android:id="@+id/addToCollectionTextView"
+              android:id="@+id/operationTextView"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_alignParentBottom="true"
@@ -232,7 +234,7 @@
             android:clickable="true">
 
           <ImageView
-              android:id="@+id/downloadRawSizeImageView"
+              android:id="@+id/operationImageView"
               android:layout_width="@dimen/detail_activity_option_image_view_width"
               android:layout_height="@dimen/detail_activity_option_image_view_height"
               android:layout_centerHorizontal="true"
@@ -240,7 +242,7 @@
               android:src="@drawable/ic_share_white_small"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-              android:id="@+id/downloadRawSizeTextView"
+              android:id="@+id/operationTextView"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_alignParentBottom="true"

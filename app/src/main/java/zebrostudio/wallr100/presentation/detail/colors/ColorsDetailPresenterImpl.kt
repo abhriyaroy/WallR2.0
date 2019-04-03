@@ -116,8 +116,7 @@ class ColorsDetailPresenterImpl(
             .observeOn(postExecutionThread.scheduler)
             .doOnSubscribe {
               view?.showIndefiniteWaitLoader(
-                  context.stringRes(R.string.finalizing_wallpaper_wait_message))
-              view?.disableColorOperations()
+                  context.stringRes(R.string.finalizing_stuff_wait_message))
             }
             .autoDisposable(view!!.getScope())
             .subscribe({
@@ -225,15 +224,28 @@ class ColorsDetailPresenterImpl(
     }.observeOn(postExecutionThread.scheduler)
         .doOnSubscribe {
           view?.showMainImageWaitLoader()
+          disableOperations()
         }
         .autoDisposable(view!!.getScope())
         .subscribe({
           view?.hideMainImageWaitLoader()
           view?.showImage(it)
+          enableOperations()
         }, {
           it.printStackTrace()
           view?.showImageLoadError()
+          enableOperations()
         })
+  }
+
+  private fun disableOperations(){
+    view?.disableColorOperations()
+    areColorOperationsDisabled = true
+  }
+
+  private fun enableOperations(){
+    view?.enableColorOperations()
+    areColorOperationsDisabled = false
   }
 }
 

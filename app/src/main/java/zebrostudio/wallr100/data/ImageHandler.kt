@@ -272,6 +272,8 @@ class ImageHandlerImpl(
         GRADIENT -> createGradientBitmap(hexValueList as ArrayList<String>)
         PLASMA -> createPlasmaBitmap(hexValueList as ArrayList<String>)
       }.let {
+        fileHandler.getCacheFile().outputStream()
+            .compressBitmap(it, JPEG, BITMAP_COMPRESS_QUALITY)
         emitter.onSuccess(it)
       }
     }

@@ -335,7 +335,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showWallpaperOperationInProgressWaitMessage() {
-    infoToast(getString(R.string.finalizing_wallpaper_wait_message), Toast.LENGTH_SHORT)
+    infoToast(getString(R.string.finalizing_stuff_wait_message), Toast.LENGTH_SHORT)
   }
 
   override fun showDownloadWallpaperCancelledMessage() {
