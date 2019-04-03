@@ -28,6 +28,7 @@ import zebrostudio.wallr100.domain.model.RestoreColorsModel
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
 import java.util.Collections
 import java.util.TreeMap
 import java.util.concurrent.TimeUnit.SECONDS
@@ -327,6 +328,19 @@ class WallrDataRepository(
             Single.just(RestoreColorsModel(list, map))
           }
         }
+        .subscribeOn(executionThread.computationScheduler)
+  }
+
+  override fun getSingleColorBitmap(hexValue: String): Single<Bitmap> {
+    return imageHandler.getSingleColorBitmap(hexValue)
+        .subscribeOn(executionThread.computationScheduler)
+  }
+
+  override fun getMultiColorBitmap(
+    hexValueList: List<String>,
+    multiColorImageType: MultiColorImageType
+  ): Single<Bitmap> {
+    return imageHandler.getMultiColorBitmap(hexValueList, multiColorImageType)
         .subscribeOn(executionThread.computationScheduler)
   }
 

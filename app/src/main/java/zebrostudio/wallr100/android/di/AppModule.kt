@@ -42,6 +42,8 @@ import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseInteractor
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
+import zebrostudio.wallr100.domain.interactor.ColorsDetailsInteractor
+import zebrostudio.wallr100.domain.interactor.ColorsDetailsUseCase
 import zebrostudio.wallr100.domain.interactor.ImageOptionsInteractor
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.MinimalImagesInteractor
@@ -143,8 +145,9 @@ class AppModule {
   fun provideImageHandler(
     context: Context,
     fileHandler: FileHandler,
-    databaseHelper: DatabaseHelper
-  ): ImageHandler = ImageHandlerImpl(context, fileHandler, databaseHelper)
+    databaseHelper: DatabaseHelper,
+    wallpaperSetter: WallpaperSetter
+  ): ImageHandler = ImageHandlerImpl(context, fileHandler, databaseHelper, wallpaperSetter)
 
   @Provides
   @Singleton
@@ -208,6 +211,11 @@ class AppModule {
   fun provideMinimalImagesUseCase(
     wallrRepository: WallrRepository
   ): MinimalImagesUseCase = MinimalImagesInteractor(wallrRepository)
+
+  @Provides
+  fun providesColorsDetailsUseCase(
+    wallrRepository: WallrRepository
+  ): ColorsDetailsUseCase = ColorsDetailsInteractor(wallrRepository)
 
   @Provides
   fun provideImageRecyclerViewPresenter()

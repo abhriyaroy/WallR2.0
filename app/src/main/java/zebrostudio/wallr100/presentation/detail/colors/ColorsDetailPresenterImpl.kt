@@ -1,13 +1,22 @@
 package zebrostudio.wallr100.presentation.detail.colors
 
 import android.content.Intent
+import android.content.pm.PackageManager
+import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.android.ui.detail.colors.COLORS_DETAIL_MODE_INTENT_EXTRA_TAG
 import zebrostudio.wallr100.android.ui.detail.colors.COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG
 import zebrostudio.wallr100.android.ui.detail.colors.COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.MULTIPLE
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.SINGLE
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
+import zebrostudio.wallr100.domain.interactor.ColorsDetailsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
+import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.ADD_TO_COLLECTION
+import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.DOWNLOAD
+import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.EDIT_SET
+import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.LOAD_COLOR_WALLPAPER
+import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.QUICK_SET
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.ColorsDetailPresenter
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.ColorsDetailView
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
@@ -15,8 +24,13 @@ import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
 
-class ColorsDetailPresenterImpl(private val isUserPremiumStatusUseCase: UserPremiumStatusUseCase) :
-    ColorsDetailPresenter {
+const val FIRST_ELEMENT_POSITION = 0
+
+class ColorsDetailPresenterImpl(
+  private val postExecutionThread: PostExecutionThread,
+  private val isUserPremiumStatusUseCase: UserPremiumStatusUseCase,
+  private val colorsDetailsUseCase: ColorsDetailsUseCase
+) : ColorsDetailPresenter {
 
   internal var colorsDetailMode: ColorsDetailMode = SINGLE
   internal var multiColorImageType: MultiColorImageType? = null
@@ -32,11 +46,76 @@ class ColorsDetailPresenterImpl(private val isUserPremiumStatusUseCase: UserPrem
   }
 
   override fun setCalledIntent(intent: Intent) {
-    processIntent(intent)
+    if (intent.extras != null) {
+      processIntent(intent)
+      if (view?.hasStoragePermission() == true) {
+        loadImage()
+      } else {
+        view?.requestStoragePermission(LOAD_COLOR_WALLPAPER)
+      }
+    } else {
+      view?.throwIllegalStateException()
+    }
+  }
+
+  override fun handlePermissionRequestResult(
+    requestCode: Int,
+    permissions: Array<String>,
+    grantResults: IntArray
+  ) {
+    if (requestCode == LOAD_COLOR_WALLPAPER.ordinal ||
+        requestCode == QUICK_SET.ordinal ||
+        requestCode == DOWNLOAD.ordinal ||
+        requestCode == EDIT_SET.ordinal ||
+        requestCode == ADD_TO_COLLECTION.ordinal
+    ) {
+      if ((grantResults.isNotEmpty() && grantResults[FIRST_ELEMENT_POSITION]
+              == PackageManager.PERMISSION_GRANTED)) {
+        handlePermissionGranted(requestCode)
+      } else {
+        if (requestCode == LOAD_COLOR_WALLPAPER.ordinal) {
+          view?.exitView()
+        }
+        view?.showPermissionRequiredMessage()
+      }
+    }
+  }
+
+  override fun handleBackButtonClick() {
+    view?.exitView()
+  }
+
+  override fun handleQuickSetClick() {
 
   }
 
-  private fun processIntent(intent: Intent){
+  override fun handleDownloadClick() {
+
+  }
+
+  override fun handleEditSetClick() {
+
+  }
+
+  override fun handleAddToCollectionClick() {
+
+  }
+
+  override fun handleShareClick() {
+
+  }
+
+  private fun handlePermissionGranted(requestCode: Int) {
+    when (requestCode) {
+      LOAD_COLOR_WALLPAPER.ordinal -> loadImage()
+      QUICK_SET.ordinal -> handleQuickSetClick()
+      DOWNLOAD.ordinal -> handleDownloadClick()
+      EDIT_SET.ordinal -> handleEditSetClick()
+      ADD_TO_COLLECTION.ordinal -> handleAddToCollectionClick()
+    }
+  }
+
+  private fun processIntent(intent: Intent) {
     colorsDetailMode =
         if (intent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG, SINGLE.ordinal)
             == SINGLE.ordinal) {
@@ -56,4 +135,32 @@ class ColorsDetailPresenterImpl(private val isUserPremiumStatusUseCase: UserPrem
     colorList = intent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)
   }
 
+  private fun loadImage() {
+    if (colorsDetailMode == SINGLE) {
+      colorsDetailsUseCase.getColorBitmapSingle(colorList[FIRST_ELEMENT_POSITION])
+    } else {
+      colorsDetailsUseCase.getMultiColorMaterialSingle(colorList, multiColorImageType!!)
+    }.observeOn(postExecutionThread.scheduler)
+        .doOnSubscribe {
+          view?.showMainImageWaitLoader()
+        }
+        .autoDisposable(view!!.getScope())
+        .subscribe({
+          view?.hideMainImageWaitLoader()
+          view?.showImage(it)
+        }, {
+          it.printStackTrace()
+          view?.showImageLoadError()
+        })
+  }
+
+}
+
+enum class ColorsActionType {
+  LOAD_COLOR_WALLPAPER,
+  QUICK_SET,
+  DOWNLOAD,
+  EDIT_SET,
+  ADD_TO_COLLECTION,
+  SHARE
 }

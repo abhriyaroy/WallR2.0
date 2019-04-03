@@ -16,8 +16,6 @@
       android:label="@string/app_name"
       android:largeHeap="true"
       android:theme="@style/AppTheme">
-    <activity android:name=".android.ui.detail.colors.ColorsDetailActivity">
-    </activity>
     <activity android:name=".android.ui.main.MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -28,6 +26,7 @@
     <activity android:name=".android.ui.buypro.BuyProActivity"/>
     <activity android:name=".android.ui.search.SearchActivity"/>
     <activity android:name=".android.ui.detail.images.DetailActivity"/>
+    <activity android:name=".android.ui.detail.colors.ColorsDetailActivity"/>
     <activity android:name=".android.ui.expandimage.FullScreenImageActivity"/>
     <activity
         android:name="com.yalantis.ucrop.UCropActivity"

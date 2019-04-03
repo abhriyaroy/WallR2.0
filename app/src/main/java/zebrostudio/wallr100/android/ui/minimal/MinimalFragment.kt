@@ -28,6 +28,7 @@ import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.ui.adapters.DragSelectImageAdapter
 import zebrostudio.wallr100.android.ui.adapters.DragSelectImageAdapterCallbacks
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailActivity
+import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.MULTIPLE
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.SINGLE
 import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
 import zebrostudio.wallr100.android.utils.colorRes
@@ -44,6 +45,7 @@ import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.DragSelectItemPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
 import javax.inject.Inject
 
 const val SINGLE_ITEM_SIZE = 1
@@ -68,10 +70,10 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    presenter.attachView(this)
     initRecyclerView()
     initBottomPanel()
     attachMultiSelectClickListener()
-    presenter.attachView(this)
     presenter.handleViewCreated()
   }
 
@@ -309,7 +311,13 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
   override fun showColorDetails(hexValue: String) {
     context?.let {
-      ColorsDetailActivity.getCallingIntent(it, listOf(hexValue), SINGLE)
+      startActivity(ColorsDetailActivity.getCallingIntent(it, listOf(hexValue), SINGLE))
+    }
+  }
+
+  override fun showMultiColorDetails(hexValueList: List<String>, type: MultiColorImageType) {
+    context?.let {
+      startActivity(ColorsDetailActivity.getCallingIntent(it, hexValueList, MULTIPLE, type))
     }
   }
 
@@ -353,18 +361,24 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   private fun attachMultiSelectClickListener() {
-    activity!!.toolbarMultiSelectIcon.setOnClickListener {
-      presenter.handleMultiSelectMenuClick()
-    }
+    activity!!.let {
+      it.toolbarMultiSelectIcon.setOnClickListener {
+        presenter.handleMultiSelectMenuClick()
+      }
 
-    activity!!.toolbarMultiSelectIcon.setOnLongClickListener { view ->
-      Toast.makeText(context,
-          stringRes(R.string.minimal_fragment_toolbar_menu_multiselect_title), Toast.LENGTH_SHORT)
-          .let {
-            view.menuTitleToast(context!!, it, activity!!.window)
-            it.show()
-          }
-      true
+      it.toolbarMultiSelectIcon.setOnLongClickListener { view ->
+        Toast.makeText(context,
+            stringRes(R.string.minimal_fragment_toolbar_menu_multiselect_title), Toast.LENGTH_SHORT)
+            .let {
+              view.menuTitleToast(context!!, it, activity!!.window)
+              it.show()
+            }
+        true
+      }
+
+      it.minimalBottomLayoutFab.setOnClickListener {
+        presenter.handleMultiSelectFabClick(dragSelectImageAdapter!!.getSelectedItemsMap())
+      }
     }
   }
 
