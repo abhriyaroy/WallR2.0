@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.ContextCompat
@@ -15,6 +16,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.github.zagum.expandicon.ExpandIconView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import com.yalantis.ucrop.UCrop
 import dagger.android.AndroidInjection
 import eightbitlab.com.blurview.RenderScriptBlur
 import kotlinx.android.synthetic.main.activity_colors_detail.addColorToCollectionLayout
@@ -145,6 +147,10 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     spinkitView.gone()
   }
 
+  override fun showNotEnoughFreeSpaceErrorMessage() {
+    errorToast(stringRes(R.string.not_enough_free_space_error_message))
+  }
+
   override fun showImageLoadError() {
     errorToast(stringRes(R.string.colors_detail_activity_image_load_error_message))
   }
@@ -202,8 +208,28 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     shareColorLayout.enable(this)
   }
 
-  override fun showColorOperationsDisbaledMessage() {
+  override fun showColorOperationsDisabledMessage() {
     infoToast(stringRes(R.string.colors_detail_activity_color_operations_disabled_message))
+  }
+
+  override fun startCroppingActivity(
+    source: Uri,
+    destination: Uri,
+    minimumWidth: Int,
+    minimumHeight: Int
+  ) {
+    UCrop.of(source, destination)
+        .withMaxResultSize(minimumWidth, minimumHeight)
+        .useSourceImageAspectRatio()
+        .start(this)
+  }
+
+  override fun getUriFromIntent(data: Intent): Uri? {
+    return UCrop.getOutput(data)
+  }
+
+  override fun showGenericErrorMessage() {
+    errorToast(stringRes(R.string.generic_error_message))
   }
 
   override fun exitView() {

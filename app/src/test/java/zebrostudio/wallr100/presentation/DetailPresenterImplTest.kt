@@ -292,7 +292,7 @@ class DetailPresenterImplTest {
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(mockContext.stringRes(R.string.detail_activity_finalizing_wallpaper_messsage))
+    `when`(mockContext.getString(R.string.finalizing_wallpaper_messsage))
         .thenReturn(indefiniteLoaderMessage)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
@@ -324,7 +324,7 @@ class DetailPresenterImplTest {
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(true)
-    `when`(mockContext.stringRes(R.string.detail_activity_finalizing_wallpaper_messsage))
+    `when`(mockContext.stringRes(R.string.finalizing_wallpaper_messsage))
         .thenReturn(indefiniteLoaderMessage)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
@@ -357,8 +357,12 @@ class DetailPresenterImplTest {
         Observable.just(imageDownloadModel))
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(false)
     `when`(
+        < < < < < < < HEAD
         mockContext.stringRes(R.string.detail_activity_finalizing_wallpaper_messsage))
-        .thenReturn(randomString)
+    ====== =
+    mockContext.getString(R.string.finalizing_wallpaper_messsage))
+    >>>>>>> Implement edit set feature
+    .thenReturn(randomString)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
@@ -540,8 +544,8 @@ class DetailPresenterImplTest {
   @Test
   fun `should set wallpaper and show success message when crop activity results to success`() {
     `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(mockContext.stringRes(R.string.detail_activity_finalizing_wallpaper_messsage))
-        .thenReturn(randomString)
+    `when`(mockContext.stringRes(R.string.finalizing_wallpaper_messsage))
+    .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri)).thenReturn(Single.just(mockBitmap))
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(true)
 
@@ -563,8 +567,8 @@ class DetailPresenterImplTest {
 
   @Test fun `should show wallpaper setting error message when crop activity results to success`() {
     `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(mockContext.stringRes(R.string.detail_activity_finalizing_wallpaper_messsage))
-        .thenReturn(randomString)
+    `when`(mockContext.stringRes(R.string.finalizing_wallpaper_messsage))
+    .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri)).thenReturn(Single.just(mockBitmap))
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(false)
 
@@ -586,8 +590,8 @@ class DetailPresenterImplTest {
   @Test
   fun `should show generic error message when crop activity results to success but getBitmapFromUriSingle call fails`() {
     `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(mockContext.stringRes(R.string.detail_activity_finalizing_wallpaper_messsage))
-        .thenReturn(randomString)
+    `when`(mockContext.stringRes(R.string.finalizing_wallpaper_messsage))
+    .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri))
         .thenReturn(Single.error(Exception()))
 
@@ -608,8 +612,8 @@ class DetailPresenterImplTest {
 
   @Test fun `should show generic error message when crop activity results to failure`() {
     `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(mockContext.stringRes(R.string.detail_activity_finalizing_wallpaper_messsage))
-        .thenReturn(randomString)
+    `when`(mockContext.stringRes(R.string.finalizing_wallpaper_messsage))
+    .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri))
         .thenReturn(Single.error(Exception()))
 
