@@ -86,14 +86,22 @@ fun LinearLayout.setMenuItemColorWhite(context: Context) {
       .setTextColor(Color.parseColor(context.getString(R.color.white)))
 }
 
-fun RelativeLayout.disable(context: Context, imageView: ImageView, textView: TextView) {
-  imageView.alpha = 0.3f
-  textView.setTextColor(context.colorRes(R.color.dove_gray))
+fun RelativeLayout.disable(context: Context) {
+  findViewById<ImageView>(R.id.operationImageView).apply {
+    alpha = 0.3f
+  }
+  findViewById<TextView>(R.id.operationTextView).apply {
+    setTextColor(context.colorRes(R.color.dove_gray))
+  }
 }
 
-fun RelativeLayout.enable(context: Context, imageView: ImageView, textView: TextView) {
-  imageView.alpha = 1f
-  textView.setTextColor(context.colorRes(R.color.white))
+fun RelativeLayout.enable(context: Context) {
+  findViewById<ImageView>(R.id.operationImageView).apply {
+    alpha = 1.0f
+  }
+  findViewById<TextView>(R.id.operationTextView).apply {
+    setTextColor(context.colorRes(R.color.white))
+  }
 }
 
 fun withDelayOnMain(delay: Long, block: () -> Unit) {

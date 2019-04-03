@@ -18,30 +18,19 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.android.AndroidInjection
 import eightbitlab.com.blurview.RenderScriptBlur
 import kotlinx.android.synthetic.main.activity_colors_detail.addColorToCollectionLayout
-import kotlinx.android.synthetic.main.activity_colors_detail.addToCollectionImageView
-import kotlinx.android.synthetic.main.activity_colors_detail.addToCollectionTextView
 import kotlinx.android.synthetic.main.activity_colors_detail.blurView
 import kotlinx.android.synthetic.main.activity_colors_detail.colorActionHintTextView
 import kotlinx.android.synthetic.main.activity_colors_detail.colorActionProgressSpinkit
 import kotlinx.android.synthetic.main.activity_colors_detail.colorStyleNameTextView
 import kotlinx.android.synthetic.main.activity_colors_detail.downloadColorLayout
-import kotlinx.android.synthetic.main.activity_colors_detail.downloadImageView
-import kotlinx.android.synthetic.main.activity_colors_detail.downloadRawSizeImageView
-import kotlinx.android.synthetic.main.activity_colors_detail.downloadRawSizeTextView
-import kotlinx.android.synthetic.main.activity_colors_detail.downloadTextView
 import kotlinx.android.synthetic.main.activity_colors_detail.editAndSetColorLayout
-import kotlinx.android.synthetic.main.activity_colors_detail.editAndSetImageView
-import kotlinx.android.synthetic.main.activity_colors_detail.editSetTextView
 import kotlinx.android.synthetic.main.activity_colors_detail.expandIconView
 import kotlinx.android.synthetic.main.activity_colors_detail.setColorWallpaperLayout
-import kotlinx.android.synthetic.main.activity_colors_detail.setWallpaperImageView
-import kotlinx.android.synthetic.main.activity_colors_detail.setWallpaperTextView
 import kotlinx.android.synthetic.main.activity_colors_detail.shareColorLayout
 import kotlinx.android.synthetic.main.activity_colors_detail.slidingPanel
 import kotlinx.android.synthetic.main.activity_colors_detail.spinkitView
 import kotlinx.android.synthetic.main.activity_detail.imageView
 import kotlinx.android.synthetic.main.activity_detail.parentFrameLayout
-import kotlinx.android.synthetic.main.activity_detail.setWallpaperImageLayout
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
@@ -190,27 +179,27 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   override fun disableColorOperations() {
-    setWallpaperImageLayout.disable(this, setWallpaperImageView, setWallpaperTextView)
+    setColorWallpaperLayout.disable(this)
 
-    downloadColorLayout.disable(this, downloadImageView, downloadTextView)
+    downloadColorLayout.disable(this)
 
-    editAndSetColorLayout.disable(this, editAndSetImageView, editSetTextView)
+    editAndSetColorLayout.disable(this)
 
-    addColorToCollectionLayout.disable(this, addToCollectionImageView, addToCollectionTextView)
+    addColorToCollectionLayout.disable(this)
 
-    shareColorLayout.disable(this, downloadRawSizeImageView, downloadRawSizeTextView)
+    shareColorLayout.disable(this)
   }
 
   override fun enableColorOperations() {
-    setWallpaperImageLayout.enable(this, setWallpaperImageView, setWallpaperTextView)
+    setColorWallpaperLayout.enable(this)
 
-    downloadColorLayout.enable(this, downloadImageView, downloadTextView)
+    downloadColorLayout.enable(this)
 
-    editAndSetColorLayout.enable(this, editAndSetImageView, editSetTextView)
+    editAndSetColorLayout.enable(this)
 
-    addColorToCollectionLayout.enable(this, addToCollectionImageView, addToCollectionTextView)
+    addColorToCollectionLayout.enable(this)
 
-    shareColorLayout.enable(this, downloadRawSizeImageView, downloadRawSizeTextView)
+    shareColorLayout.enable(this)
   }
 
   override fun showColorOperationsDisbaledMessage() {
