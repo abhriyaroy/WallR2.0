@@ -13,12 +13,17 @@ interface ColorsDetailContract {
     fun hasStoragePermission(): Boolean
     fun requestStoragePermission(colorsActionType: ColorsActionType)
     fun showPermissionRequiredMessage()
+    fun redirectToBuyPro(requestCode: Int)
     fun showUnsuccessfulPurchaseError()
     fun showImage(bitmap: Bitmap)
     fun showMainImageWaitLoader()
     fun hideMainImageWaitLoader()
     fun showImageLoadError()
-    fun showNoInternetToShareError()
+    fun showNoInternetError()
+    fun showIndefiniteWaitLoader(message: String)
+    fun hideIndefiniteWaitLoader()
+    fun showWallpaperSetErrorMessage()
+    fun showWallpaperSetSuccessMessage()
   }
 
   interface ColorsDetailPresenter : BasePresenter<ColorsDetailView> {

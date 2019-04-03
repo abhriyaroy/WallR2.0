@@ -14,6 +14,7 @@ interface ColorsDetailsUseCase {
     multiColorImageType: MultiColorImageType
   ): Single<Bitmap>
 
+  fun getBitmapSingle(): Single<Bitmap>
   fun getBitmapFromUriSingle(uri: Uri): Single<Bitmap>
   fun saveToCollectionsCompletable(): Completable
   fun clearCachesCompletable(): Completable
@@ -30,6 +31,10 @@ class ColorsDetailsInteractor(private val wallrRepository: WallrRepository) : Co
     multiColorImageType: MultiColorImageType
   ): Single<Bitmap> {
     return wallrRepository.getMultiColorBitmap(colorHexList, multiColorImageType)
+  }
+
+  override fun getBitmapSingle(): Single<Bitmap> {
+    return wallrRepository.getImageBitmap()
   }
 
   override fun getBitmapFromUriSingle(uri: Uri): Single<Bitmap> {

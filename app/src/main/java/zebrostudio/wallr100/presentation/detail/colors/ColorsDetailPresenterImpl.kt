@@ -1,14 +1,18 @@
 package zebrostudio.wallr100.presentation.detail.colors
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import com.uber.autodispose.autoDisposable
+import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.detail.colors.COLORS_DETAIL_MODE_INTENT_EXTRA_TAG
 import zebrostudio.wallr100.android.ui.detail.colors.COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG
 import zebrostudio.wallr100.android.ui.detail.colors.COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.MULTIPLE
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.SINGLE
+import zebrostudio.wallr100.android.utils.WallpaperSetter
+import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ColorsDetailsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
@@ -27,9 +31,11 @@ import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
 const val FIRST_ELEMENT_POSITION = 0
 
 class ColorsDetailPresenterImpl(
+  private val context: Context,
   private val postExecutionThread: PostExecutionThread,
-  private val isUserPremiumStatusUseCase: UserPremiumStatusUseCase,
-  private val colorsDetailsUseCase: ColorsDetailsUseCase
+  private val userPremiumStatusUseCase: UserPremiumStatusUseCase,
+  private val colorsDetailsUseCase: ColorsDetailsUseCase,
+  private val wallpaperSetter: WallpaperSetter
 ) : ColorsDetailPresenter {
 
   internal var colorsDetailMode: ColorsDetailMode = SINGLE
@@ -86,11 +92,36 @@ class ColorsDetailPresenterImpl(
   }
 
   override fun handleQuickSetClick() {
-
+    if (view?.hasStoragePermission() == true) {
+      colorsDetailsUseCase.getBitmapSingle()
+          .observeOn(postExecutionThread.scheduler)
+          .doOnSubscribe {
+            view?.showIndefiniteWaitLoader(
+                context.stringRes(R.string.finalizing_wallpaper_wait_message))
+          }
+          .autoDisposable(view!!.getScope())
+          .subscribe({
+            view?.hideIndefiniteWaitLoader()
+            view?.showWallpaperSetSuccessMessage()
+          }, {
+            view?.hideIndefiniteWaitLoader()
+            view?.showWallpaperSetErrorMessage()
+          })
+    } else {
+      view?.requestStoragePermission(QUICK_SET)
+    }
   }
 
   override fun handleDownloadClick() {
+    if (userPremiumStatusUseCase.isUserPremium()) {
+      if (view?.hasStoragePermission() == true) {
 
+      } else {
+        view?.requestStoragePermission(DOWNLOAD)
+      }
+    } else {
+      view?.redirectToBuyPro(DOWNLOAD.ordinal)
+    }
   }
 
   override fun handleEditSetClick() {

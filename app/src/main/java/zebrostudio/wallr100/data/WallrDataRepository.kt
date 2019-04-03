@@ -180,6 +180,11 @@ class WallrDataRepository(
         .subscribeOn(executionThread.ioScheduler)
   }
 
+  override fun getImageBitmap(): Single<Bitmap> {
+    return Single.just(imageHandler.getImageBitmap())
+        .subscribeOn(executionThread.computationScheduler)
+  }
+
   override fun getImageBitmap(link: String): Observable<ImageDownloadModel> {
     if (!fileHandler.freeSpaceAvailable()) {
       return Observable.error(NotEnoughFreeSpaceException())
