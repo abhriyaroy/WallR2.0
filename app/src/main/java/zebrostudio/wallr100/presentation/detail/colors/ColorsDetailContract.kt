@@ -2,6 +2,7 @@ package zebrostudio.wallr100.presentation.detail.colors
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import zebrostudio.wallr100.presentation.BasePresenter
 import zebrostudio.wallr100.presentation.BaseView
 
@@ -18,6 +19,7 @@ interface ColorsDetailContract {
     fun showImage(bitmap: Bitmap)
     fun showMainImageWaitLoader()
     fun hideMainImageWaitLoader()
+    fun showNotEnoughFreeSpaceErrorMessage()
     fun showImageLoadError()
     fun showNoInternetError()
     fun showIndefiniteWaitLoader(message: String)
@@ -27,7 +29,15 @@ interface ColorsDetailContract {
     fun collapsePanel()
     fun disableColorOperations()
     fun enableColorOperations()
-    fun showColorOperationsDisbaledMessage()
+    fun showColorOperationsDisabledMessage()
+    fun startCroppingActivity(
+      source: Uri,
+      destination: Uri,
+      minimumWidth: Int,
+      minimumHeight: Int
+    )
+    fun getUriFromIntent(data: Intent): Uri?
+    fun showGenericErrorMessage()
     fun exitView()
   }
 
@@ -39,6 +49,7 @@ interface ColorsDetailContract {
       requestCode: Int, permissions: Array<String>, grantResults: IntArray
     )
 
+    fun handleViewResult(requestCode: Int, resultCode: Int, data: Intent?)
     fun handleQuickSetClick()
     fun handleDownloadClick()
     fun handleEditSetClick()

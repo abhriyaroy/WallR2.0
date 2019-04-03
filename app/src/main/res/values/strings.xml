@@ -33,7 +33,8 @@
     Storage permission is required to continue using this app. Please GRANT the permission when asked for</string>
   <string name="unsuccessful_purchase_error">Purchase not successful. Please try again</string>
   <string name="already_present_in_collection_error_message">Wallpaper is already present in the collection</string>
-  <string name="finalizing_wallpaper_wait_message">Finalizing stuff. Please wait...</string>
+  <string name="finalizing_stuff_wait_message">Finalizing stuff. Please wait…</string>
+  <string name="finalizing_wallpaper_messsage">Finalizing wallpaper...</string>
 
   <!-- Main activity strings -->
   <string name="main_activity_no_email_client_error">There is no email client installed</string>
@@ -118,7 +119,6 @@
   <string name="detail_activity_options_add_to_collection">ADD TO COLLECTION</string>
   <string name="detail_activity_options_edit_and_set">EDIT AND SET</string>
   <string name="detail_activity_choose_download_quality_message">Choose Download Quality</string>
-  <string name="detail_activity_finalizing_wallpaper_messsage">Finalizing wallpaper...</string>
   <string name="detail_activity_grabbing_best_quality_wallpaper_message">Grabbing the best quality wallpaper...</string>
   <string name="detail_activity_setting_up_resources_message">Setting up the necessary resources...</string>
   <string name="detail_activity_editing_tool_message">Firing up the editing tool...</string>
@@ -185,5 +185,6 @@
   <string name="colors_detail_activity_colors_style_name_plasma">Style : Plasma</string>
   <string name="colors_detail_activity_image_load_error_message">Unable to load minimal image</string>
   <string name="colors_detail_activity_color_operations_disabled_message">Please wait for the image to finish loading</string>
+  <string name="not_enough_free_space_error_message">Low on memory. Please free some memory for app to work</string>
 
 </resources>

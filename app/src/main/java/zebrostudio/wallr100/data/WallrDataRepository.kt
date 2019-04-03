@@ -181,6 +181,9 @@ class WallrDataRepository(
   }
 
   override fun getImageBitmap(): Single<Bitmap> {
+    if (!fileHandler.freeSpaceAvailable()) {
+      return Single.error(NotEnoughFreeSpaceException())
+    }
     return Single.just(imageHandler.getImageBitmap())
         .subscribeOn(executionThread.computationScheduler)
   }
@@ -337,6 +340,9 @@ class WallrDataRepository(
   }
 
   override fun getSingleColorBitmap(hexValue: String): Single<Bitmap> {
+    if (!fileHandler.freeSpaceAvailable()) {
+      return Single.error(NotEnoughFreeSpaceException())
+    }
     return imageHandler.getSingleColorBitmap(hexValue)
         .subscribeOn(executionThread.computationScheduler)
   }
@@ -345,6 +351,9 @@ class WallrDataRepository(
     hexValueList: List<String>,
     multiColorImageType: MultiColorImageType
   ): Single<Bitmap> {
+    if (!fileHandler.freeSpaceAvailable()) {
+      return Single.error(NotEnoughFreeSpaceException())
+    }
     return imageHandler.getMultiColorBitmap(hexValueList, multiColorImageType)
         .subscribeOn(executionThread.computationScheduler)
   }

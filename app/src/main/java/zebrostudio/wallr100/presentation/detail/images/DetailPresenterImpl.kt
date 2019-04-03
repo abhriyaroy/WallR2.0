@@ -412,11 +412,11 @@ class DetailPresenterImpl(
               isImageOperationInProgress = true
               detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
               val message =
-                  context.stringRes(R.string.detail_activity_finalizing_wallpaper_messsage)
+                  context.stringRes(R.string.finalizing_wallpaper_messsage)
               detailView?.showIndefiniteLoaderWithAnimation(message)
             } else if (progress == DOWNLOAD_COMPLETED_VALUE) {
               val message =
-                  context.stringRes(R.string.detail_activity_finalizing_wallpaper_messsage)
+                  context.stringRes(R.string.finalizing_wallpaper_messsage)
               detailView?.showIndefiniteLoader(message)
               if (wallpaperHasBeenSet) {
                 detailView?.showWallpaperSetSuccessMessage()
@@ -614,7 +614,7 @@ class DetailPresenterImpl(
     var hasWallpaperBeenSet = false
     detailView?.blurScreen()
     detailView?.showIndefiniteLoader(
-        context.stringRes(R.string.detail_activity_finalizing_wallpaper_messsage))
+        context.stringRes(R.string.finalizing_wallpaper_messsage))
     imageOptionsUseCase.getBitmapFromUriSingle(cropResultUri)
         .doOnSuccess {
           hasWallpaperBeenSet = wallpaperSetter.setWallpaper(it)

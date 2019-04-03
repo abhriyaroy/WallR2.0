@@ -17,6 +17,8 @@ interface ColorsDetailsUseCase {
   fun getBitmapSingle(): Single<Bitmap>
   fun getBitmapFromUriSingle(uri: Uri): Single<Bitmap>
   fun saveToCollectionsCompletable(): Completable
+  fun getCroppingSourceUri(): Uri
+  fun getCroppingDestinationUri(): Uri
   fun clearCachesCompletable(): Completable
 }
 
@@ -44,6 +46,10 @@ class ColorsDetailsInteractor(private val wallrRepository: WallrRepository) : Co
   override fun saveToCollectionsCompletable(): Completable {
     return wallrRepository.saveImageToCollections()
   }
+
+  override fun getCroppingSourceUri() = wallrRepository.getCacheSourceUri()
+
+  override fun getCroppingDestinationUri() = wallrRepository.getCacheResultUri()
 
   override fun clearCachesCompletable(): Completable {
     return wallrRepository.clearImageCaches()
