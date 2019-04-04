@@ -21,6 +21,7 @@ import com.yalantis.ucrop.UCrop
 import dagger.android.AndroidInjection
 import eightbitlab.com.blurview.RenderScriptBlur
 import kotlinx.android.synthetic.main.activity_colors_detail.addColorToCollectionLayout
+import kotlinx.android.synthetic.main.activity_colors_detail.backIcon
 import kotlinx.android.synthetic.main.activity_colors_detail.blurView
 import kotlinx.android.synthetic.main.activity_colors_detail.colorActionHintTextView
 import kotlinx.android.synthetic.main.activity_colors_detail.colorActionProgressSpinkit
@@ -252,6 +253,10 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     startActivity(FullScreenImageActivity.getCallingIntent(this, EDITED_BITMAP_CACHE))
   }
 
+  override fun showDownloadCompletedSuccessMessage() {
+    successToast(stringRes(R.string.download_finished_success_message))
+  }
+
   override fun exitView() {
     overridePendingTransition(R.anim.no_change, R.anim.slide_to_right)
     finish()
@@ -280,6 +285,10 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
     imageView.setOnClickListener {
       presenter.handleImageViewClicked()
+    }
+
+    backIcon.setOnClickListener {
+      presenter.handleBackButtonClick()
     }
   }
 

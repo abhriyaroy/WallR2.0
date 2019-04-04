@@ -5,6 +5,7 @@ import android.net.Uri
 import io.reactivex.Completable
 import io.reactivex.Single
 import zebrostudio.wallr100.domain.WallrRepository
+import zebrostudio.wallr100.domain.model.CollectionsImageModel
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
 
 interface ColorsDetailsUseCase {
@@ -16,9 +17,14 @@ interface ColorsDetailsUseCase {
 
   fun getBitmapSingle(): Single<Bitmap>
   fun getBitmapFromUriSingle(uri: Uri): Single<Bitmap>
-  fun saveToCollectionsCompletable(): Completable
+  fun saveToCollectionsCompletable(
+    data: String,
+    type: CollectionsImageModel
+  ): Completable
+
   fun getCroppingSourceUri(): Uri
   fun getCroppingDestinationUri(): Uri
+  fun downloadImage(): Completable
   fun clearCachesCompletable(): Completable
 }
 
@@ -43,13 +49,16 @@ class ColorsDetailsInteractor(private val wallrRepository: WallrRepository) : Co
     return wallrRepository.getBitmapFromUri(uri)
   }
 
-  override fun saveToCollectionsCompletable(): Completable {
-    return wallrRepository.saveImageToCollections()
-  }
+  override fun saveToCollectionsCompletable(
+    data: String,
+    type: CollectionsImageModel
+  ) = wallrRepository.saveImageToCollections(data, type)
 
   override fun getCroppingSourceUri() = wallrRepository.getCacheSourceUri()
 
   override fun getCroppingDestinationUri() = wallrRepository.getCacheResultUri()
+
+  override fun downloadImage() = wallrRepository.saveCachedImageToDownloads()
 
   override fun clearCachesCompletable(): Completable {
     return wallrRepository.clearImageCaches()

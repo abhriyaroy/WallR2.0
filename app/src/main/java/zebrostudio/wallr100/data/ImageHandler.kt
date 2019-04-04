@@ -46,9 +46,8 @@ interface ImageHandler {
   fun getImageUri(): Uri
   fun convertUriToBitmap(uri: Uri): Single<Bitmap>
   fun convertImageInCacheToLowpoly(): Single<Bitmap>
-  fun saveLowPolyImageToDownloads(): Completable
+  fun saveCacheImageToDownloads(): Completable
   fun saveImageToCollections(data: String, type: DatabaseImageType): Completable
-  fun saveImageToCollections(): Completable
   fun getSingleColorBitmap(hexValue: String): Single<Bitmap>
   fun getMultiColorBitmap(
     hexValueList: List<String>,
@@ -185,7 +184,7 @@ class ImageHandlerImpl(
     }
   }
 
-  override fun saveLowPolyImageToDownloads(): Completable {
+  override fun saveCacheImageToDownloads(): Completable {
     return Completable.create {
       try {
         fileHandler.getCacheFile().inputStream().let { inputStream ->

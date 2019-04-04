@@ -117,11 +117,11 @@ class ImageOptionsUseCaseTest {
   }
 
   @Test fun `should complete on downloadCrystallizedImageCompletable call success`() {
-    `when`(wallrRepository.saveCrystallizedImageToDownloads()).thenReturn(Completable.complete())
+    `when`(wallrRepository.saveCachedImageToDownloads()).thenReturn(Completable.complete())
 
     imageOptionsUseCase.downloadCrystallizedImageCompletable().test().assertComplete()
 
-    verify(wallrRepository).saveCrystallizedImageToDownloads()
+    verify(wallrRepository).saveCachedImageToDownloads()
     verifyNoMoreInteractions(wallrRepository)
   }
 

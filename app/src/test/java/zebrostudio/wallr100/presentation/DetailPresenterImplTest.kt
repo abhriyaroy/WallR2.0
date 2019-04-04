@@ -356,8 +356,7 @@ class DetailPresenterImplTest {
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
         Observable.just(imageDownloadModel))
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(false)
-    `when`(mockContext.getString(R.string.finalizing_wallpaper_messsage))
-        .thenReturn(randomString)
+    `when`(mockContext.getString(R.string.finalizing_wallpaper_messsage)).thenReturn(randomString)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),

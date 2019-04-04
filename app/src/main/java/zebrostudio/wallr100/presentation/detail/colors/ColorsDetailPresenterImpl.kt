@@ -20,11 +20,14 @@ import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ColorsDetailsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
+import zebrostudio.wallr100.domain.model.CollectionsImageModel.EDITED
+import zebrostudio.wallr100.domain.model.CollectionsImageModel.MINIMAL_COLOR
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.ADD_TO_COLLECTION
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.DOWNLOAD
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.EDIT_SET
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.LOAD_COLOR_WALLPAPER
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.QUICK_SET
+import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.SHARE
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.ColorsDetailPresenter
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.ColorsDetailView
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
@@ -48,6 +51,7 @@ class ColorsDetailPresenterImpl(
   internal var isPanelExpanded: Boolean = false
   internal var areColorOperationsDisabled: Boolean = false
   internal var isColorWallpaperOperationActive: Boolean = false
+  internal var lastImageOperationType = MINIMAL_COLOR
   private var view: ColorsDetailView? = null
 
   override fun attachView(view: ColorsDetailView) {
@@ -192,19 +196,19 @@ class ColorsDetailPresenterImpl(
     if (!areColorOperationsDisabled) {
       if (userPremiumStatusUseCase.isUserPremium()) {
         if (view?.hasStoragePermission() == true) {
-          colorsDetailsUseCase.saveToCollectionsCompletable()
+          colorsDetailsUseCase.downloadImage()
               .observeOn(postExecutionThread.scheduler)
               .doOnSubscribe {
-                view?.showIndefiniteWaitLoader(
-                    context.stringRes(R.string.adding_image_to_collections_message))
+                view?.showIndefiniteWaitLoader(context.stringRes(
+                    R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
               }
               .autoDisposable(view!!.getScope())
               .subscribe({
-                view?.showAddToCollectionSuccessMessage()
                 view?.hideIndefiniteWaitLoader()
+                view?.showDownloadCompletedSuccessMessage()
               }, {
-                view?.showGenericErrorMessage()
                 view?.hideIndefiniteWaitLoader()
+                view?.showGenericErrorMessage()
               })
         } else {
           view?.requestStoragePermission(DOWNLOAD)
@@ -241,7 +245,21 @@ class ColorsDetailPresenterImpl(
     if (!areColorOperationsDisabled) {
       if (userPremiumStatusUseCase.isUserPremium()) {
         if (view?.hasStoragePermission() == true) {
-
+          colorsDetailsUseCase.saveToCollectionsCompletable(colorList.toString(),
+              lastImageOperationType)
+              .observeOn(postExecutionThread.scheduler)
+              .doOnSubscribe {
+                view?.showIndefiniteWaitLoader(
+                    context.stringRes(R.string.adding_image_to_collections_message))
+              }
+              .autoDisposable(view!!.getScope())
+              .subscribe({
+                view?.showAddToCollectionSuccessMessage()
+                view?.hideIndefiniteWaitLoader()
+              }, {
+                view?.showGenericErrorMessage()
+                view?.hideIndefiniteWaitLoader()
+              })
         } else {
           view?.requestStoragePermission(ADD_TO_COLLECTION)
         }
@@ -255,7 +273,15 @@ class ColorsDetailPresenterImpl(
 
   override fun handleShareClick() {
     if (!areColorOperationsDisabled) {
+      if (userPremiumStatusUseCase.isUserPremium()) {
+        if (view?.hasStoragePermission() == true) {
 
+        } else {
+          view?.requestStoragePermission(SHARE)
+        }
+      } else {
+        view?.redirectToBuyPro(SHARE.ordinal)
+      }
     } else {
       view?.showColorOperationsDisabledMessage()
     }
@@ -296,8 +322,8 @@ class ColorsDetailPresenterImpl(
       context.stringRes(R.string.colors_detail_activity_colors_style_name_solid)
     } else when (multiColorImageType) {
       MATERIAL -> context.stringRes(R.string.colors_detail_activity_colors_style_name_material)
-      GRADIENT -> context.stringRes(R.string.colors_detail_activity_colors_style_name_solid)
-      else -> context.stringRes(R.string.colors_detail_activity_colors_style_name_solid)
+      GRADIENT -> context.stringRes(R.string.colors_detail_activity_colors_style_name_gradient)
+      else -> context.stringRes(R.string.colors_detail_activity_colors_style_name_plasma)
     }.let {
       view?.showImageTypeText(it)
     }
@@ -333,6 +359,7 @@ class ColorsDetailPresenterImpl(
         .autoDisposable(view?.getScope()!!)
         .subscribe({
           isColorWallpaperOperationActive = false
+          lastImageOperationType = EDITED
           view?.showImage(it)
           hasWallpaperBeenSet = wallpaperSetter.setWallpaper(it)
           if (hasWallpaperBeenSet) {

@@ -413,7 +413,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showDownloadCompletedSuccessMessage() {
-    successToast(stringRes(R.string.detail_activity_download_finished_message))
+    successToast(stringRes(R.string.download_finished_success_message))
   }
 
   override fun showCrystallizedDownloadCompletedSuccessMessage() {

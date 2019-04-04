@@ -255,8 +255,8 @@ class WallrDataRepository(
         }
   }
 
-  override fun saveCrystallizedImageToDownloads(): Completable {
-    return imageHandler.saveLowPolyImageToDownloads()
+  override fun saveCachedImageToDownloads(): Completable {
+    return imageHandler.saveCacheImageToDownloads()
         .subscribeOn(executionThread.computationScheduler)
   }
 

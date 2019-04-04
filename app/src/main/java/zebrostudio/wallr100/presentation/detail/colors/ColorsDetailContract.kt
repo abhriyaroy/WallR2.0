@@ -41,6 +41,7 @@ interface ColorsDetailContract {
     fun showGenericErrorMessage()
     fun showOperationInProgressWaitMessage()
     fun showFullScreenImage()
+    fun showDownloadCompletedSuccessMessage()
     fun exitView()
   }
 

@@ -404,11 +404,11 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should complete on saveCrystallizedImageToDownloads call success`() {
-    `when`(imageHandler.saveLowPolyImageToDownloads()).thenReturn(Completable.complete())
+    `when`(imageHandler.saveCacheImageToDownloads()).thenReturn(Completable.complete())
 
-    wallrDataRepository.saveCrystallizedImageToDownloads().test().assertComplete()
+    wallrDataRepository.saveCachedImageToDownloads().test().assertComplete()
 
-    verify(imageHandler).saveLowPolyImageToDownloads()
+    verify(imageHandler).saveCacheImageToDownloads()
     verifyNoMoreInteractions(imageHandler)
     `should verify computation scheduler call`()
   }

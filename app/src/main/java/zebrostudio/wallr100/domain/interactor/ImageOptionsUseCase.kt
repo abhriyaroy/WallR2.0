@@ -69,7 +69,7 @@ class ImageOptionsInteractor(
   }
 
   override fun downloadCrystallizedImageCompletable(): Completable {
-    return wallrRepository.saveCrystallizedImageToDownloads()
+    return wallrRepository.saveCachedImageToDownloads()
   }
 
   override fun isDownloadInProgress(link: String): Boolean {
