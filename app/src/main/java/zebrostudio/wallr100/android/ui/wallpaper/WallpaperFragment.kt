@@ -16,6 +16,7 @@ import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.EXPLO
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.TOP_PICKS_TAG
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
+import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.visible
 
 class WallpaperFragment : BaseFragment() {
@@ -52,7 +53,7 @@ class WallpaperFragment : BaseFragment() {
   private fun configureExploreChildView(imageListFragmentClass: Class<ImageListFragment>) {
     val viewPagerItemAdapter =
         FragmentPagerItemAdapter(childFragmentManager, FragmentPagerItems.with(context)
-            .add(getString(R.string.explore_images), imageListFragmentClass)
+            .add(stringRes(R.string.explore_images), imageListFragmentClass)
             .create())
     wallpaperFragmentViewPager?.adapter = viewPagerItemAdapter
   }
@@ -63,9 +64,9 @@ class WallpaperFragment : BaseFragment() {
   ) {
     val viewPagerItemAdapter =
         FragmentPagerItemAdapter(childFragmentManager, FragmentPagerItems.with(context)
-            .add(getString(R.string.recent_images), imageListFragmentClass)
-            .add(getString(R.string.popular_images), imageListFragmentClass)
-            .add(getString(R.string.standouts_images), imageListFragmentClass)
+            .add(stringRes(R.string.recent_images), imageListFragmentClass)
+            .add(stringRes(R.string.popular_images), imageListFragmentClass)
+            .add(stringRes(R.string.standouts_images), imageListFragmentClass)
             .create())
     wallpaperFragmentViewPager?.adapter = viewPagerItemAdapter
     tabLayout?.setViewPager(wallpaperFragmentViewPager)
@@ -78,12 +79,12 @@ class WallpaperFragment : BaseFragment() {
   ) {
     val viewPagerItemAdapter =
         FragmentPagerItemAdapter(childFragmentManager, FragmentPagerItems.with(context)
-            .add(getString(R.string.buildings_images), imageListFragmentClass)
-            .add(getString(R.string.food_images), imageListFragmentClass)
-            .add(getString(R.string.nature_images), imageListFragmentClass)
-            .add(getString(R.string.objects_images), imageListFragmentClass)
-            .add(getString(R.string.people_images), imageListFragmentClass)
-            .add(getString(R.string.technology_images), imageListFragmentClass)
+            .add(stringRes(R.string.buildings_images), imageListFragmentClass)
+            .add(stringRes(R.string.food_images), imageListFragmentClass)
+            .add(stringRes(R.string.nature_images), imageListFragmentClass)
+            .add(stringRes(R.string.objects_images), imageListFragmentClass)
+            .add(stringRes(R.string.people_images), imageListFragmentClass)
+            .add(stringRes(R.string.technology_images), imageListFragmentClass)
             .create())
     wallpaperFragmentViewPager?.adapter = viewPagerItemAdapter
     tabLayout?.setViewPager(wallpaperFragmentViewPager)

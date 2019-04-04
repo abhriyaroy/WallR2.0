@@ -9,6 +9,7 @@ import android.content.IntentFilter
 import android.net.Uri
 import io.reactivex.Completable
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.utils.stringRes
 
 interface DownloadHelper {
   fun downloadImage(link: String): Completable
@@ -28,7 +29,7 @@ class DownloadHelperImpl(
       val request =
           DownloadManager.Request(Uri.parse(link))
               .setTitle(
-                  context.getString(R.string.detail_activity_download_notification_title_text))
+                  context.stringRes(R.string.detail_activity_download_notification_title_text))
               .setNotificationVisibility(
                   DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
               .setDestinationUri(Uri.fromFile(fileHandler.getDownloadFile()))

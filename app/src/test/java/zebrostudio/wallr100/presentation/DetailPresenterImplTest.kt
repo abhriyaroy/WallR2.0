@@ -33,11 +33,12 @@ import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.android.ui.detail.images.DetailActivity
-import zebrostudio.wallr100.android.utils.GsonProvider
 import zebrostudio.wallr100.android.utils.WallpaperSetter
+import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
+import zebrostudio.wallr100.domain.model.CollectionsImageModel
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
@@ -67,7 +68,6 @@ class DetailPresenterImplTest {
   @Mock private lateinit var mockBitmap: Bitmap
   @Mock private lateinit var mockContext: Context
   @Mock private lateinit var postExecutionThread: PostExecutionThread
-  @Mock private lateinit var gsonProvider: GsonProvider
   @Mock private lateinit var mockUri: Uri
   @Mock private lateinit var mockIntent: Intent
   @Mock private lateinit var mockBundle: Bundle
@@ -88,7 +88,7 @@ class DetailPresenterImplTest {
     detailPresenterImpl =
         DetailPresenterImpl(mockContext,
             imageOptionsUseCase, userPremiumStatusUseCase,
-            wallpaperSetter, postExecutionThread, imageDownloadPresenterEntityMapper, gsonProvider)
+            wallpaperSetter, postExecutionThread, imageDownloadPresenterEntityMapper)
     detailPresenterImpl.attachView(detailView)
 
     testScopeProvider = TestLifecycleScopeProvider.createInitial(
@@ -292,7 +292,7 @@ class DetailPresenterImplTest {
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(mockContext.getString(R.string.detail_activity_finalizing_wallpaper_messsage))
+    `when`(mockContext.stringRes(R.string.detail_activity_finalizing_wallpaper_messsage))
         .thenReturn(indefiniteLoaderMessage)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
@@ -324,7 +324,7 @@ class DetailPresenterImplTest {
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(true)
-    `when`(mockContext.getString(R.string.detail_activity_finalizing_wallpaper_messsage))
+    `when`(mockContext.stringRes(R.string.detail_activity_finalizing_wallpaper_messsage))
         .thenReturn(indefiniteLoaderMessage)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
@@ -357,7 +357,7 @@ class DetailPresenterImplTest {
         Observable.just(imageDownloadModel))
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(false)
     `when`(
-        mockContext.getString(R.string.detail_activity_finalizing_wallpaper_messsage))
+        mockContext.stringRes(R.string.detail_activity_finalizing_wallpaper_messsage))
         .thenReturn(randomString)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
@@ -482,7 +482,7 @@ class DetailPresenterImplTest {
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(mockContext.getString(R.string.detail_activity_editing_tool_message))
+    `when`(mockContext.stringRes(R.string.detail_activity_editing_tool_message))
         .thenReturn(randomString)
 
     detailPresenterImpl.handlePermissionRequestResult(EDIT_SET.ordinal,
@@ -540,7 +540,7 @@ class DetailPresenterImplTest {
   @Test
   fun `should set wallpaper and show success message when crop activity results to success`() {
     `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(mockContext.getString(R.string.detail_activity_finalizing_wallpaper_messsage))
+    `when`(mockContext.stringRes(R.string.detail_activity_finalizing_wallpaper_messsage))
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri)).thenReturn(Single.just(mockBitmap))
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(true)
@@ -563,7 +563,7 @@ class DetailPresenterImplTest {
 
   @Test fun `should show wallpaper setting error message when crop activity results to success`() {
     `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(mockContext.getString(R.string.detail_activity_finalizing_wallpaper_messsage))
+    `when`(mockContext.stringRes(R.string.detail_activity_finalizing_wallpaper_messsage))
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri)).thenReturn(Single.just(mockBitmap))
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(false)
@@ -586,7 +586,7 @@ class DetailPresenterImplTest {
   @Test
   fun `should show generic error message when crop activity results to success but getBitmapFromUriSingle call fails`() {
     `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(mockContext.getString(R.string.detail_activity_finalizing_wallpaper_messsage))
+    `when`(mockContext.stringRes(R.string.detail_activity_finalizing_wallpaper_messsage))
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri))
         .thenReturn(Single.error(Exception()))
@@ -608,7 +608,7 @@ class DetailPresenterImplTest {
 
   @Test fun `should show generic error message when crop activity results to failure`() {
     `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(mockContext.getString(R.string.detail_activity_finalizing_wallpaper_messsage))
+    `when`(mockContext.stringRes(R.string.detail_activity_finalizing_wallpaper_messsage))
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri))
         .thenReturn(Single.error(Exception()))
@@ -1301,7 +1301,7 @@ class DetailPresenterImplTest {
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(mockContext.getString(
+    `when`(mockContext.stringRes(
         R.string.detail_activity_adding_image_to_collections_message)).thenReturn(randomString)
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
@@ -1336,7 +1336,7 @@ class DetailPresenterImplTest {
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(mockContext.getString(
+    `when`(mockContext.stringRes(
         R.string.detail_activity_adding_image_to_collections_message)).thenReturn(randomString)
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
@@ -1362,6 +1362,7 @@ class DetailPresenterImplTest {
   fun `should add image to collection on handleViewResult of add to collection type call success of search image type`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
     detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.lastImageOperationType = CollectionsImageModel.SEARCH
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
     val jsonString = Gson().toJson(detailPresenterImpl.searchImage)
@@ -1373,8 +1374,10 @@ class DetailPresenterImplTest {
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(gsonProvider.getGson()).thenReturn(Gson())
-    `when`(imageOptionsUseCase.addImageToCollection()).thenReturn(
+    `when`(imageOptionsUseCase.addImageToCollection(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
+        detailPresenterImpl.lastImageOperationType
+    )).thenReturn(
         Completable.complete())
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
@@ -1391,7 +1394,9 @@ class DetailPresenterImplTest {
     verifyNoMoreInteractions(detailView)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
-    verify(imageOptionsUseCase).addImageToCollection()
+    verify(imageOptionsUseCase).addImageToCollection(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
+        detailPresenterImpl.lastImageOperationType)
     verifyNoMoreInteractions(imageOptionsUseCase)
     shouldVerifyPostExecutionThreadSchedulerCall(2)
   }
@@ -1400,6 +1405,7 @@ class DetailPresenterImplTest {
   fun `should add image to collection on handleViewResult of add to collection type call success of wallpaper image type`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
     detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.lastImageOperationType = CollectionsImageModel.WALLPAPER
     detailPresenterImpl.wallpaperImage =
         ImagePresenterEntityFactory.getImagePresenterEntity()
     val jsonString = Gson().toJson(detailPresenterImpl.wallpaperImage)
@@ -1411,8 +1417,10 @@ class DetailPresenterImplTest {
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(gsonProvider.getGson()).thenReturn(Gson())
-    `when`(imageOptionsUseCase.addImageToCollection()).thenReturn(
+    `when`(imageOptionsUseCase.addImageToCollection(
+        detailPresenterImpl.wallpaperImage.imageLink.large,
+        detailPresenterImpl.lastImageOperationType
+    )).thenReturn(
         Completable.complete())
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
@@ -1429,7 +1437,9 @@ class DetailPresenterImplTest {
     verifyNoMoreInteractions(detailView)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
         detailPresenterImpl.wallpaperImage.imageLink.large)
-    verify(imageOptionsUseCase).addImageToCollection()
+    verify(imageOptionsUseCase).addImageToCollection(
+        detailPresenterImpl.wallpaperImage.imageLink.large,
+        detailPresenterImpl.lastImageOperationType)
     verifyNoMoreInteractions(imageOptionsUseCase)
     shouldVerifyPostExecutionThreadSchedulerCall(2)
   }

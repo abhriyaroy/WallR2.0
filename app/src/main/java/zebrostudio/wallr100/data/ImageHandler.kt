@@ -187,11 +187,10 @@ class ImageHandlerImpl(
           saveToCollection(emitter, data, type)
         } else {
           var isEntryAlreadyPresent = false
-          databaseHelper.getDatabase().collectionsDao().getAllData().subscribe({
+          databaseHelper.getDatabase().collectionsDao().getAllData().subscribe { it ->
             it.forEach {
               if (it.type == type.ordinal && it.data == data) {
                 isEntryAlreadyPresent = true
-                return@forEach
               }
             }
             if (!isEntryAlreadyPresent) {
@@ -199,9 +198,7 @@ class ImageHandlerImpl(
             } else {
               emitter.onError(AlreadyPresentInCollectionException())
             }
-          }, {
-
-          })
+          }
         }
       } catch (exception: IOException) {
         emitter.onError(exception)

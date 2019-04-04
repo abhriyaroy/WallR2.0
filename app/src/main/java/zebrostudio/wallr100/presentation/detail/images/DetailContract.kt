@@ -54,6 +54,7 @@ interface DetailContract {
     fun showCrystallizeSuccessMessage()
     fun showImageHasAlreadyBeenCrystallizedMessage()
     fun showAddToCollectionSuccessMessage()
+    fun showAlreadyPresentInCollectionErrorMessage()
     fun showExpandedImage(lowQualityLink: String, highQualityLink: String)
     fun showCrystallizedExpandedImage()
     fun showEditedExpandedImage()

@@ -182,5 +182,6 @@
   <string name="colors_detail_activity_colors_style_name_material">Style : Material</string>
   <string name="colors_detail_activity_colors_style_name_gradient">Style : Gradient</string>
   <string name="colors_detail_activity_colors_style_name_plasma">Style : Plasma</string>
+  <string name="already_present_in_collection_error_message">Wallpaper is already present in the collection</string>
 
 </resources>

@@ -9,7 +9,6 @@ import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.presentation.detail.images.DetailContract
 import zebrostudio.wallr100.presentation.detail.images.DetailPresenterImpl
-import zebrostudio.wallr100.android.utils.GsonProvider
 import zebrostudio.wallr100.presentation.detail.images.mapper.ImageDownloadPresenterEntityMapper
 
 @Module
@@ -26,14 +25,12 @@ class DetailActivityModule {
     userPremiumStatusUseCase: UserPremiumStatusUseCase,
     wallpaperSetter: WallpaperSetter,
     postExecutionThread: PostExecutionThread,
-    imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper,
-    gsonHelper: GsonProvider
+    imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper
   ): DetailContract.DetailPresenter = DetailPresenterImpl(
       context,
       imageOptionsUseCase,
       userPremiumStatusUseCase,
       wallpaperSetter,
       postExecutionThread,
-      imageDownloadPresenterEntityMapper,
-      gsonHelper)
+      imageDownloadPresenterEntityMapper)
 }

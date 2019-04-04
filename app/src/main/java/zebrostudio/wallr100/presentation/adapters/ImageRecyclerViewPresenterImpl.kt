@@ -71,8 +71,8 @@ class ImageRecyclerViewPresenterImpl : ImageRecyclerViewPresenter {
   }
 
   enum class ImageListType {
-    SEARCH,
-    WALLPAPERS
+    WALLPAPERS,
+    SEARCH
   }
 
 }

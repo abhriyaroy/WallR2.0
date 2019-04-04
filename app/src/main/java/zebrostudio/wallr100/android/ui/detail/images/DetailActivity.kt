@@ -209,24 +209,24 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showPermissionRequiredMessage() {
-    errorToast(getString(R.string.detail_activity_storage_permission_denied_error))
+    errorToast(stringRes(R.string.detail_activity_storage_permission_denied_error))
   }
 
   override fun showNoInternetToShareError() {
-    errorToast(getString(R.string.detail_activity_share_error))
+    errorToast(stringRes(R.string.detail_activity_share_error))
   }
 
   override fun showUnsuccessfulPurchaseError() {
-    errorToast(getString(R.string.detail_activity_unsuccessful_purchase_error))
+    errorToast(stringRes(R.string.detail_activity_unsuccessful_purchase_error))
   }
 
   override fun shareLink(shortLink: String) {
     val sendIntent = Intent()
     sendIntent.action = Intent.ACTION_SEND
-    sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_intent_message) +
+    sendIntent.putExtra(Intent.EXTRA_TEXT, stringRes(R.string.share_intent_message) +
         "\n\n" + shortLink)
     sendIntent.type = "text/plain"
-    startActivity(Intent.createChooser(sendIntent, getString(R.string.share_link_using)))
+    startActivity(Intent.createChooser(sendIntent, stringRes(R.string.share_link_using)))
   }
 
   override fun showWaitLoader(message: String) {
@@ -250,7 +250,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showGenericErrorMessage() {
-    errorToast(getString(R.string.generic_error_message))
+    errorToast(stringRes(R.string.generic_error_message))
   }
 
   override fun blurScreen() {
@@ -267,7 +267,7 @@ class DetailActivity : BaseActivity(), DetailView {
         INITIAL_LOADER_PROGRESS_PERCENTAGE
     wallpaperDownloadProgressPercentage.visible()
     loadingHintBelowProgressPercentage.text =
-        getString(R.string.detail_activity_grabbing_best_quality_wallpaper_message)
+        stringRes(R.string.detail_activity_grabbing_best_quality_wallpaper_message)
     loadingHintBelowProgressPercentage.visible()
   }
 
@@ -319,15 +319,15 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showUnableToDownloadErrorMessage() {
-    errorToast(getString(R.string.detail_activity_fetch_wallpaper_error_message))
+    errorToast(stringRes(R.string.detail_activity_fetch_wallpaper_error_message))
   }
 
   override fun showWallpaperSetErrorMessage() {
-    errorToast(getString(R.string.detail_activity_set_wallpaper_error_message))
+    errorToast(stringRes(R.string.detail_activity_set_wallpaper_error_message))
   }
 
   override fun showWallpaperSetSuccessMessage() {
-    successToast(getString(R.string.detail_activity_set_wallpaper_success_message))
+    successToast(stringRes(R.string.detail_activity_set_wallpaper_success_message))
   }
 
   override fun updateProgressPercentage(progress: String) {
@@ -335,11 +335,11 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showWallpaperOperationInProgressWaitMessage() {
-    infoToast(getString(R.string.detail_activity_finalizing_stuff_wait_message), Toast.LENGTH_SHORT)
+    infoToast(stringRes(R.string.detail_activity_finalizing_stuff_wait_message), Toast.LENGTH_SHORT)
   }
 
   override fun showDownloadWallpaperCancelledMessage() {
-    infoToast(getString(R.string.detail_activity_wallpaper_download_cancelled_message))
+    infoToast(stringRes(R.string.detail_activity_wallpaper_download_cancelled_message))
   }
 
   override fun startCroppingActivity(
@@ -405,19 +405,19 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showDownloadStartedMessage() {
-    infoToast(getString(R.string.detail_activity_download_started_message))
+    infoToast(stringRes(R.string.detail_activity_download_started_message))
   }
 
   override fun showDownloadAlreadyInProgressMessage() {
-    errorToast(getString(R.string.detail_activity_download_already_in_progress_message))
+    errorToast(stringRes(R.string.detail_activity_download_already_in_progress_message))
   }
 
   override fun showDownloadCompletedSuccessMessage() {
-    successToast(getString(R.string.detail_activity_download_finished_message))
+    successToast(stringRes(R.string.detail_activity_download_finished_message))
   }
 
   override fun showCrystallizedDownloadCompletedSuccessMessage() {
-    successToast(getString(R.string.detail_activity_crystallized_download_finished_message))
+    successToast(stringRes(R.string.detail_activity_crystallized_download_finished_message))
   }
 
   override fun showCrystallizeDescriptionDialog() {
@@ -428,8 +428,8 @@ class DetailActivity : BaseActivity(), DetailView {
         .widgetColor(colorRes(R.color.accent))
         .positiveColor(colorRes(R.color.accent))
         .negativeColor(colorRes(R.color.accent))
-        .positiveText(getString(R.string.detail_activity_crystallize_dialog_positive_text))
-        .negativeText(getString(R.string.detail_activity_crystallize_dialog_negative_text))
+        .positiveText(stringRes(R.string.detail_activity_crystallize_dialog_positive_text))
+        .negativeText(stringRes(R.string.detail_activity_crystallize_dialog_negative_text))
         .onPositive { _, _ ->
           presenter.handleCrystallizeDialogPositiveClick()
         }
@@ -437,15 +437,19 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showCrystallizeSuccessMessage() {
-    successToast(getString(R.string.detail_activity_crystallizing_wallpaper_successful_message))
+    successToast(stringRes(R.string.detail_activity_crystallizing_wallpaper_successful_message))
   }
 
   override fun showImageHasAlreadyBeenCrystallizedMessage() {
-    infoToast(getString(R.string.detail_activity_image_already_crystallized_message))
+    infoToast(stringRes(R.string.detail_activity_image_already_crystallized_message))
   }
 
   override fun showAddToCollectionSuccessMessage() {
-    successToast(getString(R.string.detail_activity_image_add_to_collection_success_message))
+    successToast(stringRes(R.string.detail_activity_image_add_to_collection_success_message))
+  }
+
+  override fun showAlreadyPresentInCollectionErrorMessage() {
+    errorToast(stringRes(R.string.already_present_in_collection_error_message))
   }
 
   override fun showExpandedImage(lowQualityLink: String, highQualityLink: String) {

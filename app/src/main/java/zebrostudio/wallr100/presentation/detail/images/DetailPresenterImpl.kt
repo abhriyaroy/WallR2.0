@@ -14,13 +14,14 @@ import io.reactivex.disposables.Disposable
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.android.ui.detail.images.DetailActivity
-import zebrostudio.wallr100.android.utils.GsonProvider
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.android.utils.stringRes
+import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
 import zebrostudio.wallr100.data.exception.ImageDownloadException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
+import zebrostudio.wallr100.domain.model.CollectionsImageModel
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
@@ -45,8 +46,7 @@ class DetailPresenterImpl(
   private var userPremiumStatusUseCase: UserPremiumStatusUseCase,
   private val wallpaperSetter: WallpaperSetter,
   private val postExecutionThread: PostExecutionThread,
-  private val imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper,
-  private val gsonProvider: GsonProvider
+  private val imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper
 ) : DetailContract.DetailPresenter {
 
   internal lateinit var imageType: ImageListType
@@ -59,6 +59,7 @@ class DetailPresenterImpl(
   internal var isSlidingPanelExpanded = false
   internal var imageHasBeenCrystallized = false
   internal var imageHasBeenEdited = false
+  internal var lastImageOperationType = CollectionsImageModel.WALLPAPER
   private var downloadProgress: Long = 0
   private var detailView: DetailContract.DetailView? = null
 
@@ -324,9 +325,9 @@ class DetailPresenterImpl(
     if (isSlidingPanelExpanded) {
       detailView?.collapseSlidingPanel()
     } else {
-      if (imageHasBeenCrystallized) {
+      if (lastImageOperationType == CollectionsImageModel.CRYSTALLIZED) {
         detailView?.showCrystallizedExpandedImage()
-      } else if (imageHasBeenEdited) {
+      } else if (lastImageOperationType == CollectionsImageModel.EDITED) {
         detailView?.showEditedExpandedImage()
       } else {
         if (imageType == SEARCH) {
@@ -352,9 +353,11 @@ class DetailPresenterImpl(
     if (imageTypeOrdinal == SEARCH.ordinal) {
       imageType = SEARCH
       searchImage = detailView?.getSearchImageDetails()!!
+      lastImageOperationType = CollectionsImageModel.SEARCH
     } else {
       imageType = WALLPAPERS
       wallpaperImage = detailView?.getWallpaperImageDetails()!!
+      lastImageOperationType = CollectionsImageModel.WALLPAPER
     }
     decorateView()
   }
@@ -487,6 +490,7 @@ class DetailPresenterImpl(
         .autoDisposable(detailView?.getScope()!!)
         .subscribe({
           if (it.first) {
+            lastImageOperationType = CollectionsImageModel.CRYSTALLIZED
             detailView?.showImage(it.second!!)
             detailView?.hideScreenBlur()
             detailView?.showCrystallizeSuccessMessage()
@@ -577,12 +581,7 @@ class DetailPresenterImpl(
           isDownloadInProgress = true
         }.flatMapSingle {
           if (it.progress == DOWNLOAD_COMPLETED_VALUE) {
-            val detailsString = if (imageType == SEARCH) {
-              gsonProvider.getGson().toJson(searchImage)
-            } else {
-              gsonProvider.getGson().toJson(wallpaperImage)
-            }
-            imageOptionsUseCase.addImageToCollection(getImageFetchingLink())
+            imageOptionsUseCase.addImageToCollection(getImageFetchingLink(), lastImageOperationType)
                 .andThen(
                     Single.just(true)
                 )
@@ -601,6 +600,8 @@ class DetailPresenterImpl(
         }, {
           if (it is ImageDownloadException) {
             detailView?.showUnableToDownloadErrorMessage()
+          } else if(it is AlreadyPresentInCollectionException) {
+            detailView?.showAlreadyPresentInCollectionErrorMessage()
           } else {
             detailView?.showGenericErrorMessage()
           }
@@ -621,6 +622,7 @@ class DetailPresenterImpl(
         .observeOn(postExecutionThread.scheduler)
         .autoDisposable(detailView?.getScope()!!)
         .subscribe({
+          lastImageOperationType = CollectionsImageModel.EDITED
           if (hasWallpaperBeenSet) {
             detailView?.showImage(it)
             detailView?.showWallpaperSetSuccessMessage()
@@ -701,13 +703,4 @@ enum class ActionType {
   EDIT_SET,
   ADD_TO_COLLECTION,
   SHARE
-}
-
-enum class ImageDownloadType {
-  SUPER_HIGH,
-  HIGH,
-  MEDIUM,
-  LOW,
-  SUPER_LOW,
-  CRYSTALLIZED_VERSION
 }
