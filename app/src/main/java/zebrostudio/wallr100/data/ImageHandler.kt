@@ -7,12 +7,16 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import com.zebrostudio.wallrcustoms.lowpoly.LowPoly
 import io.reactivex.Completable
+import io.reactivex.CompletableEmitter
 import io.reactivex.Observable
 import io.reactivex.Single
 import zebrostudio.wallr100.android.utils.compressBitmap
 import zebrostudio.wallr100.android.utils.writeInputStreamUsingByteArray
 import zebrostudio.wallr100.data.database.DatabaseHelper
+import zebrostudio.wallr100.data.database.DatabaseImageType
+import zebrostudio.wallr100.data.database.DatabaseImageType.EDITED
 import zebrostudio.wallr100.data.database.entity.CollectionDatabaseImageEntity
+import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
 import zebrostudio.wallr100.data.exception.ImageDownloadException
 import java.io.FileOutputStream
 import java.io.IOException
@@ -31,7 +35,7 @@ interface ImageHandler {
   fun convertUriToBitmap(uri: Uri): Single<Bitmap>
   fun convertImageInCacheToLowpoly(): Single<Bitmap>
   fun saveLowPolyImageToDownloads(): Completable
-  fun saveImageToCollections(): Completable
+  fun saveImageToCollections(data: String, type: DatabaseImageType): Completable
 }
 
 const val BYTE_ARRAY_SIZE = 2048
@@ -176,25 +180,50 @@ class ImageHandlerImpl(
     }
   }
 
-  override fun saveImageToCollections(): Completable {
-    return Completable.create {
+  override fun saveImageToCollections(data: String, type: DatabaseImageType): Completable {
+    return Completable.create { emitter ->
       try {
-        fileHandler.getCacheFile().inputStream().let { inputStream ->
-          fileHandler.getCollectionsFile().let { file ->
-            file.outputStream()
-                .writeInputStreamUsingByteArray(inputStream, BYTE_ARRAY_SIZE)
-            databaseHelper.getDatabase().collectionsDao().insert(CollectionDatabaseImageEntity(
-                UID_AUTO_INCREMENT,
-                file.name,
-                file.path
-            ))
-          }
-          inputStream.close()
-          it.onComplete()
+        if (type == EDITED) {
+          saveToCollection(emitter, data, type)
+        } else {
+          var isEntryAlreadyPresent = false
+          databaseHelper.getDatabase().collectionsDao().getAllData().subscribe({
+            it.forEach {
+              if (it.type == type.ordinal && it.data == data) {
+                isEntryAlreadyPresent = true
+                return@forEach
+              }
+            }
+            if (!isEntryAlreadyPresent) {
+              saveToCollection(emitter, data, type)
+            } else {
+              emitter.onError(AlreadyPresentInCollectionException())
+            }
+          }, {
+
+          })
         }
       } catch (exception: IOException) {
-        it.onError(exception)
+        emitter.onError(exception)
       }
+    }
+  }
+
+  private fun saveToCollection(emitter: CompletableEmitter, data: String, type: DatabaseImageType) {
+    fileHandler.getCacheFile().inputStream().let { inputStream ->
+      fileHandler.getCollectionsFile().let { file ->
+        file.outputStream()
+            .writeInputStreamUsingByteArray(inputStream, BYTE_ARRAY_SIZE)
+        databaseHelper.getDatabase().collectionsDao().insert(CollectionDatabaseImageEntity(
+            UID_AUTO_INCREMENT,
+            file.name,
+            file.path,
+            data,
+            type.ordinal
+        ))
+      }
+      inputStream.close()
+      emitter.onComplete()
     }
   }
 

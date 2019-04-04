@@ -23,3 +23,11 @@ class DatabaseHelperImpl(private val context: Context) : DatabaseHelper {
   }
 
 }
+
+enum class DatabaseImageType{
+  WALLPAPER,
+  SEARCH,
+  CRYSTALLIZED,
+  EDITED,
+  MINIMAL_COLOR
+}

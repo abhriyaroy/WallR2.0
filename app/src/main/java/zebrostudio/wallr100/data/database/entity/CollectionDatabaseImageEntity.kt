@@ -7,6 +7,8 @@ import android.arch.persistence.room.PrimaryKey
 const val TABLE_NAME = "collection_table"
 const val NAME_COLUMN = "NAME"
 const val PATH_COLUMN = "PATH"
+const val DATA_COLUMN = "DATA"
+const val TYPE_COLUMN = "TYPE"
 
 @Entity(tableName = TABLE_NAME)
 data class CollectionDatabaseImageEntity(
@@ -17,5 +19,11 @@ data class CollectionDatabaseImageEntity(
   val name: String,
 
   @ColumnInfo(name = PATH_COLUMN)
-  val path: String
+  val path: String,
+
+  @ColumnInfo(name = DATA_COLUMN)
+  val data: String,
+
+  @ColumnInfo(name = TYPE_COLUMN)
+  val type: Int
 )

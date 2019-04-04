@@ -17,11 +17,13 @@ import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.NotEnoughFreeSpaceException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
+import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapper
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.firebasedatabase.FirebaseImageEntity
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.ExecutionThread
+import zebrostudio.wallr100.domain.model.CollectionsImageModel
 import zebrostudio.wallr100.domain.model.RestoreColorsModel
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
@@ -263,8 +265,9 @@ class WallrDataRepository(
     return downloadHelper.isDownloadEnqueued(link)
   }
 
-  override fun saveImageToCollections(): Completable {
-    return imageHandler.saveImageToCollections()
+  override fun saveImageToCollections(data: String, type: CollectionsImageModel): Completable {
+    return imageHandler.saveImageToCollections(data,
+        DatabaseImageTypeMapper.mapToDatabaseImageType(type))
         .subscribeOn(executionThread.computationScheduler)
   }
 
