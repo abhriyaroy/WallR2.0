@@ -13,8 +13,7 @@ import zebrostudio.wallr100.presentation.expandimage.FullScreenImageContract.Ful
 class FullScreenImagePresenterImpl(
   private var imageOptionsUseCase: ImageOptionsUseCase,
   private var postExecutionThread: PostExecutionThread
-) :
-    FullScreenImageContract.FullScreenImagePresenter {
+) : FullScreenImageContract.FullScreenImagePresenter {
 
   internal lateinit var intent: Intent
   internal var isInFullScreenMode: Boolean = false
