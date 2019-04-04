@@ -38,6 +38,7 @@ interface ColorsDetailContract {
     )
     fun getUriFromIntent(data: Intent): Uri?
     fun showGenericErrorMessage()
+    fun showOperationInProgressWaitMessage()
     fun exitView()
   }
 

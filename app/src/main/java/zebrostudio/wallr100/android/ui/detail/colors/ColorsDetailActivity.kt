@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.ContextCompat
 import android.view.View
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -87,6 +88,11 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     permissions: Array<String>, grantResults: IntArray
   ) {
     presenter.handlePermissionRequestResult(requestCode, permissions, grantResults)
+  }
+
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+    presenter.handleViewResult(requestCode, resultCode, data)
   }
 
   override fun throwIllegalStateException() {
@@ -230,6 +236,10 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
   override fun showGenericErrorMessage() {
     errorToast(stringRes(R.string.generic_error_message))
+  }
+
+  override fun showOperationInProgressWaitMessage() {
+    infoToast(getString(R.string.finalizing_stuff_wait_message), Toast.LENGTH_SHORT)
   }
 
   override fun exitView() {

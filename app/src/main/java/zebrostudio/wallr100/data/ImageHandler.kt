@@ -324,7 +324,7 @@ class ImageHandlerImpl(
   }
 
   private fun createGradientBitmap(colors: ArrayList<String>): Bitmap {
-    val height = wallpaperSetter.getDesiredMinimumHeight()
+    val height = COLOR_BITMAP_SIZE
     val wallpaperBitmap = Bitmap.createBitmap(height, height, Bitmap.Config.ARGB_8888)
     val colorsInt = IntArray(colors.size)
     for (i in colors.indices) {
@@ -340,7 +340,7 @@ class ImageHandlerImpl(
   }
 
   private fun createPlasmaBitmap(colors: ArrayList<String>): Bitmap {
-    val height = wallpaperSetter.getDesiredMinimumHeight() / 4
+    val height = COLOR_BITMAP_SIZE / 4
     val wallpaperBitmap = Bitmap.createBitmap(height, height, Bitmap.Config.ARGB_8888)
     val colorsInt = IntArray(colors.size)
     for (i in colors.indices) {
