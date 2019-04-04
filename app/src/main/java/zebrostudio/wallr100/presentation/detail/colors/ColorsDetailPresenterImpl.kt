@@ -47,6 +47,7 @@ class ColorsDetailPresenterImpl(
   internal var colorList = mutableListOf<String>()
   internal var isPanelExpanded: Boolean = false
   internal var areColorOperationsDisabled: Boolean = false
+  internal var isColorWallpaperOperationActive: Boolean = false
   private var view: ColorsDetailView? = null
 
   override fun attachView(view: ColorsDetailView) {
@@ -137,10 +138,14 @@ class ColorsDetailPresenterImpl(
   }
 
   override fun handleBackButtonClick() {
-    if (isPanelExpanded) {
-      view?.collapsePanel()
+    if (isColorWallpaperOperationActive) {
+      view?.showOperationInProgressWaitMessage()
     } else {
-      view?.exitView()
+      if (isPanelExpanded) {
+        view?.collapsePanel()
+      } else {
+        view?.exitView()
+      }
     }
   }
 
@@ -153,14 +158,17 @@ class ColorsDetailPresenterImpl(
             }
             .observeOn(postExecutionThread.scheduler)
             .doOnSubscribe {
+              isColorWallpaperOperationActive = true
               view?.showIndefiniteWaitLoader(
-                  context.stringRes(R.string.finalizing_stuff_wait_message))
+                  context.stringRes(R.string.finalizing_wallpaper_messsage))
             }
             .autoDisposable(view!!.getScope())
             .subscribe({
+              isColorWallpaperOperationActive = false
               view?.hideIndefiniteWaitLoader()
               view?.showWallpaperSetSuccessMessage()
             }, {
+              isColorWallpaperOperationActive = false
               view?.hideIndefiniteWaitLoader()
               view?.showWallpaperSetErrorMessage()
             })
@@ -191,6 +199,7 @@ class ColorsDetailPresenterImpl(
   override fun handleEditSetClick() {
     if (!areColorOperationsDisabled) {
       if (view?.hasStoragePermission() == true) {
+        isColorWallpaperOperationActive = true
         view?.showIndefiniteWaitLoader(
             context.stringRes(R.string.detail_activity_editing_tool_message))
         view?.startCroppingActivity(
@@ -299,20 +308,20 @@ class ColorsDetailPresenterImpl(
     var hasWallpaperBeenSet = false
     view?.showIndefiniteWaitLoader(context.stringRes(R.string.finalizing_wallpaper_messsage))
     colorsDetailsUseCase.getBitmapFromUriSingle(cropResultUri)
-        .doOnSuccess {
-          hasWallpaperBeenSet = wallpaperSetter.setWallpaper(it)
-        }
         .observeOn(postExecutionThread.scheduler)
         .autoDisposable(view?.getScope()!!)
         .subscribe({
+          isColorWallpaperOperationActive = false
+          view?.showImage(it)
+          hasWallpaperBeenSet = wallpaperSetter.setWallpaper(it)
           if (hasWallpaperBeenSet) {
-            view?.showImage(it)
             view?.showWallpaperSetSuccessMessage()
           } else {
             view?.showWallpaperSetErrorMessage()
           }
           view?.hideIndefiniteWaitLoader()
         }, {
+          isColorWallpaperOperationActive = false
           view?.showGenericErrorMessage()
           view?.hideIndefiniteWaitLoader()
         })
