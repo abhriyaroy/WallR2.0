@@ -571,7 +571,7 @@ class DetailPresenterImpl(
             isImageOperationInProgress = true
             detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
             val message =
-                context.stringRes(R.string.detail_activity_adding_image_to_collections_message)
+                context.stringRes(R.string.adding_image_to_collections_message)
             detailView?.showIndefiniteLoaderWithAnimation(message)
           } else if (progress != DOWNLOAD_COMPLETED_VALUE) {
             detailView?.updateProgressPercentage("$progress%")

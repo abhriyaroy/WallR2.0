@@ -445,7 +445,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showAddToCollectionSuccessMessage() {
-    successToast(stringRes(R.string.detail_activity_image_add_to_collection_success_message))
+    successToast(stringRes(R.string.add_to_collection_success_message))
   }
 
   override fun showAlreadyPresentInCollectionErrorMessage() {

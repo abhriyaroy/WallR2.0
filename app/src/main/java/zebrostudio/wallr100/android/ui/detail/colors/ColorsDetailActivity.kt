@@ -188,6 +188,10 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     successToast(getString(R.string.detail_activity_set_wallpaper_success_message))
   }
 
+  override fun showAddToCollectionSuccessMessage() {
+    successToast(getString(R.string.add_to_collection_success_message))
+  }
+
   override fun collapsePanel() {
     slidingPanel.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
   }

@@ -1306,7 +1306,7 @@ class DetailPresenterImplTest {
           it.onNext(imageDownloadModel)
         })
     `when`(mockContext.stringRes(
-        R.string.detail_activity_adding_image_to_collections_message)).thenReturn(randomString)
+        R.string.adding_image_to_collections_message)).thenReturn(randomString)
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
@@ -1341,7 +1341,7 @@ class DetailPresenterImplTest {
           it.onNext(imageDownloadModel)
         })
     `when`(mockContext.stringRes(
-        R.string.detail_activity_adding_image_to_collections_message)).thenReturn(randomString)
+        R.string.adding_image_to_collections_message)).thenReturn(randomString)
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
