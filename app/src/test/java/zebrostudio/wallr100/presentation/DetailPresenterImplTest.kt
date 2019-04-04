@@ -1300,8 +1300,8 @@ class DetailPresenterImplTest {
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(mockContext.getString(
-        R.string.detail_activity_adding_image_to_collections_message)).thenReturn(randomString)
+    `when`(mockContext.stringRes(R.string.adding_image_to_collections_message))
+        .thenReturn(randomString)
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
@@ -1335,8 +1335,8 @@ class DetailPresenterImplTest {
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(mockContext.getString(
-        R.string.detail_activity_adding_image_to_collections_message)).thenReturn(randomString)
+    `when`(mockContext.stringRes(R.string.adding_image_to_collections_message))
+        .thenReturn(randomString)
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)

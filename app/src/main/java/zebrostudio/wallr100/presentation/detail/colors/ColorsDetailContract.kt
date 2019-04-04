@@ -26,6 +26,7 @@ interface ColorsDetailContract {
     fun hideIndefiniteWaitLoader()
     fun showWallpaperSetErrorMessage()
     fun showWallpaperSetSuccessMessage()
+    fun showAddToCollectionSuccessMessage()
     fun collapsePanel()
     fun disableColorOperations()
     fun enableColorOperations()

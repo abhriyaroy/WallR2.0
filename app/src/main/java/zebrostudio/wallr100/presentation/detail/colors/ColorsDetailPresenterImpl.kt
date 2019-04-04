@@ -138,7 +138,7 @@ class ColorsDetailPresenterImpl(
   }
 
   override fun handleImageViewClicked() {
-    if (isPanelExpanded){
+    if (isPanelExpanded) {
       view?.collapsePanel()
     } else {
       view?.showFullScreenImage()
@@ -192,7 +192,20 @@ class ColorsDetailPresenterImpl(
     if (!areColorOperationsDisabled) {
       if (userPremiumStatusUseCase.isUserPremium()) {
         if (view?.hasStoragePermission() == true) {
-
+          colorsDetailsUseCase.saveToCollectionsCompletable()
+              .observeOn(postExecutionThread.scheduler)
+              .doOnSubscribe {
+                view?.showIndefiniteWaitLoader(
+                    context.stringRes(R.string.adding_image_to_collections_message))
+              }
+              .autoDisposable(view!!.getScope())
+              .subscribe({
+                view?.showAddToCollectionSuccessMessage()
+                view?.hideIndefiniteWaitLoader()
+              }, {
+                view?.showGenericErrorMessage()
+                view?.hideIndefiniteWaitLoader()
+              })
         } else {
           view?.requestStoragePermission(DOWNLOAD)
         }

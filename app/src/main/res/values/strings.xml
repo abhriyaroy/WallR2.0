@@ -35,6 +35,8 @@
   <string name="already_present_in_collection_error_message">Wallpaper is already present in the collection</string>
   <string name="finalizing_stuff_wait_message">Finalizing stuff. Please wait…</string>
   <string name="finalizing_wallpaper_messsage">Finalizing wallpaper...</string>
+  <string name="adding_image_to_collections_message">Adding wallpaper to collection...</string>
+  <string name="add_to_collection_success_message">Wallpaper has been added to collection!</string>
 
   <!-- Main activity strings -->
   <string name="main_activity_no_email_client_error">There is no email client installed</string>
@@ -124,7 +126,6 @@
   <string name="detail_activity_editing_tool_message">Firing up the editing tool...</string>
   <string name="detail_activity_crystallizing_wallpaper_message">Crystallizing wallpaper...</string>
   <string name="detail_activity_crystallizing_wallpaper_successful_message">Wallpaper has been crystallized!</string>
-  <string name="detail_activity_adding_image_to_collections_message">Adding wallpaper to collection....</string>
   <string name="detail_activity_fetching_sharable_link_message">Fetching sharable link...</string>
   <string name="detail_activity_options_download">DOWNLOAD</string>
   <string name="detail_activity_options_save">SAVE</string>
@@ -156,7 +157,6 @@
   <string name="detail_activity_crystallize_dialog_negative_text">CANCEL</string>
   <string name="detail_activity_image_already_crystallized_message">This image has already been crystallized</string>
   <string name="detail_activity_crystallized_download_finished_message">Your crystallized wallpaper has finished downloading</string>
-  <string name="detail_activity_image_add_to_collection_success_message">Wallpaper has been added to collection!</string>
 
   <string name="minimal_fragment_unable_to_get_colors_error_message">Unable to fetch minimal wallpapers</string>
   <string name="menu_minimal_title_delete">Delete Wallpaper</string>
