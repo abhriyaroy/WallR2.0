@@ -37,6 +37,7 @@
   <string name="finalizing_wallpaper_messsage">Finalizing wallpaper...</string>
   <string name="adding_image_to_collections_message">Adding wallpaper to collection...</string>
   <string name="add_to_collection_success_message">Wallpaper has been added to collection!</string>
+  <string name="download_finished_success_message">Your wallpaper has finished downloading</string>
 
   <!-- Main activity strings -->
   <string name="main_activity_no_email_client_error">There is no email client installed</string>
@@ -148,7 +149,6 @@
   <string name="detail_activity_download_notification_title_text">Downloading wallpaper</string>
   <string name="detail_activity_download_started_message">Your wallpaper download has been started</string>
   <string name="detail_activity_download_already_in_progress_message">Your wallpaper download is already in progress</string>
-  <string name="detail_activity_download_finished_message">Your wallpaper has finished downloading</string>
   <string name="detail_activity_crystallize_dialog_description">Generates a beautiful and unique artwork of the current wallpaper using WallR\'s innovative Crystallize algorithm. It can give your device the fresh look it deserves.</string>
   <string name="detail_activity_crystallize_wallpaper_dialog_title">Crystallize Wallpaper</string>
   <string name="detail_activity_crystallize_dialog_before_text">BEFORE</string>
