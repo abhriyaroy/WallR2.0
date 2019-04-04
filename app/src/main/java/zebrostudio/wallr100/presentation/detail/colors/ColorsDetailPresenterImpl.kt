@@ -137,6 +137,14 @@ class ColorsDetailPresenterImpl(
     }
   }
 
+  override fun handleImageViewClicked() {
+    if (isPanelExpanded){
+      view?.collapsePanel()
+    } else {
+      view?.showFullScreenImage()
+    }
+  }
+
   override fun handleBackButtonClick() {
     if (isColorWallpaperOperationActive) {
       view?.showOperationInProgressWaitMessage()
