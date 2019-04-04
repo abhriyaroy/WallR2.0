@@ -28,11 +28,11 @@ import kotlinx.android.synthetic.main.activity_colors_detail.colorStyleNameTextV
 import kotlinx.android.synthetic.main.activity_colors_detail.downloadColorLayout
 import kotlinx.android.synthetic.main.activity_colors_detail.editAndSetColorLayout
 import kotlinx.android.synthetic.main.activity_colors_detail.expandIconView
+import kotlinx.android.synthetic.main.activity_colors_detail.imageView
 import kotlinx.android.synthetic.main.activity_colors_detail.setColorWallpaperLayout
 import kotlinx.android.synthetic.main.activity_colors_detail.shareColorLayout
 import kotlinx.android.synthetic.main.activity_colors_detail.slidingPanel
 import kotlinx.android.synthetic.main.activity_colors_detail.spinkitView
-import kotlinx.android.synthetic.main.activity_detail.imageView
 import kotlinx.android.synthetic.main.activity_detail.parentFrameLayout
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
@@ -40,6 +40,8 @@ import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.ui.detail.images.BLUR_RADIUS
 import zebrostudio.wallr100.android.ui.detail.images.ILLEGAL_STATE_EXCEPTION_MESSAGE
 import zebrostudio.wallr100.android.ui.detail.images.SLIDING_PANEL_PARALLEL_OFFSET
+import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
+import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.EDITED_BITMAP_CACHE
 import zebrostudio.wallr100.android.utils.disable
 import zebrostudio.wallr100.android.utils.enable
 import zebrostudio.wallr100.android.utils.errorToast
@@ -242,6 +244,10 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     infoToast(getString(R.string.finalizing_stuff_wait_message), Toast.LENGTH_SHORT)
   }
 
+  override fun showFullScreenImage() {
+    startActivity(FullScreenImageActivity.getCallingIntent(this, EDITED_BITMAP_CACHE))
+  }
+
   override fun exitView() {
     overridePendingTransition(R.anim.no_change, R.anim.slide_to_right)
     finish()
@@ -266,6 +272,10 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
     shareColorLayout.setOnClickListener {
       presenter.handleShareClick()
+    }
+
+    imageView.setOnClickListener {
+      presenter.handleImageViewClicked()
     }
   }
 
