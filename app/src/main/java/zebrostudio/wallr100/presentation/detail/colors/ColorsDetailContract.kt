@@ -37,6 +37,7 @@ interface ColorsDetailContract {
       minimumWidth: Int,
       minimumHeight: Int
     )
+
     fun getUriFromIntent(data: Intent): Uri?
     fun showGenericErrorMessage()
     fun showOperationInProgressWaitMessage()

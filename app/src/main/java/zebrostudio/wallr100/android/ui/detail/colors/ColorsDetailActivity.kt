@@ -61,6 +61,7 @@ import javax.inject.Inject
 const val COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG = "colors_hex_list"
 const val COLORS_DETAIL_MODE_INTENT_EXTRA_TAG = "colors_mode"
 const val COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG = "colors_type"
+const val INTENT_IMAGE_TYPE = "image/*"
 
 class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
@@ -262,16 +263,12 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   override fun showShareIntent(uri: Uri) {
-    try {
-      val sendIntent = Intent()
-      sendIntent.action = Intent.ACTION_SEND
-      sendIntent.putExtra(Intent.EXTRA_STREAM, uri)
-      sendIntent.type = "image/*"
-      sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-      startActivity(Intent.createChooser(sendIntent, stringRes(R.string.share_link_using)))
-    } catch (e: Exception) {
-      e.printStackTrace()
-    }
+    val sendIntent = Intent()
+    sendIntent.action = Intent.ACTION_SEND
+    sendIntent.putExtra(Intent.EXTRA_STREAM, uri)
+    sendIntent.type = INTENT_IMAGE_TYPE
+    sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    startActivity(Intent.createChooser(sendIntent, stringRes(R.string.share_link_using)))
   }
 
   override fun exitView() {

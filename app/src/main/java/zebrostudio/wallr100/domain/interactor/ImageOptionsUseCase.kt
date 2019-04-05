@@ -25,7 +25,7 @@ interface ImageOptionsUseCase {
   fun isCrystallizeDescriptionDialogShown(): Boolean
   fun setCrystallizeDescriptionShownOnce()
   fun getCrystallizedImageSingle(): Single<Bitmap>
-  fun addImageToCollection(data: String, type : CollectionsImageModel): Completable
+  fun addImageToCollection(data: String, type: CollectionsImageModel): Completable
 }
 
 class ImageOptionsInteractor(
