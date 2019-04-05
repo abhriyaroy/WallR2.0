@@ -260,7 +260,7 @@ class WallrDataRepository(
         .subscribeOn(executionThread.computationScheduler)
   }
 
-  override fun getCacheImageUri(): Single<Uri> {
+  override fun getShareableImageUri(): Single<Uri> {
     return imageHandler.getShareableUri()
         .subscribeOn(executionThread.ioScheduler)
   }
