@@ -600,7 +600,7 @@ class DetailPresenterImpl(
         }, {
           if (it is ImageDownloadException) {
             detailView?.showUnableToDownloadErrorMessage()
-          } else if(it is AlreadyPresentInCollectionException) {
+          } else if (it is AlreadyPresentInCollectionException) {
             detailView?.showAlreadyPresentInCollectionErrorMessage()
           } else {
             detailView?.showGenericErrorMessage()

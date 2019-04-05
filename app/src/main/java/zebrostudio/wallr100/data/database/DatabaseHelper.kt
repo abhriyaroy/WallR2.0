@@ -24,7 +24,7 @@ class DatabaseHelperImpl(private val context: Context) : DatabaseHelper {
 
 }
 
-enum class DatabaseImageType{
+enum class DatabaseImageType {
   WALLPAPER,
   SEARCH,
   CRYSTALLIZED,
