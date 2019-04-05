@@ -28,6 +28,11 @@ import zebrostudio.wallr100.android.utils.GsonProvider
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
+import zebrostudio.wallr100.data.database.DatabaseImageType.CRYSTALLIZED
+import zebrostudio.wallr100.data.database.DatabaseImageType.EDITED
+import zebrostudio.wallr100.data.database.DatabaseImageType.MINIMAL_COLOR
+import zebrostudio.wallr100.data.database.DatabaseImageType.SEARCH
+import zebrostudio.wallr100.data.database.DatabaseImageType.WALLPAPER
 import zebrostudio.wallr100.data.datafactory.FirebaseImageEntityModelFactory
 import zebrostudio.wallr100.data.datafactory.UnsplashPictureEntityModelFactory
 import zebrostudio.wallr100.data.exception.EmptyRecentlyDeletedMapException
@@ -40,6 +45,7 @@ import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 import zebrostudio.wallr100.domain.executor.ExecutionThread
+import zebrostudio.wallr100.domain.model.CollectionsImageModel
 import zebrostudio.wallr100.domain.model.RestoreColorsModel
 import java.util.TreeMap
 import java.util.UUID.randomUUID
@@ -431,13 +437,69 @@ class WallrDataRepositoryTest {
     verifyNoMoreInteractions(sharedPrefs)
   }
 
-  @Test fun `should complete on saveImageToCollections call success`() {
-    `when`(imageHandler.saveImageToCollections()).thenReturn(
+  @Test fun `should complete on saveImageToCollections call success of type wallpaper`() {
+    `when`(
+        imageHandler.saveImageToCollections(randomString, WALLPAPER)).thenReturn(
         Completable.complete())
 
-    wallrDataRepository.saveImageToCollections().test().assertComplete()
+    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageModel.WALLPAPER).test()
+        .assertComplete()
 
-    verify(imageHandler).saveImageToCollections()
+    verify(imageHandler).saveImageToCollections(randomString, WALLPAPER)
+    verifyNoMoreInteractions(imageHandler)
+    `should verify computation scheduler call`()
+  }
+
+  @Test fun `should complete on saveImageToCollections call success of type search`() {
+    `when`(
+        imageHandler.saveImageToCollections(randomString, SEARCH)).thenReturn(
+        Completable.complete())
+
+    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageModel.SEARCH).test()
+        .assertComplete()
+
+    verify(imageHandler).saveImageToCollections(randomString, SEARCH)
+    verifyNoMoreInteractions(imageHandler)
+    `should verify computation scheduler call`()
+  }
+
+  @Test fun `should complete on saveImageToCollections call success of type edited`() {
+    `when`(
+        imageHandler.saveImageToCollections(randomString, EDITED)).thenReturn(
+        Completable.complete())
+
+    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageModel.EDITED).test()
+        .assertComplete()
+
+    verify(imageHandler).saveImageToCollections(randomString, EDITED)
+    verifyNoMoreInteractions(imageHandler)
+    `should verify computation scheduler call`()
+  }
+
+  @Test fun `should complete on saveImageToCollections call success of type crystallized`() {
+    `when`(
+        imageHandler.saveImageToCollections(randomString, CRYSTALLIZED)).thenReturn(
+        Completable.complete())
+
+    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageModel.CRYSTALLIZED)
+        .test()
+        .assertComplete()
+
+    verify(imageHandler).saveImageToCollections(randomString, CRYSTALLIZED)
+    verifyNoMoreInteractions(imageHandler)
+    `should verify computation scheduler call`()
+  }
+
+  @Test fun `should complete on saveImageToCollections call success of type minimal color`() {
+    `when`(
+        imageHandler.saveImageToCollections(randomString, MINIMAL_COLOR)).thenReturn(
+        Completable.complete())
+
+    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageModel.MINIMAL_COLOR)
+        .test()
+        .assertComplete()
+
+    verify(imageHandler).saveImageToCollections(randomString, MINIMAL_COLOR)
     verifyNoMoreInteractions(imageHandler)
     `should verify computation scheduler call`()
   }

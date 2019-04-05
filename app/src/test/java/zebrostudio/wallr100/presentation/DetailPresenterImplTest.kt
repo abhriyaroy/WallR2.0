@@ -34,11 +34,12 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.android.ui.detail.images.DetailActivity
 import zebrostudio.wallr100.android.utils.WallpaperSetter
-import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.model.CollectionsImageModel
+import zebrostudio.wallr100.domain.model.CollectionsImageModel.CRYSTALLIZED
+import zebrostudio.wallr100.domain.model.CollectionsImageModel.EDITED
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
@@ -324,7 +325,7 @@ class DetailPresenterImplTest {
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(true)
-    `when`(mockContext.stringRes(R.string.finalizing_wallpaper_messsage))
+    `when`(mockContext.getString(R.string.finalizing_wallpaper_messsage))
         .thenReturn(indefiniteLoaderMessage)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
@@ -538,7 +539,7 @@ class DetailPresenterImplTest {
   @Test
   fun `should set wallpaper and show success message when crop activity results to success`() {
     `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(mockContext.stringRes(R.string.finalizing_wallpaper_messsage))
+    `when`(mockContext.getString(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri)).thenReturn(Single.just(mockBitmap))
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(true)
@@ -561,7 +562,7 @@ class DetailPresenterImplTest {
 
   @Test fun `should show wallpaper setting error message when crop activity results to success`() {
     `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(mockContext.stringRes(R.string.finalizing_wallpaper_messsage))
+    `when`(mockContext.getString(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri)).thenReturn(Single.just(mockBitmap))
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(false)
@@ -584,7 +585,7 @@ class DetailPresenterImplTest {
   @Test
   fun `should show generic error message when crop activity results to success but getBitmapFromUriSingle call fails`() {
     `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(mockContext.stringRes(R.string.finalizing_wallpaper_messsage))
+    `when`(mockContext.getString(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri))
         .thenReturn(Single.error(Exception()))
@@ -606,7 +607,7 @@ class DetailPresenterImplTest {
 
   @Test fun `should show generic error message when crop activity results to failure`() {
     `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(mockContext.stringRes(R.string.finalizing_wallpaper_messsage))
+    `when`(mockContext.getString(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri))
         .thenReturn(Single.error(Exception()))
@@ -1299,7 +1300,7 @@ class DetailPresenterImplTest {
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(mockContext.stringRes(R.string.adding_image_to_collections_message))
+    `when`(mockContext.getString(R.string.adding_image_to_collections_message))
         .thenReturn(randomString)
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
@@ -1334,7 +1335,7 @@ class DetailPresenterImplTest {
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(mockContext.stringRes(R.string.adding_image_to_collections_message))
+    `when`(mockContext.getString(R.string.adding_image_to_collections_message))
         .thenReturn(randomString)
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
@@ -1500,9 +1501,7 @@ class DetailPresenterImplTest {
   @Test
   fun `should show full screen crystallized image on handleImageViewClicked call success and image has been crystallized `() {
     detailPresenterImpl.isSlidingPanelExpanded = false
-    detailPresenterImpl.imageType = SEARCH
-    detailPresenterImpl.imageHasBeenCrystallized = true
-    detailPresenterImpl.imageHasBeenEdited = false
+    detailPresenterImpl.lastImageOperationType = CRYSTALLIZED
 
     detailPresenterImpl.handleImageViewClicked()
 
@@ -1513,9 +1512,7 @@ class DetailPresenterImplTest {
   @Test
   fun `should show full screen edited image on handleImageViewClicked call success and image has been crystallized `() {
     detailPresenterImpl.isSlidingPanelExpanded = false
-    detailPresenterImpl.imageType = SEARCH
-    detailPresenterImpl.imageHasBeenCrystallized = false
-    detailPresenterImpl.imageHasBeenEdited = true
+    detailPresenterImpl.lastImageOperationType = EDITED
 
     detailPresenterImpl.handleImageViewClicked()
 
