@@ -209,7 +209,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showPermissionRequiredMessage() {
-    errorToast(getString(R.string.storage_permission_denied_error))
+    errorToast(stringRes(R.string.storage_permission_denied_error))
   }
 
   override fun showNoInternetToShareError() {
@@ -217,7 +217,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showUnsuccessfulPurchaseError() {
-    errorToast(getString(R.string.unsuccessful_purchase_error))
+    errorToast(stringRes(R.string.unsuccessful_purchase_error))
   }
 
   override fun shareLink(shortLink: String) {
@@ -335,7 +335,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showWallpaperOperationInProgressWaitMessage() {
-    infoToast(getString(R.string.finalizing_stuff_wait_message), Toast.LENGTH_SHORT)
+    infoToast(stringRes(R.string.finalizing_stuff_wait_message), Toast.LENGTH_SHORT)
   }
 
   override fun showDownloadWallpaperCancelledMessage() {

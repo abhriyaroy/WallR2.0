@@ -362,18 +362,21 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
   private fun attachMultiSelectClickListener() {
     activity!!.let {
-      it.toolbarMultiSelectIcon.setOnClickListener {
-        presenter.handleMultiSelectMenuClick()
-      }
+      it.toolbarMultiSelectIcon.apply {
+        setOnClickListener {
+          presenter.handleMultiSelectMenuClick()
+        }
 
-      it.toolbarMultiSelectIcon.setOnLongClickListener { view ->
-        Toast.makeText(context,
-            stringRes(R.string.minimal_fragment_toolbar_menu_multiselect_title), Toast.LENGTH_SHORT)
-            .let {
-              view.menuTitleToast(context!!, it, activity!!.window)
-              it.show()
-            }
-        true
+        setOnLongClickListener { view ->
+          Toast.makeText(context,
+              stringRes(R.string.minimal_fragment_toolbar_menu_multiselect_title),
+              Toast.LENGTH_SHORT)
+              .let {
+                view.menuTitleToast(context!!, it, activity!!.window)
+                it.show()
+              }
+          true
+        }
       }
 
       it.minimalBottomLayoutFab.setOnClickListener {

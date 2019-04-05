@@ -100,8 +100,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   override fun throwIllegalStateException() {
-    throw IllegalStateException(
-        ILLEGAL_STATE_EXCEPTION_MESSAGE)
+    throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
   }
 
   override fun showImageTypeText(text: String) {

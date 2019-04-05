@@ -41,6 +41,7 @@
   <string name="share_intent_message">Get high-quality wallpapers for your Android device - WallR</string>
   <string name="share_link_using">Share link using</string>
   <string name="preparing_shareable_wallpaper_message">Preparing shareable wallpaper...</string>
+  <string name="not_enough_free_space_error_message">Low on memory. Please free some memory for app to work</string>
 
   <!-- Main activity strings -->
   <string name="main_activity_no_email_client_error">There is no email client installed</string>
@@ -186,6 +187,5 @@
   <string name="colors_detail_activity_colors_style_name_plasma">Style : Plasma</string>
   <string name="colors_detail_activity_image_load_error_message">Unable to load minimal image</string>
   <string name="colors_detail_activity_color_operations_disabled_message">Please wait for the image to finish loading</string>
-  <string name="not_enough_free_space_error_message">Low on memory. Please free some memory for app to work</string>
 
 </resources>
