@@ -299,7 +299,6 @@ class ColorsDetailPresenterImpl(
                 view?.hideIndefiniteWaitLoader()
                 view?.showShareIntent(it)
               }, {
-                it.printStackTrace()
                 isColorWallpaperOperationActive = false
                 view?.hideIndefiniteWaitLoader()
                 view?.showGenericErrorMessage()
@@ -375,7 +374,6 @@ class ColorsDetailPresenterImpl(
           view?.showImage(it)
           enableOperations()
         }, {
-          it.printStackTrace()
           view?.showImageLoadError()
           enableOperations()
         })
