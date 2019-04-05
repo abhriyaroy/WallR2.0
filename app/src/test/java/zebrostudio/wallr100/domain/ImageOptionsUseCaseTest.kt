@@ -19,6 +19,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.domain.interactor.ImageOptionsInteractor
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
+import zebrostudio.wallr100.domain.model.CollectionsImageModel
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.util.UUID.randomUUID
@@ -171,12 +172,14 @@ class ImageOptionsUseCaseTest {
 
   @Test fun `should complete on addImageToCollection call success`() {
     val imageType = 1
-    `when`(wallrRepository.saveImageToCollections()).thenReturn(
+    `when`(wallrRepository.saveImageToCollections(randomString,
+        CollectionsImageModel.WALLPAPER)).thenReturn(
         Completable.complete())
 
-    imageOptionsUseCase.addImageToCollection().test().assertComplete()
+    imageOptionsUseCase.addImageToCollection(randomString, CollectionsImageModel.WALLPAPER).test()
+        .assertComplete()
 
-    verify(wallrRepository).saveImageToCollections()
+    verify(wallrRepository).saveImageToCollections(randomString, CollectionsImageModel.WALLPAPER)
     verifyNoMoreInteractions(wallrRepository)
   }
 }

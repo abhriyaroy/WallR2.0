@@ -22,8 +22,9 @@ interface ColorsDetailsUseCase {
     type: CollectionsImageModel
   ): Completable
 
-  fun getCroppingSourceUri(): Uri
+  fun getCacheSourceUri(): Uri
   fun getCroppingDestinationUri(): Uri
+  fun getCacheImageUri(): Single<Uri>
   fun downloadImage(): Completable
   fun clearCachesCompletable(): Completable
 }
@@ -54,9 +55,11 @@ class ColorsDetailsInteractor(private val wallrRepository: WallrRepository) : Co
     type: CollectionsImageModel
   ) = wallrRepository.saveImageToCollections(data, type)
 
-  override fun getCroppingSourceUri() = wallrRepository.getCacheSourceUri()
+  override fun getCacheSourceUri() = wallrRepository.getCacheSourceUri()
 
   override fun getCroppingDestinationUri() = wallrRepository.getCacheResultUri()
+
+  override fun getCacheImageUri() = wallrRepository.getCacheImageUri()
 
   override fun downloadImage() = wallrRepository.saveCachedImageToDownloads()
 

@@ -45,6 +45,7 @@ interface WallrRepository {
 
   fun getCacheSourceUri(): Uri
   fun getCacheResultUri(): Uri
+  fun getCacheImageUri() : Single<Uri>
 
   fun getBitmapFromUri(uri: Uri): Single<Bitmap>
   fun downloadImage(link: String): Completable

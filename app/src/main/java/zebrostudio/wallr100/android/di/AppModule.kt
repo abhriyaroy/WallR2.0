@@ -130,7 +130,7 @@ class AppModule {
   fun provideUrlShortener(): URLShortener = URLShortenerImpl()
 
   @Provides
-  fun provideFileHandler(): FileHandler = FileHandlerImpl()
+  fun provideFileHandler(context: Context): FileHandler = FileHandlerImpl(context)
 
   @Provides
   fun provideWallpaperSetter(context: Context): WallpaperSetter = WallpaperSetterImpl(context)

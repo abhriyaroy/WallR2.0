@@ -17,6 +17,7 @@ import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.MULTIPLE
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.SINGLE
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.android.utils.stringRes
+import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ColorsDetailsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
@@ -201,14 +202,17 @@ class ColorsDetailPresenterImpl(
               .doOnSubscribe {
                 view?.showIndefiniteWaitLoader(context.stringRes(
                     R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
+                isColorWallpaperOperationActive = true
               }
               .autoDisposable(view!!.getScope())
               .subscribe({
                 view?.hideIndefiniteWaitLoader()
                 view?.showDownloadCompletedSuccessMessage()
+                isColorWallpaperOperationActive = false
               }, {
                 view?.hideIndefiniteWaitLoader()
                 view?.showGenericErrorMessage()
+                isColorWallpaperOperationActive = false
               })
         } else {
           view?.requestStoragePermission(DOWNLOAD)
@@ -228,11 +232,11 @@ class ColorsDetailPresenterImpl(
         view?.showIndefiniteWaitLoader(
             context.stringRes(R.string.detail_activity_editing_tool_message))
         view?.startCroppingActivity(
-            colorsDetailsUseCase.getCroppingSourceUri(),
+            colorsDetailsUseCase.getCacheSourceUri(),
             colorsDetailsUseCase.getCroppingDestinationUri(),
             wallpaperSetter.getDesiredMinimumWidth(),
-            wallpaperSetter.getDesiredMinimumHeight()
-        )
+            wallpaperSetter.getDesiredMinimumHeight())
+        isColorWallpaperOperationActive = false
       } else {
         view?.requestStoragePermission(EDIT_SET)
       }
@@ -251,14 +255,21 @@ class ColorsDetailPresenterImpl(
               .doOnSubscribe {
                 view?.showIndefiniteWaitLoader(
                     context.stringRes(R.string.adding_image_to_collections_message))
+                isColorWallpaperOperationActive = true
               }
               .autoDisposable(view!!.getScope())
               .subscribe({
                 view?.showAddToCollectionSuccessMessage()
                 view?.hideIndefiniteWaitLoader()
+                isColorWallpaperOperationActive = false
               }, {
-                view?.showGenericErrorMessage()
+                if (it is AlreadyPresentInCollectionException) {
+                  view?.showAlreadyPresentInCollectionErrorMessage()
+                } else {
+                  view?.showGenericErrorMessage()
+                }
                 view?.hideIndefiniteWaitLoader()
+                isColorWallpaperOperationActive = false
               })
         } else {
           view?.requestStoragePermission(ADD_TO_COLLECTION)
@@ -275,7 +286,24 @@ class ColorsDetailPresenterImpl(
     if (!areColorOperationsDisabled) {
       if (userPremiumStatusUseCase.isUserPremium()) {
         if (view?.hasStoragePermission() == true) {
-
+          colorsDetailsUseCase.getCacheImageUri()
+              .observeOn(postExecutionThread.scheduler)
+              .doOnSubscribe {
+                isColorWallpaperOperationActive = true
+                view?.showIndefiniteWaitLoader(
+                    context.stringRes(R.string.preparing_shareable_wallpaper_message))
+              }
+              .autoDisposable(view!!.getScope())
+              .subscribe({
+                isColorWallpaperOperationActive = false
+                view?.hideIndefiniteWaitLoader()
+                view?.showShareIntent(it)
+              }, {
+                it.printStackTrace()
+                isColorWallpaperOperationActive = false
+                view?.hideIndefiniteWaitLoader()
+                view?.showGenericErrorMessage()
+              })
         } else {
           view?.requestStoragePermission(SHARE)
         }
@@ -320,10 +348,12 @@ class ColorsDetailPresenterImpl(
   private fun setImageTypeText() {
     if (colorsDetailMode == SINGLE) {
       context.stringRes(R.string.colors_detail_activity_colors_style_name_solid)
-    } else when (multiColorImageType) {
-      MATERIAL -> context.stringRes(R.string.colors_detail_activity_colors_style_name_material)
-      GRADIENT -> context.stringRes(R.string.colors_detail_activity_colors_style_name_gradient)
-      else -> context.stringRes(R.string.colors_detail_activity_colors_style_name_plasma)
+    } else {
+      when (multiColorImageType) {
+        MATERIAL -> context.stringRes(R.string.colors_detail_activity_colors_style_name_material)
+        GRADIENT -> context.stringRes(R.string.colors_detail_activity_colors_style_name_gradient)
+        else -> context.stringRes(R.string.colors_detail_activity_colors_style_name_plasma)
+      }
     }.let {
       view?.showImageTypeText(it)
     }
@@ -355,6 +385,9 @@ class ColorsDetailPresenterImpl(
     var hasWallpaperBeenSet = false
     view?.showIndefiniteWaitLoader(context.stringRes(R.string.finalizing_wallpaper_messsage))
     colorsDetailsUseCase.getBitmapFromUriSingle(cropResultUri)
+        .doOnSubscribe {
+          isColorWallpaperOperationActive = true
+        }
         .observeOn(postExecutionThread.scheduler)
         .autoDisposable(view?.getScope()!!)
         .subscribe({

@@ -257,6 +257,23 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     successToast(stringRes(R.string.download_finished_success_message))
   }
 
+  override fun showAlreadyPresentInCollectionErrorMessage() {
+    errorToast(stringRes(R.string.already_present_in_collection_error_message))
+  }
+
+  override fun showShareIntent(uri: Uri) {
+    try {
+      val sendIntent = Intent()
+      sendIntent.action = Intent.ACTION_SEND
+      sendIntent.putExtra(Intent.EXTRA_STREAM, uri)
+      sendIntent.type = "image/*"
+      sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+      startActivity(Intent.createChooser(sendIntent, stringRes(R.string.share_link_using)))
+    } catch (e: Exception) {
+      e.printStackTrace()
+    }
+  }
+
   override fun exitView() {
     overridePendingTransition(R.anim.no_change, R.anim.slide_to_right)
     finish()

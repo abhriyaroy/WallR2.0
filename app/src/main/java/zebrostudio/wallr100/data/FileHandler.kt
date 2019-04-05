@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.data
 
+import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import java.io.File
@@ -10,6 +11,7 @@ interface FileHandler {
   fun getDownloadFile(): File
   fun deleteCacheFiles()
   fun getCollectionsFile(): File
+  fun getShareableFle(): File
   fun freeSpaceAvailable(): Boolean
 }
 
@@ -21,7 +23,7 @@ const val JPG_EXTENSION = ".jpg"
 const val MINIMUM_FREE_STORAGE_IN_MB = 20
 const val BYTES_TO_MEGA_BYTES = 1048576
 
-class FileHandlerImpl : FileHandler {
+class FileHandlerImpl(context: Context) : FileHandler {
 
   private val cacheFolder: File =
       File(Environment.getExternalStorageDirectory().path + File.separator + APP_DIRECTORY_NAME
@@ -35,6 +37,8 @@ class FileHandlerImpl : FileHandler {
   private val cacheFile: File = File(cacheFolder, System.currentTimeMillis().toString())
   private val cacheCroppedFile: File =
       File(cacheFolder, System.currentTimeMillis().toString())
+  private val shareableFile: File =
+      File(context.filesDir, System.currentTimeMillis().toString() + JPG_EXTENSION)
 
   override fun getCacheFile(): File {
     createCacheFolderIfNotPresent()
@@ -74,6 +78,10 @@ class FileHandlerImpl : FileHandler {
         createNewFile()
       }
     }
+  }
+
+  override fun getShareableFle(): File {
+    return shareableFile
   }
 
   override fun freeSpaceAvailable(): Boolean {
