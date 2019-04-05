@@ -1098,7 +1098,8 @@ class ColorsDetailPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.getCacheImageUri()).thenReturn(Single.error(Exception()))
-    `when`(context.getString(R.string.preparing_shareable_wallpaper_message)).thenReturn(randomString)
+    `when`(context.getString(R.string.preparing_shareable_wallpaper_message)).thenReturn(
+        randomString)
 
     colorsDetailPresenterImpl.handleShareClick()
 
@@ -1119,7 +1120,8 @@ class ColorsDetailPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.getCacheImageUri()).thenReturn(Single.just(mockUri))
-    `when`(context.getString(R.string.preparing_shareable_wallpaper_message)).thenReturn(randomString)
+    `when`(context.getString(R.string.preparing_shareable_wallpaper_message)).thenReturn(
+        randomString)
 
     colorsDetailPresenterImpl.handleShareClick()
 
@@ -1134,27 +1136,6 @@ class ColorsDetailPresenterImplTest {
     verifyNoMoreInteractions(colorsDetailView)
     shouldVerifyPostExecutionThreadSchedulerCall()
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   @Test
   fun `should show unsuccessful purchase error on handleViewResult call failure with share request codee`() {
@@ -1171,7 +1152,8 @@ class ColorsDetailPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.getCacheImageUri()).thenReturn(Single.just(mockUri))
-    `when`(context.getString(R.string.preparing_shareable_wallpaper_message)).thenReturn(randomString)
+    `when`(context.getString(R.string.preparing_shareable_wallpaper_message)).thenReturn(
+        randomString)
 
     colorsDetailPresenterImpl.handleViewResult(SHARE.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, mockIntent)
@@ -1194,7 +1176,8 @@ class ColorsDetailPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.getCacheImageUri()).thenReturn(Single.just(mockUri))
-    `when`(context.getString(R.string.preparing_shareable_wallpaper_message)).thenReturn(randomString)
+    `when`(context.getString(R.string.preparing_shareable_wallpaper_message)).thenReturn(
+        randomString)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(SHARE.ordinal,
         arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,

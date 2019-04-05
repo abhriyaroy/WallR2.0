@@ -310,12 +310,12 @@ class ImageHandlerImpl(
     val paint = Paint()
     val initStripeHeight = (middleHeight / colors.size).toFloat()
     val initShadowHeight = (middleHeight * 0.012).toFloat()
-    val stripeSpread = (initStripeHeight * 0.25).toInt()  // Vary stripe height a bit.
-    val shadowSpread = initShadowHeight * 0.5f  // Vary shadow thickness too.
-    for (i in colors.indices.reversed()) {  // Going upwards.
+    val stripeSpread = (initStripeHeight * 0.25).toInt()
+    val shadowSpread = initShadowHeight * 0.5f
+    for (i in colors.indices.reversed()) {
       var stripeHeight: Int
       val shadowThickness: Float
-      if (i == colors.size - 1) {  // Fill whole canvas with last color.
+      if (i == colors.size - 1) {
         stripeHeight = bigHeight
         shadowThickness = 0f
       } else {
@@ -375,7 +375,7 @@ class ImageHandlerImpl(
 
     val plasma = Array(height) { IntArray(height) }
     val random = Random()
-    val n = 1.3  // Number of periods per wallpaper width.
+    val n = 1.3
     val period = height / (n * 2.0 * 3.14)
     val spread = period * 0.3
     val period1 = period - spread + spread * random.nextFloat()
@@ -383,7 +383,6 @@ class ImageHandlerImpl(
     val period3 = period - spread + spread * random.nextFloat()
     for (x in 0 until height)
       for (y in 0 until height) {
-        // Adding sines to get plasma value.
         val value = (128.0 + 128.0 * Math.sin(x / period1)
             + 128.0 + 128.0 * Math.sin(y / period2)
             + 128.0 + 128.0 * Math.sin((x + y) / period1)
