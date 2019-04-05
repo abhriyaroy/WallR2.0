@@ -164,122 +164,90 @@ class ColorsDetailPresenterImpl(
   }
 
   override fun handleQuickSetClick() {
-    if (!areColorOperationsDisabled) {
-      if (view?.hasStoragePermission() == true) {
-        colorImagesUseCase.getBitmapSingle()
-            .doOnSuccess {
-              wallpaperSetter.setWallpaper(it)
-            }
-            .observeOn(postExecutionThread.scheduler)
-            .doOnSubscribe {
-              isColorWallpaperOperationActive = true
-              view?.showIndefiniteWaitLoader(
-                  context.stringRes(R.string.finalizing_wallpaper_messsage))
-            }
-            .autoDisposable(view!!.getScope())
-            .subscribe({
-              isColorWallpaperOperationActive = false
-              view?.hideIndefiniteWaitLoader()
-              view?.showWallpaperSetSuccessMessage()
-            }, {
-              isColorWallpaperOperationActive = false
-              view?.hideIndefiniteWaitLoader()
-              view?.showWallpaperSetErrorMessage()
-            })
-      } else {
-        view?.requestStoragePermission(QUICK_SET)
-      }
-    } else {
-      view?.showColorOperationsDisabledMessage()
+    if (isNotInOperationAndHasStoragePermissions(QUICK_SET)) {
+      colorImagesUseCase.getBitmapSingle()
+          .doOnSuccess {
+            wallpaperSetter.setWallpaper(it)
+          }
+          .observeOn(postExecutionThread.scheduler)
+          .doOnSubscribe {
+            isColorWallpaperOperationActive = true
+            view?.showIndefiniteWaitLoader(
+                context.stringRes(R.string.finalizing_wallpaper_messsage))
+          }
+          .autoDisposable(view!!.getScope())
+          .subscribe({
+            isColorWallpaperOperationActive = false
+            view?.hideIndefiniteWaitLoader()
+            view?.showWallpaperSetSuccessMessage()
+          }, {
+            isColorWallpaperOperationActive = false
+            view?.hideIndefiniteWaitLoader()
+            view?.showWallpaperSetErrorMessage()
+          })
     }
   }
 
   override fun handleDownloadClick() {
-    if (!areColorOperationsDisabled) {
-      if (userPremiumStatusUseCase.isUserPremium()) {
-        if (view?.hasStoragePermission() == true) {
-          colorImagesUseCase.downloadImage()
-              .observeOn(postExecutionThread.scheduler)
-              .doOnSubscribe {
-                view?.showIndefiniteWaitLoader(context.stringRes(
-                    R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
-                isColorWallpaperOperationActive = true
-              }
-              .autoDisposable(view!!.getScope())
-              .subscribe({
-                view?.hideIndefiniteWaitLoader()
-                view?.showDownloadCompletedSuccessMessage()
-                isColorWallpaperOperationActive = false
-              }, {
-                view?.hideIndefiniteWaitLoader()
-                view?.showGenericErrorMessage()
-                isColorWallpaperOperationActive = false
-              })
-        } else {
-          view?.requestStoragePermission(DOWNLOAD)
-        }
-      } else {
-        view?.redirectToBuyPro(DOWNLOAD.ordinal)
-      }
-    } else {
-      view?.showColorOperationsDisabledMessage()
+    if (isNotInOperationAndIsPremiumAndHasAllPermissions(DOWNLOAD)) {
+      colorImagesUseCase.downloadImage()
+          .observeOn(postExecutionThread.scheduler)
+          .doOnSubscribe {
+            view?.showIndefiniteWaitLoader(context.stringRes(
+                R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
+            isColorWallpaperOperationActive = true
+          }
+          .autoDisposable(view!!.getScope())
+          .subscribe({
+            view?.hideIndefiniteWaitLoader()
+            view?.showDownloadCompletedSuccessMessage()
+            isColorWallpaperOperationActive = false
+          }, {
+            view?.hideIndefiniteWaitLoader()
+            view?.showGenericErrorMessage()
+            isColorWallpaperOperationActive = false
+          })
     }
   }
 
   override fun handleEditSetClick() {
-    if (!areColorOperationsDisabled) {
-      if (view?.hasStoragePermission() == true) {
-        isColorWallpaperOperationActive = true
-        view?.showIndefiniteWaitLoader(
-            context.stringRes(R.string.detail_activity_editing_tool_message))
-        view?.startCroppingActivity(
-            colorImagesUseCase.getCacheSourceUri(),
-            colorImagesUseCase.getCroppingDestinationUri(),
-            wallpaperSetter.getDesiredMinimumWidth(),
-            wallpaperSetter.getDesiredMinimumHeight())
-        isColorWallpaperOperationActive = false
-      } else {
-        view?.requestStoragePermission(EDIT_SET)
-      }
-    } else {
-      view?.showColorOperationsDisabledMessage()
+    if (isNotInOperationAndHasStoragePermissions(EDIT_SET)) {
+      isColorWallpaperOperationActive = true
+      view?.showIndefiniteWaitLoader(
+          context.stringRes(R.string.detail_activity_editing_tool_message))
+      view?.startCroppingActivity(
+          colorImagesUseCase.getCacheSourceUri(),
+          colorImagesUseCase.getCroppingDestinationUri(),
+          wallpaperSetter.getDesiredMinimumWidth(),
+          wallpaperSetter.getDesiredMinimumHeight())
+      isColorWallpaperOperationActive = false
     }
   }
 
   override fun handleAddToCollectionClick() {
-    if (!areColorOperationsDisabled) {
-      if (userPremiumStatusUseCase.isUserPremium()) {
-        if (view?.hasStoragePermission() == true) {
-          colorImagesUseCase.saveToCollectionsCompletable(colorList.toString(),
-              lastImageOperationType)
-              .observeOn(postExecutionThread.scheduler)
-              .doOnSubscribe {
-                view?.showIndefiniteWaitLoader(
-                    context.stringRes(R.string.adding_image_to_collections_message))
-                isColorWallpaperOperationActive = true
-              }
-              .autoDisposable(view!!.getScope())
-              .subscribe({
-                view?.showAddToCollectionSuccessMessage()
-                view?.hideIndefiniteWaitLoader()
-                isColorWallpaperOperationActive = false
-              }, {
-                if (it is AlreadyPresentInCollectionException) {
-                  view?.showAlreadyPresentInCollectionErrorMessage()
-                } else {
-                  view?.showGenericErrorMessage()
-                }
-                view?.hideIndefiniteWaitLoader()
-                isColorWallpaperOperationActive = false
-              })
-        } else {
-          view?.requestStoragePermission(ADD_TO_COLLECTION)
-        }
-      } else {
-        view?.redirectToBuyPro(ADD_TO_COLLECTION.ordinal)
-      }
-    } else {
-      view?.showColorOperationsDisabledMessage()
+    if (isNotInOperationAndIsPremiumAndHasAllPermissions(ADD_TO_COLLECTION)) {
+      colorImagesUseCase.saveToCollectionsCompletable(colorList.toString(),
+          lastImageOperationType)
+          .observeOn(postExecutionThread.scheduler)
+          .doOnSubscribe {
+            view?.showIndefiniteWaitLoader(
+                context.stringRes(R.string.adding_image_to_collections_message))
+            isColorWallpaperOperationActive = true
+          }
+          .autoDisposable(view!!.getScope())
+          .subscribe({
+            view?.showAddToCollectionSuccessMessage()
+            view?.hideIndefiniteWaitLoader()
+            isColorWallpaperOperationActive = false
+          }, {
+            if (it is AlreadyPresentInCollectionException) {
+              view?.showAlreadyPresentInCollectionErrorMessage()
+            } else {
+              view?.showGenericErrorMessage()
+            }
+            view?.hideIndefiniteWaitLoader()
+            isColorWallpaperOperationActive = false
+          })
     }
   }
 
@@ -416,6 +384,36 @@ class ColorsDetailPresenterImpl(
   private fun enableOperations() {
     view?.enableColorOperations()
     areColorOperationsDisabled = false
+  }
+
+  private fun isNotInOperationAndHasStoragePermissions(colorsActionType: ColorsActionType): Boolean {
+    if (!areColorOperationsDisabled) {
+      if (view?.hasStoragePermission() == true) {
+        return true
+      } else {
+        view?.requestStoragePermission(colorsActionType)
+      }
+    } else {
+      view?.showColorOperationsDisabledMessage()
+    }
+    return false
+  }
+
+  private fun isNotInOperationAndIsPremiumAndHasAllPermissions(colorsActionType: ColorsActionType): Boolean {
+    if (!areColorOperationsDisabled) {
+      if (userPremiumStatusUseCase.isUserPremium()) {
+        if (view?.hasStoragePermission() == true) {
+          return true
+        } else {
+          view?.requestStoragePermission(colorsActionType)
+        }
+      } else {
+        view?.redirectToBuyPro(colorsActionType.ordinal)
+      }
+    } else {
+      view?.showColorOperationsDisabledMessage()
+    }
+    return false
   }
 }
 
