@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.Provides
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
-import zebrostudio.wallr100.domain.interactor.ColorsDetailsUseCase
+import zebrostudio.wallr100.domain.interactor.ColorImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.ColorsDetailPresenter
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailPresenterImpl
@@ -18,12 +18,12 @@ class ColorsDetailModule {
     context: Context,
     postExecutionThread: PostExecutionThread,
     isUserPremiumStatusUseCase: UserPremiumStatusUseCase,
-    colorsDetailsUseCase: ColorsDetailsUseCase,
+    colorImagesUseCase: ColorImagesUseCase,
     wallpaperSetter: WallpaperSetter
   ): ColorsDetailPresenter = ColorsDetailPresenterImpl(
       context,
       postExecutionThread,
       isUserPremiumStatusUseCase,
-      colorsDetailsUseCase,
+      colorImagesUseCase,
       wallpaperSetter)
 }

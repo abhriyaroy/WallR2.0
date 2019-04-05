@@ -8,8 +8,8 @@ import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.model.CollectionsImageModel
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
 
-interface ColorsDetailsUseCase {
-  fun getColorBitmapSingle(colorHex: String): Single<Bitmap>
+interface ColorImagesUseCase {
+  fun getSingularColorBitmapSingle(colorHex: String): Single<Bitmap>
   fun getMultiColorMaterialSingle(
     colorHexList: List<String>,
     multiColorImageType: MultiColorImageType
@@ -29,9 +29,9 @@ interface ColorsDetailsUseCase {
   fun clearCachesCompletable(): Completable
 }
 
-class ColorsDetailsInteractor(private val wallrRepository: WallrRepository) : ColorsDetailsUseCase {
+class ColorImagesInteractor(private val wallrRepository: WallrRepository) : ColorImagesUseCase {
 
-  override fun getColorBitmapSingle(colorHex: String): Single<Bitmap> {
+  override fun getSingularColorBitmapSingle(colorHex: String): Single<Bitmap> {
     return wallrRepository.getSingleColorBitmap(colorHex)
   }
 

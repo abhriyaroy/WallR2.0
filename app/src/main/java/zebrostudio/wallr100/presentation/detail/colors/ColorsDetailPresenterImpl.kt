@@ -19,7 +19,7 @@ import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
-import zebrostudio.wallr100.domain.interactor.ColorsDetailsUseCase
+import zebrostudio.wallr100.domain.interactor.ColorImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.model.CollectionsImageModel.EDITED
 import zebrostudio.wallr100.domain.model.CollectionsImageModel.MINIMAL_COLOR
@@ -42,7 +42,7 @@ class ColorsDetailPresenterImpl(
   private val context: Context,
   private val postExecutionThread: PostExecutionThread,
   private val userPremiumStatusUseCase: UserPremiumStatusUseCase,
-  private val colorsDetailsUseCase: ColorsDetailsUseCase,
+  private val colorImagesUseCase: ColorImagesUseCase,
   private val wallpaperSetter: WallpaperSetter
 ) : ColorsDetailPresenter {
 
@@ -165,7 +165,7 @@ class ColorsDetailPresenterImpl(
   override fun handleQuickSetClick() {
     if (!areColorOperationsDisabled) {
       if (view?.hasStoragePermission() == true) {
-        colorsDetailsUseCase.getBitmapSingle()
+        colorImagesUseCase.getBitmapSingle()
             .doOnSuccess {
               wallpaperSetter.setWallpaper(it)
             }
@@ -197,7 +197,7 @@ class ColorsDetailPresenterImpl(
     if (!areColorOperationsDisabled) {
       if (userPremiumStatusUseCase.isUserPremium()) {
         if (view?.hasStoragePermission() == true) {
-          colorsDetailsUseCase.downloadImage()
+          colorImagesUseCase.downloadImage()
               .observeOn(postExecutionThread.scheduler)
               .doOnSubscribe {
                 view?.showIndefiniteWaitLoader(context.stringRes(
@@ -232,8 +232,8 @@ class ColorsDetailPresenterImpl(
         view?.showIndefiniteWaitLoader(
             context.stringRes(R.string.detail_activity_editing_tool_message))
         view?.startCroppingActivity(
-            colorsDetailsUseCase.getCacheSourceUri(),
-            colorsDetailsUseCase.getCroppingDestinationUri(),
+            colorImagesUseCase.getCacheSourceUri(),
+            colorImagesUseCase.getCroppingDestinationUri(),
             wallpaperSetter.getDesiredMinimumWidth(),
             wallpaperSetter.getDesiredMinimumHeight())
         isColorWallpaperOperationActive = false
@@ -249,7 +249,7 @@ class ColorsDetailPresenterImpl(
     if (!areColorOperationsDisabled) {
       if (userPremiumStatusUseCase.isUserPremium()) {
         if (view?.hasStoragePermission() == true) {
-          colorsDetailsUseCase.saveToCollectionsCompletable(colorList.toString(),
+          colorImagesUseCase.saveToCollectionsCompletable(colorList.toString(),
               lastImageOperationType)
               .observeOn(postExecutionThread.scheduler)
               .doOnSubscribe {
@@ -286,7 +286,7 @@ class ColorsDetailPresenterImpl(
     if (!areColorOperationsDisabled) {
       if (userPremiumStatusUseCase.isUserPremium()) {
         if (view?.hasStoragePermission() == true) {
-          colorsDetailsUseCase.getCacheImageUri()
+          colorImagesUseCase.getCacheImageUri()
               .observeOn(postExecutionThread.scheduler)
               .doOnSubscribe {
                 isColorWallpaperOperationActive = true
@@ -361,9 +361,9 @@ class ColorsDetailPresenterImpl(
 
   private fun loadImage() {
     if (colorsDetailMode == SINGLE) {
-      colorsDetailsUseCase.getColorBitmapSingle(colorList[FIRST_ELEMENT_POSITION])
+      colorImagesUseCase.getSingularColorBitmapSingle(colorList[FIRST_ELEMENT_POSITION])
     } else {
-      colorsDetailsUseCase.getMultiColorMaterialSingle(colorList, multiColorImageType!!)
+      colorImagesUseCase.getMultiColorMaterialSingle(colorList, multiColorImageType!!)
     }.observeOn(postExecutionThread.scheduler)
         .doOnSubscribe {
           view?.showMainImageWaitLoader()
@@ -384,7 +384,7 @@ class ColorsDetailPresenterImpl(
   private fun handleCropResult(cropResultUri: Uri) {
     var hasWallpaperBeenSet = false
     view?.showIndefiniteWaitLoader(context.stringRes(R.string.finalizing_wallpaper_messsage))
-    colorsDetailsUseCase.getBitmapFromUriSingle(cropResultUri)
+    colorImagesUseCase.getBitmapFromUriSingle(cropResultUri)
         .doOnSubscribe {
           isColorWallpaperOperationActive = true
         }
