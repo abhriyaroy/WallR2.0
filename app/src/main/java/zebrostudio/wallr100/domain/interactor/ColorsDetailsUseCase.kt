@@ -59,7 +59,7 @@ class ColorsDetailsInteractor(private val wallrRepository: WallrRepository) : Co
 
   override fun getCroppingDestinationUri() = wallrRepository.getCacheResultUri()
 
-  override fun getCacheImageUri() = wallrRepository.getCacheImageUri()
+  override fun getCacheImageUri() = wallrRepository.getShareableImageUri()
 
   override fun downloadImage() = wallrRepository.saveCachedImageToDownloads()
 

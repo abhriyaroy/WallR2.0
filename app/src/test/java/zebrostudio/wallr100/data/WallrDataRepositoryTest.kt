@@ -47,6 +47,9 @@ import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.model.CollectionsImageModel
 import zebrostudio.wallr100.domain.model.RestoreColorsModel
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
 import java.util.TreeMap
 import java.util.UUID.randomUUID
 import java.util.concurrent.TimeUnit
@@ -885,6 +888,135 @@ class WallrDataRepositoryTest {
     verify(minimalColorHelper).getCustomColors()
     verify(minimalColorHelper).getDeletedItemsFromCache()
     verifyNoMoreInteractions(minimalColorHelper)
+    `should verify computation scheduler call`()
+  }
+
+  @Test fun `should return single of uri on geShareableImageUri call success`() {
+    `when`(imageHandler.getShareableUri()).thenReturn(Single.just(mockUri))
+
+    val result = wallrDataRepository.getShareableImageUri().test().values()[0]
+
+    assertEquals(mockUri, result)
+    verify(imageHandler).getShareableUri()
+    verifyNoMoreInteractions(imageHandler)
+    `should verify io scheduler call`()
+  }
+
+  @Test
+  fun `should return NotEnoughFreeSpaceException on getSingleColorBitmap call failure due to low storage space`() {
+    `when`(fileHandler.freeSpaceAvailable()).thenReturn(false)
+
+    wallrDataRepository.getSingleColorBitmap(randomString).test()
+        .assertError(NotEnoughFreeSpaceException::class.java)
+
+    verify(fileHandler).freeSpaceAvailable()
+    verifyNoMoreInteractions(fileHandler)
+    verifyNoMoreInteractions(imageHandler)
+  }
+
+  @Test
+  fun `should return single of bitmap on getSingleColorBitmap call success`() {
+    `when`(fileHandler.freeSpaceAvailable()).thenReturn(true)
+    `when`(imageHandler.getSingleColorBitmap(randomString)).thenReturn(Single.just(mockBitmap))
+
+    val result = wallrDataRepository.getSingleColorBitmap(randomString).test()
+        .values()[0]
+
+    assertEquals(mockBitmap, result)
+    verify(fileHandler).freeSpaceAvailable()
+    verifyNoMoreInteractions(fileHandler)
+    verify(imageHandler).getSingleColorBitmap(randomString)
+    verifyNoMoreInteractions(imageHandler)
+    `should verify computation scheduler call`()
+  }
+
+  @Test
+  fun `should return NotEnoughFreeSpaceException on getMultiColorBitmap call of type Material failure due to low storage space`() {
+    val list = listOf(randomString)
+    `when`(fileHandler.freeSpaceAvailable()).thenReturn(false)
+
+    wallrDataRepository.getMultiColorBitmap(list, MATERIAL).test()
+        .assertError(NotEnoughFreeSpaceException::class.java)
+
+    verify(fileHandler).freeSpaceAvailable()
+    verifyNoMoreInteractions(fileHandler)
+    verifyNoMoreInteractions(imageHandler)
+  }
+
+  @Test
+  fun `should return single of bitmap on getMultiColorBitmap  call of type Material success`() {
+    val list = listOf(randomString)
+    `when`(fileHandler.freeSpaceAvailable()).thenReturn(true)
+    `when`(imageHandler.getMultiColorBitmap(list, MATERIAL)).thenReturn(Single.just(mockBitmap))
+
+    val result = wallrDataRepository.getMultiColorBitmap(list, MATERIAL).test()
+        .values()[0]
+
+    assertEquals(mockBitmap, result)
+    verify(fileHandler).freeSpaceAvailable()
+    verifyNoMoreInteractions(fileHandler)
+    verify(imageHandler).getMultiColorBitmap(list, MATERIAL)
+    verifyNoMoreInteractions(imageHandler)
+    `should verify computation scheduler call`()
+  }
+
+  @Test
+  fun `should return NotEnoughFreeSpaceException on getMultiColorBitmap call of type Gradient failure due to low storage space`() {
+    val list = listOf(randomString)
+    `when`(fileHandler.freeSpaceAvailable()).thenReturn(false)
+
+    wallrDataRepository.getMultiColorBitmap(list, GRADIENT).test()
+        .assertError(NotEnoughFreeSpaceException::class.java)
+
+    verify(fileHandler).freeSpaceAvailable()
+    verifyNoMoreInteractions(fileHandler)
+    verifyNoMoreInteractions(imageHandler)
+  }
+
+  @Test
+  fun `should return single of bitmap on getMultiColorBitmap  call of type Gradient success`() {
+    val list = listOf(randomString)
+    `when`(fileHandler.freeSpaceAvailable()).thenReturn(true)
+    `when`(imageHandler.getMultiColorBitmap(list, GRADIENT)).thenReturn(Single.just(mockBitmap))
+
+    val result = wallrDataRepository.getMultiColorBitmap(list, GRADIENT).test()
+        .values()[0]
+
+    assertEquals(mockBitmap, result)
+    verify(fileHandler).freeSpaceAvailable()
+    verifyNoMoreInteractions(fileHandler)
+    verify(imageHandler).getMultiColorBitmap(list, GRADIENT)
+    verifyNoMoreInteractions(imageHandler)
+    `should verify computation scheduler call`()
+  }
+
+  @Test
+  fun `should return NotEnoughFreeSpaceException on getMultiColorBitmap call of type Plasma failure due to low storage space`() {
+    val list = listOf(randomString)
+    `when`(fileHandler.freeSpaceAvailable()).thenReturn(false)
+
+    wallrDataRepository.getMultiColorBitmap(list, PLASMA).test()
+        .assertError(NotEnoughFreeSpaceException::class.java)
+
+    verify(fileHandler).freeSpaceAvailable()
+    verifyNoMoreInteractions(fileHandler)
+    verifyNoMoreInteractions(imageHandler)
+  }
+
+  @Test
+  fun `should return single of bitmap on getMultiColorBitmap  call of type Plasma success`() {
+    val list = listOf(randomString)
+    `when`(fileHandler.freeSpaceAvailable()).thenReturn(true)
+    `when`(imageHandler.getMultiColorBitmap(list, PLASMA)).thenReturn(Single.just(mockBitmap))
+
+    val result = wallrDataRepository.getMultiColorBitmap(list, PLASMA).test()
+        .values()[0]
+
+    assertEquals(mockBitmap, result)
+    verify(fileHandler).freeSpaceAvailable()
+    verifyNoMoreInteractions(fileHandler)
+    verify(imageHandler).getMultiColorBitmap(list, PLASMA)
+    verifyNoMoreInteractions(imageHandler)
     `should verify computation scheduler call`()
   }
 
