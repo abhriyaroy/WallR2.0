@@ -13,6 +13,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider
+import com.yalantis.ucrop.UCrop
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -33,10 +34,14 @@ import zebrostudio.wallr100.android.ui.detail.colors.COLORS_DETAIL_MULTIPLE_TYPE
 import zebrostudio.wallr100.android.ui.detail.colors.COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode
 import zebrostudio.wallr100.android.utils.WallpaperSetter
+import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ColorImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
+import zebrostudio.wallr100.domain.model.CollectionsImageModel
+import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.ADD_TO_COLLECTION
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.DOWNLOAD
+import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.EDIT_SET
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.LOAD_COLOR_WALLPAPER
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.QUICK_SET
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.ColorsDetailView
@@ -58,6 +63,7 @@ class ColorsDetailPresenterImplTest {
   @Mock lateinit var mockIntent: Intent
   private lateinit var colorsDetailPresenterImpl: ColorsDetailPresenterImpl
   private val randomString = UUID.randomUUID().toString()
+  private val randomInt = Math.random().toInt()
 
   @Before fun setup() {
     colorsDetailPresenterImpl =
@@ -453,6 +459,18 @@ class ColorsDetailPresenterImplTest {
     shouldVerifyPostExecutionThreadSchedulerCall()
   }
 
+  @Test
+  fun `should show permission required and exit view on handlePermissionRequestResult call failure due to permission denied with load color wallpaper request code`() {
+    colorsDetailPresenterImpl.handlePermissionRequestResult(LOAD_COLOR_WALLPAPER.ordinal,
+        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE),
+        intArrayOf(PackageManager.PERMISSION_DENIED))
+
+    verify(colorsDetailView).exitView()
+    verify(colorsDetailView).showPermissionRequiredMessage()
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
   @Test fun `should set panel expanded to true on setPanelStateAsExpanded call success`() {
     colorsDetailPresenterImpl.setPanelStateAsExpanded()
 
@@ -568,6 +586,17 @@ class ColorsDetailPresenterImplTest {
   }
 
   @Test
+  fun `should show permission required on handlePermissionRequestResult call failure due to permission denied with quick set request code`() {
+    colorsDetailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
+        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE),
+        intArrayOf(PackageManager.PERMISSION_DENIED))
+
+    verify(colorsDetailView).showPermissionRequiredMessage()
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
+  @Test
   fun `should show operation disabled message on handleDownloadClick call failure due to image still being loaded`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = true
 
@@ -655,6 +684,17 @@ class ColorsDetailPresenterImplTest {
   }
 
   @Test
+  fun `should show permission required on handlePermissionRequestResult call failure due to permission denied with download request code`() {
+    colorsDetailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal,
+        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE),
+        intArrayOf(PackageManager.PERMISSION_DENIED))
+
+    verify(colorsDetailView).showPermissionRequiredMessage()
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
+  @Test
   fun `should show unsuccessful purchase error on handleViewResult call failure with download request code`() {
     colorsDetailPresenterImpl.handleViewResult(DOWNLOAD.ordinal, Activity.RESULT_CANCELED,
         mockIntent)
@@ -685,6 +725,332 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showGenericErrorMessage()
     verifyNoMoreInteractions(colorsDetailView)
     shouldVerifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show operation disabled message on handleEditSetClick call failure due to image still being loaded`() {
+    colorsDetailPresenterImpl.areColorOperationsDisabled = true
+
+    colorsDetailPresenterImpl.handleEditSetClick()
+
+    verify(colorsDetailView).showColorOperationsDisabledMessage()
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
+  @Test
+  fun `should request storage permission on handleEditSetClick call failure due to missing permission`() {
+    colorsDetailPresenterImpl.areColorOperationsDisabled = false
+    `when`(colorsDetailView.hasStoragePermission()).thenReturn(false)
+
+    colorsDetailPresenterImpl.handleEditSetClick()
+
+    verify(colorsDetailView).hasStoragePermission()
+    verify(colorsDetailView).requestStoragePermission(EDIT_SET)
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
+  @Test fun `should start cropping activity on handleEditSetClick call success`() {
+    colorsDetailPresenterImpl.areColorOperationsDisabled = false
+    `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
+    `when`(context.getString(R.string.detail_activity_editing_tool_message)).thenReturn(
+        randomString)
+    `when`(colorImagesUseCase.getCacheSourceUri()).thenReturn(mockUri)
+    `when`(colorImagesUseCase.getCroppingDestinationUri()).thenReturn(mockUri)
+    `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(randomInt)
+    `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(randomInt)
+
+    colorsDetailPresenterImpl.handleEditSetClick()
+
+    assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
+    verify(colorsDetailView).hasStoragePermission()
+    verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
+    verify(colorsDetailView).startCroppingActivity(
+        colorImagesUseCase.getCacheSourceUri(),
+        colorImagesUseCase.getCroppingDestinationUri(),
+        wallpaperSetter.getDesiredMinimumWidth(),
+        wallpaperSetter.getDesiredMinimumHeight())
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
+  @Test
+  fun `should show permission required on handlePermissionRequestResult call failure due to permission denied with edit set request code`() {
+    colorsDetailPresenterImpl.handlePermissionRequestResult(EDIT_SET.ordinal,
+        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE),
+        intArrayOf(PackageManager.PERMISSION_DENIED))
+
+    verify(colorsDetailView).showPermissionRequiredMessage()
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
+  @Test fun `should show error on handleViewResult call failure due to null crop uri`() {
+    `when`(colorsDetailView.getUriFromIntent(mockIntent)).thenReturn(null)
+
+    colorsDetailPresenterImpl.handleViewResult(UCrop.REQUEST_CROP, Activity.RESULT_OK, mockIntent)
+
+    verify(colorsDetailView).getUriFromIntent(mockIntent)
+    verify(colorsDetailView).hideIndefiniteWaitLoader()
+    verify(colorsDetailView).showGenericErrorMessage()
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
+  @Test fun `should show error on handleViewResult call failure of request type crop`() {
+    `when`(colorsDetailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
+    `when`(context.getString(R.string.finalizing_wallpaper_messsage)).thenReturn(randomString)
+    `when`(colorImagesUseCase.getBitmapFromUriSingle(mockUri)).thenReturn(Single.error(Exception()))
+
+    colorsDetailPresenterImpl.handleViewResult(UCrop.REQUEST_CROP, Activity.RESULT_OK, mockIntent)
+
+    assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
+    verify(colorsDetailView).getUriFromIntent(mockIntent)
+    verify(colorsDetailView).getScope()
+    verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
+    verify(colorsDetailView).hideIndefiniteWaitLoader()
+    verify(colorsDetailView).showGenericErrorMessage()
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
+  @Test
+  fun `should show unable to set wallpaper error on handleViewResult call success of request type crop`() {
+    `when`(colorsDetailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
+    `when`(context.getString(R.string.finalizing_wallpaper_messsage)).thenReturn(randomString)
+    `when`(colorImagesUseCase.getBitmapFromUriSingle(mockUri)).thenReturn(Single.just(mockBitmap))
+    `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(false)
+
+    colorsDetailPresenterImpl.handleViewResult(UCrop.REQUEST_CROP, Activity.RESULT_OK, mockIntent)
+
+    assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
+    assertEquals(CollectionsImageModel.EDITED, colorsDetailPresenterImpl.lastImageOperationType)
+    verify(colorsDetailView).getUriFromIntent(mockIntent)
+    verify(colorsDetailView).getScope()
+    verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
+    verify(colorsDetailView).showImage(mockBitmap)
+    verify(colorsDetailView).hideIndefiniteWaitLoader()
+    verify(colorsDetailView).showWallpaperSetErrorMessage()
+    verifyNoMoreInteractions(colorsDetailView)
+    verify(wallpaperSetter).setWallpaper(mockBitmap)
+    verifyNoMoreInteractions(wallpaperSetter)
+    shouldVerifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test fun `should set wallpaper on handleViewResult call success of request type crop`() {
+    `when`(colorsDetailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
+    `when`(context.getString(R.string.finalizing_wallpaper_messsage)).thenReturn(randomString)
+    `when`(colorImagesUseCase.getBitmapFromUriSingle(mockUri)).thenReturn(Single.just(mockBitmap))
+    `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(true)
+
+    colorsDetailPresenterImpl.handleViewResult(UCrop.REQUEST_CROP, Activity.RESULT_OK, mockIntent)
+
+    assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
+    assertEquals(CollectionsImageModel.EDITED, colorsDetailPresenterImpl.lastImageOperationType)
+    verify(colorsDetailView).getUriFromIntent(mockIntent)
+    verify(colorsDetailView).getScope()
+    verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
+    verify(colorsDetailView).showImage(mockBitmap)
+    verify(colorsDetailView).hideIndefiniteWaitLoader()
+    verify(colorsDetailView).showWallpaperSetSuccessMessage()
+    verifyNoMoreInteractions(colorsDetailView)
+    verify(wallpaperSetter).setWallpaper(mockBitmap)
+    verifyNoMoreInteractions(wallpaperSetter)
+    shouldVerifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show operation disabled message on handleAddToCollectionClick call failure due to image still being loaded`() {
+    colorsDetailPresenterImpl.areColorOperationsDisabled = true
+
+    colorsDetailPresenterImpl.handleAddToCollectionClick()
+
+    verify(colorsDetailView).showColorOperationsDisabledMessage()
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
+  @Test
+  fun `should redirect to buy pro on handleAddToCollectionClick call failure due to non pro user`() {
+    colorsDetailPresenterImpl.areColorOperationsDisabled = false
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(false)
+
+    colorsDetailPresenterImpl.handleAddToCollectionClick()
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(colorsDetailView).redirectToBuyPro(ADD_TO_COLLECTION.ordinal)
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
+  @Test
+  fun `should request storage permission on handleAddToCollectionClick call failure due to missing permission`() {
+    colorsDetailPresenterImpl.areColorOperationsDisabled = false
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(colorsDetailView.hasStoragePermission()).thenReturn(false)
+
+    colorsDetailPresenterImpl.handleAddToCollectionClick()
+
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(colorsDetailView).hasStoragePermission()
+    verify(colorsDetailView).requestStoragePermission(ADD_TO_COLLECTION)
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
+  @Test
+  fun `should show generic error on handleAddToCollectionClick call failure`() {
+    val list = mutableListOf(randomString)
+    colorsDetailPresenterImpl.colorList = list
+    colorsDetailPresenterImpl.lastImageOperationType = CollectionsImageModel.MINIMAL_COLOR
+    colorsDetailPresenterImpl.areColorOperationsDisabled = false
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
+    `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
+        CollectionsImageModel.MINIMAL_COLOR)).thenReturn(
+        Completable.error(Exception()))
+    `when`(context.getString(R.string.adding_image_to_collections_message)).thenReturn(randomString)
+
+    colorsDetailPresenterImpl.handleAddToCollectionClick()
+
+    assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(colorsDetailView).hasStoragePermission()
+    verify(colorsDetailView).getScope()
+    verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
+    verify(colorsDetailView).showGenericErrorMessage()
+    verify(colorsDetailView).hideIndefiniteWaitLoader()
+    verifyNoMoreInteractions(colorsDetailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show already present error in collection message on handleAddToCollectionClick call failure`() {
+    val list = mutableListOf(randomString)
+    colorsDetailPresenterImpl.colorList = list
+    colorsDetailPresenterImpl.lastImageOperationType = CollectionsImageModel.MINIMAL_COLOR
+    colorsDetailPresenterImpl.areColorOperationsDisabled = false
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
+    `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
+        CollectionsImageModel.MINIMAL_COLOR)).thenReturn(
+        Completable.error(AlreadyPresentInCollectionException()))
+    `when`(context.getString(R.string.adding_image_to_collections_message)).thenReturn(randomString)
+
+    colorsDetailPresenterImpl.handleAddToCollectionClick()
+
+    assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(colorsDetailView).hasStoragePermission()
+    verify(colorsDetailView).getScope()
+    verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
+    verify(colorsDetailView).showAlreadyPresentInCollectionErrorMessage()
+    verify(colorsDetailView).hideIndefiniteWaitLoader()
+    verifyNoMoreInteractions(colorsDetailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should add to collection on handleAddToCollectionClick call success`() {
+    val list = mutableListOf(randomString)
+    colorsDetailPresenterImpl.colorList = list
+    colorsDetailPresenterImpl.lastImageOperationType = CollectionsImageModel.MINIMAL_COLOR
+    colorsDetailPresenterImpl.areColorOperationsDisabled = false
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
+    `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
+        CollectionsImageModel.MINIMAL_COLOR)).thenReturn(
+        Completable.complete())
+    `when`(context.getString(R.string.adding_image_to_collections_message)).thenReturn(randomString)
+
+    colorsDetailPresenterImpl.handleAddToCollectionClick()
+
+    assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(colorsDetailView).hasStoragePermission()
+    verify(colorsDetailView).getScope()
+    verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
+    verify(colorsDetailView).showAddToCollectionSuccessMessage()
+    verify(colorsDetailView).hideIndefiniteWaitLoader()
+    verifyNoMoreInteractions(colorsDetailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show unsuccessful purchase error on handleViewResult call failure with add to collection request codee`() {
+    colorsDetailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal, Activity.RESULT_CANCELED,
+        mockIntent)
+
+    verify(colorsDetailView).showUnsuccessfulPurchaseError()
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
+  @Test
+  fun `should add to collection on handleViewResult call success with add to collection request code`() {
+    val list = mutableListOf(randomString)
+    colorsDetailPresenterImpl.colorList = list
+    colorsDetailPresenterImpl.lastImageOperationType = CollectionsImageModel.MINIMAL_COLOR
+    colorsDetailPresenterImpl.areColorOperationsDisabled = false
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
+    `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
+        CollectionsImageModel.MINIMAL_COLOR)).thenReturn(
+        Completable.complete())
+    `when`(context.getString(R.string.adding_image_to_collections_message)).thenReturn(randomString)
+
+    colorsDetailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, mockIntent)
+
+    assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(colorsDetailView).hasStoragePermission()
+    verify(colorsDetailView).getScope()
+    verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
+    verify(colorsDetailView).showAddToCollectionSuccessMessage()
+    verify(colorsDetailView).hideIndefiniteWaitLoader()
+    verifyNoMoreInteractions(colorsDetailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should add to collection on handlePermissionRequestResult call success with add to collection request code`() {
+    val list = mutableListOf(randomString)
+    colorsDetailPresenterImpl.colorList = list
+    colorsDetailPresenterImpl.lastImageOperationType = CollectionsImageModel.MINIMAL_COLOR
+    colorsDetailPresenterImpl.areColorOperationsDisabled = false
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
+    `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
+        CollectionsImageModel.MINIMAL_COLOR)).thenReturn(
+        Completable.complete())
+    `when`(context.getString(R.string.adding_image_to_collections_message)).thenReturn(randomString)
+
+    colorsDetailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal,
+        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(colorsDetailView).hasStoragePermission()
+    verify(colorsDetailView).getScope()
+    verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
+    verify(colorsDetailView).showAddToCollectionSuccessMessage()
+    verify(colorsDetailView).hideIndefiniteWaitLoader()
+    verifyNoMoreInteractions(colorsDetailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show permission required on handlePermissionRequestResult call failure due to permission denied with add to collection request code`() {
+    colorsDetailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal,
+        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE),
+        intArrayOf(PackageManager.PERMISSION_DENIED))
+
+    verify(colorsDetailView).showPermissionRequiredMessage()
+    verifyNoMoreInteractions(colorsDetailView)
   }
 
   @After fun tearDown() {
