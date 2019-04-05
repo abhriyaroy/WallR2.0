@@ -53,6 +53,7 @@ class ColorsDetailPresenterImpl(
   internal var areColorOperationsDisabled: Boolean = false
   internal var isColorWallpaperOperationActive: Boolean = false
   internal var lastImageOperationType = MINIMAL_COLOR
+  internal var intent: Intent = Intent()
   private var view: ColorsDetailView? = null
 
   override fun attachView(view: ColorsDetailView) {
@@ -316,7 +317,7 @@ class ColorsDetailPresenterImpl(
 
   private fun handlePermissionGranted(requestCode: Int) {
     when (requestCode) {
-      LOAD_COLOR_WALLPAPER.ordinal -> loadImage()
+      LOAD_COLOR_WALLPAPER.ordinal -> setCalledIntent(intent)
       QUICK_SET.ordinal -> handleQuickSetClick()
       DOWNLOAD.ordinal -> handleDownloadClick()
       EDIT_SET.ordinal -> handleEditSetClick()
@@ -325,6 +326,7 @@ class ColorsDetailPresenterImpl(
   }
 
   private fun processIntent(intent: Intent) {
+    this.intent = intent
     colorsDetailMode =
         if (intent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG, SINGLE.ordinal)
             == SINGLE.ordinal) {
