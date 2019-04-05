@@ -95,7 +95,8 @@ class ColorsDetailPresenterImpl(
         requestCode == QUICK_SET.ordinal ||
         requestCode == DOWNLOAD.ordinal ||
         requestCode == EDIT_SET.ordinal ||
-        requestCode == ADD_TO_COLLECTION.ordinal
+        requestCode == ADD_TO_COLLECTION.ordinal ||
+        requestCode == SHARE.ordinal
     ) {
       if ((grantResults.isNotEmpty() && grantResults[FIRST_ELEMENT_POSITION]
               == PackageManager.PERMISSION_GRANTED)) {
@@ -252,34 +253,24 @@ class ColorsDetailPresenterImpl(
   }
 
   override fun handleShareClick() {
-    if (!areColorOperationsDisabled) {
-      if (userPremiumStatusUseCase.isUserPremium()) {
-        if (view?.hasStoragePermission() == true) {
-          colorImagesUseCase.getCacheImageUri()
-              .observeOn(postExecutionThread.scheduler)
-              .doOnSubscribe {
-                isColorWallpaperOperationActive = true
-                view?.showIndefiniteWaitLoader(
-                    context.stringRes(R.string.preparing_shareable_wallpaper_message))
-              }
-              .autoDisposable(view!!.getScope())
-              .subscribe({
-                isColorWallpaperOperationActive = false
-                view?.hideIndefiniteWaitLoader()
-                view?.showShareIntent(it)
-              }, {
-                isColorWallpaperOperationActive = false
-                view?.hideIndefiniteWaitLoader()
-                view?.showGenericErrorMessage()
-              })
-        } else {
-          view?.requestStoragePermission(SHARE)
-        }
-      } else {
-        view?.redirectToBuyPro(SHARE.ordinal)
-      }
-    } else {
-      view?.showColorOperationsDisabledMessage()
+    if (isNotInOperationAndIsPremiumAndHasAllPermissions(SHARE)) {
+      colorImagesUseCase.getCacheImageUri()
+          .observeOn(postExecutionThread.scheduler)
+          .doOnSubscribe {
+            isColorWallpaperOperationActive = true
+            view?.showIndefiniteWaitLoader(
+                context.stringRes(R.string.preparing_shareable_wallpaper_message))
+          }
+          .autoDisposable(view!!.getScope())
+          .subscribe({
+            isColorWallpaperOperationActive = false
+            view?.hideIndefiniteWaitLoader()
+            view?.showShareIntent(it)
+          }, {
+            isColorWallpaperOperationActive = false
+            view?.hideIndefiniteWaitLoader()
+            view?.showGenericErrorMessage()
+          })
     }
   }
 
@@ -290,6 +281,7 @@ class ColorsDetailPresenterImpl(
       DOWNLOAD.ordinal -> handleDownloadClick()
       EDIT_SET.ordinal -> handleEditSetClick()
       ADD_TO_COLLECTION.ordinal -> handleAddToCollectionClick()
+      SHARE.ordinal -> handleShareClick()
     }
   }
 

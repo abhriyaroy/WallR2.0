@@ -44,6 +44,7 @@ import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.DOWNLOAD
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.EDIT_SET
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.LOAD_COLOR_WALLPAPER
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.QUICK_SET
+import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.SHARE
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.ColorsDetailView
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailPresenterImpl
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
@@ -1045,6 +1046,176 @@ class ColorsDetailPresenterImplTest {
   @Test
   fun `should show permission required on handlePermissionRequestResult call failure due to permission denied with add to collection request code`() {
     colorsDetailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal,
+        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE),
+        intArrayOf(PackageManager.PERMISSION_DENIED))
+
+    verify(colorsDetailView).showPermissionRequiredMessage()
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
+  @Test
+  fun `should show operation disabled message on handleShareClick call failure due to image still being loaded`() {
+    colorsDetailPresenterImpl.areColorOperationsDisabled = true
+
+    colorsDetailPresenterImpl.handleShareClick()
+
+    verify(colorsDetailView).showColorOperationsDisabledMessage()
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
+  @Test
+  fun `should redirect to buy pro on handleShareClick call failure due to non pro user`() {
+    colorsDetailPresenterImpl.areColorOperationsDisabled = false
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(false)
+
+    colorsDetailPresenterImpl.handleShareClick()
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(colorsDetailView).redirectToBuyPro(SHARE.ordinal)
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
+  @Test
+  fun `should request storage permission on handleShareClick call failure due to missing permission`() {
+    colorsDetailPresenterImpl.areColorOperationsDisabled = false
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(colorsDetailView.hasStoragePermission()).thenReturn(false)
+
+    colorsDetailPresenterImpl.handleShareClick()
+
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(colorsDetailView).hasStoragePermission()
+    verify(colorsDetailView).requestStoragePermission(SHARE)
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
+  @Test fun `should show generic error on handleShareClick call failure`() {
+    colorsDetailPresenterImpl.areColorOperationsDisabled = false
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
+    `when`(colorImagesUseCase.getCacheImageUri()).thenReturn(Single.error(Exception()))
+    `when`(context.getString(R.string.preparing_shareable_wallpaper_message)).thenReturn(randomString)
+
+    colorsDetailPresenterImpl.handleShareClick()
+
+    assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(colorsDetailView).hasStoragePermission()
+    verify(colorsDetailView).getScope()
+    verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
+    verify(colorsDetailView).hideIndefiniteWaitLoader()
+    verify(colorsDetailView).showGenericErrorMessage()
+    verifyNoMoreInteractions(colorsDetailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test fun `should share image on handleShareClick call success`() {
+    colorsDetailPresenterImpl.areColorOperationsDisabled = false
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
+    `when`(colorImagesUseCase.getCacheImageUri()).thenReturn(Single.just(mockUri))
+    `when`(context.getString(R.string.preparing_shareable_wallpaper_message)).thenReturn(randomString)
+
+    colorsDetailPresenterImpl.handleShareClick()
+
+    assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(colorsDetailView).hasStoragePermission()
+    verify(colorsDetailView).getScope()
+    verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
+    verify(colorsDetailView).showShareIntent(mockUri)
+    verify(colorsDetailView).hideIndefiniteWaitLoader()
+    verifyNoMoreInteractions(colorsDetailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  @Test
+  fun `should show unsuccessful purchase error on handleViewResult call failure with share request codee`() {
+    colorsDetailPresenterImpl.handleViewResult(SHARE.ordinal, Activity.RESULT_CANCELED,
+        mockIntent)
+
+    verify(colorsDetailView).showUnsuccessfulPurchaseError()
+    verifyNoMoreInteractions(colorsDetailView)
+  }
+
+  @Test
+  fun `should add to collection on handleViewResult call success with add to share request code`() {
+    colorsDetailPresenterImpl.areColorOperationsDisabled = false
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
+    `when`(colorImagesUseCase.getCacheImageUri()).thenReturn(Single.just(mockUri))
+    `when`(context.getString(R.string.preparing_shareable_wallpaper_message)).thenReturn(randomString)
+
+    colorsDetailPresenterImpl.handleViewResult(SHARE.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, mockIntent)
+
+    assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(colorsDetailView).hasStoragePermission()
+    verify(colorsDetailView).getScope()
+    verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
+    verify(colorsDetailView).showShareIntent(mockUri)
+    verify(colorsDetailView).hideIndefiniteWaitLoader()
+    verifyNoMoreInteractions(colorsDetailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should add to collection on handlePermissionRequestResult call success with share request code`() {
+    colorsDetailPresenterImpl.areColorOperationsDisabled = false
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
+    `when`(colorImagesUseCase.getCacheImageUri()).thenReturn(Single.just(mockUri))
+    `when`(context.getString(R.string.preparing_shareable_wallpaper_message)).thenReturn(randomString)
+
+    colorsDetailPresenterImpl.handlePermissionRequestResult(SHARE.ordinal,
+        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verifyNoMoreInteractions(userPremiumStatusUseCase)
+    verify(colorsDetailView).hasStoragePermission()
+    verify(colorsDetailView).getScope()
+    verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
+    verify(colorsDetailView).showShareIntent(mockUri)
+    verify(colorsDetailView).hideIndefiniteWaitLoader()
+    verifyNoMoreInteractions(colorsDetailView)
+    shouldVerifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show permission required on handlePermissionRequestResult call failure due to permission denied with share request code`() {
+    colorsDetailPresenterImpl.handlePermissionRequestResult(SHARE.ordinal,
         arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE),
         intArrayOf(PackageManager.PERMISSION_DENIED))
