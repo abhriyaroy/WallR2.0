@@ -10,6 +10,7 @@ import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Shader
 import android.net.Uri
+import android.support.v4.content.FileProvider
 import com.zebrostudio.wallrcustoms.lowpoly.LowPoly
 import io.reactivex.Completable
 import io.reactivex.CompletableEmitter
@@ -44,6 +45,7 @@ interface ImageHandler {
   fun getImageBitmap(): Bitmap
   fun clearImageCache(): Completable
   fun getImageUri(): Uri
+  fun getShareableUri(): Single<Uri>
   fun convertUriToBitmap(uri: Uri): Single<Bitmap>
   fun convertImageInCacheToLowpoly(): Single<Bitmap>
   fun saveCacheImageToDownloads(): Completable
@@ -150,6 +152,20 @@ class ImageHandlerImpl(
       fileHandler.getCacheFile().outputStream()
           .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
       Uri.fromFile(fileHandler.getCacheFile())
+    }
+  }
+
+  override fun getShareableUri(): Single<Uri> {
+    return Single.create { emitter ->
+      getImageBitmap().let { bitmap ->
+        fileHandler.getShareableFle().outputStream()
+            .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
+        FileProvider.getUriForFile(context,
+            context.applicationContext.packageName + ".provider", fileHandler.getShareableFle())
+            .let {
+              emitter.onSuccess(it)
+            }
+      }
     }
   }
 

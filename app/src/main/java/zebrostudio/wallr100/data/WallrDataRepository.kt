@@ -260,6 +260,11 @@ class WallrDataRepository(
         .subscribeOn(executionThread.computationScheduler)
   }
 
+  override fun getCacheImageUri(): Single<Uri> {
+    return imageHandler.getShareableUri()
+        .subscribeOn(executionThread.ioScheduler)
+  }
+
   override fun isCrystallizeDescriptionShown(): Boolean {
     return sharedPrefsHelper.getBoolean(IMAGE_PREFERENCE_NAME,
         CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG)

@@ -12,7 +12,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:gravity="bottom"
-      sothree:umanoPanelHeight="@dimen/detail_activity_sliding_panel_height"
+      sothree:umanoPanelHeight="@dimen/colors_detail_activity_sliding_panel_height"
       sothree:umanoShadowHeight="@dimen/detail_activity_sliding_panel_shadow_height">
 
     <FrameLayout
