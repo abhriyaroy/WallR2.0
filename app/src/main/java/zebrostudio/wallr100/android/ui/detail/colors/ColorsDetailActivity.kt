@@ -126,7 +126,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   override fun showPermissionRequiredMessage() {
-    errorToast(getString(R.string.storage_permission_denied_error))
+    errorToast(stringRes(R.string.storage_permission_denied_error))
   }
 
   override fun redirectToBuyPro(requestCode: Int) {
@@ -134,7 +134,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   override fun showUnsuccessfulPurchaseError() {
-    errorToast(getString(R.string.unsuccessful_purchase_error))
+    errorToast(stringRes(R.string.unsuccessful_purchase_error))
   }
 
   override fun showImage(bitmap: Bitmap) {
@@ -182,15 +182,15 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   override fun showWallpaperSetErrorMessage() {
-    errorToast(getString(R.string.detail_activity_set_wallpaper_error_message))
+    errorToast(stringRes(R.string.detail_activity_set_wallpaper_error_message))
   }
 
   override fun showWallpaperSetSuccessMessage() {
-    successToast(getString(R.string.detail_activity_set_wallpaper_success_message))
+    successToast(stringRes(R.string.detail_activity_set_wallpaper_success_message))
   }
 
   override fun showAddToCollectionSuccessMessage() {
-    successToast(getString(R.string.add_to_collection_success_message))
+    successToast(stringRes(R.string.add_to_collection_success_message))
   }
 
   override fun collapsePanel() {
@@ -246,7 +246,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   override fun showOperationInProgressWaitMessage() {
-    infoToast(getString(R.string.finalizing_stuff_wait_message), Toast.LENGTH_SHORT)
+    infoToast(stringRes(R.string.finalizing_stuff_wait_message), Toast.LENGTH_SHORT)
   }
 
   override fun showFullScreenImage() {
