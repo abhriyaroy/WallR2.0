@@ -14,7 +14,11 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.domain.interactor.ColorImagesInteractor
-import zebrostudio.wallr100.domain.model.CollectionsImageModel
+import zebrostudio.wallr100.domain.model.CollectionsImageModel.CRYSTALLIZED
+import zebrostudio.wallr100.domain.model.CollectionsImageModel.EDITED
+import zebrostudio.wallr100.domain.model.CollectionsImageModel.MINIMAL_COLOR
+import zebrostudio.wallr100.domain.model.CollectionsImageModel.SEARCH
+import zebrostudio.wallr100.domain.model.CollectionsImageModel.WALLPAPER
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
@@ -106,62 +110,62 @@ class ColorImagesUseCaseTest {
   }
 
   @Test fun `should complete on saveToCollectionsCompletable of Wallpaper type call success`() {
-    `when`(wallrRepository.saveImageToCollections(randomString, CollectionsImageModel.WALLPAPER))
+    `when`(wallrRepository.saveImageToCollections(randomString, WALLPAPER))
         .thenReturn(Completable.complete())
 
     colorImagesInteractor.saveToCollectionsCompletable(randomString,
-        CollectionsImageModel.WALLPAPER)
+        WALLPAPER)
         .test().assertComplete()
 
-    verify(wallrRepository).saveImageToCollections(randomString, CollectionsImageModel.WALLPAPER)
+    verify(wallrRepository).saveImageToCollections(randomString, WALLPAPER)
     verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should complete on saveToCollectionsCompletable of Search type call success`() {
-    `when`(wallrRepository.saveImageToCollections(randomString, CollectionsImageModel.SEARCH))
+    `when`(wallrRepository.saveImageToCollections(randomString, SEARCH))
         .thenReturn(Completable.complete())
 
-    colorImagesInteractor.saveToCollectionsCompletable(randomString, CollectionsImageModel.SEARCH)
+    colorImagesInteractor.saveToCollectionsCompletable(randomString, SEARCH)
         .test().assertComplete()
 
-    verify(wallrRepository).saveImageToCollections(randomString, CollectionsImageModel.SEARCH)
+    verify(wallrRepository).saveImageToCollections(randomString, SEARCH)
     verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should complete on saveToCollectionsCompletable of Crystallised type call success`() {
-    `when`(wallrRepository.saveImageToCollections(randomString, CollectionsImageModel.CRYSTALLIZED))
+    `when`(wallrRepository.saveImageToCollections(randomString, CRYSTALLIZED))
         .thenReturn(Completable.complete())
 
     colorImagesInteractor.saveToCollectionsCompletable(randomString,
-        CollectionsImageModel.CRYSTALLIZED)
+        CRYSTALLIZED)
         .test().assertComplete()
 
-    verify(wallrRepository).saveImageToCollections(randomString, CollectionsImageModel.CRYSTALLIZED)
+    verify(wallrRepository).saveImageToCollections(randomString, CRYSTALLIZED)
     verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should complete on saveToCollectionsCompletable of Edited type call success`() {
-    `when`(wallrRepository.saveImageToCollections(randomString, CollectionsImageModel.EDITED))
+    `when`(wallrRepository.saveImageToCollections(randomString, EDITED))
         .thenReturn(Completable.complete())
 
-    colorImagesInteractor.saveToCollectionsCompletable(randomString, CollectionsImageModel.EDITED)
+    colorImagesInteractor.saveToCollectionsCompletable(randomString, EDITED)
         .test().assertComplete()
 
-    verify(wallrRepository).saveImageToCollections(randomString, CollectionsImageModel.EDITED)
+    verify(wallrRepository).saveImageToCollections(randomString, EDITED)
     verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should complete on saveToCollectionsCompletable of Minimal Color type call success`() {
     `when`(
-        wallrRepository.saveImageToCollections(randomString, CollectionsImageModel.MINIMAL_COLOR))
+        wallrRepository.saveImageToCollections(randomString, MINIMAL_COLOR))
         .thenReturn(Completable.complete())
 
     colorImagesInteractor.saveToCollectionsCompletable(randomString,
-        CollectionsImageModel.MINIMAL_COLOR)
+        MINIMAL_COLOR)
         .test().assertComplete()
 
     verify(wallrRepository).saveImageToCollections(randomString,
-        CollectionsImageModel.MINIMAL_COLOR)
+        MINIMAL_COLOR)
     verifyNoMoreInteractions(wallrRepository)
   }
 

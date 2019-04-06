@@ -32,13 +32,15 @@ import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.android.ui.detail.colors.COLORS_DETAIL_MODE_INTENT_EXTRA_TAG
 import zebrostudio.wallr100.android.ui.detail.colors.COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG
 import zebrostudio.wallr100.android.ui.detail.colors.COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG
-import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode
+import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.MULTIPLE
+import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.SINGLE
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ColorImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
-import zebrostudio.wallr100.domain.model.CollectionsImageModel
+import zebrostudio.wallr100.domain.model.CollectionsImageModel.EDITED
+import zebrostudio.wallr100.domain.model.CollectionsImageModel.MINIMAL_COLOR
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.ADD_TO_COLLECTION
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.DOWNLOAD
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.EDIT_SET
@@ -47,7 +49,9 @@ import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.QUICK_SE
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.SHARE
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.ColorsDetailView
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailPresenterImpl
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
 import java.util.UUID
 
 @RunWith(MockitoJUnitRunner::class)
@@ -95,7 +99,7 @@ class ColorsDetailPresenterImplTest {
     val arrayList = ArrayList(list)
     `when`(mockIntent.extras).thenReturn(Bundle())
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG,
-        ColorsDetailMode.SINGLE.ordinal)).thenReturn(ColorsDetailMode.SINGLE.ordinal)
+        SINGLE.ordinal)).thenReturn(SINGLE.ordinal)
     `when`(mockIntent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)).thenReturn(
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(false)
@@ -103,7 +107,7 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.setCalledIntent(mockIntent)
 
     assertEquals(mockIntent, colorsDetailPresenterImpl.intent)
-    assertEquals(ColorsDetailMode.SINGLE, colorsDetailPresenterImpl.colorsDetailMode)
+    assertEquals(SINGLE, colorsDetailPresenterImpl.colorsDetailMode)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).requestStoragePermission(LOAD_COLOR_WALLPAPER)
@@ -116,10 +120,10 @@ class ColorsDetailPresenterImplTest {
     val arrayList = ArrayList(list)
     `when`(mockIntent.extras).thenReturn(Bundle())
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG,
-        ColorsDetailMode.SINGLE.ordinal)).thenReturn(ColorsDetailMode.MULTIPLE.ordinal)
+        SINGLE.ordinal)).thenReturn(MULTIPLE.ordinal)
     `when`(mockIntent.getIntExtra(
         COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG,
-        MultiColorImageType.MATERIAL.ordinal)).thenReturn(MultiColorImageType.MATERIAL.ordinal)
+        MATERIAL.ordinal)).thenReturn(MATERIAL.ordinal)
     `when`(mockIntent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)).thenReturn(
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(false)
@@ -127,8 +131,8 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.setCalledIntent(mockIntent)
 
     assertEquals(mockIntent, colorsDetailPresenterImpl.intent)
-    assertEquals(ColorsDetailMode.MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
-    assertEquals(MultiColorImageType.MATERIAL, colorsDetailPresenterImpl.multiColorImageType)
+    assertEquals(MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
+    assertEquals(MATERIAL, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).requestStoragePermission(LOAD_COLOR_WALLPAPER)
@@ -141,10 +145,10 @@ class ColorsDetailPresenterImplTest {
     val arrayList = ArrayList(list)
     `when`(mockIntent.extras).thenReturn(Bundle())
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG,
-        ColorsDetailMode.SINGLE.ordinal)).thenReturn(ColorsDetailMode.MULTIPLE.ordinal)
+        SINGLE.ordinal)).thenReturn(MULTIPLE.ordinal)
     `when`(mockIntent.getIntExtra(
         COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG,
-        MultiColorImageType.MATERIAL.ordinal)).thenReturn(MultiColorImageType.GRADIENT.ordinal)
+        MATERIAL.ordinal)).thenReturn(GRADIENT.ordinal)
     `when`(mockIntent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)).thenReturn(
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(false)
@@ -152,8 +156,8 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.setCalledIntent(mockIntent)
 
     assertEquals(mockIntent, colorsDetailPresenterImpl.intent)
-    assertEquals(ColorsDetailMode.MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
-    assertEquals(MultiColorImageType.GRADIENT, colorsDetailPresenterImpl.multiColorImageType)
+    assertEquals(MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
+    assertEquals(GRADIENT, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).requestStoragePermission(LOAD_COLOR_WALLPAPER)
@@ -166,10 +170,10 @@ class ColorsDetailPresenterImplTest {
     val arrayList = ArrayList(list)
     `when`(mockIntent.extras).thenReturn(Bundle())
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG,
-        ColorsDetailMode.SINGLE.ordinal)).thenReturn(ColorsDetailMode.MULTIPLE.ordinal)
+        SINGLE.ordinal)).thenReturn(MULTIPLE.ordinal)
     `when`(mockIntent.getIntExtra(
         COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG,
-        MultiColorImageType.MATERIAL.ordinal)).thenReturn(MultiColorImageType.PLASMA.ordinal)
+        MATERIAL.ordinal)).thenReturn(PLASMA.ordinal)
     `when`(mockIntent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)).thenReturn(
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(false)
@@ -177,8 +181,8 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.setCalledIntent(mockIntent)
 
     assertEquals(mockIntent, colorsDetailPresenterImpl.intent)
-    assertEquals(ColorsDetailMode.MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
-    assertEquals(MultiColorImageType.PLASMA, colorsDetailPresenterImpl.multiColorImageType)
+    assertEquals(MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
+    assertEquals(PLASMA, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).requestStoragePermission(LOAD_COLOR_WALLPAPER)
@@ -191,7 +195,7 @@ class ColorsDetailPresenterImplTest {
     val arrayList = ArrayList(list)
     `when`(mockIntent.extras).thenReturn(Bundle())
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG,
-        ColorsDetailMode.SINGLE.ordinal)).thenReturn(ColorsDetailMode.SINGLE.ordinal)
+        SINGLE.ordinal)).thenReturn(SINGLE.ordinal)
     `when`(mockIntent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)).thenReturn(
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
@@ -203,7 +207,7 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.setCalledIntent(mockIntent)
 
     assertEquals(mockIntent, colorsDetailPresenterImpl.intent)
-    assertEquals(ColorsDetailMode.SINGLE, colorsDetailPresenterImpl.colorsDetailMode)
+    assertEquals(SINGLE, colorsDetailPresenterImpl.colorsDetailMode)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_solid)
@@ -218,7 +222,7 @@ class ColorsDetailPresenterImplTest {
     val arrayList = ArrayList(list)
     `when`(mockIntent.extras).thenReturn(Bundle())
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG,
-        ColorsDetailMode.SINGLE.ordinal)).thenReturn(ColorsDetailMode.SINGLE.ordinal)
+        SINGLE.ordinal)).thenReturn(SINGLE.ordinal)
     `when`(mockIntent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)).thenReturn(
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
@@ -230,7 +234,7 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.setCalledIntent(mockIntent)
 
     assertEquals(mockIntent, colorsDetailPresenterImpl.intent)
-    assertEquals(ColorsDetailMode.SINGLE, colorsDetailPresenterImpl.colorsDetailMode)
+    assertEquals(SINGLE, colorsDetailPresenterImpl.colorsDetailMode)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_solid)
@@ -245,9 +249,9 @@ class ColorsDetailPresenterImplTest {
     val arrayList = ArrayList(list)
     `when`(mockIntent.extras).thenReturn(Bundle())
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG,
-        ColorsDetailMode.SINGLE.ordinal)).thenReturn(ColorsDetailMode.MULTIPLE.ordinal)
+        SINGLE.ordinal)).thenReturn(MULTIPLE.ordinal)
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG,
-        MultiColorImageType.MATERIAL.ordinal)).thenReturn(MultiColorImageType.MATERIAL.ordinal)
+        MATERIAL.ordinal)).thenReturn(MATERIAL.ordinal)
     `when`(mockIntent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)).thenReturn(
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
@@ -255,13 +259,13 @@ class ColorsDetailPresenterImplTest {
         context.getString(R.string.colors_detail_activity_colors_style_name_material)).thenReturn(
         randomString)
     `when`(colorImagesUseCase.getMultiColorMaterialSingle(list,
-        MultiColorImageType.MATERIAL)).thenReturn(Single.just(mockBitmap))
+        MATERIAL)).thenReturn(Single.just(mockBitmap))
 
     colorsDetailPresenterImpl.setCalledIntent(mockIntent)
 
     assertEquals(mockIntent, colorsDetailPresenterImpl.intent)
-    assertEquals(ColorsDetailMode.MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
-    assertEquals(MultiColorImageType.MATERIAL, colorsDetailPresenterImpl.multiColorImageType)
+    assertEquals(MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
+    assertEquals(MATERIAL, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_material)
@@ -276,9 +280,9 @@ class ColorsDetailPresenterImplTest {
     val arrayList = ArrayList(list)
     `when`(mockIntent.extras).thenReturn(Bundle())
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG,
-        ColorsDetailMode.SINGLE.ordinal)).thenReturn(ColorsDetailMode.MULTIPLE.ordinal)
+        SINGLE.ordinal)).thenReturn(MULTIPLE.ordinal)
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG,
-        MultiColorImageType.MATERIAL.ordinal)).thenReturn(MultiColorImageType.MATERIAL.ordinal)
+        MATERIAL.ordinal)).thenReturn(MATERIAL.ordinal)
     `when`(mockIntent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)).thenReturn(
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
@@ -286,13 +290,13 @@ class ColorsDetailPresenterImplTest {
         context.getString(R.string.colors_detail_activity_colors_style_name_material)).thenReturn(
         randomString)
     `when`(colorImagesUseCase.getMultiColorMaterialSingle(list,
-        MultiColorImageType.MATERIAL)).thenReturn(Single.error(Exception()))
+        MATERIAL)).thenReturn(Single.error(Exception()))
 
     colorsDetailPresenterImpl.setCalledIntent(mockIntent)
 
     assertEquals(mockIntent, colorsDetailPresenterImpl.intent)
-    assertEquals(ColorsDetailMode.MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
-    assertEquals(MultiColorImageType.MATERIAL, colorsDetailPresenterImpl.multiColorImageType)
+    assertEquals(MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
+    assertEquals(MATERIAL, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_material)
@@ -307,9 +311,9 @@ class ColorsDetailPresenterImplTest {
     val arrayList = ArrayList(list)
     `when`(mockIntent.extras).thenReturn(Bundle())
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG,
-        ColorsDetailMode.SINGLE.ordinal)).thenReturn(ColorsDetailMode.MULTIPLE.ordinal)
+        SINGLE.ordinal)).thenReturn(MULTIPLE.ordinal)
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG,
-        MultiColorImageType.MATERIAL.ordinal)).thenReturn(MultiColorImageType.GRADIENT.ordinal)
+        MATERIAL.ordinal)).thenReturn(GRADIENT.ordinal)
     `when`(mockIntent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)).thenReturn(
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
@@ -317,13 +321,13 @@ class ColorsDetailPresenterImplTest {
         context.getString(R.string.colors_detail_activity_colors_style_name_gradient)).thenReturn(
         randomString)
     `when`(colorImagesUseCase.getMultiColorMaterialSingle(list,
-        MultiColorImageType.GRADIENT)).thenReturn(Single.just(mockBitmap))
+        GRADIENT)).thenReturn(Single.just(mockBitmap))
 
     colorsDetailPresenterImpl.setCalledIntent(mockIntent)
 
     assertEquals(mockIntent, colorsDetailPresenterImpl.intent)
-    assertEquals(ColorsDetailMode.MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
-    assertEquals(MultiColorImageType.GRADIENT, colorsDetailPresenterImpl.multiColorImageType)
+    assertEquals(MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
+    assertEquals(GRADIENT, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_gradient)
@@ -338,9 +342,9 @@ class ColorsDetailPresenterImplTest {
     val arrayList = ArrayList(list)
     `when`(mockIntent.extras).thenReturn(Bundle())
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG,
-        ColorsDetailMode.SINGLE.ordinal)).thenReturn(ColorsDetailMode.MULTIPLE.ordinal)
+        SINGLE.ordinal)).thenReturn(MULTIPLE.ordinal)
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG,
-        MultiColorImageType.MATERIAL.ordinal)).thenReturn(MultiColorImageType.GRADIENT.ordinal)
+        MATERIAL.ordinal)).thenReturn(GRADIENT.ordinal)
     `when`(mockIntent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)).thenReturn(
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
@@ -348,13 +352,13 @@ class ColorsDetailPresenterImplTest {
         context.getString(R.string.colors_detail_activity_colors_style_name_gradient)).thenReturn(
         randomString)
     `when`(colorImagesUseCase.getMultiColorMaterialSingle(list,
-        MultiColorImageType.GRADIENT)).thenReturn(Single.error(Exception()))
+        GRADIENT)).thenReturn(Single.error(Exception()))
 
     colorsDetailPresenterImpl.setCalledIntent(mockIntent)
 
     assertEquals(mockIntent, colorsDetailPresenterImpl.intent)
-    assertEquals(ColorsDetailMode.MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
-    assertEquals(MultiColorImageType.GRADIENT, colorsDetailPresenterImpl.multiColorImageType)
+    assertEquals(MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
+    assertEquals(GRADIENT, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_gradient)
@@ -369,9 +373,9 @@ class ColorsDetailPresenterImplTest {
     val arrayList = ArrayList(list)
     `when`(mockIntent.extras).thenReturn(Bundle())
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG,
-        ColorsDetailMode.SINGLE.ordinal)).thenReturn(ColorsDetailMode.MULTIPLE.ordinal)
+        SINGLE.ordinal)).thenReturn(MULTIPLE.ordinal)
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG,
-        MultiColorImageType.MATERIAL.ordinal)).thenReturn(MultiColorImageType.PLASMA.ordinal)
+        MATERIAL.ordinal)).thenReturn(PLASMA.ordinal)
     `when`(mockIntent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)).thenReturn(
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
@@ -379,13 +383,13 @@ class ColorsDetailPresenterImplTest {
         context.getString(R.string.colors_detail_activity_colors_style_name_plasma)).thenReturn(
         randomString)
     `when`(colorImagesUseCase.getMultiColorMaterialSingle(list,
-        MultiColorImageType.PLASMA)).thenReturn(Single.just(mockBitmap))
+        PLASMA)).thenReturn(Single.just(mockBitmap))
 
     colorsDetailPresenterImpl.setCalledIntent(mockIntent)
 
     assertEquals(mockIntent, colorsDetailPresenterImpl.intent)
-    assertEquals(ColorsDetailMode.MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
-    assertEquals(MultiColorImageType.PLASMA, colorsDetailPresenterImpl.multiColorImageType)
+    assertEquals(MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
+    assertEquals(PLASMA, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_plasma)
@@ -400,9 +404,9 @@ class ColorsDetailPresenterImplTest {
     val arrayList = ArrayList(list)
     `when`(mockIntent.extras).thenReturn(Bundle())
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG,
-        ColorsDetailMode.SINGLE.ordinal)).thenReturn(ColorsDetailMode.MULTIPLE.ordinal)
+        SINGLE.ordinal)).thenReturn(MULTIPLE.ordinal)
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG,
-        MultiColorImageType.MATERIAL.ordinal)).thenReturn(MultiColorImageType.PLASMA.ordinal)
+        MATERIAL.ordinal)).thenReturn(PLASMA.ordinal)
     `when`(mockIntent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)).thenReturn(
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
@@ -410,13 +414,13 @@ class ColorsDetailPresenterImplTest {
         context.getString(R.string.colors_detail_activity_colors_style_name_plasma)).thenReturn(
         randomString)
     `when`(colorImagesUseCase.getMultiColorMaterialSingle(list,
-        MultiColorImageType.PLASMA)).thenReturn(Single.error(Exception()))
+        PLASMA)).thenReturn(Single.error(Exception()))
 
     colorsDetailPresenterImpl.setCalledIntent(mockIntent)
 
     assertEquals(mockIntent, colorsDetailPresenterImpl.intent)
-    assertEquals(ColorsDetailMode.MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
-    assertEquals(MultiColorImageType.PLASMA, colorsDetailPresenterImpl.multiColorImageType)
+    assertEquals(MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
+    assertEquals(PLASMA, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_plasma)
@@ -432,9 +436,9 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.intent = mockIntent
     `when`(mockIntent.extras).thenReturn(Bundle())
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG,
-        ColorsDetailMode.SINGLE.ordinal)).thenReturn(ColorsDetailMode.MULTIPLE.ordinal)
+        SINGLE.ordinal)).thenReturn(MULTIPLE.ordinal)
     `when`(mockIntent.getIntExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG,
-        MultiColorImageType.MATERIAL.ordinal)).thenReturn(MultiColorImageType.MATERIAL.ordinal)
+        MATERIAL.ordinal)).thenReturn(MATERIAL.ordinal)
     `when`(mockIntent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)).thenReturn(
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
@@ -442,7 +446,7 @@ class ColorsDetailPresenterImplTest {
         context.getString(R.string.colors_detail_activity_colors_style_name_material)).thenReturn(
         randomString)
     `when`(colorImagesUseCase.getMultiColorMaterialSingle(list,
-        MultiColorImageType.MATERIAL)).thenReturn(Single.just(mockBitmap))
+        MATERIAL)).thenReturn(Single.just(mockBitmap))
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(LOAD_COLOR_WALLPAPER.ordinal,
         arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -450,8 +454,8 @@ class ColorsDetailPresenterImplTest {
         intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(mockIntent, colorsDetailPresenterImpl.intent)
-    assertEquals(ColorsDetailMode.MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
-    assertEquals(MultiColorImageType.MATERIAL, colorsDetailPresenterImpl.multiColorImageType)
+    assertEquals(MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
+    assertEquals(MATERIAL, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_material)
@@ -821,7 +825,7 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.handleViewResult(UCrop.REQUEST_CROP, Activity.RESULT_OK, mockIntent)
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
-    assertEquals(CollectionsImageModel.EDITED, colorsDetailPresenterImpl.lastImageOperationType)
+    assertEquals(EDITED, colorsDetailPresenterImpl.lastImageOperationType)
     verify(colorsDetailView).getUriFromIntent(mockIntent)
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
@@ -843,7 +847,7 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.handleViewResult(UCrop.REQUEST_CROP, Activity.RESULT_OK, mockIntent)
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
-    assertEquals(CollectionsImageModel.EDITED, colorsDetailPresenterImpl.lastImageOperationType)
+    assertEquals(EDITED, colorsDetailPresenterImpl.lastImageOperationType)
     verify(colorsDetailView).getUriFromIntent(mockIntent)
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
@@ -899,12 +903,12 @@ class ColorsDetailPresenterImplTest {
   fun `should show generic error on handleAddToCollectionClick call failure`() {
     val list = mutableListOf(randomString)
     colorsDetailPresenterImpl.colorList = list
-    colorsDetailPresenterImpl.lastImageOperationType = CollectionsImageModel.MINIMAL_COLOR
+    colorsDetailPresenterImpl.lastImageOperationType = MINIMAL_COLOR
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
-        CollectionsImageModel.MINIMAL_COLOR)).thenReturn(
+        MINIMAL_COLOR)).thenReturn(
         Completable.error(Exception()))
     `when`(context.getString(R.string.adding_image_to_collections_message)).thenReturn(randomString)
 
@@ -926,12 +930,12 @@ class ColorsDetailPresenterImplTest {
   fun `should show already present error in collection message on handleAddToCollectionClick call failure`() {
     val list = mutableListOf(randomString)
     colorsDetailPresenterImpl.colorList = list
-    colorsDetailPresenterImpl.lastImageOperationType = CollectionsImageModel.MINIMAL_COLOR
+    colorsDetailPresenterImpl.lastImageOperationType = MINIMAL_COLOR
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
-        CollectionsImageModel.MINIMAL_COLOR)).thenReturn(
+        MINIMAL_COLOR)).thenReturn(
         Completable.error(AlreadyPresentInCollectionException()))
     `when`(context.getString(R.string.adding_image_to_collections_message)).thenReturn(randomString)
 
@@ -953,12 +957,12 @@ class ColorsDetailPresenterImplTest {
   fun `should add to collection on handleAddToCollectionClick call success`() {
     val list = mutableListOf(randomString)
     colorsDetailPresenterImpl.colorList = list
-    colorsDetailPresenterImpl.lastImageOperationType = CollectionsImageModel.MINIMAL_COLOR
+    colorsDetailPresenterImpl.lastImageOperationType = MINIMAL_COLOR
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
-        CollectionsImageModel.MINIMAL_COLOR)).thenReturn(
+        MINIMAL_COLOR)).thenReturn(
         Completable.complete())
     `when`(context.getString(R.string.adding_image_to_collections_message)).thenReturn(randomString)
 
@@ -989,12 +993,12 @@ class ColorsDetailPresenterImplTest {
   fun `should add to collection on handleViewResult call success with add to collection request code`() {
     val list = mutableListOf(randomString)
     colorsDetailPresenterImpl.colorList = list
-    colorsDetailPresenterImpl.lastImageOperationType = CollectionsImageModel.MINIMAL_COLOR
+    colorsDetailPresenterImpl.lastImageOperationType = MINIMAL_COLOR
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
-        CollectionsImageModel.MINIMAL_COLOR)).thenReturn(
+        MINIMAL_COLOR)).thenReturn(
         Completable.complete())
     `when`(context.getString(R.string.adding_image_to_collections_message)).thenReturn(randomString)
 
@@ -1017,12 +1021,12 @@ class ColorsDetailPresenterImplTest {
   fun `should add to collection on handlePermissionRequestResult call success with add to collection request code`() {
     val list = mutableListOf(randomString)
     colorsDetailPresenterImpl.colorList = list
-    colorsDetailPresenterImpl.lastImageOperationType = CollectionsImageModel.MINIMAL_COLOR
+    colorsDetailPresenterImpl.lastImageOperationType = MINIMAL_COLOR
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
-        CollectionsImageModel.MINIMAL_COLOR)).thenReturn(
+        MINIMAL_COLOR)).thenReturn(
         Completable.complete())
     `when`(context.getString(R.string.adding_image_to_collections_message)).thenReturn(randomString)
 
