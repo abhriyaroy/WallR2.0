@@ -2,7 +2,6 @@ package zebrostudio.wallr100.android.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.graphics.Rect
 import android.os.Handler
 import android.os.Looper
@@ -77,13 +76,17 @@ fun ViewGroup.inflate(
 @SuppressLint("ResourceType")
 fun LinearLayout.setMenuItemColorRed(context: Context) {
   this.findViewById<WallrCustomTextView>(R.id.textviewGuillotineMenuItem)
-      .setTextColor(Color.parseColor(context.getString(R.color.accent)))
+      .setTextColor(context.colorRes(R.color.accent))
+  this.findViewById<ImageView>(R.id.imageviewGuillotineMenuItem)
+      .setColorFilter(context.colorRes(R.color.accent), android.graphics.PorterDuff.Mode.MULTIPLY)
 }
 
 @SuppressLint("ResourceType")
 fun LinearLayout.setMenuItemColorWhite(context: Context) {
   this.findViewById<WallrCustomTextView>(R.id.textviewGuillotineMenuItem)
-      .setTextColor(Color.parseColor(context.getString(R.color.white)))
+      .setTextColor(context.colorRes(R.color.white))
+  this.findViewById<ImageView>(R.id.imageviewGuillotineMenuItem)
+      .setColorFilter(context.colorRes(R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY)
 }
 
 fun RelativeLayout.disable(context: Context) {
