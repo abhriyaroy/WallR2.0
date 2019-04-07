@@ -39,7 +39,6 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.ui.detail.images.BLUR_RADIUS
-import zebrostudio.wallr100.android.ui.detail.images.ILLEGAL_STATE_EXCEPTION_MESSAGE
 import zebrostudio.wallr100.android.ui.detail.images.SLIDING_PANEL_PARALLEL_OFFSET
 import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.EDITED_BITMAP_CACHE
@@ -97,10 +96,6 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     presenter.handleViewResult(requestCode, resultCode, data)
-  }
-
-  override fun throwIllegalStateException() {
-    throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
   }
 
   override fun showImageTypeText(text: String) {

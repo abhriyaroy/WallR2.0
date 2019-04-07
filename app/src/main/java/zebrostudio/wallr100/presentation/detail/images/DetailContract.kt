@@ -12,7 +12,6 @@ import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 interface DetailContract {
 
   interface DetailView : BaseView {
-    fun throwIllegalStateException()
     fun getSearchImageDetails(): SearchPicturesPresenterEntity
     fun getWallpaperImageDetails(): ImagePresenterEntity
     fun showAuthorDetails(name: String, profileImageLink: String)

@@ -39,6 +39,7 @@ import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 const val DOWNLOAD_COMPLETED_VALUE: Long = 100
 const val PROGRESS_VALUE_99: Long = 99
 const val DOWNLOAD_STARTED_VALUE: Long = 0
+const val ILLEGAL_STATE_EXCEPTION_MESSAGE = "Activity is not invoked using getCallingIntent method"
 
 class DetailPresenterImpl(
   private val context: Context,
@@ -77,7 +78,7 @@ class DetailPresenterImpl(
       setImageType(intent.extras!!.getInt(
           DetailActivity.IMAGE_TYPE_TAG))
     } else {
-      detailView?.throwIllegalStateException()
+      throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
     }
   }
 

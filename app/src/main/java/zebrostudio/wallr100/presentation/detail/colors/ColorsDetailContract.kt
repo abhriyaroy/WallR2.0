@@ -9,7 +9,6 @@ import zebrostudio.wallr100.presentation.BaseView
 interface ColorsDetailContract {
 
   interface ColorsDetailView : BaseView {
-    fun throwIllegalStateException()
     fun showImageTypeText(text: String)
     fun hasStoragePermission(): Boolean
     fun requestStoragePermission(colorsActionType: ColorsActionType)

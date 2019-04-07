@@ -83,13 +83,12 @@ class ColorsDetailPresenterImplTest {
     stubPostExecutionThreadReturnsIoScheduler()
   }
 
-  @Test
+  @Test(expected = IllegalStateException::class)
   fun `should throw IllegalStateException on setCalledIntent call failure due to null Intent extras`() {
     `when`(mockIntent.extras).thenReturn(null)
 
     colorsDetailPresenterImpl.setCalledIntent(mockIntent)
 
-    verify(colorsDetailView).throwIllegalStateException()
     verifyNoMoreInteractions(colorsDetailView)
   }
 

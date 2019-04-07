@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import com.afollestad.dragselectrecyclerview.DragSelectTouchListener
 import com.afollestad.dragselectrecyclerview.Mode.RANGE
 import com.afollestad.materialcab.MaterialCab
@@ -368,13 +367,9 @@ class MinimalFragment : BaseFragment(), MinimalView {
         }
 
         setOnLongClickListener { view ->
-          Toast.makeText(context,
+          view.menuTitleToast(context!!,
               stringRes(R.string.minimal_fragment_toolbar_menu_multiselect_title),
-              Toast.LENGTH_SHORT)
-              .let {
-                view.menuTitleToast(context!!, it, activity!!.window)
-                it.show()
-              }
+              activity!!.window)
           true
         }
       }

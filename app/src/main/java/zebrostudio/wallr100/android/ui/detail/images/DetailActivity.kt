@@ -73,7 +73,6 @@ const val INITIAL_LOADER_PROGRESS_VALUE = 0
 const val INITIAL_LOADER_PROGRESS_PERCENTAGE = "0%"
 const val BLUR_RADIUS: Float = 8F
 const val INITIAL_SELECTED_DOWNLOAD_OPTION = 0
-const val ILLEGAL_STATE_EXCEPTION_MESSAGE = "Activity is not invoked using getCallingIntent method"
 
 class DetailActivity : BaseActivity(), DetailView {
 
@@ -106,11 +105,6 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun onBackPressed() {
     presenter.handleBackButtonClick()
-  }
-
-  override fun throwIllegalStateException() {
-    throw IllegalStateException(
-        ILLEGAL_STATE_EXCEPTION_MESSAGE)
   }
 
   override fun getWallpaperImageDetails(): ImagePresenterEntity {

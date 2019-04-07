@@ -333,13 +333,10 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
       }
 
       searchIcon.setOnLongClickListener { view ->
-        Toast.makeText(this,
-            stringRes(R.string.minimal_fragment_toolbar_menu_multiselect_title), Toast.LENGTH_SHORT)
-            .let {
-              view.menuTitleToast(this, it, window)
-              it.show()
-              true
-            }
+        view.menuTitleToast(this,
+            stringRes(R.string.minimal_fragment_toolbar_menu_multiselect_title),
+            window)
+        true
       }
     }
   }
