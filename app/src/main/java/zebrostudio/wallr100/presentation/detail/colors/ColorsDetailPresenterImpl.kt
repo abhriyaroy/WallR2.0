@@ -15,6 +15,7 @@ import zebrostudio.wallr100.android.ui.detail.colors.COLORS_HEX_VALUE_LIST_INTEN
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.MULTIPLE
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.SINGLE
+import zebrostudio.wallr100.android.ui.expandimage.ILLEGAL_STATE_EXCEPTION_MESSAGE
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
@@ -74,7 +75,7 @@ class ColorsDetailPresenterImpl(
         view?.requestStoragePermission(LOAD_COLOR_WALLPAPER)
       }
     } else {
-      view?.throwIllegalStateException()
+      throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
     }
   }
 
