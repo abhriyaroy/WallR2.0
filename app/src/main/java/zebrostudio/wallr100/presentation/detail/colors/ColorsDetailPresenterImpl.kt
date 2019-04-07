@@ -166,7 +166,7 @@ class ColorsDetailPresenterImpl(
   }
 
   override fun handleQuickSetClick() {
-    if (isNotInOperationAndHasStoragePermissions(QUICK_SET)) {
+    if (isNotInOperation() && hasStoragePermissions(QUICK_SET)) {
       colorImagesUseCase.getBitmapSingle()
           .doOnSuccess {
             wallpaperSetter.setWallpaper(it)
@@ -191,7 +191,7 @@ class ColorsDetailPresenterImpl(
   }
 
   override fun handleDownloadClick() {
-    if (isNotInOperationAndIsPremiumAndHasAllPermissions(DOWNLOAD)) {
+    if (isNotInOperation() && isUserPremium(DOWNLOAD) && hasStoragePermissions(DOWNLOAD)) {
       colorImagesUseCase.downloadImage()
           .observeOn(postExecutionThread.scheduler)
           .doOnSubscribe {
@@ -213,7 +213,7 @@ class ColorsDetailPresenterImpl(
   }
 
   override fun handleEditSetClick() {
-    if (isNotInOperationAndHasStoragePermissions(EDIT_SET)) {
+    if (isNotInOperation() && hasStoragePermissions(EDIT_SET)) {
       isColorWallpaperOperationActive = true
       view?.showIndefiniteWaitLoader(
           context.stringRes(R.string.detail_activity_editing_tool_message))
@@ -227,7 +227,8 @@ class ColorsDetailPresenterImpl(
   }
 
   override fun handleAddToCollectionClick() {
-    if (isNotInOperationAndIsPremiumAndHasAllPermissions(ADD_TO_COLLECTION)) {
+    if (isNotInOperation() && isUserPremium(ADD_TO_COLLECTION)
+        && hasStoragePermissions(ADD_TO_COLLECTION)) {
       colorImagesUseCase.saveToCollectionsCompletable(colorList.toString(),
           lastImageOperationType)
           .observeOn(postExecutionThread.scheduler)
@@ -254,7 +255,8 @@ class ColorsDetailPresenterImpl(
   }
 
   override fun handleShareClick() {
-    if (isNotInOperationAndIsPremiumAndHasAllPermissions(SHARE)) {
+    if (isNotInOperation() && isUserPremium(SHARE)
+        && hasStoragePermissions(SHARE)) {
       colorImagesUseCase.getCacheImageUri()
           .observeOn(postExecutionThread.scheduler)
           .doOnSubscribe {
@@ -379,32 +381,29 @@ class ColorsDetailPresenterImpl(
     areColorOperationsDisabled = false
   }
 
-  private fun isNotInOperationAndHasStoragePermissions(colorsActionType: ColorsActionType): Boolean {
+  private fun isNotInOperation(): Boolean {
     if (!areColorOperationsDisabled) {
-      if (view?.hasStoragePermission() == true) {
-        return true
-      } else {
-        view?.requestStoragePermission(colorsActionType)
-      }
+      return true
     } else {
       view?.showColorOperationsDisabledMessage()
     }
     return false
   }
 
-  private fun isNotInOperationAndIsPremiumAndHasAllPermissions(colorsActionType: ColorsActionType): Boolean {
-    if (!areColorOperationsDisabled) {
-      if (userPremiumStatusUseCase.isUserPremium()) {
-        if (view?.hasStoragePermission() == true) {
-          return true
-        } else {
-          view?.requestStoragePermission(colorsActionType)
-        }
-      } else {
-        view?.redirectToBuyPro(colorsActionType.ordinal)
-      }
+  private fun isUserPremium(colorsActionType: ColorsActionType): Boolean {
+    if (userPremiumStatusUseCase.isUserPremium()) {
+      return true
     } else {
-      view?.showColorOperationsDisabledMessage()
+      view?.redirectToBuyPro(colorsActionType.ordinal)
+    }
+    return false
+  }
+
+  private fun hasStoragePermissions(colorsActionType: ColorsActionType): Boolean {
+    if (view?.hasStoragePermission() == true) {
+      return true
+    } else {
+      view?.requestStoragePermission(colorsActionType)
     }
     return false
   }

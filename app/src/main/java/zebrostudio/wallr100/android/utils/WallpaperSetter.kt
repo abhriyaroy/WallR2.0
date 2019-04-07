@@ -11,8 +11,6 @@ interface WallpaperSetter {
   fun getDesiredMinimumHeight(): Int
 }
 
-const val SDK_VERSION_24 = 24
-
 class WallpaperSetterImpl(private var context: Context) : WallpaperSetter {
 
   private var wallpaperManager: WallpaperManager? = null
@@ -22,7 +20,7 @@ class WallpaperSetterImpl(private var context: Context) : WallpaperSetter {
       val scaledBitmapToFitPhoneAspectRatio =
           Bitmap.createScaledBitmap(it, getDesiredMinimumWidth(), getDesiredMinimumHeight(), false)
       getWallpaperManagerInstance().setBitmap(scaledBitmapToFitPhoneAspectRatio)
-      if (Build.VERSION.SDK_INT >= SDK_VERSION_24) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         getWallpaperManagerInstance().setBitmap(scaledBitmapToFitPhoneAspectRatio, null,
             true, WallpaperManager.FLAG_LOCK)
       }

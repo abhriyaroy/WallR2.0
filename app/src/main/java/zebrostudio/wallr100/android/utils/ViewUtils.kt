@@ -90,24 +90,6 @@ fun LinearLayout.setMenuItemColorWhite(context: Context) {
       .setColorFilter(context.colorRes(R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY)
 }
 
-fun RelativeLayout.disable(context: Context) {
-  findViewById<ImageView>(R.id.operationImageView).apply {
-    alpha = 0.3f
-  }
-  findViewById<TextView>(R.id.operationTextView).apply {
-    setTextColor(context.colorRes(R.color.dove_gray))
-  }
-}
-
-fun RelativeLayout.enable(context: Context) {
-  findViewById<ImageView>(R.id.operationImageView).apply {
-    alpha = 1.0f
-  }
-  findViewById<TextView>(R.id.operationTextView).apply {
-    setTextColor(context.colorRes(R.color.white))
-  }
-}
-
 fun withDelayOnMain(delay: Long, block: () -> Unit) {
   Handler(Looper.getMainLooper()).postDelayed(Runnable(block), delay)
 }
