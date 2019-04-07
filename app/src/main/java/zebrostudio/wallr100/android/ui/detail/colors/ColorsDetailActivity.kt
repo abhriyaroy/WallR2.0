@@ -10,6 +10,9 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.ContextCompat
 import android.view.View
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -42,8 +45,7 @@ import zebrostudio.wallr100.android.ui.detail.images.BLUR_RADIUS
 import zebrostudio.wallr100.android.ui.detail.images.SLIDING_PANEL_PARALLEL_OFFSET
 import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.EDITED_BITMAP_CACHE
-import zebrostudio.wallr100.android.utils.disable
-import zebrostudio.wallr100.android.utils.enable
+import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.infoToast
@@ -193,27 +195,19 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   override fun disableColorOperations() {
-    setColorWallpaperLayout.disable(this)
-
-    downloadColorLayout.disable(this)
-
-    editAndSetColorLayout.disable(this)
-
-    addColorToCollectionLayout.disable(this)
-
-    shareColorLayout.disable(this)
+    disableOperation(setColorWallpaperLayout,
+        downloadColorLayout,
+        editAndSetColorLayout,
+        addColorToCollectionLayout,
+        shareColorLayout)
   }
 
   override fun enableColorOperations() {
-    setColorWallpaperLayout.enable(this)
-
-    downloadColorLayout.enable(this)
-
-    editAndSetColorLayout.enable(this)
-
-    addColorToCollectionLayout.enable(this)
-
-    shareColorLayout.enable(this)
+    enableOperation(setColorWallpaperLayout,
+        downloadColorLayout,
+        editAndSetColorLayout,
+        addColorToCollectionLayout,
+        shareColorLayout)
   }
 
   override fun showColorOperationsDisabledMessage() {
@@ -346,6 +340,28 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
         multiColorImageType?.let {
           putExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG, it.ordinal)
         }
+      }
+    }
+  }
+
+  private fun disableOperation(vararg views: RelativeLayout) {
+    for (view in views) {
+      view.findViewById<ImageView>(R.id.operationImageView).apply {
+        alpha = 0.3f
+      }
+      view.findViewById<TextView>(R.id.operationTextView).apply {
+        setTextColor(context.colorRes(R.color.dove_gray))
+      }
+    }
+  }
+
+  private fun enableOperation(vararg views: RelativeLayout) {
+    for (view in views) {
+      view.findViewById<ImageView>(R.id.operationImageView).apply {
+        alpha = 1.0f
+      }
+      view.findViewById<TextView>(R.id.operationTextView).apply {
+        setTextColor(context.colorRes(R.color.white))
       }
     }
   }
