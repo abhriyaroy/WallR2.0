@@ -336,8 +336,7 @@ class WallrDataRepository(
               list.add(it, map[it]!!)
             }
             sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME,
-                CUSTOM_MINIMAL_COLOR_LIST_TAG,
-                gsonProvider.getGson().toJson(list))
+                CUSTOM_MINIMAL_COLOR_LIST_TAG, gsonProvider.getGson().toJson(list))
             Single.just(RestoreColorsModel(list, map))
           }
         }

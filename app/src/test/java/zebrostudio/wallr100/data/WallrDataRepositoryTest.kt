@@ -5,7 +5,6 @@ import android.net.Uri
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.Gson
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.pddstudio.urlshortener.URLShortener
@@ -15,6 +14,7 @@ import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -102,7 +102,9 @@ class WallrDataRepositoryTest {
         .test()
         .assertComplete()
 
-    `should verify io scheduler call`()
+    verify(remoteAuthServiceFactory).verifyPurchaseService(
+        UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
+    verifyIoSchedulerCall()
   }
 
   @Test
@@ -115,7 +117,9 @@ class WallrDataRepositoryTest {
         .test()
         .assertError(InvalidPurchaseException::class.java)
 
-    `should verify io scheduler call`()
+    verify(remoteAuthServiceFactory).verifyPurchaseService(
+        UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
+    verifyIoSchedulerCall()
   }
 
   @Test
@@ -130,8 +134,7 @@ class WallrDataRepositoryTest {
 
     verify(remoteAuthServiceFactory).verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
-    verifyNoMoreInteractions(remoteAuthServiceFactory)
-    `should verify io scheduler call`()
+    verifyIoSchedulerCall()
   }
 
   @Test
@@ -146,8 +149,7 @@ class WallrDataRepositoryTest {
 
     verify(remoteAuthServiceFactory).verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
-    verifyNoMoreInteractions(remoteAuthServiceFactory)
-    `should verify io scheduler call`()
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return true after successfully updating purchase status`() {
@@ -155,6 +157,8 @@ class WallrDataRepositoryTest {
         PREMIUM_USER_TAG, true)).thenReturn(true)
 
     assertEquals(true, wallrDataRepository.updateUserPurchaseStatus())
+    verify(sharedPrefs).setBoolean(PURCHASE_PREFERENCE_NAME,
+        PREMIUM_USER_TAG, true)
   }
 
   @Test fun `should return false after unsuccessful update of purchase status`() {
@@ -164,7 +168,6 @@ class WallrDataRepositoryTest {
     assertEquals(false, wallrDataRepository.updateUserPurchaseStatus())
 
     verify(sharedPrefs).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, true)
-    verifyNoMoreInteractions(sharedPrefs)
   }
 
   @Test fun `should return true after checking if user is a premium user`() {
@@ -174,7 +177,6 @@ class WallrDataRepositoryTest {
     assertEquals(true, wallrDataRepository.isUserPremium())
 
     verify(sharedPrefs).getBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, false)
-    verifyNoMoreInteractions(sharedPrefs)
   }
 
   @Test fun `should return false after checking if user is a premium user`() {
@@ -184,7 +186,6 @@ class WallrDataRepositoryTest {
     assertEquals(false, wallrDataRepository.isUserPremium())
 
     verify(sharedPrefs).getBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, false)
-    verifyNoMoreInteractions(sharedPrefs)
   }
 
   @Test fun `should return no result found exception on getPictures call success`() {
@@ -196,8 +197,7 @@ class WallrDataRepositoryTest {
         .assertError(NoResultFoundException::class.java)
 
     verify(unsplashClientFactory).getPicturesService(randomString)
-    verifyNoMoreInteractions(unsplashClientFactory)
-    `should verify io scheduler call`()
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return unable to resolve host exception on getPictures call failure`() {
@@ -209,8 +209,7 @@ class WallrDataRepositoryTest {
         .assertError(UnableToResolveHostException::class.java)
 
     verify(unsplashClientFactory).getPicturesService(randomString)
-    verifyNoMoreInteractions(unsplashClientFactory)
-    `should verify io scheduler call`()
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return mapped search pictures model list on getPictures call failure`() {
@@ -229,8 +228,7 @@ class WallrDataRepositoryTest {
 
     assertTrue(searchPicturesModelList[0] == searchPicturesResult)
     verify(unsplashClientFactory).getPicturesService(randomString)
-    verifyNoMoreInteractions(unsplashClientFactory)
-    `should verify io scheduler call`()
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return explore node reference on getNodeReference call`() {
@@ -239,8 +237,9 @@ class WallrDataRepositoryTest {
     val nodeReference = wallrDataRepository.getExploreNodeReference()
 
     assertTrue(nodeReference == databaseReference)
-    verify(firebaseDatabaseHelper, times(3)).getDatabase()
-    verifyNoMoreInteractions(firebaseDatabaseHelper)
+    verify(firebaseDatabaseHelper).getDatabase()
+    verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
+    verify(databaseReference).child(CHILD_PATH_EXPLORE)
   }
 
   @Test fun `should return shortened image link on getShortImageLink call success`() {
@@ -249,7 +248,7 @@ class WallrDataRepositoryTest {
     wallrDataRepository.getShortImageLink(randomString).test().assertValue(randomString)
 
     verify(urlShortener).shortUrl(randomString)
-    verifyNoMoreInteractions(urlShortener)
+    verify(executionThread).ioScheduler
   }
 
   @Test fun `should return NotEnoughFreeSpace exception on getImageBitmap call error`() {
@@ -259,7 +258,6 @@ class WallrDataRepositoryTest {
         .assertError(NotEnoughFreeSpaceException::class.java)
 
     verify(fileHandler).freeSpaceAvailable()
-    verifyNoMoreInteractions(fileHandler)
   }
 
   @Test fun `should return cached bitmap on getImageBitmap call success and cache is present`() {
@@ -276,11 +274,9 @@ class WallrDataRepositoryTest {
     assertEquals(resultImageDownloadModelCompleted.imageBitmap, mockBitmap)
 
     verify(fileHandler).freeSpaceAvailable()
-    verifyNoMoreInteractions(fileHandler)
     verify(imageHandler).isImageCached(randomString)
     verify(imageHandler).getImageBitmap()
-    verifyNoMoreInteractions(imageHandler)
-    `should verify io scheduler call`()
+    verifyIoSchedulerCall()
   }
 
   @Test
@@ -296,11 +292,9 @@ class WallrDataRepositoryTest {
     assertEquals(resultImageDownloadModel.progress, IMAGE_DOWNLOAD_PROGRESS_VALUE_99)
     assertEquals(resultImageDownloadModel.imageBitmap, null)
     verify(fileHandler).freeSpaceAvailable()
-    verifyNoMoreInteractions(fileHandler)
     verify(imageHandler).fetchImage(randomString)
     verify(imageHandler).isImageCached(randomString)
-    verifyNoMoreInteractions(imageHandler)
-    `should verify io scheduler call`()
+    verifyIoSchedulerCall()
   }
 
   @Test
@@ -317,12 +311,10 @@ class WallrDataRepositoryTest {
     assertEquals(resultImageDownloadModel.progress, DOWNLOAD_PROGRESS_COMPLETED_VALUE)
     assertEquals(resultImageDownloadModel.imageBitmap, mockBitmap)
     verify(fileHandler).freeSpaceAvailable()
-    verifyNoMoreInteractions(fileHandler)
     verify(imageHandler).fetchImage(randomString)
     verify(imageHandler).isImageCached(randomString)
     verify(imageHandler).getImageBitmap()
-    verifyNoMoreInteractions(imageHandler)
-    `should verify io scheduler call`()
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return Single of bitmap on getCacheImageBitmap call success`() {
@@ -331,8 +323,7 @@ class WallrDataRepositoryTest {
     wallrDataRepository.getCacheImageBitmap().test().assertValue(mockBitmap)
 
     verify(imageHandler).getImageBitmap()
-    verifyNoMoreInteractions(imageHandler)
-    `should verify computation scheduler call`()
+    verifyComputationSchedulerCall()
   }
 
   @Test fun `should complete on clearImageCaches call success`() {
@@ -340,14 +331,14 @@ class WallrDataRepositoryTest {
 
     wallrDataRepository.clearImageCaches().test().assertComplete()
 
-    `should verify computation scheduler call`()
+    verify(imageHandler).clearImageCache()
+    verifyComputationSchedulerCall()
   }
 
   @Test fun `should invoke cancelImageFetching on cancelImageBitmapFetchOperation call success`() {
     wallrDataRepository.cancelImageBitmapFetchOperation()
 
     verify(imageHandler).cancelFetchingImage()
-    verifyNoMoreInteractions(imageHandler)
   }
 
   @Test fun `should return image uri on getCacheSourceUri call success`() {
@@ -357,7 +348,6 @@ class WallrDataRepositoryTest {
 
     assertEquals(mockUri, uri)
     verify(imageHandler).getImageUri()
-    verifyNoMoreInteractions(imageHandler)
   }
 
   @Test fun `should return result destination file uri on getCacheResultUri call success`() {
@@ -367,7 +357,6 @@ class WallrDataRepositoryTest {
 
     assertEquals(mockUri, uri)
     verify(fileHandler).getCacheFileUriForCropping()
-    verifyNoMoreInteractions(fileHandler)
   }
 
   @Test fun `should return Single of bitmap on getBitmapFromUri call success`() {
@@ -377,8 +366,7 @@ class WallrDataRepositoryTest {
         .assertValue(mockBitmap)
 
     verify(imageHandler).convertUriToBitmap(mockUri)
-    verifyNoMoreInteractions(imageHandler)
-    `should verify computation scheduler call`()
+    verifyComputationSchedulerCall()
   }
 
   @Test fun `should complete successfully on downloadImage call success`() {
@@ -387,8 +375,7 @@ class WallrDataRepositoryTest {
     wallrDataRepository.downloadImage(randomString).test().assertComplete()
 
     verify(downloadHelper).downloadImage(randomString)
-    verifyNoMoreInteractions(downloadHelper)
-    `should verify io scheduler call`()
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return true on checkIfDownloadIsInProgress call success`() {
@@ -397,7 +384,6 @@ class WallrDataRepositoryTest {
     assertTrue(wallrDataRepository.checkIfDownloadIsInProgress(randomString))
 
     verify(downloadHelper).isDownloadEnqueued(randomString)
-    verifyNoMoreInteractions(downloadHelper)
   }
 
   @Test fun `should return pair on crystallize image call success`() {
@@ -408,8 +394,7 @@ class WallrDataRepositoryTest {
     assertEquals(true, result.first)
     assertEquals(mockBitmap, result.second)
     verify(imageHandler).convertImageInCacheToLowpoly()
-    verifyNoMoreInteractions(imageHandler)
-    `should verify computation scheduler call`()
+    verifyComputationSchedulerCall()
   }
 
   @Test fun `should complete on saveCrystallizedImageToDownloads call success`() {
@@ -418,8 +403,7 @@ class WallrDataRepositoryTest {
     wallrDataRepository.saveCachedImageToDownloads().test().assertComplete()
 
     verify(imageHandler).saveCacheImageToDownloads()
-    verifyNoMoreInteractions(imageHandler)
-    `should verify computation scheduler call`()
+    verifyComputationSchedulerCall()
   }
 
   @Test fun `should return false on isCrystallizeDescriptionShown call success`() {
@@ -429,7 +413,6 @@ class WallrDataRepositoryTest {
     assertFalse(wallrDataRepository.isCrystallizeDescriptionShown())
 
     verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME, CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG)
-    verifyNoMoreInteractions(sharedPrefs)
   }
 
   @Test fun `should call shared preference on rememberCrystallizeDescriptionShown call success`() {
@@ -437,7 +420,6 @@ class WallrDataRepositoryTest {
 
     verify(sharedPrefs).setBoolean(IMAGE_PREFERENCE_NAME, CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG,
         true)
-    verifyNoMoreInteractions(sharedPrefs)
   }
 
   @Test fun `should complete on saveImageToCollections call success of type wallpaper`() {
@@ -449,8 +431,7 @@ class WallrDataRepositoryTest {
         .assertComplete()
 
     verify(imageHandler).saveImageToCollections(randomString, WALLPAPER)
-    verifyNoMoreInteractions(imageHandler)
-    `should verify computation scheduler call`()
+    verifyComputationSchedulerCall()
   }
 
   @Test fun `should complete on saveImageToCollections call success of type search`() {
@@ -462,8 +443,7 @@ class WallrDataRepositoryTest {
         .assertComplete()
 
     verify(imageHandler).saveImageToCollections(randomString, SEARCH)
-    verifyNoMoreInteractions(imageHandler)
-    `should verify computation scheduler call`()
+    verifyComputationSchedulerCall()
   }
 
   @Test fun `should complete on saveImageToCollections call success of type edited`() {
@@ -475,8 +455,7 @@ class WallrDataRepositoryTest {
         .assertComplete()
 
     verify(imageHandler).saveImageToCollections(randomString, EDITED)
-    verifyNoMoreInteractions(imageHandler)
-    `should verify computation scheduler call`()
+    verifyComputationSchedulerCall()
   }
 
   @Test fun `should complete on saveImageToCollections call success of type crystallized`() {
@@ -489,8 +468,7 @@ class WallrDataRepositoryTest {
         .assertComplete()
 
     verify(imageHandler).saveImageToCollections(randomString, CRYSTALLIZED)
-    verifyNoMoreInteractions(imageHandler)
-    `should verify computation scheduler call`()
+    verifyComputationSchedulerCall()
   }
 
   @Test fun `should complete on saveImageToCollections call success of type minimal color`() {
@@ -503,8 +481,7 @@ class WallrDataRepositoryTest {
         .assertComplete()
 
     verify(imageHandler).saveImageToCollections(randomString, MINIMAL_COLOR)
-    verifyNoMoreInteractions(imageHandler)
-    `should verify computation scheduler call`()
+    verifyComputationSchedulerCall()
   }
 
   @Test fun `should return Single of ImageModel list on getExplorePictures call success`() {
@@ -529,8 +506,11 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get image model`()
-    `should verify io scheduler call`()
+    verify(gsonProvider).getGson()
+    verifyFirebaseDatabaseHelperCallToFetchDatabaseReference()
+    verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
+    verify(databaseReference).child(CHILD_PATH_EXPLORE)
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return Single of ImageModel list on getRecentPictures call success`() {
@@ -555,8 +535,12 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get image model`()
-    `should verify io scheduler call`()
+    verify(gsonProvider).getGson()
+    verifyFirebaseDatabaseHelperCallToFetchDatabaseReference()
+    verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
+    verify(databaseReference).child(CHILD_PATH_TOP_PICKS)
+    verify(databaseReference).child(CHILD_PATH_RECENT)
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return Single of ImageModel list on getPopularPictures call success`() {
@@ -581,8 +565,12 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get image model`()
-    `should verify io scheduler call`()
+    verify(gsonProvider).getGson()
+    verifyFirebaseDatabaseHelperCallToFetchDatabaseReference()
+    verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
+    verify(databaseReference).child(CHILD_PATH_TOP_PICKS)
+    verify(databaseReference).child(CHILD_PATH_POPULAR)
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return Single of ImageModel list on getStandoutPictures call success`() {
@@ -607,8 +595,12 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get image model`()
-    `should verify io scheduler call`()
+    verify(gsonProvider).getGson()
+    verifyFirebaseDatabaseHelperCallToFetchDatabaseReference()
+    verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
+    verify(databaseReference).child(CHILD_PATH_TOP_PICKS)
+    verify(databaseReference).child(CHILD_PATH_STANDOUT)
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return Single of ImageModel list on getBuildingsPictures call success`() {
@@ -633,8 +625,12 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get image model`()
-    `should verify io scheduler call`()
+    verify(gsonProvider).getGson()
+    verifyFirebaseDatabaseHelperCallToFetchDatabaseReference()
+    verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
+    verify(databaseReference).child(CHILD_PATH_CATEGORIES)
+    verify(databaseReference).child(CHILD_PATH_BUILDING)
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return Single of ImageModel list on getFoodPictures call success`() {
@@ -659,8 +655,12 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get image model`()
-    `should verify io scheduler call`()
+    verify(gsonProvider).getGson()
+    verifyFirebaseDatabaseHelperCallToFetchDatabaseReference()
+    verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
+    verify(databaseReference).child(CHILD_PATH_CATEGORIES)
+    verify(databaseReference).child(CHILD_PATH_FOOD)
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return Single of ImageModel list on getNaturePictures call success`() {
@@ -685,8 +685,12 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get image model`()
-    `should verify io scheduler call`()
+    verify(gsonProvider).getGson()
+    verifyFirebaseDatabaseHelperCallToFetchDatabaseReference()
+    verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
+    verify(databaseReference).child(CHILD_PATH_CATEGORIES)
+    verify(databaseReference).child(CHILD_PATH_NATURE)
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return Single of ImageModel list on getObjectsPictures call success`() {
@@ -711,8 +715,12 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get image model`()
-    `should verify io scheduler call`()
+    verify(gsonProvider).getGson()
+    verifyFirebaseDatabaseHelperCallToFetchDatabaseReference()
+    verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
+    verify(databaseReference).child(CHILD_PATH_CATEGORIES)
+    verify(databaseReference).child(CHILD_PATH_OBJECT)
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return Single of ImageModel list on getPeoplePictures call success`() {
@@ -737,8 +745,12 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get image model`()
-    `should verify io scheduler call`()
+    verify(gsonProvider).getGson()
+    verifyFirebaseDatabaseHelperCallToFetchDatabaseReference()
+    verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
+    verify(databaseReference).child(CHILD_PATH_CATEGORIES)
+    verify(databaseReference).child(CHILD_PATH_PEOPLE)
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return Single of ImageModel list on getTechnologyPictures call success`() {
@@ -763,8 +775,12 @@ class WallrDataRepositoryTest {
     testScheduler.advanceTimeBy(FIREBASE_TIMEOUT_DURATION.toLong(), TimeUnit.SECONDS)
 
     testObserver.assertValue(imageModelList)
-    `should verify firebase database helper calls to get image model`()
-    `should verify io scheduler call`()
+    verify(gsonProvider).getGson()
+    verifyFirebaseDatabaseHelperCallToFetchDatabaseReference()
+    verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
+    verify(databaseReference).child(CHILD_PATH_CATEGORIES)
+    verify(databaseReference).child(CHILD_PATH_TECHNOLOGY)
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return true on isCustomColorListPresent call success`() {
@@ -774,7 +790,6 @@ class WallrDataRepositoryTest {
     assertTrue(wallrDataRepository.isCustomMinimalColorListPresent())
 
     verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG)
-    verifyNoMoreInteractions(sharedPrefs)
   }
 
   @Test fun `should return single of list of string on getCustomColorList call success`() {
@@ -784,8 +799,7 @@ class WallrDataRepositoryTest {
     wallrDataRepository.getCustomMinimalColorList().test().assertValue(list)
 
     verify(minimalColorHelper).getCustomColors()
-    verifyNoMoreInteractions(minimalColorHelper)
-    `should verify io scheduler call`()
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return single of list of string on getDefaultColorList call success`() {
@@ -795,23 +809,22 @@ class WallrDataRepositoryTest {
     wallrDataRepository.getDefaultMinimalColorList().test().assertValue(list)
 
     verify(minimalColorHelper).getDefaultColors()
-    verifyNoMoreInteractions(minimalColorHelper)
-    `should verify io scheduler call`()
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should complete saveCustomMinimalColorList call success`() {
     val list = listOf(randomString)
     val gsonString = Gson().toJson(list)
     `when`(gsonProvider.getGson()).thenReturn(Gson())
-    `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
-        gsonProvider.getGson().toJson(list))).thenReturn(true)
+    `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG, gsonString))
+        .thenReturn(true)
 
     wallrDataRepository.saveCustomMinimalColorList(list).test().assertComplete()
 
+    verify(gsonProvider).getGson()
     verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
         gsonString)
-    verifyNoMoreInteractions(sharedPrefs)
-    `should verify io scheduler call`()
+    verifyIoSchedulerCall()
   }
 
   @Test fun `should return single of list of strings on modifyColorList call success`() {
@@ -826,14 +839,13 @@ class WallrDataRepositoryTest {
 
     wallrDataRepository.modifyColorList(list, selectedIndices).test().assertValue(modifiedList)
 
+    verify(gsonProvider).getGson()
     verify(minimalColorHelper).cacheDeletedItems(selectedIndices)
-    verifyNoMoreInteractions(minimalColorHelper)
     verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
         gsonString)
     verify(sharedPrefs).setBoolean(IMAGE_PREFERENCE_NAME,
         CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG, true)
-    verifyNoMoreInteractions(sharedPrefs)
-    `should verify computation scheduler call`()
+    verifyComputationSchedulerCall()
   }
 
   @Test fun `should return error on modifyColorList call failure`() {
@@ -849,12 +861,11 @@ class WallrDataRepositoryTest {
     wallrDataRepository.modifyColorList(list, selectedIndices).test()
         .assertError(Exception::class.java)
 
+    verify(gsonProvider).getGson()
     verify(minimalColorHelper).cacheDeletedItems(selectedIndices)
-    verifyNoMoreInteractions(minimalColorHelper)
     verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
         gsonString)
-    verifyNoMoreInteractions(sharedPrefs)
-    `should verify computation scheduler call`()
+    verifyComputationSchedulerCall()
   }
 
   @Test
@@ -869,10 +880,12 @@ class WallrDataRepositoryTest {
 
     wallrDataRepository.restoreDeletedColors().test().assertValue(restoreColorsModel)
 
+    verify(gsonProvider).getGson()
     verify(minimalColorHelper).getCustomColors()
     verify(minimalColorHelper).getDeletedItemsFromCache()
-    verifyNoMoreInteractions(minimalColorHelper)
-    `should verify computation scheduler call`()
+    verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME,
+        CUSTOM_MINIMAL_COLOR_LIST_TAG, Gson().toJson(modifiedList))
+    verifyComputationSchedulerCall()
   }
 
   @Test
@@ -887,8 +900,7 @@ class WallrDataRepositoryTest {
 
     verify(minimalColorHelper).getCustomColors()
     verify(minimalColorHelper).getDeletedItemsFromCache()
-    verifyNoMoreInteractions(minimalColorHelper)
-    `should verify computation scheduler call`()
+    verifyComputationSchedulerCall()
   }
 
   @Test fun `should return single of uri on geShareableImageUri call success`() {
@@ -898,8 +910,7 @@ class WallrDataRepositoryTest {
 
     assertEquals(mockUri, result)
     verify(imageHandler).getShareableUri()
-    verifyNoMoreInteractions(imageHandler)
-    `should verify io scheduler call`()
+    verifyIoSchedulerCall()
   }
 
   @Test
@@ -910,8 +921,6 @@ class WallrDataRepositoryTest {
         .assertError(NotEnoughFreeSpaceException::class.java)
 
     verify(fileHandler).freeSpaceAvailable()
-    verifyNoMoreInteractions(fileHandler)
-    verifyNoMoreInteractions(imageHandler)
   }
 
   @Test
@@ -924,10 +933,8 @@ class WallrDataRepositoryTest {
 
     assertEquals(mockBitmap, result)
     verify(fileHandler).freeSpaceAvailable()
-    verifyNoMoreInteractions(fileHandler)
     verify(imageHandler).getSingleColorBitmap(randomString)
-    verifyNoMoreInteractions(imageHandler)
-    `should verify computation scheduler call`()
+    verifyComputationSchedulerCall()
   }
 
   @Test
@@ -939,8 +946,6 @@ class WallrDataRepositoryTest {
         .assertError(NotEnoughFreeSpaceException::class.java)
 
     verify(fileHandler).freeSpaceAvailable()
-    verifyNoMoreInteractions(fileHandler)
-    verifyNoMoreInteractions(imageHandler)
   }
 
   @Test
@@ -954,10 +959,8 @@ class WallrDataRepositoryTest {
 
     assertEquals(mockBitmap, result)
     verify(fileHandler).freeSpaceAvailable()
-    verifyNoMoreInteractions(fileHandler)
     verify(imageHandler).getMultiColorBitmap(list, MATERIAL)
-    verifyNoMoreInteractions(imageHandler)
-    `should verify computation scheduler call`()
+    verifyComputationSchedulerCall()
   }
 
   @Test
@@ -969,8 +972,6 @@ class WallrDataRepositoryTest {
         .assertError(NotEnoughFreeSpaceException::class.java)
 
     verify(fileHandler).freeSpaceAvailable()
-    verifyNoMoreInteractions(fileHandler)
-    verifyNoMoreInteractions(imageHandler)
   }
 
   @Test
@@ -984,10 +985,8 @@ class WallrDataRepositoryTest {
 
     assertEquals(mockBitmap, result)
     verify(fileHandler).freeSpaceAvailable()
-    verifyNoMoreInteractions(fileHandler)
     verify(imageHandler).getMultiColorBitmap(list, GRADIENT)
-    verifyNoMoreInteractions(imageHandler)
-    `should verify computation scheduler call`()
+    verifyComputationSchedulerCall()
   }
 
   @Test
@@ -999,8 +998,6 @@ class WallrDataRepositoryTest {
         .assertError(NotEnoughFreeSpaceException::class.java)
 
     verify(fileHandler).freeSpaceAvailable()
-    verifyNoMoreInteractions(fileHandler)
-    verifyNoMoreInteractions(imageHandler)
   }
 
   @Test
@@ -1014,34 +1011,48 @@ class WallrDataRepositoryTest {
 
     assertEquals(mockBitmap, result)
     verify(fileHandler).freeSpaceAvailable()
-    verifyNoMoreInteractions(fileHandler)
     verify(imageHandler).getMultiColorBitmap(list, PLASMA)
-    verifyNoMoreInteractions(imageHandler)
-    `should verify computation scheduler call`()
+    verifyComputationSchedulerCall()
+  }
+
+  @After fun tearDown() {
+    verifyNoMoreInteractions(
+        executionThread,
+        sharedPrefs,
+        remoteAuthServiceFactory,
+        unsplashClientFactory,
+        firebaseDatabaseHelper,
+        databaseReference,
+        firebaseDatabase,
+        urlShortener,
+        imageHandler,
+        fileHandler,
+        downloadHelper,
+        minimalColorHelper,
+        mockBitmap,
+        mockUri,
+        gsonProvider
+    )
   }
 
   private fun stubFirebaseDatabaseNode(childPath: String) {
     `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
-    `when`(firebaseDatabaseHelper.getDatabase().getReference(FIREBASE_DATABASE_PATH)).thenReturn(
+    `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(
         databaseReference)
-    `when`(firebaseDatabaseHelper.getDatabase().getReference(FIREBASE_DATABASE_PATH)
-        .child(childPath)).thenReturn(databaseReference)
+    `when`(databaseReference.child(childPath)).thenReturn(databaseReference)
   }
 
-  private fun `should verify io scheduler call`() {
+  private fun verifyIoSchedulerCall() {
     verify(executionThread).ioScheduler
-    verifyNoMoreInteractions(executionThread)
   }
 
-  private fun `should verify computation scheduler call`() {
+  private fun verifyComputationSchedulerCall() {
     verify(executionThread).computationScheduler
-    verifyNoMoreInteractions(executionThread)
   }
 
-  private fun `should verify firebase database helper calls to get image model`() {
+  private fun verifyFirebaseDatabaseHelperCallToFetchDatabaseReference() {
     verify(firebaseDatabaseHelper).getDatabase()
     verify(firebaseDatabaseHelper).fetch(databaseReference)
-    verifyNoMoreInteractions(firebaseDatabaseHelper)
   }
 
 }

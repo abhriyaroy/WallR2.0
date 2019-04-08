@@ -211,8 +211,8 @@ class ColorsDetailPresenterImplTest {
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_solid)
     verifyNoMoreInteractions(context)
-    shouldVerifyImageShown()
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyImageShown()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -238,8 +238,8 @@ class ColorsDetailPresenterImplTest {
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_solid)
     verifyNoMoreInteractions(context)
-    shouldVerifyImageNotShown()
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyImageNotShown()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -269,8 +269,8 @@ class ColorsDetailPresenterImplTest {
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_material)
     verifyNoMoreInteractions(context)
-    shouldVerifyImageShown()
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyImageShown()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -300,8 +300,8 @@ class ColorsDetailPresenterImplTest {
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_material)
     verifyNoMoreInteractions(context)
-    shouldVerifyImageNotShown()
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyImageNotShown()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -331,8 +331,8 @@ class ColorsDetailPresenterImplTest {
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_gradient)
     verifyNoMoreInteractions(context)
-    shouldVerifyImageShown()
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyImageShown()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -362,8 +362,8 @@ class ColorsDetailPresenterImplTest {
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_gradient)
     verifyNoMoreInteractions(context)
-    shouldVerifyImageNotShown()
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyImageNotShown()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -393,8 +393,8 @@ class ColorsDetailPresenterImplTest {
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_plasma)
     verifyNoMoreInteractions(context)
-    shouldVerifyImageShown()
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyImageShown()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -424,8 +424,8 @@ class ColorsDetailPresenterImplTest {
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_plasma)
     verifyNoMoreInteractions(context)
-    shouldVerifyImageNotShown()
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyImageNotShown()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -459,8 +459,8 @@ class ColorsDetailPresenterImplTest {
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(context).getString(R.string.colors_detail_activity_colors_style_name_material)
     verifyNoMoreInteractions(context)
-    shouldVerifyImageShown()
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyImageShown()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -545,7 +545,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verify(colorsDetailView).showWallpaperSetErrorMessage()
     verifyNoMoreInteractions(colorsDetailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -564,7 +564,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verify(colorsDetailView).showWallpaperSetSuccessMessage()
     verifyNoMoreInteractions(colorsDetailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -586,7 +586,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verify(colorsDetailView).showWallpaperSetSuccessMessage()
     verifyNoMoreInteractions(colorsDetailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -658,7 +658,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verify(colorsDetailView).showGenericErrorMessage()
     verifyNoMoreInteractions(colorsDetailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -684,7 +684,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verify(colorsDetailView).showGenericErrorMessage()
     verifyNoMoreInteractions(colorsDetailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -728,7 +728,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verify(colorsDetailView).showGenericErrorMessage()
     verifyNoMoreInteractions(colorsDetailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -834,7 +834,7 @@ class ColorsDetailPresenterImplTest {
     verifyNoMoreInteractions(colorsDetailView)
     verify(wallpaperSetter).setWallpaper(mockBitmap)
     verifyNoMoreInteractions(wallpaperSetter)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should set wallpaper on handleViewResult call success of request type crop`() {
@@ -856,7 +856,7 @@ class ColorsDetailPresenterImplTest {
     verifyNoMoreInteractions(colorsDetailView)
     verify(wallpaperSetter).setWallpaper(mockBitmap)
     verifyNoMoreInteractions(wallpaperSetter)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -922,7 +922,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showGenericErrorMessage()
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verifyNoMoreInteractions(colorsDetailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -949,7 +949,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showAlreadyPresentInCollectionErrorMessage()
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verifyNoMoreInteractions(colorsDetailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -976,7 +976,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showAddToCollectionSuccessMessage()
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verifyNoMoreInteractions(colorsDetailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -1013,7 +1013,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showAddToCollectionSuccessMessage()
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verifyNoMoreInteractions(colorsDetailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -1043,7 +1043,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showAddToCollectionSuccessMessage()
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verifyNoMoreInteractions(colorsDetailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -1115,7 +1115,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verify(colorsDetailView).showGenericErrorMessage()
     verifyNoMoreInteractions(colorsDetailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should share image on handleShareClick call success`() {
@@ -1137,7 +1137,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showShareIntent(mockUri)
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verifyNoMoreInteractions(colorsDetailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -1170,7 +1170,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showShareIntent(mockUri)
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verifyNoMoreInteractions(colorsDetailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -1196,7 +1196,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showShareIntent(mockUri)
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verifyNoMoreInteractions(colorsDetailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -1218,12 +1218,12 @@ class ColorsDetailPresenterImplTest {
     whenever(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 
-  private fun shouldVerifyPostExecutionThreadSchedulerCall(times: Int = 1) {
+  private fun verifyPostExecutionThreadSchedulerCall(times: Int = 1) {
     verify(postExecutionThread, times(times)).scheduler
     verifyNoMoreInteractions(postExecutionThread)
   }
 
-  private fun shouldVerifyImageShown() {
+  private fun verifyImageShown() {
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).showImageTypeText(randomString)
@@ -1235,7 +1235,7 @@ class ColorsDetailPresenterImplTest {
     verifyNoMoreInteractions(colorsDetailView)
   }
 
-  private fun shouldVerifyImageNotShown() {
+  private fun verifyImageNotShown() {
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).showImageTypeText(randomString)
