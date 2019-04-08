@@ -9,12 +9,13 @@ import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
+import zebrostudio.wallr100.presentation.buypro.BuyProContract.BuyProPresenter
 
 class BuyProPresenterImpl(
   private val authenticatePurchaseUseCase: AuthenticatePurchaseUseCase,
   private val userPremiumStatusUseCase: UserPremiumStatusUseCase,
   private val postExecutionThread: PostExecutionThread
-) : BuyProContract.BuyProPresenter {
+) : BuyProPresenter {
 
   private var buyProView: BuyProContract.BuyProView? = null
 
@@ -52,17 +53,18 @@ class BuyProPresenterImpl(
     }
   }
 
-  override fun verifyPurchase(
+  override fun verifyTransaction(
     packageName: String,
     skuId: String,
     purchaseToken: String,
-    proTransactionType: PremiumTransactionType
+    premiumTransactionType: PremiumTransactionType
   ) {
-    authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId, purchaseToken)
+    authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
+        purchaseToken)
         .observeOn(postExecutionThread.scheduler)
         .autoDisposable(buyProView?.getScope()!!)
         .subscribe({
-          handleSuccessfulVerification(proTransactionType)
+          handleSuccessfulVerification(premiumTransactionType)
           buyProView?.dismissWaitLoader()
         }, {
           when (it) {
@@ -74,9 +76,7 @@ class BuyProPresenterImpl(
         })
   }
 
-  fun handleSuccessfulVerification(
-    premiumTransactionType: PremiumTransactionType
-  ) {
+  private fun handleSuccessfulVerification(premiumTransactionType: PremiumTransactionType) {
     if (userPremiumStatusUseCase.updateUserPurchaseStatus()) {
       buyProView?.showSuccessfulTransactionMessage(premiumTransactionType)
       buyProView?.finishWithResult()
