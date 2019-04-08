@@ -3,6 +3,7 @@ package zebrostudio.wallr100.domain
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.Single
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -45,7 +46,6 @@ class SearchPicturesInteractorTest {
     assertEquals(picture, searchPicturesModelList[0])
 
     verify(wallrRepository).getSearchPictures(dummyString)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test
@@ -58,7 +58,6 @@ class SearchPicturesInteractorTest {
         .assertError(NoResultFoundException::class.java)
 
     verify(wallrRepository).getSearchPictures(dummyString)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test
@@ -71,6 +70,9 @@ class SearchPicturesInteractorTest {
         .assertError(UnableToResolveHostException::class.java)
 
     verify(wallrRepository).getSearchPictures(dummyString)
+  }
+
+  @After fun tearDown() {
     verifyNoMoreInteractions(wallrRepository)
   }
 

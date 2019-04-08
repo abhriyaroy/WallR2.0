@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.Completable
 import io.reactivex.Single
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -44,7 +45,6 @@ class ColorImagesUseCaseTest {
 
     assertEquals(mockBitmap, result)
     verify(wallrRepository).getSingleColorBitmap(randomString)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test
@@ -57,7 +57,6 @@ class ColorImagesUseCaseTest {
 
     assertEquals(mockBitmap, result)
     verify(wallrRepository).getMultiColorBitmap(list, MATERIAL)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test
@@ -70,7 +69,6 @@ class ColorImagesUseCaseTest {
 
     assertEquals(mockBitmap, result)
     verify(wallrRepository).getMultiColorBitmap(list, GRADIENT)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test
@@ -84,7 +82,6 @@ class ColorImagesUseCaseTest {
     assertEquals(mockBitmap, result)
     verify(wallrRepository).getMultiColorBitmap(list, PLASMA)
     verify(wallrRepository).getMultiColorBitmap(list, PLASMA)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test
@@ -95,7 +92,6 @@ class ColorImagesUseCaseTest {
 
     assertEquals(mockBitmap, result)
     verify(wallrRepository).getImageBitmap()
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test
@@ -106,7 +102,6 @@ class ColorImagesUseCaseTest {
 
     assertEquals(mockBitmap, result)
     verify(wallrRepository).getBitmapFromUri(mockUri)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should complete on saveToCollectionsCompletable of Wallpaper type call success`() {
@@ -118,7 +113,6 @@ class ColorImagesUseCaseTest {
         .test().assertComplete()
 
     verify(wallrRepository).saveImageToCollections(randomString, WALLPAPER)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should complete on saveToCollectionsCompletable of Search type call success`() {
@@ -129,7 +123,6 @@ class ColorImagesUseCaseTest {
         .test().assertComplete()
 
     verify(wallrRepository).saveImageToCollections(randomString, SEARCH)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should complete on saveToCollectionsCompletable of Crystallised type call success`() {
@@ -141,7 +134,6 @@ class ColorImagesUseCaseTest {
         .test().assertComplete()
 
     verify(wallrRepository).saveImageToCollections(randomString, CRYSTALLIZED)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should complete on saveToCollectionsCompletable of Edited type call success`() {
@@ -152,7 +144,6 @@ class ColorImagesUseCaseTest {
         .test().assertComplete()
 
     verify(wallrRepository).saveImageToCollections(randomString, EDITED)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should complete on saveToCollectionsCompletable of Minimal Color type call success`() {
@@ -166,7 +157,6 @@ class ColorImagesUseCaseTest {
 
     verify(wallrRepository).saveImageToCollections(randomString,
         MINIMAL_COLOR)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return uri on getCacheSourceUri call success`() {
@@ -176,7 +166,6 @@ class ColorImagesUseCaseTest {
 
     assertEquals(mockUri, result)
     verify(wallrRepository).getCacheSourceUri()
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return uri on getCroppingDestinationUri call success`() {
@@ -186,7 +175,6 @@ class ColorImagesUseCaseTest {
 
     assertEquals(mockUri, result)
     verify(wallrRepository).getCacheResultUri()
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return single of uri on getCacheImageUri call success`() {
@@ -196,7 +184,6 @@ class ColorImagesUseCaseTest {
 
     assertEquals(mockUri, result)
     verify(wallrRepository).getShareableImageUri()
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should complete on downloadImage call success`() {
@@ -214,6 +201,9 @@ class ColorImagesUseCaseTest {
     colorImagesInteractor.clearCachesCompletable().test().assertComplete()
 
     verify(wallrRepository).clearImageCaches()
+  }
+
+  @After fun tearDown() {
     verifyNoMoreInteractions(wallrRepository)
   }
 }

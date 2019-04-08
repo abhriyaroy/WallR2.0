@@ -18,11 +18,11 @@ import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 @RunWith(MockitoJUnitRunner::class)
 class ImageHandlerTest {
 
-  @get:Rule var trampolineSchedulerRule = TrampolineSchedulerRule()
   @Mock lateinit var fileHandler: FileHandler
   @Mock lateinit var context: Context
   @Mock lateinit var databaseHelper: DatabaseHelper
   @Mock lateinit var wallpaperSetter: WallpaperSetter
+
   private lateinit var imageHandlerImpl: ImageHandlerImpl
 
   @Before
