@@ -4,7 +4,7 @@ import zebrostudio.wallr100.domain.model.RestoreColorsModel
 import java.util.TreeMap
 import java.util.UUID.randomUUID
 
-class RestoreColorsModelFactory {
+object RestoreColorsModelFactory {
 
   fun getRestoreColorsModel(): RestoreColorsModel {
     val list = mutableListOf<String>()
