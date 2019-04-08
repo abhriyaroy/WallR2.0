@@ -335,7 +335,7 @@ class MinimalPresenterImplTest {
   }
 
   @Test fun `should restore colors on handleUndoDeletionOptionClick call success`() {
-    val restoreColorsModel = RestoreColorsModelFactory().getRestoreColorsModel()
+    val restoreColorsModel = RestoreColorsModelFactory.getRestoreColorsModel()
     val restoreColorsPresenterEntity =
         RestoreColorsPresenterEntityMapper().mapToPresenterEntity(restoreColorsModel)
     val inOrder = inOrder(minimalView)
