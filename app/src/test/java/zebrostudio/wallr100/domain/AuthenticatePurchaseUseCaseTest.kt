@@ -1,8 +1,10 @@
 package zebrostudio.wallr100.domain
 
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -43,13 +45,17 @@ class AuthenticatePurchaseUseCaseTest {
 
     authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId, purchaseToken).test()
         .assertComplete()
+
+    verify(wallrRepository).authenticatePurchase(packageName, skuId, purchaseToken)
   }
 
   @Test fun `should return invalidPurchaseException when unsuccessful purchase verification`() {
     stubAuthenticatePurchaseReturnsInvalidPurchaseException()
+
     authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId, purchaseToken)
         .test().assertError(InvalidPurchaseException::class.java)
 
+    verify(wallrRepository).authenticatePurchase(packageName, skuId, purchaseToken)
   }
 
   @Test fun `should return unableToVerifyPurchaseException when unable to verify purchase`() {
@@ -58,6 +64,11 @@ class AuthenticatePurchaseUseCaseTest {
     authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId, purchaseToken).test()
         .assertError(UnableToVerifyPurchaseException::class.java)
 
+    verify(wallrRepository).authenticatePurchase(packageName, skuId, purchaseToken)
+  }
+
+  @After fun tearDown() {
+    verifyNoMoreInteractions(wallrRepository)
   }
 
   private fun stubAuthenticatePurchaseReturnsCompletableSuccess() {

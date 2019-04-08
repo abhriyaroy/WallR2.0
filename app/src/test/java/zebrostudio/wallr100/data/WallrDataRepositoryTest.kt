@@ -78,6 +78,7 @@ class WallrDataRepositoryTest {
   @Mock lateinit var databaseImageTypeMapper: DatabaseImageTypeMapper
   @Mock lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
   @Mock lateinit var firebasePictureEntityMapper: FirebasePictureEntityMapper
+
   private lateinit var wallrDataRepository: WallrDataRepository
   private val randomString = randomUUID().toString()
   private val dummyInt = 500 // to force some error other than 403 or 404
