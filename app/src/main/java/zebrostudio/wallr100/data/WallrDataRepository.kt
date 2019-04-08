@@ -65,6 +65,7 @@ class WallrDataRepository(
   private val unsplashClientFactory: UnsplashClientFactory,
   private val sharedPrefsHelper: SharedPrefsHelper,
   private val gsonProvider: GsonProvider,
+  private val databaseImageTypeMapper: DatabaseImageTypeMapper,
   private val unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
   private val firebaseDatabaseHelper: FirebaseDatabaseHelper,
   private val firebasePictureEntityMapper: FirebasePictureEntityMapper,
@@ -281,7 +282,7 @@ class WallrDataRepository(
 
   override fun saveImageToCollections(data: String, type: CollectionsImageModel): Completable {
     return imageHandler.saveImageToCollections(data,
-        DatabaseImageTypeMapper.mapToDatabaseImageType(type))
+        databaseImageTypeMapper.mapToDatabaseImageType(type))
         .subscribeOn(executionThread.computationScheduler)
   }
 

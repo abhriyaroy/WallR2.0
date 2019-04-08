@@ -7,9 +7,13 @@ import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.images.ImageResolutionModel
 import zebrostudio.wallr100.domain.model.images.ImageSizeModel
 
-class FirebasePictureEntityMapper {
+interface FirebasePictureEntityMapper {
+  fun mapFromEntity(firebaseImageEntity: List<FirebaseImageEntity>): List<ImageModel>
+}
 
-  fun mapFromEntity(firebaseImageEntity: List<FirebaseImageEntity>) =
+class FirebasePictureEntityMapperImpl : FirebasePictureEntityMapper {
+
+  override fun mapFromEntity(firebaseImageEntity: List<FirebaseImageEntity>) =
       firebaseImageEntity.map {
         ImageModel(
             ImageLinkModel(it.imageLinks.thumbSmall,

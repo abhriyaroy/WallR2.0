@@ -41,9 +41,12 @@ import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.NotEnoughFreeSpaceException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
+import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapper
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
+import zebrostudio.wallr100.domain.datafactory.ImageModelFactory
+import zebrostudio.wallr100.domain.datafactory.SearchPicturesModelFactory
 import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.model.CollectionsImageModel
 import zebrostudio.wallr100.domain.model.RestoreColorsModel
@@ -72,8 +75,9 @@ class WallrDataRepositoryTest {
   @Mock lateinit var mockBitmap: Bitmap
   @Mock lateinit var mockUri: Uri
   @Mock lateinit var gsonProvider: GsonProvider
-  private lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
-  private lateinit var firebasePictureEntityMapper: FirebasePictureEntityMapper
+  @Mock lateinit var databaseImageTypeMapper: DatabaseImageTypeMapper
+  @Mock lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
+  @Mock lateinit var firebasePictureEntityMapper: FirebasePictureEntityMapper
   private lateinit var wallrDataRepository: WallrDataRepository
   private val randomString = randomUUID().toString()
   private val dummyInt = 500 // to force some error other than 403 or 404
@@ -81,11 +85,10 @@ class WallrDataRepositoryTest {
 
   @Before
   fun setup() {
-    unsplashPictureEntityMapper = UnsplashPictureEntityMapper()
-    firebasePictureEntityMapper = FirebasePictureEntityMapper()
     wallrDataRepository =
         WallrDataRepository(remoteAuthServiceFactory, unsplashClientFactory, sharedPrefs,
-            gsonProvider, unsplashPictureEntityMapper, firebaseDatabaseHelper,
+            gsonProvider, databaseImageTypeMapper, unsplashPictureEntityMapper,
+            firebaseDatabaseHelper,
             firebasePictureEntityMapper, urlShortener, imageHandler, fileHandler, downloadHelper,
             minimalColorHelper, executionThread)
 
@@ -104,7 +107,7 @@ class WallrDataRepositoryTest {
 
     verify(remoteAuthServiceFactory).verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
-    verifyIoSchedulerCall()
+    verifyIoSchedulerSubscription()
   }
 
   @Test
@@ -119,7 +122,7 @@ class WallrDataRepositoryTest {
 
     verify(remoteAuthServiceFactory).verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
-    verifyIoSchedulerCall()
+    verifyIoSchedulerSubscription()
   }
 
   @Test
@@ -134,7 +137,7 @@ class WallrDataRepositoryTest {
 
     verify(remoteAuthServiceFactory).verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
-    verifyIoSchedulerCall()
+    verifyIoSchedulerSubscription()
   }
 
   @Test
@@ -149,7 +152,7 @@ class WallrDataRepositoryTest {
 
     verify(remoteAuthServiceFactory).verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
-    verifyIoSchedulerCall()
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return true after successfully updating purchase status`() {
@@ -197,7 +200,7 @@ class WallrDataRepositoryTest {
         .assertError(NoResultFoundException::class.java)
 
     verify(unsplashClientFactory).getPicturesService(randomString)
-    verifyIoSchedulerCall()
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return unable to resolve host exception on getPictures call failure`() {
@@ -209,16 +212,16 @@ class WallrDataRepositoryTest {
         .assertError(UnableToResolveHostException::class.java)
 
     verify(unsplashClientFactory).getPicturesService(randomString)
-    verifyIoSchedulerCall()
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return mapped search pictures model list on getPictures call failure`() {
     val unsplashPicturesEntityList = mutableListOf(
         UnsplashPictureEntityModelFactory.getUnsplashPictureEntityModel())
-
-    val searchPicturesModelList = unsplashPictureEntityMapper
-        .mapFromEntity(unsplashPicturesEntityList)
-
+    val searchPicturesModelList = listOf(SearchPicturesModelFactory
+        .getSearchPicturesModel())
+    `when`(unsplashPictureEntityMapper.mapFromEntity(unsplashPicturesEntityList)).thenReturn(
+        searchPicturesModelList)
     `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
         Single.just(unsplashPicturesEntityList))
 
@@ -228,7 +231,8 @@ class WallrDataRepositoryTest {
 
     assertTrue(searchPicturesModelList[0] == searchPicturesResult)
     verify(unsplashClientFactory).getPicturesService(randomString)
-    verifyIoSchedulerCall()
+    verify(unsplashPictureEntityMapper).mapFromEntity(unsplashPicturesEntityList)
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return explore node reference on getNodeReference call`() {
@@ -276,7 +280,7 @@ class WallrDataRepositoryTest {
     verify(fileHandler).freeSpaceAvailable()
     verify(imageHandler).isImageCached(randomString)
     verify(imageHandler).getImageBitmap()
-    verifyIoSchedulerCall()
+    verifyIoSchedulerSubscription()
   }
 
   @Test
@@ -294,7 +298,7 @@ class WallrDataRepositoryTest {
     verify(fileHandler).freeSpaceAvailable()
     verify(imageHandler).fetchImage(randomString)
     verify(imageHandler).isImageCached(randomString)
-    verifyIoSchedulerCall()
+    verifyIoSchedulerSubscription()
   }
 
   @Test
@@ -314,7 +318,7 @@ class WallrDataRepositoryTest {
     verify(imageHandler).fetchImage(randomString)
     verify(imageHandler).isImageCached(randomString)
     verify(imageHandler).getImageBitmap()
-    verifyIoSchedulerCall()
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return Single of bitmap on getCacheImageBitmap call success`() {
@@ -375,7 +379,7 @@ class WallrDataRepositoryTest {
     wallrDataRepository.downloadImage(randomString).test().assertComplete()
 
     verify(downloadHelper).downloadImage(randomString)
-    verifyIoSchedulerCall()
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return true on checkIfDownloadIsInProgress call success`() {
@@ -423,8 +427,9 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should complete on saveImageToCollections call success of type wallpaper`() {
-    `when`(
-        imageHandler.saveImageToCollections(randomString, WALLPAPER)).thenReturn(
+    `when`(databaseImageTypeMapper.mapToDatabaseImageType(CollectionsImageModel.WALLPAPER))
+        .thenReturn(WALLPAPER)
+    `when`(imageHandler.saveImageToCollections(randomString, WALLPAPER)).thenReturn(
         Completable.complete())
 
     wallrDataRepository.saveImageToCollections(randomString, CollectionsImageModel.WALLPAPER).test()
@@ -435,9 +440,10 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should complete on saveImageToCollections call success of type search`() {
-    `when`(
-        imageHandler.saveImageToCollections(randomString, SEARCH)).thenReturn(
-        Completable.complete())
+    `when`(databaseImageTypeMapper.mapToDatabaseImageType(CollectionsImageModel.SEARCH))
+        .thenReturn(SEARCH)
+    `when`(imageHandler.saveImageToCollections(randomString, SEARCH))
+        .thenReturn(Completable.complete())
 
     wallrDataRepository.saveImageToCollections(randomString, CollectionsImageModel.SEARCH).test()
         .assertComplete()
@@ -447,8 +453,9 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should complete on saveImageToCollections call success of type edited`() {
-    `when`(
-        imageHandler.saveImageToCollections(randomString, EDITED)).thenReturn(
+    `when`(databaseImageTypeMapper.mapToDatabaseImageType(CollectionsImageModel.EDITED))
+        .thenReturn(EDITED)
+    `when`(imageHandler.saveImageToCollections(randomString, EDITED)).thenReturn(
         Completable.complete())
 
     wallrDataRepository.saveImageToCollections(randomString, CollectionsImageModel.EDITED).test()
@@ -459,8 +466,9 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should complete on saveImageToCollections call success of type crystallized`() {
-    `when`(
-        imageHandler.saveImageToCollections(randomString, CRYSTALLIZED)).thenReturn(
+    `when`(databaseImageTypeMapper.mapToDatabaseImageType(
+        CollectionsImageModel.CRYSTALLIZED)).thenReturn(CRYSTALLIZED)
+    `when`(imageHandler.saveImageToCollections(randomString, CRYSTALLIZED)).thenReturn(
         Completable.complete())
 
     wallrDataRepository.saveImageToCollections(randomString, CollectionsImageModel.CRYSTALLIZED)
@@ -472,8 +480,9 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should complete on saveImageToCollections call success of type minimal color`() {
-    `when`(
-        imageHandler.saveImageToCollections(randomString, MINIMAL_COLOR)).thenReturn(
+    `when`(databaseImageTypeMapper.mapToDatabaseImageType(
+        CollectionsImageModel.MINIMAL_COLOR)).thenReturn(MINIMAL_COLOR)
+    `when`(imageHandler.saveImageToCollections(randomString, MINIMAL_COLOR)).thenReturn(
         Completable.complete())
 
     wallrDataRepository.saveImageToCollections(randomString, CollectionsImageModel.MINIMAL_COLOR)
@@ -488,12 +497,14 @@ class WallrDataRepositoryTest {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
+    val imageModelList = listOf(ImageModelFactory.getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
     val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
+    `when`(firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)).thenReturn(
+        imageModelList)
     `when`(gsonProvider.getGson()).thenReturn(gson)
     `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
     `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
@@ -510,25 +521,26 @@ class WallrDataRepositoryTest {
     verifyFirebaseDatabaseHelperCallToFetchDatabaseReference()
     verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
     verify(databaseReference).child(CHILD_PATH_EXPLORE)
-    verifyIoSchedulerCall()
+    verify(firebasePictureEntityMapper).mapFromEntity(firebaseImageEntityList)
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return Single of ImageModel list on getRecentPictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
+    val imageModelList = listOf(ImageModelFactory.getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
     val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
+    `when`(firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)).thenReturn(
+        imageModelList)
     `when`(gsonProvider.getGson()).thenReturn(gson)
-    `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
-    `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
-    `when`(databaseReference.child(CHILD_PATH_TOP_PICKS)).thenReturn(databaseReference)
     `when`(databaseReference.child(CHILD_PATH_RECENT)).thenReturn(databaseReference)
     `when`(firebaseDatabaseHelper.fetch(databaseReference)).thenReturn(Single.just(map))
+    stubFirebaseDatabaseNode(CHILD_PATH_TOP_PICKS)
 
     wallrDataRepository.getRecentPictures().subscribeOn(testScheduler)
         .subscribe(testObserver)
@@ -540,25 +552,26 @@ class WallrDataRepositoryTest {
     verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
     verify(databaseReference).child(CHILD_PATH_TOP_PICKS)
     verify(databaseReference).child(CHILD_PATH_RECENT)
-    verifyIoSchedulerCall()
+    verify(firebasePictureEntityMapper).mapFromEntity(firebaseImageEntityList)
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return Single of ImageModel list on getPopularPictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
+    val imageModelList = listOf(ImageModelFactory.getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
     val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
+    `when`(firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)).thenReturn(
+        imageModelList)
     `when`(gsonProvider.getGson()).thenReturn(gson)
-    `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
-    `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
-    `when`(databaseReference.child(CHILD_PATH_TOP_PICKS)).thenReturn(databaseReference)
     `when`(databaseReference.child(CHILD_PATH_POPULAR)).thenReturn(databaseReference)
     `when`(firebaseDatabaseHelper.fetch(databaseReference)).thenReturn(Single.just(map))
+    stubFirebaseDatabaseNode(CHILD_PATH_TOP_PICKS)
 
     wallrDataRepository.getPopularPictures().subscribeOn(testScheduler)
         .subscribe(testObserver)
@@ -570,25 +583,26 @@ class WallrDataRepositoryTest {
     verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
     verify(databaseReference).child(CHILD_PATH_TOP_PICKS)
     verify(databaseReference).child(CHILD_PATH_POPULAR)
-    verifyIoSchedulerCall()
+    verify(firebasePictureEntityMapper).mapFromEntity(firebaseImageEntityList)
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return Single of ImageModel list on getStandoutPictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
+    val imageModelList = listOf(ImageModelFactory.getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
     val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
+    `when`(firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)).thenReturn(
+        imageModelList)
     `when`(gsonProvider.getGson()).thenReturn(gson)
-    `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
-    `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
-    `when`(databaseReference.child(CHILD_PATH_TOP_PICKS)).thenReturn(databaseReference)
     `when`(databaseReference.child(CHILD_PATH_STANDOUT)).thenReturn(databaseReference)
     `when`(firebaseDatabaseHelper.fetch(databaseReference)).thenReturn(Single.just(map))
+    stubFirebaseDatabaseNode(CHILD_PATH_TOP_PICKS)
 
     wallrDataRepository.getStandoutPictures().subscribeOn(testScheduler)
         .subscribe(testObserver)
@@ -600,25 +614,26 @@ class WallrDataRepositoryTest {
     verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
     verify(databaseReference).child(CHILD_PATH_TOP_PICKS)
     verify(databaseReference).child(CHILD_PATH_STANDOUT)
-    verifyIoSchedulerCall()
+    verify(firebasePictureEntityMapper).mapFromEntity(firebaseImageEntityList)
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return Single of ImageModel list on getBuildingsPictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
+    val imageModelList = listOf(ImageModelFactory.getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
     val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
+    `when`(firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)).thenReturn(
+        imageModelList)
     `when`(gsonProvider.getGson()).thenReturn(gson)
-    `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
-    `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
-    `when`(databaseReference.child(CHILD_PATH_CATEGORIES)).thenReturn(databaseReference)
     `when`(databaseReference.child(CHILD_PATH_BUILDING)).thenReturn(databaseReference)
     `when`(firebaseDatabaseHelper.fetch(databaseReference)).thenReturn(Single.just(map))
+    stubFirebaseDatabaseNode(CHILD_PATH_CATEGORIES)
 
     wallrDataRepository.getBuildingsPictures().subscribeOn(testScheduler)
         .subscribe(testObserver)
@@ -630,25 +645,26 @@ class WallrDataRepositoryTest {
     verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
     verify(databaseReference).child(CHILD_PATH_CATEGORIES)
     verify(databaseReference).child(CHILD_PATH_BUILDING)
-    verifyIoSchedulerCall()
+    verify(firebasePictureEntityMapper).mapFromEntity(firebaseImageEntityList)
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return Single of ImageModel list on getFoodPictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
+    val imageModelList = listOf(ImageModelFactory.getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
     val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
+    `when`(firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList))
+        .thenReturn(imageModelList)
     `when`(gsonProvider.getGson()).thenReturn(gson)
-    `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
-    `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
-    `when`(databaseReference.child(CHILD_PATH_CATEGORIES)).thenReturn(databaseReference)
     `when`(databaseReference.child(CHILD_PATH_FOOD)).thenReturn(databaseReference)
     `when`(firebaseDatabaseHelper.fetch(databaseReference)).thenReturn(Single.just(map))
+    stubFirebaseDatabaseNode(CHILD_PATH_CATEGORIES)
 
     wallrDataRepository.getFoodPictures().subscribeOn(testScheduler)
         .subscribe(testObserver)
@@ -660,25 +676,26 @@ class WallrDataRepositoryTest {
     verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
     verify(databaseReference).child(CHILD_PATH_CATEGORIES)
     verify(databaseReference).child(CHILD_PATH_FOOD)
-    verifyIoSchedulerCall()
+    verify(firebasePictureEntityMapper).mapFromEntity(firebaseImageEntityList)
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return Single of ImageModel list on getNaturePictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
+    val imageModelList = listOf(ImageModelFactory.getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
     val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
+    `when`(firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList))
+        .thenReturn(imageModelList)
     `when`(gsonProvider.getGson()).thenReturn(gson)
-    `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
-    `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
-    `when`(databaseReference.child(CHILD_PATH_CATEGORIES)).thenReturn(databaseReference)
     `when`(databaseReference.child(CHILD_PATH_NATURE)).thenReturn(databaseReference)
     `when`(firebaseDatabaseHelper.fetch(databaseReference)).thenReturn(Single.just(map))
+    stubFirebaseDatabaseNode(CHILD_PATH_CATEGORIES)
 
     wallrDataRepository.getNaturePictures().subscribeOn(testScheduler)
         .subscribe(testObserver)
@@ -690,25 +707,26 @@ class WallrDataRepositoryTest {
     verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
     verify(databaseReference).child(CHILD_PATH_CATEGORIES)
     verify(databaseReference).child(CHILD_PATH_NATURE)
-    verifyIoSchedulerCall()
+    verify(firebasePictureEntityMapper).mapFromEntity(firebaseImageEntityList)
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return Single of ImageModel list on getObjectsPictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
+    val imageModelList = listOf(ImageModelFactory.getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
     val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
+    `when`(firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList))
+        .thenReturn(imageModelList)
     `when`(gsonProvider.getGson()).thenReturn(gson)
-    `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
-    `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
-    `when`(databaseReference.child(CHILD_PATH_CATEGORIES)).thenReturn(databaseReference)
     `when`(databaseReference.child(CHILD_PATH_OBJECT)).thenReturn(databaseReference)
     `when`(firebaseDatabaseHelper.fetch(databaseReference)).thenReturn(Single.just(map))
+    stubFirebaseDatabaseNode(CHILD_PATH_CATEGORIES)
 
     wallrDataRepository.getObjectsPictures().subscribeOn(testScheduler)
         .subscribe(testObserver)
@@ -720,25 +738,26 @@ class WallrDataRepositoryTest {
     verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
     verify(databaseReference).child(CHILD_PATH_CATEGORIES)
     verify(databaseReference).child(CHILD_PATH_OBJECT)
-    verifyIoSchedulerCall()
+    verify(firebasePictureEntityMapper).mapFromEntity(firebaseImageEntityList)
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return Single of ImageModel list on getPeoplePictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
+    val imageModelList = listOf(ImageModelFactory.getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
     val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
     `when`(gsonProvider.getGson()).thenReturn(gson)
-    `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
-    `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
-    `when`(databaseReference.child(CHILD_PATH_CATEGORIES)).thenReturn(databaseReference)
+    `when`(firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList))
+        .thenReturn(imageModelList)
     `when`(databaseReference.child(CHILD_PATH_PEOPLE)).thenReturn(databaseReference)
     `when`(firebaseDatabaseHelper.fetch(databaseReference)).thenReturn(Single.just(map))
+    stubFirebaseDatabaseNode(CHILD_PATH_CATEGORIES)
 
     wallrDataRepository.getPeoplePictures().subscribeOn(testScheduler)
         .subscribe(testObserver)
@@ -750,25 +769,26 @@ class WallrDataRepositoryTest {
     verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
     verify(databaseReference).child(CHILD_PATH_CATEGORIES)
     verify(databaseReference).child(CHILD_PATH_PEOPLE)
-    verifyIoSchedulerCall()
+    verify(firebasePictureEntityMapper).mapFromEntity(firebaseImageEntityList)
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return Single of ImageModel list on getTechnologyPictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)
+    val imageModelList = listOf(ImageModelFactory.getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
     val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
+    `when`(firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)).thenReturn(
+        imageModelList)
     `when`(gsonProvider.getGson()).thenReturn(gson)
-    `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
-    `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
-    `when`(databaseReference.child(CHILD_PATH_CATEGORIES)).thenReturn(databaseReference)
     `when`(databaseReference.child(CHILD_PATH_TECHNOLOGY)).thenReturn(databaseReference)
     `when`(firebaseDatabaseHelper.fetch(databaseReference)).thenReturn(Single.just(map))
+    stubFirebaseDatabaseNode(CHILD_PATH_CATEGORIES)
 
     wallrDataRepository.getTechnologyPictures().subscribeOn(testScheduler)
         .subscribe(testObserver)
@@ -780,7 +800,8 @@ class WallrDataRepositoryTest {
     verify(firebaseDatabase).getReference(FIREBASE_DATABASE_PATH)
     verify(databaseReference).child(CHILD_PATH_CATEGORIES)
     verify(databaseReference).child(CHILD_PATH_TECHNOLOGY)
-    verifyIoSchedulerCall()
+    verify(firebasePictureEntityMapper).mapFromEntity(firebaseImageEntityList)
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return true on isCustomColorListPresent call success`() {
@@ -799,7 +820,7 @@ class WallrDataRepositoryTest {
     wallrDataRepository.getCustomMinimalColorList().test().assertValue(list)
 
     verify(minimalColorHelper).getCustomColors()
-    verifyIoSchedulerCall()
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return single of list of string on getDefaultColorList call success`() {
@@ -809,7 +830,7 @@ class WallrDataRepositoryTest {
     wallrDataRepository.getDefaultMinimalColorList().test().assertValue(list)
 
     verify(minimalColorHelper).getDefaultColors()
-    verifyIoSchedulerCall()
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should complete saveCustomMinimalColorList call success`() {
@@ -824,7 +845,7 @@ class WallrDataRepositoryTest {
     verify(gsonProvider).getGson()
     verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
         gsonString)
-    verifyIoSchedulerCall()
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return single of list of strings on modifyColorList call success`() {
@@ -910,7 +931,7 @@ class WallrDataRepositoryTest {
 
     assertEquals(mockUri, result)
     verify(imageHandler).getShareableUri()
-    verifyIoSchedulerCall()
+    verifyIoSchedulerSubscription()
   }
 
   @Test
@@ -1031,8 +1052,9 @@ class WallrDataRepositoryTest {
         minimalColorHelper,
         mockBitmap,
         mockUri,
-        gsonProvider
-    )
+        gsonProvider,
+        unsplashPictureEntityMapper,
+        firebasePictureEntityMapper)
   }
 
   private fun stubFirebaseDatabaseNode(childPath: String) {
@@ -1042,7 +1064,7 @@ class WallrDataRepositoryTest {
     `when`(databaseReference.child(childPath)).thenReturn(databaseReference)
   }
 
-  private fun verifyIoSchedulerCall() {
+  private fun verifyIoSchedulerSubscription() {
     verify(executionThread).ioScheduler
   }
 
