@@ -28,11 +28,11 @@ interface BuyProContract {
 
     fun handlePurchaseClicked()
     fun handleRestoreClicked()
-    fun verifyPurchase(
+    fun verifyTransaction(
       packageName: String,
       skuId: String,
       purchaseToken: String,
-      proTransactionType: PremiumTransactionType
+      premiumTransactionType: PremiumTransactionType
     )
   }
 

@@ -28,7 +28,7 @@ import java.util.UUID.randomUUID
 @RunWith(MockitoJUnitRunner::class)
 class BuyProPresenterImplTest {
 
-  @Mock private lateinit var postExecutionThread: PostExecutionThread
+  @Mock lateinit var postExecutionThread: PostExecutionThread
   @Mock lateinit var buyProView: BuyProContract.BuyProView
   @Mock lateinit var authenticatePurchaseUseCase: AuthenticatePurchaseUseCase
   @Mock lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
@@ -48,8 +48,9 @@ class BuyProPresenterImplTest {
     stubPostExecutionThreadReturnsIoScheduler()
   }
 
-  @Test fun `should showGenericVerificationError if iab not ready and purchase clicked`() {
-    stubIabNotReady()
+  @Test
+  fun `should showGenericVerificationError on handlePurchaseClicked call failure due to iab not ready`() {
+    `when`(buyProView.isIabReady()).thenReturn(false)
     buyProPresenterImpl.handlePurchaseClicked()
 
     verify(buyProView).isIabReady()
@@ -58,207 +59,201 @@ class BuyProPresenterImplTest {
   }
 
   @Test
-  fun `should showNoInternetErrorMessage if iab ready and purchase clicked but no internet`() {
-    stubIabReady()
-    stubInternetNotAvailable()
+  fun `should showNoInternetErrorMessage on handlePurchaseClicked call failure on no internet`() {
+    `when`(buyProView.isIabReady()).thenReturn(true)
+    `when`(buyProView.internetAvailability()).thenReturn(false)
     buyProPresenterImpl.handlePurchaseClicked()
 
     verify(buyProView).isIabReady()
     verify(buyProView).internetAvailability()
     verify(buyProView).showNoInternetErrorMessage(PURCHASE)
-    verifyNoMoreInteractions(buyProView)
   }
 
   @Test
-  fun `should launchPurchase if iab ready and purchase clicked and internet available`() {
-    stubIabReady()
-    stubInternetAvailable()
+  fun `should launchPurchase on on handlePurchaseClicked call success`() {
+    `when`(buyProView.isIabReady()).thenReturn(true)
+    `when`(buyProView.internetAvailability()).thenReturn(true)
+
     buyProPresenterImpl.handlePurchaseClicked()
 
     verify(buyProView).isIabReady()
     verify(buyProView).internetAvailability()
     verify(buyProView).showWaitLoader(PURCHASE)
     verify(buyProView).launchPurchase()
-    verifyNoMoreInteractions(buyProView)
   }
 
-  @Test fun `should showGenericVerificationError if iab not ready and restore clicked`() {
-    stubIabNotReady()
+  @Test
+  fun `should showGenericVerificationError on handleRestoreClicked call failure due to iab not ready`() {
+    `when`(buyProView.isIabReady()).thenReturn(false)
+
     buyProPresenterImpl.handleRestoreClicked()
 
     verify(buyProView).isIabReady()
     verify(buyProView).showGenericVerificationError()
-    verifyNoMoreInteractions(buyProView)
   }
 
-  @Test fun `should showNoInternetErrorMessage if iab ready and restore clicked but no internet`() {
-    stubIabReady()
-    stubInternetNotAvailable()
+  @Test
+  fun `should showNoInternetErrorMessage on handleRestoreClicked call failure due to no internet`() {
+    `when`(buyProView.isIabReady()).thenReturn(true)
+    `when`(buyProView.internetAvailability()).thenReturn(false)
+
     buyProPresenterImpl.handleRestoreClicked()
 
     verify(buyProView).isIabReady()
     verify(buyProView).internetAvailability()
     verify(buyProView).showNoInternetErrorMessage(RESTORE)
-    verifyNoMoreInteractions(buyProView)
   }
 
   @Test
-  fun `should launchRestore if iab ready and restore clicked and internet available`() {
-    stubIabReady()
-    stubInternetAvailable()
+  fun `should launchRestore on handleRestoreClicked call success`() {
+    `when`(buyProView.isIabReady()).thenReturn(true)
+    `when`(buyProView.internetAvailability()).thenReturn(true)
+
     buyProPresenterImpl.handleRestoreClicked()
 
     verify(buyProView).isIabReady()
     verify(buyProView).internetAvailability()
     verify(buyProView).showWaitLoader(RESTORE)
     verify(buyProView).launchRestore()
-    verifyNoMoreInteractions(buyProView)
   }
 
   @Test
-  fun `should showSuccessfulTransactionMessage and finishWithResult on purchase verification success`() {
-    stubSuccessfulUpdateUserPurchaseStatus()
-    buyProPresenterImpl.handleSuccessfulVerification(PURCHASE)
-
-    verify(buyProView).showSuccessfulTransactionMessage(PURCHASE)
-    verify(buyProView).finishWithResult()
-    verifyNoMoreInteractions(buyProView)
-  }
-
-  @Test
-  fun `should showGenericVerificationError on unsuccessful purchase verification`() {
-    stubUnsuccessfulUpdateUserPurchaseStatus()
-    buyProPresenterImpl.handleSuccessfulVerification(PURCHASE)
-
-    verify(buyProView).showGenericVerificationError()
-    verifyNoMoreInteractions(buyProView)
-  }
-
-  @Test
-  fun `should showSuccessfulTransactionMessage and finishWithResult on restore verification success`() {
-    stubSuccessfulUpdateUserPurchaseStatus()
-    buyProPresenterImpl.handleSuccessfulVerification(RESTORE)
-
-    verify(buyProView).showSuccessfulTransactionMessage(RESTORE)
-    verify(buyProView).finishWithResult()
-    verifyNoMoreInteractions(buyProView)
-  }
-
-  @Test fun `should showGenericVerificationError on unsuccessful restore verification`() {
-    stubUnsuccessfulUpdateUserPurchaseStatus()
-    buyProPresenterImpl.handleSuccessfulVerification(RESTORE)
-
-    verify(buyProView).showGenericVerificationError()
-    verifyNoMoreInteractions(buyProView)
-  }
-
-  @Test
-  fun `should show invalid purchase exception when verifyPurchase call succeeds but purchase is invalid`() {
-    `when`(authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId,
+  fun `should show invalid purchase exception on verifyPurchase call failure with type Purchase`() {
+    `when`(authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
         purchaseToken)).thenReturn(Completable.error(InvalidPurchaseException()))
 
-    buyProPresenterImpl.verifyPurchase(packageName, skuId, purchaseToken, PURCHASE)
+    buyProPresenterImpl.verifyTransaction(packageName, skuId, purchaseToken, PURCHASE)
 
+    verify(authenticatePurchaseUseCase).authenticatePurchaseCompletable(packageName, skuId,
+        purchaseToken)
     verify(buyProView).getScope()
     verify(buyProView).showInvalidPurchaseError()
     verify(buyProView).dismissWaitLoader()
-    verifyNoMoreInteractions(buyProView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should show unable to verify purchase error on verifyPurchase call failure with UnableToVerifyPurchaseException`() {
-    `when`(authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId,
+  fun `should show unable to verify purchase error on verifyPurchase call failure due to UnableToVerifyPurchaseException with type Purchase`() {
+    `when`(authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
         purchaseToken)).thenReturn(Completable.error(UnableToVerifyPurchaseException()))
 
-    buyProPresenterImpl.verifyPurchase(packageName, skuId, purchaseToken, PURCHASE)
+    buyProPresenterImpl.verifyTransaction(packageName, skuId, purchaseToken, PURCHASE)
 
+    verify(authenticatePurchaseUseCase).authenticatePurchaseCompletable(packageName, skuId,
+        purchaseToken)
     verify(buyProView).getScope()
     verify(buyProView).showUnableToVerifyPurchaseError()
     verify(buyProView).dismissWaitLoader()
-    verifyNoMoreInteractions(buyProView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should show generic purchase error on verifyPurchase call failure with generic exception`() {
-    `when`(authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId,
+  fun `should show generic purchase error on verifyPurchase call failure with type Purchase`() {
+    `when`(authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
         purchaseToken)).thenReturn(Completable.error(Exception()))
 
-    buyProPresenterImpl.verifyPurchase(packageName, skuId, purchaseToken, PURCHASE)
+    buyProPresenterImpl.verifyTransaction(packageName, skuId, purchaseToken, PURCHASE)
 
+    verify(authenticatePurchaseUseCase).authenticatePurchaseCompletable(packageName, skuId,
+        purchaseToken)
     verify(buyProView).getScope()
     verify(buyProView).showGenericVerificationError()
     verify(buyProView).dismissWaitLoader()
-    verifyNoMoreInteractions(buyProView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
-  }
-
-  @Test fun `should call handle successful verification on successful verification of purchase`() {
-    `when`(authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId,
-        purchaseToken)).thenReturn(Completable.complete())
-    `when`(userPremiumStatusUseCase.updateUserPurchaseStatus()).thenReturn(true)
-
-    buyProPresenterImpl.verifyPurchase(packageName, skuId, purchaseToken, PURCHASE)
-
-    verify(buyProView).getScope()
-    verify(buyProView).dismissWaitLoader()
-    verify(buyProView).showSuccessfulTransactionMessage(PURCHASE)
-    verify(buyProView).finishWithResult()
-    verifyNoMoreInteractions(buyProView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should call handle successful verification on successfully verification of purchase restoration`() {
-    `when`(authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId,
+  fun `should show successful transaction message and finish with result on verifyPurchase call success with type Purchase`() {
+    `when`(authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
         purchaseToken)).thenReturn(Completable.complete())
     `when`(userPremiumStatusUseCase.updateUserPurchaseStatus()).thenReturn(true)
 
-    buyProPresenterImpl.verifyPurchase(packageName, skuId, purchaseToken, RESTORE)
+    buyProPresenterImpl.verifyTransaction(packageName, skuId, purchaseToken, PURCHASE)
 
+    verify(authenticatePurchaseUseCase).authenticatePurchaseCompletable(packageName, skuId,
+        purchaseToken)
+    verify(userPremiumStatusUseCase).updateUserPurchaseStatus()
     verify(buyProView).getScope()
+    verify(buyProView).showSuccessfulTransactionMessage(PURCHASE)
+    verify(buyProView).finishWithResult()
     verify(buyProView).dismissWaitLoader()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show invalid purchase exception on verifyPurchase call failure with type Restore`() {
+    `when`(authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
+        purchaseToken)).thenReturn(Completable.error(InvalidPurchaseException()))
+
+    buyProPresenterImpl.verifyTransaction(packageName, skuId, purchaseToken, RESTORE)
+
+    verify(authenticatePurchaseUseCase).authenticatePurchaseCompletable(packageName, skuId,
+        purchaseToken)
+    verify(buyProView).getScope()
+    verify(buyProView).showInvalidPurchaseError()
+    verify(buyProView).dismissWaitLoader()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show unable to verify purchase error on verifyPurchase call failure due to UnableToVerifyPurchaseException with type Restore`() {
+    `when`(authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
+        purchaseToken)).thenReturn(Completable.error(UnableToVerifyPurchaseException()))
+
+    buyProPresenterImpl.verifyTransaction(packageName, skuId, purchaseToken, RESTORE)
+
+    verify(authenticatePurchaseUseCase).authenticatePurchaseCompletable(packageName, skuId,
+        purchaseToken)
+    verify(buyProView).getScope()
+    verify(buyProView).showUnableToVerifyPurchaseError()
+    verify(buyProView).dismissWaitLoader()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show generic purchase error on verifyPurchase call failure with type Restore`() {
+    `when`(authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
+        purchaseToken)).thenReturn(Completable.error(Exception()))
+
+    buyProPresenterImpl.verifyTransaction(packageName, skuId, purchaseToken, RESTORE)
+
+    verify(authenticatePurchaseUseCase).authenticatePurchaseCompletable(packageName, skuId,
+        purchaseToken)
+    verify(buyProView).getScope()
+    verify(buyProView).showGenericVerificationError()
+    verify(buyProView).dismissWaitLoader()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show successful transaction message and finish with result on verifyPurchase call success with type Restore`() {
+    `when`(authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
+        purchaseToken)).thenReturn(Completable.complete())
+    `when`(userPremiumStatusUseCase.updateUserPurchaseStatus()).thenReturn(true)
+
+    buyProPresenterImpl.verifyTransaction(packageName, skuId, purchaseToken, RESTORE)
+
+    verify(authenticatePurchaseUseCase).authenticatePurchaseCompletable(packageName, skuId,
+        purchaseToken)
+    verify(userPremiumStatusUseCase).updateUserPurchaseStatus()
+    verify(buyProView).getScope()
     verify(buyProView).showSuccessfulTransactionMessage(RESTORE)
     verify(buyProView).finishWithResult()
-    verifyNoMoreInteractions(buyProView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verify(buyProView).dismissWaitLoader()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @After fun tearDown() {
+    verifyNoMoreInteractions(postExecutionThread, userPremiumStatusUseCase,
+        authenticatePurchaseUseCase, buyProView)
     buyProPresenterImpl.detachView()
-  }
-
-  private fun stubIabReady() {
-    `when`(buyProView.isIabReady()).thenReturn(true)
-  }
-
-  private fun stubIabNotReady() {
-    `when`(buyProView.isIabReady()).thenReturn(false)
-  }
-
-  private fun stubInternetAvailable() {
-    `when`(buyProView.internetAvailability()).thenReturn(true)
-  }
-
-  private fun stubInternetNotAvailable() {
-    `when`(buyProView.internetAvailability()).thenReturn(false)
-  }
-
-  private fun stubSuccessfulUpdateUserPurchaseStatus() {
-    `when`(userPremiumStatusUseCase.updateUserPurchaseStatus()).thenReturn(true)
-  }
-
-  private fun stubUnsuccessfulUpdateUserPurchaseStatus() {
-    `when`(userPremiumStatusUseCase.updateUserPurchaseStatus()).thenReturn(false)
   }
 
   private fun stubPostExecutionThreadReturnsIoScheduler() {
     whenever(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 
-  private fun shouldVerifyPostExecutionThreadSchedulerCall() {
+  private fun verifyPostExecutionThreadSchedulerCall() {
     verify(postExecutionThread).scheduler
-    verifyNoMoreInteractions(postExecutionThread)
   }
 }

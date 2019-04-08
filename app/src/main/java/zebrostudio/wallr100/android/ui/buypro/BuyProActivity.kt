@@ -41,7 +41,7 @@ class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
       showTryRestoringInfo()
       dismissWaitLoader()
     } else {
-      buyProPresenter.verifyPurchase(purchase.packageName,
+      buyProPresenter.verifyTransaction(purchase.packageName,
           purchase.sku,
           purchase.token,
           PURCHASE)
@@ -52,7 +52,7 @@ class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
       showGenericVerificationError()
       dismissWaitLoader()
     } else {
-      buyProPresenter.verifyPurchase(
+      buyProPresenter.verifyTransaction(
           inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).packageName,
           inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).sku,
           inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).token,
