@@ -3,6 +3,7 @@ package zebrostudio.wallr100.data
 import android.content.Context
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -39,6 +40,9 @@ class ImageHandlerTest {
     imageHandlerImpl.clearImageCache().test().assertComplete()
 
     verify(fileHandler).deleteCacheFiles()
-    verifyNoMoreInteractions(fileHandler)
+  }
+
+  @After fun tearDown() {
+    verifyNoMoreInteractions(fileHandler, context, databaseHelper, wallpaperSetter)
   }
 }

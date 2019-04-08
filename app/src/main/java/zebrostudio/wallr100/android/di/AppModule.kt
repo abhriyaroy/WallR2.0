@@ -35,8 +35,12 @@ import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactoryImpl
 import zebrostudio.wallr100.data.database.DatabaseHelper
 import zebrostudio.wallr100.data.database.DatabaseHelperImpl
+import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapper
+import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapperImpl
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
+import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapperImpl
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
+import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapperImpl
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
@@ -121,10 +125,13 @@ class AppModule {
   fun provideUnsplashClientFactory(): UnsplashClientFactory = UnsplashClientFactoryImpl()
 
   @Provides
-  fun providePictureEntityMapper(): UnsplashPictureEntityMapper = UnsplashPictureEntityMapper()
+  fun provideDataBaseImageTypeMapper(): DatabaseImageTypeMapper = DatabaseImageTypeMapperImpl()
 
   @Provides
-  fun provideFirebasePictureEntityMapper(): FirebasePictureEntityMapper = FirebasePictureEntityMapper()
+  fun provideUnspalshPictureEntityMapper(): UnsplashPictureEntityMapper = UnsplashPictureEntityMapperImpl()
+
+  @Provides
+  fun provideFirebasePictureEntityMapper(): FirebasePictureEntityMapper = FirebasePictureEntityMapperImpl()
 
   @Provides
   fun provideUrlShortener(): URLShortener = URLShortenerImpl()
@@ -156,6 +163,7 @@ class AppModule {
     unsplashClientFactory: UnsplashClientFactory,
     sharedPrefsHelper: SharedPrefsHelper,
     gsonProvider: GsonProvider,
+    databaseImageTypeMapper: DatabaseImageTypeMapper,
     unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
     firebaseDatabaseHelper: FirebaseDatabaseHelper,
     firebasePictureEntityMapper: FirebasePictureEntityMapper,
@@ -169,6 +177,7 @@ class AppModule {
       unsplashClientFactory,
       sharedPrefsHelper,
       gsonProvider,
+      databaseImageTypeMapper,
       unsplashPictureEntityMapper,
       firebaseDatabaseHelper,
       firebasePictureEntityMapper,
