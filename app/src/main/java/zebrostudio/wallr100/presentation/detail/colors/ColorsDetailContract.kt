@@ -3,12 +3,15 @@ package zebrostudio.wallr100.presentation.detail.colors
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode
 import zebrostudio.wallr100.presentation.BasePresenter
 import zebrostudio.wallr100.presentation.BaseView
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
 
 interface ColorsDetailContract {
 
   interface ColorsDetailView : BaseView {
+    fun getMultiColorImageType(): MultiColorImageType
     fun showImageTypeText(text: String)
     fun hasStoragePermission(): Boolean
     fun requestStoragePermission(colorsActionType: ColorsActionType)
@@ -48,9 +51,11 @@ interface ColorsDetailContract {
   }
 
   interface ColorsDetailPresenter : BasePresenter<ColorsDetailView> {
-    fun setCalledIntent(intent: Intent)
-    fun setPanelStateAsExpanded()
-    fun setPanelStateAsCollapsed()
+    fun setColorsDetailMode(colorsDetailMode: ColorsDetailMode)
+    fun setColorList(list: List<String>)
+    fun handleViewReadyState()
+    fun notifyPanelExpanded()
+    fun notifyPanelCollapsed()
     fun handlePermissionRequestResult(
       requestCode: Int, permissions: Array<String>, grantResults: IntArray
     )

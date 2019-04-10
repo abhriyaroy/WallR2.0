@@ -2,8 +2,6 @@ package zebrostudio.wallr100.presentation
 
 import android.Manifest
 import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
@@ -34,6 +32,7 @@ import zebrostudio.wallr100.android.ui.detail.colors.COLORS_DETAIL_MULTIPLE_TYPE
 import zebrostudio.wallr100.android.ui.detail.colors.COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.MULTIPLE
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.SINGLE
+import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
@@ -62,17 +61,16 @@ class ColorsDetailPresenterImplTest {
   @Mock lateinit var wallpaperSetter: WallpaperSetter
   @Mock lateinit var colorsDetailView: ColorsDetailView
   @Mock lateinit var postExecutionThread: PostExecutionThread
-  @Mock lateinit var context: Context
+  @Mock lateinit var resourceUtils: ResourceUtils
   @Mock lateinit var mockBitmap: Bitmap
   @Mock lateinit var mockUri: Uri
-  @Mock lateinit var mockIntent: Intent
   private lateinit var colorsDetailPresenterImpl: ColorsDetailPresenterImpl
   private val randomString = UUID.randomUUID().toString()
   private val randomInt = Math.random().toInt()
 
   @Before fun setup() {
     colorsDetailPresenterImpl =
-        ColorsDetailPresenterImpl(context, postExecutionThread, userPremiumStatusUseCase,
+        ColorsDetailPresenterImpl(resourceUtils, postExecutionThread, userPremiumStatusUseCase,
             colorImagesUseCase, wallpaperSetter)
 
     colorsDetailPresenterImpl.attachView(colorsDetailView)
@@ -81,15 +79,6 @@ class ColorsDetailPresenterImplTest {
         TestLifecycleScopeProvider.TestLifecycle.STARTED)
     `when`(colorsDetailView.getScope()).thenReturn(testScopeProvider)
     stubPostExecutionThreadReturnsIoScheduler()
-  }
-
-  @Test(expected = IllegalStateException::class)
-  fun `should throw IllegalStateException on setCalledIntent call failure due to null Intent extras`() {
-    `when`(mockIntent.extras).thenReturn(null)
-
-    colorsDetailPresenterImpl.setCalledIntent(mockIntent)
-
-    verifyNoMoreInteractions(colorsDetailView)
   }
 
   @Test
@@ -108,9 +97,9 @@ class ColorsDetailPresenterImplTest {
     assertEquals(mockIntent, colorsDetailPresenterImpl.intent)
     assertEquals(SINGLE, colorsDetailPresenterImpl.colorsDetailMode)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
+    verify(mockIntent).getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).requestStoragePermission(LOAD_COLOR_WALLPAPER)
-    verifyNoMoreInteractions(colorsDetailView)
   }
 
   @Test
@@ -198,7 +187,8 @@ class ColorsDetailPresenterImplTest {
     `when`(mockIntent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)).thenReturn(
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
-    `when`(context.getString(R.string.colors_detail_activity_colors_style_name_solid)).thenReturn(
+    `when`(resourceUtils.getStringResource(
+        R.string.colors_detail_activity_colors_style_name_solid)).thenReturn(
         randomString)
     `when`(colorImagesUseCase.getSingularColorBitmapSingle(randomString)).thenReturn(
         Single.just(mockBitmap))
@@ -209,8 +199,8 @@ class ColorsDetailPresenterImplTest {
     assertEquals(SINGLE, colorsDetailPresenterImpl.colorsDetailMode)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
-    verify(context).getString(R.string.colors_detail_activity_colors_style_name_solid)
-    verifyNoMoreInteractions(context)
+    verify(resourceUtils).getStringResource(R.string.colors_detail_activity_colors_style_name_solid)
+    verifyNoMoreInteractions(resourceUtils)
     verifyImageShown()
     verifyPostExecutionThreadSchedulerCall()
   }
@@ -225,7 +215,8 @@ class ColorsDetailPresenterImplTest {
     `when`(mockIntent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)).thenReturn(
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
-    `when`(context.getString(R.string.colors_detail_activity_colors_style_name_solid)).thenReturn(
+    `when`(resourceUtils.getStringResource(
+        R.string.colors_detail_activity_colors_style_name_solid)).thenReturn(
         randomString)
     `when`(colorImagesUseCase.getSingularColorBitmapSingle(randomString)).thenReturn(
         Single.error(Exception()))
@@ -236,8 +227,7 @@ class ColorsDetailPresenterImplTest {
     assertEquals(SINGLE, colorsDetailPresenterImpl.colorsDetailMode)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
-    verify(context).getString(R.string.colors_detail_activity_colors_style_name_solid)
-    verifyNoMoreInteractions(context)
+    verify(resourceUtils).getStringResource(R.string.colors_detail_activity_colors_style_name_solid)
     verifyImageNotShown()
     verifyPostExecutionThreadSchedulerCall()
   }
@@ -255,7 +245,8 @@ class ColorsDetailPresenterImplTest {
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(
-        context.getString(R.string.colors_detail_activity_colors_style_name_material)).thenReturn(
+        resourceUtils.getStringResource(
+            R.string.colors_detail_activity_colors_style_name_material)).thenReturn(
         randomString)
     `when`(colorImagesUseCase.getMultiColorMaterialSingle(list,
         MATERIAL)).thenReturn(Single.just(mockBitmap))
@@ -267,8 +258,8 @@ class ColorsDetailPresenterImplTest {
     assertEquals(MATERIAL, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
-    verify(context).getString(R.string.colors_detail_activity_colors_style_name_material)
-    verifyNoMoreInteractions(context)
+    verify(resourceUtils).getStringResource(
+        R.string.colors_detail_activity_colors_style_name_material)
     verifyImageShown()
     verifyPostExecutionThreadSchedulerCall()
   }
@@ -286,7 +277,8 @@ class ColorsDetailPresenterImplTest {
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(
-        context.getString(R.string.colors_detail_activity_colors_style_name_material)).thenReturn(
+        resourceUtils.getStringResource(
+            R.string.colors_detail_activity_colors_style_name_material)).thenReturn(
         randomString)
     `when`(colorImagesUseCase.getMultiColorMaterialSingle(list,
         MATERIAL)).thenReturn(Single.error(Exception()))
@@ -298,8 +290,9 @@ class ColorsDetailPresenterImplTest {
     assertEquals(MATERIAL, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
-    verify(context).getString(R.string.colors_detail_activity_colors_style_name_material)
-    verifyNoMoreInteractions(context)
+    verify(resourceUtils).getStringResource(
+        R.string.colors_detail_activity_colors_style_name_material)
+    verifyNoMoreInteractions(resourceUtils)
     verifyImageNotShown()
     verifyPostExecutionThreadSchedulerCall()
   }
@@ -317,7 +310,8 @@ class ColorsDetailPresenterImplTest {
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(
-        context.getString(R.string.colors_detail_activity_colors_style_name_gradient)).thenReturn(
+        resourceUtils.getStringResource(
+            R.string.colors_detail_activity_colors_style_name_gradient)).thenReturn(
         randomString)
     `when`(colorImagesUseCase.getMultiColorMaterialSingle(list,
         GRADIENT)).thenReturn(Single.just(mockBitmap))
@@ -329,8 +323,9 @@ class ColorsDetailPresenterImplTest {
     assertEquals(GRADIENT, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
-    verify(context).getString(R.string.colors_detail_activity_colors_style_name_gradient)
-    verifyNoMoreInteractions(context)
+    verify(resourceUtils).getStringResource(
+        R.string.colors_detail_activity_colors_style_name_gradient)
+    verifyNoMoreInteractions(resourceUtils)
     verifyImageShown()
     verifyPostExecutionThreadSchedulerCall()
   }
@@ -348,7 +343,8 @@ class ColorsDetailPresenterImplTest {
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(
-        context.getString(R.string.colors_detail_activity_colors_style_name_gradient)).thenReturn(
+        resourceUtils.getStringResource(
+            R.string.colors_detail_activity_colors_style_name_gradient)).thenReturn(
         randomString)
     `when`(colorImagesUseCase.getMultiColorMaterialSingle(list,
         GRADIENT)).thenReturn(Single.error(Exception()))
@@ -360,8 +356,8 @@ class ColorsDetailPresenterImplTest {
     assertEquals(GRADIENT, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
-    verify(context).getString(R.string.colors_detail_activity_colors_style_name_gradient)
-    verifyNoMoreInteractions(context)
+    verify(resourceUtils).getStringResource(
+        R.string.colors_detail_activity_colors_style_name_gradient)
     verifyImageNotShown()
     verifyPostExecutionThreadSchedulerCall()
   }
@@ -379,7 +375,8 @@ class ColorsDetailPresenterImplTest {
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(
-        context.getString(R.string.colors_detail_activity_colors_style_name_plasma)).thenReturn(
+        resourceUtils.getStringResource(
+            R.string.colors_detail_activity_colors_style_name_plasma)).thenReturn(
         randomString)
     `when`(colorImagesUseCase.getMultiColorMaterialSingle(list,
         PLASMA)).thenReturn(Single.just(mockBitmap))
@@ -391,8 +388,8 @@ class ColorsDetailPresenterImplTest {
     assertEquals(PLASMA, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
-    verify(context).getString(R.string.colors_detail_activity_colors_style_name_plasma)
-    verifyNoMoreInteractions(context)
+    verify(resourceUtils).getStringResource(
+        R.string.colors_detail_activity_colors_style_name_plasma)
     verifyImageShown()
     verifyPostExecutionThreadSchedulerCall()
   }
@@ -410,7 +407,8 @@ class ColorsDetailPresenterImplTest {
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(
-        context.getString(R.string.colors_detail_activity_colors_style_name_plasma)).thenReturn(
+        resourceUtils.getStringResource(
+            R.string.colors_detail_activity_colors_style_name_plasma)).thenReturn(
         randomString)
     `when`(colorImagesUseCase.getMultiColorMaterialSingle(list,
         PLASMA)).thenReturn(Single.error(Exception()))
@@ -422,8 +420,8 @@ class ColorsDetailPresenterImplTest {
     assertEquals(PLASMA, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
-    verify(context).getString(R.string.colors_detail_activity_colors_style_name_plasma)
-    verifyNoMoreInteractions(context)
+    verify(resourceUtils).getStringResource(
+        R.string.colors_detail_activity_colors_style_name_plasma)
     verifyImageNotShown()
     verifyPostExecutionThreadSchedulerCall()
   }
@@ -442,7 +440,8 @@ class ColorsDetailPresenterImplTest {
         arrayList)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(
-        context.getString(R.string.colors_detail_activity_colors_style_name_material)).thenReturn(
+        resourceUtils.getStringResource(
+            R.string.colors_detail_activity_colors_style_name_material)).thenReturn(
         randomString)
     `when`(colorImagesUseCase.getMultiColorMaterialSingle(list,
         MATERIAL)).thenReturn(Single.just(mockBitmap))
@@ -457,8 +456,8 @@ class ColorsDetailPresenterImplTest {
     assertEquals(MATERIAL, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(arrayList, colorsDetailPresenterImpl.colorList)
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
-    verify(context).getString(R.string.colors_detail_activity_colors_style_name_material)
-    verifyNoMoreInteractions(context)
+    verify(resourceUtils).getStringResource(
+        R.string.colors_detail_activity_colors_style_name_material)
     verifyImageShown()
     verifyPostExecutionThreadSchedulerCall()
   }
@@ -475,14 +474,14 @@ class ColorsDetailPresenterImplTest {
     verifyNoMoreInteractions(colorsDetailView)
   }
 
-  @Test fun `should set panel expanded to true on setPanelStateAsExpanded call success`() {
-    colorsDetailPresenterImpl.setPanelStateAsExpanded()
+  @Test fun `should set panel expanded to true on notifyPanelExpanded call success`() {
+    colorsDetailPresenterImpl.notifyPanelExpanded()
 
     assertTrue(colorsDetailPresenterImpl.isPanelExpanded)
   }
 
-  @Test fun `should set panel expanded to false on setPanelStateAsCollapsed call success`() {
-    colorsDetailPresenterImpl.setPanelStateAsCollapsed()
+  @Test fun `should set panel expanded to false on notifyPanelCollapsed call success`() {
+    colorsDetailPresenterImpl.notifyPanelCollapsed()
 
     assertFalse(colorsDetailPresenterImpl.isPanelExpanded)
   }
@@ -534,7 +533,8 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.getBitmapSingle()).thenReturn(Single.error(java.lang.Exception()))
-    `when`(context.getString(R.string.finalizing_wallpaper_messsage)).thenReturn(randomString)
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)).thenReturn(
+        randomString)
 
     colorsDetailPresenterImpl.handleQuickSetClick()
 
@@ -553,7 +553,8 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.getBitmapSingle()).thenReturn(Single.just(mockBitmap))
-    `when`(context.getString(R.string.finalizing_wallpaper_messsage)).thenReturn(randomString)
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)).thenReturn(
+        randomString)
 
     colorsDetailPresenterImpl.handleQuickSetClick()
 
@@ -572,7 +573,8 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.getBitmapSingle()).thenReturn(Single.just(mockBitmap))
-    `when`(context.getString(R.string.finalizing_wallpaper_messsage)).thenReturn(randomString)
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)).thenReturn(
+        randomString)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
         arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -644,7 +646,8 @@ class ColorsDetailPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.downloadImage()).thenReturn(Completable.error(Exception()))
-    `when`(context.getString(R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
+    `when`(resourceUtils.getStringResource(
+        R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handleDownloadClick()
@@ -667,7 +670,8 @@ class ColorsDetailPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.downloadImage()).thenReturn(Completable.error(Exception()))
-    `when`(context.getString(R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
+    `when`(resourceUtils.getStringResource(
+        R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal,
@@ -713,7 +717,8 @@ class ColorsDetailPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.downloadImage()).thenReturn(Completable.error(Exception()))
-    `when`(context.getString(R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
+    `when`(resourceUtils.getStringResource(
+        R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
@@ -756,7 +761,8 @@ class ColorsDetailPresenterImplTest {
   @Test fun `should start cropping activity on handleEditSetClick call success`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
-    `when`(context.getString(R.string.detail_activity_editing_tool_message)).thenReturn(
+    `when`(
+        resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message)).thenReturn(
         randomString)
     `when`(colorImagesUseCase.getCacheSourceUri()).thenReturn(mockUri)
     `when`(colorImagesUseCase.getCroppingDestinationUri()).thenReturn(mockUri)
@@ -784,7 +790,6 @@ class ColorsDetailPresenterImplTest {
         intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(colorsDetailView).showPermissionRequiredMessage()
-    verifyNoMoreInteractions(colorsDetailView)
   }
 
   @Test fun `should show error on handleViewResult call failure due to null crop uri`() {
@@ -795,12 +800,12 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).getUriFromIntent(mockIntent)
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verify(colorsDetailView).showGenericErrorMessage()
-    verifyNoMoreInteractions(colorsDetailView)
   }
 
   @Test fun `should show error on handleViewResult call failure of request type crop`() {
     `when`(colorsDetailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(context.getString(R.string.finalizing_wallpaper_messsage)).thenReturn(randomString)
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)).thenReturn(
+        randomString)
     `when`(colorImagesUseCase.getBitmapFromUriSingle(mockUri)).thenReturn(Single.error(Exception()))
 
     colorsDetailPresenterImpl.handleViewResult(UCrop.REQUEST_CROP, Activity.RESULT_OK, mockIntent)
@@ -811,13 +816,13 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verify(colorsDetailView).showGenericErrorMessage()
-    verifyNoMoreInteractions(colorsDetailView)
   }
 
   @Test
   fun `should show unable to set wallpaper error on handleViewResult call success of request type crop`() {
     `when`(colorsDetailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(context.getString(R.string.finalizing_wallpaper_messsage)).thenReturn(randomString)
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)).thenReturn(
+        randomString)
     `when`(colorImagesUseCase.getBitmapFromUriSingle(mockUri)).thenReturn(Single.just(mockBitmap))
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(false)
 
@@ -831,15 +836,14 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showImage(mockBitmap)
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verify(colorsDetailView).showWallpaperSetErrorMessage()
-    verifyNoMoreInteractions(colorsDetailView)
     verify(wallpaperSetter).setWallpaper(mockBitmap)
-    verifyNoMoreInteractions(wallpaperSetter)
     verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should set wallpaper on handleViewResult call success of request type crop`() {
     `when`(colorsDetailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(context.getString(R.string.finalizing_wallpaper_messsage)).thenReturn(randomString)
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)).thenReturn(
+        randomString)
     `when`(colorImagesUseCase.getBitmapFromUriSingle(mockUri)).thenReturn(Single.just(mockBitmap))
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(true)
 
@@ -853,9 +857,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showImage(mockBitmap)
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verify(colorsDetailView).showWallpaperSetSuccessMessage()
-    verifyNoMoreInteractions(colorsDetailView)
     verify(wallpaperSetter).setWallpaper(mockBitmap)
-    verifyNoMoreInteractions(wallpaperSetter)
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -866,7 +868,6 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.handleAddToCollectionClick()
 
     verify(colorsDetailView).showColorOperationsDisabledMessage()
-    verifyNoMoreInteractions(colorsDetailView)
   }
 
   @Test
@@ -877,9 +878,7 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.handleAddToCollectionClick()
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyNoMoreInteractions(userPremiumStatusUseCase)
     verify(colorsDetailView).redirectToBuyPro(ADD_TO_COLLECTION.ordinal)
-    verifyNoMoreInteractions(colorsDetailView)
   }
 
   @Test
@@ -892,10 +891,8 @@ class ColorsDetailPresenterImplTest {
 
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyNoMoreInteractions(userPremiumStatusUseCase)
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).requestStoragePermission(ADD_TO_COLLECTION)
-    verifyNoMoreInteractions(colorsDetailView)
   }
 
   @Test
@@ -909,19 +906,19 @@ class ColorsDetailPresenterImplTest {
     `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
         MINIMAL_COLOR)).thenReturn(
         Completable.error(Exception()))
-    `when`(context.getString(R.string.adding_image_to_collections_message)).thenReturn(randomString)
+    `when`(
+        resourceUtils.getStringResource(R.string.adding_image_to_collections_message)).thenReturn(
+        randomString)
 
     colorsDetailPresenterImpl.handleAddToCollectionClick()
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyNoMoreInteractions(userPremiumStatusUseCase)
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
     verify(colorsDetailView).showGenericErrorMessage()
     verify(colorsDetailView).hideIndefiniteWaitLoader()
-    verifyNoMoreInteractions(colorsDetailView)
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -936,19 +933,19 @@ class ColorsDetailPresenterImplTest {
     `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
         MINIMAL_COLOR)).thenReturn(
         Completable.error(AlreadyPresentInCollectionException()))
-    `when`(context.getString(R.string.adding_image_to_collections_message)).thenReturn(randomString)
+    `when`(
+        resourceUtils.getStringResource(R.string.adding_image_to_collections_message)).thenReturn(
+        randomString)
 
     colorsDetailPresenterImpl.handleAddToCollectionClick()
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyNoMoreInteractions(userPremiumStatusUseCase)
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
     verify(colorsDetailView).showAlreadyPresentInCollectionErrorMessage()
     verify(colorsDetailView).hideIndefiniteWaitLoader()
-    verifyNoMoreInteractions(colorsDetailView)
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -963,19 +960,19 @@ class ColorsDetailPresenterImplTest {
     `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
         MINIMAL_COLOR)).thenReturn(
         Completable.complete())
-    `when`(context.getString(R.string.adding_image_to_collections_message)).thenReturn(randomString)
+    `when`(
+        resourceUtils.getStringResource(R.string.adding_image_to_collections_message)).thenReturn(
+        randomString)
 
     colorsDetailPresenterImpl.handleAddToCollectionClick()
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyNoMoreInteractions(userPremiumStatusUseCase)
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
     verify(colorsDetailView).showAddToCollectionSuccessMessage()
     verify(colorsDetailView).hideIndefiniteWaitLoader()
-    verifyNoMoreInteractions(colorsDetailView)
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -985,7 +982,6 @@ class ColorsDetailPresenterImplTest {
         mockIntent)
 
     verify(colorsDetailView).showUnsuccessfulPurchaseError()
-    verifyNoMoreInteractions(colorsDetailView)
   }
 
   @Test
@@ -999,7 +995,9 @@ class ColorsDetailPresenterImplTest {
     `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
         MINIMAL_COLOR)).thenReturn(
         Completable.complete())
-    `when`(context.getString(R.string.adding_image_to_collections_message)).thenReturn(randomString)
+    `when`(
+        resourceUtils.getStringResource(R.string.adding_image_to_collections_message)).thenReturn(
+        randomString)
 
     colorsDetailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, mockIntent)
@@ -1012,7 +1010,6 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
     verify(colorsDetailView).showAddToCollectionSuccessMessage()
     verify(colorsDetailView).hideIndefiniteWaitLoader()
-    verifyNoMoreInteractions(colorsDetailView)
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -1027,7 +1024,9 @@ class ColorsDetailPresenterImplTest {
     `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
         MINIMAL_COLOR)).thenReturn(
         Completable.complete())
-    `when`(context.getString(R.string.adding_image_to_collections_message)).thenReturn(randomString)
+    `when`(
+        resourceUtils.getStringResource(R.string.adding_image_to_collections_message)).thenReturn(
+        randomString)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal,
         arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -1042,7 +1041,6 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
     verify(colorsDetailView).showAddToCollectionSuccessMessage()
     verify(colorsDetailView).hideIndefiniteWaitLoader()
-    verifyNoMoreInteractions(colorsDetailView)
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -1054,7 +1052,6 @@ class ColorsDetailPresenterImplTest {
         intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(colorsDetailView).showPermissionRequiredMessage()
-    verifyNoMoreInteractions(colorsDetailView)
   }
 
   @Test
@@ -1064,7 +1061,6 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.handleShareClick()
 
     verify(colorsDetailView).showColorOperationsDisabledMessage()
-    verifyNoMoreInteractions(colorsDetailView)
   }
 
   @Test
@@ -1077,7 +1073,6 @@ class ColorsDetailPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyNoMoreInteractions(userPremiumStatusUseCase)
     verify(colorsDetailView).redirectToBuyPro(SHARE.ordinal)
-    verifyNoMoreInteractions(colorsDetailView)
   }
 
   @Test
@@ -1093,7 +1088,6 @@ class ColorsDetailPresenterImplTest {
     verifyNoMoreInteractions(userPremiumStatusUseCase)
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).requestStoragePermission(SHARE)
-    verifyNoMoreInteractions(colorsDetailView)
   }
 
   @Test fun `should show generic error on handleShareClick call failure`() {
@@ -1101,7 +1095,8 @@ class ColorsDetailPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.getCacheImageUri()).thenReturn(Single.error(Exception()))
-    `when`(context.getString(R.string.preparing_shareable_wallpaper_message)).thenReturn(
+    `when`(
+        resourceUtils.getStringResource(R.string.preparing_shareable_wallpaper_message)).thenReturn(
         randomString)
 
     colorsDetailPresenterImpl.handleShareClick()
@@ -1114,7 +1109,6 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
     verify(colorsDetailView).hideIndefiniteWaitLoader()
     verify(colorsDetailView).showGenericErrorMessage()
-    verifyNoMoreInteractions(colorsDetailView)
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -1123,7 +1117,8 @@ class ColorsDetailPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.getCacheImageUri()).thenReturn(Single.just(mockUri))
-    `when`(context.getString(R.string.preparing_shareable_wallpaper_message)).thenReturn(
+    `when`(
+        resourceUtils.getStringResource(R.string.preparing_shareable_wallpaper_message)).thenReturn(
         randomString)
 
     colorsDetailPresenterImpl.handleShareClick()
@@ -1136,7 +1131,6 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
     verify(colorsDetailView).showShareIntent(mockUri)
     verify(colorsDetailView).hideIndefiniteWaitLoader()
-    verifyNoMoreInteractions(colorsDetailView)
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -1155,7 +1149,8 @@ class ColorsDetailPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.getCacheImageUri()).thenReturn(Single.just(mockUri))
-    `when`(context.getString(R.string.preparing_shareable_wallpaper_message)).thenReturn(
+    `when`(
+        resourceUtils.getStringResource(R.string.preparing_shareable_wallpaper_message)).thenReturn(
         randomString)
 
     colorsDetailPresenterImpl.handleViewResult(SHARE.ordinal,
@@ -1169,7 +1164,6 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
     verify(colorsDetailView).showShareIntent(mockUri)
     verify(colorsDetailView).hideIndefiniteWaitLoader()
-    verifyNoMoreInteractions(colorsDetailView)
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -1179,7 +1173,8 @@ class ColorsDetailPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.getCacheImageUri()).thenReturn(Single.just(mockUri))
-    `when`(context.getString(R.string.preparing_shareable_wallpaper_message)).thenReturn(
+    `when`(
+        resourceUtils.getStringResource(R.string.preparing_shareable_wallpaper_message)).thenReturn(
         randomString)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(SHARE.ordinal,
@@ -1189,13 +1184,11 @@ class ColorsDetailPresenterImplTest {
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyNoMoreInteractions(userPremiumStatusUseCase)
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteWaitLoader(randomString)
     verify(colorsDetailView).showShareIntent(mockUri)
     verify(colorsDetailView).hideIndefiniteWaitLoader()
-    verifyNoMoreInteractions(colorsDetailView)
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -1207,10 +1200,11 @@ class ColorsDetailPresenterImplTest {
         intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(colorsDetailView).showPermissionRequiredMessage()
-    verifyNoMoreInteractions(colorsDetailView)
   }
 
   @After fun tearDown() {
+    verifyNoMoreInteractions(postExecutionThread, wallpaperSetter, userPremiumStatusUseCase,
+        colorImagesUseCase, colorsDetailView, resourceUtils, mockUri, mockBitmap, mockIntent)
     colorsDetailPresenterImpl.detachView()
   }
 
@@ -1220,7 +1214,6 @@ class ColorsDetailPresenterImplTest {
 
   private fun verifyPostExecutionThreadSchedulerCall(times: Int = 1) {
     verify(postExecutionThread, times(times)).scheduler
-    verifyNoMoreInteractions(postExecutionThread)
   }
 
   private fun verifyImageShown() {
@@ -1232,7 +1225,6 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showImage(mockBitmap)
     verify(colorsDetailView).hideMainImageWaitLoader()
     verify(colorsDetailView).enableColorOperations()
-    verifyNoMoreInteractions(colorsDetailView)
   }
 
   private fun verifyImageNotShown() {
@@ -1243,6 +1235,5 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showMainImageWaitLoader()
     verify(colorsDetailView).showImageLoadError()
     verify(colorsDetailView).enableColorOperations()
-    verifyNoMoreInteractions(colorsDetailView)
   }
 }

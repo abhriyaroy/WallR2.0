@@ -41,6 +41,8 @@ import kotlinx.android.synthetic.main.activity_detail.parentFrameLayout
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
+import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.MULTIPLE
+import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.SINGLE
 import zebrostudio.wallr100.android.ui.detail.images.BLUR_RADIUS
 import zebrostudio.wallr100.android.ui.detail.images.SLIDING_PANEL_PARALLEL_OFFSET
 import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
@@ -76,7 +78,8 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     attachClickListeners()
     setUpBlurView()
     setUpExpandPanel()
-    presenter.setCalledIntent(intent)
+    processIntent()
+    presenter.handleViewReadyState()
   }
 
   override fun onDestroy() {
@@ -98,6 +101,15 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     presenter.handleViewResult(requestCode, resultCode, data)
+  }
+
+  override fun getMultiColorImageType(): MultiColorImageType {
+    return when (intent.getIntExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG,
+        MultiColorImageType.MATERIAL.ordinal)) {
+      MultiColorImageType.MATERIAL.ordinal -> MultiColorImageType.MATERIAL
+      MultiColorImageType.GRADIENT.ordinal -> MultiColorImageType.GRADIENT
+      else -> MultiColorImageType.PLASMA
+    }
   }
 
   override fun showImageTypeText(text: String) {
@@ -316,13 +328,28 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
       ) {
         if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
           expandIconView.setState(ExpandIconView.MORE, true)
-          presenter.setPanelStateAsExpanded()
+          presenter.notifyPanelExpanded()
         } else if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
           expandIconView.setState(ExpandIconView.LESS, true)
-          presenter.setPanelStateAsCollapsed()
+          presenter.notifyPanelCollapsed()
         }
       }
     })
+  }
+
+  private fun processIntent() {
+    if (intent.extras != null) {
+      presenter.setColorsDetailMode(
+          if (intent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG, SINGLE.ordinal)
+              == SINGLE.ordinal) {
+            SINGLE
+          } else {
+            MULTIPLE
+          })
+      presenter.setColorList(intent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG))
+    } else {
+      throw IllegalStateException()
+    }
   }
 
   companion object {
@@ -344,8 +371,8 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     }
   }
 
-  private fun disableOperation(vararg views: RelativeLayout) {
-    for (view in views) {
+  private fun disableOperation(vararg imageOperationRelativeLayout: RelativeLayout) {
+    for (view in imageOperationRelativeLayout) {
       view.findViewById<ImageView>(R.id.operationImageView).apply {
         alpha = 0.3f
       }
