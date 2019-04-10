@@ -76,19 +76,6 @@ fun ViewGroup.inflate(
   attachToRoot: Boolean = false
 ) = inflater.inflate(layoutRes, root, attachToRoot)!!
 
-fun LinearLayout.setMenuItemColorRed(context: Context) {
-  this.findViewById<WallrCustomTextView>(R.id.textviewGuillotineMenuItem)
-      .setTextColor(context.colorRes(R.color.accent))
-  this.findViewById<ImageView>(R.id.imageviewGuillotineMenuItem)
-      .setColorFilter(context.colorRes(R.color.accent), android.graphics.PorterDuff.Mode.MULTIPLY)
-}
-
-fun LinearLayout.setMenuItemColorWhite(context: Context) {
-  this.findViewById<WallrCustomTextView>(R.id.textviewGuillotineMenuItem)
-      .setTextColor(context.colorRes(R.color.white))
-  this.findViewById<ImageView>(R.id.imageviewGuillotineMenuItem)
-      .setColorFilter(context.colorRes(R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY)
-}
 
 fun withDelayOnMain(delay: Long, block: () -> Unit) {
   Handler(Looper.getMainLooper()).postDelayed(Runnable(block), delay)

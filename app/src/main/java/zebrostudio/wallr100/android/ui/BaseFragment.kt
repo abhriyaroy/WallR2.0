@@ -17,10 +17,9 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.EXPLORE_TAG
 import zebrostudio.wallr100.android.utils.checkDataConnection
+import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.invisible
-import zebrostudio.wallr100.android.utils.setMenuItemColorRed
-import zebrostudio.wallr100.android.utils.setMenuItemColorWhite
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.BaseView
@@ -59,9 +58,9 @@ abstract class BaseFragment : Fragment(), BaseView {
   private fun highlightCurrentMenuItem() {
     for (menuItem in menuItemIdList) {
       if (stringRes(menuItem) == fragmentTag) {
-        activity?.findViewById<LinearLayout>(menuItem)?.setMenuItemColorRed(this.context!!)
+        highlightMenuItemView(activity!!.findViewById(menuItem))
       } else {
-        activity?.findViewById<LinearLayout>(menuItem)?.setMenuItemColorWhite(this.context!!)
+        clearMenuItemViewHighlight(activity!!.findViewById(menuItem))
       }
     }
   }
@@ -105,5 +104,19 @@ abstract class BaseFragment : Fragment(), BaseView {
   }
 
   override fun internetAvailability() = activity?.checkDataConnection()!!
+
+  private fun highlightMenuItemView(menuItemView: LinearLayout) {
+    menuItemView.findViewById<WallrCustomTextView>(R.id.textviewGuillotineMenuItem)
+        .setTextColor(colorRes(R.color.accent))
+    menuItemView.findViewById<ImageView>(R.id.imageviewGuillotineMenuItem)
+        .setColorFilter(colorRes(R.color.accent), android.graphics.PorterDuff.Mode.MULTIPLY)
+  }
+
+  private fun clearMenuItemViewHighlight(menuItemView: LinearLayout) {
+    menuItemView.findViewById<WallrCustomTextView>(R.id.textviewGuillotineMenuItem)
+        .setTextColor(colorRes(R.color.white))
+    menuItemView.findViewById<ImageView>(R.id.imageviewGuillotineMenuItem)
+        .setColorFilter(colorRes(R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY)
+  }
 
 }

@@ -1,7 +1,6 @@
 package zebrostudio.wallr100.presentation.detail.colors
 
 import android.app.Activity.RESULT_OK
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -9,15 +8,11 @@ import com.uber.autodispose.autoDisposable
 import com.yalantis.ucrop.UCrop.REQUEST_CROP
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
-import zebrostudio.wallr100.android.ui.detail.colors.COLORS_DETAIL_MODE_INTENT_EXTRA_TAG
-import zebrostudio.wallr100.android.ui.detail.colors.COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG
-import zebrostudio.wallr100.android.ui.detail.colors.COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.MULTIPLE
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.SINGLE
-import zebrostudio.wallr100.android.ui.expandimage.ILLEGAL_STATE_EXCEPTION_MESSAGE
+import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
-import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ColorImagesUseCase
@@ -35,12 +30,11 @@ import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.Colo
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
 
 const val FIRST_ELEMENT_POSITION = 0
 
 class ColorsDetailPresenterImpl(
-  private val context: Context,
+  private val resourceUtils: ResourceUtils,
   private val postExecutionThread: PostExecutionThread,
   private val userPremiumStatusUseCase: UserPremiumStatusUseCase,
   private val colorImagesUseCase: ColorImagesUseCase,
@@ -54,7 +48,6 @@ class ColorsDetailPresenterImpl(
   internal var areColorOperationsDisabled: Boolean = false
   internal var isColorWallpaperOperationActive: Boolean = false
   internal var lastImageOperationType = MINIMAL_COLOR
-  internal var intent: Intent = Intent()
   private var view: ColorsDetailView? = null
 
   override fun attachView(view: ColorsDetailView) {
@@ -65,25 +58,26 @@ class ColorsDetailPresenterImpl(
     view = null
   }
 
-  override fun setCalledIntent(intent: Intent) {
-    if (intent.extras != null) {
-      processIntent(intent)
-      if (view?.hasStoragePermission() == true) {
-        setImageTypeText()
-        loadImage()
-      } else {
-        view?.requestStoragePermission(LOAD_COLOR_WALLPAPER)
-      }
-    } else {
-      throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
+  override fun setColorsDetailMode(colorsDetailMode: ColorsDetailMode) {
+    this.colorsDetailMode = colorsDetailMode
+    if (colorsDetailMode == MULTIPLE) {
+      multiColorImageType = view?.getMultiColorImageType()
     }
   }
 
-  override fun setPanelStateAsExpanded() {
+  override fun setColorList(list: List<String>) {
+    colorList = list.toMutableList()
+  }
+
+  override fun handleViewReadyState() {
+    configureView()
+  }
+
+  override fun notifyPanelExpanded() {
     isPanelExpanded = true
   }
 
-  override fun setPanelStateAsCollapsed() {
+  override fun notifyPanelCollapsed() {
     isPanelExpanded = false
   }
 
@@ -175,7 +169,7 @@ class ColorsDetailPresenterImpl(
           .doOnSubscribe {
             isColorWallpaperOperationActive = true
             view?.showIndefiniteWaitLoader(
-                context.stringRes(R.string.finalizing_wallpaper_messsage))
+                resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
           }
           .autoDisposable(view!!.getScope())
           .subscribe({
@@ -195,7 +189,7 @@ class ColorsDetailPresenterImpl(
       colorImagesUseCase.downloadImage()
           .observeOn(postExecutionThread.scheduler)
           .doOnSubscribe {
-            view?.showIndefiniteWaitLoader(context.stringRes(
+            view?.showIndefiniteWaitLoader(resourceUtils.getStringResource(
                 R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
             isColorWallpaperOperationActive = true
           }
@@ -216,7 +210,7 @@ class ColorsDetailPresenterImpl(
     if (isNotInOperation() && hasStoragePermissions(EDIT_SET)) {
       isColorWallpaperOperationActive = true
       view?.showIndefiniteWaitLoader(
-          context.stringRes(R.string.detail_activity_editing_tool_message))
+          resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message))
       view?.startCroppingActivity(
           colorImagesUseCase.getCacheSourceUri(),
           colorImagesUseCase.getCroppingDestinationUri(),
@@ -234,7 +228,7 @@ class ColorsDetailPresenterImpl(
           .observeOn(postExecutionThread.scheduler)
           .doOnSubscribe {
             view?.showIndefiniteWaitLoader(
-                context.stringRes(R.string.adding_image_to_collections_message))
+                resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
             isColorWallpaperOperationActive = true
           }
           .autoDisposable(view!!.getScope())
@@ -262,7 +256,7 @@ class ColorsDetailPresenterImpl(
           .doOnSubscribe {
             isColorWallpaperOperationActive = true
             view?.showIndefiniteWaitLoader(
-                context.stringRes(R.string.preparing_shareable_wallpaper_message))
+                resourceUtils.getStringResource(R.string.preparing_shareable_wallpaper_message))
           }
           .autoDisposable(view!!.getScope())
           .subscribe({
@@ -277,9 +271,18 @@ class ColorsDetailPresenterImpl(
     }
   }
 
+  private fun configureView() {
+    if (view?.hasStoragePermission() == true) {
+      setImageTypeText()
+      loadImage()
+    } else {
+      view?.requestStoragePermission(LOAD_COLOR_WALLPAPER)
+    }
+  }
+
   private fun handlePermissionGranted(requestCode: Int) {
     when (requestCode) {
-      LOAD_COLOR_WALLPAPER.ordinal -> setCalledIntent(intent)
+      LOAD_COLOR_WALLPAPER.ordinal -> configureView()
       QUICK_SET.ordinal -> handleQuickSetClick()
       DOWNLOAD.ordinal -> handleDownloadClick()
       EDIT_SET.ordinal -> handleEditSetClick()
@@ -288,35 +291,17 @@ class ColorsDetailPresenterImpl(
     }
   }
 
-  private fun processIntent(intent: Intent) {
-    this.intent = intent
-    colorsDetailMode =
-        if (intent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG, SINGLE.ordinal)
-            == SINGLE.ordinal) {
-          SINGLE
-        } else {
-          MULTIPLE
-        }
-    if (colorsDetailMode == MULTIPLE) {
-      val ordinal =
-          intent.getIntExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG, MATERIAL.ordinal)
-      multiColorImageType = when (ordinal) {
-        MATERIAL.ordinal -> MATERIAL
-        GRADIENT.ordinal -> GRADIENT
-        else -> PLASMA
-      }
-    }
-    colorList = intent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)
-  }
-
   private fun setImageTypeText() {
     if (colorsDetailMode == SINGLE) {
-      context.stringRes(R.string.colors_detail_activity_colors_style_name_solid)
+      resourceUtils.getStringResource(R.string.colors_detail_activity_colors_style_name_solid)
     } else {
       when (multiColorImageType) {
-        MATERIAL -> context.stringRes(R.string.colors_detail_activity_colors_style_name_material)
-        GRADIENT -> context.stringRes(R.string.colors_detail_activity_colors_style_name_gradient)
-        else -> context.stringRes(R.string.colors_detail_activity_colors_style_name_plasma)
+        MATERIAL -> resourceUtils.getStringResource(
+            R.string.colors_detail_activity_colors_style_name_material)
+        GRADIENT -> resourceUtils.getStringResource(
+            R.string.colors_detail_activity_colors_style_name_gradient)
+        else -> resourceUtils.getStringResource(
+            R.string.colors_detail_activity_colors_style_name_plasma)
       }
     }.let {
       view?.showImageTypeText(it)
@@ -346,7 +331,8 @@ class ColorsDetailPresenterImpl(
 
   private fun handleCropResult(cropResultUri: Uri) {
     var hasWallpaperBeenSet = false
-    view?.showIndefiniteWaitLoader(context.stringRes(R.string.finalizing_wallpaper_messsage))
+    view?.showIndefiniteWaitLoader(
+        resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
     colorImagesUseCase.getBitmapFromUriSingle(cropResultUri)
         .doOnSubscribe {
           isColorWallpaperOperationActive = true
