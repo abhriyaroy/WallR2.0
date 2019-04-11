@@ -7,7 +7,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.Gson
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.pddstudio.urlshortener.URLShortener
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -45,6 +44,7 @@ import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapper
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
+import zebrostudio.wallr100.data.urlshortener.UrlShortener
 import zebrostudio.wallr100.domain.datafactory.ImageModelFactory
 import zebrostudio.wallr100.domain.datafactory.SearchPicturesModelFactory
 import zebrostudio.wallr100.domain.executor.ExecutionThread
@@ -67,7 +67,7 @@ class WallrDataRepositoryTest {
   @Mock lateinit var firebaseDatabaseHelper: FirebaseDatabaseHelper
   @Mock lateinit var databaseReference: DatabaseReference
   @Mock lateinit var firebaseDatabase: FirebaseDatabase
-  @Mock lateinit var urlShortener: URLShortener
+  @Mock lateinit var urlShortener: UrlShortener
   @Mock lateinit var imageHandler: ImageHandler
   @Mock lateinit var fileHandler: FileHandler
   @Mock lateinit var downloadHelper: DownloadHelper
@@ -248,11 +248,21 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should return shortened image link on getShortImageLink call success`() {
-    `when`(urlShortener.shortUrl(randomString)).thenReturn(randomString)
+    val shortUrl = "Short Url"
+    `when`(urlShortener.getShortUrl(randomString)).thenReturn(Single.just(shortUrl))
 
-    wallrDataRepository.getShortImageLink(randomString).test().assertValue(randomString)
+    wallrDataRepository.getShortImageLink(randomString).test().assertValue(shortUrl)
 
-    verify(urlShortener).shortUrl(randomString)
+    verify(urlShortener).getShortUrl(randomString)
+    verify(executionThread).ioScheduler
+  }
+
+  @Test fun `should return error on getShortImageLink call failure`() {
+    `when`(urlShortener.getShortUrl(randomString)).thenReturn(Single.error(Exception()))
+
+    wallrDataRepository.getShortImageLink(randomString).test().assertError(Exception::class.java)
+
+    verify(urlShortener).getShortUrl(randomString)
     verify(executionThread).ioScheduler
   }
 
