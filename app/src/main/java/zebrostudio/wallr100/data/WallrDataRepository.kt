@@ -3,7 +3,6 @@ package zebrostudio.wallr100.data
 import android.graphics.Bitmap
 import android.net.Uri
 import com.google.firebase.database.DatabaseReference
-import com.pddstudio.urlshortener.URLShortener
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -21,6 +20,7 @@ import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapper
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.firebasedatabase.FirebaseImageEntity
+import zebrostudio.wallr100.data.urlshortener.UrlShortener
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.model.CollectionsImageModel
@@ -69,7 +69,7 @@ class WallrDataRepository(
   private val unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
   private val firebaseDatabaseHelper: FirebaseDatabaseHelper,
   private val firebasePictureEntityMapper: FirebasePictureEntityMapper,
-  private val urlShortener: URLShortener,
+  private val urlShortener: UrlShortener,
   private val imageHandler: ImageHandler,
   private val fileHandler: FileHandler,
   private val downloadHelper: DownloadHelper,
@@ -218,10 +218,8 @@ class WallrDataRepository(
   }
 
   override fun getShortImageLink(link: String): Single<String> {
-    val single: Single<String> = Single.create {
-      it.onSuccess(urlShortener.shortUrl(link))
-    }
-    return single.subscribeOn(executionThread.ioScheduler)
+    return urlShortener.getShortUrl(link)
+        .subscribeOn(executionThread.ioScheduler)
   }
 
   override fun clearImageCaches(): Completable {

@@ -2,8 +2,6 @@ package zebrostudio.wallr100.android.di
 
 import android.app.Application
 import android.content.Context
-import com.pddstudio.urlshortener.URLShortener
-import com.pddstudio.urlshortener.URLShortenerImpl
 import dagger.Module
 import dagger.Provides
 import zebrostudio.wallr100.android.AndroidBackgroundThreads
@@ -41,6 +39,8 @@ import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapperImpl
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapperImpl
+import zebrostudio.wallr100.data.urlshortener.UrlShortener
+import zebrostudio.wallr100.data.urlshortener.UrlShortenerImpl
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
@@ -134,7 +134,8 @@ class AppModule {
   fun provideFirebasePictureEntityMapper(): FirebasePictureEntityMapper = FirebasePictureEntityMapperImpl()
 
   @Provides
-  fun provideUrlShortener(): URLShortener = URLShortenerImpl()
+  @Singleton
+  fun provideUrlShortener(): UrlShortener = UrlShortenerImpl()
 
   @Provides
   fun provideFileHandler(context: Context): FileHandler = FileHandlerImpl(context)
@@ -167,7 +168,7 @@ class AppModule {
     unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
     firebaseDatabaseHelper: FirebaseDatabaseHelper,
     firebasePictureEntityMapper: FirebasePictureEntityMapper,
-    urlShortener: URLShortener,
+    urlShortener: UrlShortener,
     imageHandler: ImageHandler,
     fileHandler: FileHandler,
     downloadHelper: DownloadHelper,

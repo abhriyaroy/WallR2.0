@@ -78,6 +78,7 @@ android {
     // Firebase
     implementation "com.google.firebase:firebase-core:$FIREBASE_CORE_VERSION"
     implementation "com.google.firebase:firebase-database:$FIREBASE_DATABASE_VERSION"
+    implementation "com.google.firebase:firebase-dynamic-links:$FIREBASE_DYNAMIC_LINKS_VERSION"
     // Sliding up panel
     implementation "com.sothree.slidinguppanel:library:$SLIDING_UP_PANEL_VERSION"
     // Circle ImageView
@@ -96,7 +97,6 @@ android {
     implementation project(':libraryWallrCustoms')
     implementation project(':libraryPurchaseFlow')
     implementation project(':libraryExpandIcon')
-    implementation project(':libraryUrlShortener')
     implementation project(':libraryUCrop')
     implementation project(':libraryPhotoView')
     implementation project(':libraryDragSelectRecyclerView')

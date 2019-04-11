@@ -1,7 +1,6 @@
 package zebrostudio.wallr100.presentation.detail.colors
 
 import android.app.Activity.RESULT_OK
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
@@ -105,7 +104,7 @@ class ColorsDetailPresenterImpl(
     }
   }
 
-  override fun handleViewResult(requestCode: Int, resultCode: Int, data: Intent?) {
+  override fun handleViewResult(requestCode: Int, resultCode: Int) {
     if (requestCode == DOWNLOAD.ordinal) {
       if (resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
         handleDownloadClick()
@@ -126,12 +125,12 @@ class ColorsDetailPresenterImpl(
       }
     } else if (requestCode == REQUEST_CROP && resultCode == RESULT_OK) {
       view?.let {
-        val cropResultUri = view?.getUriFromIntent(data!!)
+        val cropResultUri = it.getUriFromResultIntent()
         if (cropResultUri != null) {
           handleCropResult(cropResultUri)
         } else {
-          view?.hideIndefiniteWaitLoader()
-          view?.showGenericErrorMessage()
+          it.hideIndefiniteWaitLoader()
+          it.showGenericErrorMessage()
         }
       }
     } else {
@@ -330,7 +329,6 @@ class ColorsDetailPresenterImpl(
   }
 
   private fun handleCropResult(cropResultUri: Uri) {
-    var hasWallpaperBeenSet = false
     view?.showIndefiniteWaitLoader(
         resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
     colorImagesUseCase.getBitmapFromUriSingle(cropResultUri)
@@ -343,8 +341,7 @@ class ColorsDetailPresenterImpl(
           isColorWallpaperOperationActive = false
           lastImageOperationType = EDITED
           view?.showImage(it)
-          hasWallpaperBeenSet = wallpaperSetter.setWallpaper(it)
-          if (hasWallpaperBeenSet) {
+          if (wallpaperSetter.setWallpaper(it)) {
             view?.showWallpaperSetSuccessMessage()
           } else {
             view?.showWallpaperSetErrorMessage()
