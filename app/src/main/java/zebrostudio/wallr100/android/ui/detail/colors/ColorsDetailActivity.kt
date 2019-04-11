@@ -70,6 +70,8 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
   @Inject lateinit var presenter: ColorsDetailPresenter
 
+  private var activityResultIntent: Intent? = null
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_colors_detail)
@@ -100,7 +102,10 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    presenter.handleViewResult(requestCode, resultCode, data)
+    if (data != null) {
+      activityResultIntent = data
+    }
+    presenter.handleViewResult(requestCode, resultCode)
   }
 
   override fun getMultiColorImageType(): MultiColorImageType {
@@ -238,8 +243,11 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
         .start(this)
   }
 
-  override fun getUriFromIntent(data: Intent): Uri? {
-    return UCrop.getOutput(data)
+  override fun getUriFromResultIntent(): Uri? {
+    if (activityResultIntent != null) {
+      return UCrop.getOutput(activityResultIntent!!)
+    }
+    return null
   }
 
   override fun showGenericErrorMessage() {

@@ -40,7 +40,7 @@ interface ColorsDetailContract {
       minimumHeight: Int
     )
 
-    fun getUriFromIntent(data: Intent): Uri?
+    fun getUriFromResultIntent(): Uri?
     fun showGenericErrorMessage()
     fun showOperationInProgressWaitMessage()
     fun showFullScreenImage()
@@ -60,7 +60,7 @@ interface ColorsDetailContract {
       requestCode: Int, permissions: Array<String>, grantResults: IntArray
     )
 
-    fun handleViewResult(requestCode: Int, resultCode: Int, data: Intent?)
+    fun handleViewResult(requestCode: Int, resultCode: Int)
     fun handleImageViewClicked()
     fun handleQuickSetClick()
     fun handleDownloadClick()
