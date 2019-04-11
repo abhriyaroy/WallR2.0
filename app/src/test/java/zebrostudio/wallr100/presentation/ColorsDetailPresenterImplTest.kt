@@ -879,10 +879,8 @@ class ColorsDetailPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
-        MINIMAL_COLOR)).thenReturn(
-        Completable.complete())
-    `when`(
-        resourceUtils.getStringResource(R.string.adding_image_to_collections_message)).thenReturn(
+        MINIMAL_COLOR)).thenReturn(Completable.complete())
+    `when`(resourceUtils.getStringResource(R.string.adding_image_to_collections_message)).thenReturn(
         randomString)
 
     colorsDetailPresenterImpl.handleAddToCollectionClick()
@@ -913,10 +911,8 @@ class ColorsDetailPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
-        MINIMAL_COLOR)).thenReturn(
-        Completable.complete())
-    `when`(
-        resourceUtils.getStringResource(R.string.adding_image_to_collections_message)).thenReturn(
+        MINIMAL_COLOR)).thenReturn(Completable.complete())
+    `when`(resourceUtils.getStringResource(R.string.adding_image_to_collections_message)).thenReturn(
         randomString)
 
     colorsDetailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
