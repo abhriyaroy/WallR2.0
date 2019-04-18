@@ -2,20 +2,15 @@ package zebrostudio.wallr100.presentation
 
 import android.Manifest.permission
 import android.app.Activity.RESULT_OK
-import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Bundle
-import com.google.gson.Gson
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider
 import com.yalantis.ucrop.UCrop.REQUEST_CROP
-import com.yalantis.ucrop.UCrop.RESULT_ERROR
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -32,7 +27,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
-import zebrostudio.wallr100.android.ui.detail.images.DetailActivity
+import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
@@ -54,7 +49,6 @@ import zebrostudio.wallr100.presentation.detail.images.ActionType.SHARE
 import zebrostudio.wallr100.presentation.detail.images.DetailContract
 import zebrostudio.wallr100.presentation.detail.images.DetailPresenterImpl
 import zebrostudio.wallr100.presentation.detail.images.mapper.ImageDownloadPresenterEntityMapper
-import java.util.Random
 import java.util.UUID.randomUUID
 
 const val UNSUCCESSFUL_PURCHASE_CODE = 0
@@ -67,11 +61,9 @@ class DetailPresenterImplTest {
   @Mock private lateinit var detailView: DetailContract.DetailView
   @Mock private lateinit var wallpaperSetter: WallpaperSetter
   @Mock private lateinit var mockBitmap: Bitmap
-  @Mock private lateinit var mockContext: Context
+  @Mock private lateinit var resourceUtils: ResourceUtils
   @Mock private lateinit var postExecutionThread: PostExecutionThread
   @Mock private lateinit var mockUri: Uri
-  @Mock private lateinit var mockIntent: Intent
-  @Mock private lateinit var mockBundle: Bundle
   private lateinit var detailPresenterImpl: DetailPresenterImpl
   private lateinit var testScopeProvider: TestLifecycleScopeProvider
   private val downloadProgressCompletedValue: Long = 100
@@ -79,7 +71,6 @@ class DetailPresenterImplTest {
   private val downloadProgressCompleteUpTo98: Long = 98
   private val indefiniteLoaderMessage = "Finalizing wallpaper..."
   private var randomString = randomUUID().toString()
-  private var randomInt = Random().nextInt()
   private lateinit var imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper
 
   @Before
@@ -87,7 +78,7 @@ class DetailPresenterImplTest {
     imageDownloadPresenterEntityMapper =
         ImageDownloadPresenterEntityMapper()
     detailPresenterImpl =
-        DetailPresenterImpl(mockContext,
+        DetailPresenterImpl(resourceUtils,
             imageOptionsUseCase, userPremiumStatusUseCase,
             wallpaperSetter, postExecutionThread, imageDownloadPresenterEntityMapper)
     detailPresenterImpl.attachView(detailView)
@@ -99,14 +90,12 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show search image details on setImageType as search call`() {
+  fun `should show search image details on setImageType call success with type as search`() {
     val searchImagePresenterEntity =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
-    `when`(mockIntent.extras).thenReturn(mockBundle)
-    `when`(mockIntent.extras!!.getInt(DetailActivity.IMAGE_TYPE_TAG)).thenReturn(SEARCH.ordinal)
     `when`(detailView.getSearchImageDetails()).thenReturn(searchImagePresenterEntity)
 
-    detailPresenterImpl.setCalledIntent(mockIntent)
+    detailPresenterImpl.setImageType(SEARCH.ordinal)
 
     assertEquals(SEARCH, detailPresenterImpl.imageType)
     verify(detailView).getSearchImageDetails()
@@ -115,17 +104,14 @@ class DetailPresenterImplTest {
     verify(detailView).showImage(
         searchImagePresenterEntity.imageQualityUrlPresenterEntity.smallImageLink,
         searchImagePresenterEntity.imageQualityUrlPresenterEntity.largeImageLink)
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
-  fun `should show wallpaper image details on setIMAGE_TYPE_TAG as wallpaper call`() {
+  fun `should show wallpaper image details on setImageType call success with type as wallpaper`() {
     val imagePresenterEntity = ImagePresenterEntityFactory.getImagePresenterEntity()
-    `when`(mockIntent.extras).thenReturn(mockBundle)
-    `when`(mockIntent.extras!!.getInt(DetailActivity.IMAGE_TYPE_TAG)).thenReturn(WALLPAPERS.ordinal)
     `when`(detailView.getWallpaperImageDetails()).thenReturn(imagePresenterEntity)
 
-    detailPresenterImpl.setCalledIntent(mockIntent)
+    detailPresenterImpl.setImageType(WALLPAPERS.ordinal)
 
     assertEquals(WALLPAPERS, detailPresenterImpl.imageType)
     verify(detailView).getWallpaperImageDetails()
@@ -133,25 +119,245 @@ class DetailPresenterImplTest {
         imagePresenterEntity.author.profileImageLink)
     verify(detailView).showImage(imagePresenterEntity.imageLink.thumb,
         imagePresenterEntity.imageLink.large)
-    verifyNoMoreInteractions(detailView)
   }
 
-  @Test fun `should show error toast on high quality image loading failure`() {
+  @Test fun `should show error toast on handleHighQualityImageLoadFailed call success`() {
     detailPresenterImpl.handleHighQualityImageLoadFailed()
 
     verify(detailView).showImageLoadError()
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
-  fun `should request storage permission on handleQuickSetClicked call`() {
+  fun `should show no internet error on handleShareClicked call failure due to no internet`() {
+    `when`(detailView.internetAvailability()).thenReturn(false)
+
+    detailPresenterImpl.handleShareClick()
+
+    verify(detailView).internetAvailability()
+    verify(detailView).showNoInternetToShareError()
+  }
+
+  @Test fun `should redirect to pro when handleShareClicked call failure due to non pro user`() {
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(false)
+
+    detailPresenterImpl.handleShareClick()
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).internetAvailability()
+    verify(detailView).redirectToBuyPro(SHARE.ordinal)
+  }
+
+  @Test fun `should show error on handleShareClicked call failure of type search`() {
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(imageOptionsUseCase.getImageShareableLinkSingle(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+        Single.error(Exception()))
+
+    detailPresenterImpl.handleShareClick()
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).getImageShareableLinkSingle(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verify(detailView).internetAvailability()
+    verify(detailView).getScope()
+    verify(detailView).hideWaitLoader()
+    verify(detailView).showGenericErrorMessage()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test fun `should share link on handleShareClicked call success of type search`() {
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(imageOptionsUseCase.getImageShareableLinkSingle(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+        Single.just(randomString))
+
+    detailPresenterImpl.handleShareClick()
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).getImageShareableLinkSingle(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verify(detailView).internetAvailability()
+    verify(detailView).getScope()
+    verify(detailView).hideWaitLoader()
+    verify(detailView).shareLink(randomString)
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test fun `should show error on handleShareClicked call failure of type wallpaper`() {
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage =
+        ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(imageOptionsUseCase.getImageShareableLinkSingle(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Single.error(Exception()))
+
+    detailPresenterImpl.handleShareClick()
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).getImageShareableLinkSingle(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(detailView).internetAvailability()
+    verify(detailView).getScope()
+    verify(detailView).hideWaitLoader()
+    verify(detailView).showGenericErrorMessage()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test fun `should share link on handleShareClicked call success of type wallpaper`() {
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage =
+        ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(imageOptionsUseCase.getImageShareableLinkSingle(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Single.just(randomString))
+
+    detailPresenterImpl.handleShareClick()
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).getImageShareableLinkSingle(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(detailView).internetAvailability()
+    verify(detailView).getScope()
+    verify(detailView).hideWaitLoader()
+    verify(detailView).shareLink(randomString)
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show no internet error on handleViewResult call failure of type share and premium purchase is successful but no internet available`() {
+    `when`(detailView.internetAvailability()).thenReturn(false)
+
+    detailPresenterImpl.handleViewResult(SHARE.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+
+    verify(detailView).internetAvailability()
+    verify(detailView).showNoInternetToShareError()
+  }
+
+  @Test
+  fun `should show purchase unsuccessful message on handleViewResult call failure of type share due to unsuccessful purchase`() {
+    detailPresenterImpl.handleViewResult(SHARE.ordinal, UNSUCCESSFUL_PURCHASE_CODE)
+
+    verify(detailView).showUnsuccessfulPurchaseError()
+  }
+
+  @Test
+  fun `should show error on handleViewResult call failure of type share with image type search`() {
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(imageOptionsUseCase.getImageShareableLinkSingle(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+        Single.error(Exception()))
+
+    detailPresenterImpl.handleViewResult(SHARE.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).getImageShareableLinkSingle(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verify(detailView).internetAvailability()
+    verify(detailView).getScope()
+    verify(detailView).hideWaitLoader()
+    verify(detailView).showGenericErrorMessage()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should share link on handleViewResult call success of type share with image type search`() {
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(imageOptionsUseCase.getImageShareableLinkSingle(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+        Single.just(randomString))
+
+    detailPresenterImpl.handleViewResult(SHARE.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).getImageShareableLinkSingle(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verify(detailView).internetAvailability()
+    verify(detailView).getScope()
+    verify(detailView).hideWaitLoader()
+    verify(detailView).shareLink(randomString)
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show error on handleViewResult call failure of type share with image type wallpaper`() {
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage =
+        ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(imageOptionsUseCase.getImageShareableLinkSingle(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Single.error(Exception()))
+
+    detailPresenterImpl.handleViewResult(SHARE.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).getImageShareableLinkSingle(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(detailView).internetAvailability()
+    verify(detailView).getScope()
+    verify(detailView).hideWaitLoader()
+    verify(detailView).showGenericErrorMessage()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should share link on handleViewResult call success of type share with image type as wallpaper`() {
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage =
+        ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(imageOptionsUseCase.getImageShareableLinkSingle(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Single.just(randomString))
+
+    detailPresenterImpl.handleViewResult(SHARE.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).getImageShareableLinkSingle(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(detailView).internetAvailability()
+    verify(detailView).getScope()
+    verify(detailView).hideWaitLoader()
+    verify(detailView).shareLink(randomString)
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should request storage permission on handleQuickSetClicked call failure due to missing permission`() {
     `when`(detailView.hasStoragePermission()).thenReturn(false)
 
     detailPresenterImpl.handleQuickSetClick()
 
     verify(detailView).hasStoragePermission()
     verify(detailView).requestStoragePermission(QUICK_SET)
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
@@ -164,10 +370,109 @@ class DetailPresenterImplTest {
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).showNoInternetError()
-    verifyNoMoreInteractions(detailView)
   }
 
-  @Test fun `should show image download progress on handleQuickSetClicked call success`() {
+  @Test
+  fun `should show image download progress on handleQuickSetClicked call success of type search with progress value 98`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+
+    detailPresenterImpl.handleQuickSetClick()
+
+    assertEquals(detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
+        true)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).getScope()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show indefinite loader wit animation on handleQuickSetClicked call success of type search with progress value 99`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
+        .thenReturn(indefiniteLoaderMessage)
+
+    detailPresenterImpl.handleQuickSetClick()
+
+    assertEquals(detailPresenterImpl.isDownloadInProgress, false)
+    assertEquals(detailPresenterImpl.isImageOperationInProgress, true)
+    verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).getScope()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
+    verify(detailView).showIndefiniteLoaderWithAnimation(indefiniteLoaderMessage)
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should set wallpaper on handleQuickSetClicked call success of type search with progress value 100`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+          it.onComplete()
+        })
+    `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(true)
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
+        .thenReturn(indefiniteLoaderMessage)
+
+    detailPresenterImpl.handleQuickSetClick()
+
+    assertEquals(detailPresenterImpl.isDownloadInProgress, false)
+    assertEquals(detailPresenterImpl.isImageOperationInProgress, false)
+    verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verify(wallpaperSetter).setWallpaper(mockBitmap)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).getScope()
+    verify(detailView).showIndefiniteLoader(indefiniteLoaderMessage)
+    verify(detailView).showWallpaperSetSuccessMessage()
+    verify(detailView).hideScreenBlur()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show image download progress on handleQuickSetClicked call success of type wallpaper with progress value 98`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
@@ -182,79 +487,96 @@ class DetailPresenterImplTest {
     detailPresenterImpl.handleQuickSetClick()
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, true)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
     verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
-    verifyNoMoreInteractions(detailView)
-    verify(postExecutionThread).scheduler
-    verifyNoMoreInteractions(postExecutionThread)
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should show no internet error on handleShareClicked call failure due to no internet`() {
-    `when`(detailView.internetAvailability()).thenReturn(false)
-
-    detailPresenterImpl.handleShareClick()
-
-    verify(detailView).internetAvailability()
-    verify(detailView).showNoInternetToShareError()
-    verifyNoMoreInteractions(detailView)
-  }
-
-  @Test fun `should redirect to pro when handleShareClicked call failure due to non pro user`() {
+  fun `should show indefinite loader wit animation on handleQuickSetClicked call success of type wallpaper with progress value 99`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
-    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(false)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
+        .thenReturn(indefiniteLoaderMessage)
 
-    detailPresenterImpl.handleShareClick()
+    detailPresenterImpl.handleQuickSetClick()
 
+    assertEquals(detailPresenterImpl.isDownloadInProgress, false)
+    assertEquals(detailPresenterImpl.isImageOperationInProgress, true)
+    verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
-    verify(detailView).redirectToBuyPro(SHARE.ordinal)
-    verifyNoMoreInteractions(detailView)
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).getScope()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
+    verify(detailView).showIndefiniteLoaderWithAnimation(indefiniteLoaderMessage)
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should unsuccessful purchase error after handleShareClick is called and premium purchase is unsuccessful`() {
-    detailPresenterImpl.handleViewResult(SHARE.ordinal, RESULT_ERROR, mockIntent)
+  fun `should set wallpaper on handleQuickSetClicked call success of type wallpaper with progress value 100`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+          it.onComplete()
+        })
+    `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(true)
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
+        .thenReturn(indefiniteLoaderMessage)
 
-    verify(detailView).showUnsuccessfulPurchaseError()
-    verifyNoMoreInteractions(detailView)
-  }
+    detailPresenterImpl.handleQuickSetClick()
 
-  @Test
-  fun `should show no internet error due to no internet after handleShareClick is called and premium purchase is successful`() {
-    `when`(detailView.internetAvailability()).thenReturn(false)
-
-    detailPresenterImpl.handleViewResult(SHARE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, mockIntent)
-
+    assertEquals(detailPresenterImpl.isDownloadInProgress, false)
+    assertEquals(detailPresenterImpl.isImageOperationInProgress, false)
+    verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(wallpaperSetter).setWallpaper(mockBitmap)
+    verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
-    verify(detailView).showNoInternetToShareError()
-    verifyNoMoreInteractions(detailView)
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).getScope()
+    verify(detailView).showIndefiniteLoader(indefiniteLoaderMessage)
+    verify(detailView).showWallpaperSetSuccessMessage()
+    verify(detailView).hideScreenBlur()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should show purchase unsuccessful message on handleViewResult of share type call failure`() {
-    detailPresenterImpl.handleViewResult(SHARE.ordinal, UNSUCCESSFUL_PURCHASE_CODE, null)
-
-    verify(detailView).showUnsuccessfulPurchaseError()
-    verifyNoMoreInteractions(detailView)
-  }
-
-  @Test
-  fun `should show permission required message when handlePermissionRequestResult is called after permission is denied`() {
+  fun `should show permission required message on handlePermissionRequestResult call failure of type quick set due to permission being denied`() {
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
         intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(detailView).showPermissionRequiredMessage()
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
-  fun `should handle permission granted success and show progress after handlePermissionRequestResult is called in handleQuickSet call`() {
+  fun `should show progress on handlePermissionRequestResult call success of type quick set when progress value is 98`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
@@ -271,29 +593,30 @@ class DetailPresenterImplTest {
         intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, true)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
     verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should handle permission granted success and show finalizing wallpaper message after handlePermissionRequestResult is called in handleQuickSet call`() {
+  fun `should show finalizing wallpaper message on handlePermissionRequestResult call success of type quick set when progress value is 99`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
     detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
-    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(mockContext.getString(R.string.finalizing_wallpaper_messsage))
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(indefiniteLoaderMessage)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
@@ -302,6 +625,9 @@ class DetailPresenterImplTest {
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, false)
     assertEquals(detailPresenterImpl.isImageOperationInProgress, true)
+    verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
@@ -309,12 +635,11 @@ class DetailPresenterImplTest {
     verify(detailView).getScope()
     verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
     verify(detailView).showIndefiniteLoaderWithAnimation(indefiniteLoaderMessage)
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should handle permission granted success and set wallpaper successfully after handlePermissionRequestResult is called`() {
+  fun `should set wallpaper successfully on handlePermissionRequestResult call success of type quick set when progress value is 100`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
     detailPresenterImpl.imageType = SEARCH
     detailPresenterImpl.searchImage =
@@ -325,14 +650,19 @@ class DetailPresenterImplTest {
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(true)
-    `when`(mockContext.getString(R.string.finalizing_wallpaper_messsage))
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(indefiniteLoaderMessage)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
         intArrayOf(PackageManager.PERMISSION_GRANTED))
 
+    assertEquals(detailPresenterImpl.isDownloadInProgress, false)
     assertEquals(detailPresenterImpl.isImageOperationInProgress, false)
+    verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verify(wallpaperSetter).setWallpaper(mockBitmap)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
@@ -341,12 +671,11 @@ class DetailPresenterImplTest {
     verify(detailView).showIndefiniteLoader(indefiniteLoaderMessage)
     verify(detailView).showWallpaperSetSuccessMessage()
     verify(detailView).hideScreenBlur()
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should handle permission granted success and show set wallpaper error message after handlePermissionRequestResult is called`() {
+  fun `should show set wallpaper error message after handlePermissionRequestResult call failure of type quick set due to wallpaper setter returning false`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
     detailPresenterImpl.imageType = SEARCH
     detailPresenterImpl.searchImage =
@@ -357,13 +686,18 @@ class DetailPresenterImplTest {
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
         Observable.just(imageDownloadModel))
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(false)
-    `when`(mockContext.getString(R.string.finalizing_wallpaper_messsage)).thenReturn(randomString)
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
+        .thenReturn(randomString)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
         intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(detailPresenterImpl.isImageOperationInProgress, false)
+    verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verify(wallpaperSetter).setWallpaper(mockBitmap)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
@@ -372,59 +706,42 @@ class DetailPresenterImplTest {
     verify(detailView).showIndefiniteLoader(randomString)
     verify(detailView).showWallpaperSetErrorMessage()
     verify(detailView).hideScreenBlur()
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should cancel download on handleBackButtonClick call while download in progress`() {
+  @Test
+  fun `should cancel download with message on handleBackButtonClick call success while download in progress`() {
     detailPresenterImpl.isDownloadInProgress = true
 
     detailPresenterImpl.handleBackButtonClick()
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, false)
     verify(imageOptionsUseCase).cancelFetchImageOperation()
-    verifyNoMoreInteractions(imageOptionsUseCase)
     verify(detailView).hideScreenBlur()
     verify(detailView).showDownloadWallpaperCancelledMessage()
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
-  fun `should cancel download when handleBackButtonClick is called while image downloading is in progress`() {
-    detailPresenterImpl.isDownloadInProgress = true
-
-    detailPresenterImpl.handleBackButtonClick()
-
-    assertEquals(detailPresenterImpl.isDownloadInProgress, false)
-    verify(imageOptionsUseCase).cancelFetchImageOperation()
-    verifyNoMoreInteractions(imageOptionsUseCase)
-    verify(detailView).hideScreenBlur()
-    verify(detailView).showDownloadWallpaperCancelledMessage()
-    verifyNoMoreInteractions(detailView)
-  }
-
-  @Test
-  fun `should show wait message when handleBackButtonClick is called while image operation is in progress`() {
+  fun `should show wait message on handleBackButtonClick call success while image operation is in progress`() {
     detailPresenterImpl.isImageOperationInProgress = true
 
     detailPresenterImpl.handleBackButtonClick()
 
     verify(detailView).showWallpaperOperationInProgressWaitMessage()
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
-  fun `should exit activity when handleBackButtonClick is called and clearing cache is successful`() {
+  fun `should exit activity on handleBackButtonClick call success and clearing cache is successful`() {
     detailPresenterImpl.isDownloadInProgress = false
     detailPresenterImpl.isImageOperationInProgress = false
     `when`(imageOptionsUseCase.clearCachesCompletable()).thenReturn(Completable.complete())
 
     detailPresenterImpl.handleBackButtonClick()
 
+    verify(imageOptionsUseCase).clearCachesCompletable()
     verify(detailView).getScope()
     verify(detailView).exitView()
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -435,14 +752,14 @@ class DetailPresenterImplTest {
 
     detailPresenterImpl.handleBackButtonClick()
 
+    verify(imageOptionsUseCase).clearCachesCompletable()
     verify(detailView).getScope()
     verify(detailView).exitView()
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should handle permission granted success and show progress after handlePermissionRequestResult is called in handleEditSet call`() {
+  fun `should show progress on handlePermissionRequestResult call success of type edit set when progress value is 98`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
@@ -459,18 +776,19 @@ class DetailPresenterImplTest {
         intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, true)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
     verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should handle permission granted success and show indefinite loader after handlePermissionRequestResult is called in handleEditSet call`() {
+  fun `should show indefinite loader on handlePermissionRequestResult call success of type edit set when progress value is 99`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
     detailPresenterImpl.imageType = WALLPAPERS
     `when`(detailView.hasStoragePermission()).thenReturn(true)
@@ -481,7 +799,7 @@ class DetailPresenterImplTest {
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(mockContext.getString(R.string.detail_activity_editing_tool_message))
+    `when`(resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message))
         .thenReturn(randomString)
 
     detailPresenterImpl.handlePermissionRequestResult(EDIT_SET.ordinal,
@@ -490,6 +808,9 @@ class DetailPresenterImplTest {
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, false)
     assertEquals(detailPresenterImpl.isImageOperationInProgress, true)
+    verify(resourceUtils).getStringResource(R.string.detail_activity_editing_tool_message)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
@@ -497,13 +818,14 @@ class DetailPresenterImplTest {
     verify(detailView).getScope()
     verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
     verify(detailView).showIndefiniteLoaderWithAnimation(randomString)
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should handle permission granted success and start cropping activity after handlePermissionRequestResult is called in handleEditSet call`() {
+  fun `should start cropping activity on handlePermissionRequestResult call success of type edit set when progress value is 100`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, null)
+    val height = 1
+    val width = 2
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(detailView.hasStoragePermission()).thenReturn(true)
@@ -515,143 +837,165 @@ class DetailPresenterImplTest {
         })
     `when`(imageOptionsUseCase.getCroppingSourceUri()).thenReturn(mockUri)
     `when`(imageOptionsUseCase.getCroppingDestinationUri()).thenReturn(mockUri)
-    `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(randomInt)
-    `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(randomInt)
+    `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(width)
+    `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(height)
 
     detailPresenterImpl.handlePermissionRequestResult(EDIT_SET.ordinal,
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
         intArrayOf(PackageManager.PERMISSION_GRANTED))
 
+    verify(imageOptionsUseCase).getCroppingSourceUri()
+    verify(imageOptionsUseCase).getCroppingDestinationUri()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(wallpaperSetter).getDesiredMinimumWidth()
+    verify(wallpaperSetter).getDesiredMinimumHeight()
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
     verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
-    verify(detailView).startCroppingActivity(imageOptionsUseCase.getCroppingSourceUri(),
-        imageOptionsUseCase.getCroppingDestinationUri(),
-        wallpaperSetter.getDesiredMinimumWidth(),
-        wallpaperSetter.getDesiredMinimumHeight())
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verify(detailView).startCroppingActivity(mockUri,
+        mockUri,
+        width,
+        height)
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test fun `should show error on handleViewResult call failure due to null crop uri`() {
+    `when`(detailView.getUriFromResultIntent()).thenReturn(null)
+    `when`(imageOptionsUseCase.getBitmapFromUriSingle(null)).thenReturn(
+        Single.error(NullPointerException()))
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
+        .thenReturn(randomString)
+
+    detailPresenterImpl.handleViewResult(REQUEST_CROP, RESULT_OK)
+
+    verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
+    verify(imageOptionsUseCase).getBitmapFromUriSingle(null)
+    verify(detailView).getUriFromResultIntent()
+    verify(detailView).getScope()
+    verify(detailView).blurScreen()
+    verify(detailView).showIndefiniteLoader(randomString)
+    verify(detailView).hideScreenBlur()
+    verify(detailView).showGenericErrorMessage()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should set wallpaper and show success message when crop activity results to success`() {
-    `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(mockContext.getString(R.string.finalizing_wallpaper_messsage))
+  fun `should set wallpaper and show success message on handleViewResult call success with request code crop`() {
+    `when`(detailView.getUriFromResultIntent()).thenReturn(mockUri)
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri)).thenReturn(Single.just(mockBitmap))
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(true)
 
-    detailPresenterImpl.handleViewResult(REQUEST_CROP, RESULT_OK, mockIntent)
+    detailPresenterImpl.handleViewResult(REQUEST_CROP, RESULT_OK)
 
     assertEquals(false, detailPresenterImpl.isImageOperationInProgress)
-    verify(detailView).getUriFromIntent(mockIntent)
+    verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
+    verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
+    verify(wallpaperSetter).setWallpaper(mockBitmap)
+    verify(detailView).getUriFromResultIntent()
     verify(detailView).blurScreen()
     verify(detailView).showIndefiniteLoader(randomString)
     verify(detailView).getScope()
     verify(detailView).showImage(mockBitmap)
     verify(detailView).showWallpaperSetSuccessMessage()
     verify(detailView).hideScreenBlur()
-    verifyNoMoreInteractions(detailView)
-    verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
-    verifyNoMoreInteractions(imageOptionsUseCase)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should show wallpaper setting error message when crop activity results to success`() {
-    `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(mockContext.getString(R.string.finalizing_wallpaper_messsage))
+  @Test
+  fun `should show wallpaper setting error message on handleViewResult call failure with request code crop due to wallpaper setter error`() {
+    `when`(detailView.getUriFromResultIntent()).thenReturn(mockUri)
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri)).thenReturn(Single.just(mockBitmap))
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(false)
 
-    detailPresenterImpl.handleViewResult(REQUEST_CROP, RESULT_OK, mockIntent)
+    detailPresenterImpl.handleViewResult(REQUEST_CROP, RESULT_OK)
 
     assertEquals(false, detailPresenterImpl.isImageOperationInProgress)
-    verify(detailView).getUriFromIntent(mockIntent)
+    verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
+    verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
+    verify(wallpaperSetter).setWallpaper(mockBitmap)
+    verify(detailView).getUriFromResultIntent()
     verify(detailView).blurScreen()
     verify(detailView).showIndefiniteLoader(randomString)
     verify(detailView).getScope()
     verify(detailView).showWallpaperSetErrorMessage()
     verify(detailView).hideScreenBlur()
-    verifyNoMoreInteractions(detailView)
-    verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
-    verifyNoMoreInteractions(imageOptionsUseCase)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should show generic error message when crop activity results to success but getBitmapFromUriSingle call fails`() {
-    `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(mockContext.getString(R.string.finalizing_wallpaper_messsage))
+  fun `should show generic error message on handleViewResult call failure with request code crop due to getBitmapFromUriSingle error`() {
+    `when`(detailView.getUriFromResultIntent()).thenReturn(mockUri)
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri))
         .thenReturn(Single.error(Exception()))
 
-    detailPresenterImpl.handleViewResult(REQUEST_CROP, RESULT_OK, mockIntent)
+    detailPresenterImpl.handleViewResult(REQUEST_CROP, RESULT_OK)
 
     assertEquals(false, detailPresenterImpl.isImageOperationInProgress)
-    verify(detailView).getUriFromIntent(mockIntent)
+    verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
+    verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
+    verify(detailView).getUriFromResultIntent()
     verify(detailView).blurScreen()
     verify(detailView).showIndefiniteLoader(randomString)
     verify(detailView).getScope()
     verify(detailView).showGenericErrorMessage()
     verify(detailView).hideScreenBlur()
-    verifyNoMoreInteractions(detailView)
-    verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
-    verifyNoMoreInteractions(imageOptionsUseCase)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should show generic error message when crop activity results to failure`() {
-    `when`(detailView.getUriFromIntent(mockIntent)).thenReturn(mockUri)
-    `when`(mockContext.getString(R.string.finalizing_wallpaper_messsage))
+    `when`(detailView.getUriFromResultIntent()).thenReturn(mockUri)
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri))
         .thenReturn(Single.error(Exception()))
 
-    detailPresenterImpl.handleViewResult(REQUEST_CROP, RESULT_OK, mockIntent)
+    detailPresenterImpl.handleViewResult(REQUEST_CROP, RESULT_OK)
 
     assertEquals(false, detailPresenterImpl.isImageOperationInProgress)
-    verify(detailView).getUriFromIntent(mockIntent)
+    verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
+    verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
+    verify(detailView).getUriFromResultIntent()
     verify(detailView).blurScreen()
     verify(detailView).showIndefiniteLoader(randomString)
     verify(detailView).getScope()
     verify(detailView).showGenericErrorMessage()
     verify(detailView).hideScreenBlur()
-    verifyNoMoreInteractions(detailView)
-    verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
-    verifyNoMoreInteractions(imageOptionsUseCase)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should redirect to buy pro on handleDownloadClick call failure`() {
+  @Test fun `should redirect to buy pro on handleDownloadClick call failure due to non pro user`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(false)
 
     detailPresenterImpl.handleDownloadClick()
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyNoMoreInteractions(userPremiumStatusUseCase)
     verify(detailView).redirectToBuyPro(DOWNLOAD.ordinal)
-    verifyNoMoreInteractions(detailView)
   }
 
-  @Test fun `should request storage permission on handleDownloadClick call failure`() {
+  @Test
+  fun `should request storage permission on handleDownloadClick call failure due to storage permission not available`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(false)
 
     detailPresenterImpl.handleDownloadClick()
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyNoMoreInteractions(userPremiumStatusUseCase)
     verify(detailView).hasStoragePermission()
     verify(detailView).requestStoragePermission(DOWNLOAD)
-    verifyNoMoreInteractions(detailView)
   }
 
-  @Test fun `should show no internet error message on handleDownloadClick call failure`() {
+  @Test
+  fun `should show no internet error message on handleDownloadClick call failure due to internet not available`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(false)
@@ -659,11 +1003,9 @@ class DetailPresenterImplTest {
     detailPresenterImpl.handleDownloadClick()
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyNoMoreInteractions(userPremiumStatusUseCase)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).showNoInternetError()
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
@@ -677,11 +1019,9 @@ class DetailPresenterImplTest {
     detailPresenterImpl.handleDownloadClick()
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyNoMoreInteractions(userPremiumStatusUseCase)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).showSearchTypeDownloadDialog(true)
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
@@ -695,11 +1035,9 @@ class DetailPresenterImplTest {
     detailPresenterImpl.handleDownloadClick()
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyNoMoreInteractions(userPremiumStatusUseCase)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).showSearchTypeDownloadDialog(false)
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
@@ -713,11 +1051,9 @@ class DetailPresenterImplTest {
     detailPresenterImpl.handleDownloadClick()
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyNoMoreInteractions(userPremiumStatusUseCase)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).showWallpaperTypeDownloadDialog(true)
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
@@ -731,11 +1067,9 @@ class DetailPresenterImplTest {
     detailPresenterImpl.handleDownloadClick()
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyNoMoreInteractions(userPremiumStatusUseCase)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).showWallpaperTypeDownloadDialog(false)
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
@@ -750,11 +1084,9 @@ class DetailPresenterImplTest {
         intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyNoMoreInteractions(userPremiumStatusUseCase)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).showWallpaperTypeDownloadDialog(true)
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
@@ -763,15 +1095,13 @@ class DetailPresenterImplTest {
         intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(detailView).showPermissionRequiredMessage()
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
   fun `should show purchase unsuccessful message on handleViewResult of download type call failure`() {
-    detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal, UNSUCCESSFUL_PURCHASE_CODE, null)
+    detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal, UNSUCCESSFUL_PURCHASE_CODE)
 
     verify(detailView).showUnsuccessfulPurchaseError()
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
@@ -786,12 +1116,10 @@ class DetailPresenterImplTest {
 
     verify(imageOptionsUseCase).isDownloadInProgress(link)
     verify(imageOptionsUseCase).downloadImageCompletable(link)
-    verifyNoMoreInteractions(imageOptionsUseCase)
     verify(detailView).getScope()
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -807,12 +1135,10 @@ class DetailPresenterImplTest {
 
     verify(imageOptionsUseCase).isDownloadInProgress(link)
     verify(imageOptionsUseCase).downloadImageCompletable(link)
-    verifyNoMoreInteractions(imageOptionsUseCase)
     verify(detailView).getScope()
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showGenericErrorMessage()
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -827,12 +1153,10 @@ class DetailPresenterImplTest {
 
     verify(imageOptionsUseCase).isDownloadInProgress(link)
     verify(imageOptionsUseCase).downloadImageCompletable(link)
-    verifyNoMoreInteractions(imageOptionsUseCase)
     verify(detailView).getScope()
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -847,12 +1171,10 @@ class DetailPresenterImplTest {
 
     verify(imageOptionsUseCase).isDownloadInProgress(link)
     verify(imageOptionsUseCase).downloadImageCompletable(link)
-    verifyNoMoreInteractions(imageOptionsUseCase)
     verify(detailView).getScope()
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -867,12 +1189,10 @@ class DetailPresenterImplTest {
 
     verify(imageOptionsUseCase).isDownloadInProgress(link)
     verify(imageOptionsUseCase).downloadImageCompletable(link)
-    verifyNoMoreInteractions(imageOptionsUseCase)
     verify(detailView).getScope()
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -887,12 +1207,10 @@ class DetailPresenterImplTest {
 
     verify(imageOptionsUseCase).isDownloadInProgress(link)
     verify(imageOptionsUseCase).downloadImageCompletable(link)
-    verifyNoMoreInteractions(imageOptionsUseCase)
     verify(detailView).getScope()
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -906,12 +1224,10 @@ class DetailPresenterImplTest {
 
     verify(imageOptionsUseCase).isDownloadInProgress(link)
     verify(imageOptionsUseCase).downloadImageCompletable(link)
-    verifyNoMoreInteractions(imageOptionsUseCase)
     verify(detailView).getScope()
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -926,12 +1242,10 @@ class DetailPresenterImplTest {
 
     verify(imageOptionsUseCase).isDownloadInProgress(link)
     verify(imageOptionsUseCase).downloadImageCompletable(link)
-    verifyNoMoreInteractions(imageOptionsUseCase)
     verify(detailView).getScope()
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showGenericErrorMessage()
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -945,12 +1259,10 @@ class DetailPresenterImplTest {
 
     verify(imageOptionsUseCase).isDownloadInProgress(link)
     verify(imageOptionsUseCase).downloadImageCompletable(link)
-    verifyNoMoreInteractions(imageOptionsUseCase)
     verify(detailView).getScope()
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -964,12 +1276,10 @@ class DetailPresenterImplTest {
 
     verify(imageOptionsUseCase).isDownloadInProgress(link)
     verify(imageOptionsUseCase).downloadImageCompletable(link)
-    verifyNoMoreInteractions(imageOptionsUseCase)
     verify(detailView).getScope()
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -983,12 +1293,10 @@ class DetailPresenterImplTest {
 
     verify(imageOptionsUseCase).isDownloadInProgress(link)
     verify(imageOptionsUseCase).downloadImageCompletable(link)
-    verifyNoMoreInteractions(imageOptionsUseCase)
     verify(detailView).getScope()
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -1002,12 +1310,10 @@ class DetailPresenterImplTest {
 
     verify(imageOptionsUseCase).isDownloadInProgress(link)
     verify(imageOptionsUseCase).downloadImageCompletable(link)
-    verifyNoMoreInteractions(imageOptionsUseCase)
     verify(detailView).getScope()
     verify(detailView).showDownloadStartedMessage()
     verify(detailView).showDownloadCompletedSuccessMessage()
-    verifyNoMoreInteractions(detailView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -1016,6 +1322,7 @@ class DetailPresenterImplTest {
 
     detailPresenterImpl.handleCrystallizeClick()
 
+    verify(userPremiumStatusUseCase).isUserPremium()
     verify(detailView).redirectToBuyPro(CRYSTALLIZE.ordinal)
   }
 
@@ -1026,9 +1333,9 @@ class DetailPresenterImplTest {
 
     detailPresenterImpl.handleCrystallizeClick()
 
+    verify(userPremiumStatusUseCase).isUserPremium()
     verify(detailView).hasStoragePermission()
     verify(detailView).requestStoragePermission(CRYSTALLIZE)
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
@@ -1039,14 +1346,14 @@ class DetailPresenterImplTest {
 
     detailPresenterImpl.handleCrystallizeClick()
 
+    verify(userPremiumStatusUseCase).isUserPremium()
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).showNoInternetError()
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
-  fun `should show crystallize description dialog on handleCrystallizeClick first call`() {
+  fun `should show crystallize description dialog on handleCrystallizeClick call success`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
@@ -1057,9 +1364,8 @@ class DetailPresenterImplTest {
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).showCrystallizeDescriptionDialog()
-    verifyNoMoreInteractions(detailView)
     verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
-    verifyNoMoreInteractions(imageOptionsUseCase)
+    verify(userPremiumStatusUseCase).isUserPremium()
   }
 
   @Test
@@ -1080,6 +1386,10 @@ class DetailPresenterImplTest {
 
     detailPresenterImpl.handleCrystallizeClick()
 
+    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
+    verify(imageOptionsUseCase).crystallizeImageSingle()
+    verify(userPremiumStatusUseCase).isUserPremium()
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -1088,22 +1398,14 @@ class DetailPresenterImplTest {
     verify(detailView).hideScreenBlur()
     verify(detailView).showCrystallizeSuccessMessage()
     verify(detailView).getScope()
-    verifyNoMoreInteractions(detailView)
-    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
-    verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
-    verify(imageOptionsUseCase).crystallizeImageSingle()
-    verifyNoMoreInteractions(imageOptionsUseCase)
-    verify(userPremiumStatusUseCase).isUserPremium()
-    verifyNoMoreInteractions(userPremiumStatusUseCase)
-    shouldVerifyPostExecutionThreadSchedulerCall(2)
+    verifyPostExecutionThreadSchedulerCall(2)
   }
 
   @Test
   fun `should show purchase unsuccessful message on handleViewResult of crystallize type call failure`() {
-    detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal, UNSUCCESSFUL_PURCHASE_CODE, null)
+    detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal, UNSUCCESSFUL_PURCHASE_CODE)
 
     verify(detailView).showUnsuccessfulPurchaseError()
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
@@ -1123,8 +1425,12 @@ class DetailPresenterImplTest {
         Single.just(Pair(true, mockBitmap)))
 
     detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
+    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
+    verify(imageOptionsUseCase).crystallizeImageSingle()
+    verify(userPremiumStatusUseCase).isUserPremium()
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -1133,14 +1439,7 @@ class DetailPresenterImplTest {
     verify(detailView).hideScreenBlur()
     verify(detailView).showCrystallizeSuccessMessage()
     verify(detailView).getScope()
-    verifyNoMoreInteractions(detailView)
-    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
-    verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
-    verify(imageOptionsUseCase).crystallizeImageSingle()
-    verifyNoMoreInteractions(imageOptionsUseCase)
-    verify(userPremiumStatusUseCase).isUserPremium()
-    verifyNoMoreInteractions(userPremiumStatusUseCase)
-    shouldVerifyPostExecutionThreadSchedulerCall(2)
+    verifyPostExecutionThreadSchedulerCall(2)
   }
 
   @Test
@@ -1160,8 +1459,12 @@ class DetailPresenterImplTest {
         Single.error(Exception()))
 
     detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
+    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
+    verify(imageOptionsUseCase).crystallizeImageSingle()
+    verify(userPremiumStatusUseCase).isUserPremium()
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -1169,14 +1472,7 @@ class DetailPresenterImplTest {
     verify(detailView).showGenericErrorMessage()
     verify(detailView).hideScreenBlur()
     verify(detailView).getScope()
-    verifyNoMoreInteractions(detailView)
-    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
-    verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
-    verify(imageOptionsUseCase).crystallizeImageSingle()
-    verifyNoMoreInteractions(imageOptionsUseCase)
-    verify(userPremiumStatusUseCase).isUserPremium()
-    verifyNoMoreInteractions(userPremiumStatusUseCase)
-    shouldVerifyPostExecutionThreadSchedulerCall(2)
+    verifyPostExecutionThreadSchedulerCall(2)
   }
 
   @Test
@@ -1185,6 +1481,7 @@ class DetailPresenterImplTest {
 
     detailPresenterImpl.handleAddToCollectionClick()
 
+    verify(userPremiumStatusUseCase).isUserPremium()
     verify(detailView).redirectToBuyPro(ADD_TO_COLLECTION.ordinal)
   }
 
@@ -1195,9 +1492,9 @@ class DetailPresenterImplTest {
 
     detailPresenterImpl.handleAddToCollectionClick()
 
+    verify(userPremiumStatusUseCase).isUserPremium()
     verify(detailView).hasStoragePermission()
     verify(detailView).requestStoragePermission(ADD_TO_COLLECTION)
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
@@ -1208,19 +1505,17 @@ class DetailPresenterImplTest {
 
     detailPresenterImpl.handleAddToCollectionClick()
 
+    verify(userPremiumStatusUseCase).isUserPremium()
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).showNoInternetError()
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
   fun `should show purchase unsuccessful message on handleViewResult of add to collection type call failure`() {
-    detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal, UNSUCCESSFUL_PURCHASE_CODE,
-        null)
+    detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal, UNSUCCESSFUL_PURCHASE_CODE)
 
     verify(detailView).showUnsuccessfulPurchaseError()
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
@@ -1239,20 +1534,19 @@ class DetailPresenterImplTest {
         })
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertTrue(detailPresenterImpl.isDownloadInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
     verify(detailView).getScope()
-    verifyNoMoreInteractions(detailView)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
-    verifyNoMoreInteractions(imageOptionsUseCase)
-    shouldVerifyPostExecutionThreadSchedulerCall(1)
+    verifyPostExecutionThreadSchedulerCall(1)
   }
 
   @Test
@@ -1270,44 +1564,49 @@ class DetailPresenterImplTest {
         })
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertTrue(detailPresenterImpl.isDownloadInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
     verify(detailView).getScope()
-    verifyNoMoreInteractions(detailView)
-    verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
-    verifyNoMoreInteractions(imageOptionsUseCase)
-    shouldVerifyPostExecutionThreadSchedulerCall(1)
+    verifyPostExecutionThreadSchedulerCall(1)
   }
 
   @Test
   fun `should show adding to collection message on handleViewResult of add to collection call success of search image type`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
-    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(detailView.hasStoragePermission()).thenReturn(true)
-    `when`(detailView.internetAvailability()).thenReturn(true)
     detailPresenterImpl.imageType = SEARCH
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(mockContext.getString(R.string.adding_image_to_collections_message))
+    `when`(resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
         .thenReturn(randomString)
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertFalse(detailPresenterImpl.isDownloadInProgress)
     assertTrue(detailPresenterImpl.isImageOperationInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -1315,34 +1614,36 @@ class DetailPresenterImplTest {
     verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
     verify(detailView).showIndefiniteLoaderWithAnimation(randomString)
     verify(detailView).getScope()
-    verifyNoMoreInteractions(detailView)
-    verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
-    verifyNoMoreInteractions(imageOptionsUseCase)
-    shouldVerifyPostExecutionThreadSchedulerCall(1)
+    verifyPostExecutionThreadSchedulerCall(1)
   }
 
   @Test
   fun `should show adding to collection message on handleViewResult of add to collection call success of wallpaper image type`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
-    detailPresenterImpl.imageType = WALLPAPERS
-    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
         detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(mockContext.getString(R.string.adding_image_to_collections_message))
+    `when`(resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
         .thenReturn(randomString)
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertFalse(detailPresenterImpl.isDownloadInProgress)
     assertTrue(detailPresenterImpl.isImageOperationInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -1350,11 +1651,7 @@ class DetailPresenterImplTest {
     verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
     verify(detailView).showIndefiniteLoaderWithAnimation(randomString)
     verify(detailView).getScope()
-    verifyNoMoreInteractions(detailView)
-    verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
-    verifyNoMoreInteractions(imageOptionsUseCase)
-    shouldVerifyPostExecutionThreadSchedulerCall(1)
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -1364,7 +1661,6 @@ class DetailPresenterImplTest {
     detailPresenterImpl.lastImageOperationType = CollectionsImageModel.SEARCH
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
-    val jsonString = Gson().toJson(detailPresenterImpl.searchImage)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
@@ -1380,9 +1676,15 @@ class DetailPresenterImplTest {
         Completable.complete())
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertFalse(detailPresenterImpl.isImageOperationInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verify(imageOptionsUseCase).addImageToCollection(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
+        detailPresenterImpl.lastImageOperationType)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -1390,14 +1692,7 @@ class DetailPresenterImplTest {
     verify(detailView).hideScreenBlur()
     verify(detailView).showAddToCollectionSuccessMessage()
     verify(detailView).getScope()
-    verifyNoMoreInteractions(detailView)
-    verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
-    verify(imageOptionsUseCase).addImageToCollection(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
-        detailPresenterImpl.lastImageOperationType)
-    verifyNoMoreInteractions(imageOptionsUseCase)
-    shouldVerifyPostExecutionThreadSchedulerCall(2)
+    verifyPostExecutionThreadSchedulerCall(2)
   }
 
   @Test
@@ -1407,7 +1702,6 @@ class DetailPresenterImplTest {
     detailPresenterImpl.lastImageOperationType = CollectionsImageModel.WALLPAPER
     detailPresenterImpl.wallpaperImage =
         ImagePresenterEntityFactory.getImagePresenterEntity()
-    val jsonString = Gson().toJson(detailPresenterImpl.wallpaperImage)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
@@ -1419,13 +1713,18 @@ class DetailPresenterImplTest {
     `when`(imageOptionsUseCase.addImageToCollection(
         detailPresenterImpl.wallpaperImage.imageLink.large,
         detailPresenterImpl.lastImageOperationType
-    )).thenReturn(
-        Completable.complete())
+    )).thenReturn(Completable.complete())
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, null)
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertFalse(detailPresenterImpl.isImageOperationInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(imageOptionsUseCase).addImageToCollection(
+        detailPresenterImpl.wallpaperImage.imageLink.large,
+        detailPresenterImpl.lastImageOperationType)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -1433,14 +1732,7 @@ class DetailPresenterImplTest {
     verify(detailView).hideScreenBlur()
     verify(detailView).showAddToCollectionSuccessMessage()
     verify(detailView).getScope()
-    verifyNoMoreInteractions(detailView)
-    verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
-    verify(imageOptionsUseCase).addImageToCollection(
-        detailPresenterImpl.wallpaperImage.imageLink.large,
-        detailPresenterImpl.lastImageOperationType)
-    verifyNoMoreInteractions(imageOptionsUseCase)
-    shouldVerifyPostExecutionThreadSchedulerCall(2)
+    verifyPostExecutionThreadSchedulerCall(2)
   }
 
   @Test
@@ -1464,7 +1756,6 @@ class DetailPresenterImplTest {
     detailPresenterImpl.handleBackButtonClick()
 
     verify(detailView).collapseSlidingPanel()
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
@@ -1479,7 +1770,6 @@ class DetailPresenterImplTest {
 
     verify(detailView).showExpandedImage(searchImage.imageQualityUrlPresenterEntity.smallImageLink,
         searchImage.imageQualityUrlPresenterEntity.largeImageLink)
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
@@ -1495,7 +1785,6 @@ class DetailPresenterImplTest {
 
     verify(detailView).showExpandedImage(wallpaperImage.imageLink.thumb,
         wallpaperImage.imageLink.large)
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
@@ -1506,7 +1795,6 @@ class DetailPresenterImplTest {
     detailPresenterImpl.handleImageViewClicked()
 
     verify(detailView).showCrystallizedExpandedImage()
-    verifyNoMoreInteractions(detailView)
   }
 
   @Test
@@ -1517,21 +1805,21 @@ class DetailPresenterImplTest {
     detailPresenterImpl.handleImageViewClicked()
 
     verify(detailView).showEditedExpandedImage()
-    verifyNoMoreInteractions(detailView)
   }
 
   @After
-  fun cleanup() {
+  fun tearDown() {
     detailPresenterImpl.detachView()
+    verifyNoMoreInteractions(postExecutionThread, wallpaperSetter, userPremiumStatusUseCase,
+        imageOptionsUseCase, detailView, resourceUtils, mockUri, mockBitmap)
   }
 
   private fun stubPostExecutionThreadReturnsIoScheduler() {
     whenever(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 
-  private fun shouldVerifyPostExecutionThreadSchedulerCall(times: Int = 1) {
+  private fun verifyPostExecutionThreadSchedulerCall(times: Int = 1) {
     verify(postExecutionThread, times(times)).scheduler
-    verifyNoMoreInteractions(postExecutionThread)
   }
 
 }

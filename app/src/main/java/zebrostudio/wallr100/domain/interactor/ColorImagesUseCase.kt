@@ -16,7 +16,7 @@ interface ColorImagesUseCase {
   ): Single<Bitmap>
 
   fun getBitmapSingle(): Single<Bitmap>
-  fun getBitmapFromUriSingle(uri: Uri): Single<Bitmap>
+  fun getBitmapFromUriSingle(uri: Uri?): Single<Bitmap>
   fun saveToCollectionsCompletable(
     data: String,
     type: CollectionsImageModel
@@ -46,7 +46,7 @@ class ColorImagesInteractor(private val wallrRepository: WallrRepository) : Colo
     return wallrRepository.getImageBitmap()
   }
 
-  override fun getBitmapFromUriSingle(uri: Uri): Single<Bitmap> {
+  override fun getBitmapFromUriSingle(uri: Uri?): Single<Bitmap> {
     return wallrRepository.getBitmapFromUri(uri)
   }
 

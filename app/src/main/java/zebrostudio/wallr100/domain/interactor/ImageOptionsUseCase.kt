@@ -18,7 +18,7 @@ interface ImageOptionsUseCase {
   fun getCroppingDestinationUri(): Uri
   fun getEditedImageSingle(): Single<Bitmap>
   fun crystallizeImageSingle(): Single<Pair<Boolean, Bitmap>>
-  fun getBitmapFromUriSingle(imageUri: Uri): Single<Bitmap>
+  fun getBitmapFromUriSingle(imageUri: Uri?): Single<Bitmap>
   fun downloadImageCompletable(link: String): Completable
   fun downloadCrystallizedImageCompletable(): Completable
   fun isDownloadInProgress(link: String): Boolean
@@ -56,7 +56,7 @@ class ImageOptionsInteractor(
     return wallrRepository.getCacheImageBitmap()
   }
 
-  override fun getBitmapFromUriSingle(imageUri: Uri): Single<Bitmap> {
+  override fun getBitmapFromUriSingle(imageUri: Uri?): Single<Bitmap> {
     return wallrRepository.getBitmapFromUri(imageUri)
   }
 

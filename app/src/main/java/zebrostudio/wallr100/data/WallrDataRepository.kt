@@ -235,7 +235,7 @@ class WallrDataRepository(
 
   override fun getCacheResultUri() = fileHandler.getCacheFileUriForCropping()
 
-  override fun getBitmapFromUri(uri: Uri): Single<Bitmap> {
+  override fun getBitmapFromUri(uri: Uri?): Single<Bitmap> {
     return imageHandler.convertUriToBitmap(uri)
         .subscribeOn(executionThread.computationScheduler)
   }

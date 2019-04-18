@@ -182,14 +182,14 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     errorToast(stringRes(R.string.no_internet_message))
   }
 
-  override fun showIndefiniteWaitLoader(message: String) {
+  override fun showIndefiniteLoader(message: String) {
     blurView.visible()
     colorActionProgressSpinkit.visible()
     colorActionHintTextView.visible()
     colorActionHintTextView.text = message
   }
 
-  override fun hideIndefiniteWaitLoader() {
+  override fun hideIndefiniteLoader() {
     blurView.gone()
     colorActionProgressSpinkit.gone()
     colorActionHintTextView.gone()
