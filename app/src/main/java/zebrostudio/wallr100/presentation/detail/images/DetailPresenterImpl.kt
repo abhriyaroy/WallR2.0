@@ -1,8 +1,6 @@
 package zebrostudio.wallr100.presentation.detail.images
 
 import android.app.Activity.RESULT_OK
-import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
@@ -13,9 +11,8 @@ import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
-import zebrostudio.wallr100.android.ui.detail.images.DetailActivity
+import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
-import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
 import zebrostudio.wallr100.data.exception.ImageDownloadException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
@@ -42,7 +39,7 @@ const val DOWNLOAD_STARTED_VALUE: Long = 0
 const val ILLEGAL_STATE_EXCEPTION_MESSAGE = "Activity is not invoked using getCallingIntent method"
 
 class DetailPresenterImpl(
-  private val context: Context,
+  private val resourceUtils: ResourceUtils,
   private val imageOptionsUseCase: ImageOptionsUseCase,
   private var userPremiumStatusUseCase: UserPremiumStatusUseCase,
   private val wallpaperSetter: WallpaperSetter,
@@ -53,7 +50,6 @@ class DetailPresenterImpl(
   internal lateinit var imageType: ImageListType
   internal lateinit var wallpaperImage: ImagePresenterEntity
   internal lateinit var searchImage: SearchPicturesPresenterEntity
-  internal lateinit var intent: Intent
   internal var isDownloadInProgress = false
   internal var isImageOperationInProgress = false
   internal var wallpaperHasBeenSet = false
@@ -73,13 +69,17 @@ class DetailPresenterImpl(
     detailView = null
   }
 
-  override fun setCalledIntent(intent: Intent) {
-    if (intent.extras != null) {
-      setImageType(intent.extras!!.getInt(
-          DetailActivity.IMAGE_TYPE_TAG))
+  override fun setImageType(imageTypeOrdinal: Int) {
+    if (imageTypeOrdinal == SEARCH.ordinal) {
+      imageType = SEARCH
+      searchImage = detailView!!.getSearchImageDetails()
+      lastImageOperationType = CollectionsImageModel.SEARCH
     } else {
-      throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
+      imageType = WALLPAPERS
+      wallpaperImage = detailView!!.getWallpaperImageDetails()
+      lastImageOperationType = CollectionsImageModel.WALLPAPER
     }
+    decorateView()
   }
 
   override fun handleHighQualityImageLoadFailed() {
@@ -235,7 +235,7 @@ class DetailPresenterImpl(
     }
   }
 
-  override fun handleViewResult(requestCode: Int, resultCode: Int, data: Intent?) {
+  override fun handleViewResult(requestCode: Int, resultCode: Int) {
     if (requestCode == DOWNLOAD.ordinal) {
       if (resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
         handleDownloadClick()
@@ -261,15 +261,7 @@ class DetailPresenterImpl(
         detailView?.showUnsuccessfulPurchaseError()
       }
     } else if (requestCode == REQUEST_CROP && resultCode == RESULT_OK) {
-      detailView?.let {
-        val cropResultUri = detailView?.getUriFromIntent(data!!)
-        if (cropResultUri != null) {
-          handleCropResult(cropResultUri)
-        } else {
-          detailView?.hideScreenBlur()
-          detailView?.showGenericErrorMessage()
-        }
-      }
+      handleCropResult(detailView?.getUriFromResultIntent())
     } else {
       isDownloadInProgress = false
       isImageOperationInProgress = false
@@ -303,7 +295,7 @@ class DetailPresenterImpl(
           .observeOn(postExecutionThread.scheduler)
           .doOnSubscribe {
             detailView?.blurScreen()
-            detailView?.showIndefiniteLoader(context.stringRes(
+            detailView?.showIndefiniteLoader(resourceUtils.getStringResource(
                 R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
           }
           .autoDisposable(detailView?.getScope()!!)
@@ -348,19 +340,6 @@ class DetailPresenterImpl(
 
   override fun setPanelStateAsCollapsed() {
     isSlidingPanelExpanded = false
-  }
-
-  private fun setImageType(imageTypeOrdinal: Int) {
-    if (imageTypeOrdinal == SEARCH.ordinal) {
-      imageType = SEARCH
-      searchImage = detailView?.getSearchImageDetails()!!
-      lastImageOperationType = CollectionsImageModel.SEARCH
-    } else {
-      imageType = WALLPAPERS
-      wallpaperImage = detailView?.getWallpaperImageDetails()!!
-      lastImageOperationType = CollectionsImageModel.WALLPAPER
-    }
-    decorateView()
   }
 
   private fun decorateView() {
@@ -412,13 +391,14 @@ class DetailPresenterImpl(
               isDownloadInProgress = false
               isImageOperationInProgress = true
               detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
-              val message =
-                  context.stringRes(R.string.finalizing_wallpaper_messsage)
-              detailView?.showIndefiniteLoaderWithAnimation(message)
+              resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)
+                  .let {
+                    detailView?.showIndefiniteLoaderWithAnimation(it)
+                  }
             } else if (progress == DOWNLOAD_COMPLETED_VALUE) {
-              val message =
-                  context.stringRes(R.string.finalizing_wallpaper_messsage)
-              detailView?.showIndefiniteLoader(message)
+              resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage).let {
+                detailView?.showIndefiniteLoader(it)
+              }
               if (wallpaperHasBeenSet) {
                 detailView?.showWallpaperSetSuccessMessage()
               } else {
@@ -470,7 +450,8 @@ class DetailPresenterImpl(
             isImageOperationInProgress = true
             detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
             val message =
-                context.stringRes(R.string.detail_activity_crystallizing_wallpaper_message)
+                resourceUtils.getStringResource(
+                    R.string.detail_activity_crystallizing_wallpaper_message)
             detailView?.showIndefiniteLoaderWithAnimation(message)
           } else if (progress != DOWNLOAD_COMPLETED_VALUE) {
             detailView?.updateProgressPercentage("$progress%")
@@ -542,7 +523,7 @@ class DetailPresenterImpl(
               isImageOperationInProgress = true
               detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
               val message =
-                  context.stringRes(R.string.detail_activity_editing_tool_message)
+                  resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message)
               detailView?.showIndefiniteLoaderWithAnimation(message)
             } else {
               detailView?.updateProgressPercentage("$progress%")
@@ -572,7 +553,7 @@ class DetailPresenterImpl(
             isImageOperationInProgress = true
             detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
             val message =
-                context.stringRes(R.string.adding_image_to_collections_message)
+                resourceUtils.getStringResource(R.string.adding_image_to_collections_message)
             detailView?.showIndefiniteLoaderWithAnimation(message)
           } else if (progress != DOWNLOAD_COMPLETED_VALUE) {
             detailView?.updateProgressPercentage("$progress%")
@@ -611,11 +592,11 @@ class DetailPresenterImpl(
         })
   }
 
-  private fun handleCropResult(cropResultUri: Uri) {
+  private fun handleCropResult(cropResultUri: Uri?) {
     var hasWallpaperBeenSet = false
     detailView?.blurScreen()
     detailView?.showIndefiniteLoader(
-        context.stringRes(R.string.finalizing_wallpaper_messsage))
+        resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
     imageOptionsUseCase.getBitmapFromUriSingle(cropResultUri)
         .doOnSuccess {
           hasWallpaperBeenSet = wallpaperSetter.setWallpaper(it)

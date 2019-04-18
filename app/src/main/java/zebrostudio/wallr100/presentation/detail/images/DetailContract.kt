@@ -35,7 +35,7 @@ interface DetailContract {
     fun showIndefiniteLoader(message: String)
     fun showIndefiniteLoaderWithAnimation(message: String)
     fun hideIndefiniteLoader()
-    fun getUriFromIntent(data: Intent): Uri?
+    fun getUriFromResultIntent(): Uri?
     fun hideScreenBlur()
     fun showWallpaperSetSuccessMessage()
     fun showWallpaperSetErrorMessage()
@@ -62,7 +62,7 @@ interface DetailContract {
   }
 
   interface DetailPresenter : BasePresenter<DetailView> {
-    fun setCalledIntent(intent: Intent)
+    fun setImageType(imageTypeOrdinal: Int)
     fun handleHighQualityImageLoadFailed()
     fun handleQuickSetClick()
     fun handleDownloadClick()
@@ -75,7 +75,7 @@ interface DetailContract {
       requestCode: Int, permissions: Array<String>, grantResults: IntArray
     )
 
-    fun handleViewResult(requestCode: Int, resultCode: Int, data: Intent?)
+    fun handleViewResult(requestCode: Int, resultCode: Int)
     fun handleDownloadQualitySelectionEvent(downloadType: ImageListType, selectedIndex: Int)
     fun handleCrystallizeDialogPositiveClick()
     fun handleImageViewClicked()

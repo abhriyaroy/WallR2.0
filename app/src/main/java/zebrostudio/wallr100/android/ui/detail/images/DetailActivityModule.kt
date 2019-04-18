@@ -1,8 +1,8 @@
 package zebrostudio.wallr100.android.ui.detail.images
 
-import android.content.Context
 import dagger.Module
 import dagger.Provides
+import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
@@ -20,14 +20,14 @@ class DetailActivityModule {
 
   @Provides
   fun providesDetailPresenter(
-    context: Context,
+    resourceUtils: ResourceUtils,
     imageOptionsUseCase: ImageOptionsUseCase,
     userPremiumStatusUseCase: UserPremiumStatusUseCase,
     wallpaperSetter: WallpaperSetter,
     postExecutionThread: PostExecutionThread,
     imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper
   ): DetailContract.DetailPresenter = DetailPresenterImpl(
-      context,
+      resourceUtils,
       imageOptionsUseCase,
       userPremiumStatusUseCase,
       wallpaperSetter,

@@ -374,6 +374,18 @@ class WallrDataRepositoryTest {
     verify(fileHandler).getCacheFileUriForCropping()
   }
 
+  @Test
+  fun `should return Single of Nullpointer exception on getBitmapFromUri call failure due to null uri`() {
+    `when`(imageHandler.convertUriToBitmap(mockUri)).thenReturn(
+        Single.error(NullPointerException()))
+
+    wallrDataRepository.getBitmapFromUri(mockUri).test()
+        .assertError(NullPointerException::class.java)
+
+    verify(imageHandler).convertUriToBitmap(mockUri)
+    verifyComputationSchedulerCall()
+  }
+
   @Test fun `should return Single of bitmap on getBitmapFromUri call success`() {
     `when`(imageHandler.convertUriToBitmap(mockUri)).thenReturn(Single.just(mockBitmap))
 

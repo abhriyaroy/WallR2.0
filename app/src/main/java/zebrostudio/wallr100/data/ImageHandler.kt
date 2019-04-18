@@ -46,7 +46,7 @@ interface ImageHandler {
   fun clearImageCache(): Completable
   fun getImageUri(): Uri
   fun getShareableUri(): Single<Uri>
-  fun convertUriToBitmap(uri: Uri): Single<Bitmap>
+  fun convertUriToBitmap(uri: Uri?): Single<Bitmap>
   fun convertImageInCacheToLowpoly(): Single<Bitmap>
   fun saveCacheImageToDownloads(): Completable
   fun saveImageToCollections(data: String, type: DatabaseImageType): Completable
@@ -169,19 +169,23 @@ class ImageHandlerImpl(
     }
   }
 
-  override fun convertUriToBitmap(uri: Uri): Single<Bitmap> {
+  override fun convertUriToBitmap(uri: Uri?): Single<Bitmap> {
     return Single.create {
-      try {
-        with(context.contentResolver.openFileDescriptor(uri, READ_MODE)) {
-          BitmapFactory.decodeFileDescriptor(fileDescriptor).let { bitmap ->
-            this?.close()
-            fileHandler.getCacheFile().outputStream()
-                .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
-            it.onSuccess(bitmap)
+      if (uri == null) {
+        it.onError(NullPointerException())
+      } else {
+        try {
+          with(context.contentResolver.openFileDescriptor(uri, READ_MODE)) {
+            BitmapFactory.decodeFileDescriptor(fileDescriptor).let { bitmap ->
+              this?.close()
+              fileHandler.getCacheFile().outputStream()
+                  .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
+              it.onSuccess(bitmap)
+            }
           }
+        } catch (exception: IOException) {
+          it.onError(exception)
         }
-      } catch (exception: IOException) {
-        it.onError(exception)
       }
     }
   }

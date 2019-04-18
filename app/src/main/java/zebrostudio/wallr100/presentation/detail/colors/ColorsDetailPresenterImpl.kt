@@ -124,17 +124,9 @@ class ColorsDetailPresenterImpl(
         view?.showUnsuccessfulPurchaseError()
       }
     } else if (requestCode == REQUEST_CROP && resultCode == RESULT_OK) {
-      view?.let {
-        val cropResultUri = it.getUriFromResultIntent()
-        if (cropResultUri != null) {
-          handleCropResult(cropResultUri)
-        } else {
-          it.hideIndefiniteWaitLoader()
-          it.showGenericErrorMessage()
-        }
-      }
+      handleCropResult(view?.getUriFromResultIntent())
     } else {
-      view?.hideIndefiniteWaitLoader()
+      view?.hideIndefiniteLoader()
     }
   }
 
@@ -167,17 +159,17 @@ class ColorsDetailPresenterImpl(
           .observeOn(postExecutionThread.scheduler)
           .doOnSubscribe {
             isColorWallpaperOperationActive = true
-            view?.showIndefiniteWaitLoader(
+            view?.showIndefiniteLoader(
                 resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
           }
           .autoDisposable(view!!.getScope())
           .subscribe({
             isColorWallpaperOperationActive = false
-            view?.hideIndefiniteWaitLoader()
+            view?.hideIndefiniteLoader()
             view?.showWallpaperSetSuccessMessage()
           }, {
             isColorWallpaperOperationActive = false
-            view?.hideIndefiniteWaitLoader()
+            view?.hideIndefiniteLoader()
             view?.showWallpaperSetErrorMessage()
           })
     }
@@ -188,17 +180,17 @@ class ColorsDetailPresenterImpl(
       colorImagesUseCase.downloadImage()
           .observeOn(postExecutionThread.scheduler)
           .doOnSubscribe {
-            view?.showIndefiniteWaitLoader(resourceUtils.getStringResource(
+            view?.showIndefiniteLoader(resourceUtils.getStringResource(
                 R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
             isColorWallpaperOperationActive = true
           }
           .autoDisposable(view!!.getScope())
           .subscribe({
-            view?.hideIndefiniteWaitLoader()
+            view?.hideIndefiniteLoader()
             view?.showDownloadCompletedSuccessMessage()
             isColorWallpaperOperationActive = false
           }, {
-            view?.hideIndefiniteWaitLoader()
+            view?.hideIndefiniteLoader()
             view?.showGenericErrorMessage()
             isColorWallpaperOperationActive = false
           })
@@ -208,7 +200,7 @@ class ColorsDetailPresenterImpl(
   override fun handleEditSetClick() {
     if (isNotInOperation() && hasStoragePermissions(EDIT_SET)) {
       isColorWallpaperOperationActive = true
-      view?.showIndefiniteWaitLoader(
+      view?.showIndefiniteLoader(
           resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message))
       view?.startCroppingActivity(
           colorImagesUseCase.getCacheSourceUri(),
@@ -226,14 +218,14 @@ class ColorsDetailPresenterImpl(
           lastImageOperationType)
           .observeOn(postExecutionThread.scheduler)
           .doOnSubscribe {
-            view?.showIndefiniteWaitLoader(
+            view?.showIndefiniteLoader(
                 resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
             isColorWallpaperOperationActive = true
           }
           .autoDisposable(view!!.getScope())
           .subscribe({
             view?.showAddToCollectionSuccessMessage()
-            view?.hideIndefiniteWaitLoader()
+            view?.hideIndefiniteLoader()
             isColorWallpaperOperationActive = false
           }, {
             if (it is AlreadyPresentInCollectionException) {
@@ -241,7 +233,7 @@ class ColorsDetailPresenterImpl(
             } else {
               view?.showGenericErrorMessage()
             }
-            view?.hideIndefiniteWaitLoader()
+            view?.hideIndefiniteLoader()
             isColorWallpaperOperationActive = false
           })
     }
@@ -254,17 +246,17 @@ class ColorsDetailPresenterImpl(
           .observeOn(postExecutionThread.scheduler)
           .doOnSubscribe {
             isColorWallpaperOperationActive = true
-            view?.showIndefiniteWaitLoader(
+            view?.showIndefiniteLoader(
                 resourceUtils.getStringResource(R.string.preparing_shareable_wallpaper_message))
           }
           .autoDisposable(view!!.getScope())
           .subscribe({
             isColorWallpaperOperationActive = false
-            view?.hideIndefiniteWaitLoader()
+            view?.hideIndefiniteLoader()
             view?.showShareIntent(it)
           }, {
             isColorWallpaperOperationActive = false
-            view?.hideIndefiniteWaitLoader()
+            view?.hideIndefiniteLoader()
             view?.showGenericErrorMessage()
           })
     }
@@ -328,8 +320,8 @@ class ColorsDetailPresenterImpl(
         })
   }
 
-  private fun handleCropResult(cropResultUri: Uri) {
-    view?.showIndefiniteWaitLoader(
+  private fun handleCropResult(cropResultUri: Uri?) {
+    view?.showIndefiniteLoader(
         resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
     colorImagesUseCase.getBitmapFromUriSingle(cropResultUri)
         .doOnSubscribe {
@@ -346,11 +338,11 @@ class ColorsDetailPresenterImpl(
           } else {
             view?.showWallpaperSetErrorMessage()
           }
-          view?.hideIndefiniteWaitLoader()
+          view?.hideIndefiniteLoader()
         }, {
           isColorWallpaperOperationActive = false
           view?.showGenericErrorMessage()
-          view?.hideIndefiniteWaitLoader()
+          view?.hideIndefiniteLoader()
         })
   }
 

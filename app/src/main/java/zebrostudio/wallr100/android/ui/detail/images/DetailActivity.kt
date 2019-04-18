@@ -64,6 +64,7 @@ import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
 import zebrostudio.wallr100.presentation.detail.images.ActionType
 import zebrostudio.wallr100.presentation.detail.images.DetailContract.DetailPresenter
 import zebrostudio.wallr100.presentation.detail.images.DetailContract.DetailView
+import zebrostudio.wallr100.presentation.detail.images.ILLEGAL_STATE_EXCEPTION_MESSAGE
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 import javax.inject.Inject
@@ -78,6 +79,7 @@ class DetailActivity : BaseActivity(), DetailView {
 
   @Inject lateinit var presenter: DetailPresenter
 
+  private var activityResultIntent: Intent? = null
   private var materialProgressLoader: MaterialDialog? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,7 +87,11 @@ class DetailActivity : BaseActivity(), DetailView {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_detail)
     presenter.attachView(this)
-    presenter.setCalledIntent(intent)
+    if (intent.extras != null) {
+      presenter.setImageType(intent.extras!!.getInt(IMAGE_TYPE_TAG))
+    } else {
+      throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
+    }
     setUpExpandPanel()
     attachClickListeners()
     setUpBlurView()
@@ -100,7 +106,10 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    presenter.handleViewResult(requestCode, resultCode, data)
+    if (data != null) {
+      activityResultIntent = intent
+    }
+    presenter.handleViewResult(requestCode, resultCode)
   }
 
   override fun onBackPressed() {
@@ -308,8 +317,11 @@ class DetailActivity : BaseActivity(), DetailView {
     loadingHintBelowProgressSpinkit.gone()
   }
 
-  override fun getUriFromIntent(data: Intent): Uri? {
-    return UCrop.getOutput(data)
+  override fun getUriFromResultIntent(): Uri? {
+    if (activityResultIntent != null) {
+      return UCrop.getOutput(activityResultIntent!!)
+    }
+    return null
   }
 
   override fun showUnableToDownloadErrorMessage() {
