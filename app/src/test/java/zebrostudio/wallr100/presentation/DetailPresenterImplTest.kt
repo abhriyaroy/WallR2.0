@@ -121,7 +121,8 @@ class DetailPresenterImplTest {
         imagePresenterEntity.imageLink.large)
   }
 
-  @Test fun `should show error toast on handleHighQualityImageLoadFailed call success`() {
+  @Test
+  fun `should show image load error toast on handleHighQualityImageLoadFailed call success`() {
     detailPresenterImpl.handleHighQualityImageLoadFailed()
 
     verify(detailView).showImageLoadError()
@@ -148,7 +149,7 @@ class DetailPresenterImplTest {
     verify(detailView).redirectToBuyPro(SHARE.ordinal)
   }
 
-  @Test fun `should show error on handleShareClicked call failure of type search`() {
+  @Test fun `should show generic error on handleShareClicked call failure of type search`() {
     detailPresenterImpl.imageType = SEARCH
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
@@ -192,7 +193,7 @@ class DetailPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should show error on handleShareClicked call failure of type wallpaper`() {
+  @Test fun `should show generic error on handleShareClicked call failure of type wallpaper`() {
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage =
         ImagePresenterEntityFactory.getImagePresenterEntity()
@@ -255,7 +256,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show error on handleViewResult call failure of type share with image type search`() {
+  fun `should show generic error on handleViewResult call failure of type share with image type search`() {
     detailPresenterImpl.imageType = SEARCH
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
@@ -303,7 +304,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show error on handleViewResult call failure of type share with image type wallpaper`() {
+  fun `should show generic error on handleViewResult call failure of type share with image type wallpaper`() {
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage =
         ImagePresenterEntityFactory.getImagePresenterEntity()
@@ -388,10 +389,9 @@ class DetailPresenterImplTest {
 
     detailPresenterImpl.handleQuickSetClick()
 
-    assertEquals(detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
-        true)
+    assertEquals(detailPresenterImpl.isDownloadInProgress, true)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verify(detailView).hasStoragePermission()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
@@ -567,12 +567,26 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show permission required message on handlePermissionRequestResult call failure of type quick set due to permission being denied`() {
+  fun `should show permission required message on handlePermissionRequestResult call failure of type quick set due to permission not granted`() {
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
         arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
         intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(detailView).showPermissionRequiredMessage()
+  }
+
+  @Test
+  fun `should show no internet error on handlePermissionRequestResult call failure of type quick set due to no internet`() {
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(false)
+
+    detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
+        arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showNoInternetError()
   }
 
   @Test
@@ -731,7 +745,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should exit activity on handleBackButtonClick call success and clearing cache is successful`() {
+  fun `should exit activity on handleBackButtonClick call success and clear cache is successful`() {
     detailPresenterImpl.isDownloadInProgress = false
     detailPresenterImpl.isImageOperationInProgress = false
     `when`(imageOptionsUseCase.clearCachesCompletable()).thenReturn(Completable.complete())
@@ -745,17 +759,111 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should exit activity when handleBackButtonClick is called and clearing cache is unsuccessful`() {
-    detailPresenterImpl.isDownloadInProgress = false
-    detailPresenterImpl.isImageOperationInProgress = false
-    `when`(imageOptionsUseCase.clearCachesCompletable()).thenReturn(Completable.error(Exception()))
+  fun `should show progress on handleEditSetClick call success of type edit set when progress value is 98`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
 
-    detailPresenterImpl.handleBackButtonClick()
+    detailPresenterImpl.handleEditSetClick()
 
-    verify(imageOptionsUseCase).clearCachesCompletable()
+    assertEquals(detailPresenterImpl.isDownloadInProgress, true)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
-    verify(detailView).exitView()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
     verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show indefinite loader on handleEditSetClick call success of type edit set when progress value is 99`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
+    detailPresenterImpl.imageType = WALLPAPERS
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+    `when`(resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message))
+        .thenReturn(randomString)
+
+    detailPresenterImpl.handleEditSetClick()
+
+    assertEquals(detailPresenterImpl.isDownloadInProgress, false)
+    assertEquals(detailPresenterImpl.isImageOperationInProgress, true)
+    verify(resourceUtils).getStringResource(R.string.detail_activity_editing_tool_message)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).getScope()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
+    verify(detailView).showIndefiniteLoaderWithAnimation(randomString)
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should start cropping activity on handleEditSetClick call success of type edit set when progress value is 100`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, null)
+    val height = 1
+    val width = 2
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+    `when`(imageOptionsUseCase.getCroppingSourceUri()).thenReturn(mockUri)
+    `when`(imageOptionsUseCase.getCroppingDestinationUri()).thenReturn(mockUri)
+    `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(width)
+    `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(height)
+
+    detailPresenterImpl.handleEditSetClick()
+
+    verify(imageOptionsUseCase).getCroppingSourceUri()
+    verify(imageOptionsUseCase).getCroppingDestinationUri()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(wallpaperSetter).getDesiredMinimumWidth()
+    verify(wallpaperSetter).getDesiredMinimumHeight()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).getScope()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
+    verify(detailView).startCroppingActivity(mockUri,
+        mockUri,
+        width,
+        height)
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show permission required message on handlePermissionRequestResult call failure of type edit set due to permission not granted`() {
+    detailPresenterImpl.handlePermissionRequestResult(EDIT_SET.ordinal,
+        arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
+        intArrayOf(PackageManager.PERMISSION_DENIED))
+
+    verify(detailView).showPermissionRequiredMessage()
   }
 
   @Test
@@ -1073,7 +1181,77 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show download dialog with crystallized wallpaper image option on handlePermissionRequestResult call success`() {
+  fun `should show permission required message on handlePermissionRequestResult call failure of type download due to permission not granted`() {
+    detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_DENIED))
+
+    verify(detailView).showPermissionRequiredMessage()
+  }
+
+  @Test
+  fun `should request storage permission on handlePermissionRequestResult call failure of type download due to storage permission not available`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(false)
+
+    detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).requestStoragePermission(DOWNLOAD)
+  }
+
+  @Test
+  fun `should show no internet error message on handlePermissionRequestResult call failure of type download due to internet not available`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(false)
+
+    detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showNoInternetError()
+  }
+
+  @Test
+  fun `should show download dialog with crystallized search image option on handlePermissionRequestResult call success of type download`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.imageHasBeenCrystallized = true
+
+    detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showSearchTypeDownloadDialog(true)
+  }
+
+  @Test
+  fun `should show download dialog without crystallized search image option on handlePermissionRequestResult call success of type download`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.imageHasBeenCrystallized = false
+
+    detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showSearchTypeDownloadDialog(false)
+  }
+
+  @Test
+  fun `should show download dialog with crystallized wallpaper image option on handlePermissionRequestResult call success of type download`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
@@ -1090,11 +1268,20 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show permission required message on handlePermissionRequestResult call failure`() {
-    detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_DENIED))
+  fun `should show download dialog without crystallized wallpaper image option on handlePermissionRequestResult call success of type download`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.imageHasBeenCrystallized = false
 
-    verify(detailView).showPermissionRequiredMessage()
+    detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showWallpaperTypeDownloadDialog(false)
   }
 
   @Test
@@ -1102,6 +1289,102 @@ class DetailPresenterImplTest {
     detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal, UNSUCCESSFUL_PURCHASE_CODE)
 
     verify(detailView).showUnsuccessfulPurchaseError()
+  }
+
+  @Test
+  fun `should request storage permission on handleViewResult call failure of type download due to storage permission not available`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(false)
+
+    detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).requestStoragePermission(DOWNLOAD)
+  }
+
+  @Test
+  fun `should show no internet error message on handleViewResult call failure of type download due to internet not available`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(false)
+
+    detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showNoInternetError()
+  }
+
+  @Test
+  fun `should show download dialog with crystallized search image option on handleViewResult call success of type download`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.imageHasBeenCrystallized = true
+
+    detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showSearchTypeDownloadDialog(true)
+  }
+
+  @Test
+  fun `should show download dialog without crystallized search image option on handleViewResult call success of type download`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.imageHasBeenCrystallized = false
+
+    detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showSearchTypeDownloadDialog(false)
+  }
+
+  @Test
+  fun `should show download dialog with crystallized wallpaper image option on handleViewResult call success of type download`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.imageHasBeenCrystallized = true
+
+    detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showWallpaperTypeDownloadDialog(true)
+  }
+
+  @Test
+  fun `should show download dialog without crystallized wallpaper image option on handleViewResult call success of type download`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.imageHasBeenCrystallized = false
+
+    detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showWallpaperTypeDownloadDialog(false)
   }
 
   @Test
@@ -1353,7 +1636,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show crystallize description dialog on handleCrystallizeClick call success`() {
+  fun `should show crystallize description dialog on handleCrystallizeClick call success and crystallize description not shown yet`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(true)
@@ -1402,10 +1685,214 @@ class DetailPresenterImplTest {
   }
 
   @Test
+  fun `should show permission required message on handlePermissionRequestResult with crystallize request code type call failure`() {
+    detailPresenterImpl.handlePermissionRequestResult(CRYSTALLIZE.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_DENIED))
+
+    verify(detailView).showPermissionRequiredMessage()
+  }
+
+  @Test
+  fun `should show no internet error on handlePermissionRequestResult with crystallize request code call failure due to no internet`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(false)
+
+    detailPresenterImpl.handlePermissionRequestResult(CRYSTALLIZE.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showNoInternetError()
+  }
+
+  @Test
+  fun `should show crystallize description dialog on handlePermissionRequestResult with crystallize request code call success and crystallize description not shown yet`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(false)
+
+    detailPresenterImpl.handlePermissionRequestResult(CRYSTALLIZE.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showCrystallizeDescriptionDialog()
+    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
+    verify(userPremiumStatusUseCase).isUserPremium()
+  }
+
+  @Test
+  fun `should set bitmap to image view on handlePermissionRequestResult with crystallize request code call success of search type`() {
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    val link = detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
+        Observable.just(imageDownloadModel))
+    `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
+        Single.just(Pair(true, mockBitmap)))
+
+    detailPresenterImpl.handlePermissionRequestResult(CRYSTALLIZE.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
+    verify(imageOptionsUseCase).crystallizeImageSingle()
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).showImage(mockBitmap)
+    verify(detailView).hideScreenBlur()
+    verify(detailView).showCrystallizeSuccessMessage()
+    verify(detailView).getScope()
+    verifyPostExecutionThreadSchedulerCall(2)
+  }
+
+  @Test
+  fun `should show generic error message on handlePermissionRequestResult with crystallize request code call failure of search type`() {
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    val link = detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
+        Observable.just(imageDownloadModel))
+    `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
+        Single.error(Exception()))
+
+    detailPresenterImpl.handlePermissionRequestResult(CRYSTALLIZE.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
+    verify(imageOptionsUseCase).crystallizeImageSingle()
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).showGenericErrorMessage()
+    verify(detailView).hideScreenBlur()
+    verify(detailView).getScope()
+    verifyPostExecutionThreadSchedulerCall(2)
+  }
+
+  @Test
+  fun `should set bitmap to image view on handlePermissionRequestResult with crystallize request code call success of wallpaper type`() {
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    val link = detailPresenterImpl.wallpaperImage.imageLink.large
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
+        Observable.just(imageDownloadModel))
+    `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
+        Single.just(Pair(true, mockBitmap)))
+
+    detailPresenterImpl.handlePermissionRequestResult(CRYSTALLIZE.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
+    verify(imageOptionsUseCase).crystallizeImageSingle()
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).showImage(mockBitmap)
+    verify(detailView).hideScreenBlur()
+    verify(detailView).showCrystallizeSuccessMessage()
+    verify(detailView).getScope()
+    verifyPostExecutionThreadSchedulerCall(2)
+  }
+
+  @Test
+  fun `should show generic error message on handlePermissionRequestResult with crystallize request code call failure of wallpaper type`() {
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    val link = detailPresenterImpl.wallpaperImage.imageLink.large
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
+        Observable.just(imageDownloadModel))
+    `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
+        Single.error(Exception()))
+
+    detailPresenterImpl.handlePermissionRequestResult(CRYSTALLIZE.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
+    verify(imageOptionsUseCase).crystallizeImageSingle()
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).showGenericErrorMessage()
+    verify(detailView).hideScreenBlur()
+    verify(detailView).getScope()
+    verifyPostExecutionThreadSchedulerCall(2)
+  }
+
+  @Test
   fun `should show purchase unsuccessful message on handleViewResult of crystallize type call failure`() {
     detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal, UNSUCCESSFUL_PURCHASE_CODE)
 
     verify(detailView).showUnsuccessfulPurchaseError()
+  }
+
+  @Test
+  fun `should show no internet error on handleViewResult of crystallize type call failure due to no internet`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(false)
+
+    detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showNoInternetError()
+  }
+
+  @Test
+  fun `should show crystallize description dialog on handleViewResult of crystallize type call success and crystallize description not shown yet`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(false)
+
+    detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).showCrystallizeDescriptionDialog()
+    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
+    verify(userPremiumStatusUseCase).isUserPremium()
   }
 
   @Test
@@ -1443,11 +1930,76 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show error message on handleViewResult with crystallize request code call failure of search type`() {
+  fun `should show generic error message on handleViewResult with crystallize request code call failure of search type`() {
     detailPresenterImpl.imageType = SEARCH
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
     val link = detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
+        Observable.just(imageDownloadModel))
+    `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
+        Single.error(Exception()))
+
+    detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+
+    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
+    verify(imageOptionsUseCase).crystallizeImageSingle()
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).showGenericErrorMessage()
+    verify(detailView).hideScreenBlur()
+    verify(detailView).getScope()
+    verifyPostExecutionThreadSchedulerCall(2)
+  }
+
+  @Test
+  fun `should set bitmap to image view on handleViewResult with crystallize request code call success of wallpaper type`() {
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    val link = detailPresenterImpl.wallpaperImage.imageLink.large
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
+        Observable.just(imageDownloadModel))
+    `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
+        Single.just(Pair(true, mockBitmap)))
+
+    detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal,
+        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+
+    verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
+    verify(imageOptionsUseCase).crystallizeImageSingle()
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).showImage(mockBitmap)
+    verify(detailView).hideScreenBlur()
+    verify(detailView).showCrystallizeSuccessMessage()
+    verify(detailView).getScope()
+    verifyPostExecutionThreadSchedulerCall(2)
+  }
+
+  @Test
+  fun `should show generic error message on handleViewResult with crystallize request code call failure of wallpaper type`() {
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    val link = detailPresenterImpl.wallpaperImage.imageLink.large
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
@@ -1512,6 +2064,442 @@ class DetailPresenterImplTest {
   }
 
   @Test
+  fun `should update progress on handleAddToCollectionClick call success of search image type with progress value at 98`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+
+    detailPresenterImpl.handleAddToCollectionClick()
+
+    assertTrue(detailPresenterImpl.isDownloadInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
+    verify(detailView).getScope()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verifyPostExecutionThreadSchedulerCall(1)
+  }
+
+  @Test
+  fun `should update progress on handleAddToCollectionClick call success of wallpaper image type with progress value at 98`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+
+    detailPresenterImpl.handleAddToCollectionClick()
+
+    assertTrue(detailPresenterImpl.isDownloadInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
+    verify(detailView).getScope()
+    verifyPostExecutionThreadSchedulerCall(1)
+  }
+
+  @Test
+  fun `should show adding to collection message on handleAddToCollectionClick call success of search image type with progress value at 99`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+    `when`(resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
+        .thenReturn(randomString)
+
+    detailPresenterImpl.handleAddToCollectionClick()
+
+    assertFalse(detailPresenterImpl.isDownloadInProgress)
+    assertTrue(detailPresenterImpl.isImageOperationInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
+    verify(detailView).showIndefiniteLoaderWithAnimation(randomString)
+    verify(detailView).getScope()
+    verifyPostExecutionThreadSchedulerCall(1)
+  }
+
+  @Test
+  fun `should show adding to collection message on handleAddToCollectionClick call success of wallpaper image type with progress value at 99`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+    `when`(resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
+        .thenReturn(randomString)
+
+    detailPresenterImpl.handleAddToCollectionClick()
+
+    assertFalse(detailPresenterImpl.isDownloadInProgress)
+    assertTrue(detailPresenterImpl.isImageOperationInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
+    verify(detailView).showIndefiniteLoaderWithAnimation(randomString)
+    verify(detailView).getScope()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should add image to collection on handleAddToCollectionClick call success of search image type with progress value at 100`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.lastImageOperationType = CollectionsImageModel.SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+    `when`(imageOptionsUseCase.addImageToCollection(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
+        detailPresenterImpl.lastImageOperationType
+    )).thenReturn(
+        Completable.complete())
+
+    detailPresenterImpl.handleAddToCollectionClick()
+
+    assertFalse(detailPresenterImpl.isImageOperationInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verify(imageOptionsUseCase).addImageToCollection(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
+        detailPresenterImpl.lastImageOperationType)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).hideScreenBlur()
+    verify(detailView).showAddToCollectionSuccessMessage()
+    verify(detailView).getScope()
+    verifyPostExecutionThreadSchedulerCall(2)
+  }
+
+  @Test
+  fun `should add image to collection on handleAddToCollectionClick call success of wallpaper image type with progress value at 100`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.lastImageOperationType = CollectionsImageModel.WALLPAPER
+    detailPresenterImpl.wallpaperImage =
+        ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+    `when`(imageOptionsUseCase.addImageToCollection(
+        detailPresenterImpl.wallpaperImage.imageLink.large,
+        detailPresenterImpl.lastImageOperationType
+    )).thenReturn(Completable.complete())
+
+    detailPresenterImpl.handleAddToCollectionClick()
+
+    assertFalse(detailPresenterImpl.isImageOperationInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(imageOptionsUseCase).addImageToCollection(
+        detailPresenterImpl.wallpaperImage.imageLink.large,
+        detailPresenterImpl.lastImageOperationType)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).hideScreenBlur()
+    verify(detailView).showAddToCollectionSuccessMessage()
+    verify(detailView).getScope()
+    verifyPostExecutionThreadSchedulerCall(2)
+  }
+
+  @Test
+  fun `should show permission required message on handlePermissionRequestResult of add to collection type call failure`() {
+    detailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_DENIED))
+
+    verify(detailView).showPermissionRequiredMessage()
+  }
+
+  @Test
+  fun `should update progress on handlePermissionRequestResult of add to collection call success of search image type with progress value at 98`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+
+    detailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    assertTrue(detailPresenterImpl.isDownloadInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
+    verify(detailView).getScope()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verifyPostExecutionThreadSchedulerCall(1)
+  }
+
+  @Test
+  fun `should update progress on handlePermissionRequestResult of add to collection call success of wallpaper image type with progress value at 98`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+
+    detailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    assertTrue(detailPresenterImpl.isDownloadInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
+    verify(detailView).getScope()
+    verifyPostExecutionThreadSchedulerCall(1)
+  }
+
+  @Test
+  fun `should show adding to collection message on handlePermissionRequestResult of add to collection call success of search image type with progress value at 99`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+    `when`(resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
+        .thenReturn(randomString)
+
+    detailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    assertFalse(detailPresenterImpl.isDownloadInProgress)
+    assertTrue(detailPresenterImpl.isImageOperationInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
+    verify(detailView).showIndefiniteLoaderWithAnimation(randomString)
+    verify(detailView).getScope()
+    verifyPostExecutionThreadSchedulerCall(1)
+  }
+
+  @Test
+  fun `should show adding to collection message on handlePermissionRequestResult of add to collection call success of wallpaper image type with progress value at 99`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+    `when`(resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
+        .thenReturn(randomString)
+
+    detailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    assertFalse(detailPresenterImpl.isDownloadInProgress)
+    assertTrue(detailPresenterImpl.isImageOperationInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
+    verify(detailView).showIndefiniteLoaderWithAnimation(randomString)
+    verify(detailView).getScope()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should add image to collection on handlePermissionRequestResult of add to collection type call success of search image type with progress value at 100`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
+    detailPresenterImpl.imageType = SEARCH
+    detailPresenterImpl.lastImageOperationType = CollectionsImageModel.SEARCH
+    detailPresenterImpl.searchImage =
+        SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+    `when`(imageOptionsUseCase.addImageToCollection(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
+        detailPresenterImpl.lastImageOperationType
+    )).thenReturn(
+        Completable.complete())
+
+    detailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    assertFalse(detailPresenterImpl.isImageOperationInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+    verify(imageOptionsUseCase).addImageToCollection(
+        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
+        detailPresenterImpl.lastImageOperationType)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).hideScreenBlur()
+    verify(detailView).showAddToCollectionSuccessMessage()
+    verify(detailView).getScope()
+    verifyPostExecutionThreadSchedulerCall(2)
+  }
+
+  @Test
+  fun `should add image to collection on handlePermissionRequestResult of add to collection type call success of wallpaper image type with progress value at 100`() {
+    val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
+    detailPresenterImpl.imageType = WALLPAPERS
+    detailPresenterImpl.lastImageOperationType = CollectionsImageModel.WALLPAPER
+    detailPresenterImpl.wallpaperImage =
+        ImagePresenterEntityFactory.getImagePresenterEntity()
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(detailView.hasStoragePermission()).thenReturn(true)
+    `when`(detailView.internetAvailability()).thenReturn(true)
+    `when`(imageOptionsUseCase.fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+        Observable.create {
+          it.onNext(imageDownloadModel)
+        })
+    `when`(imageOptionsUseCase.addImageToCollection(
+        detailPresenterImpl.wallpaperImage.imageLink.large,
+        detailPresenterImpl.lastImageOperationType
+    )).thenReturn(Completable.complete())
+
+    detailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal, arrayOf(""),
+        intArrayOf(PackageManager.PERMISSION_GRANTED))
+
+    assertFalse(detailPresenterImpl.isImageOperationInProgress)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(imageOptionsUseCase).fetchImageBitmapObservable(
+        detailPresenterImpl.wallpaperImage.imageLink.large)
+    verify(imageOptionsUseCase).addImageToCollection(
+        detailPresenterImpl.wallpaperImage.imageLink.large,
+        detailPresenterImpl.lastImageOperationType)
+    verify(detailView).hasStoragePermission()
+    verify(detailView).internetAvailability()
+    verify(detailView).hideIndefiniteLoader()
+    verify(detailView).blurScreenAndInitializeProgressPercentage()
+    verify(detailView).hideScreenBlur()
+    verify(detailView).showAddToCollectionSuccessMessage()
+    verify(detailView).getScope()
+    verifyPostExecutionThreadSchedulerCall(2)
+  }
+
+  @Test
   fun `should show purchase unsuccessful message on handleViewResult of add to collection type call failure`() {
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal, UNSUCCESSFUL_PURCHASE_CODE)
 
@@ -1519,7 +2507,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should update progress on handleViewResult of add to collection call success of search image type`() {
+  fun `should update progress on handleViewResult of add to collection call success of search image type with progress value at 98`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
@@ -1550,7 +2538,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should update progress on handleViewResult of add to collection call success of wallpaper image type`() {
+  fun `should update progress on handleViewResult of add to collection call success of wallpaper image type with progress value at 98`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo98, null)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
@@ -1580,7 +2568,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show adding to collection message on handleViewResult of add to collection call success of search image type`() {
+  fun `should show adding to collection message on handleViewResult of add to collection call success of search image type with progress value at 99`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
     detailPresenterImpl.imageType = SEARCH
     detailPresenterImpl.searchImage =
@@ -1618,7 +2606,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show adding to collection message on handleViewResult of add to collection call success of wallpaper image type`() {
+  fun `should show adding to collection message on handleViewResult of add to collection call success of wallpaper image type with progress value at 99`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompleteUpTo99, null)
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
@@ -1655,7 +2643,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should add image to collection on handleViewResult of add to collection type call success of search image type`() {
+  fun `should add image to collection on handleViewResult of add to collection type call success of search image type with progress value at 100`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
     detailPresenterImpl.imageType = SEARCH
     detailPresenterImpl.lastImageOperationType = CollectionsImageModel.SEARCH
@@ -1696,7 +2684,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should add image to collection on handleViewResult of add to collection type call success of wallpaper image type`() {
+  fun `should add image to collection on handleViewResult of add to collection type call success of wallpaper image type with progress value at 100`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.lastImageOperationType = CollectionsImageModel.WALLPAPER
