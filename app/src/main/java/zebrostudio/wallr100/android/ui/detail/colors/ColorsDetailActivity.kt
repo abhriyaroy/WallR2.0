@@ -390,8 +390,8 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     }
   }
 
-  private fun disableOperation(vararg imageOperationRelativeLayout: RelativeLayout) {
-    for (view in imageOperationRelativeLayout) {
+  private fun disableOperation(vararg views: RelativeLayout) {
+    for (view in views) {
       view.findViewById<ImageView>(R.id.operationImageView).apply {
         alpha = 0.3f
       }

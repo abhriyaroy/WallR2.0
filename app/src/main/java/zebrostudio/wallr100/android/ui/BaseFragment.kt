@@ -2,6 +2,7 @@ package zebrostudio.wallr100.android.ui
 
 import android.annotation.SuppressLint
 import android.arch.lifecycle.Lifecycle
+import android.graphics.PorterDuff.Mode.MULTIPLY
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.widget.ImageView
@@ -109,14 +110,14 @@ abstract class BaseFragment : Fragment(), BaseView {
     menuItemView.findViewById<WallrCustomTextView>(R.id.textviewGuillotineMenuItem)
         .setTextColor(colorRes(R.color.accent))
     menuItemView.findViewById<ImageView>(R.id.imageviewGuillotineMenuItem)
-        .setColorFilter(colorRes(R.color.accent), android.graphics.PorterDuff.Mode.MULTIPLY)
+        .setColorFilter(colorRes(R.color.accent), MULTIPLY)
   }
 
   private fun clearMenuItemViewHighlight(menuItemView: LinearLayout) {
     menuItemView.findViewById<WallrCustomTextView>(R.id.textviewGuillotineMenuItem)
         .setTextColor(colorRes(R.color.white))
     menuItemView.findViewById<ImageView>(R.id.imageviewGuillotineMenuItem)
-        .setColorFilter(colorRes(R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY)
+        .setColorFilter(colorRes(R.color.white), MULTIPLY)
   }
 
 }
