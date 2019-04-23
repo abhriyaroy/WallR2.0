@@ -103,6 +103,7 @@ android {
     implementation project(':libraryMaterialSpinner')
     implementation project(':libraryMaterialCab')
     implementation project(':libraryFloatingActionButton')
+    implementation project(':libraryColorPickerView')
     // Test runners
     testImplementation "junit:junit:$JUNIT_VERSION"
     testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"
