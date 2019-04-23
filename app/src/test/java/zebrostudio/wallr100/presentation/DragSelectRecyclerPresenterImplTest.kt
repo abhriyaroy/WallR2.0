@@ -2,6 +2,7 @@ package zebrostudio.wallr100.presentation
 
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -41,7 +42,6 @@ class DragSelectRecyclerPresenterImplTest {
     verify(dragSelectItemViewHolder).hideSelectedIndicator()
     verify(dragSelectItemViewHolder).showAddImageLayout()
     verify(dragSelectItemViewHolder).attachClickListener()
-    verifyNoMoreInteractions(dragSelectItemViewHolder)
   }
 
   @Test
@@ -59,7 +59,6 @@ class DragSelectRecyclerPresenterImplTest {
     verify(dragSelectItemViewHolder).setImageViewColor(randomString)
     verify(dragSelectItemViewHolder).attachLongClickListener()
     verify(dragSelectItemViewHolder).attachClickListener()
-    verifyNoMoreInteractions(dragSelectItemViewHolder)
   }
 
   @Test
@@ -79,6 +78,9 @@ class DragSelectRecyclerPresenterImplTest {
     verify(dragSelectItemViewHolder).attachLongClickListener()
     verify(dragSelectItemViewHolder).attachClickListener()
     verify(dragSelectItemViewHolder).showSelectedIndicator()
+  }
+
+  @After fun tearDown(){
     verifyNoMoreInteractions(dragSelectItemViewHolder)
   }
 

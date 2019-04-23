@@ -87,10 +87,12 @@ class DetailActivity : BaseActivity(), DetailView {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_detail)
     presenter.attachView(this)
-    if (intent.extras != null) {
-      presenter.setImageType(intent.extras!!.getInt(IMAGE_TYPE_TAG))
-    } else {
-      throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
+    intent.let {
+      if (it.hasExtra(IMAGE_TYPE_TAG)) {
+        presenter.setImageType(it.getIntExtra(IMAGE_TYPE_TAG, WALLPAPERS.ordinal))
+      } else {
+        throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
+      }
     }
     setUpExpandPanel()
     attachClickListeners()
@@ -117,13 +119,23 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun getWallpaperImageDetails(): ImagePresenterEntity {
-    return intent.extras!!.getSerializable(
-        IMAGE_DETAILS_TAG) as ImagePresenterEntity
+    return intent.let {
+      if (it.hasExtra(IMAGE_DETAILS_TAG)) {
+        it.getSerializableExtra(IMAGE_DETAILS_TAG) as ImagePresenterEntity
+      } else {
+        throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
+      }
+    }
   }
 
   override fun getSearchImageDetails(): SearchPicturesPresenterEntity {
-    return intent.extras!!.getSerializable(
-        IMAGE_DETAILS_TAG) as SearchPicturesPresenterEntity
+    return intent.let {
+      if (it.hasExtra(IMAGE_DETAILS_TAG)) {
+        it.getSerializableExtra(IMAGE_DETAILS_TAG) as SearchPicturesPresenterEntity
+      } else {
+        throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
+      }
+    }
   }
 
   override fun showAuthorDetails(name: String, profileImageLink: String) {

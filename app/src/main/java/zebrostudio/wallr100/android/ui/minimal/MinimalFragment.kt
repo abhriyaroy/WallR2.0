@@ -206,7 +206,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
   override fun showColorPickerDialogAndAttachColorPickerListener() {
     colorPickerDialog = MaterialDialog.Builder(context!!)
         .backgroundColor(colorRes(R.color.primary))
-        .customView(R.layout.dialog_colorpicker, false)
+        .customView(R.layout.dialog_color_picker, false)
         .contentColor(colorRes(R.color.white))
         .widgetColor(colorRes(R.color.accent))
         .positiveColor(colorRes(R.color.accent))
