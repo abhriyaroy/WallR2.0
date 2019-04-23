@@ -2,6 +2,7 @@ package zebrostudio.wallr100.presentation
 
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -34,9 +35,8 @@ class FragmentNameTagFetcherImplTest {
 
     val fragmentTag = fragmentNameTag.getFragmentName(EXPLORE_TAG)
 
-    verify(resourceUtils).getStringResource(R.string.explore_fragment_tag)
-    verifyNoMoreInteractions(resourceUtils)
     assertTrue(fragmentTag == exploreTag)
+    verify(resourceUtils).getStringResource(R.string.explore_fragment_tag)
   }
 
   @Test fun `should return top picks string on getFragmentName with top picks tag call success`() {
@@ -45,9 +45,8 @@ class FragmentNameTagFetcherImplTest {
 
     val fragmentTag = fragmentNameTag.getFragmentName(TOP_PICKS_TAG)
 
-    verify(resourceUtils).getStringResource(R.string.top_picks_fragment_tag)
-    verifyNoMoreInteractions(resourceUtils)
     assertTrue(fragmentTag == topPicksTag)
+    verify(resourceUtils).getStringResource(R.string.top_picks_fragment_tag)
   }
 
   @Test
@@ -58,9 +57,8 @@ class FragmentNameTagFetcherImplTest {
 
     val fragmentTag = fragmentNameTag.getFragmentName(CATEGORIES_TAG)
 
-    verify(resourceUtils).getStringResource(R.string.categories_fragment_tag)
-    verifyNoMoreInteractions(resourceUtils)
     assertTrue(fragmentTag == categoriesTag)
+    verify(resourceUtils).getStringResource(R.string.categories_fragment_tag)
   }
 
   @Test fun `should return minimal string on getFragmentName with minimal tag call success`() {
@@ -69,9 +67,8 @@ class FragmentNameTagFetcherImplTest {
 
     val fragmentTag = fragmentNameTag.getFragmentName(MINIMAL_TAG)
 
-    verify(resourceUtils).getStringResource(R.string.minimal_fragment_tag)
-    verifyNoMoreInteractions(resourceUtils)
     assertTrue(fragmentTag == minimalTag)
+    verify(resourceUtils).getStringResource(R.string.minimal_fragment_tag)
   }
 
   @Test
@@ -82,9 +79,12 @@ class FragmentNameTagFetcherImplTest {
 
     val fragmentTag = fragmentNameTag.getFragmentName(COLLECTIONS_TAG)
 
-    verify(resourceUtils).getStringResource(R.string.collection_fragment_tag)
-    verifyNoMoreInteractions(resourceUtils)
     assertTrue(fragmentTag == collectionsTag)
+    verify(resourceUtils).getStringResource(R.string.collection_fragment_tag)
+  }
+
+  @After fun tearDown() {
+    verifyNoMoreInteractions(resourceUtils)
   }
 
 }

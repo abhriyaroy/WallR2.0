@@ -7,24 +7,21 @@
   <com.skydoves.colorpickerview.ColorPickerView
       android:id="@+id/colorPickerView"
       android:layout_width="match_parent"
-      android:layout_height="300dp"
+      android:layout_height="@dimen/color_picker_view_height"
       app:palette="@drawable/palette"
       app:selector="@drawable/wheel"
-      android:layout_marginLeft="24dp"
-      android:layout_marginRight="24dp"
-      android:layout_marginTop="24dp"/>
+      android:layout_margin="@dimen/color_picker_view_margin"/>
 
   <RelativeLayout
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_below="@id/colorPickerView"
-      android:layout_marginTop="24dp"
       android:layout_centerHorizontal="true">
 
     <View
         android:id="@+id/sampleColorView"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="@dimen/sample_color_view_width"
+        android:layout_height="@dimen/sample_color_view_height"
         android:background="@color/white"/>
 
     <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
@@ -32,10 +29,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="24dp"
-        android:layout_centerVertical="true"
-        android:textSize="18sp"
+        android:layout_marginLeft="@dimen/sample_color_hex_text_view_margin_left"
         android:layout_toRightOf="@id/sampleColorView"
+        android:layout_centerVertical="true"
+        android:textSize="@dimen/sample_color_hex_text_view_text_size"
         android:text="@color/white"/>
 
   </RelativeLayout>

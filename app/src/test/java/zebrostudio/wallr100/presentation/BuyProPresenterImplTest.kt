@@ -49,17 +49,16 @@ class BuyProPresenterImplTest {
   }
 
   @Test
-  fun `should showGenericVerificationError on handlePurchaseClicked call failure due to iab not ready`() {
+  fun `should show generic verification error message on handlePurchaseClicked call failure due to iab not ready`() {
     `when`(buyProView.isIabReady()).thenReturn(false)
     buyProPresenterImpl.handlePurchaseClicked()
 
     verify(buyProView).isIabReady()
     verify(buyProView).showGenericVerificationError()
-    verifyNoMoreInteractions(buyProView)
   }
 
   @Test
-  fun `should showNoInternetErrorMessage on handlePurchaseClicked call failure on no internet`() {
+  fun `should show no internet error message on handlePurchaseClicked call failure on no internet`() {
     `when`(buyProView.isIabReady()).thenReturn(true)
     `when`(buyProView.internetAvailability()).thenReturn(false)
     buyProPresenterImpl.handlePurchaseClicked()
@@ -83,7 +82,7 @@ class BuyProPresenterImplTest {
   }
 
   @Test
-  fun `should showGenericVerificationError on handleRestoreClicked call failure due to iab not ready`() {
+  fun `should show generic verification error message on handleRestoreClicked call failure due to iab not ready`() {
     `when`(buyProView.isIabReady()).thenReturn(false)
 
     buyProPresenterImpl.handleRestoreClicked()
@@ -93,7 +92,7 @@ class BuyProPresenterImplTest {
   }
 
   @Test
-  fun `should showNoInternetErrorMessage on handleRestoreClicked call failure due to no internet`() {
+  fun `should show no internet error message on handleRestoreClicked call failure due to no internet`() {
     `when`(buyProView.isIabReady()).thenReturn(true)
     `when`(buyProView.internetAvailability()).thenReturn(false)
 

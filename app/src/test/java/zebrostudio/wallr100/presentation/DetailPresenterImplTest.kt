@@ -64,6 +64,7 @@ class DetailPresenterImplTest {
   @Mock private lateinit var resourceUtils: ResourceUtils
   @Mock private lateinit var postExecutionThread: PostExecutionThread
   @Mock private lateinit var mockUri: Uri
+  @Mock private lateinit var mockDestinationUri: Uri
   private lateinit var detailPresenterImpl: DetailPresenterImpl
   private lateinit var testScopeProvider: TestLifecycleScopeProvider
   private val downloadProgressCompletedValue: Long = 100
@@ -832,7 +833,7 @@ class DetailPresenterImplTest {
           it.onNext(imageDownloadModel)
         })
     `when`(imageOptionsUseCase.getCroppingSourceUri()).thenReturn(mockUri)
-    `when`(imageOptionsUseCase.getCroppingDestinationUri()).thenReturn(mockUri)
+    `when`(imageOptionsUseCase.getCroppingDestinationUri()).thenReturn(mockDestinationUri)
     `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(width)
     `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(height)
 
@@ -851,7 +852,7 @@ class DetailPresenterImplTest {
     verify(detailView).getScope()
     verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
     verify(detailView).startCroppingActivity(mockUri,
-        mockUri,
+        mockDestinationUri,
         width,
         height)
     verifyPostExecutionThreadSchedulerCall()
@@ -944,7 +945,7 @@ class DetailPresenterImplTest {
           it.onNext(imageDownloadModel)
         })
     `when`(imageOptionsUseCase.getCroppingSourceUri()).thenReturn(mockUri)
-    `when`(imageOptionsUseCase.getCroppingDestinationUri()).thenReturn(mockUri)
+    `when`(imageOptionsUseCase.getCroppingDestinationUri()).thenReturn(mockDestinationUri)
     `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(width)
     `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(height)
 
@@ -965,7 +966,7 @@ class DetailPresenterImplTest {
     verify(detailView).getScope()
     verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
     verify(detailView).startCroppingActivity(mockUri,
-        mockUri,
+        mockDestinationUri,
         width,
         height)
     verifyPostExecutionThreadSchedulerCall()

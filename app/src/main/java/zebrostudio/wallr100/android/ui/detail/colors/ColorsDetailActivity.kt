@@ -57,6 +57,7 @@ import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.ColorsDetailPresenter
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.ColorsDetailView
+import zebrostudio.wallr100.presentation.detail.images.ILLEGAL_STATE_EXCEPTION_MESSAGE
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
 import java.util.ArrayList
 import javax.inject.Inject
@@ -109,12 +110,19 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   override fun getMultiColorImageType(): MultiColorImageType {
-    return when (intent.getIntExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG,
-        MultiColorImageType.MATERIAL.ordinal)) {
-      MultiColorImageType.MATERIAL.ordinal -> MultiColorImageType.MATERIAL
-      MultiColorImageType.GRADIENT.ordinal -> MultiColorImageType.GRADIENT
-      else -> MultiColorImageType.PLASMA
+    return intent.let {
+      if (it.hasExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG)) {
+        when (it.getIntExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG,
+            MultiColorImageType.MATERIAL.ordinal)) {
+          MultiColorImageType.MATERIAL.ordinal -> MultiColorImageType.MATERIAL
+          MultiColorImageType.GRADIENT.ordinal -> MultiColorImageType.GRADIENT
+          else -> MultiColorImageType.PLASMA
+        }
+      } else {
+        throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
+      }
     }
+
   }
 
   override fun showImageTypeText(text: String) {
@@ -346,17 +354,20 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   private fun processIntent() {
-    if (intent.extras != null) {
-      presenter.setColorsDetailMode(
-          if (intent.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG, SINGLE.ordinal)
-              == SINGLE.ordinal) {
-            SINGLE
-          } else {
-            MULTIPLE
-          })
-      presenter.setColorList(intent.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG))
-    } else {
-      throw IllegalStateException()
+    intent.let {
+      if (it.hasExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG)
+          && it.hasExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)) {
+        presenter.setColorsDetailMode(
+            if (it.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG, SINGLE.ordinal)
+                == SINGLE.ordinal) {
+              SINGLE
+            } else {
+              MULTIPLE
+            })
+        presenter.setColorList(it.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG))
+      } else {
+        throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
+      }
     }
   }
 

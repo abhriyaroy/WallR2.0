@@ -24,11 +24,10 @@ import zebrostudio.wallr100.android.utils.hideStatusBarAndNavigationBar
 import zebrostudio.wallr100.android.utils.makeNavigationBarAndStatusBarTransparent
 import zebrostudio.wallr100.android.utils.showStatusBarAndNavigationBar
 import zebrostudio.wallr100.android.utils.visible
+import zebrostudio.wallr100.presentation.detail.images.ILLEGAL_STATE_EXCEPTION_MESSAGE
 import zebrostudio.wallr100.presentation.expandimage.FullScreenImageContract.FullScreenImagePresenter
 import zebrostudio.wallr100.presentation.expandimage.FullScreenImageContract.FullScreenImageView
 import javax.inject.Inject
-
-const val ILLEGAL_STATE_EXCEPTION_MESSAGE = "Activity is not invoked using getCallingIntent methods"
 
 class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
 
@@ -39,7 +38,13 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
     preventWindowFromTakingScreenshot()
     setContentView(R.layout.activity_full_screen_image)
     presenter.attachView(this)
-    presenter.setCalledIntent(intent)
+    intent.let {
+      if (it.hasExtra(IMAGE_LOADING_TYPE_TAG)) {
+        presenter.setImageLoadingType(it.getIntExtra(IMAGE_LOADING_TYPE_TAG, REMOTE.ordinal))
+      } else {
+        throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
+      }
+    }
     initStatusBarAndNavigationBarConfiguration()
     configurePhotoView()
     backIcon.setOnClickListener {
@@ -52,13 +57,15 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
     super.onDestroy()
   }
 
-  override fun throwIllegalStateException() {
-    throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
-  }
-
-  override fun getImageLinksFromBundle() {
-    presenter.setLowQualityImageLink(intent.getStringExtra(LOW_QUALITY_IMAGE_TAG))
-    presenter.setHighQualityImageLink(intent.getStringExtra(HIGH_QUALITY_IMAGE_TAG))
+  override fun getImageLinks() {
+    intent.let {
+      if (it.hasExtra(LOW_QUALITY_IMAGE_TAG) && it.hasExtra(HIGH_QUALITY_IMAGE_TAG)) {
+        presenter.setLowQualityImageLink(it.getStringExtra(LOW_QUALITY_IMAGE_TAG))
+        presenter.setHighQualityImageLink(it.getStringExtra(HIGH_QUALITY_IMAGE_TAG))
+      } else {
+        throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
+      }
+    }
   }
 
   override fun showLowQualityImage(link: String) {
@@ -77,7 +84,7 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
             target: Target<Drawable>?,
             isFirstResource: Boolean
           ): Boolean {
-            presenter.notifyHighQualityImageLoadingFailed()
+            presenter.handleHighQualityImageLoadingFailed()
             return false
           }
 
@@ -88,7 +95,7 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
             dataSource: DataSource?,
             isFirstResource: Boolean
           ): Boolean {
-            presenter.notifyHighQualityImageLoadingFinished()
+            presenter.handleHighQualityImageLoadingFinished()
             return false
           }
 
@@ -106,7 +113,7 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
             target: Target<Drawable>?,
             isFirstResource: Boolean
           ): Boolean {
-            presenter.notifyHighQualityImageLoadingFailed()
+            presenter.handleHighQualityImageLoadingFailed()
             return false
           }
 
@@ -117,7 +124,7 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
             dataSource: DataSource?,
             isFirstResource: Boolean
           ): Boolean {
-            presenter.notifyHighQualityImageLoadingFinished()
+            presenter.handleHighQualityImageLoadingFinished()
             return false
           }
 
@@ -167,7 +174,7 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
 
   private fun configurePhotoView() {
     highQualityImagePhotoView.setOnPhotoTapListener { _, _, _ ->
-      presenter.notifyPhotoViewTapped()
+      presenter.notifyZoomImageViewTapped()
     }
     highQualityImagePhotoView.maximumScale = 5.0f
     highQualityImagePhotoView.mediumScale = 3.0f
@@ -182,7 +189,7 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
       return Intent(context, FullScreenImageActivity::class.java)
           .apply {
             putExtras(Bundle().apply {
-              putInt(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG, imageLoadingType.ordinal)
+              putInt(IMAGE_LOADING_TYPE_TAG, imageLoadingType.ordinal)
             })
           }
     }
@@ -194,9 +201,9 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
     ): Intent {
       return Intent(context, FullScreenImageActivity::class.java).apply {
         putExtras(Bundle().apply {
-          putInt(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG, REMOTE.ordinal)
-          putString(FullScreenImageActivity.LOW_QUALITY_IMAGE_TAG, lowQualityLink)
-          putString(FullScreenImageActivity.HIGH_QUALITY_IMAGE_TAG, highQualityLink)
+          putInt(IMAGE_LOADING_TYPE_TAG, REMOTE.ordinal)
+          putString(LOW_QUALITY_IMAGE_TAG, lowQualityLink)
+          putString(HIGH_QUALITY_IMAGE_TAG, highQualityLink)
         })
       }
     }
