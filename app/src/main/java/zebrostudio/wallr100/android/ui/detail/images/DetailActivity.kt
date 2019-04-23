@@ -441,7 +441,7 @@ class DetailActivity : BaseActivity(), DetailView {
   override fun showCrystallizeDescriptionDialog() {
     MaterialDialog.Builder(this)
         .backgroundColor(colorRes(R.color.primary))
-        .customView(R.layout.crystallize_example_dialog_layout, false)
+        .customView(R.layout.dialog_crystallize_example, false)
         .contentColor(colorRes(R.color.white))
         .widgetColor(colorRes(R.color.accent))
         .positiveColor(colorRes(R.color.accent))

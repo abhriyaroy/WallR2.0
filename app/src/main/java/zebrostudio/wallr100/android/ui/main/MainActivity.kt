@@ -21,9 +21,9 @@ import kotlinx.android.synthetic.main.activity_main.appbar
 import kotlinx.android.synthetic.main.activity_main.fragmentContainer
 import kotlinx.android.synthetic.main.activity_main.rootFrameLayout
 import kotlinx.android.synthetic.main.activity_main.toolbar
-import kotlinx.android.synthetic.main.guillotine_menu_layout.rootLinearLayoutGuillotineMenu
-import kotlinx.android.synthetic.main.guillotine_menu_layout.view.hamburgerGuillotineMenu
-import kotlinx.android.synthetic.main.guillotine_menu_layout.view.proBadgeGuillotineMenu
+import kotlinx.android.synthetic.main.menu_guillotine_layout.rootLinearLayoutGuillotineMenu
+import kotlinx.android.synthetic.main.menu_guillotine_layout.view.hamburgerGuillotineMenu
+import kotlinx.android.synthetic.main.menu_guillotine_layout.view.proBadgeGuillotineMenu
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.imageviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.textviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
 
   private fun initializeViews() {
     val guillotineMenu = LayoutInflater.from(this)
-        .inflate(R.layout.guillotine_menu_layout, null)
+        .inflate(R.layout.menu_guillotine_layout, null)
     rootFrameLayout.addView(guillotineMenu)
 
     setSupportActionBar(toolbar)
