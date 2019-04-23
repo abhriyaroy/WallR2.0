@@ -14,7 +14,9 @@ import com.afollestad.dragselectrecyclerview.DragSelectTouchListener
 import com.afollestad.dragselectrecyclerview.Mode.RANGE
 import com.afollestad.materialcab.MaterialCab
 import com.afollestad.materialdialogs.MaterialDialog
+import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerView
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.minimalBottomLayout
 import kotlinx.android.synthetic.main.activity_main.minimalBottomLayoutFab
@@ -224,10 +226,12 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
     colorPickerDialog?.customView?.apply {
       findViewById<ColorPickerView>(R.id.colorPickerView).let { colorPickerView ->
-        colorPickerView.setColorListener {
-          findViewById<TextView>(R.id.colorPickerHexTextView).text = "#${colorPickerView.colorHtml}"
-          findViewById<View>(R.id.sampleColorView).setBackgroundColor(it)
-        }
+        colorPickerView.setColorListener(object : ColorEnvelopeListener {
+          override fun onColorSelected(envelope: ColorEnvelope, fromUser: Boolean) {
+            findViewById<TextView>(R.id.colorPickerHexTextView).text = "#${envelope.hexCode}}"
+            findViewById<View>(R.id.sampleColorView).setBackgroundColor(envelope.color)
+          }
+        })
       }
     }
   }

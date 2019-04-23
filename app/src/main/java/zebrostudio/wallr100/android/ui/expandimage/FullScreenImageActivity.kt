@@ -212,6 +212,6 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
 
 enum class ImageLoadingType {
   REMOTE,
-  CRYSTALLIZED_BITMAP_CACHE,
-  EDITED_BITMAP_CACHE
+  BITMAP_CACHE,
+  CRYSTALLIZED_BITMAP_CACHE
 }

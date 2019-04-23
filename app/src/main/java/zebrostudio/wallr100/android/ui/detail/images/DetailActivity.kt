@@ -51,7 +51,7 @@ import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE
-import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.EDITED_BITMAP_CACHE
+import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.BITMAP_CACHE
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
@@ -479,7 +479,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showEditedExpandedImage() {
-    startActivity(FullScreenImageActivity.getCallingIntent(this, EDITED_BITMAP_CACHE))
+    startActivity(FullScreenImageActivity.getCallingIntent(this, BITMAP_CACHE))
   }
 
   override fun collapseSlidingPanel() {

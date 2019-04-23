@@ -18,7 +18,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE
-import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.EDITED_BITMAP_CACHE
+import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.BITMAP_CACHE
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.REMOTE
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
@@ -68,7 +68,7 @@ class FullScreenImagePresenterImplTest {
     verify(fullScreenImageView).showImage(mockBitmap)
     verify(fullScreenImageView).hideLoader()
     verify(imageOptionsUseCase).getCrystallizedImageSingle()
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -76,14 +76,14 @@ class FullScreenImagePresenterImplTest {
     `when`(imageOptionsUseCase.getEditedImageSingle()).thenReturn(Single.just(mockBitmap))
     `when`(fullScreenImageView.getScope()).thenReturn(testScopeProvider)
 
-    presenter.setImageLoadingType(EDITED_BITMAP_CACHE.ordinal)
+    presenter.setImageLoadingType(BITMAP_CACHE.ordinal)
 
     verify(fullScreenImageView).showLoader()
     verify(fullScreenImageView).getScope()
     verify(fullScreenImageView).showImage(mockBitmap)
     verify(fullScreenImageView).hideLoader()
     verify(imageOptionsUseCase).getEditedImageSingle()
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should show low quality image and loader on setLowQualityImageLink call success`() {
@@ -163,12 +163,12 @@ class FullScreenImagePresenterImplTest {
 
   @After
   fun tearDown() {
-    presenter.detachView()
     verifyNoMoreInteractions(fullScreenImageView, imageOptionsUseCase, mockBitmap,
         postExecutionThread)
+    presenter.detachView()
   }
 
-  private fun shouldVerifyPostExecutionThreadSchedulerCall(times: Int = 1) {
+  private fun verifyPostExecutionThreadSchedulerCall(times: Int = 1) {
     verify(postExecutionThread, times(times)).scheduler
   }
 

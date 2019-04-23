@@ -2,7 +2,7 @@ package zebrostudio.wallr100.presentation.expandimage
 
 import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE
-import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.EDITED_BITMAP_CACHE
+import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.BITMAP_CACHE
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.REMOTE
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
@@ -31,7 +31,7 @@ class FullScreenImagePresenterImpl(
     when (type) {
       REMOTE.ordinal -> fullScreenView?.getImageLinks()
       CRYSTALLIZED_BITMAP_CACHE.ordinal -> fetchCrystallizedImageBitmap()
-      EDITED_BITMAP_CACHE.ordinal -> fetchEditedImageBitmap()
+      BITMAP_CACHE.ordinal -> fetchEditedImageBitmap()
     }
   }
 

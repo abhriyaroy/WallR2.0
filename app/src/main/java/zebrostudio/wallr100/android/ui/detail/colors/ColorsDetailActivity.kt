@@ -46,7 +46,7 @@ import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.SINGLE
 import zebrostudio.wallr100.android.ui.detail.images.BLUR_RADIUS
 import zebrostudio.wallr100.android.ui.detail.images.SLIDING_PANEL_PARALLEL_OFFSET
 import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
-import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.EDITED_BITMAP_CACHE
+import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.BITMAP_CACHE
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
@@ -267,7 +267,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   override fun showFullScreenImage() {
-    startActivity(FullScreenImageActivity.getCallingIntent(this, EDITED_BITMAP_CACHE))
+    startActivity(FullScreenImageActivity.getCallingIntent(this, BITMAP_CACHE))
   }
 
   override fun showDownloadCompletedSuccessMessage() {
