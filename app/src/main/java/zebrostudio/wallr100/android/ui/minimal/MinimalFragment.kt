@@ -228,7 +228,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
       findViewById<ColorPickerView>(R.id.colorPickerView).let { colorPickerView ->
         colorPickerView.setColorListener(object : ColorEnvelopeListener {
           override fun onColorSelected(envelope: ColorEnvelope, fromUser: Boolean) {
-            findViewById<TextView>(R.id.colorPickerHexTextView).text = "#${envelope.hexCode}}"
+            findViewById<TextView>(R.id.colorPickerHexTextView).text = "#${envelope.hexCode}"
             findViewById<View>(R.id.sampleColorView).setBackgroundColor(envelope.color)
           }
         })
