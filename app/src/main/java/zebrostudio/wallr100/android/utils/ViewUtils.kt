@@ -14,12 +14,7 @@ import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
 import android.widget.Toast
-import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
 import zebrostudio.wallr100.R
 
 fun View.setOnDebouncedClickListener(onClick: (v: View) -> Unit) {
@@ -75,7 +70,6 @@ fun ViewGroup.inflate(
   root: ViewGroup = this,
   attachToRoot: Boolean = false
 ) = inflater.inflate(layoutRes, root, attachToRoot)!!
-
 
 fun withDelayOnMain(delay: Long, block: () -> Unit) {
   Handler(Looper.getMainLooper()).postDelayed(Runnable(block), delay)

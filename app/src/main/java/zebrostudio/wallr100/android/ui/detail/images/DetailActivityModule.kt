@@ -7,7 +7,7 @@ import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
-import zebrostudio.wallr100.presentation.detail.images.DetailContract
+import zebrostudio.wallr100.presentation.detail.images.DetailContract.DetailPresenter
 import zebrostudio.wallr100.presentation.detail.images.DetailPresenterImpl
 import zebrostudio.wallr100.presentation.detail.images.mapper.ImageDownloadPresenterEntityMapper
 
@@ -26,7 +26,7 @@ class DetailActivityModule {
     wallpaperSetter: WallpaperSetter,
     postExecutionThread: PostExecutionThread,
     imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper
-  ): DetailContract.DetailPresenter = DetailPresenterImpl(
+  ): DetailPresenter = DetailPresenterImpl(
       resourceUtils,
       imageOptionsUseCase,
       userPremiumStatusUseCase,

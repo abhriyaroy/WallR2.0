@@ -6,14 +6,12 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.data.database.DatabaseHelper
-import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 
 @RunWith(MockitoJUnitRunner::class)
 class ImageHandlerTest {

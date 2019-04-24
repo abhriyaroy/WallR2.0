@@ -20,6 +20,8 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.github.zagum.expandicon.ExpandIconView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED
 import com.yalantis.ucrop.UCrop
 import dagger.android.AndroidInjection
 import eightbitlab.com.blurview.RenderScriptBlur
@@ -66,6 +68,7 @@ const val COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG = "colors_hex_list"
 const val COLORS_DETAIL_MODE_INTENT_EXTRA_TAG = "colors_mode"
 const val COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG = "colors_type"
 const val INTENT_IMAGE_TYPE = "image/*"
+const val WALLR_DOWNLOAD_LINK = "http://bit.ly/download_wallr"
 
 class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
@@ -122,7 +125,6 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
         throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
       }
     }
-
   }
 
   override fun showImageTypeText(text: String) {
@@ -204,11 +206,11 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   override fun showWallpaperSetErrorMessage() {
-    errorToast(stringRes(R.string.detail_activity_set_wallpaper_error_message))
+    errorToast(stringRes(R.string.set_wallpaper_error_message))
   }
 
   override fun showWallpaperSetSuccessMessage() {
-    successToast(stringRes(R.string.detail_activity_set_wallpaper_success_message))
+    successToast(stringRes(R.string.set_wallpaper_success_message))
   }
 
   override fun showAddToCollectionSuccessMessage() {
@@ -216,7 +218,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   override fun collapsePanel() {
-    slidingPanel.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+    slidingPanel.panelState = COLLAPSED
   }
 
   override fun disableColorOperations() {
@@ -283,7 +285,8 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     sendIntent.action = Intent.ACTION_SEND
     sendIntent.putExtra(Intent.EXTRA_STREAM, uri)
     sendIntent.type = INTENT_IMAGE_TYPE
-    sendIntent.putExtra(Intent.EXTRA_TEXT, stringRes(R.string.share_intent_message) + "\n\n")
+    sendIntent.putExtra(Intent.EXTRA_TEXT,
+        stringRes(R.string.share_intent_message, WALLR_DOWNLOAD_LINK) + "\n\n")
     sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     startActivity(Intent.createChooser(sendIntent, stringRes(R.string.share_link_using)))
   }
@@ -342,10 +345,10 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
         previousState: SlidingUpPanelLayout.PanelState,
         newState: SlidingUpPanelLayout.PanelState
       ) {
-        if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+        if (newState == EXPANDED) {
           expandIconView.setState(ExpandIconView.MORE, true)
           presenter.notifyPanelExpanded()
-        } else if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+        } else if (newState == COLLAPSED) {
           expandIconView.setState(ExpandIconView.LESS, true)
           presenter.notifyPanelCollapsed()
         }

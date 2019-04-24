@@ -80,7 +80,7 @@ class DragSelectRecyclerPresenterImplTest {
     verify(dragSelectItemViewHolder).showSelectedIndicator()
   }
 
-  @After fun tearDown(){
+  @After fun tearDown() {
     verifyNoMoreInteractions(dragSelectItemViewHolder)
   }
 

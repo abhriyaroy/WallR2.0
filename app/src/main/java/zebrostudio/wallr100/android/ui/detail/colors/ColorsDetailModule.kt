@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.android.ui.detail.colors
 
-import android.content.Context
 import dagger.Module
 import dagger.Provides
 import zebrostudio.wallr100.android.utils.ResourceUtils

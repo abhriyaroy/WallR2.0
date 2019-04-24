@@ -26,7 +26,7 @@ interface FullScreenImageContract {
     fun setHighQualityImageLink(link: String)
     fun handleHighQualityImageLoadingFinished()
     fun handleHighQualityImageLoadingFailed()
-    fun notifyZoomImageViewTapped()
+    fun handleZoomImageViewTapped()
     fun notifyStatusBarAndNavBarShown()
     fun notifyStatusBarAndNavBarHidden()
   }

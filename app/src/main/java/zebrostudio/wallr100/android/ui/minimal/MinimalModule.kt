@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.MinimalImagesUseCase
-import zebrostudio.wallr100.presentation.minimal.MinimalContract
+import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalPresenterImpl
 
 @Module
@@ -14,7 +14,7 @@ class MinimalModule {
   internal fun provideMinimalPresenter(
     minimalImagesUseCase: MinimalImagesUseCase,
     postExecutionThread: PostExecutionThread
-  ): MinimalContract.MinimalPresenter = MinimalPresenterImpl(minimalImagesUseCase,
+  ): MinimalPresenter = MinimalPresenterImpl(minimalImagesUseCase,
       postExecutionThread)
 
 }

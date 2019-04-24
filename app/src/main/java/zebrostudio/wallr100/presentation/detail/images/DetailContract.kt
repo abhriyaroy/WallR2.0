@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.presentation.detail.images
 
-import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import zebrostudio.wallr100.presentation.BasePresenter

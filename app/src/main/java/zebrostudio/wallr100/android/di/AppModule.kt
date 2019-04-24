@@ -60,7 +60,7 @@ import zebrostudio.wallr100.domain.interactor.WallpaperImagesInteractor
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.DragSelectItemPresenter
 import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerIPresenterImpl
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract.ImageRecyclerViewPresenter
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
 import javax.inject.Singleton
 
@@ -229,7 +229,7 @@ class AppModule {
 
   @Provides
   fun provideImageRecyclerViewPresenter()
-      : ImageRecyclerItemContract.ImageRecyclerViewPresenter = ImageRecyclerViewPresenterImpl()
+      : ImageRecyclerViewPresenter = ImageRecyclerViewPresenterImpl()
 
   @Provides
   fun provideDragSelectRecyclerItemPresenter(): DragSelectItemPresenter = DragSelectRecyclerIPresenterImpl()

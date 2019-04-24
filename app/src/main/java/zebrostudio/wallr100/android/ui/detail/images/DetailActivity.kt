@@ -49,9 +49,10 @@ import kotlinx.android.synthetic.main.activity_detail.wallpaperDownloadProgressP
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
+import zebrostudio.wallr100.android.ui.detail.colors.WALLR_DOWNLOAD_LINK
 import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
-import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.BITMAP_CACHE
+import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
@@ -238,8 +239,9 @@ class DetailActivity : BaseActivity(), DetailView {
   override fun shareLink(shortLink: String) {
     val sendIntent = Intent()
     sendIntent.action = Intent.ACTION_SEND
-    sendIntent.putExtra(Intent.EXTRA_TEXT, stringRes(R.string.share_intent_message) +
-        "\n\n" + shortLink)
+    sendIntent.putExtra(Intent.EXTRA_TEXT,
+        stringRes(R.string.share_intent_message, WALLR_DOWNLOAD_LINK) + "\n\n"
+            + "Image link - $shortLink")
     sendIntent.type = "text/plain"
     startActivity(Intent.createChooser(sendIntent, stringRes(R.string.share_link_using)))
   }
@@ -341,11 +343,11 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showWallpaperSetErrorMessage() {
-    errorToast(stringRes(R.string.detail_activity_set_wallpaper_error_message))
+    errorToast(stringRes(R.string.set_wallpaper_error_message))
   }
 
   override fun showWallpaperSetSuccessMessage() {
-    successToast(stringRes(R.string.detail_activity_set_wallpaper_success_message))
+    successToast(stringRes(R.string.set_wallpaper_success_message))
   }
 
   override fun updateProgressPercentage(progress: String) {

@@ -47,15 +47,15 @@ class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
           PURCHASE)
     }
   }
-  private val queryInventoryFinishedListener = QueryInventoryFinishedListener { result, inv ->
+  private val queryInventoryFinishedListener = QueryInventoryFinishedListener { result, inventory ->
     if (result.isFailure) {
       showGenericVerificationError()
       dismissWaitLoader()
     } else {
       buyProPresenter.verifyTransaction(
-          inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).packageName,
-          inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).sku,
-          inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).token,
+          inventory.getPurchase(PurchaseTransactionConfig.ITEM_SKU).packageName,
+          inventory.getPurchase(PurchaseTransactionConfig.ITEM_SKU).sku,
+          inventory.getPurchase(PurchaseTransactionConfig.ITEM_SKU).token,
           RESTORE)
     }
   }

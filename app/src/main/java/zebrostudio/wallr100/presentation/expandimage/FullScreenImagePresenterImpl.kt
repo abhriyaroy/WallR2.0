@@ -56,7 +56,7 @@ class FullScreenImagePresenterImpl(
     fullScreenView?.showHighQualityImageLoadingError()
   }
 
-  override fun notifyZoomImageViewTapped() {
+  override fun handleZoomImageViewTapped() {
     if (isInFullScreenMode) {
       fullScreenView?.showStatusAndNavBar()
     } else {

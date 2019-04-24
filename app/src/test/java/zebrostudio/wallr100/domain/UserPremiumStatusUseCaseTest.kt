@@ -63,7 +63,7 @@ class UserPremiumStatusUseCaseTest {
     verify(wallrRepository).isUserPremium()
   }
 
-  @After fun tearDown(){
+  @After fun tearDown() {
     verifyNoMoreInteractions(wallrRepository)
   }
 }

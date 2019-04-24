@@ -21,11 +21,11 @@ import kotlinx.android.synthetic.main.activity_main.appbar
 import kotlinx.android.synthetic.main.activity_main.fragmentContainer
 import kotlinx.android.synthetic.main.activity_main.rootFrameLayout
 import kotlinx.android.synthetic.main.activity_main.toolbar
+import kotlinx.android.synthetic.main.item_guillotine_menu.view.imageviewGuillotineMenuItem
+import kotlinx.android.synthetic.main.item_guillotine_menu.view.textviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.menu_guillotine_layout.rootLinearLayoutGuillotineMenu
 import kotlinx.android.synthetic.main.menu_guillotine_layout.view.hamburgerGuillotineMenu
 import kotlinx.android.synthetic.main.menu_guillotine_layout.view.proBadgeGuillotineMenu
-import kotlinx.android.synthetic.main.item_guillotine_menu.view.imageviewGuillotineMenuItem
-import kotlinx.android.synthetic.main.item_guillotine_menu.view.textviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
 import kotlinx.android.synthetic.main.toolbar_layout.toolbarSearchIcon
 import zebrostudio.wallr100.R

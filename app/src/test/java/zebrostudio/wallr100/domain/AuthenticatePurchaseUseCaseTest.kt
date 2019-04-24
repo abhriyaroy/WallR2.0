@@ -43,7 +43,8 @@ class AuthenticatePurchaseUseCaseTest {
   @Test fun `should complete when successful purchase verification`() {
     stubAuthenticatePurchaseReturnsCompletableSuccess()
 
-    authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId, purchaseToken).test()
+    authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId, purchaseToken)
+        .test()
         .assertComplete()
 
     verify(wallrRepository).authenticatePurchase(packageName, skuId, purchaseToken)
@@ -61,7 +62,8 @@ class AuthenticatePurchaseUseCaseTest {
   @Test fun `should return unableToVerifyPurchaseException when unable to verify purchase`() {
     stubAuthenticatePurchaseReturnsUnableToVerifyPurchaseException()
 
-    authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId, purchaseToken).test()
+    authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId, purchaseToken)
+        .test()
         .assertError(UnableToVerifyPurchaseException::class.java)
 
     verify(wallrRepository).authenticatePurchase(packageName, skuId, purchaseToken)

@@ -174,7 +174,7 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
 
   private fun configurePhotoView() {
     highQualityImagePhotoView.setOnPhotoTapListener { _, _, _ ->
-      presenter.notifyZoomImageViewTapped()
+      presenter.handleZoomImageViewTapped()
     }
     highQualityImagePhotoView.maximumScale = 5.0f
     highQualityImagePhotoView.mediumScale = 3.0f

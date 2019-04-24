@@ -17,8 +17,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
-import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.BITMAP_CACHE
+import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.REMOTE
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
@@ -50,7 +50,8 @@ class FullScreenImagePresenterImplTest {
     `when`(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 
-  @Test fun `should call getImageLinks on setImageLoadingType call success of loading type remote`() {
+  @Test
+  fun `should call getImageLinks on setImageLoadingType call success of loading type remote`() {
     presenter.setImageLoadingType(REMOTE.ordinal)
 
     verify(fullScreenImageView).getImageLinks()
@@ -128,22 +129,22 @@ class FullScreenImagePresenterImplTest {
   }
 
   @Test
-  fun `should show status bar and navigation bar on notifyZoomImageViewTapped call success when full screen mode is on`() {
+  fun `should show status bar and navigation bar on handleZoomImageViewTapped call success when full screen mode is on`() {
     presenter.isInFullScreenMode = true
     presenter.setImageLoadingType(REMOTE.ordinal)
 
-    presenter.notifyZoomImageViewTapped()
+    presenter.handleZoomImageViewTapped()
 
     verify(fullScreenImageView).getImageLinks()
     verify(fullScreenImageView).showStatusAndNavBar()
   }
 
   @Test
-  fun `should hide status bar and navigation bar on notifyZoomImageViewTapped call success when full screen mode is off`() {
+  fun `should hide status bar and navigation bar on handleZoomImageViewTapped call success when full screen mode is off`() {
     presenter.setImageLoadingType(REMOTE.ordinal)
     presenter.isInFullScreenMode = false
 
-    presenter.notifyZoomImageViewTapped()
+    presenter.handleZoomImageViewTapped()
 
     verify(fullScreenImageView).getImageLinks()
     verify(fullScreenImageView).hideStatusAndNavBar()
