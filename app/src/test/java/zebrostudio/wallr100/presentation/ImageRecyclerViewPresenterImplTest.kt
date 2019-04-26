@@ -17,7 +17,6 @@ import zebrostudio.wallr100.presentation.datafactory.ImagePresenterEntityFactory
 import zebrostudio.wallr100.presentation.datafactory.SearchPicturesPresenterEntityFactory
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
-import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class ImageRecyclerViewPresenterImplTest {
@@ -85,7 +84,6 @@ class ImageRecyclerViewPresenterImplTest {
         searchPicturesList[position].paletteColor)
     verify(imageRecyclerItemView).setSearchImage(
         searchPicturesList[position].imageQualityUrlPresenterEntity.smallImageLink)
-    verifyNoMoreInteractions(imageRecyclerItemView)
   }
 
   @Test
@@ -102,7 +100,6 @@ class ImageRecyclerViewPresenterImplTest {
     verify(imageRecyclerItemView).setImageViewBackgroundAndAttachClickListener(
         wallpaperImagesList[position].color)
     verify(imageRecyclerItemView).setWallpaperImage(wallpaperImagesList[position].imageLink.thumb)
-    verifyNoMoreInteractions(imageRecyclerItemView)
   }
 
   @Test
@@ -161,7 +158,7 @@ class ImageRecyclerViewPresenterImplTest {
     verify(imageRecyclerItemView).showWallpaperImageDetails(wallpaperImagesList[position])
   }
 
-  @After fun tearDown(){
+  @After fun tearDown() {
     verifyNoMoreInteractions(imageRecyclerItemView)
   }
 }
