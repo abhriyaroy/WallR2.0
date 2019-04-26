@@ -255,7 +255,7 @@ class WallrDataRepository(
   }
 
   override fun saveCachedImageToDownloads(): Completable {
-    return imageHandler.saveCacheImageToDownloads()
+    return imageHandler.addCachedImageToDownloads()
         .subscribeOn(executionThread.computationScheduler)
   }
 
@@ -279,7 +279,7 @@ class WallrDataRepository(
   }
 
   override fun saveImageToCollections(data: String, type: CollectionsImageModel): Completable {
-    return imageHandler.saveImageToCollections(data,
+    return imageHandler.addImageToCollections(data,
         databaseImageTypeMapper.mapToDatabaseImageType(type))
         .subscribeOn(executionThread.computationScheduler)
   }

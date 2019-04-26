@@ -1,14 +1,20 @@
 package zebrostudio.wallr100.android.ui.detail.colors
 
-import android.Manifest
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.content.Intent.ACTION_SEND
+import android.content.Intent.EXTRA_STREAM
+import android.content.Intent.EXTRA_TEXT
+import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
+import android.content.Intent.createChooser
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat.requestPermissions
-import android.support.v4.content.ContextCompat
+import android.support.v4.content.ContextCompat.checkSelfPermission
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -61,6 +67,9 @@ import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.Colo
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.ColorsDetailView
 import zebrostudio.wallr100.presentation.detail.images.ILLEGAL_STATE_EXCEPTION_MESSAGE
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -69,6 +78,8 @@ const val COLORS_DETAIL_MODE_INTENT_EXTRA_TAG = "colors_mode"
 const val COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG = "colors_type"
 const val INTENT_IMAGE_TYPE = "image/*"
 const val WALLR_DOWNLOAD_LINK = "http://bit.ly/download_wallr"
+private const val ALPHA_PARTIALLY_VISIBLE = 0.3f
+private const val ALPHA_COMPLETELY_VISIBLE = 1.0f
 
 class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
@@ -116,10 +127,10 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     return intent.let {
       if (it.hasExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG)) {
         when (it.getIntExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG,
-            MultiColorImageType.MATERIAL.ordinal)) {
-          MultiColorImageType.MATERIAL.ordinal -> MultiColorImageType.MATERIAL
-          MultiColorImageType.GRADIENT.ordinal -> MultiColorImageType.GRADIENT
-          else -> MultiColorImageType.PLASMA
+            MATERIAL.ordinal)) {
+          MATERIAL.ordinal -> MATERIAL
+          GRADIENT.ordinal -> GRADIENT
+          else -> PLASMA
         }
       } else {
         throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
@@ -132,12 +143,12 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   override fun hasStoragePermission(): Boolean {
-    val readPermission = ContextCompat.checkSelfPermission(this,
-        Manifest.permission.READ_EXTERNAL_STORAGE)
-    val writePermission = ContextCompat.checkSelfPermission(this,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    if (readPermission != PackageManager.PERMISSION_GRANTED
-        || writePermission != PackageManager.PERMISSION_GRANTED) {
+    val readPermission = checkSelfPermission(this,
+        READ_EXTERNAL_STORAGE)
+    val writePermission = checkSelfPermission(this,
+        WRITE_EXTERNAL_STORAGE)
+    if (readPermission != PERMISSION_GRANTED
+        || writePermission != PERMISSION_GRANTED) {
       return false
     }
     return true
@@ -145,8 +156,8 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
   override fun requestStoragePermission(colorsActionType: ColorsActionType) {
     requestPermissions(this,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE), colorsActionType.ordinal)
+        arrayOf(READ_EXTERNAL_STORAGE,
+            WRITE_EXTERNAL_STORAGE), colorsActionType.ordinal)
   }
 
   override fun showPermissionRequiredMessage() {
@@ -282,13 +293,13 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
   override fun showShareIntent(uri: Uri) {
     val sendIntent = Intent()
-    sendIntent.action = Intent.ACTION_SEND
-    sendIntent.putExtra(Intent.EXTRA_STREAM, uri)
+    sendIntent.action = ACTION_SEND
+    sendIntent.putExtra(EXTRA_STREAM, uri)
     sendIntent.type = INTENT_IMAGE_TYPE
-    sendIntent.putExtra(Intent.EXTRA_TEXT,
+    sendIntent.putExtra(EXTRA_TEXT,
         stringRes(R.string.share_intent_message, WALLR_DOWNLOAD_LINK) + "\n\n")
-    sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    startActivity(Intent.createChooser(sendIntent, stringRes(R.string.share_link_using)))
+    sendIntent.addFlags(FLAG_GRANT_READ_URI_PERMISSION)
+    startActivity(createChooser(sendIntent, stringRes(R.string.share_link_using)))
   }
 
   override fun exitView() {
@@ -333,8 +344,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
   private fun setUpExpandPanel() {
     expandIconView.setState(ExpandIconView.LESS, false)
-    slidingPanel.setParallaxOffset(
-        SLIDING_PANEL_PARALLEL_OFFSET)
+    slidingPanel.setParallaxOffset(SLIDING_PANEL_PARALLEL_OFFSET)
     slidingPanel.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
       override fun onPanelSlide(panel: View, slideOffset: Float) {
         // Do nothing
@@ -374,6 +384,28 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     }
   }
 
+  private fun disableOperation(vararg views: RelativeLayout) {
+    for (view in views) {
+      view.findViewById<ImageView>(R.id.operationImageView).apply {
+        alpha = ALPHA_PARTIALLY_VISIBLE
+      }
+      view.findViewById<TextView>(R.id.operationTextView).apply {
+        setTextColor(context.colorRes(R.color.dove_gray))
+      }
+    }
+  }
+
+  private fun enableOperation(vararg views: RelativeLayout) {
+    for (view in views) {
+      view.findViewById<ImageView>(R.id.operationImageView).apply {
+        alpha = ALPHA_COMPLETELY_VISIBLE
+      }
+      view.findViewById<TextView>(R.id.operationTextView).apply {
+        setTextColor(context.colorRes(R.color.white))
+      }
+    }
+  }
+
   companion object {
 
     fun getCallingIntent(
@@ -389,28 +421,6 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
         multiColorImageType?.let {
           putExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG, it.ordinal)
         }
-      }
-    }
-  }
-
-  private fun disableOperation(vararg views: RelativeLayout) {
-    for (view in views) {
-      view.findViewById<ImageView>(R.id.operationImageView).apply {
-        alpha = 0.3f
-      }
-      view.findViewById<TextView>(R.id.operationTextView).apply {
-        setTextColor(context.colorRes(R.color.dove_gray))
-      }
-    }
-  }
-
-  private fun enableOperation(vararg views: RelativeLayout) {
-    for (view in views) {
-      view.findViewById<ImageView>(R.id.operationImageView).apply {
-        alpha = 1.0f
-      }
-      view.findViewById<TextView>(R.id.operationTextView).apply {
-        setTextColor(context.colorRes(R.color.white))
       }
     }
   }

@@ -3,7 +3,8 @@ package zebrostudio.wallr100.presentation
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider
+import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider.TestLifecycle.STARTED
+import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider.createInitial
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -46,8 +47,7 @@ class MinimalPresenterImplTest {
     minimalPresenter = MinimalPresenterImpl(minimalImagesUseCase, postExecutionThread)
     minimalPresenter.attachView(minimalView)
 
-    `when`(minimalView.getScope()).thenReturn(TestLifecycleScopeProvider.createInitial(
-        TestLifecycleScopeProvider.TestLifecycle.STARTED))
+    `when`(minimalView.getScope()).thenReturn(createInitial(STARTED))
     `when`(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 

@@ -48,8 +48,8 @@ interface ImageHandler {
   fun getShareableUri(): Single<Uri>
   fun convertUriToBitmap(uri: Uri?): Single<Bitmap>
   fun convertImageInCacheToLowpoly(): Single<Bitmap>
-  fun saveCacheImageToDownloads(): Completable
-  fun saveImageToCollections(data: String, type: DatabaseImageType): Completable
+  fun addCachedImageToDownloads(): Completable
+  fun addImageToCollections(data: String, type: DatabaseImageType): Completable
   fun getSingleColorBitmap(hexValue: String): Single<Bitmap>
   fun getMultiColorBitmap(
     hexValueList: List<String>,
@@ -204,7 +204,7 @@ class ImageHandlerImpl(
     }
   }
 
-  override fun saveCacheImageToDownloads(): Completable {
+  override fun addCachedImageToDownloads(): Completable {
     return Completable.create {
       try {
         fileHandler.getCacheFile().inputStream().let { inputStream ->
@@ -219,7 +219,7 @@ class ImageHandlerImpl(
     }
   }
 
-  override fun saveImageToCollections(data: String, type: DatabaseImageType): Completable {
+  override fun addImageToCollections(data: String, type: DatabaseImageType): Completable {
     return Completable.create { emitter ->
       try {
         if (type == EDITED) {
@@ -308,9 +308,9 @@ class ImageHandlerImpl(
     for (i in colors.indices) {
       colorsInt[i] = Color.parseColor(colors[i])
     }
-    val c = Canvas(bigBitmap)
-    c.save()
-    c.rotate(-45f, (c.width / 2).toFloat(), (c.height / 2).toFloat())
+    val canvas = Canvas(bigBitmap)
+    canvas.save()
+    canvas.rotate(-45f, (canvas.width / 2).toFloat(), (canvas.height / 2).toFloat())
     val paint = Paint()
     val initStripeHeight = (middleHeight / colors.size).toFloat()
     val initShadowHeight = (middleHeight * 0.012).toFloat()
@@ -334,11 +334,11 @@ class ImageHandlerImpl(
       paint.color = colorsInt[i]
       paint.style = Paint.Style.FILL
       paint.setShadowLayer(shadowThickness, 0.0f, 0.0f, -0x1000000)
-      c.drawRect(0f, 0f, bigHeight.toFloat(), stripeHeight.toFloat(), paint)
+      canvas.drawRect(0f, 0f, bigHeight.toFloat(), stripeHeight.toFloat(), paint)
     }
-    c.restore()
-    val x = (c.width - smallHeight) / 2
-    val y = (c.height - smallHeight) / 2
+    canvas.restore()
+    val x = (canvas.width - smallHeight) / 2
+    val y = (canvas.height - smallHeight) / 2
     return Bitmap.createBitmap(bigBitmap, x, y, smallHeight, smallHeight)
   }
 
@@ -352,9 +352,9 @@ class ImageHandlerImpl(
     val paint = Paint()
     val gradientShader = LinearGradient(0f, 0f, height.toFloat(), height.toFloat(), colorsInt, null,
         Shader.TileMode.CLAMP)
-    val c = Canvas(wallpaperBitmap)
+    val canvas = Canvas(wallpaperBitmap)
     paint.shader = gradientShader
-    c.drawRect(0f, 0f, height.toFloat(), height.toFloat(), paint)
+    canvas.drawRect(0f, 0f, height.toFloat(), height.toFloat(), paint)
     return wallpaperBitmap
   }
 
@@ -368,9 +368,9 @@ class ImageHandlerImpl(
     val paint = Paint()
     val gradientBitmap = Bitmap.createBitmap(256, 1, Bitmap.Config.ARGB_8888)
     val gradientShader = LinearGradient(0f, 0f, 255f, 0f, colorsInt, null, Shader.TileMode.MIRROR)
-    val c = Canvas(gradientBitmap)
+    val canvas = Canvas(gradientBitmap)
     paint.shader = gradientShader
-    c.drawRect(0f, 0f, 256f, 1f, paint)
+    canvas.drawRect(0f, 0f, 256f, 1f, paint)
     val palette = IntArray(256)
     for (x in 0..255) {
       palette[x] = gradientBitmap.getPixel(x, 0)

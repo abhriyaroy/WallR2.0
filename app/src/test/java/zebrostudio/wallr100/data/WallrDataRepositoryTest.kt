@@ -425,11 +425,11 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should complete on saveCrystallizedImageToDownloads call success`() {
-    `when`(imageHandler.saveCacheImageToDownloads()).thenReturn(Completable.complete())
+    `when`(imageHandler.addCachedImageToDownloads()).thenReturn(Completable.complete())
 
     wallrDataRepository.saveCachedImageToDownloads().test().assertComplete()
 
-    verify(imageHandler).saveCacheImageToDownloads()
+    verify(imageHandler).addCachedImageToDownloads()
     verifyComputationSchedulerCall()
   }
 
@@ -452,67 +452,67 @@ class WallrDataRepositoryTest {
   @Test fun `should complete on saveImageToCollections call success of type wallpaper`() {
     `when`(databaseImageTypeMapper.mapToDatabaseImageType(CollectionsImageModel.WALLPAPER))
         .thenReturn(WALLPAPER)
-    `when`(imageHandler.saveImageToCollections(randomString, WALLPAPER)).thenReturn(
+    `when`(imageHandler.addImageToCollections(randomString, WALLPAPER)).thenReturn(
         Completable.complete())
 
     wallrDataRepository.saveImageToCollections(randomString, CollectionsImageModel.WALLPAPER).test()
         .assertComplete()
 
-    verify(imageHandler).saveImageToCollections(randomString, WALLPAPER)
+    verify(imageHandler).addImageToCollections(randomString, WALLPAPER)
     verifyComputationSchedulerCall()
   }
 
   @Test fun `should complete on saveImageToCollections call success of type search`() {
     `when`(databaseImageTypeMapper.mapToDatabaseImageType(CollectionsImageModel.SEARCH))
         .thenReturn(SEARCH)
-    `when`(imageHandler.saveImageToCollections(randomString, SEARCH))
+    `when`(imageHandler.addImageToCollections(randomString, SEARCH))
         .thenReturn(Completable.complete())
 
     wallrDataRepository.saveImageToCollections(randomString, CollectionsImageModel.SEARCH).test()
         .assertComplete()
 
-    verify(imageHandler).saveImageToCollections(randomString, SEARCH)
+    verify(imageHandler).addImageToCollections(randomString, SEARCH)
     verifyComputationSchedulerCall()
   }
 
   @Test fun `should complete on saveImageToCollections call success of type edited`() {
     `when`(databaseImageTypeMapper.mapToDatabaseImageType(CollectionsImageModel.EDITED))
         .thenReturn(EDITED)
-    `when`(imageHandler.saveImageToCollections(randomString, EDITED)).thenReturn(
+    `when`(imageHandler.addImageToCollections(randomString, EDITED)).thenReturn(
         Completable.complete())
 
     wallrDataRepository.saveImageToCollections(randomString, CollectionsImageModel.EDITED).test()
         .assertComplete()
 
-    verify(imageHandler).saveImageToCollections(randomString, EDITED)
+    verify(imageHandler).addImageToCollections(randomString, EDITED)
     verifyComputationSchedulerCall()
   }
 
   @Test fun `should complete on saveImageToCollections call success of type crystallized`() {
     `when`(databaseImageTypeMapper.mapToDatabaseImageType(
         CollectionsImageModel.CRYSTALLIZED)).thenReturn(CRYSTALLIZED)
-    `when`(imageHandler.saveImageToCollections(randomString, CRYSTALLIZED)).thenReturn(
+    `when`(imageHandler.addImageToCollections(randomString, CRYSTALLIZED)).thenReturn(
         Completable.complete())
 
     wallrDataRepository.saveImageToCollections(randomString, CollectionsImageModel.CRYSTALLIZED)
         .test()
         .assertComplete()
 
-    verify(imageHandler).saveImageToCollections(randomString, CRYSTALLIZED)
+    verify(imageHandler).addImageToCollections(randomString, CRYSTALLIZED)
     verifyComputationSchedulerCall()
   }
 
   @Test fun `should complete on saveImageToCollections call success of type minimal color`() {
     `when`(databaseImageTypeMapper.mapToDatabaseImageType(
         CollectionsImageModel.MINIMAL_COLOR)).thenReturn(MINIMAL_COLOR)
-    `when`(imageHandler.saveImageToCollections(randomString, MINIMAL_COLOR)).thenReturn(
+    `when`(imageHandler.addImageToCollections(randomString, MINIMAL_COLOR)).thenReturn(
         Completable.complete())
 
     wallrDataRepository.saveImageToCollections(randomString, CollectionsImageModel.MINIMAL_COLOR)
         .test()
         .assertComplete()
 
-    verify(imageHandler).saveImageToCollections(randomString, MINIMAL_COLOR)
+    verify(imageHandler).addImageToCollections(randomString, MINIMAL_COLOR)
     verifyComputationSchedulerCall()
   }
 

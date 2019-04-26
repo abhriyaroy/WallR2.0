@@ -1,19 +1,15 @@
 package zebrostudio.wallr100.presentation
 
 import android.app.Activity
-import android.content.Intent
-import android.speech.RecognizerIntent
 import com.miguelcatalan.materialsearchview.MaterialSearchView
-import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider
+import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider.TestLifecycle.STARTED
 import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider.createInitial
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -26,11 +22,10 @@ import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
-import zebrostudio.wallr100.presentation.datafactory.SearchPicturesModelFactory
+import zebrostudio.wallr100.presentation.datafactory.SearchPicturesModelFactory.getSearchPicturesModelList
 import zebrostudio.wallr100.presentation.search.SearchContract
 import zebrostudio.wallr100.presentation.search.SearchPresenterImpl
 import zebrostudio.wallr100.presentation.search.mapper.SearchPicturesPresenterEntityMapper
-import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.util.UUID.randomUUID
 
@@ -42,10 +37,8 @@ class SearchPresenterImplTest {
   @Mock lateinit var postExecutionThread: PostExecutionThread
   @Mock lateinit var searchView: SearchContract.SearchView
   @Mock lateinit var searchPicturesUseCase: SearchPicturesUseCase
-  @Mock lateinit var intent: Intent
   private lateinit var searchPicturesPresenterEntityMapper: SearchPicturesPresenterEntityMapper
   private lateinit var searchPresenterImpl: SearchPresenterImpl
-  private lateinit var testLifecycleScopeProvider: TestLifecycleScopeProvider
 
   private val randomString = randomUUID().toString()
   private val queryPage = 1
@@ -56,196 +49,206 @@ class SearchPresenterImplTest {
         SearchPresenterImpl(searchPicturesUseCase, searchPicturesPresenterEntityMapper,
             postExecutionThread)
     searchPresenterImpl.attachView(searchView)
-    testLifecycleScopeProvider = createInitial(TestLifecycleScopeProvider.TestLifecycle.STARTED)
 
-    `when`(searchView.getScope()).thenReturn(testLifecycleScopeProvider)
+    `when`(searchView.getScope()).thenReturn(createInitial(STARTED))
     `when`(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 
-  @Test fun `should return query string`() {
+  @Test fun `should return query string on getQueryStringCallSuccess`() {
     assertEquals(getQueryString(randomString, queryPage),
         "photos/search?query=$randomString&per_page=30&page=1")
   }
 
   @Test
-  fun `should show no result view when notifyQuerySubmitted call succeeds but no result is found`() {
-    `when`(searchPicturesUseCase.buildUseCaseSingle(
-        getQueryString(randomString, queryPage))).thenReturn(
-        Single.error(NoResultFoundException()))
+  fun `should show no result view when notifyQuerySubmitted call success but no result is found`() {
+    `when`(searchPicturesUseCase.buildUseCaseSingle(getQueryString(randomString, queryPage)))
+        .thenReturn(Single.error(NoResultFoundException()))
 
     searchPresenterImpl.notifyQuerySubmitted(randomString)
 
+    verify(searchPicturesUseCase).buildUseCaseSingle(getQueryString(randomString, queryPage))
     verify(searchView).hideAllLoadersAndMessageViews()
     verify(searchView).showLoader()
     verify(searchView).getScope()
     verify(searchView).showNoResultView(randomString)
-    verifyNoMoreInteractions(searchView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
   fun `should show no internet view on notifyQuerySubmitted call failure due to no internet connection`() {
-    `when`(searchPicturesUseCase.buildUseCaseSingle(
-        getQueryString(randomString, queryPage))).thenReturn(
-        Single.error(UnableToResolveHostException()))
+    `when`(searchPicturesUseCase.buildUseCaseSingle(getQueryString(randomString, queryPage)))
+        .thenReturn(Single.error(UnableToResolveHostException()))
 
     searchPresenterImpl.notifyQuerySubmitted(randomString)
 
+    verify(searchPicturesUseCase).buildUseCaseSingle(getQueryString(randomString, queryPage))
     verify(searchView).hideAllLoadersAndMessageViews()
     verify(searchView).showLoader()
     verify(searchView).getScope()
     verify(searchView).showNoInternetView()
-    verifyNoMoreInteractions(searchView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should show generic error view on notifyQuerySubmitted call failure`() {
-    `when`(searchPicturesUseCase.buildUseCaseSingle(
-        getQueryString(randomString, queryPage))).thenReturn(
-        Single.error(Exception()))
+    `when`(searchPicturesUseCase.buildUseCaseSingle(getQueryString(randomString, queryPage)))
+        .thenReturn(Single.error(Exception()))
 
     searchPresenterImpl.notifyQuerySubmitted(randomString)
 
+    verify(searchPicturesUseCase).buildUseCaseSingle(getQueryString(randomString, queryPage))
     verify(searchView).hideAllLoadersAndMessageViews()
     verify(searchView).showLoader()
     verify(searchView).getScope()
     verify(searchView).showGenericErrorView()
-    verifyNoMoreInteractions(searchView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
   fun `should return list of searchPicturesPresenterEntity on notifyQuerySubmitted call success`() {
-    val searchPicturesModelList =
-        SearchPicturesModelFactory.getSearchPicturesModelList()
+    val searchPicturesModelList = getSearchPicturesModelList()
     val searchPicturesPresenterEntity =
         searchPicturesPresenterEntityMapper.mapToPresenterEntity(searchPicturesModelList)
-    `when`(searchPicturesUseCase.buildUseCaseSingle(
-        getQueryString(randomString, queryPage))).thenReturn(
-        Single.just(searchPicturesModelList))
+    `when`(searchPicturesUseCase.buildUseCaseSingle(getQueryString(randomString, queryPage)))
+        .thenReturn(Single.just(searchPicturesModelList))
 
     searchPresenterImpl.notifyQuerySubmitted(randomString)
 
-    val argCaptor = argumentCaptor<List<SearchPicturesPresenterEntity>>()
+    verify(searchPicturesUseCase).buildUseCaseSingle(getQueryString(randomString, queryPage))
     verify(searchView).hideAllLoadersAndMessageViews()
     verify(searchView).showLoader()
     verify(searchView).hideLoader()
     verify(searchView).getScope()
-    verify(searchView).showSearchResults(argCaptor.capture())
-    assertTrue(argCaptor.firstValue == searchPicturesPresenterEntity)
-    verifyNoMoreInteractions(searchView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verify(searchView).showSearchResults(searchPicturesPresenterEntity)
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
   fun `should show no internet toast on fetchMoreImages call failure due to no internet connection`() {
-    `when`(searchPicturesUseCase.buildUseCaseSingle(
-        getQueryString("", queryPage))).thenReturn(
-        Single.error(UnableToResolveHostException()))
+    `when`(searchPicturesUseCase.buildUseCaseSingle(getQueryString("", queryPage)))
+        .thenReturn(Single.error(UnableToResolveHostException()))
 
     searchPresenterImpl.fetchMoreImages()
 
+    verify(searchPicturesUseCase).buildUseCaseSingle(getQueryString("", queryPage))
     verify(searchView).showBottomLoader()
     verify(searchView).getScope()
     verify(searchView).showNoInternetToast()
     verify(searchView).setEndlessLoadingToFalse()
     verify(searchView).hideBottomLoader()
-    verifyNoMoreInteractions(searchView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should show generic error toast on fetchMoreImages call failure`() {
-    `when`(searchPicturesUseCase.buildUseCaseSingle(
-        getQueryString("", queryPage))).thenReturn(
-        Single.error(Exception()))
+    `when`(searchPicturesUseCase.buildUseCaseSingle(getQueryString("", queryPage)))
+        .thenReturn(Single.error(Exception()))
 
     searchPresenterImpl.fetchMoreImages()
 
+    verify(searchPicturesUseCase).buildUseCaseSingle(getQueryString("", queryPage))
     verify(searchView).showBottomLoader()
     verify(searchView).getScope()
     verify(searchView).setEndlessLoadingToFalse()
     verify(searchView).showGenericErrorToast()
     verify(searchView).hideBottomLoader()
-    verifyNoMoreInteractions(searchView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
   fun `should return list of search pictures presenter entity on fetchMoreImages call success`() {
-    val searchPicturesModelList =
-        SearchPicturesModelFactory.getSearchPicturesModelList()
+    val searchPicturesModelList = getSearchPicturesModelList()
     val searchPicturesPresenterEntity =
         searchPicturesPresenterEntityMapper.mapToPresenterEntity(searchPicturesModelList)
-    `when`(searchPicturesUseCase.buildUseCaseSingle(
-        getQueryString("", queryPage))).thenReturn(
-        Single.just(searchPicturesModelList))
+    `when`(searchPicturesUseCase.buildUseCaseSingle(getQueryString("", queryPage)))
+        .thenReturn(Single.just(searchPicturesModelList))
 
     searchPresenterImpl.fetchMoreImages()
 
-    val firstArgCaptor = argumentCaptor<Int>()
-    val secondArgCaptor = argumentCaptor<List<SearchPicturesPresenterEntity>>()
+    verify(searchPicturesUseCase).buildUseCaseSingle(getQueryString("", queryPage))
     verify(searchView).showBottomLoader()
     verify(searchView).hideBottomLoader()
     verify(searchView).getScope()
-    verify(searchView).appendSearchResults(firstArgCaptor.capture(), secondArgCaptor.capture())
-    assertEquals(firstArgCaptor.firstValue, 0)
-    assertTrue(secondArgCaptor.firstValue == searchPicturesPresenterEntity)
-    verifyNoMoreInteractions(searchView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verify(searchView).appendSearchResults(0, searchPicturesPresenterEntity)
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should call showInputASearchQueryMessageView when retry button is pressed and keyword is not empty`() {
+  fun `should call showInputASearchQueryMessageView on notifyRetryButtonClicked call failure due to empty keyword`() {
     searchPresenterImpl.notifyRetryButtonClicked()
 
     verify(searchView).showInputASearchQueryMessageView()
-    verifyNoMoreInteractions(searchView)
+  }
+
+  @Test
+  fun `should show no internet toast on notifyRetryButtonClicked call failure due to no internet connection`() {
+    searchPresenterImpl.keyword = randomString
+    `when`(searchPicturesUseCase.buildUseCaseSingle(getQueryString(randomString, queryPage)))
+        .thenReturn(Single.error(UnableToResolveHostException()))
+
+    searchPresenterImpl.notifyRetryButtonClicked()
+
+    verify(searchPicturesUseCase).buildUseCaseSingle(getQueryString(randomString, queryPage))
+    verify(searchView).hideAllLoadersAndMessageViews()
+    verify(searchView).showLoader()
+    verify(searchView).getScope()
+    verify(searchView).showNoInternetView()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test fun `should show generic error toast on notifyRetryButtonClicked call failure`() {
+    searchPresenterImpl.keyword = randomString
+    `when`(searchPicturesUseCase.buildUseCaseSingle(getQueryString(randomString, queryPage)))
+        .thenReturn(Single.error(Exception()))
+
+    searchPresenterImpl.notifyRetryButtonClicked()
+
+    verify(searchPicturesUseCase).buildUseCaseSingle(getQueryString(randomString, queryPage))
+    verify(searchView).hideAllLoadersAndMessageViews()
+    verify(searchView).showLoader()
+    verify(searchView).getScope()
+    verify(searchView).showGenericErrorView()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
   fun `should return list of searchPicturesPresenterEntity when retry button is pressed and search keyword is valid and notifyQuerySubmitted call succeeds`() {
     val searchPicturesModelList =
-        SearchPicturesModelFactory.getSearchPicturesModelList()
+        getSearchPicturesModelList()
     val searchPicturesPresenterEntity =
         searchPicturesPresenterEntityMapper.mapToPresenterEntity(searchPicturesModelList)
-    `when`(searchPicturesUseCase.buildUseCaseSingle(
-        getQueryString(randomString, queryPage))).thenReturn(
-        Single.just(searchPicturesModelList))
     searchPresenterImpl.keyword = randomString
+    `when`(searchPicturesUseCase.buildUseCaseSingle(getQueryString(randomString, queryPage)))
+        .thenReturn(Single.just(searchPicturesModelList))
 
     searchPresenterImpl.notifyRetryButtonClicked()
 
-    val argCaptor = argumentCaptor<List<SearchPicturesPresenterEntity>>()
+    verify(searchPicturesUseCase).buildUseCaseSingle(getQueryString(randomString, queryPage))
     verify(searchView).hideAllLoadersAndMessageViews()
     verify(searchView).showLoader()
     verify(searchView).hideLoader()
     verify(searchView).getScope()
-    verify(searchView).showSearchResults(argCaptor.capture())
-    assertTrue(argCaptor.firstValue == searchPicturesPresenterEntity)
-    verifyNoMoreInteractions(searchView)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verify(searchView).showSearchResults(searchPicturesPresenterEntity)
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should call setSearchQueryWithoutSubmitting when notifyActivityResult is called with valid requestCode, resultCode and data`() {
+  fun `should set search query without submitting when notifyActivityResult is called with valid requestCode, resultCode and data`() {
     val wordsArrayList = arrayListOf(randomString)
-    `when`(intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)).thenReturn(
-        wordsArrayList)
+    `when`(searchView.getRecognisedWordsFromSpeech()).thenReturn(wordsArrayList)
 
     searchPresenterImpl.notifyActivityResult(
-        MaterialSearchView.REQUEST_VOICE, Activity.RESULT_OK, intent)
+        MaterialSearchView.REQUEST_VOICE, Activity.RESULT_OK)
 
+    verify(searchView).getRecognisedWordsFromSpeech()
     verify(searchView).setSearchQueryWithoutSubmitting(randomString)
-    verifyNoMoreInteractions(searchView)
   }
 
   @After fun tearDown() {
+    verifyNoMoreInteractions(postExecutionThread, searchPicturesUseCase, searchView)
     searchPresenterImpl.detachView()
   }
 
-  private fun shouldVerifyPostExecutionThreadSchedulerCall() {
+  private fun verifyPostExecutionThreadSchedulerCall() {
     verify(postExecutionThread).scheduler
-    verifyNoMoreInteractions(postExecutionThread)
   }
 
 }

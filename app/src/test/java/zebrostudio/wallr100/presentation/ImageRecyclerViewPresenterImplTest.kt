@@ -2,6 +2,7 @@ package zebrostudio.wallr100.presentation
 
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -23,7 +24,6 @@ class ImageRecyclerViewPresenterImplTest {
 
   @Mock lateinit var imageRecyclerItemView: ImageRecyclerItemView
   private lateinit var imageRecyclerViewPresenterImpl: ImageRecyclerViewPresenterImpl
-  private val randomString = randomUUID().toString()
 
   @Before
   fun setup() {
@@ -159,5 +159,9 @@ class ImageRecyclerViewPresenterImplTest {
     imageRecyclerViewPresenterImpl.handleImageClicked(position, imageRecyclerItemView)
 
     verify(imageRecyclerItemView).showWallpaperImageDetails(wallpaperImagesList[position])
+  }
+
+  @After fun tearDown(){
+    verifyNoMoreInteractions(imageRecyclerItemView)
   }
 }

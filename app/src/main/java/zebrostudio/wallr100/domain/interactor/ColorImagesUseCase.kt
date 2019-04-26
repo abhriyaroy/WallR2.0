@@ -10,7 +10,7 @@ import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
 
 interface ColorImagesUseCase {
   fun getSingularColorBitmapSingle(colorHex: String): Single<Bitmap>
-  fun getMultiColorMaterialSingle(
+  fun getMultiColorBitmapSingle(
     colorHexList: List<String>,
     multiColorImageType: MultiColorImageType
   ): Single<Bitmap>
@@ -35,7 +35,7 @@ class ColorImagesInteractor(private val wallrRepository: WallrRepository) : Colo
     return wallrRepository.getSingleColorBitmap(colorHex)
   }
 
-  override fun getMultiColorMaterialSingle(
+  override fun getMultiColorBitmapSingle(
     colorHexList: List<String>,
     multiColorImageType: MultiColorImageType
   ): Single<Bitmap> {

@@ -2,11 +2,12 @@ package zebrostudio.wallr100.presentation.detail.colors
 
 import android.app.Activity.RESULT_OK
 import android.content.pm.PackageManager
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
 import com.yalantis.ucrop.UCrop.REQUEST_CROP
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
+import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig.Companion.PURCHASE_SUCCESSFUL_RESULT_CODE
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.MULTIPLE
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.SINGLE
@@ -93,7 +94,7 @@ class ColorsDetailPresenterImpl(
         requestCode == SHARE.ordinal
     ) {
       if ((grantResults.isNotEmpty() && grantResults[FIRST_ELEMENT_POSITION]
-              == PackageManager.PERMISSION_GRANTED)) {
+              == PERMISSION_GRANTED)) {
         handlePermissionGranted(requestCode)
       } else {
         if (requestCode == LOAD_COLOR_WALLPAPER.ordinal) {
@@ -106,19 +107,19 @@ class ColorsDetailPresenterImpl(
 
   override fun handleViewResult(requestCode: Int, resultCode: Int) {
     if (requestCode == DOWNLOAD.ordinal) {
-      if (resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
+      if (resultCode == PURCHASE_SUCCESSFUL_RESULT_CODE) {
         handleDownloadClick()
       } else {
         view?.showUnsuccessfulPurchaseError()
       }
     } else if (requestCode == ADD_TO_COLLECTION.ordinal) {
-      if (resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
+      if (resultCode == PURCHASE_SUCCESSFUL_RESULT_CODE) {
         handleAddToCollectionClick()
       } else {
         view?.showUnsuccessfulPurchaseError()
       }
     } else if (requestCode == ColorsActionType.SHARE.ordinal) {
-      if (resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
+      if (resultCode == PURCHASE_SUCCESSFUL_RESULT_CODE) {
         handleShareClick()
       } else {
         view?.showUnsuccessfulPurchaseError()
@@ -303,7 +304,7 @@ class ColorsDetailPresenterImpl(
     if (colorsDetailMode == SINGLE) {
       colorImagesUseCase.getSingularColorBitmapSingle(colorList[FIRST_ELEMENT_POSITION])
     } else {
-      colorImagesUseCase.getMultiColorMaterialSingle(colorList, multiColorImageType!!)
+      colorImagesUseCase.getMultiColorBitmapSingle(colorList, multiColorImageType!!)
     }.observeOn(postExecutionThread.scheduler)
         .doOnSubscribe {
           view?.showMainImageWaitLoader()

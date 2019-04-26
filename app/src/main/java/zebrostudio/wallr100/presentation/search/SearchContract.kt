@@ -24,13 +24,14 @@ interface SearchContract {
     fun appendSearchResults(startPosition: Int, list: List<SearchPicturesPresenterEntity>)
     fun setEndlessLoadingToFalse()
     fun setSearchQueryWithoutSubmitting(searchWord: String)
+    fun getRecognisedWordsFromSpeech(): ArrayList<String>?
   }
 
   interface SearchPresenter : BasePresenter<SearchView> {
     fun notifyQuerySubmitted(query: String)
     fun fetchMoreImages()
     fun notifyRetryButtonClicked()
-    fun notifyActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    fun notifyActivityResult(requestCode: Int, resultCode: Int)
   }
 
 }

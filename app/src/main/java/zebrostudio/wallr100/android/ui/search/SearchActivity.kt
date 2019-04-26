@@ -4,6 +4,7 @@ import android.arch.lifecycle.Lifecycle
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.support.design.widget.AppBarLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
@@ -51,6 +52,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   private val disableScrollFlag = 0
   private var appBarIsCollapsed = false
   private var recyclerviewAdapter: ImageAdapter? = null
+  private var activityResultIntent: Intent? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)
@@ -72,7 +74,8 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    presenter.notifyActivityResult(requestCode, resultCode, data)
+    activityResultIntent = data
+    presenter.notifyActivityResult(requestCode, resultCode)
   }
 
   override fun onBackPressed() {
@@ -199,6 +202,10 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
 
   override fun setSearchQueryWithoutSubmitting(searchWord: String) {
     searchView.setQuery(searchWord, false)
+  }
+
+  override fun getRecognisedWordsFromSpeech(): ArrayList<String>? {
+   return  activityResultIntent?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
   }
 
   private fun initAppbar() {

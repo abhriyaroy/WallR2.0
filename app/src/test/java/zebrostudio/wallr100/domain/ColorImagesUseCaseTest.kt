@@ -53,7 +53,7 @@ class ColorImagesUseCaseTest {
     `when`(wallrRepository.getMultiColorBitmap(list, MATERIAL)).thenReturn(Single.just(mockBitmap))
 
     val result =
-        colorImagesInteractor.getMultiColorMaterialSingle(list, MATERIAL).test().values()[0]
+        colorImagesInteractor.getMultiColorBitmapSingle(list, MATERIAL).test().values()[0]
 
     assertEquals(mockBitmap, result)
     verify(wallrRepository).getMultiColorBitmap(list, MATERIAL)
@@ -65,7 +65,7 @@ class ColorImagesUseCaseTest {
     `when`(wallrRepository.getMultiColorBitmap(list, GRADIENT)).thenReturn(Single.just(mockBitmap))
 
     val result =
-        colorImagesInteractor.getMultiColorMaterialSingle(list, GRADIENT).test().values()[0]
+        colorImagesInteractor.getMultiColorBitmapSingle(list, GRADIENT).test().values()[0]
 
     assertEquals(mockBitmap, result)
     verify(wallrRepository).getMultiColorBitmap(list, GRADIENT)
@@ -77,7 +77,7 @@ class ColorImagesUseCaseTest {
     `when`(wallrRepository.getMultiColorBitmap(list, PLASMA)).thenReturn(Single.just(mockBitmap))
 
     val result =
-        colorImagesInteractor.getMultiColorMaterialSingle(list, PLASMA).test().values()[0]
+        colorImagesInteractor.getMultiColorBitmapSingle(list, PLASMA).test().values()[0]
 
     assertEquals(mockBitmap, result)
     verify(wallrRepository).getMultiColorBitmap(list, PLASMA)

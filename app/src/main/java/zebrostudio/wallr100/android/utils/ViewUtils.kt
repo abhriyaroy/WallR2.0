@@ -11,6 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.INVISIBLE
+import android.view.View.MeasureSpec.UNSPECIFIED
+import android.view.View.MeasureSpec.makeMeasureSpec
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.Window
@@ -52,9 +54,9 @@ fun View.menuTitleToast(
       val metrics = DisplayMetrics()
       window.windowManager.defaultDisplay.getMetrics(metrics)
       val widthMeasureSpec =
-          View.MeasureSpec.makeMeasureSpec(metrics.widthPixels, View.MeasureSpec.UNSPECIFIED)
+          makeMeasureSpec(metrics.widthPixels, UNSPECIFIED)
       val heightMeasureSpec =
-          View.MeasureSpec.makeMeasureSpec(metrics.heightPixels, View.MeasureSpec.UNSPECIFIED)
+          makeMeasureSpec(metrics.heightPixels, UNSPECIFIED)
       toast.view.measure(widthMeasureSpec, heightMeasureSpec)
       val toastWidth = toast.view.measuredWidth
       val toastX = rect.right - toastWidth - offsetX
