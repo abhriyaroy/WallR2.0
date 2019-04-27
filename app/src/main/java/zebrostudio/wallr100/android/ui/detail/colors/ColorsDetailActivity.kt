@@ -233,7 +233,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   override fun disableColorOperations() {
-    disableOperation(setColorWallpaperLayout,
+    disableOperations(setColorWallpaperLayout,
         downloadColorLayout,
         editAndSetColorLayout,
         addColorToCollectionLayout,
@@ -241,7 +241,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   override fun enableColorOperations() {
-    enableOperation(setColorWallpaperLayout,
+    enableOperations(setColorWallpaperLayout,
         downloadColorLayout,
         editAndSetColorLayout,
         addColorToCollectionLayout,
@@ -384,7 +384,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     }
   }
 
-  private fun disableOperation(vararg views: RelativeLayout) {
+  private fun disableOperations(vararg views: RelativeLayout) {
     for (view in views) {
       view.findViewById<ImageView>(R.id.operationImageView).apply {
         alpha = ALPHA_PARTIALLY_VISIBLE
@@ -395,7 +395,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     }
   }
 
-  private fun enableOperation(vararg views: RelativeLayout) {
+  private fun enableOperations(vararg views: RelativeLayout) {
     for (view in views) {
       view.findViewById<ImageView>(R.id.operationImageView).apply {
         alpha = ALPHA_COMPLETELY_VISIBLE
