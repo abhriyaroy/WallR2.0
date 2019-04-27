@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.presentation.search
 
-import android.content.Intent
 import zebrostudio.wallr100.presentation.BasePresenter
 import zebrostudio.wallr100.presentation.BaseView
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity

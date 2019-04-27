@@ -73,6 +73,7 @@ interface DetailContract {
     fun handlePermissionRequestResult(
       requestCode: Int, permissions: Array<String>, grantResults: IntArray
     )
+
     fun handleViewResult(requestCode: Int, resultCode: Int)
     fun handleDownloadQualitySelectionEvent(downloadType: ImageListType, selectedIndex: Int)
     fun handleCrystallizeDialogPositiveClick()

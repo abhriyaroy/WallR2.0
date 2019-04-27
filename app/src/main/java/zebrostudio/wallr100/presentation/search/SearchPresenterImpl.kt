@@ -1,8 +1,6 @@
 package zebrostudio.wallr100.presentation.search
 
 import android.app.Activity
-import android.content.Intent
-import android.speech.RecognizerIntent
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.data.api.UrlMap.getQueryString

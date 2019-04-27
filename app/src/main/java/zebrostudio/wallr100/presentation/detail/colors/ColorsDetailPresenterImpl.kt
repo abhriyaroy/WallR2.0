@@ -1,7 +1,6 @@
 package zebrostudio.wallr100.presentation.detail.colors
 
 import android.app.Activity.RESULT_OK
-import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
