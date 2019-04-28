@@ -8,7 +8,8 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Paint
-import android.graphics.Shader
+import android.graphics.Shader.TileMode.CLAMP
+import android.graphics.Shader.TileMode.MIRROR
 import android.net.Uri
 import android.support.v4.content.FileProvider
 import com.zebrostudio.wallrcustoms.lowpoly.LowPoly
@@ -49,7 +50,7 @@ interface ImageHandler {
   fun convertUriToBitmap(uri: Uri?): Single<Bitmap>
   fun convertImageInCacheToLowpoly(): Single<Bitmap>
   fun addCachedImageToDownloads(): Completable
-  fun addImageToCollections(data: String, type: DatabaseImageType): Completable
+  fun addImageToCollections(data: String, databaseImageType: DatabaseImageType): Completable
   fun getSingleColorBitmap(hexValue: String): Single<Bitmap>
   fun getMultiColorBitmap(
     hexValueList: List<String>,
@@ -219,21 +220,24 @@ class ImageHandlerImpl(
     }
   }
 
-  override fun addImageToCollections(data: String, type: DatabaseImageType): Completable {
+  override fun addImageToCollections(
+    data: String,
+    databaseImageType: DatabaseImageType
+  ): Completable {
     return Completable.create { emitter ->
       try {
-        if (type == EDITED) {
-          saveToCollection(emitter, data, type)
+        if (databaseImageType == EDITED) {
+          saveToCollection(emitter, data, databaseImageType)
         } else {
           var isEntryAlreadyPresent = false
           databaseHelper.getDatabase().collectionsDao().getAllData().subscribe { it ->
             it.forEach {
-              if (it.type == type.ordinal && it.data == data) {
+              if (it.type == databaseImageType.ordinal && it.data == data) {
                 isEntryAlreadyPresent = true
               }
             }
             if (!isEntryAlreadyPresent) {
-              saveToCollection(emitter, data, type)
+              saveToCollection(emitter, data, databaseImageType)
             } else {
               emitter.onError(AlreadyPresentInCollectionException())
             }
@@ -350,8 +354,8 @@ class ImageHandlerImpl(
       colorsInt[i] = Color.parseColor(colors[i])
     }
     val paint = Paint()
-    val gradientShader = LinearGradient(0f, 0f, height.toFloat(), height.toFloat(), colorsInt, null,
-        Shader.TileMode.CLAMP)
+    val gradientShader = LinearGradient(0f, 0f, height.toFloat(), height.toFloat(), colorsInt,
+        null, CLAMP)
     val canvas = Canvas(wallpaperBitmap)
     paint.shader = gradientShader
     canvas.drawRect(0f, 0f, height.toFloat(), height.toFloat(), paint)
@@ -367,7 +371,8 @@ class ImageHandlerImpl(
     }
     val paint = Paint()
     val gradientBitmap = Bitmap.createBitmap(256, 1, Bitmap.Config.ARGB_8888)
-    val gradientShader = LinearGradient(0f, 0f, 255f, 0f, colorsInt, null, Shader.TileMode.MIRROR)
+    val gradientShader = LinearGradient(0f, 0f, 255f, 0f, colorsInt, null,
+        MIRROR)
     val canvas = Canvas(gradientBitmap)
     paint.shader = gradientShader
     canvas.drawRect(0f, 0f, 256f, 1f, paint)
@@ -379,8 +384,7 @@ class ImageHandlerImpl(
 
     val plasma = Array(height) { IntArray(height) }
     val random = Random()
-    val n = 1.3
-    val period = height / (n * 2.0 * 3.14)
+    val period = height / (1.3 * 2.0 * 3.14)
     val spread = period * 0.3
     val period1 = period - spread + spread * random.nextFloat()
     val period2 = period - spread + spread * random.nextFloat()

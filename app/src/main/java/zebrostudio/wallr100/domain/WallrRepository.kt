@@ -55,7 +55,7 @@ interface WallrRepository {
   fun rememberCrystallizeDescriptionShown()
   fun checkIfDownloadIsInProgress(link: String): Boolean
 
-  fun saveImageToCollections(data: String, type: CollectionsImageModel): Completable
+  fun saveImageToCollections(data: String, collectionsImageModel: CollectionsImageModel): Completable
 
   fun isCustomMinimalColorListPresent(): Boolean
   fun getCustomMinimalColorList(): Single<List<String>>

@@ -70,15 +70,14 @@ interface DetailContract {
     fun handleAddToCollectionClick()
     fun handleShareClick()
     fun handleBackButtonClick()
-    fun handlePermissionRequestResult(
-      requestCode: Int, permissions: Array<String>, grantResults: IntArray
-    )
-
     fun handleViewResult(requestCode: Int, resultCode: Int)
     fun handleDownloadQualitySelectionEvent(downloadType: ImageListType, selectedIndex: Int)
     fun handleCrystallizeDialogPositiveClick()
     fun handleImageViewClicked()
     fun setPanelStateAsExpanded()
     fun setPanelStateAsCollapsed()
+    fun handlePermissionRequestResult(
+      requestCode: Int, permissions: Array<String>, grantResults: IntArray
+    )
   }
 }

@@ -1,10 +1,11 @@
 package zebrostudio.wallr100.presentation.main
 
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
+import zebrostudio.wallr100.presentation.main.MainContract.MainPresenter
 
 class MainPresenterImpl(
   private val userPremiumStatusUseCase: UserPremiumStatusUseCase
-) : MainContract.MainPresenter {
+) : MainPresenter {
 
   internal var backPressedOnce = false
   internal var isGuillotineMenuOpen = false

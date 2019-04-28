@@ -28,6 +28,7 @@ import zebrostudio.wallr100.presentation.detail.images.ActionType.DOWNLOAD
 import zebrostudio.wallr100.presentation.detail.images.ActionType.EDIT_SET
 import zebrostudio.wallr100.presentation.detail.images.ActionType.QUICK_SET
 import zebrostudio.wallr100.presentation.detail.images.ActionType.SHARE
+import zebrostudio.wallr100.presentation.detail.images.DetailContract.DetailPresenter
 import zebrostudio.wallr100.presentation.detail.images.mapper.ImageDownloadPresenterEntityMapper
 import zebrostudio.wallr100.presentation.detail.images.model.ImageDownloadPresenterEntity
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
@@ -45,7 +46,7 @@ class DetailPresenterImpl(
   private val wallpaperSetter: WallpaperSetter,
   private val postExecutionThread: PostExecutionThread,
   private val imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper
-) : DetailContract.DetailPresenter {
+) : DetailPresenter {
 
   internal lateinit var imageType: ImageListType
   internal lateinit var wallpaperImage: ImagePresenterEntity

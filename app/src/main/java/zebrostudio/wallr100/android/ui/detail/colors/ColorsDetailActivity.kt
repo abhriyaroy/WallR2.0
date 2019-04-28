@@ -117,8 +117,8 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    if (data != null) {
-      activityResultIntent = data
+    data.let {
+      activityResultIntent = it
     }
     presenter.handleViewResult(requestCode, resultCode)
   }

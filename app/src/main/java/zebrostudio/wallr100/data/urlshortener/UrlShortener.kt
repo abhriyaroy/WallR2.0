@@ -13,9 +13,6 @@ interface UrlShortener {
 class UrlShortenerImpl : UrlShortener {
 
   override fun getShortUrl(longUrl: String): Single<String> {
-    if (BuildConfig.DEBUG) {
-
-    }
     return Single.create { emitter ->
       FirebaseDynamicLinks.getInstance().createDynamicLink()
           .setLink(Uri.parse(longUrl))

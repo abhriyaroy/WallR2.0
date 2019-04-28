@@ -32,13 +32,6 @@ interface ColorsDetailContract {
     fun disableColorOperations()
     fun enableColorOperations()
     fun showColorOperationsDisabledMessage()
-    fun startCroppingActivity(
-      source: Uri,
-      destination: Uri,
-      minimumWidth: Int,
-      minimumHeight: Int
-    )
-
     fun getUriFromResultIntent(): Uri?
     fun showGenericErrorMessage()
     fun showOperationInProgressWaitMessage()
@@ -47,6 +40,12 @@ interface ColorsDetailContract {
     fun showAlreadyPresentInCollectionErrorMessage()
     fun showShareIntent(uri: Uri)
     fun exitView()
+    fun startCroppingActivity(
+      source: Uri,
+      destination: Uri,
+      minimumWidth: Int,
+      minimumHeight: Int
+    )
   }
 
   interface ColorsDetailPresenter : BasePresenter<ColorsDetailView> {
@@ -55,10 +54,6 @@ interface ColorsDetailContract {
     fun handleViewReadyState()
     fun notifyPanelExpanded()
     fun notifyPanelCollapsed()
-    fun handlePermissionRequestResult(
-      requestCode: Int, permissions: Array<String>, grantResults: IntArray
-    )
-
     fun handleViewResult(requestCode: Int, resultCode: Int)
     fun handleImageViewClicked()
     fun handleQuickSetClick()
@@ -67,5 +62,8 @@ interface ColorsDetailContract {
     fun handleAddToCollectionClick()
     fun handleShareClick()
     fun handleBackButtonClick()
+    fun handlePermissionRequestResult(
+      requestCode: Int, permissions: Array<String>, grantResults: IntArray
+    )
   }
 }

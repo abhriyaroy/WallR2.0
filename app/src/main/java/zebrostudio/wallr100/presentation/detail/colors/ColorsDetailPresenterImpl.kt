@@ -117,7 +117,7 @@ class ColorsDetailPresenterImpl(
       } else {
         view?.showUnsuccessfulPurchaseError()
       }
-    } else if (requestCode == ColorsActionType.SHARE.ordinal) {
+    } else if (requestCode == SHARE.ordinal) {
       if (resultCode == PURCHASE_SUCCESSFUL_RESULT_CODE) {
         handleShareClick()
       } else {
