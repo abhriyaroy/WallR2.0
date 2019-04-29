@@ -204,7 +204,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     searchView.setQuery(searchWord, false)
   }
 
-  override fun getRecognisedWordsFromSpeech(): ArrayList<String>? {
+  override fun recognizeWordsFromSpeech(): ArrayList<String>? {
     return activityResultIntent?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
   }
 

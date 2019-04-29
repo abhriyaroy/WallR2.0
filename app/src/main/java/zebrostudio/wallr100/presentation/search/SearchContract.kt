@@ -23,7 +23,7 @@ interface SearchContract {
     fun appendSearchResults(startPosition: Int, list: List<SearchPicturesPresenterEntity>)
     fun setEndlessLoadingToFalse()
     fun setSearchQueryWithoutSubmitting(searchWord: String)
-    fun getRecognisedWordsFromSpeech(): ArrayList<String>?
+    fun recognizeWordsFromSpeech(): ArrayList<String>?
   }
 
   interface SearchPresenter : BasePresenter<SearchView> {

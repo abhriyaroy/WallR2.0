@@ -95,7 +95,7 @@ class SearchPresenterImpl(
 
   override fun notifyActivityResult(requestCode: Int, resultCode: Int) {
     if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == Activity.RESULT_OK) {
-      val matches = searchView?.getRecognisedWordsFromSpeech()
+      val matches = searchView?.recognizeWordsFromSpeech()
       if (matches != null && matches.size > 0) {
         val searchWord = matches[0]
         if (searchWord.isNotEmpty()) {

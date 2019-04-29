@@ -179,10 +179,10 @@
 
   <!-- Color picker dialog -->
   <dimen name="color_picker_view_margin">24dp</dimen>
+  <dimen name="color_picker_view_height">300dp</dimen>
   <dimen name="sample_color_view_width">24dp</dimen>
   <dimen name="sample_color_view_height">24dp</dimen>
   <dimen name="sample_color_hex_text_view_margin_left">24dp</dimen>
   <dimen name="sample_color_hex_text_view_text_size">18sp</dimen>
-  <dimen name="color_picker_view_height">300dp</dimen>
 
 </resources>

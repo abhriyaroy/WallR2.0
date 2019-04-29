@@ -143,12 +143,9 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   override fun hasStoragePermission(): Boolean {
-    val readPermission = checkSelfPermission(this,
-        READ_EXTERNAL_STORAGE)
-    val writePermission = checkSelfPermission(this,
-        WRITE_EXTERNAL_STORAGE)
-    if (readPermission != PERMISSION_GRANTED
-        || writePermission != PERMISSION_GRANTED) {
+    val readPermission = checkSelfPermission(this, READ_EXTERNAL_STORAGE)
+    val writePermission = checkSelfPermission(this, WRITE_EXTERNAL_STORAGE)
+    if (readPermission != PERMISSION_GRANTED || writePermission != PERMISSION_GRANTED) {
       return false
     }
     return true
@@ -156,8 +153,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
   override fun requestStoragePermission(colorsActionType: ColorsActionType) {
     requestPermissions(this,
-        arrayOf(READ_EXTERNAL_STORAGE,
-            WRITE_EXTERNAL_STORAGE), colorsActionType.ordinal)
+        arrayOf(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE), colorsActionType.ordinal)
   }
 
   override fun showPermissionRequiredMessage() {
