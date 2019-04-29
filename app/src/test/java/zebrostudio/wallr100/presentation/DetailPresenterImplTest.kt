@@ -130,7 +130,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show no internet error on handleShareClicked call failure due to no internet`() {
+  fun `should show no internet error on handleShareClicked call failure due to no internet availability`() {
     `when`(detailView.internetAvailability()).thenReturn(false)
 
     detailPresenterImpl.handleShareClick()
@@ -239,7 +239,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show no internet error on handleViewResult call failure of type share and premium purchase is successful but no internet available`() {
+  fun `should show no internet error on handleViewResult call failure of type share when premium purchase is successful but internet is not available`() {
     `when`(detailView.internetAvailability()).thenReturn(false)
 
     detailPresenterImpl.handleViewResult(SHARE.ordinal,
@@ -363,7 +363,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show no internet error on handleQuickSetClicked call failure due to no internet`() {
+  fun `should show no internet error on handleQuickSetClicked call failure due to no internet availability`() {
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(false)
 
@@ -577,7 +577,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show no internet error on handlePermissionRequestResult call failure of type quick set due to no internet`() {
+  fun `should show no internet error on handlePermissionRequestResult call failure of type quick set due to no internet availability`() {
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(false)
 
@@ -1623,7 +1623,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show no internet error on handleCrystallizeClick call failure due to no internet`() {
+  fun `should show no internet error on handleCrystallizeClick call failure due to no internet availability`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(false)
@@ -1694,7 +1694,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show no internet error on handlePermissionRequestResult with crystallize request code call failure due to no internet`() {
+  fun `should show no internet error on handlePermissionRequestResult with crystallize request code call failure due to no internet availability`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(false)
@@ -1865,7 +1865,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show no internet error on handleViewResult of crystallize type call failure due to no internet`() {
+  fun `should show no internet error on handleViewResult of crystallize type call failure due to no internet availability`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(false)
@@ -2051,7 +2051,7 @@ class DetailPresenterImplTest {
   }
 
   @Test
-  fun `should show no internet error on handleAddToCollectionClick call failure due to no internet`() {
+  fun `should show no internet error on handleAddToCollectionClick call failure due to no internet availability`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(detailView.hasStoragePermission()).thenReturn(true)
     `when`(detailView.internetAvailability()).thenReturn(false)

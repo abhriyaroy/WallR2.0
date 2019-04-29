@@ -233,12 +233,12 @@ class SearchPresenterImplTest {
   @Test
   fun `should set search query without submitting when notifyActivityResult is called with valid requestCode, resultCode and data`() {
     val wordsArrayList = arrayListOf(randomString)
-    `when`(searchView.getRecognisedWordsFromSpeech()).thenReturn(wordsArrayList)
+    `when`(searchView.recognizeWordsFromSpeech()).thenReturn(wordsArrayList)
 
     searchPresenterImpl.notifyActivityResult(
         MaterialSearchView.REQUEST_VOICE, Activity.RESULT_OK)
 
-    verify(searchView).getRecognisedWordsFromSpeech()
+    verify(searchView).recognizeWordsFromSpeech()
     verify(searchView).setSearchQueryWithoutSubmitting(randomString)
   }
 
