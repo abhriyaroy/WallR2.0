@@ -237,13 +237,15 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun shareLink(shortLink: String) {
-    val sendIntent = Intent()
-    sendIntent.action = Intent.ACTION_SEND
-    sendIntent.putExtra(Intent.EXTRA_TEXT,
-        stringRes(R.string.share_intent_message, WALLR_DOWNLOAD_LINK) + "\n\n"
-            + "Image link - $shortLink")
-    sendIntent.type = "text/plain"
-    startActivity(Intent.createChooser(sendIntent, stringRes(R.string.share_link_using)))
+    Intent().apply {
+      action = Intent.ACTION_SEND
+      putExtra(Intent.EXTRA_TEXT,
+          stringRes(R.string.share_intent_message, WALLR_DOWNLOAD_LINK) + "\n\n"
+              + "Image link - $shortLink")
+      type = "text/plain"
+    }.let {
+      startActivity(Intent.createChooser(it, stringRes(R.string.share_link_using)))
+    }
   }
 
   override fun showWaitLoader(message: String) {

@@ -329,12 +329,12 @@ class ImageHandlerImpl(
         shadowThickness = 0f
       } else {
         stripeHeight = Math.round((i + 1) * initStripeHeight)
-        val dh = (stripeSpread * Math.random() - stripeSpread / 2).toInt()
-        stripeHeight += offset + dh
+        val variableColorSpread = (stripeSpread * Math.random() - stripeSpread / 2).toInt()
+        stripeHeight += offset + variableColorSpread
         if (stripeHeight < 0) stripeHeight = 0
         if (stripeHeight > bigHeight) stripeHeight = bigHeight
-        val ds = (shadowSpread * Math.random() - shadowSpread / 2).toFloat()
-        shadowThickness = Math.max(1f, initShadowHeight + ds)
+        val variableShadowSpread = (shadowSpread * Math.random() - shadowSpread / 2).toFloat()
+        shadowThickness = Math.max(1f, initShadowHeight + variableShadowSpread)
       }
       paint.color = colorsInt[i]
       paint.style = FILL
@@ -344,7 +344,8 @@ class ImageHandlerImpl(
     canvas.restore()
     val startingXCoordinate = (canvas.width - smallHeight) / 2
     val startingYCoordinate = (canvas.height - smallHeight) / 2
-    return Bitmap.createBitmap(bigBitmap, startingXCoordinate, startingYCoordinate, smallHeight, smallHeight)
+    return Bitmap.createBitmap(bigBitmap, startingXCoordinate, startingYCoordinate, smallHeight,
+        smallHeight)
   }
 
   private fun createGradientBitmap(colors: ArrayList<String>): Bitmap {
