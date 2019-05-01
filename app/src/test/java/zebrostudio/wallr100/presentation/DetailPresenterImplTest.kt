@@ -2091,7 +2091,7 @@ class DetailPresenterImplTest {
     verify(detailView).getScope()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
-    verifyPostExecutionThreadSchedulerCall(1)
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -2120,7 +2120,7 @@ class DetailPresenterImplTest {
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
     verify(detailView).getScope()
-    verifyPostExecutionThreadSchedulerCall(1)
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -2157,7 +2157,7 @@ class DetailPresenterImplTest {
     verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
     verify(detailView).showIndefiniteLoaderWithAnimation(randomString)
     verify(detailView).getScope()
-    verifyPostExecutionThreadSchedulerCall(1)
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -2311,7 +2311,7 @@ class DetailPresenterImplTest {
     verify(detailView).getScope()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
-    verifyPostExecutionThreadSchedulerCall(1)
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -2341,7 +2341,7 @@ class DetailPresenterImplTest {
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
     verify(detailView).getScope()
-    verifyPostExecutionThreadSchedulerCall(1)
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -2379,7 +2379,7 @@ class DetailPresenterImplTest {
     verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
     verify(detailView).showIndefiniteLoaderWithAnimation(randomString)
     verify(detailView).getScope()
-    verifyPostExecutionThreadSchedulerCall(1)
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -2535,7 +2535,7 @@ class DetailPresenterImplTest {
     verify(detailView).getScope()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
         detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
-    verifyPostExecutionThreadSchedulerCall(1)
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -2565,7 +2565,7 @@ class DetailPresenterImplTest {
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
     verify(detailView).getScope()
-    verifyPostExecutionThreadSchedulerCall(1)
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -2603,7 +2603,7 @@ class DetailPresenterImplTest {
     verify(detailView).updateProgressPercentage("$downloadProgressCompletedValue%")
     verify(detailView).showIndefiniteLoaderWithAnimation(randomString)
     verify(detailView).getScope()
-    verifyPostExecutionThreadSchedulerCall(1)
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test

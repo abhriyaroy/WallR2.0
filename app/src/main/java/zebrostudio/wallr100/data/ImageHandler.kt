@@ -8,6 +8,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Paint
+import android.graphics.Paint.Style.FILL
 import android.graphics.Shader.TileMode.CLAMP
 import android.graphics.Shader.TileMode.MIRROR
 import android.net.Uri
@@ -305,7 +306,7 @@ class ImageHandlerImpl(
   private fun createMaterialBitmap(colors: ArrayList<String>): Bitmap {
     val smallHeight = wallpaperSetter.getDesiredMinimumHeight()
     val bigHeight = 2 * smallHeight
-    val middleHeight = (2 * smallHeight / Math.sqrt(2.0)).toInt()
+    val middleHeight = (bigHeight / Math.sqrt(2.0)).toInt()
     val offset = (bigHeight - middleHeight) / 2
     val bigBitmap = Bitmap.createBitmap(bigHeight, bigHeight, Bitmap.Config.ARGB_8888)
     val colorsInt = IntArray(colors.size)
@@ -336,14 +337,14 @@ class ImageHandlerImpl(
         shadowThickness = Math.max(1f, initShadowHeight + ds)
       }
       paint.color = colorsInt[i]
-      paint.style = Paint.Style.FILL
+      paint.style = FILL
       paint.setShadowLayer(shadowThickness, 0.0f, 0.0f, -0x1000000)
       canvas.drawRect(0f, 0f, bigHeight.toFloat(), stripeHeight.toFloat(), paint)
     }
     canvas.restore()
-    val x = (canvas.width - smallHeight) / 2
-    val y = (canvas.height - smallHeight) / 2
-    return Bitmap.createBitmap(bigBitmap, x, y, smallHeight, smallHeight)
+    val startingXCoordinate = (canvas.width - smallHeight) / 2
+    val startingYCoordinate = (canvas.height - smallHeight) / 2
+    return Bitmap.createBitmap(bigBitmap, startingXCoordinate, startingYCoordinate, smallHeight, smallHeight)
   }
 
   private fun createGradientBitmap(colors: ArrayList<String>): Bitmap {
