@@ -100,7 +100,7 @@ public abstract class AbstractSlider extends FrameLayout {
     if (selectorDrawable != null) {
       selector.setImageDrawable(selectorDrawable);
 
-      FrameLayout.LayoutParams thumbParams =
+      LayoutParams thumbParams =
           new LayoutParams(
               ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
       thumbParams.gravity = Gravity.CENTER_VERTICAL;

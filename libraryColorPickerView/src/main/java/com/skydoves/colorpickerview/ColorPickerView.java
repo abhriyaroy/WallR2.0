@@ -127,7 +127,7 @@ public class ColorPickerView extends FrameLayout implements LifecycleObserver {
       palette.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.palette));
     }
 
-    FrameLayout.LayoutParams paletteParam =
+    LayoutParams paletteParam =
         new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     paletteParam.gravity = Gravity.CENTER;
     addView(palette, paletteParam);
@@ -139,7 +139,7 @@ public class ColorPickerView extends FrameLayout implements LifecycleObserver {
       selector.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.wheel));
     }
 
-    FrameLayout.LayoutParams selectorParam =
+    LayoutParams selectorParam =
         new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     selectorParam.gravity = Gravity.CENTER;
     addView(selector, selectorParam);
@@ -169,13 +169,13 @@ public class ColorPickerView extends FrameLayout implements LifecycleObserver {
   }
 
   /**
-   * initialize the {@link ColorPickerView} by {@link ColorPickerView.Builder}.
+   * initialize the {@link ColorPickerView} by {@link Builder}.
    *
-   * @param builder {@link ColorPickerView.Builder}.
+   * @param builder {@link Builder}.
    */
   protected void onCreateByBuilder(Builder builder) {
-    FrameLayout.LayoutParams params =
-        new FrameLayout.LayoutParams(
+    LayoutParams params =
+        new LayoutParams(
             SizeUtils.dp2Px(getContext(), builder.width),
             SizeUtils.dp2Px(getContext(), builder.height));
     setLayoutParams(params);
