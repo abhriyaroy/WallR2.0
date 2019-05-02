@@ -108,16 +108,16 @@ abstract class BaseFragment : Fragment(), BaseView {
 
   private fun highlightMenuItemView(menuItemView: LinearLayout) {
     menuItemView.findViewById<WallrCustomTextView>(R.id.textviewGuillotineMenuItem)
-        .setTextColor(colorRes(R.color.accent))
+        ?.setTextColor(colorRes(R.color.accent))
     menuItemView.findViewById<ImageView>(R.id.imageviewGuillotineMenuItem)
-        .setColorFilter(colorRes(R.color.accent), MULTIPLY)
+        ?.setColorFilter(colorRes(R.color.accent), MULTIPLY)
   }
 
   private fun clearMenuItemViewHighlight(menuItemView: LinearLayout) {
     menuItemView.findViewById<WallrCustomTextView>(R.id.textviewGuillotineMenuItem)
-        .setTextColor(colorRes(R.color.white))
+        ?.setTextColor(colorRes(R.color.white))
     menuItemView.findViewById<ImageView>(R.id.imageviewGuillotineMenuItem)
-        .setColorFilter(colorRes(R.color.white), MULTIPLY)
+        ?.setColorFilter(colorRes(R.color.white), MULTIPLY)
   }
 
 }

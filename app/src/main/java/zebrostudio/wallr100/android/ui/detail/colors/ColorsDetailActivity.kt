@@ -382,10 +382,10 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
   private fun disableOperations(vararg views: RelativeLayout) {
     for (view in views) {
-      view.findViewById<ImageView>(R.id.operationImageView).apply {
+      view.findViewById<ImageView>(R.id.operationImageView)?.apply {
         alpha = ALPHA_PARTIALLY_VISIBLE
       }
-      view.findViewById<TextView>(R.id.operationTextView).apply {
+      view.findViewById<TextView>(R.id.operationTextView)?.apply {
         setTextColor(context.colorRes(R.color.dove_gray))
       }
     }
@@ -393,10 +393,10 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
   private fun enableOperations(vararg views: RelativeLayout) {
     for (view in views) {
-      view.findViewById<ImageView>(R.id.operationImageView).apply {
+      view.findViewById<ImageView>(R.id.operationImageView)?.apply {
         alpha = ALPHA_COMPLETELY_VISIBLE
       }
-      view.findViewById<TextView>(R.id.operationTextView).apply {
+      view.findViewById<TextView>(R.id.operationTextView)?.apply {
         setTextColor(context.colorRes(R.color.white))
       }
     }
