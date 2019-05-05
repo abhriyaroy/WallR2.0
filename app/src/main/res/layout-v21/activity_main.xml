@@ -109,7 +109,7 @@
       <View
           android:id="@+id/spinnerStubView"
           app:layout_widthPercent="5%"
-          android:layout_marginLeft="@dimen/main_activity_spinner_stub_margin_left"
+          android:layout_marginStart="@dimen/main_activity_spinner_stub_margin_left"
           android:clickable="false"/>
 
     </android.support.percent.PercentRelativeLayout>
@@ -126,7 +126,7 @@
       fab:fab_icon="@drawable/ic_arrow_forward_white_small"
       android:layout_gravity="bottom|end"
       android:layout_marginBottom="@dimen/main_activity_fab_margin_botom"
-      android:elevation="8dp"
+      android:elevation="@dimen/main_activity_fab_elevation"
       android:visibility="visible"/>
 
 </FrameLayout>

@@ -38,6 +38,7 @@ interface MinimalContract {
     fun addColorToList(hexValue: String)
     fun selectItem(position: Int)
     fun showColorDetails(hexValue: String)
+    fun showMultiColorImageModesHint()
     fun showMultiColorDetails(hexValueList: List<String>, type: MultiColorImageType)
   }
 
@@ -58,6 +59,7 @@ interface MinimalContract {
       selectedItemsMap: HashMap<Int, String>
     ): Boolean
 
+    fun handleHintDismissed()
     fun isItemSelectable(index: Int): Boolean
     fun isItemSelected(index: Int, selectedItemsMap: HashMap<Int, String>): Boolean
     fun setItemSelected(

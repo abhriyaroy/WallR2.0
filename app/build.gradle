@@ -89,6 +89,8 @@ android {
     implementation "android.arch.persistence.room:runtime:$ROOM_VERSION"
     implementation "android.arch.persistence.room:rxjava2:$ROOM_VERSION"
     kapt "android.arch.persistence.room:compiler:$ROOM_VERSION"
+    // Taptarget view
+    implementation "com.getkeepsafe.taptargetview:taptargetview:$TAP_TARGER_VIEW_VERSION"
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
     implementation project(':librarySearch')

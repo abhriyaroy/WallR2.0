@@ -35,6 +35,9 @@ import java.util.concurrent.TimeUnit.SECONDS
 
 const val SUCCESS_STATUS = "success"
 const val ERROR_STATUS = "error"
+const val HINT_PREFERENCE_NAME = "HINT_PREF"
+const val NAVIGATION_HAMBURGER_HINT_PREFERENCE_TAG = "navigation_hamburger_hint"
+const val MULTI_COLOR_IMAGE_HINT_PREFERENCE_TAG = "multi_color_image_hint"
 const val PURCHASE_PREFERENCE_NAME = "PURCHASE_PREF"
 const val PREMIUM_USER_TAG = "premium_user"
 const val IMAGE_PREFERENCE_NAME = "IMAGE_PREF"
@@ -76,6 +79,16 @@ class WallrDataRepository(
   private val minimalColorHelper: MinimalColorHelper,
   private val executionThread: ExecutionThread
 ) : WallrRepository {
+
+  override fun isAppOpenedForTheFirstTime(): Boolean {
+    return sharedPrefsHelper.getBoolean(HINT_PREFERENCE_NAME,
+        NAVIGATION_HAMBURGER_HINT_PREFERENCE_TAG)
+  }
+
+  override fun saveAppPreviouslyOpenedState() {
+    sharedPrefsHelper.setBoolean(HINT_PREFERENCE_NAME,
+        NAVIGATION_HAMBURGER_HINT_PREFERENCE_TAG, true)
+  }
 
   override fun authenticatePurchase(
     packageName: String,
@@ -285,6 +298,15 @@ class WallrDataRepository(
     return imageHandler.addImageToCollections(data,
         databaseImageTypeMapper.mapToDatabaseImageType(collectionsImageModel))
         .subscribeOn(executionThread.computationScheduler)
+  }
+
+  override fun isMultiColorModesHintShown(): Boolean {
+    return sharedPrefsHelper.getBoolean(HINT_PREFERENCE_NAME, MULTI_COLOR_IMAGE_HINT_PREFERENCE_TAG)
+  }
+
+  override fun saveMultiColorModesHintShownState() {
+    sharedPrefsHelper.setBoolean(HINT_PREFERENCE_NAME,
+        MULTI_COLOR_IMAGE_HINT_PREFERENCE_TAG, true)
   }
 
   override fun isCustomMinimalColorListPresent(): Boolean {

@@ -14,6 +14,8 @@ import com.afollestad.dragselectrecyclerview.DragSelectTouchListener
 import com.afollestad.dragselectrecyclerview.Mode.RANGE
 import com.afollestad.materialcab.MaterialCab
 import com.afollestad.materialdialogs.MaterialDialog
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetView
 import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerView
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
@@ -21,6 +23,7 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.minimalBottomLayout
 import kotlinx.android.synthetic.main.activity_main.minimalBottomLayoutFab
 import kotlinx.android.synthetic.main.activity_main.spinner
+import kotlinx.android.synthetic.main.activity_main.spinnerStubView
 import kotlinx.android.synthetic.main.fragment_minimal.minimalFragmentRecyclerView
 import kotlinx.android.synthetic.main.fragment_minimal.minimalFragmentRootLayout
 import kotlinx.android.synthetic.main.toolbar_layout.toolbarMultiSelectIcon
@@ -316,6 +319,37 @@ class MinimalFragment : BaseFragment(), MinimalView {
     context?.let {
       startActivity(ColorsDetailActivity.getCallingIntent(it, listOf(hexValue), SINGLE))
     }
+  }
+
+  override fun showMultiColorImageModesHint() {
+    println("show multi color image mode")
+    TapTargetView.showFor(activity,
+        TapTarget.forView(activity?.spinnerStubView,
+            stringRes(R.string.minimal_fragment_multi_color_hint_title),
+            stringRes(R.string.minimal_fragment_multi_color_hint_description))
+            .dimColor(android.R.color.transparent)
+            .outerCircleColor(R.color.accent)
+            .transparentTarget(true)
+            .targetCircleColor(R.color.tap_target_hint_inner_circle)
+            .textColor(android.R.color.white)
+            .cancelable(true),
+        object : TapTargetView.Listener() {
+          override fun onTargetClick(view: TapTargetView) {
+            super.onTargetClick(view)
+            presenter.handleHintDismissed()
+            activity?.spinner?.expand()
+          }
+
+          override fun onTargetDismissed(view: TapTargetView?, userInitiated: Boolean) {
+            super.onTargetDismissed(view, userInitiated)
+            presenter.handleHintDismissed()
+          }
+
+          override fun onOuterCircleClick(view: TapTargetView?) {
+            super.onTargetClick(view!!)
+            view.dismiss(true)
+          }
+        })
   }
 
   override fun showMultiColorDetails(hexValueList: List<String>, type: MultiColorImageType) {

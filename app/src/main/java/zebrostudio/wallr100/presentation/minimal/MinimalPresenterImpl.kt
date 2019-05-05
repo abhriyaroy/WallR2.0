@@ -4,6 +4,7 @@ import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.data.exception.UnableToGetMinimalColorsException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.MinimalImagesUseCase
+import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
@@ -23,6 +24,7 @@ const val INCREMENT_BY_1 = 1
 const val INCREMENT_BY_2 = 2
 
 class MinimalPresenterImpl(
+  private val widgetHintsUseCase: WidgetHintsUseCase,
   private val minimalImagesUseCase: MinimalImagesUseCase,
   private val postExecutionThread: PostExecutionThread
 ) : MinimalPresenter {
@@ -32,6 +34,7 @@ class MinimalPresenterImpl(
   internal var multiColorImageType: MultiColorImageType = MATERIAL
   internal var shouldUpdateAllItems = true
   private var minimalView: MinimalView? = null
+  private var isHintBeingShown = false
 
   override fun attachView(view: MinimalView) {
     minimalView = view
@@ -214,6 +217,11 @@ class MinimalPresenterImpl(
     return false
   }
 
+  override fun handleHintDismissed() {
+    isHintBeingShown = false
+    widgetHintsUseCase.saveMultiColorImageHintShownState()
+  }
+
   override fun isItemSelectable(index: Int): Boolean {
     return index != INITIAL_SIZE
   }
@@ -284,6 +292,10 @@ class MinimalPresenterImpl(
   private fun showBottomPanelWithAnimationInView() {
     minimalView?.showBottomPanelWithAnimation()
     isBottomPanelEnabled = true
+    if (!widgetHintsUseCase.isMultiColorImageModesHintShown() && !isHintBeingShown) {
+      isHintBeingShown = true
+      minimalView?.showMultiColorImageModesHint()
+    }
   }
 
   private fun hideBottomPanelWithAnimationInView() {

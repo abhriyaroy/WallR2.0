@@ -50,6 +50,8 @@
   <string name="main_activity_exit_confirmation_message">Press back again to exit</string>
   <string name="main_activity_feedback_contact_using_message">Contact using</string>
   <string name="search_menu_title">search</string>
+  <string name="main_activity_hamburger_hint_title">100K+ High-Quality Wallpapers</string>
+  <string name="main_activity_hamburger_hint_description">Choose from more than 100K wallpapers from various categories to meet all your needs.</string>
 
   <!-- Fragment strings -->
   <string name="fragment_unable_to_load_wallpapers_message">Oops. Unable to load wallpapers</string>
@@ -180,6 +182,8 @@
   <string name="minimal_fragment_unable_to_restore_colors_error_message">Unable to restore deleted colors</string>
   <string name="minimal_fragment_restore_colors_success_message">Successfully restored deleted colors</string>
   <string name="minimal_fragment_toolbar_menu_multiselect_title">Multi-select</string>
+  <string name="minimal_fragment_multi_color_hint_title">Wallpaper Modes</string>
+  <string name="minimal_fragment_multi_color_hint_description">You can choose from different modes to generate variety of wallpapers</string>
 
   <string name="colors_detail_activity_colors_style_name_solid">Style : Solid</string>
   <string name="colors_detail_activity_colors_style_name_material">Style : Material</string>

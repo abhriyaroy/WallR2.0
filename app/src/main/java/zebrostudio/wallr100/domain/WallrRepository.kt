@@ -14,6 +14,8 @@ import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
 
 interface WallrRepository {
 
+  fun isAppOpenedForTheFirstTime(): Boolean
+  fun saveAppPreviouslyOpenedState()
   fun authenticatePurchase(
     packageName: String,
     skuId: String,
@@ -55,8 +57,13 @@ interface WallrRepository {
   fun rememberCrystallizeDescriptionShown()
   fun checkIfDownloadIsInProgress(link: String): Boolean
 
-  fun saveImageToCollections(data: String, collectionsImageModel: CollectionsImageModel): Completable
+  fun saveImageToCollections(
+    data: String,
+    collectionsImageModel: CollectionsImageModel
+  ): Completable
 
+  fun isMultiColorModesHintShown(): Boolean
+  fun saveMultiColorModesHintShownState()
   fun isCustomMinimalColorListPresent(): Boolean
   fun getCustomMinimalColorList(): Single<List<String>>
   fun getDefaultMinimalColorList(): Single<List<String>>

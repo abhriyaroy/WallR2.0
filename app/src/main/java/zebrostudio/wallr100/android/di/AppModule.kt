@@ -58,6 +58,8 @@ import zebrostudio.wallr100.domain.interactor.UserPremiumStatusInteractor
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesInteractor
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
+import zebrostudio.wallr100.domain.interactor.WidgetHintsInteractor
+import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.DragSelectItemPresenter
 import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerIPresenterImpl
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract.ImageRecyclerViewPresenter
@@ -223,9 +225,14 @@ class AppModule {
   ): MinimalImagesUseCase = MinimalImagesInteractor(wallrRepository)
 
   @Provides
-  fun providesColorsDetailsUseCase(
+  fun provideColorsDetailsUseCase(
     wallrRepository: WallrRepository
   ): ColorImagesUseCase = ColorImagesInteractor(wallrRepository)
+
+  @Provides
+  fun provideWidgetHintsUseCase(
+    wallrRepository: WallrRepository
+  ): WidgetHintsUseCase = WidgetHintsInteractor(wallrRepository)
 
   @Provides
   fun provideImageRecyclerViewPresenter()

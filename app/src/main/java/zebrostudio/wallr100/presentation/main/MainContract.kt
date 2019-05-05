@@ -5,6 +5,7 @@ import zebrostudio.wallr100.presentation.BasePresenter
 interface MainContract {
 
   interface MainView {
+    fun showHamburgerHint()
     fun showExitConfirmation()
     fun exitApp()
     fun closeNavigationMenu()
@@ -19,10 +20,12 @@ interface MainContract {
   }
 
   interface MainPresenter : BasePresenter<MainView> {
+    fun handleViewCreated()
     fun handleBackPress()
     fun handleNavigationMenuOpened()
     fun handleNavigationMenuClosed()
     fun setBackPressedFlagToFalse()
     fun shouldShowPurchaseOption(): Boolean
+    fun handleHamburgerHintDismissed()
   }
 }

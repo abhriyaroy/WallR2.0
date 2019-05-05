@@ -13,6 +13,7 @@
   <color name="limed_spruce">#37474F</color>
   <color name="westar">#dbd4cf</color>
   <color name="dove_gray">#717171</color>
+  <color name="concrete">#f2f2f2</color>
 
 
   <color name="primary">@color/mineshaft</color>
@@ -22,6 +23,8 @@
 
   <color name="fab_ripple">@color/burnt_sienna</color>
   <color name="guillotine_menu_background">@color/mineshaft</color>
+
+  <color name="tap_target_hint_inner_circle">@color/concrete</color>
 
   <!-- Main -->
   <color name="smart_tab_layout_overline">@color/mineshaft</color>

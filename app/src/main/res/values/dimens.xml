@@ -34,6 +34,8 @@
   <dimen name="main_activity_tab_layout_title_offset">24dp</dimen>
   <dimen name="main_activity_minimal_bottom_layout_height">56dp</dimen>
   <dimen name="main_activity_material_spinner_max_height">350dp</dimen>
+  <dimen name="main_activity_spinner_stub_margin_left">44dp</dimen>
+  <dimen name="main_activity_fab_elevation">8dp</dimen>
 
   <dimen name="overflow_menu_text_size">12sp</dimen>
   <dimen name="back_icon_width">40dp</dimen>

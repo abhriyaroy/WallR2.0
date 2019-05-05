@@ -12,6 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import com.afollestad.materialcab.MaterialCab
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetView
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import com.yalantis.guillotine.interfaces.GuillotineListener
 import dagger.android.AndroidInjection
@@ -78,6 +80,7 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
         fragmentNameTagFetcher.getFragmentName(EXPLORE_TAG))
 
     attachToolbarItemClickListeners()
+    presenter.handleViewCreated()
   }
 
   override fun onBackPressed() {
@@ -97,6 +100,35 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
   }
 
   override fun supportFragmentInjector() = fragmentDispatchingAndroidInjector
+
+  override fun showHamburgerHint() {
+    TapTargetView.showFor(this,
+        TapTarget.forView(findViewById(R.id.contentHamburger),
+            stringRes(R.string.main_activity_hamburger_hint_title),
+            stringRes(R.string.main_activity_hamburger_hint_description))
+            .dimColor(android.R.color.transparent)
+            .outerCircleColor(R.color.accent)
+            .targetCircleColor(R.color.tap_target_hint_inner_circle)
+            .textColor(android.R.color.white)
+            .cancelable(true),
+        object : TapTargetView.Listener() {
+          override fun onTargetClick(view: TapTargetView) {
+            super.onTargetClick(view)
+            guillotineMenuAnimation.open()
+            presenter.handleHamburgerHintDismissed()
+          }
+
+          override fun onTargetDismissed(view: TapTargetView?, userInitiated: Boolean) {
+            super.onTargetDismissed(view, userInitiated)
+            presenter.handleHamburgerHintDismissed()
+          }
+
+          override fun onOuterCircleClick(view: TapTargetView?) {
+            super.onTargetClick(view!!)
+            view.dismiss(true)
+          }
+        })
+  }
 
   override fun exitApp() {
     this.finish()
