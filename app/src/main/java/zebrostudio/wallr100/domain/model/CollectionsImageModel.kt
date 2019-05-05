@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.domain.model
 
-enum class CollectionsImageModel{
+enum class CollectionsImageModel {
   WALLPAPER,
   SEARCH,
   CRYSTALLIZED,

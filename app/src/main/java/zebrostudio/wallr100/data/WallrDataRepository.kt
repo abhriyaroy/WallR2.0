@@ -3,7 +3,6 @@ package zebrostudio.wallr100.data
 import android.graphics.Bitmap
 import android.net.Uri
 import com.google.firebase.database.DatabaseReference
-import com.pddstudio.urlshortener.URLShortener
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -21,6 +20,7 @@ import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapper
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.firebasedatabase.FirebaseImageEntity
+import zebrostudio.wallr100.data.urlshortener.UrlShortener
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.model.CollectionsImageModel
@@ -28,6 +28,7 @@ import zebrostudio.wallr100.domain.model.RestoreColorsModel
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
 import java.util.Collections
 import java.util.TreeMap
 import java.util.concurrent.TimeUnit.SECONDS
@@ -64,10 +65,11 @@ class WallrDataRepository(
   private val unsplashClientFactory: UnsplashClientFactory,
   private val sharedPrefsHelper: SharedPrefsHelper,
   private val gsonProvider: GsonProvider,
+  private val databaseImageTypeMapper: DatabaseImageTypeMapper,
   private val unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
   private val firebaseDatabaseHelper: FirebaseDatabaseHelper,
   private val firebasePictureEntityMapper: FirebasePictureEntityMapper,
-  private val urlShortener: URLShortener,
+  private val urlShortener: UrlShortener,
   private val imageHandler: ImageHandler,
   private val fileHandler: FileHandler,
   private val downloadHelper: DownloadHelper,
@@ -179,6 +181,14 @@ class WallrDataRepository(
         .subscribeOn(executionThread.ioScheduler)
   }
 
+  override fun getImageBitmap(): Single<Bitmap> {
+    if (!fileHandler.freeSpaceAvailable()) {
+      return Single.error(NotEnoughFreeSpaceException())
+    }
+    return Single.just(imageHandler.getImageBitmap())
+        .subscribeOn(executionThread.computationScheduler)
+  }
+
   override fun getImageBitmap(link: String): Observable<ImageDownloadModel> {
     if (!fileHandler.freeSpaceAvailable()) {
       return Observable.error(NotEnoughFreeSpaceException())
@@ -208,10 +218,8 @@ class WallrDataRepository(
   }
 
   override fun getShortImageLink(link: String): Single<String> {
-    val single: Single<String> = Single.create {
-      it.onSuccess(urlShortener.shortUrl(link))
-    }
-    return single.subscribeOn(executionThread.ioScheduler)
+    return urlShortener.getShortUrl(link)
+        .subscribeOn(executionThread.ioScheduler)
   }
 
   override fun clearImageCaches(): Completable {
@@ -227,7 +235,7 @@ class WallrDataRepository(
 
   override fun getCacheResultUri() = fileHandler.getCacheFileUriForCropping()
 
-  override fun getBitmapFromUri(uri: Uri): Single<Bitmap> {
+  override fun getBitmapFromUri(uri: Uri?): Single<Bitmap> {
     return imageHandler.convertUriToBitmap(uri)
         .subscribeOn(executionThread.computationScheduler)
   }
@@ -246,9 +254,14 @@ class WallrDataRepository(
         }
   }
 
-  override fun saveCrystallizedImageToDownloads(): Completable {
-    return imageHandler.saveLowPolyImageToDownloads()
+  override fun saveCachedImageToDownloads(): Completable {
+    return imageHandler.addCachedImageToDownloads()
         .subscribeOn(executionThread.computationScheduler)
+  }
+
+  override fun getShareableImageUri(): Single<Uri> {
+    return imageHandler.getShareableUri()
+        .subscribeOn(executionThread.ioScheduler)
   }
 
   override fun isCrystallizeDescriptionShown(): Boolean {
@@ -265,9 +278,12 @@ class WallrDataRepository(
     return downloadHelper.isDownloadEnqueued(link)
   }
 
-  override fun saveImageToCollections(data: String, type: CollectionsImageModel): Completable {
-    return imageHandler.saveImageToCollections(data,
-        DatabaseImageTypeMapper.mapToDatabaseImageType(type))
+  override fun saveImageToCollections(
+    data: String,
+    collectionsImageModel: CollectionsImageModel
+  ): Completable {
+    return imageHandler.addImageToCollections(data,
+        databaseImageTypeMapper.mapToDatabaseImageType(collectionsImageModel))
         .subscribeOn(executionThread.computationScheduler)
   }
 
@@ -322,11 +338,29 @@ class WallrDataRepository(
               list.add(it, map[it]!!)
             }
             sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME,
-                CUSTOM_MINIMAL_COLOR_LIST_TAG,
-                gsonProvider.getGson().toJson(list))
+                CUSTOM_MINIMAL_COLOR_LIST_TAG, gsonProvider.getGson().toJson(list))
             Single.just(RestoreColorsModel(list, map))
           }
         }
+        .subscribeOn(executionThread.computationScheduler)
+  }
+
+  override fun getSingleColorBitmap(hexValue: String): Single<Bitmap> {
+    if (!fileHandler.freeSpaceAvailable()) {
+      return Single.error(NotEnoughFreeSpaceException())
+    }
+    return imageHandler.getSingleColorBitmap(hexValue)
+        .subscribeOn(executionThread.computationScheduler)
+  }
+
+  override fun getMultiColorBitmap(
+    hexValueList: List<String>,
+    multiColorImageType: MultiColorImageType
+  ): Single<Bitmap> {
+    if (!fileHandler.freeSpaceAvailable()) {
+      return Single.error(NotEnoughFreeSpaceException())
+    }
+    return imageHandler.getMultiColorBitmap(hexValueList, multiColorImageType)
         .subscribeOn(executionThread.computationScheduler)
   }
 

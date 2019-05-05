@@ -12,7 +12,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:gravity="bottom"
-      sothree:umanoPanelHeight="@dimen/detail_activity_sliding_panel_height"
+      sothree:umanoPanelHeight="@dimen/colors_detail_activity_sliding_panel_height"
       sothree:umanoShadowHeight="@dimen/detail_activity_sliding_panel_shadow_height">
 
     <FrameLayout
@@ -98,7 +98,7 @@
           android:weightSum="3">
 
         <RelativeLayout
-            android:id="@+id/setWallpaperImageLayout"
+            android:id="@+id/setColorWallpaperLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -106,7 +106,7 @@
             android:clickable="true">
 
           <ImageView
-              android:id="@+id/setWallpaperImageView"
+              android:id="@+id/operationImageView"
               android:layout_width="@dimen/detail_activity_option_image_view_width"
               android:layout_height="@dimen/detail_activity_option_image_view_height"
               android:layout_centerHorizontal="true"
@@ -114,9 +114,11 @@
               android:src="@drawable/ic_set_wallpaper"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+              android:id="@+id/operationTextView"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_below="@id/setWallpaperImageView"
+              android:layout_alignParentBottom="true"
+              android:layout_alignParentStart="true"
               android:paddingBottom="@dimen/detail_activity_option_text_view_padding_bottom"
               android:text="@string/detail_activity_options_quick_set"
               android:gravity="center"
@@ -125,7 +127,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/downloadImageLayout"
+            android:id="@+id/downloadColorLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -133,7 +135,7 @@
             android:clickable="true">
 
           <ImageView
-              android:id="@+id/downloadImageView"
+              android:id="@+id/operationImageView"
               android:layout_width="@dimen/detail_activity_option_image_view_width"
               android:layout_height="@dimen/detail_activity_option_image_view_height"
               android:layout_centerHorizontal="true"
@@ -141,9 +143,11 @@
               android:src="@drawable/ic_download_wallpaper"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+              android:id="@+id/operationTextView"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_below="@id/downloadImageView"
+              android:layout_alignParentBottom="true"
+              android:layout_alignParentStart="true"
               android:paddingBottom="@dimen/detail_activity_option_text_view_padding_bottom"
               android:text="@string/detail_activity_options_download"
               android:gravity="center"
@@ -152,7 +156,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/editAndSetImageLayout"
+            android:id="@+id/editAndSetColorLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -160,7 +164,7 @@
             android:clickable="true">
 
           <ImageView
-              android:id="@+id/editAndSetImageView"
+              android:id="@+id/operationImageView"
               android:layout_width="@dimen/detail_activity_option_image_view_width"
               android:layout_height="@dimen/detail_activity_option_image_view_height"
               android:layout_centerHorizontal="true"
@@ -168,6 +172,7 @@
               android:src="@drawable/ic_edit_set_wallpaper"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+              android:id="@+id/operationTextView"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_alignParentBottom="true"
@@ -192,7 +197,7 @@
           android:weightSum="2">
 
         <RelativeLayout
-            android:id="@+id/addToCollectionImageLayout"
+            android:id="@+id/addColorToCollectionLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -200,7 +205,7 @@
             android:clickable="true">
 
           <ImageView
-              android:id="@+id/addToCollectionImageView"
+              android:id="@+id/operationImageView"
               android:layout_width="@dimen/detail_activity_option_image_view_width"
               android:layout_height="@dimen/detail_activity_option_image_view_height"
               android:layout_centerHorizontal="true"
@@ -208,6 +213,7 @@
               android:src="@drawable/ic_add_to_gallery_white"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+              android:id="@+id/operationTextView"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_alignParentBottom="true"
@@ -220,7 +226,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/shareImageLayout"
+            android:id="@+id/shareColorLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -228,7 +234,7 @@
             android:clickable="true">
 
           <ImageView
-              android:id="@+id/downloadRawSizeImageView"
+              android:id="@+id/operationImageView"
               android:layout_width="@dimen/detail_activity_option_image_view_width"
               android:layout_height="@dimen/detail_activity_option_image_view_height"
               android:layout_centerHorizontal="true"
@@ -236,6 +242,7 @@
               android:src="@drawable/ic_share_white_small"/>
 
           <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+              android:id="@+id/operationTextView"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_alignParentBottom="true"
@@ -265,22 +272,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-      <TextView
-          android:id="@+id/wallpaperDownloadProgressPercentage"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_centerInParent="true"
-          android:animateLayoutChanges="true"
-          android:fontFamily="sans-serif-thin"
-          android:text="@string/detail_activity_wallpaper_action_progress_percentage"
-          android:textColor="@color/white"
-          android:textSize="80sp"
-          android:typeface="sans"
-          android:visibility="gone"/>
-
-
       <com.github.ybq.android.spinkit.SpinKitView
-          android:id="@+id/wallpaperActionProgressSpinkit"
+          android:id="@+id/colorActionProgressSpinkit"
           style="@style/SpinKitView.Large.FoldingCube"
           android:layout_width="wrap_content"
           android:layout_height="@dimen/wallpaper_action_progress_spinkit_height"
@@ -290,26 +283,14 @@
           app:SpinKit_Color="@color/white"/>
 
       <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-          android:id="@+id/loadingHintBelowProgressPercentage"
+          android:id="@+id/colorActionHintTextView"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_below="@id/wallpaperDownloadProgressPercentage"
-          android:layout_centerHorizontal="true"
-          android:paddingTop="@dimen/detail_activity_loading_hint_below_progress_percentage_padding_top"
-          android:textSize="@dimen/detail_activity_loading_hint_below_progress_percentage_text_size"
-          android:visibility="gone"
-          android:maxLines="1"
-          android:ellipsize="end"/>
-
-      <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-          android:id="@+id/loadingHintBelowProgressSpinkit"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_below="@id/wallpaperActionProgressSpinkit"
+          android:layout_below="@id/colorActionProgressSpinkit"
           android:layout_centerHorizontal="true"
           android:layout_marginTop="@dimen/detail_activity_loading_hint_below_progress_spinkit_margin_top"
           android:paddingTop="@dimen/detail_activity_loading_hint_below_progress_spinkit_padding_top"
-          android:text="@string/detail_activity_finalizing_wallpaper_messsage"
+          android:text="@string/finalizing_wallpaper_messsage"
           android:textSize="@dimen/detail_activity_loading_hint_below_progress_spinkit_text_size"
           android:visibility="gone"
           android:maxLines="1"

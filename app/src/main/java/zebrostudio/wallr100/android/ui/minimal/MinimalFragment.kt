@@ -10,12 +10,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import com.afollestad.dragselectrecyclerview.DragSelectTouchListener
 import com.afollestad.dragselectrecyclerview.Mode.RANGE
 import com.afollestad.materialcab.MaterialCab
 import com.afollestad.materialdialogs.MaterialDialog
+import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerView
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.minimalBottomLayout
 import kotlinx.android.synthetic.main.activity_main.minimalBottomLayoutFab
@@ -27,6 +28,9 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.ui.adapters.DragSelectImageAdapter
 import zebrostudio.wallr100.android.ui.adapters.DragSelectImageAdapterCallbacks
+import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailActivity
+import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.MULTIPLE
+import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.SINGLE
 import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
@@ -42,6 +46,7 @@ import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.DragSelectItemPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
 import javax.inject.Inject
 
 const val SINGLE_ITEM_SIZE = 1
@@ -66,10 +71,10 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    presenter.attachView(this)
     initRecyclerView()
     initBottomPanel()
     attachMultiSelectClickListener()
-    presenter.attachView(this)
     presenter.handleViewCreated()
   }
 
@@ -203,7 +208,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
   override fun showColorPickerDialogAndAttachColorPickerListener() {
     colorPickerDialog = MaterialDialog.Builder(context!!)
         .backgroundColor(colorRes(R.color.primary))
-        .customView(R.layout.dialog_colorpicker, false)
+        .customView(R.layout.dialog_color_picker, false)
         .contentColor(colorRes(R.color.white))
         .widgetColor(colorRes(R.color.accent))
         .positiveColor(colorRes(R.color.accent))
@@ -221,10 +226,12 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
     colorPickerDialog?.customView?.apply {
       findViewById<ColorPickerView>(R.id.colorPickerView).let { colorPickerView ->
-        colorPickerView.setColorListener {
-          findViewById<TextView>(R.id.colorPickerHexTextView).text = "#${colorPickerView.colorHtml}"
-          findViewById<View>(R.id.sampleColorView).setBackgroundColor(it)
-        }
+        colorPickerView.setColorListener(object : ColorEnvelopeListener {
+          override fun onColorSelected(envelope: ColorEnvelope, fromUser: Boolean) {
+            findViewById<TextView>(R.id.colorPickerHexTextView).text = "#${envelope.hexCode}"
+            findViewById<View>(R.id.sampleColorView).setBackgroundColor(envelope.color)
+          }
+        })
       }
     }
   }
@@ -306,7 +313,15 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun showColorDetails(hexValue: String) {
+    context?.let {
+      startActivity(ColorsDetailActivity.getCallingIntent(it, listOf(hexValue), SINGLE))
+    }
+  }
 
+  override fun showMultiColorDetails(hexValueList: List<String>, type: MultiColorImageType) {
+    context?.let {
+      startActivity(ColorsDetailActivity.getCallingIntent(it, hexValueList, MULTIPLE, type))
+    }
   }
 
   private fun initRecyclerView() {
@@ -349,18 +364,23 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   private fun attachMultiSelectClickListener() {
-    activity!!.toolbarMultiSelectIcon.setOnClickListener {
-      presenter.handleMultiSelectMenuClick()
-    }
+    activity!!.let {
+      it.toolbarMultiSelectIcon.apply {
+        setOnClickListener {
+          presenter.handleMultiSelectMenuClick()
+        }
 
-    activity!!.toolbarMultiSelectIcon.setOnLongClickListener { view ->
-      Toast.makeText(context,
-          stringRes(R.string.minimal_fragment_toolbar_menu_multiselect_title), Toast.LENGTH_SHORT)
-          .let {
-            view.menuTitleToast(context!!, it, activity!!.window)
-            it.show()
-          }
-      true
+        setOnLongClickListener { view ->
+          view.menuTitleToast(context!!,
+              stringRes(R.string.minimal_fragment_toolbar_menu_multiselect_title),
+              activity!!.window)
+          true
+        }
+      }
+
+      it.minimalBottomLayoutFab.setOnClickListener {
+        presenter.handleMultiSelectFabClick(dragSelectImageAdapter!!.getSelectedItemsMap())
+      }
     }
   }
 

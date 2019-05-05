@@ -1,4 +1,4 @@
 include ':app', ':libraryGuillotineMenu', ':libraryPurchaseFlow', ':libraryWallrCustoms',
-        ':librarySearch', ':libraryExpandIcon', ':libraryUrlShortener', ':libraryUCrop',
+        ':librarySearch', ':libraryExpandIcon', ':libraryUCrop',
         ':libraryPhotoView', ':libraryDragSelectRecyclerView', ':libraryMaterialSpinner',
         ':libraryMaterialCab', ':libraryFloatingActionButton', ':libraryColorPickerView'

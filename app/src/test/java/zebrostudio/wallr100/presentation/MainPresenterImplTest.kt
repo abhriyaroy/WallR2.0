@@ -41,7 +41,6 @@ class MainPresenterImplTest {
     mainPresenter.handleBackPress()
 
     verify(mainView).closeNavigationMenu()
-    verifyNoMoreInteractions(mainView)
   }
 
   @Test
@@ -58,7 +57,6 @@ class MainPresenterImplTest {
     verify(mainView).getMinimalFragmentTag()
     verify(mainView).showAppBar()
     verify(mainView).showPreviousFragment()
-    verifyNoMoreInteractions(mainView)
   }
 
   @Test
@@ -75,7 +73,6 @@ class MainPresenterImplTest {
     verify(mainView).getMinimalFragmentTag()
     verify(mainView).showAppBar()
     verify(mainView).showPreviousFragment()
-    verifyNoMoreInteractions(mainView)
   }
 
   @Test
@@ -94,7 +91,6 @@ class MainPresenterImplTest {
     verify(mainView).showAppBar()
     verify(mainView).isCabActive()
     verify(mainView).dismissCab()
-    verifyNoMoreInteractions(mainView)
   }
 
   @Test
@@ -113,7 +109,6 @@ class MainPresenterImplTest {
     verify(mainView).showAppBar()
     verify(mainView).isCabActive()
     verify(mainView).showPreviousFragment()
-    verifyNoMoreInteractions(mainView)
   }
 
   @Test
@@ -130,7 +125,6 @@ class MainPresenterImplTest {
     verify(mainView).getMinimalFragmentTag()
     verify(mainView).showAppBar()
     verify(mainView).showPreviousFragment()
-    verifyNoMoreInteractions(mainView)
   }
 
   @Test
@@ -146,7 +140,6 @@ class MainPresenterImplTest {
     verify(mainView).getExploreFragmentTag()
     verify(mainView).showExitConfirmation()
     verify(mainView).startBackPressedFlagResetTimer()
-    verifyNoMoreInteractions(mainView)
   }
 
   @Test
@@ -161,7 +154,6 @@ class MainPresenterImplTest {
     verify(mainView).getFragmentTagAtStackTop()
     verify(mainView).getExploreFragmentTag()
     verify(mainView).exitApp()
-    verifyNoMoreInteractions(mainView)
   }
 
   @Test
@@ -189,10 +181,12 @@ class MainPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(false)
 
     assertTrue(mainPresenter.shouldShowPurchaseOption())
+    verify(userPremiumStatusUseCase).isUserPremium()
   }
 
   @After
-  fun cleanup() {
+  fun tearDown() {
+    verifyNoMoreInteractions(userPremiumStatusUseCase, mainView)
     mainPresenter.detachView()
   }
 

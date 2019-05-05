@@ -5,7 +5,7 @@ import dagger.Provides
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
-import zebrostudio.wallr100.presentation.buypro.BuyProContract
+import zebrostudio.wallr100.presentation.buypro.BuyProContract.BuyProPresenter
 import zebrostudio.wallr100.presentation.buypro.BuyProPresenterImpl
 
 @Module
@@ -16,7 +16,7 @@ class BuyProModule {
     authenticatePurchaseUseCase: AuthenticatePurchaseUseCase,
     userPremiumStatusUseCase: UserPremiumStatusUseCase,
     postExecutionThread: PostExecutionThread
-  ): BuyProContract.BuyProPresenter = BuyProPresenterImpl(
+  ): BuyProPresenter = BuyProPresenterImpl(
       authenticatePurchaseUseCase,
       userPremiumStatusUseCase,
       postExecutionThread)

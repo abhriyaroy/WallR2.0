@@ -10,6 +10,7 @@ import zebrostudio.wallr100.domain.model.RestoreColorsModel
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
 
 interface WallrRepository {
 
@@ -35,6 +36,7 @@ interface WallrRepository {
   fun getPeoplePictures(): Single<List<ImageModel>>
   fun getTechnologyPictures(): Single<List<ImageModel>>
 
+  fun getImageBitmap(): Single<Bitmap>
   fun getImageBitmap(link: String): Observable<ImageDownloadModel>
   fun getCacheImageBitmap(): Single<Bitmap>
   fun getShortImageLink(link: String): Single<String>
@@ -43,16 +45,17 @@ interface WallrRepository {
 
   fun getCacheSourceUri(): Uri
   fun getCacheResultUri(): Uri
+  fun getShareableImageUri(): Single<Uri>
 
-  fun getBitmapFromUri(uri: Uri): Single<Bitmap>
+  fun getBitmapFromUri(uri: Uri?): Single<Bitmap>
   fun downloadImage(link: String): Completable
   fun crystallizeImage(): Single<Pair<Boolean, Bitmap>>
-  fun saveCrystallizedImageToDownloads(): Completable
+  fun saveCachedImageToDownloads(): Completable
   fun isCrystallizeDescriptionShown(): Boolean
   fun rememberCrystallizeDescriptionShown()
   fun checkIfDownloadIsInProgress(link: String): Boolean
 
-  fun saveImageToCollections(data: String, type: CollectionsImageModel): Completable
+  fun saveImageToCollections(data: String, collectionsImageModel: CollectionsImageModel): Completable
 
   fun isCustomMinimalColorListPresent(): Boolean
   fun getCustomMinimalColorList(): Single<List<String>>
@@ -64,5 +67,10 @@ interface WallrRepository {
   ): Single<List<String>>
 
   fun restoreDeletedColors(): Single<RestoreColorsModel>
+  fun getSingleColorBitmap(hexValue: String): Single<Bitmap>
+  fun getMultiColorBitmap(
+    hexValueList: List<String>,
+    multiColorImageType: MultiColorImageType
+  ): Single<Bitmap>
 
 }

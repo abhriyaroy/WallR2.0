@@ -1,8 +1,6 @@
 package zebrostudio.wallr100.presentation
 
-import android.content.Intent
 import android.graphics.Bitmap
-import android.os.Bundle
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -19,9 +17,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
-import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
+import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.BITMAP_CACHE
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE
-import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.EDITED_BITMAP_CACHE
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.REMOTE
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
@@ -39,210 +36,141 @@ class FullScreenImagePresenterImplTest {
   @Mock private lateinit var postExecutionThread: PostExecutionThread
   @Mock private lateinit var fullScreenImageView: FullScreenImageView
   @Mock private lateinit var mockBitmap: Bitmap
-  @Mock private lateinit var mockIntent: Intent
-  @Mock private lateinit var mockBundle: Bundle
-  private lateinit var fullScreenImagePresenter: FullScreenImagePresenterImpl
+  private lateinit var presenter: FullScreenImagePresenterImpl
   private lateinit var testScopeProvider: TestLifecycleScopeProvider
   private var randomString = randomUUID().toString()
 
   @Before
   fun setup() {
-    fullScreenImagePresenter =
+    presenter =
         FullScreenImagePresenterImpl(imageOptionsUseCase, postExecutionThread)
-    fullScreenImagePresenter.attachView(fullScreenImageView)
+    presenter.attachView(fullScreenImageView)
     testScopeProvider = TestLifecycleScopeProvider.createInitial(
         TestLifecycleScopeProvider.TestLifecycle.STARTED)
     `when`(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 
-  @Test fun `should call getImageLinks on setCalledIntent call success of loading type original`() {
-    `when`(mockIntent.extras).thenReturn(mockBundle)
-    `when`(mockBundle.getInt(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG)).thenReturn(
-        REMOTE.ordinal)
+  @Test
+  fun `should call getImageLinks on setImageLoadingType call success of loading type remote`() {
+    presenter.setImageLoadingType(REMOTE.ordinal)
 
-    fullScreenImagePresenter.setCalledIntent(mockIntent)
-
-    verify(fullScreenImageView).getImageLinksFromBundle()
-    verifyNoMoreInteractions(fullScreenImageView)
+    verify(fullScreenImageView).getImageLinks()
   }
 
   @Test
-  fun `should call throwIllegalStateException on setCalledIntent call success of loading type original`() {
-    `when`(mockIntent.extras).thenReturn(null)
-
-    fullScreenImagePresenter.setCalledIntent(mockIntent)
-
-    verify(fullScreenImageView).throwIllegalStateException()
-    verifyNoMoreInteractions(fullScreenImageView)
-  }
-
-  @Test
-  fun `should show crystallized image on setCalledIntent call success of crystallized image type`() {
-    `when`(mockIntent.extras).thenReturn(mockBundle)
-    `when`(mockBundle.getInt(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG)).thenReturn(
-        CRYSTALLIZED_BITMAP_CACHE.ordinal)
+  fun `should show crystallized image on setImageLoadingType call success of type crystallized image`() {
     `when`(imageOptionsUseCase.getCrystallizedImageSingle()).thenReturn(Single.just(mockBitmap))
     `when`(fullScreenImageView.getScope()).thenReturn(testScopeProvider)
 
-    fullScreenImagePresenter.setCalledIntent(mockIntent)
+    presenter.setImageLoadingType(CRYSTALLIZED_BITMAP_CACHE.ordinal)
 
     verify(fullScreenImageView).showLoader()
     verify(fullScreenImageView).getScope()
     verify(fullScreenImageView).showImage(mockBitmap)
     verify(fullScreenImageView).hideLoader()
-    verifyNoMoreInteractions(fullScreenImageView)
     verify(imageOptionsUseCase).getCrystallizedImageSingle()
-    verifyNoMoreInteractions(imageOptionsUseCase)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should show edited image on setCalledIntent call success of edited image type`() {
-    `when`(mockIntent.extras).thenReturn(mockBundle)
-    `when`(mockBundle.getInt(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG)).thenReturn(
-        EDITED_BITMAP_CACHE.ordinal)
+  fun `should show edited image on setImageLoadingType call success of type edited image`() {
     `when`(imageOptionsUseCase.getEditedImageSingle()).thenReturn(Single.just(mockBitmap))
     `when`(fullScreenImageView.getScope()).thenReturn(testScopeProvider)
 
-    fullScreenImagePresenter.setCalledIntent(mockIntent)
+    presenter.setImageLoadingType(BITMAP_CACHE.ordinal)
 
     verify(fullScreenImageView).showLoader()
     verify(fullScreenImageView).getScope()
     verify(fullScreenImageView).showImage(mockBitmap)
     verify(fullScreenImageView).hideLoader()
-    verifyNoMoreInteractions(fullScreenImageView)
     verify(imageOptionsUseCase).getEditedImageSingle()
-    verifyNoMoreInteractions(imageOptionsUseCase)
-    shouldVerifyPostExecutionThreadSchedulerCall()
-  }
-
-  @Test
-  fun `should show generic error message on setCalledIntent call error of crystallized image type`() {
-    `when`(mockIntent.extras).thenReturn(mockBundle)
-    `when`(mockBundle.getInt(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG)).thenReturn(
-        CRYSTALLIZED_BITMAP_CACHE.ordinal)
-    `when`(imageOptionsUseCase.getCrystallizedImageSingle()).thenReturn(Single.error(Exception()))
-    `when`(fullScreenImageView.getScope()).thenReturn(testScopeProvider)
-
-    fullScreenImagePresenter.setCalledIntent(mockIntent)
-
-    verify(fullScreenImageView).showLoader()
-    verify(fullScreenImageView).getScope()
-    verify(fullScreenImageView).showGenericErrorMessage()
-    verify(fullScreenImageView).hideLoader()
-    verifyNoMoreInteractions(fullScreenImageView)
-    verify(imageOptionsUseCase).getCrystallizedImageSingle()
-    verifyNoMoreInteractions(imageOptionsUseCase)
-    shouldVerifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should show low quality image and loader on setLowQualityImageLink call success`() {
-    `when`(mockIntent.extras).thenReturn(mockBundle)
-    `when`(mockBundle.getInt(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG)).thenReturn(
-        REMOTE.ordinal)
+    presenter.setImageLoadingType(REMOTE.ordinal)
 
-    fullScreenImagePresenter.setCalledIntent(mockIntent)
-    fullScreenImagePresenter.setLowQualityImageLink(randomString)
+    presenter.setLowQualityImageLink(randomString)
 
-    verify(fullScreenImageView).getImageLinksFromBundle()
+    verify(fullScreenImageView).getImageLinks()
     verify(fullScreenImageView).showLowQualityImage(randomString)
     verify(fullScreenImageView).showLoader()
-    verifyNoMoreInteractions(fullScreenImageView)
   }
 
   @Test fun `should start loading high quality image on setHighQualityImageLink call success`() {
-    `when`(mockIntent.extras).thenReturn(mockBundle)
-    `when`(mockBundle.getInt(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG)).thenReturn(
-        REMOTE.ordinal)
+    presenter.setImageLoadingType(REMOTE.ordinal)
 
-    fullScreenImagePresenter.setCalledIntent(mockIntent)
-    fullScreenImagePresenter.setHighQualityImageLink(randomString)
+    presenter.setHighQualityImageLink(randomString)
 
-    verify(fullScreenImageView).getImageLinksFromBundle()
+    verify(fullScreenImageView).getImageLinks()
     verify(fullScreenImageView).startLoadingHighQualityImage(randomString)
-    verifyNoMoreInteractions(fullScreenImageView)
   }
 
   @Test
-  fun `should hide loader and low quality image on notifyHighQualityImageLoadingFinished call success`() {
-    `when`(mockIntent.extras).thenReturn(mockBundle)
-    `when`(mockBundle.getInt(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG)).thenReturn(
-        REMOTE.ordinal)
+  fun `should hide loader and low quality image on handleHighQualityImageLoadingFinished call success`() {
+    presenter.setImageLoadingType(REMOTE.ordinal)
 
-    fullScreenImagePresenter.setCalledIntent(mockIntent)
-    fullScreenImagePresenter.notifyHighQualityImageLoadingFinished()
+    presenter.handleHighQualityImageLoadingFinished()
 
-    verify(fullScreenImageView).getImageLinksFromBundle()
+    verify(fullScreenImageView).getImageLinks()
     verify(fullScreenImageView).hideLoader()
     verify(fullScreenImageView).hideLowQualityImage()
-    verifyNoMoreInteractions(fullScreenImageView)
   }
 
   @Test
-  fun `should hide loader and show loading error on notifyHighQualityImageLoadingFinished call error`() {
-    `when`(mockIntent.extras).thenReturn(mockBundle)
-    `when`(mockBundle.getInt(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG)).thenReturn(
-        REMOTE.ordinal)
+  fun `should hide loader and show loading error on handleHighQualityImageLoadingFailed call success`() {
+    presenter.setImageLoadingType(REMOTE.ordinal)
 
-    fullScreenImagePresenter.setCalledIntent(mockIntent)
-    fullScreenImagePresenter.notifyHighQualityImageLoadingFailed()
+    presenter.handleHighQualityImageLoadingFailed()
 
-    verify(fullScreenImageView).getImageLinksFromBundle()
+    verify(fullScreenImageView).getImageLinks()
     verify(fullScreenImageView).hideLoader()
     verify(fullScreenImageView).showHighQualityImageLoadingError()
-    verifyNoMoreInteractions(fullScreenImageView)
   }
 
   @Test
-  fun `should show status bar and navigation bar on notifyPhotoViewTapped call success with isInFullScreen set to true`() {
-    `when`(mockIntent.extras).thenReturn(mockBundle)
-    `when`(mockBundle.getInt(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG)).thenReturn(
-        REMOTE.ordinal)
-    fullScreenImagePresenter.isInFullScreenMode = true
+  fun `should show status bar and navigation bar on handleZoomImageViewTapped call success when full screen mode is on`() {
+    presenter.isInFullScreenMode = true
+    presenter.setImageLoadingType(REMOTE.ordinal)
 
-    fullScreenImagePresenter.setCalledIntent(mockIntent)
-    fullScreenImagePresenter.notifyPhotoViewTapped()
+    presenter.handleZoomImageViewTapped()
 
-    verify(fullScreenImageView).getImageLinksFromBundle()
+    verify(fullScreenImageView).getImageLinks()
     verify(fullScreenImageView).showStatusAndNavBar()
-    verifyNoMoreInteractions(fullScreenImageView)
   }
 
   @Test
-  fun `should hide status bar and navigation bar on notifyPhotoViewTapped call success with isInFullScreen set to false`() {
-    `when`(mockIntent.extras).thenReturn(mockBundle)
-    `when`(mockBundle.getInt(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG)).thenReturn(
-        REMOTE.ordinal)
-    fullScreenImagePresenter.isInFullScreenMode = false
+  fun `should hide status bar and navigation bar on handleZoomImageViewTapped call success when full screen mode is off`() {
+    presenter.setImageLoadingType(REMOTE.ordinal)
+    presenter.isInFullScreenMode = false
 
-    fullScreenImagePresenter.setCalledIntent(mockIntent)
-    fullScreenImagePresenter.notifyPhotoViewTapped()
+    presenter.handleZoomImageViewTapped()
 
-    verify(fullScreenImageView).getImageLinksFromBundle()
+    verify(fullScreenImageView).getImageLinks()
     verify(fullScreenImageView).hideStatusAndNavBar()
-    verifyNoMoreInteractions(fullScreenImageView)
   }
 
   @Test fun `should set isInFullScreen to false on notifyStatusBarAndNavBarShown call success`() {
-    fullScreenImagePresenter.notifyStatusBarAndNavBarShown()
+    presenter.notifyStatusBarAndNavBarShown()
 
-    assertFalse(fullScreenImagePresenter.isInFullScreenMode)
+    assertFalse(presenter.isInFullScreenMode)
   }
 
   @Test fun `should set isInFullScreen to true on notifyStatusBarAndNavBarHidden call success`() {
-    fullScreenImagePresenter.notifyStatusBarAndNavBarHidden()
+    presenter.notifyStatusBarAndNavBarHidden()
 
-    assertTrue(fullScreenImagePresenter.isInFullScreenMode)
+    assertTrue(presenter.isInFullScreenMode)
   }
 
   @After
   fun tearDown() {
-    fullScreenImagePresenter.detachView()
+    verifyNoMoreInteractions(fullScreenImageView, imageOptionsUseCase, mockBitmap,
+        postExecutionThread)
+    presenter.detachView()
   }
 
-  private fun shouldVerifyPostExecutionThreadSchedulerCall(times: Int = 1) {
+  private fun verifyPostExecutionThreadSchedulerCall(times: Int = 1) {
     verify(postExecutionThread, times(times)).scheduler
-    verifyNoMoreInteractions(postExecutionThread)
   }
 
 }

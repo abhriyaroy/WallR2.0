@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.Completable
 import io.reactivex.Single
+import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -35,7 +36,6 @@ class MinimalImagesUseCaseTest {
     assertTrue(minimalImagesUseCase.isCustomColorListPresent())
 
     verify(wallrRepository).isCustomMinimalColorListPresent()
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return single of list of string on getDefaultColors call success`() {
@@ -45,7 +45,6 @@ class MinimalImagesUseCaseTest {
     minimalImagesUseCase.getDefaultColors().test().assertValue(list)
 
     verify(wallrRepository).getDefaultMinimalColorList()
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return error on getDefaultColors call failure`() {
@@ -54,7 +53,6 @@ class MinimalImagesUseCaseTest {
     minimalImagesUseCase.getDefaultColors().test().assertError(Exception::class.java)
 
     verify(wallrRepository).getDefaultMinimalColorList()
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return single of list of string on getCustomColors call success`() {
@@ -64,7 +62,6 @@ class MinimalImagesUseCaseTest {
     minimalImagesUseCase.getCustomColors().test().assertValue(list)
 
     verify(wallrRepository).getCustomMinimalColorList()
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return error on getCustomColors call failure`() {
@@ -73,7 +70,6 @@ class MinimalImagesUseCaseTest {
     minimalImagesUseCase.getCustomColors().test().assertError(Exception::class.java)
 
     verify(wallrRepository).getCustomMinimalColorList()
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return single of list of string on modifyColors call success`() {
@@ -84,7 +80,6 @@ class MinimalImagesUseCaseTest {
     minimalImagesUseCase.modifyColors(list, map).test().assertValue(list)
 
     verify(wallrRepository).modifyColorList(list, map)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return error on modifyColors call failure`() {
@@ -95,7 +90,6 @@ class MinimalImagesUseCaseTest {
     minimalImagesUseCase.modifyColors(list, map).test().assertError(Exception::class.java)
 
     verify(wallrRepository).modifyColorList(list, map)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should complete on addCustomColor call success`() {
@@ -105,7 +99,6 @@ class MinimalImagesUseCaseTest {
     minimalImagesUseCase.addCustomColor(list)
 
     verify(wallrRepository).saveCustomMinimalColorList(list)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return error on addCustomColor call failure`() {
@@ -116,7 +109,6 @@ class MinimalImagesUseCaseTest {
     minimalImagesUseCase.addCustomColor(list).test().assertError(Exception::class.java)
 
     verify(wallrRepository).saveCustomMinimalColorList(list)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return single of RestoreColorModel on restoreColors call success`() {
@@ -128,7 +120,6 @@ class MinimalImagesUseCaseTest {
     minimalImagesUseCase.restoreColors().test().assertValue(restoreColorModel)
 
     verify(wallrRepository).restoreDeletedColors()
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test fun `should return error on restoreColors call failure`() {
@@ -137,6 +128,9 @@ class MinimalImagesUseCaseTest {
     minimalImagesUseCase.restoreColors().test().assertError(Exception::class.java)
 
     verify(wallrRepository).restoreDeletedColors()
+  }
+
+  @After fun tearDown() {
     verifyNoMoreInteractions(wallrRepository)
   }
 

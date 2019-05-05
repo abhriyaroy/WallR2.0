@@ -350,7 +350,7 @@
           android:layout_centerHorizontal="true"
           android:layout_marginTop="@dimen/detail_activity_loading_hint_below_progress_spinkit_margin_top"
           android:paddingTop="@dimen/detail_activity_loading_hint_below_progress_spinkit_padding_top"
-          android:text="@string/detail_activity_finalizing_wallpaper_messsage"
+          android:text="@string/finalizing_wallpaper_messsage"
           android:textSize="@dimen/detail_activity_loading_hint_below_progress_spinkit_text_size"
           android:visibility="gone"
           android:maxLines="1"

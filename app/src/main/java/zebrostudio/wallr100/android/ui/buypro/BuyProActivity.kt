@@ -41,21 +41,21 @@ class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
       showTryRestoringInfo()
       dismissWaitLoader()
     } else {
-      buyProPresenter.verifyPurchase(purchase.packageName,
+      buyProPresenter.verifyTransaction(purchase.packageName,
           purchase.sku,
           purchase.token,
           PURCHASE)
     }
   }
-  private val queryInventoryFinishedListener = QueryInventoryFinishedListener { result, inv ->
+  private val queryInventoryFinishedListener = QueryInventoryFinishedListener { result, inventory ->
     if (result.isFailure) {
       showGenericVerificationError()
       dismissWaitLoader()
     } else {
-      buyProPresenter.verifyPurchase(
-          inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).packageName,
-          inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).sku,
-          inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).token,
+      buyProPresenter.verifyTransaction(
+          inventory.getPurchase(PurchaseTransactionConfig.ITEM_SKU).packageName,
+          inventory.getPurchase(PurchaseTransactionConfig.ITEM_SKU).sku,
+          inventory.getPurchase(PurchaseTransactionConfig.ITEM_SKU).token,
           RESTORE)
     }
   }

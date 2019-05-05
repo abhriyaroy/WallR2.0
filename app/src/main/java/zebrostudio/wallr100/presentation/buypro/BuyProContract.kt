@@ -11,10 +11,7 @@ interface BuyProContract {
     fun showUnableToVerifyPurchaseError()
     fun showNoInternetErrorMessage(premiumOperationType: PremiumTransactionType)
     fun showGenericVerificationError()
-    fun showSuccessfulTransactionMessage(
-      proTransactionType: PremiumTransactionType
-    )
-
+    fun showSuccessfulTransactionMessage(proTransactionType: PremiumTransactionType)
     fun showWaitLoader(proTransactionType: PremiumTransactionType)
     fun dismissWaitLoader()
     fun finishWithResult()
@@ -28,11 +25,11 @@ interface BuyProContract {
 
     fun handlePurchaseClicked()
     fun handleRestoreClicked()
-    fun verifyPurchase(
+    fun verifyTransaction(
       packageName: String,
       skuId: String,
       purchaseToken: String,
-      proTransactionType: PremiumTransactionType
+      premiumTransactionType: PremiumTransactionType
     )
   }
 

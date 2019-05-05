@@ -2,8 +2,6 @@ package zebrostudio.wallr100.android.di
 
 import android.app.Application
 import android.content.Context
-import com.pddstudio.urlshortener.URLShortener
-import com.pddstudio.urlshortener.URLShortenerImpl
 import dagger.Module
 import dagger.Provides
 import zebrostudio.wallr100.android.AndroidBackgroundThreads
@@ -35,13 +33,21 @@ import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactoryImpl
 import zebrostudio.wallr100.data.database.DatabaseHelper
 import zebrostudio.wallr100.data.database.DatabaseHelperImpl
+import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapper
+import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapperImpl
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
+import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapperImpl
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
+import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapperImpl
+import zebrostudio.wallr100.data.urlshortener.UrlShortener
+import zebrostudio.wallr100.data.urlshortener.UrlShortenerImpl
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseInteractor
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
+import zebrostudio.wallr100.domain.interactor.ColorImagesInteractor
+import zebrostudio.wallr100.domain.interactor.ColorImagesUseCase
 import zebrostudio.wallr100.domain.interactor.ImageOptionsInteractor
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.MinimalImagesInteractor
@@ -54,7 +60,7 @@ import zebrostudio.wallr100.domain.interactor.WallpaperImagesInteractor
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.DragSelectItemPresenter
 import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerIPresenterImpl
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract.ImageRecyclerViewPresenter
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
 import javax.inject.Singleton
 
@@ -119,16 +125,20 @@ class AppModule {
   fun provideUnsplashClientFactory(): UnsplashClientFactory = UnsplashClientFactoryImpl()
 
   @Provides
-  fun providePictureEntityMapper(): UnsplashPictureEntityMapper = UnsplashPictureEntityMapper()
+  fun provideDataBaseImageTypeMapper(): DatabaseImageTypeMapper = DatabaseImageTypeMapperImpl()
 
   @Provides
-  fun provideFirebasePictureEntityMapper(): FirebasePictureEntityMapper = FirebasePictureEntityMapper()
+  fun provideUnspalshPictureEntityMapper(): UnsplashPictureEntityMapper = UnsplashPictureEntityMapperImpl()
 
   @Provides
-  fun provideUrlShortener(): URLShortener = URLShortenerImpl()
+  fun provideFirebasePictureEntityMapper(): FirebasePictureEntityMapper = FirebasePictureEntityMapperImpl()
 
   @Provides
-  fun provideFileHandler(): FileHandler = FileHandlerImpl()
+  @Singleton
+  fun provideUrlShortener(): UrlShortener = UrlShortenerImpl()
+
+  @Provides
+  fun provideFileHandler(context: Context): FileHandler = FileHandlerImpl(context)
 
   @Provides
   fun provideWallpaperSetter(context: Context): WallpaperSetter = WallpaperSetterImpl(context)
@@ -143,8 +153,9 @@ class AppModule {
   fun provideImageHandler(
     context: Context,
     fileHandler: FileHandler,
-    databaseHelper: DatabaseHelper
-  ): ImageHandler = ImageHandlerImpl(context, fileHandler, databaseHelper)
+    databaseHelper: DatabaseHelper,
+    wallpaperSetter: WallpaperSetter
+  ): ImageHandler = ImageHandlerImpl(context, fileHandler, databaseHelper, wallpaperSetter)
 
   @Provides
   @Singleton
@@ -153,10 +164,11 @@ class AppModule {
     unsplashClientFactory: UnsplashClientFactory,
     sharedPrefsHelper: SharedPrefsHelper,
     gsonProvider: GsonProvider,
+    databaseImageTypeMapper: DatabaseImageTypeMapper,
     unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
     firebaseDatabaseHelper: FirebaseDatabaseHelper,
     firebasePictureEntityMapper: FirebasePictureEntityMapper,
-    urlShortener: URLShortener,
+    urlShortener: UrlShortener,
     imageHandler: ImageHandler,
     fileHandler: FileHandler,
     downloadHelper: DownloadHelper,
@@ -166,6 +178,7 @@ class AppModule {
       unsplashClientFactory,
       sharedPrefsHelper,
       gsonProvider,
+      databaseImageTypeMapper,
       unsplashPictureEntityMapper,
       firebaseDatabaseHelper,
       firebasePictureEntityMapper,
@@ -210,8 +223,13 @@ class AppModule {
   ): MinimalImagesUseCase = MinimalImagesInteractor(wallrRepository)
 
   @Provides
+  fun providesColorsDetailsUseCase(
+    wallrRepository: WallrRepository
+  ): ColorImagesUseCase = ColorImagesInteractor(wallrRepository)
+
+  @Provides
   fun provideImageRecyclerViewPresenter()
-      : ImageRecyclerItemContract.ImageRecyclerViewPresenter = ImageRecyclerViewPresenterImpl()
+      : ImageRecyclerViewPresenter = ImageRecyclerViewPresenterImpl()
 
   @Provides
   fun provideDragSelectRecyclerItemPresenter(): DragSelectItemPresenter = DragSelectRecyclerIPresenterImpl()

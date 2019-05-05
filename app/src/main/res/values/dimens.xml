@@ -175,5 +175,14 @@
   <dimen name="colors_detail_activity_colors_style_name_text_view_width">230dp</dimen>
   <dimen name="colors_detail_activity_colors_style_name_text_view_padding_left">24dp</dimen>
   <dimen name="colors_detail_activity_colors_style_name_text_view_text_size">20sp</dimen>
+  <dimen name="colors_detail_activity_sliding_panel_height">180dp</dimen>
+
+  <!-- Color picker dialog -->
+  <dimen name="color_picker_view_margin">24dp</dimen>
+  <dimen name="color_picker_view_height">300dp</dimen>
+  <dimen name="sample_color_view_width">24dp</dimen>
+  <dimen name="sample_color_view_height">24dp</dimen>
+  <dimen name="sample_color_hex_text_view_margin_left">24dp</dimen>
+  <dimen name="sample_color_hex_text_view_text_size">18sp</dimen>
 
 </resources>

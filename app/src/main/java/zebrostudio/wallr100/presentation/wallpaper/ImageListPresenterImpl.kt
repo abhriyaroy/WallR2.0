@@ -8,6 +8,7 @@ import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.TOP_P
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.domain.model.images.ImageModel
+import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListPresenter
 import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListView
 import zebrostudio.wallr100.presentation.wallpaper.mapper.ImagePresenterEntityMapper
 
@@ -15,7 +16,7 @@ class ImageListPresenterImpl(
   private val wallpaperImagesUseCase: WallpaperImagesUseCase,
   private val imagePresenterEntityMapper: ImagePresenterEntityMapper,
   private var postExecutionThread: PostExecutionThread
-) : ImageListContract.ImageListPresenter {
+) : ImageListPresenter {
 
   private var imageListView: ImageListView? = null
   internal var imageListType = 0

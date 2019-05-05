@@ -1,26 +1,23 @@
 package zebrostudio.wallr100.presentation.expandimage
 
-import android.content.Intent
 import com.uber.autodispose.autoDisposable
-import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
+import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.BITMAP_CACHE
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE
-import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.EDITED_BITMAP_CACHE
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.REMOTE
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
+import zebrostudio.wallr100.presentation.expandimage.FullScreenImageContract.FullScreenImagePresenter
 import zebrostudio.wallr100.presentation.expandimage.FullScreenImageContract.FullScreenImageView
 
 class FullScreenImagePresenterImpl(
   private var imageOptionsUseCase: ImageOptionsUseCase,
   private var postExecutionThread: PostExecutionThread
-) : FullScreenImageContract.FullScreenImagePresenter {
+) : FullScreenImagePresenter {
 
-  internal lateinit var intent: Intent
   internal var isInFullScreenMode: Boolean = false
   private var fullScreenView: FullScreenImageView? = null
   private var lowQualityImageLink: String? = null
   private var highQualityImageLink: String? = null
-  private var imageLoadingTypeOrdinal: Int = REMOTE.ordinal
 
   override fun attachView(view: FullScreenImageView) {
     fullScreenView = view
@@ -30,13 +27,11 @@ class FullScreenImagePresenterImpl(
     fullScreenView = null
   }
 
-  override fun setCalledIntent(intent: Intent) {
-    if (intent.extras != null) {
-      imageLoadingTypeOrdinal =
-          intent.extras!!.getInt(FullScreenImageActivity.IMAGE_LOADING_TYPE_TAG)
-      processImageLoadingTypeOrdinal(imageLoadingTypeOrdinal)
-    } else {
-      fullScreenView?.throwIllegalStateException()
+  override fun setImageLoadingType(type: Int) {
+    when (type) {
+      REMOTE.ordinal -> fullScreenView?.getImageLinks()
+      CRYSTALLIZED_BITMAP_CACHE.ordinal -> fetchCrystallizedImageBitmap()
+      BITMAP_CACHE.ordinal -> fetchEditedImageBitmap()
     }
   }
 
@@ -51,17 +46,17 @@ class FullScreenImagePresenterImpl(
     fullScreenView?.startLoadingHighQualityImage(highQualityImageLink!!)
   }
 
-  override fun notifyHighQualityImageLoadingFinished() {
+  override fun handleHighQualityImageLoadingFinished() {
     fullScreenView?.hideLoader()
     fullScreenView?.hideLowQualityImage()
   }
 
-  override fun notifyHighQualityImageLoadingFailed() {
+  override fun handleHighQualityImageLoadingFailed() {
     fullScreenView?.hideLoader()
     fullScreenView?.showHighQualityImageLoadingError()
   }
 
-  override fun notifyPhotoViewTapped() {
+  override fun handleZoomImageViewTapped() {
     if (isInFullScreenMode) {
       fullScreenView?.showStatusAndNavBar()
     } else {
@@ -75,14 +70,6 @@ class FullScreenImagePresenterImpl(
 
   override fun notifyStatusBarAndNavBarHidden() {
     isInFullScreenMode = true
-  }
-
-  private fun processImageLoadingTypeOrdinal(imageLoadingType: Int) {
-    when (imageLoadingType) {
-      REMOTE.ordinal -> fullScreenView?.getImageLinksFromBundle()
-      CRYSTALLIZED_BITMAP_CACHE.ordinal -> fetchCrystallizedImageBitmap()
-      EDITED_BITMAP_CACHE.ordinal -> fetchEditedImageBitmap()
-    }
   }
 
   private fun fetchCrystallizedImageBitmap() {

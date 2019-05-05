@@ -3,7 +3,8 @@ package zebrostudio.wallr100.presentation
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider
+import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider.TestLifecycle.STARTED
+import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider.createInitial
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -46,81 +47,86 @@ class MinimalPresenterImplTest {
     minimalPresenter = MinimalPresenterImpl(minimalImagesUseCase, postExecutionThread)
     minimalPresenter.attachView(minimalView)
 
-    `when`(minimalView.getScope()).thenReturn(TestLifecycleScopeProvider.createInitial(
-        TestLifecycleScopeProvider.TestLifecycle.STARTED))
+    `when`(minimalView.getScope()).thenReturn(createInitial(STARTED))
     `when`(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 
   @Test
-  fun `should display default colors on handleViewCreated call success and custom color list not present`() {
+  fun `should display default colors on handleViewCreated call success as custom color list not present`() {
     val list = listOf(randomString)
     `when`(minimalImagesUseCase.isCustomColorListPresent()).thenReturn(false)
     `when`(minimalImagesUseCase.getDefaultColors()).thenReturn(Single.just(list))
 
     minimalPresenter.handleViewCreated()
 
+    verify(minimalImagesUseCase).isCustomColorListPresent()
+    verify(minimalImagesUseCase).getDefaultColors()
     verify(minimalView).setColorList(list)
     verify(minimalView).getScope()
     verify(minimalView).updateAllItems()
-    verifyNoMoreInteractions(minimalView)
-    `should verify post execution thread scheduler call`()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should call showUnableToGetColorsErrorMessage on handleViewCreated call failure and custom color list not present`() {
+  fun `should call showUnableToGetColorsErrorMessage on handleViewCreated call failure as custom color list is not present`() {
     `when`(minimalImagesUseCase.isCustomColorListPresent()).thenReturn(false)
     `when`(minimalImagesUseCase.getDefaultColors()).thenReturn(
         Single.error(UnableToGetMinimalColorsException()))
 
     minimalPresenter.handleViewCreated()
 
+    verify(minimalImagesUseCase).isCustomColorListPresent()
+    verify(minimalImagesUseCase).getDefaultColors()
     verify(minimalView).showUnableToGetColorsErrorMessage()
     verify(minimalView).getScope()
-    verifyNoMoreInteractions(minimalView)
-    `should verify post execution thread scheduler call`()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should call showGenericErrorMessage on handleViewCreated call failure and custom color list not present`() {
+  fun `should call showGenericErrorMessage on handleViewCreated call failure as custom color list is not present`() {
     `when`(minimalImagesUseCase.isCustomColorListPresent()).thenReturn(false)
-    `when`(minimalImagesUseCase.getDefaultColors()).thenReturn(
-        Single.error(Exception()))
+    `when`(minimalImagesUseCase.getDefaultColors()).thenReturn(Single.error(Exception()))
 
     minimalPresenter.handleViewCreated()
 
+    verify(minimalImagesUseCase).isCustomColorListPresent()
+    verify(minimalImagesUseCase).getDefaultColors()
+    verify(minimalImagesUseCase).isCustomColorListPresent()
+    verify(minimalImagesUseCase).getDefaultColors()
     verify(minimalView).showGenericErrorMessage()
     verify(minimalView).getScope()
-    verifyNoMoreInteractions(minimalView)
-    `should verify post execution thread scheduler call`()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should display custom colors on handleViewCreated call success and custom color list present`() {
+  fun `should display custom colors on handleViewCreated call success when custom color is list present`() {
     val list = listOf(randomString)
     `when`(minimalImagesUseCase.isCustomColorListPresent()).thenReturn(true)
     `when`(minimalImagesUseCase.getCustomColors()).thenReturn(Single.just(list))
 
     minimalPresenter.handleViewCreated()
 
+    verify(minimalImagesUseCase).isCustomColorListPresent()
+    verify(minimalImagesUseCase).getCustomColors()
     verify(minimalView).setColorList(list)
     verify(minimalView).getScope()
     verify(minimalView).updateAllItems()
-    verifyNoMoreInteractions(minimalView)
-    `should verify post execution thread scheduler call`()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should call showUnableToGetColorsErrorMessage on handleViewCreated call failure and custom color list present`() {
+  fun `should call showUnableToGetColorsErrorMessage on handleViewCreated call failure even though custom color list is present`() {
     `when`(minimalImagesUseCase.isCustomColorListPresent()).thenReturn(true)
     `when`(minimalImagesUseCase.getCustomColors()).thenReturn(
         Single.error(UnableToGetMinimalColorsException()))
 
     minimalPresenter.handleViewCreated()
 
+    verify(minimalImagesUseCase).isCustomColorListPresent()
+    verify(minimalImagesUseCase).getCustomColors()
     verify(minimalView).showUnableToGetColorsErrorMessage()
     verify(minimalView).getScope()
-    verifyNoMoreInteractions(minimalView)
-    `should verify post execution thread scheduler call`()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -131,10 +137,11 @@ class MinimalPresenterImplTest {
 
     minimalPresenter.handleViewCreated()
 
+    verify(minimalImagesUseCase).isCustomColorListPresent()
+    verify(minimalImagesUseCase).getCustomColors()
     verify(minimalView).showGenericErrorMessage()
     verify(minimalView).getScope()
-    verifyNoMoreInteractions(minimalView)
-    `should verify post execution thread scheduler call`()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -146,7 +153,6 @@ class MinimalPresenterImplTest {
 
     assertFalse(minimalPresenter.isBottomPanelEnabled)
     verify(minimalView).hideBottomLayoutWithAnimation()
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test
@@ -159,7 +165,6 @@ class MinimalPresenterImplTest {
 
     assertTrue(minimalPresenter.isBottomPanelEnabled)
     verify(minimalView).showBottomPanelWithAnimation()
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test
@@ -185,6 +190,7 @@ class MinimalPresenterImplTest {
     minimalPresenter.handleDeleteMenuItemClick(list, map)
 
     assertFalse(minimalPresenter.shouldUpdateAllItems)
+    verify(minimalImagesUseCase).modifyColors(list, map)
     verify(minimalView).clearSelectedItemsMap()
     verify(minimalView).setColorList(modifiedList)
     verify(minimalView).getScope()
@@ -193,8 +199,7 @@ class MinimalPresenterImplTest {
     }
     verify(minimalView).showUndoDeletionOption(map.size)
     verify(minimalView).clearCabIfActive()
-    verifyNoMoreInteractions(minimalView)
-    `should verify post execution thread scheduler call`()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should call showDeleteColorsErrorMessage on handleDeleteMenuItemClick call failure`() {
@@ -208,11 +213,11 @@ class MinimalPresenterImplTest {
     minimalPresenter.handleDeleteMenuItemClick(list, map)
 
     assertTrue(minimalPresenter.shouldUpdateAllItems)
+    verify(minimalImagesUseCase).modifyColors(list, map)
     verify(minimalView).getScope()
     verify(minimalView).clearCabIfActive()
     verify(minimalView).showDeleteColorsErrorMessage()
-    verifyNoMoreInteractions(minimalView)
-    `should verify post execution thread scheduler call`()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -226,7 +231,6 @@ class MinimalPresenterImplTest {
     minimalPresenter.handleDeleteMenuItemClick(list, map)
 
     verify(minimalView).showDeselectBeforeDeletionMessage(map.size)
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test
@@ -242,7 +246,6 @@ class MinimalPresenterImplTest {
     verify(minimalView).clearSelectedItemsMap()
     verify(minimalView).updateAllItems()
     verify(minimalView).hideBottomLayoutWithAnimation()
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test
@@ -257,7 +260,6 @@ class MinimalPresenterImplTest {
     assertEquals(INITIAL_SIZE, minimalPresenter.selectionSize)
     verify(minimalView).clearSelectedItemsMap()
     verify(minimalView).hideBottomLayoutWithAnimation()
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test
@@ -268,7 +270,6 @@ class MinimalPresenterImplTest {
 
     assertTrue(minimalPresenter.shouldUpdateAllItems)
     verify(minimalView).clearSelectedItemsMap()
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test
@@ -300,12 +301,12 @@ class MinimalPresenterImplTest {
 
     minimalPresenter.handleColorPickerPositiveClick(newColourHex, list)
 
+    verify(minimalImagesUseCase).addCustomColor(modifiedList)
     verify(minimalView).addColorToList(newColourHex)
     verify(minimalView).getScope()
     verify(minimalView).insertItemAndScrollToItemView(modifiedList.size)
     verify(minimalView).showAddColorSuccessMessage()
-    verifyNoMoreInteractions(minimalView)
-    `should verify post execution thread scheduler call`()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should show error on handleColorPickerPositiveClick call failure`() {
@@ -317,10 +318,10 @@ class MinimalPresenterImplTest {
 
     minimalPresenter.handleColorPickerPositiveClick(newColourHex, list)
 
+    verify(minimalImagesUseCase).addCustomColor(modifiedList)
     verify(minimalView).getScope()
     verify(minimalView).showGenericErrorMessage()
-    verifyNoMoreInteractions(minimalView)
-    `should verify post execution thread scheduler call`()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -331,11 +332,10 @@ class MinimalPresenterImplTest {
 
     verify(minimalView).showColorAlreadyPresentErrorMessageAndScrollToPosition(
         list.indexOf(randomString) + INITIAL_OFFSET)
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test fun `should restore colors on handleUndoDeletionOptionClick call success`() {
-    val restoreColorsModel = RestoreColorsModelFactory().getRestoreColorsModel()
+    val restoreColorsModel = RestoreColorsModelFactory.getRestoreColorsModel()
     val restoreColorsPresenterEntity =
         RestoreColorsPresenterEntityMapper().mapToPresenterEntity(restoreColorsModel)
     val inOrder = inOrder(minimalView)
@@ -343,14 +343,14 @@ class MinimalPresenterImplTest {
 
     minimalPresenter.handleUndoDeletionOptionClick()
 
+    verify(minimalImagesUseCase).restoreColors()
     verify(minimalView).getScope()
     verify(minimalView).setColorList(restoreColorsPresenterEntity.colorsList)
     restoreColorsPresenterEntity.selectedItemsMap.keys.forEach {
       inOrder.verify(minimalView).addItemView(it + INITIAL_OFFSET)
     }
     verify(minimalView).showRestoreColorsSuccessMessage()
-    verifyNoMoreInteractions(minimalView)
-    `should verify post execution thread scheduler call`()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should show error on handleUndoDeletionOptionClick call failure`() {
@@ -358,10 +358,10 @@ class MinimalPresenterImplTest {
 
     minimalPresenter.handleUndoDeletionOptionClick()
 
+    verify(minimalImagesUseCase).restoreColors()
     verify(minimalView).getScope()
     verify(minimalView).showUnableToRestoreColorsMessage()
-    verifyNoMoreInteractions(minimalView)
-    `should verify post execution thread scheduler call`()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test fun `should show color picker dialog on handleClick call success`() {
@@ -372,7 +372,6 @@ class MinimalPresenterImplTest {
     minimalPresenter.handleClick(position, list, map)
 
     verify(minimalView).showColorPickerDialogAndAttachColorPickerListener()
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test fun `should show exit selection mode message on handleClick call success`() {
@@ -384,7 +383,6 @@ class MinimalPresenterImplTest {
     minimalPresenter.handleClick(position, list, map)
 
     verify(minimalView).showExitSelectionModeToAddColorMessage()
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test fun `should add to selected items map and show bottom panel on handleClick call success`() {
@@ -407,7 +405,6 @@ class MinimalPresenterImplTest {
     verify(minimalView).showAppBar()
     verify(minimalView).showCab(map.size)
     verify(minimalView).showBottomPanelWithAnimation()
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test
@@ -430,7 +427,6 @@ class MinimalPresenterImplTest {
     verify(minimalView).updateItemView(position)
     verify(minimalView).showAppBar()
     verify(minimalView).showCab(map.size)
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test
@@ -450,7 +446,6 @@ class MinimalPresenterImplTest {
     verify(minimalView).showAppBar()
     verify(minimalView).showCab(map.size)
     verify(minimalView).hideBottomLayoutWithAnimation()
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test
@@ -470,7 +465,6 @@ class MinimalPresenterImplTest {
     verify(minimalView).updateItemView(position)
     verify(minimalView).showAppBar()
     verify(minimalView).showCab(map.size)
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test fun `should show exit selection mode message on handleImageLongClick call success`() {
@@ -482,7 +476,6 @@ class MinimalPresenterImplTest {
     minimalPresenter.handleImageLongClick(position, list, map)
 
     verify(minimalView).showExitSelectionModeToAddColorMessage()
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test
@@ -507,7 +500,6 @@ class MinimalPresenterImplTest {
     verify(minimalView).showAppBar()
     verify(minimalView).showCab(map.size)
     verify(minimalView).showBottomPanelWithAnimation()
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test
@@ -531,7 +523,6 @@ class MinimalPresenterImplTest {
     verify(minimalView).updateItemView(position)
     verify(minimalView).showAppBar()
     verify(minimalView).showCab(map.size)
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test
@@ -552,7 +543,6 @@ class MinimalPresenterImplTest {
     verify(minimalView).showAppBar()
     verify(minimalView).showCab(map.size)
     verify(minimalView).hideBottomLayoutWithAnimation()
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test
@@ -573,7 +563,6 @@ class MinimalPresenterImplTest {
     verify(minimalView).updateItemView(position)
     verify(minimalView).showAppBar()
     verify(minimalView).showCab(map.size)
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test fun `should return false on isItemSelectable call success when index is zero`() {
@@ -620,7 +609,6 @@ class MinimalPresenterImplTest {
     verify(minimalView).showAppBar()
     verify(minimalView).showCab(map.size)
     verify(minimalView).showBottomPanelWithAnimation()
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test
@@ -643,7 +631,6 @@ class MinimalPresenterImplTest {
     verify(minimalView).updateItemView(position)
     verify(minimalView).showAppBar()
     verify(minimalView).showCab(map.size)
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test
@@ -663,7 +650,6 @@ class MinimalPresenterImplTest {
     verify(minimalView).showAppBar()
     verify(minimalView).showCab(map.size)
     verify(minimalView).hideBottomLayoutWithAnimation()
-    verifyNoMoreInteractions(minimalView)
   }
 
   @Test
@@ -683,14 +669,14 @@ class MinimalPresenterImplTest {
     verify(minimalView).updateItemView(position)
     verify(minimalView).showAppBar()
     verify(minimalView).showCab(map.size)
-    verifyNoMoreInteractions(minimalView)
   }
 
   @After fun tearDown() {
+    verifyNoMoreInteractions(postExecutionThread, minimalImagesUseCase, minimalView)
     minimalPresenter.detachView()
   }
 
-  private fun `should verify post execution thread scheduler call`() {
+  private fun verifyPostExecutionThreadSchedulerCall() {
     verify(postExecutionThread).scheduler
     verifyNoMoreInteractions(postExecutionThread)
   }

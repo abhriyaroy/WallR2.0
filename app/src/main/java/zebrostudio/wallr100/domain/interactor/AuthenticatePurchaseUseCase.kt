@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import zebrostudio.wallr100.domain.WallrRepository
 
 interface AuthenticatePurchaseUseCase {
-  fun buildUseCaseCompletable(
+  fun authenticatePurchaseCompletable(
     packageName: String,
     skuId: String,
     purchaseToken: String
@@ -15,7 +15,7 @@ class AuthenticatePurchaseInteractor(
   private val wallrRepository: WallrRepository
 ) : AuthenticatePurchaseUseCase {
 
-  override fun buildUseCaseCompletable(
+  override fun authenticatePurchaseCompletable(
     packageName: String,
     skuId: String,
     purchaseToken: String

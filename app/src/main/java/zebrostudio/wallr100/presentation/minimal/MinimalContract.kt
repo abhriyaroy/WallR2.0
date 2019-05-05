@@ -38,6 +38,7 @@ interface MinimalContract {
     fun addColorToList(hexValue: String)
     fun selectItem(position: Int)
     fun showColorDetails(hexValue: String)
+    fun showMultiColorDetails(hexValueList: List<String>, type: MultiColorImageType)
   }
 
   interface MinimalPresenter : BasePresenter<MinimalView> {
@@ -49,7 +50,7 @@ interface MinimalContract {
     fun handleColorPickerPositiveClick(hexValue: String, colorList: List<String>)
     fun handleUndoDeletionOptionClick()
     fun handleMultiSelectMenuClick()
-
+    fun handleMultiSelectFabClick(selectedItemsMap: HashMap<Int, String>)
     fun handleClick(position: Int, colorList: List<String>, selectedItemsMap: HashMap<Int, String>)
     fun handleImageLongClick(
       position: Int,

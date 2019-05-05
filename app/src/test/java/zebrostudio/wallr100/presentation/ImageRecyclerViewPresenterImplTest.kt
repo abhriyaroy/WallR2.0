@@ -2,6 +2,7 @@ package zebrostudio.wallr100.presentation
 
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -16,14 +17,12 @@ import zebrostudio.wallr100.presentation.datafactory.ImagePresenterEntityFactory
 import zebrostudio.wallr100.presentation.datafactory.SearchPicturesPresenterEntityFactory
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
-import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class ImageRecyclerViewPresenterImplTest {
 
   @Mock lateinit var imageRecyclerItemView: ImageRecyclerItemView
   private lateinit var imageRecyclerViewPresenterImpl: ImageRecyclerViewPresenterImpl
-  private val randomString = randomUUID().toString()
 
   @Before
   fun setup() {
@@ -85,7 +84,6 @@ class ImageRecyclerViewPresenterImplTest {
         searchPicturesList[position].paletteColor)
     verify(imageRecyclerItemView).setSearchImage(
         searchPicturesList[position].imageQualityUrlPresenterEntity.smallImageLink)
-    verifyNoMoreInteractions(imageRecyclerItemView)
   }
 
   @Test
@@ -102,7 +100,6 @@ class ImageRecyclerViewPresenterImplTest {
     verify(imageRecyclerItemView).setImageViewBackgroundAndAttachClickListener(
         wallpaperImagesList[position].color)
     verify(imageRecyclerItemView).setWallpaperImage(wallpaperImagesList[position].imageLink.thumb)
-    verifyNoMoreInteractions(imageRecyclerItemView)
   }
 
   @Test
@@ -159,5 +156,9 @@ class ImageRecyclerViewPresenterImplTest {
     imageRecyclerViewPresenterImpl.handleImageClicked(position, imageRecyclerItemView)
 
     verify(imageRecyclerItemView).showWallpaperImageDetails(wallpaperImagesList[position])
+  }
+
+  @After fun tearDown() {
+    verifyNoMoreInteractions(imageRecyclerItemView)
   }
 }

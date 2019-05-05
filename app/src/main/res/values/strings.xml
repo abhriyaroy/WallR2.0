@@ -29,6 +29,21 @@
   <string name="cancel_text">Cancel</string>
   <string name="unable_to_load_hd_image_error">
     Unable to load high-definition preview. Please ensure you have a working internet connection</string>
+  <string name="storage_permission_denied_error">
+    Storage permission is required to continue using this app. Please GRANT the permission when asked for</string>
+  <string name="unsuccessful_purchase_error">Purchase not successful. Please try again</string>
+  <string name="already_present_in_collection_error_message">Wallpaper is already present in the collection</string>
+  <string name="finalizing_stuff_wait_message">Finalizing stuff. Please wait…</string>
+  <string name="finalizing_wallpaper_messsage">Finalizing wallpaper...</string>
+  <string name="adding_image_to_collections_message">Adding wallpaper to collection...</string>
+  <string name="add_to_collection_success_message">Wallpaper has been added to collection!</string>
+  <string name="download_finished_success_message">Your wallpaper has finished downloading</string>
+  <string name="share_intent_message">Get high-quality wallpapers for your Android device with WallR at %1$s</string>
+  <string name="share_link_using">Share link using</string>
+  <string name="preparing_shareable_wallpaper_message">Preparing shareable wallpaper...</string>
+  <string name="not_enough_free_space_error_message">Low on memory. Please free some memory for app to work</string>
+  <string name="set_wallpaper_success_message">Your wallpaper has been set!</string>
+  <string name="set_wallpaper_error_message">Couldn\'t set wallpaper</string>
 
   <!-- Main activity strings -->
   <string name="main_activity_no_email_client_error">There is no email client installed</string>
@@ -113,13 +128,11 @@
   <string name="detail_activity_options_add_to_collection">ADD TO COLLECTION</string>
   <string name="detail_activity_options_edit_and_set">EDIT AND SET</string>
   <string name="detail_activity_choose_download_quality_message">Choose Download Quality</string>
-  <string name="detail_activity_finalizing_wallpaper_messsage">Finalizing wallpaper...</string>
   <string name="detail_activity_grabbing_best_quality_wallpaper_message">Grabbing the best quality wallpaper...</string>
   <string name="detail_activity_setting_up_resources_message">Setting up the necessary resources...</string>
   <string name="detail_activity_editing_tool_message">Firing up the editing tool...</string>
   <string name="detail_activity_crystallizing_wallpaper_message">Crystallizing wallpaper...</string>
   <string name="detail_activity_crystallizing_wallpaper_successful_message">Wallpaper has been crystallized!</string>
-  <string name="detail_activity_adding_image_to_collections_message">Adding wallpaper to collection....</string>
   <string name="detail_activity_fetching_sharable_link_message">Fetching sharable link...</string>
   <string name="detail_activity_options_download">DOWNLOAD</string>
   <string name="detail_activity_options_save">SAVE</string>
@@ -130,23 +143,14 @@
   <string name="detail_activity_options_crystallize">CRYSTALLIZE</string>
   <string name="detail_activity_website_referral_unsplash">www.unsplash.com</string>
   <string name="detail_activity_wallpaper_action_progress_percentage">0%</string>
-  <string name="detail_activity_storage_permission_denied_error">
-    Storage permission is required to continue using this app. Please GRANT the permission when asked for</string>
   <string name="detail_activity_share_error">
     Unable to fetch shareable link. Please ensure you have a working internet connection</string>
-  <string name="share_intent_message">Get high-quality wallpapers for your Android device - WallR</string>
-  <string name="share_link_using">Share link using</string>
-  <string name="detail_activity_unsuccessful_purchase_error">Purchase not successful. Please try again</string>
-  <string name="detail_activity_set_wallpaper_success_message">Your wallpaper has been set!</string>
-  <string name="detail_activity_set_wallpaper_error_message">Couldn\'t set wallpaper</string>
   <string name="detail_activity_fetch_wallpaper_error_message">
     Unable to fetch wallpaper. Please try again</string>
-  <string name="detail_activity_finalizing_stuff_wait_message">Finalizing stuff. Please wait...</string>
   <string name="detail_activity_wallpaper_download_cancelled_message">Wallpaper download cancelled</string>
   <string name="detail_activity_download_notification_title_text">Downloading wallpaper</string>
   <string name="detail_activity_download_started_message">Your wallpaper download has been started</string>
   <string name="detail_activity_download_already_in_progress_message">Your wallpaper download is already in progress</string>
-  <string name="detail_activity_download_finished_message">Your wallpaper has finished downloading</string>
   <string name="detail_activity_crystallize_dialog_description">Generates a beautiful and unique artwork of the current wallpaper using WallR\'s innovative Crystallize algorithm. It can give your device the fresh look it deserves.</string>
   <string name="detail_activity_crystallize_wallpaper_dialog_title">Crystallize Wallpaper</string>
   <string name="detail_activity_crystallize_dialog_before_text">BEFORE</string>
@@ -155,7 +159,6 @@
   <string name="detail_activity_crystallize_dialog_negative_text">CANCEL</string>
   <string name="detail_activity_image_already_crystallized_message">This image has already been crystallized</string>
   <string name="detail_activity_crystallized_download_finished_message">Your crystallized wallpaper has finished downloading</string>
-  <string name="detail_activity_image_add_to_collection_success_message">Wallpaper has been added to collection!</string>
 
   <string name="minimal_fragment_unable_to_get_colors_error_message">Unable to fetch minimal wallpapers</string>
   <string name="menu_minimal_title_delete">Delete Wallpaper</string>
@@ -182,6 +185,7 @@
   <string name="colors_detail_activity_colors_style_name_material">Style : Material</string>
   <string name="colors_detail_activity_colors_style_name_gradient">Style : Gradient</string>
   <string name="colors_detail_activity_colors_style_name_plasma">Style : Plasma</string>
-  <string name="already_present_in_collection_error_message">Wallpaper is already present in the collection</string>
+  <string name="colors_detail_activity_image_load_error_message">Unable to load minimal image</string>
+  <string name="colors_detail_activity_color_operations_disabled_message">Please wait for the image to finish loading</string>
 
 </resources>

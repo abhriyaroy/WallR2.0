@@ -49,9 +49,10 @@ import kotlinx.android.synthetic.main.activity_detail.wallpaperDownloadProgressP
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
+import zebrostudio.wallr100.android.ui.detail.colors.WALLR_DOWNLOAD_LINK
 import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
+import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.BITMAP_CACHE
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE
-import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.EDITED_BITMAP_CACHE
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
@@ -64,6 +65,7 @@ import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
 import zebrostudio.wallr100.presentation.detail.images.ActionType
 import zebrostudio.wallr100.presentation.detail.images.DetailContract.DetailPresenter
 import zebrostudio.wallr100.presentation.detail.images.DetailContract.DetailView
+import zebrostudio.wallr100.presentation.detail.images.ILLEGAL_STATE_EXCEPTION_MESSAGE
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 import javax.inject.Inject
@@ -73,12 +75,12 @@ const val INITIAL_LOADER_PROGRESS_VALUE = 0
 const val INITIAL_LOADER_PROGRESS_PERCENTAGE = "0%"
 const val BLUR_RADIUS: Float = 8F
 const val INITIAL_SELECTED_DOWNLOAD_OPTION = 0
-const val ILLEGAL_STATE_EXCEPTION_MESSAGE = "Activity is not invoked using getCallingIntent method"
 
 class DetailActivity : BaseActivity(), DetailView {
 
   @Inject lateinit var presenter: DetailPresenter
 
+  private var activityResultIntent: Intent? = null
   private var materialProgressLoader: MaterialDialog? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,7 +88,13 @@ class DetailActivity : BaseActivity(), DetailView {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_detail)
     presenter.attachView(this)
-    presenter.setCalledIntent(intent)
+    intent.let {
+      if (it.hasExtra(IMAGE_TYPE_TAG)) {
+        presenter.setImageType(it.getIntExtra(IMAGE_TYPE_TAG, WALLPAPERS.ordinal))
+      } else {
+        throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
+      }
+    }
     setUpExpandPanel()
     attachClickListeners()
     setUpBlurView()
@@ -101,26 +109,34 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    presenter.handleViewResult(requestCode, resultCode, data)
+    if (data != null) {
+      activityResultIntent = intent
+    }
+    presenter.handleViewResult(requestCode, resultCode)
   }
 
   override fun onBackPressed() {
     presenter.handleBackButtonClick()
   }
 
-  override fun throwIllegalStateException() {
-    throw IllegalStateException(
-        ILLEGAL_STATE_EXCEPTION_MESSAGE)
-  }
-
   override fun getWallpaperImageDetails(): ImagePresenterEntity {
-    return intent.extras!!.getSerializable(
-        IMAGE_DETAILS_TAG) as ImagePresenterEntity
+    return intent.let {
+      if (it.hasExtra(IMAGE_DETAILS_TAG)) {
+        it.getSerializableExtra(IMAGE_DETAILS_TAG) as ImagePresenterEntity
+      } else {
+        throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
+      }
+    }
   }
 
   override fun getSearchImageDetails(): SearchPicturesPresenterEntity {
-    return intent.extras!!.getSerializable(
-        IMAGE_DETAILS_TAG) as SearchPicturesPresenterEntity
+    return intent.let {
+      if (it.hasExtra(IMAGE_DETAILS_TAG)) {
+        it.getSerializableExtra(IMAGE_DETAILS_TAG) as SearchPicturesPresenterEntity
+      } else {
+        throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
+      }
+    }
   }
 
   override fun showAuthorDetails(name: String, profileImageLink: String) {
@@ -209,7 +225,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showPermissionRequiredMessage() {
-    errorToast(stringRes(R.string.detail_activity_storage_permission_denied_error))
+    errorToast(stringRes(R.string.storage_permission_denied_error))
   }
 
   override fun showNoInternetToShareError() {
@@ -217,16 +233,19 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showUnsuccessfulPurchaseError() {
-    errorToast(stringRes(R.string.detail_activity_unsuccessful_purchase_error))
+    errorToast(stringRes(R.string.unsuccessful_purchase_error))
   }
 
   override fun shareLink(shortLink: String) {
-    val sendIntent = Intent()
-    sendIntent.action = Intent.ACTION_SEND
-    sendIntent.putExtra(Intent.EXTRA_TEXT, stringRes(R.string.share_intent_message) +
-        "\n\n" + shortLink)
-    sendIntent.type = "text/plain"
-    startActivity(Intent.createChooser(sendIntent, stringRes(R.string.share_link_using)))
+    Intent().apply {
+      action = Intent.ACTION_SEND
+      putExtra(Intent.EXTRA_TEXT,
+          stringRes(R.string.share_intent_message, WALLR_DOWNLOAD_LINK) + "\n\n"
+              + "Image link - $shortLink")
+      type = "text/plain"
+    }.let {
+      startActivity(Intent.createChooser(it, stringRes(R.string.share_link_using)))
+    }
   }
 
   override fun showWaitLoader(message: String) {
@@ -314,8 +333,11 @@ class DetailActivity : BaseActivity(), DetailView {
     loadingHintBelowProgressSpinkit.gone()
   }
 
-  override fun getUriFromIntent(data: Intent): Uri? {
-    return UCrop.getOutput(data)
+  override fun getUriFromResultIntent(): Uri? {
+    if (activityResultIntent != null) {
+      return UCrop.getOutput(activityResultIntent!!)
+    }
+    return null
   }
 
   override fun showUnableToDownloadErrorMessage() {
@@ -323,11 +345,11 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showWallpaperSetErrorMessage() {
-    errorToast(stringRes(R.string.detail_activity_set_wallpaper_error_message))
+    errorToast(stringRes(R.string.set_wallpaper_error_message))
   }
 
   override fun showWallpaperSetSuccessMessage() {
-    successToast(stringRes(R.string.detail_activity_set_wallpaper_success_message))
+    successToast(stringRes(R.string.set_wallpaper_success_message))
   }
 
   override fun updateProgressPercentage(progress: String) {
@@ -335,7 +357,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showWallpaperOperationInProgressWaitMessage() {
-    infoToast(stringRes(R.string.detail_activity_finalizing_stuff_wait_message), Toast.LENGTH_SHORT)
+    infoToast(stringRes(R.string.finalizing_stuff_wait_message), Toast.LENGTH_SHORT)
   }
 
   override fun showDownloadWallpaperCancelledMessage() {
@@ -413,7 +435,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showDownloadCompletedSuccessMessage() {
-    successToast(stringRes(R.string.detail_activity_download_finished_message))
+    successToast(stringRes(R.string.download_finished_success_message))
   }
 
   override fun showCrystallizedDownloadCompletedSuccessMessage() {
@@ -423,7 +445,7 @@ class DetailActivity : BaseActivity(), DetailView {
   override fun showCrystallizeDescriptionDialog() {
     MaterialDialog.Builder(this)
         .backgroundColor(colorRes(R.color.primary))
-        .customView(R.layout.crystallize_example_dialog_layout, false)
+        .customView(R.layout.dialog_crystallize_example, false)
         .contentColor(colorRes(R.color.white))
         .widgetColor(colorRes(R.color.accent))
         .positiveColor(colorRes(R.color.accent))
@@ -445,7 +467,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showAddToCollectionSuccessMessage() {
-    successToast(stringRes(R.string.detail_activity_image_add_to_collection_success_message))
+    successToast(stringRes(R.string.add_to_collection_success_message))
   }
 
   override fun showAlreadyPresentInCollectionErrorMessage() {
@@ -461,7 +483,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showEditedExpandedImage() {
-    startActivity(FullScreenImageActivity.getCallingIntent(this, EDITED_BITMAP_CACHE))
+    startActivity(FullScreenImageActivity.getCallingIntent(this, BITMAP_CACHE))
   }
 
   override fun collapseSlidingPanel() {

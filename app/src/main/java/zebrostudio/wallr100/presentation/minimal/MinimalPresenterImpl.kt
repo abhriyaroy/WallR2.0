@@ -29,7 +29,7 @@ class MinimalPresenterImpl(
 
   internal var isBottomPanelEnabled = false
   internal var selectionSize = INITIAL_SIZE
-  internal var multiColorImageType: MultiColorImageType? = MATERIAL
+  internal var multiColorImageType: MultiColorImageType = MATERIAL
   internal var shouldUpdateAllItems = true
   private var minimalView: MinimalView? = null
 
@@ -167,6 +167,18 @@ class MinimalPresenterImpl(
         minimalView?.selectItem(it + INCREMENT_BY_1)
         minimalView?.selectItem(it + INCREMENT_BY_2)
       }
+    }
+  }
+
+  override fun handleMultiSelectFabClick(
+    selectedItemsMap: HashMap<Int, String>
+  ) {
+    mutableListOf<String>().apply {
+      selectedItemsMap.values.forEach {
+        add(it)
+      }
+    }.let {
+      minimalView?.showMultiColorDetails(it, multiColorImageType)
     }
   }
 

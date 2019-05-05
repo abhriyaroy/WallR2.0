@@ -3,6 +3,7 @@ package zebrostudio.wallr100.android.utils
 import android.app.WallpaperManager
 import android.content.Context
 import android.graphics.Bitmap
+import android.os.Build
 
 interface WallpaperSetter {
   fun setWallpaper(imageBitmap: Bitmap?): Boolean
@@ -19,6 +20,10 @@ class WallpaperSetterImpl(private var context: Context) : WallpaperSetter {
       val scaledBitmapToFitPhoneAspectRatio =
           Bitmap.createScaledBitmap(it, getDesiredMinimumWidth(), getDesiredMinimumHeight(), false)
       getWallpaperManagerInstance().setBitmap(scaledBitmapToFitPhoneAspectRatio)
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        getWallpaperManagerInstance().setBitmap(scaledBitmapToFitPhoneAspectRatio, null,
+            true, WallpaperManager.FLAG_LOCK)
+      }
       scaledBitmapToFitPhoneAspectRatio.recycle()
       return true
     }

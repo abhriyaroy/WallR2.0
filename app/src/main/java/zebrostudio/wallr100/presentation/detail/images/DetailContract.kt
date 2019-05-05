@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.presentation.detail.images
 
-import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import zebrostudio.wallr100.presentation.BasePresenter
@@ -12,7 +11,6 @@ import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 interface DetailContract {
 
   interface DetailView : BaseView {
-    fun throwIllegalStateException()
     fun getSearchImageDetails(): SearchPicturesPresenterEntity
     fun getWallpaperImageDetails(): ImagePresenterEntity
     fun showAuthorDetails(name: String, profileImageLink: String)
@@ -36,7 +34,7 @@ interface DetailContract {
     fun showIndefiniteLoader(message: String)
     fun showIndefiniteLoaderWithAnimation(message: String)
     fun hideIndefiniteLoader()
-    fun getUriFromIntent(data: Intent): Uri?
+    fun getUriFromResultIntent(): Uri?
     fun hideScreenBlur()
     fun showWallpaperSetSuccessMessage()
     fun showWallpaperSetErrorMessage()
@@ -63,7 +61,7 @@ interface DetailContract {
   }
 
   interface DetailPresenter : BasePresenter<DetailView> {
-    fun setCalledIntent(intent: Intent)
+    fun setImageType(imageTypeOrdinal: Int)
     fun handleHighQualityImageLoadFailed()
     fun handleQuickSetClick()
     fun handleDownloadClick()
@@ -72,15 +70,14 @@ interface DetailContract {
     fun handleAddToCollectionClick()
     fun handleShareClick()
     fun handleBackButtonClick()
-    fun handlePermissionRequestResult(
-      requestCode: Int, permissions: Array<String>, grantResults: IntArray
-    )
-
-    fun handleViewResult(requestCode: Int, resultCode: Int, data: Intent?)
+    fun handleViewResult(requestCode: Int, resultCode: Int)
     fun handleDownloadQualitySelectionEvent(downloadType: ImageListType, selectedIndex: Int)
     fun handleCrystallizeDialogPositiveClick()
     fun handleImageViewClicked()
     fun setPanelStateAsExpanded()
     fun setPanelStateAsCollapsed()
+    fun handlePermissionRequestResult(
+      requestCode: Int, permissions: Array<String>, grantResults: IntArray
+    )
   }
 }
