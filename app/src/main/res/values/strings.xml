@@ -18,7 +18,7 @@
   <string name="top_picks_fragment_tag">Top Picks</string>
   <string name="categories_fragment_tag">Categories</string>
   <string name="minimal_fragment_tag">Minimal</string>
-  <string name="collection_fragment_tag">Collection</string>
+  <string name="collection_fragment_tag">Collections</string>
   <string name="feedback_fragment_tag">Feedback</string>
   <string name="guillotine_buy_pro_title">Buy Pro</string>
   <string name="guillotine_pro_badge">PRO</string>

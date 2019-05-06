@@ -75,6 +75,7 @@ abstract class BaseFragment : Fragment(), BaseView {
     activity?.let {
       it.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.gone()
       it.findViewById<ImageView>(R.id.toolbarSearchIcon)?.gone()
+      println(fragmentTag)
       when (fragmentTag) {
         MINIMAL_TAG ->
           it.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.visible()
