@@ -103,8 +103,7 @@ abstract class BaseFragment : Fragment(), BaseView {
   private fun adjustTitlePadding() {
     activity?.let {
       if (fragmentTag == COLLECTIONS_TAG) {
-        val scale = resources.displayMetrics.density
-        val dpAsPixels = (titlePadding * scale)
+        val dpAsPixels = (titlePadding * resources.displayMetrics.density)
         it.findViewById<WallrCustomTextView>(R.id.toolbarTitle)
             ?.setPaddingRelative(dpAsPixels.roundToInt(), 0, 0, 0)
       } else {
