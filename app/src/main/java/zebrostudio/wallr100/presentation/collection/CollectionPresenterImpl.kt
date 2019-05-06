@@ -12,4 +12,33 @@ class CollectionPresenterImpl : CollectionContract.CollectionPresenter {
     collectionView = null
   }
 
+  override fun handleViewCreated() {
+
+  }
+
+  override fun handleImportFromLocalStorageClicked() {
+
+  }
+
+  override fun handleChangeWallpaperIntervalClicked() {
+
+  }
+
+  override fun handleWallpaperChangerActivated() {
+
+
+  }
+
+  override fun handleWallpaperChangerDeactivated() {
+
+  }
+
+  override fun handleImageptionsHintDismissed() {
+
+  }
+
+  override fun handleReorderImagesHintHintDismissed() {
+
+  }
+
 }

@@ -82,4 +82,10 @@
     <item name="android:background">@color/pre_lollipop_bar_background_color</item>
   </style>
 
+  <style name="SwitchTheme" parent="Theme.AppCompat.Light">
+    <item name="colorControlActivated">@color/accent</item>
+    <item name="colorSwitchThumbNormal">@color/white</item>
+    <item name="android:colorForeground">@color/white</item>
+  </style>
+
 </resources>

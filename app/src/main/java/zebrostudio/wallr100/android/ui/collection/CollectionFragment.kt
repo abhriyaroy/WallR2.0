@@ -63,6 +63,22 @@ class CollectionFragment : BaseFragment(), CollectionView, OnMenuItemClickListen
         "not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
+  override fun redirectToBuyPro() {
+
+  }
+
+  override fun requestStoragePermission() {
+
+  }
+
+  override fun showImageOptionsHint() {
+
+  }
+
+  override fun showReoderImagesHint() {
+
+  }
+
   companion object {
     fun newInstance() = CollectionFragment()
   }

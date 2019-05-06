@@ -52,6 +52,7 @@
   <string name="search_menu_title">search</string>
   <string name="main_activity_hamburger_hint_title">100K+ High-Quality Wallpapers</string>
   <string name="main_activity_hamburger_hint_description">Choose from more than 100K wallpapers from various categories to meet all your needs.</string>
+  <string name="main_activity_switch_layout_automatic_wallpaper_changer">Automatic Wallpaper Changer</string>
 
   <!-- Fragment strings -->
   <string name="fragment_unable_to_load_wallpapers_message">Oops. Unable to load wallpapers</string>

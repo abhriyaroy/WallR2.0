@@ -52,4 +52,10 @@
 
   </RelativeLayout>
 
+  <View
+      android:background="@drawable/shadow_bottom"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/wallpaper_fragment_shadow_tab_height"
+      android:layout_gravity="top"/>
+
 </FrameLayout>

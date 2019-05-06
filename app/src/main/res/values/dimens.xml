@@ -197,5 +197,8 @@
   <dimen name="collections_fragment_empty_collection_sub_textview_line_spacing">5dp</dimen>
   <dimen name="collections_fragment_empty_collection_imageview_width">64dp</dimen>
   <dimen name="collections_fragment_empty_collection_imageview_height">64dp</dimen>
+  <dimen name="main_activity_switch_layout_height">56dp</dimen>
+  <dimen name="main_activity_switch_view_margin_right">16dp</dimen>
+  <dimen name="main_activity_switch_layout_text_size">16sp</dimen>
 
 </resources>

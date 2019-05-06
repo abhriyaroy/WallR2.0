@@ -67,6 +67,37 @@
           app:stl_titleOffset="@dimen/main_activity_tab_layout_title_offset"
           app:stl_drawDecorationAfterTab="true"/>
 
+      <RelativeLayout
+          android:id="@+id/SwitchLayout"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/main_activity_switch_layout_height"
+          android:background="@color/primary"
+          android:layout_alignParentTop="true">
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switchView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/SwitchTheme"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/main_activity_switch_view_margin_right"
+            android:layout_centerVertical="true"
+            android:checked="true"/>
+
+        <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/switchView"
+            android:layout_alignParentLeft="true"
+            android:text="@string/main_activity_switch_layout_automatic_wallpaper_changer"
+            android:textColor="@color/concrete"
+            android:textSize="@dimen/main_activity_switch_layout_text_size"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+      </RelativeLayout>
+
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
