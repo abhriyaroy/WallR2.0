@@ -12,16 +12,15 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
+import zebrostudio.wallr100.android.utils.FragmentTag.CATEGORIES_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.COLLECTIONS_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.MINIMAL_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.TOP_PICKS_TAG
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.main.MainContract.MainView
 import zebrostudio.wallr100.presentation.main.MainPresenterImpl
-
-const val EXPLORE_TAG = "Explore"
-const val TOP_PICKS_TAG = "Top Picks"
-const val CATEGORIES_TAG = "Categories"
-const val MINIMAL_TAG = "Minimal"
-const val COLLECTIONS_TAG = "Collections"
 
 @RunWith(MockitoJUnitRunner::class)
 class MainPresenterImplTest {
@@ -72,14 +71,10 @@ class MainPresenterImplTest {
   fun `should show previous fragment on handleBackPress call success with top picks fragment on stack top`() {
     mainPresenter.isGuillotineMenuOpen = false
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(TOP_PICKS_TAG)
-    `when`(mainView.getExploreFragmentTag()).thenReturn(EXPLORE_TAG)
-    `when`(mainView.getMinimalFragmentTag()).thenReturn(MINIMAL_TAG)
 
     mainPresenter.handleBackPress()
 
     verify(mainView, times(2)).getFragmentTagAtStackTop()
-    verify(mainView).getExploreFragmentTag()
-    verify(mainView).getMinimalFragmentTag()
     verify(mainView).showAppBar()
     verify(mainView).showPreviousFragment()
   }
@@ -88,14 +83,10 @@ class MainPresenterImplTest {
   fun `should show previous fragment on handleBackPress call success with categories fragment on stack top`() {
     mainPresenter.isGuillotineMenuOpen = false
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(CATEGORIES_TAG)
-    `when`(mainView.getExploreFragmentTag()).thenReturn(EXPLORE_TAG)
-    `when`(mainView.getMinimalFragmentTag()).thenReturn(MINIMAL_TAG)
 
     mainPresenter.handleBackPress()
 
     verify(mainView, times(2)).getFragmentTagAtStackTop()
-    verify(mainView).getExploreFragmentTag()
-    verify(mainView).getMinimalFragmentTag()
     verify(mainView).showAppBar()
     verify(mainView).showPreviousFragment()
   }
@@ -104,15 +95,11 @@ class MainPresenterImplTest {
   fun `should dismiss cab on handleBackPress call success with minimal fragment on stack top and cab in active state`() {
     mainPresenter.isGuillotineMenuOpen = false
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(MINIMAL_TAG)
-    `when`(mainView.getExploreFragmentTag()).thenReturn(EXPLORE_TAG)
-    `when`(mainView.getMinimalFragmentTag()).thenReturn(MINIMAL_TAG)
     `when`(mainView.isCabActive()).thenReturn(true)
 
     mainPresenter.handleBackPress()
 
     verify(mainView, times(2)).getFragmentTagAtStackTop()
-    verify(mainView).getExploreFragmentTag()
-    verify(mainView).getMinimalFragmentTag()
     verify(mainView).showAppBar()
     verify(mainView).isCabActive()
     verify(mainView).dismissCab()
@@ -122,15 +109,11 @@ class MainPresenterImplTest {
   fun `should show previous fragment on handleBackPress call success with minimal fragment on stack top`() {
     mainPresenter.isGuillotineMenuOpen = false
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(MINIMAL_TAG)
-    `when`(mainView.getExploreFragmentTag()).thenReturn(EXPLORE_TAG)
-    `when`(mainView.getMinimalFragmentTag()).thenReturn(MINIMAL_TAG)
     `when`(mainView.isCabActive()).thenReturn(false)
 
     mainPresenter.handleBackPress()
 
     verify(mainView, times(2)).getFragmentTagAtStackTop()
-    verify(mainView).getExploreFragmentTag()
-    verify(mainView).getMinimalFragmentTag()
     verify(mainView).showAppBar()
     verify(mainView).isCabActive()
     verify(mainView).showPreviousFragment()
@@ -140,14 +123,10 @@ class MainPresenterImplTest {
   fun `should show previous fragment on handleBackPress call success with collections fragment on stack top`() {
     mainPresenter.isGuillotineMenuOpen = false
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(COLLECTIONS_TAG)
-    `when`(mainView.getExploreFragmentTag()).thenReturn(EXPLORE_TAG)
-    `when`(mainView.getMinimalFragmentTag()).thenReturn(MINIMAL_TAG)
 
     mainPresenter.handleBackPress()
 
     verify(mainView, times(2)).getFragmentTagAtStackTop()
-    verify(mainView).getExploreFragmentTag()
-    verify(mainView).getMinimalFragmentTag()
     verify(mainView).showAppBar()
     verify(mainView).showPreviousFragment()
   }
@@ -157,12 +136,10 @@ class MainPresenterImplTest {
     mainPresenter.isGuillotineMenuOpen = false
     mainPresenter.backPressedOnce = false
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(EXPLORE_TAG)
-    `when`(mainView.getExploreFragmentTag()).thenReturn(EXPLORE_TAG)
 
     mainPresenter.handleBackPress()
 
     verify(mainView).getFragmentTagAtStackTop()
-    verify(mainView).getExploreFragmentTag()
     verify(mainView).showExitConfirmation()
     verify(mainView).startBackPressedFlagResetTimer()
   }
@@ -172,12 +149,10 @@ class MainPresenterImplTest {
     mainPresenter.isGuillotineMenuOpen = false
     mainPresenter.backPressedOnce = true
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(EXPLORE_TAG)
-    `when`(mainView.getExploreFragmentTag()).thenReturn(EXPLORE_TAG)
 
     mainPresenter.handleBackPress()
 
     verify(mainView).getFragmentTagAtStackTop()
-    verify(mainView).getExploreFragmentTag()
     verify(mainView).exitApp()
   }
 
