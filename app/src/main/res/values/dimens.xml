@@ -187,4 +187,15 @@
   <dimen name="sample_color_hex_text_view_margin_left">24dp</dimen>
   <dimen name="sample_color_hex_text_view_text_size">18sp</dimen>
 
+  <dimen name="collections_fragment_image_absent_layout_padding_bottom">54dp</dimen>
+  <dimen name="collections_fragment_empty_collection_textview_text_size">18sp</dimen>
+  <dimen name="collections_fragment_empty_collection_textview_padding_top">10dp</dimen>
+  <dimen name="collections_fragment_empty_collection_sub_textview_text_size">14sp</dimen>
+  <dimen name="collections_fragment_empty_collection_sub_textview_padding_left">24dp</dimen>
+  <dimen name="collections_fragment_empty_collection_sub_textview_padding_right">24dp</dimen>
+  <dimen name="collections_fragment_empty_collection_sub_textview_padding_top">8dp</dimen>
+  <dimen name="collections_fragment_empty_collection_sub_textview_line_spacing">5dp</dimen>
+  <dimen name="collections_fragment_empty_collection_imageview_width">64dp</dimen>
+  <dimen name="collections_fragment_empty_collection_imageview_height">64dp</dimen>
+
 </resources>

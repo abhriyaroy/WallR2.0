@@ -192,4 +192,7 @@
   <string name="colors_detail_activity_image_load_error_message">Unable to load minimal image</string>
   <string name="colors_detail_activity_color_operations_disabled_message">Please wait for the image to finish loading</string>
 
+  <string name="collections_fragment_add_wallpaper_instruction">Open any wallpaper and tap on \"Add to Collection\" to add here</string>
+  <string name="collections_fragment_empty_collection_textview_text">Empty Collection</string>
+
 </resources>
