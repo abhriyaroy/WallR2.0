@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <item
+      android:id="@+id/import_from_local_storage"
+      android:icon="@drawable/ic_import_from_storage"
+      app:showAsAction="never"
+      android:title="@string/collections_fragment_import_from_local_menu_title"/>
+
+  <item
+      android:id="@+id/change_wallpaper_interval"
+      android:icon="@drawable/ic_change_wallpaper_interval"
+      app:showAsAction="never"
+      android:title="@string/collections_fragment_change_wallpaper_interval_menu_title"/>
+
+</menu>

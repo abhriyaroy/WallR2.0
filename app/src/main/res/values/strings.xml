@@ -194,5 +194,7 @@
 
   <string name="collections_fragment_add_wallpaper_instruction">Open any wallpaper and tap on \"Add to Collection\" to add here</string>
   <string name="collections_fragment_empty_collection_textview_text">Empty Collection</string>
+  <string name="collections_fragment_import_from_local_menu_title">Import from local storage</string>
+  <string name="collections_fragment_change_wallpaper_interval_menu_title">Change wallpaper interval</string>
 
 </resources>
