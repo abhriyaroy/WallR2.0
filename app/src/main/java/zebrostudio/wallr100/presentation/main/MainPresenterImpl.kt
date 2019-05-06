@@ -1,5 +1,7 @@
 package zebrostudio.wallr100.presentation.main
 
+import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.MINIMAL_TAG
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.main.MainContract.MainPresenter
@@ -31,7 +33,7 @@ class MainPresenterImpl(
     if (isGuillotineMenuOpen) {
       mainView?.closeNavigationMenu()
     } else {
-      if (mainView?.getFragmentTagAtStackTop() == mainView?.getExploreFragmentTag()) {
+      if (mainView?.getFragmentTagAtStackTop() == EXPLORE_TAG) {
         if (backPressedOnce) {
           mainView?.exitApp()
         } else {
@@ -41,7 +43,7 @@ class MainPresenterImpl(
         }
       } else {
         mainView?.showAppBar()
-        if (mainView?.getFragmentTagAtStackTop() == mainView?.getMinimalFragmentTag() &&
+        if (mainView?.getFragmentTagAtStackTop() == MINIMAL_TAG &&
             mainView?.isCabActive() == true) {
           mainView?.dismissCab()
         } else {

@@ -39,11 +39,12 @@ import zebrostudio.wallr100.android.ui.minimal.MinimalFragment
 import zebrostudio.wallr100.android.ui.search.SearchActivity
 import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.CATEGORIES_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.COLLECTIONS_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.EXPLORE_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.MINIMAL_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.TOP_PICKS_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag
+import zebrostudio.wallr100.android.utils.FragmentTag.CATEGORIES_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.COLLECTIONS_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.MINIMAL_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.TOP_PICKS_TAG
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.drawableRes
 import zebrostudio.wallr100.android.utils.errorToast
@@ -78,8 +79,7 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
     presenter.attachView(this)
     setContentView(R.layout.activity_main)
     initializeViews()
-    addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
-        fragmentNameTagFetcher.getFragmentName(EXPLORE_TAG))
+    addFragment(fragmentContainer.id, WallpaperFragment.newInstance(), EXPLORE_TAG)
 
     attachToolbarItemClickListeners()
     presenter.handleViewCreated()
@@ -152,17 +152,15 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
     supportFragmentManager.popBackStack()
   }
 
-  override fun getFragmentTagAtStackTop(): String {
-    return supportFragmentManager
-        .getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name!!
-  }
-
-  override fun getExploreFragmentTag(): String {
-    return fragmentNameTagFetcher.getFragmentName(EXPLORE_TAG)
-  }
-
-  override fun getMinimalFragmentTag(): String {
-    return fragmentNameTagFetcher.getFragmentName(MINIMAL_TAG)
+  override fun getFragmentTagAtStackTop(): FragmentTag {
+    return when (supportFragmentManager
+        .getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name!!) {
+      EXPLORE_TAG.toString() -> EXPLORE_TAG
+      TOP_PICKS_TAG.toString() -> TOP_PICKS_TAG
+      CATEGORIES_TAG.toString() -> CATEGORIES_TAG
+      MINIMAL_TAG.toString() -> MINIMAL_TAG
+      else -> COLLECTIONS_TAG
+    }
   }
 
   override fun isCabActive(): Boolean {
@@ -180,7 +178,7 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
   private inline fun <reified T : BaseFragment> addFragment(
     @IdRes id: Int,
     fragment: T,
-    fragmentTag: String
+    fragmentTag: FragmentTag
   ) {
     if (!fragmentExistsOnStackTop(fragmentTag)) {
       if (fragmentTag == EXPLORE_TAG) {
@@ -189,15 +187,15 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
 
       supportFragmentManager
           .beginTransaction()
-          .replace(id, fragment, fragmentTag)
-          .addToBackStack(fragmentTag)
+          .replace(id, fragment, fragmentTag.toString())
+          .addToBackStack(fragmentTag.toString())
           .commitAllowingStateLoss()
 
       fragment.fragmentTag = fragmentTag
     }
   }
 
-  private fun fragmentExistsOnStackTop(fragmentTag: String): Boolean {
+  private fun fragmentExistsOnStackTop(fragmentTag: FragmentTag): Boolean {
     if (supportFragmentManager.backStackEntryCount == 0)
       return false
     return getFragmentTagAtStackTop() == fragmentTag

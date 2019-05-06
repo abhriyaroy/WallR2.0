@@ -16,11 +16,12 @@ import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
 import dagger.android.support.AndroidSupportInjection
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.CATEGORIES_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.COLLECTIONS_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.EXPLORE_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.MINIMAL_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.TOP_PICKS_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag
+import zebrostudio.wallr100.android.utils.FragmentTag.CATEGORIES_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.COLLECTIONS_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.MINIMAL_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.TOP_PICKS_TAG
 import zebrostudio.wallr100.android.utils.checkDataConnection
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.gone
@@ -33,7 +34,7 @@ import javax.inject.Inject
 abstract class BaseFragment : Fragment(), BaseView {
 
   @Inject lateinit var fragmentNameTagFetcherImpl: FragmentNameTagFetcher
-  internal var fragmentTag: String = EXPLORE_TAG
+  internal var fragmentTag: FragmentTag = EXPLORE_TAG
 
   private val menuItemIdList: List<Int> = listOf(
       R.string.explore_fragment_tag,
@@ -61,11 +62,11 @@ abstract class BaseFragment : Fragment(), BaseView {
   }
 
   private fun highlightCurrentMenuItem() {
-    for (menuItem in menuItemIdList) {
-      if (stringRes(menuItem) == fragmentTag) {
-        highlightMenuItemView(activity!!.findViewById(menuItem))
+    for (itemPosition in 0 until menuItemIdList.size) {
+      if (itemPosition == fragmentTag.ordinal) {
+        highlightMenuItemView(activity!!.findViewById(menuItemIdList[itemPosition]))
       } else {
-        clearMenuItemViewHighlight(activity!!.findViewById(menuItem))
+        clearMenuItemViewHighlight(activity!!.findViewById(menuItemIdList[itemPosition]))
       }
     }
   }

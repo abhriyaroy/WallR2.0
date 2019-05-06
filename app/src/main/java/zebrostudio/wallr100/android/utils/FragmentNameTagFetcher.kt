@@ -1,26 +1,18 @@
 package zebrostudio.wallr100.android.utils
 
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.CATEGORIES_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.EXPLORE_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.MINIMAL_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.TOP_PICKS_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.CATEGORIES_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.MINIMAL_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.TOP_PICKS_TAG
 
 interface FragmentNameTagFetcher {
-  fun getFragmentName(fragmentTag: String): String
-
-  companion object {
-    const val EXPLORE_TAG = "Explore"
-    const val TOP_PICKS_TAG = "Top Picks"
-    const val CATEGORIES_TAG = "Categories"
-    const val MINIMAL_TAG = "Minimal"
-    const val COLLECTIONS_TAG = "Collections"
-  }
+  fun getFragmentName(fragmentTag: FragmentTag): String
 }
 
 class FragmentNameTagFetcherImpl(private val resourceUtils: ResourceUtils) : FragmentNameTagFetcher {
 
-  override fun getFragmentName(fragmentTag: String): String {
+  override fun getFragmentName(fragmentTag: FragmentTag): String {
     return when (fragmentTag) {
       EXPLORE_TAG -> resourceUtils.getStringResource(R.string.explore_fragment_tag)
       TOP_PICKS_TAG -> resourceUtils.getStringResource(R.string.top_picks_fragment_tag)
@@ -29,5 +21,12 @@ class FragmentNameTagFetcherImpl(private val resourceUtils: ResourceUtils) : Fra
       else -> resourceUtils.getStringResource(R.string.collection_fragment_tag)
     }
   }
+}
 
+enum class FragmentTag {
+  EXPLORE_TAG,
+  TOP_PICKS_TAG,
+  CATEGORIES_TAG,
+  MINIMAL_TAG,
+  COLLECTIONS_TAG
 }

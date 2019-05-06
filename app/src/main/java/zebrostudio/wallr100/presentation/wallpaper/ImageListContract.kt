@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.presentation.wallpaper
 
+import zebrostudio.wallr100.android.utils.FragmentTag
 import zebrostudio.wallr100.presentation.BasePresenter
 import zebrostudio.wallr100.presentation.BaseView
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
@@ -16,7 +17,7 @@ interface ImageListContract {
   }
 
   interface ImageListPresenter : BasePresenter<ImageListView> {
-    fun setImageListType(fragmentTag: String, position: Int)
+    fun setImageListType(fragmentTag: FragmentTag, position: Int)
     fun fetchImages(refresh: Boolean)
   }
 }

@@ -2,9 +2,10 @@ package zebrostudio.wallr100.presentation.wallpaper
 
 import com.uber.autodispose.autoDisposable
 import io.reactivex.Single
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.CATEGORIES_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.EXPLORE_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.TOP_PICKS_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag
+import zebrostudio.wallr100.android.utils.FragmentTag.CATEGORIES_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.TOP_PICKS_TAG
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.domain.model.images.ImageModel
@@ -29,7 +30,7 @@ class ImageListPresenterImpl(
     imageListView = null
   }
 
-  override fun setImageListType(fragmentTag: String, position: Int) {
+  override fun setImageListType(fragmentTag: FragmentTag, position: Int) {
     when (fragmentTag) {
       EXPLORE_TAG -> {
         imageListType = position
