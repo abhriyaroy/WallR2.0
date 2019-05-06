@@ -21,6 +21,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.data.exception.UnableToGetMinimalColorsException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.MinimalImagesUseCase
+import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.datafactory.RestoreColorsModelFactory
 import zebrostudio.wallr100.presentation.minimal.INITIAL_OFFSET
 import zebrostudio.wallr100.presentation.minimal.INITIAL_SIZE
@@ -38,13 +39,15 @@ import java.util.UUID.randomUUID
 class MinimalPresenterImplTest {
 
   @Mock private lateinit var minimalImagesUseCase: MinimalImagesUseCase
+  @Mock lateinit var widgetHintsUseCase: WidgetHintsUseCase
   @Mock private lateinit var postExecutionThread: PostExecutionThread
   @Mock private lateinit var minimalView: MinimalView
   private lateinit var minimalPresenter: MinimalPresenterImpl
   private var randomString = randomUUID().toString()
 
   @Before fun setup() {
-    minimalPresenter = MinimalPresenterImpl(minimalImagesUseCase, postExecutionThread)
+    minimalPresenter =
+        MinimalPresenterImpl(widgetHintsUseCase, minimalImagesUseCase, postExecutionThread)
     minimalPresenter.attachView(minimalView)
 
     `when`(minimalView.getScope()).thenReturn(createInitial(STARTED))

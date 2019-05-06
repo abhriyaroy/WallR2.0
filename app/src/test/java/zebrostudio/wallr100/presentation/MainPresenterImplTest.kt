@@ -13,6 +13,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
+import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.main.MainContract.MainView
 import zebrostudio.wallr100.presentation.main.MainPresenterImpl
 
@@ -26,12 +27,13 @@ const val COLLECTIONS_TAG = "Collections"
 class MainPresenterImplTest {
 
   @Mock lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
+  @Mock lateinit var widgetHintsUseCase: WidgetHintsUseCase
   @Mock lateinit var mainView: MainView
   private lateinit var mainPresenter: MainPresenterImpl
 
   @Before
   fun setup() {
-    mainPresenter = MainPresenterImpl(userPremiumStatusUseCase)
+    mainPresenter = MainPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase)
     mainPresenter.attachView(mainView)
   }
 
@@ -41,6 +43,29 @@ class MainPresenterImplTest {
     mainPresenter.handleBackPress()
 
     verify(mainView).closeNavigationMenu()
+  }
+
+  @Test fun `should show hint on handleViewCreated call success and hint is not shown before`() {
+    `when`(widgetHintsUseCase.isNavigationMenuHamburgerHintShown()).thenReturn(false)
+
+    mainPresenter.handleViewCreated()
+
+    verify(widgetHintsUseCase).isNavigationMenuHamburgerHintShown()
+    verify(mainView).showHamburgerHint()
+  }
+
+  @Test fun `should not show hint on handleViewCreated call success and hint is shown before`() {
+    `when`(widgetHintsUseCase.isNavigationMenuHamburgerHintShown()).thenReturn(true)
+
+    mainPresenter.handleViewCreated()
+
+    verify(widgetHintsUseCase).isNavigationMenuHamburgerHintShown()
+  }
+
+  @Test fun `should save hint shown state on handleHamburgerHintDismissed call success`() {
+    mainPresenter.handleHamburgerHintDismissed()
+
+    verify(widgetHintsUseCase).saveNavigationMenuHamburgerHintShownState()
   }
 
   @Test
@@ -186,7 +211,7 @@ class MainPresenterImplTest {
 
   @After
   fun tearDown() {
-    verifyNoMoreInteractions(userPremiumStatusUseCase, mainView)
+    verifyNoMoreInteractions(userPremiumStatusUseCase, widgetHintsUseCase, mainView)
     mainPresenter.detachView()
   }
 

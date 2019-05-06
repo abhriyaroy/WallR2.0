@@ -16,7 +16,11 @@ import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
 import dagger.android.support.AndroidSupportInjection
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
+import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.CATEGORIES_TAG
+import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.COLLECTIONS_TAG
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.EXPLORE_TAG
+import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.MINIMAL_TAG
+import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.TOP_PICKS_TAG
 import zebrostudio.wallr100.android.utils.checkDataConnection
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.gone
@@ -71,9 +75,9 @@ abstract class BaseFragment : Fragment(), BaseView {
       it.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.gone()
       it.findViewById<ImageView>(R.id.toolbarSearchIcon)?.gone()
       when (fragmentTag) {
-        stringRes(R.string.minimal_fragment_tag) ->
+        MINIMAL_TAG ->
           it.findViewById<ImageView>(R.id.toolbarMultiSelectIcon)?.visible()
-        stringRes(R.string.collection_fragment_tag) -> {  // Do nothing
+        COLLECTIONS_TAG -> {  // Do nothing
         }
         else -> it.findViewById<ImageView>(R.id.toolbarSearchIcon)?.visible()
       }
@@ -82,8 +86,8 @@ abstract class BaseFragment : Fragment(), BaseView {
 
   private fun configureTabs() {
     activity?.let {
-      if (fragmentTag == stringRes(R.string.categories_fragment_tag) ||
-          fragmentTag == stringRes(R.string.top_picks_fragment_tag)) {
+      if (fragmentTag == CATEGORIES_TAG ||
+          fragmentTag == TOP_PICKS_TAG) {
         it.findViewById<SmartTabLayout>(R.id.tabLayout)?.visible()
       } else {
         it.findViewById<SmartTabLayout>(R.id.tabLayout)?.gone()
