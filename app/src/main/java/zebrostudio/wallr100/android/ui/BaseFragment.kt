@@ -26,10 +26,12 @@ import zebrostudio.wallr100.android.utils.checkDataConnection
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.invisible
-import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.BaseView
 import javax.inject.Inject
+import kotlin.math.roundToInt
+
+private const val titlePadding = 48
 
 abstract class BaseFragment : Fragment(), BaseView {
 
@@ -59,6 +61,7 @@ abstract class BaseFragment : Fragment(), BaseView {
     highlightCurrentMenuItem()
     showToolbarMenuIcon()
     configureTabs()
+    adjustTitlePadding()
   }
 
   private fun highlightCurrentMenuItem() {
@@ -93,6 +96,19 @@ abstract class BaseFragment : Fragment(), BaseView {
         it.findViewById<SmartTabLayout>(R.id.tabLayout)?.visible()
       } else {
         it.findViewById<SmartTabLayout>(R.id.tabLayout)?.gone()
+      }
+    }
+  }
+
+  private fun adjustTitlePadding() {
+    activity?.let {
+      if (fragmentTag == COLLECTIONS_TAG) {
+        val scale = resources.displayMetrics.density
+        val dpAsPixels = (titlePadding * scale)
+        it.findViewById<WallrCustomTextView>(R.id.toolbarTitle)
+            ?.setPaddingRelative(dpAsPixels.roundToInt(), 0, 0, 0)
+      } else {
+        it.findViewById<WallrCustomTextView>(R.id.toolbarTitle)?.setPaddingRelative(0, 0, 0, 0)
       }
     }
   }

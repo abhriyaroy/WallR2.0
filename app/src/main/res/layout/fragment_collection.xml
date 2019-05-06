@@ -29,24 +29,25 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/emptyCollectionImageView"
         android:layout_centerHorizontal="true"
+        android:paddingTop="@dimen/collections_fragment_empty_collection_textview_padding_top"
         android:text="@string/collections_fragment_empty_collection_textview_text"
         android:textSize="@dimen/collections_fragment_empty_collection_textview_text_size"
         android:textColor="@color/white"
-        android:paddingTop="@dimen/collections_fragment_empty_collection_textview_padding_top"/>
+        android:textAlignment="center"/>
 
     <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
         android:id="@+id/emptyCollectionSubtext"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/emptyCollectionTextView"
-        android:layout_centerHorizontal="true"
-        android:text="@string/collections_fragment_add_wallpaper_instruction"
-        android:textSize="@dimen/collections_fragment_empty_collection_sub_textview_text_size"
         android:paddingStart="@dimen/collections_fragment_empty_collection_sub_textview_padding_left"
         android:paddingEnd="@dimen/collections_fragment_empty_collection_sub_textview_padding_right"
         android:paddingTop="@dimen/collections_fragment_empty_collection_sub_textview_padding_top"
-        android:textAlignment="center"
+        android:text="@string/collections_fragment_add_wallpaper_instruction"
+        android:textSize="@dimen/collections_fragment_empty_collection_sub_textview_text_size"
+        android:gravity="center_horizontal"
         android:textColor="@color/white"
+        android:textAlignment="center"
         android:lineSpacingExtra="@dimen/collections_fragment_empty_collection_sub_textview_line_spacing"/>
 
   </RelativeLayout>
