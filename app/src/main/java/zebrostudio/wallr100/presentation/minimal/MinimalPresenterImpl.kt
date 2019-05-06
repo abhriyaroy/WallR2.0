@@ -32,9 +32,9 @@ class MinimalPresenterImpl(
   internal var isBottomPanelEnabled = false
   internal var selectionSize = INITIAL_SIZE
   internal var multiColorImageType: MultiColorImageType = MATERIAL
+  internal var isHintBeingShown = false
   internal var shouldUpdateAllItems = true
   private var minimalView: MinimalView? = null
-  private var isHintBeingShown = false
 
   override fun attachView(view: MinimalView) {
     minimalView = view

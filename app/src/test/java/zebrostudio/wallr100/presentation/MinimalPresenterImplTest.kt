@@ -163,10 +163,14 @@ class MinimalPresenterImplTest {
     val scrollDistance = -50
     minimalPresenter.isBottomPanelEnabled = false
     minimalPresenter.selectionSize = 2
+    `when`(widgetHintsUseCase.isMultiColorImageModesHintShown()).thenReturn(true)
+    `when`(widgetHintsUseCase.isMultiColorImageModesHintShown()).thenReturn(true)
 
     minimalPresenter.handleOnScrolled(scrollDistance)
 
     assertTrue(minimalPresenter.isBottomPanelEnabled)
+    verify(widgetHintsUseCase).isMultiColorImageModesHintShown()
+    verify(widgetHintsUseCase).isMultiColorImageModesHintShown()
     verify(minimalView).showBottomPanelWithAnimation()
   }
 
@@ -395,6 +399,7 @@ class MinimalPresenterImplTest {
     val map = hashMapOf<Int, String>()
     map[1] = randomString
     minimalPresenter.isBottomPanelEnabled = false
+    `when`(widgetHintsUseCase.isMultiColorImageModesHintShown()).thenReturn(true)
     `when`(minimalView.addToSelectedItemsMap(0, randomString)).then {
       map[0] = randomString
       true
@@ -403,6 +408,7 @@ class MinimalPresenterImplTest {
     minimalPresenter.handleClick(position, list, map)
 
     assertTrue(minimalPresenter.isBottomPanelEnabled)
+    verify(widgetHintsUseCase).isMultiColorImageModesHintShown()
     verify(minimalView).addToSelectedItemsMap(0, randomString)
     verify(minimalView).updateItemView(position)
     verify(minimalView).showAppBar()
@@ -489,6 +495,7 @@ class MinimalPresenterImplTest {
     val map = hashMapOf<Int, String>()
     map[1] = randomString
     minimalPresenter.isBottomPanelEnabled = false
+    `when`(widgetHintsUseCase.isMultiColorImageModesHintShown()).thenReturn(true)
     `when`(minimalView.addToSelectedItemsMap(0, randomString)).then {
       map[0] = randomString
       true
@@ -497,6 +504,7 @@ class MinimalPresenterImplTest {
     minimalPresenter.handleImageLongClick(position, list, map)
 
     assertTrue(minimalPresenter.isBottomPanelEnabled)
+    verify(widgetHintsUseCase).isMultiColorImageModesHintShown()
     verify(minimalView).startSelection(position)
     verify(minimalView).addToSelectedItemsMap(0, randomString)
     verify(minimalView).updateItemView(position)
@@ -599,6 +607,7 @@ class MinimalPresenterImplTest {
     val map = hashMapOf<Int, String>()
     map[1] = randomString
     minimalPresenter.isBottomPanelEnabled = false
+    `when`(widgetHintsUseCase.isMultiColorImageModesHintShown()).thenReturn(true)
     `when`(minimalView.addToSelectedItemsMap(0, randomString)).then {
       map[0] = randomString
       true
@@ -607,6 +616,7 @@ class MinimalPresenterImplTest {
     minimalPresenter.setItemSelected(position, true, list, map)
 
     assertTrue(minimalPresenter.isBottomPanelEnabled)
+    verify(widgetHintsUseCase).isMultiColorImageModesHintShown()
     verify(minimalView).addToSelectedItemsMap(0, randomString)
     verify(minimalView).updateItemView(position)
     verify(minimalView).showAppBar()
@@ -674,8 +684,116 @@ class MinimalPresenterImplTest {
     verify(minimalView).showCab(map.size)
   }
 
+  @Test fun `should show multi color image mode hint on setItemSelected call success success with image mode hint not shown before and isHintBeingShown set to false`(){
+    val position = 1
+    val list = mutableListOf<String>()
+    list.add(randomString)
+    val map = hashMapOf<Int, String>()
+    map[1] = randomString
+    minimalPresenter.isBottomPanelEnabled = false
+    minimalPresenter.isHintBeingShown = false
+    `when`(widgetHintsUseCase.isMultiColorImageModesHintShown()).thenReturn(false)
+    `when`(minimalView.addToSelectedItemsMap(0, randomString)).then {
+      map[0] = randomString
+      true
+    }
+
+    minimalPresenter.setItemSelected(position, true, list, map)
+
+    assertTrue(minimalPresenter.isBottomPanelEnabled)
+    verify(widgetHintsUseCase).isMultiColorImageModesHintShown()
+    verify(minimalView).addToSelectedItemsMap(0, randomString)
+    verify(minimalView).updateItemView(position)
+    verify(minimalView).showAppBar()
+    verify(minimalView).showCab(map.size)
+    verify(minimalView).showBottomPanelWithAnimation()
+    verify(minimalView).showMultiColorImageModesHint()
+  }
+
+  @Test fun `should not show multi color image mode hint on setItemSelected call success success with image mode hint not shown before and hint is not being shown`(){
+    val position = 1
+    val list = mutableListOf<String>()
+    list.add(randomString)
+    val map = hashMapOf<Int, String>()
+    map[1] = randomString
+    minimalPresenter.isBottomPanelEnabled = false
+    minimalPresenter.isHintBeingShown = false
+    `when`(widgetHintsUseCase.isMultiColorImageModesHintShown()).thenReturn(false)
+    `when`(minimalView.addToSelectedItemsMap(0, randomString)).then {
+      map[0] = randomString
+      true
+    }
+
+    minimalPresenter.setItemSelected(position, true, list, map)
+
+    assertTrue(minimalPresenter.isBottomPanelEnabled)
+    verify(widgetHintsUseCase).isMultiColorImageModesHintShown()
+    verify(minimalView).addToSelectedItemsMap(0, randomString)
+    verify(minimalView).updateItemView(position)
+    verify(minimalView).showAppBar()
+    verify(minimalView).showCab(map.size)
+    verify(minimalView).showBottomPanelWithAnimation()
+    verify(minimalView).showMultiColorImageModesHint()
+  }
+
+  @Test fun `should not show multi color image mode hint on setItemSelected call success success with image mode hint not shown before and hint is already being shown`(){
+    val position = 1
+    val list = mutableListOf<String>()
+    list.add(randomString)
+    val map = hashMapOf<Int, String>()
+    map[1] = randomString
+    minimalPresenter.isBottomPanelEnabled = false
+    minimalPresenter.isHintBeingShown = true
+    `when`(widgetHintsUseCase.isMultiColorImageModesHintShown()).thenReturn(false)
+    `when`(minimalView.addToSelectedItemsMap(0, randomString)).then {
+      map[0] = randomString
+      true
+    }
+
+    minimalPresenter.setItemSelected(position, true, list, map)
+
+    assertTrue(minimalPresenter.isBottomPanelEnabled)
+    verify(widgetHintsUseCase).isMultiColorImageModesHintShown()
+    verify(minimalView).addToSelectedItemsMap(0, randomString)
+    verify(minimalView).updateItemView(position)
+    verify(minimalView).showAppBar()
+    verify(minimalView).showCab(map.size)
+    verify(minimalView).showBottomPanelWithAnimation()
+  }
+
+  @Test fun `should not show multi color image mode hint on setItemSelected call success success with image mode hint shown before`(){
+    val position = 1
+    val list = mutableListOf<String>()
+    list.add(randomString)
+    val map = hashMapOf<Int, String>()
+    map[1] = randomString
+    minimalPresenter.isBottomPanelEnabled = false
+    `when`(widgetHintsUseCase.isMultiColorImageModesHintShown()).thenReturn(true)
+    `when`(minimalView.addToSelectedItemsMap(0, randomString)).then {
+      map[0] = randomString
+      true
+    }
+
+    minimalPresenter.setItemSelected(position, true, list, map)
+
+    assertTrue(minimalPresenter.isBottomPanelEnabled)
+    verify(widgetHintsUseCase).isMultiColorImageModesHintShown()
+    verify(minimalView).addToSelectedItemsMap(0, randomString)
+    verify(minimalView).updateItemView(position)
+    verify(minimalView).showAppBar()
+    verify(minimalView).showCab(map.size)
+    verify(minimalView).showBottomPanelWithAnimation()
+  }
+
+  @Test fun `should save hint dismissed sate on handleHintDismissed call success`(){
+    minimalPresenter.handleHintDismissed()
+
+    verify(widgetHintsUseCase).saveMultiColorImageHintShownState()
+  }
+
   @After fun tearDown() {
-    verifyNoMoreInteractions(postExecutionThread, minimalImagesUseCase, minimalView)
+    verifyNoMoreInteractions(postExecutionThread, widgetHintsUseCase, minimalImagesUseCase,
+        minimalView)
     minimalPresenter.detachView()
   }
 

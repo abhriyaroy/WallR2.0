@@ -57,6 +57,8 @@ import zebrostudio.wallr100.presentation.main.MainContract
 import zebrostudio.wallr100.presentation.main.MainContract.MainView
 import javax.inject.Inject
 
+private const val rippleDuration = 250
+
 class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
 
   @Inject
@@ -218,7 +220,6 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
       }
     }
 
-    val rippleDuration = 250
     guillotineMenuAnimation = GuillotineAnimation.GuillotineBuilder(
         guillotineMenu,
         guillotineMenu.hamburgerGuillotineMenu,
