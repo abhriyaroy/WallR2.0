@@ -390,6 +390,7 @@ class WallrDataRepository(
   }
 
   override fun getImagesInCollection(): Single<List<CollectionsImageModel>> {
+    println("here 3")
     return imageHandler.getAllImagesInCollection()
         .subscribeOn(executionThread.computationScheduler)
         .map {

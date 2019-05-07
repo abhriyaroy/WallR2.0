@@ -202,5 +202,6 @@
   <dimen name="main_activity_switch_layout_text_size">16sp</dimen>
   <dimen name="collection_recycler_view_hint_stub_width">48dp</dimen>
   <dimen name="collection_recycler_view_hint_stub_height">48dp</dimen>
+  <dimen name="recyclerview_item_imageview_height">230dp</dimen>
 
 </resources>

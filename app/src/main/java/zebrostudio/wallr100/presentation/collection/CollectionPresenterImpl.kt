@@ -29,8 +29,10 @@ class CollectionPresenterImpl(
   }
 
   override fun handleViewCreated() {
+    println("here 1")
     if (true) { // check if user is premium
       if (collectionView?.hasStoragePermission() == true) {
+        println("here 2")
         showPictures()
       } else {
         collectionView?.requestStoragePermission()
@@ -96,7 +98,9 @@ class CollectionPresenterImpl(
         .observeOn(postExecutionThread.scheduler)
         .autoDisposable(collectionView!!.getScope())
         .subscribe({
+          println("here $it")
           collectionView?.showImages(it)
+          collectionView?.hideImagesAbsentLayout()
         },{
           println(it)
         })

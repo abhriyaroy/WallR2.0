@@ -14,6 +14,8 @@ interface CollectionContract {
     fun showImageOptionsHint()
     fun showReorderImagesHint()
     fun showImages(imageList: List<CollectionsPresenterEntity>)
+    fun hideImagesAbsentLayout()
+    fun showImagesAbsentLayout()
   }
 
   interface CollectionPresenter : BasePresenter<CollectionView> {

@@ -4,6 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/imageView"
     android:layout_width="match_parent"
-    android:layout_height="230dp"
+    android:layout_height="@dimen/recyclerview_item_imageview_height"
     android:scaleType="centerCrop"/>
 

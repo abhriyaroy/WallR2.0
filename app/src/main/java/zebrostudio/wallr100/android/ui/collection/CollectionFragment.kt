@@ -22,6 +22,7 @@ import android.view.ViewGroup
 import com.afollestad.materialcab.MaterialCab
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_collection.collectionsRecyclerView
+import kotlinx.android.synthetic.main.fragment_collection.imagesAbsentLayout
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.ui.adapters.CollectionsImageAdapter
@@ -30,8 +31,10 @@ import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelpe
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.OnStartDragListener
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
+import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
+import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.CollectionRecyclerPresenter
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionPresenter
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionView
@@ -79,6 +82,7 @@ class CollectionFragment : BaseFragment(),
       adapter = collectionsImageAdapter
       itemTouchHelper.attachToRecyclerView(this)
     }
+    presenter.attachView(this)
     presenter.handleViewCreated()
   }
 
@@ -172,6 +176,14 @@ class CollectionFragment : BaseFragment(),
 
   override fun showImages(imageList: List<CollectionsPresenterEntity>) {
     collectionsImageAdapter.setColorList(imageList)
+  }
+
+  override fun hideImagesAbsentLayout() {
+    imagesAbsentLayout.gone()
+  }
+
+  override fun showImagesAbsentLayout() {
+    imagesAbsentLayout.visible()
   }
 
   companion object {
