@@ -112,37 +112,28 @@ class CollectionPresenterImpl(
 
   private fun showPictures() {
     collectionImagesUseCase.getAllImages()
-        .doAfterSuccess {
+        .doOnSuccess {
           isWallpaperChangerEnabled = imageOptionsUseCase.isAutomaticWallpaperChangerEnabled()
         }
         .map {
           collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
         }
         .observeOn(postExecutionThread.scheduler)
-        .doAfterSuccess {
-          showHintsIfSuitable(it.size)
-        }
         .autoDisposable(collectionView!!.getScope())
         .subscribe({
           collectionView?.showImages(it)
           collectionView?.hideImagesAbsentLayout()
-          validateWallpaperChangerVisibilityState(it.size)
+          //showHintsIfSuitable(it.size)
         }, {
           collectionView?.showImagesAbsentLayout()
           collectionView?.showGenericErrorMessage()
         })
   }
 
-  private fun validateWallpaperChangerVisibilityState(listSize: Int) {
-    if (isWallpaperChangerEnabled && listSize >= SIZE_OF_LIST_WITH_ONE_ELEMENT) {
-      collectionView?.showAutomaticWallpaperStateAsActive()
-    }
-  }
-
   private fun showHintsIfSuitable(listSize: Int) {
     if (listSize >= SIZE_OF_LIST_WITH_ONE_ELEMENT
         && !widgetHintsUseCase.isCollectionsImageOptionHintShown()) {
-      collectionView?.showImageOptionsHint()
+      collectionView?.showImagePinchHint()
     } else if (listSize > SIZE_OF_LIST_WITH_ONE_ELEMENT
         && widgetHintsUseCase.isCollectionsImageOptionHintShown()) {
       collectionView?.showReorderImagesHint()

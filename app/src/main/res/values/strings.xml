@@ -197,5 +197,9 @@
   <string name="collections_fragment_empty_collection_textview_text">Empty Collection</string>
   <string name="collections_fragment_import_from_local_menu_title">Import from local storage</string>
   <string name="collections_fragment_change_wallpaper_interval_menu_title">Change wallpaper interval</string>
+  <string name="collections_fragment_pinch_to_zoom_hint_title">Pinch To Zoom</string>
+  <string name="collections_fragment_pinch_to_zoom_hint_description">You can pinch to zoom on any image in your collection to enlarge it \\n</string>
+  <string name="collections_fragment_drag_to_reorder_hint_title">Drag-Drop To Reorder</string>
+  <string name="collections_fragment_drag_to_reorder_hint_description">You can drag and drop wallpapers to change their order of appearance \\n</string>
 
 </resources>

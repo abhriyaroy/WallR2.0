@@ -20,8 +20,9 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import com.afollestad.materialcab.MaterialCab
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetView
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_collection.collectionsRecyclerView
 import kotlinx.android.synthetic.main.fragment_collection.imagesAbsentLayout
@@ -74,6 +75,7 @@ class CollectionFragment : BaseFragment(),
     activity?.findViewById<Toolbar>(R.id.toolbar)?.setOnMenuItemClickListener(this)
     initRecyclerViewWithListeners()
     attachAutomaticWallpaperChangerListener()
+    showAutomaticWallpaperStateAsInActive()
     presenter.handleViewCreated()
   }
 
@@ -157,12 +159,64 @@ class CollectionFragment : BaseFragment(),
         Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CODE)
   }
 
-  override fun showImageOptionsHint() {
+  override fun showImagePinchHint() {
+    val targetView = collectionsRecyclerView.getChildAt(0).findViewById<View>(R.id.hintStubView)
+    TapTargetView.showFor(activity!!,
+        TapTarget.forView(targetView,
+            stringRes(R.string.collections_fragment_pinch_to_zoom_hint_title),
+            stringRes(R.string.collections_fragment_pinch_to_zoom_hint_description))
+            .dimColor(android.R.color.transparent)
+            .outerCircleColor(R.color.accent)
+            .transparentTarget(true)
+            .targetCircleColor(R.color.concrete)
+            .textColor(android.R.color.white)
+            .cancelable(true),
+        object : TapTargetView.Listener() {
+          override fun onTargetClick(view: TapTargetView) {
+            super.onTargetClick(view)
+            presenter.handleImageOptionsHintDismissed(
+                collectionsImageAdapter.getImagePathList().size)
+          }
 
+          override fun onTargetDismissed(view: TapTargetView?, userInitiated: Boolean) {
+            presenter.handleImageOptionsHintDismissed(
+                collectionsImageAdapter.getImagePathList().size)
+          }
+
+          override fun onOuterCircleClick(view: TapTargetView?) {
+            super.onTargetClick(view!!)
+            view.dismiss(true)
+          }
+        })
   }
 
   override fun showReorderImagesHint() {
+    val targetView = collectionsRecyclerView.getChildAt(1).findViewById<View>(R.id.hintStubView)
+    TapTargetView.showFor(activity!!,
+        TapTarget.forView(targetView,
+            getString(R.string.collections_fragment_drag_to_reorder_hint_title),
+            getString(R.string.collections_fragment_drag_to_reorder_hint_description))
+            .dimColor(android.R.color.transparent)
+            .outerCircleColor(R.color.accent)
+            .targetCircleColor(R.color.concrete)
+            .transparentTarget(true)
+            .textColor(android.R.color.white)
+            .cancelable(true),
+        object : TapTargetView.Listener() {
+          override fun onTargetClick(view: TapTargetView) {
+            super.onTargetClick(view)
+            presenter.handleReorderImagesHintHintDismissed()
+          }
 
+          override fun onTargetDismissed(view: TapTargetView, userInitiated: Boolean) {
+            presenter.handleReorderImagesHintHintDismissed()
+          }
+
+          override fun onOuterCircleClick(view: TapTargetView) {
+            view.dismiss(true)
+          }
+        }
+    )
   }
 
   override fun showImages(imageList: List<CollectionsPresenterEntity>) {
@@ -175,14 +229,6 @@ class CollectionFragment : BaseFragment(),
 
   override fun showImagesAbsentLayout() {
     imagesAbsentLayout.visible()
-  }
-
-  override fun hideAutomaticWallpaperChangerLayout() {
-    activity?.findViewById<RelativeLayout>(R.id.switchLayout)?.gone()
-  }
-
-  override fun showAutomaticWallpaperChangerLayout() {
-    activity?.findViewById<RelativeLayout>(R.id.switchLayout)?.visible()
   }
 
   override fun showAutomaticWallpaperStateAsActive() {

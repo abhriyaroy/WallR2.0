@@ -71,8 +71,7 @@
           android:id="@+id/switchLayout"
           android:layout_width="match_parent"
           android:layout_height="@dimen/main_activity_switch_layout_height"
-          android:background="@color/primary"
-          android:layout_alignParentTop="true">
+          android:background="@color/primary">
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/switchView"
@@ -90,6 +89,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/switchView"
             android:layout_alignParentLeft="true"
+            android:paddingLeft="@dimen/main_activity_switch_layout_textview_padding_left"
             android:text="@string/main_activity_switch_layout_automatic_wallpaper_changer"
             android:textColor="@color/concrete"
             android:textSize="@dimen/main_activity_switch_layout_text_size"

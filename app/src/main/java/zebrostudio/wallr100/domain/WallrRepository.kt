@@ -87,8 +87,8 @@ interface WallrRepository {
   fun deleteImageFromCollection(): Single<List<CollectionsImageModel>>
   fun getAutomaticWallpaperChangerState(): Boolean
   fun setAutomaticWallpaperChangerState(state: Boolean)
-  fun isCollectionsImageOptionsHintDisplayedOnce(): Boolean
-  fun saveCollectionsImageOptionHintShownState()
+  fun isCollectionsImagePinchHintDisplayedOnce(): Boolean
+  fun saveCollectionsImagePinchHintShownState()
   fun isCollectionsImageReorderHintDisplayedOnce(): Boolean
   fun saveCollectionsImageReorderHintShownState()
 }
