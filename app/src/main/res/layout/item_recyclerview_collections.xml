@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:background="?android:attr/activatedBackgroundIndicator"
+    android:descendantFocusability="blocksDescendants">
+
+  <ImageView
+      android:id="@+id/imageView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scaleType="centerCrop"/>
+
+  <View
+      android:id="@+id/hintStubView"
+      android:layout_width="@dimen/collection_recycler_view_hint_stub_width"
+      android:layout_height="@dimen/collection_recycler_view_hint_stub_height"/>
+
+  <View
+      android:id="@+id/selectedOverlay"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:alpha="0.5"
+      android:background="@color/primary"
+      android:visibility="gone"/>
+
+  <ImageView
+      android:id="@+id/selectedIndicatorIcon"
+      android:layout_width="30dp"
+      android:layout_height="30dp"
+      android:layout_gravity="end|bottom"
+      android:layout_margin="4dp"
+      android:src="@drawable/ic_selected_icon_white_large"
+      android:visibility="gone"/>
+
+</FrameLayout>

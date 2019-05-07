@@ -2,7 +2,7 @@ package zebrostudio.wallr100.presentation.adapters
 
 interface CollectionRecyclerContract {
 
-  interface CollectioneRecyclerItemViewHolder {
+  interface CollectionsRecyclerItemViewHolder {
     fun setImage(imagePath: String)
     fun showSelectedIndicator()
     fun hideSelectedIndicator()
@@ -13,7 +13,7 @@ interface CollectionRecyclerContract {
   interface CollectionRecyclerPresenter {
     fun getItemCount(list: List<String>): Int
     fun onBindRepositoryRowViewAtPosition(
-      dragSelectItemViewHolder: CollectioneRecyclerItemViewHolder,
+      dragSelectItemViewHolder: CollectionsRecyclerItemViewHolder,
       imagePathList: List<String>,
       selectedItemsMap: HashMap<Int, String>,
       position: Int
