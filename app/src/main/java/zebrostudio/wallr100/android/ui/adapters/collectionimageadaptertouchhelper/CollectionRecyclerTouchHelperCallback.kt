@@ -8,7 +8,7 @@ import android.support.v7.widget.helper.ItemTouchHelper.Callback
 
 private const val ALPHA_FULL = 1.0f
 
-class CollectionRecyclerItemTouchHelper(private val adapter: ItemTouchHelperAdapter) : Callback() {
+class CollectionRecyclerTouchHelperCallback(private val adapter: ItemTouchHelperAdapter) : Callback() {
 
   override fun isLongPressDragEnabled(): Boolean {
     return true

@@ -1,5 +1,7 @@
 package zebrostudio.wallr100.presentation.adapters
 
+import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEntity
+
 interface CollectionRecyclerContract {
 
   interface CollectionsRecyclerItemViewHolder {
@@ -11,11 +13,11 @@ interface CollectionRecyclerContract {
   }
 
   interface CollectionRecyclerPresenter {
-    fun getItemCount(list: List<String>): Int
+    fun getItemCount(list: List<CollectionsPresenterEntity>): Int
     fun onBindRepositoryRowViewAtPosition(
       dragSelectItemViewHolder: CollectionsRecyclerItemViewHolder,
-      imagePathList: List<String>,
-      selectedItemsMap: HashMap<Int, String>,
+      imagePathList: List<CollectionsPresenterEntity>,
+      selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>,
       position: Int
     )
   }

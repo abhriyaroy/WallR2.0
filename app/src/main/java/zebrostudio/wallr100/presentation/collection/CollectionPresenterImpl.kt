@@ -1,17 +1,25 @@
 package zebrostudio.wallr100.presentation.collection
 
+import com.uber.autodispose.autoDisposable
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
+import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionPresenter
+import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionView
+import zebrostudio.wallr100.presentation.collection.mapper.CollectionImagesPresenterEntityMapper
 
 class CollectionPresenterImpl(
-  widgetHintsUseCase: WidgetHintsUseCase,
-  userPremiumStatusUseCase: UserPremiumStatusUseCase
+  private val widgetHintsUseCase: WidgetHintsUseCase,
+  private val userPremiumStatusUseCase: UserPremiumStatusUseCase,
+  private val collectionImagesUseCase: CollectionImagesUseCase,
+  private val collectionImagesPresenterEntityMapper: CollectionImagesPresenterEntityMapper,
+  private val postExecutionThread: PostExecutionThread
 ) : CollectionPresenter {
 
-  private var collectionView: CollectionContract.CollectionView? = null
+  private var collectionView: CollectionView? = null
 
-  override fun attachView(view: CollectionContract.CollectionView) {
+  override fun attachView(view: CollectionView) {
     collectionView = view
   }
 
@@ -22,7 +30,7 @@ class CollectionPresenterImpl(
   override fun handleViewCreated() {
     if (true) { // check if user is premium
       if (collectionView?.hasStoragePermission() == true) {
-
+        showPictures()
       } else {
         collectionView?.requestStoragePermission()
       }
@@ -51,12 +59,46 @@ class CollectionPresenterImpl(
 
   }
 
-  override fun handleImageptionsHintDismissed() {
+  override fun handleImageOptionsHintDismissed() {
 
   }
 
   override fun handleReorderImagesHintHintDismissed() {
 
+  }
+
+  override fun handleItemMoved(fromPosition: Int, toPosition: Int, imagePathList: List<String>) {
+
+  }
+
+  override fun handleItemClicked(
+    position: Int,
+    imagePathList: List<String>,
+    selectedItemsMap: HashMap<Int, String>
+  ) {
+
+  }
+
+  override fun handleItemLongClicked(
+    position: Int,
+    imagePathList: List<String>,
+    selectedItemsMap: HashMap<Int, String>
+  ) {
+
+  }
+
+  private fun showPictures() {
+    collectionImagesUseCase.getAllImages()
+        .map {
+          collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
+        }
+        .observeOn(postExecutionThread.scheduler)
+        .autoDisposable(collectionView!!.getScope())
+        .subscribe({
+          collectionView?.showImages(it)
+        },{
+          println(it)
+        })
   }
 
 }

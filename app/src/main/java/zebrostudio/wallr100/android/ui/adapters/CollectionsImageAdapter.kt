@@ -10,27 +10,29 @@ import kotlinx.android.synthetic.main.item_recyclerview_collections.view.imageVi
 import kotlinx.android.synthetic.main.item_recyclerview_minimal_fragment.view.selectedIndicatorIcon
 import kotlinx.android.synthetic.main.item_recyclerview_minimal_fragment.view.selectedOverlay
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.ItemTouchHelperAdapter
+import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.ItemTouchHelperViewHolder
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.CollectionRecyclerPresenter
 import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.CollectionsRecyclerItemViewHolder
+import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEntity
+import zebrostudio.wallr100.presentation.minimal.INITIAL_OFFSET
 
 interface CollectionsImageAdapterCallbacks {
-  fun setItemSelected(index: Int, selected: Boolean)
-  fun isItemSelected(index: Int): Boolean
-  fun isItemSelectable(index: Int): Boolean
+  fun onItemMoved(fromPosition: Int, toPosition: Int)
   fun handleClick(index: Int)
   fun handleLongClick(index: Int): Boolean
 }
 
 class CollectionsImageAdapter(
-  private val collectionsImageAdapterCallbacks: CollectionsImageAdapterCallbacks,
+  private val collectionsImageAdapterCallback: CollectionsImageAdapterCallbacks,
   private val presenter: CollectionRecyclerPresenter
-) : RecyclerView.Adapter<CollectionsImageViewHolder>() {
+) : RecyclerView.Adapter<CollectionsImageViewHolder>(), ItemTouchHelperAdapter {
 
-  private var imagePathList = mutableListOf<String>()
-  private var selectedHashMap = HashMap<Int, String>()
+  private var imagePathList = mutableListOf<CollectionsPresenterEntity>()
+  private var selectedHashMap = HashMap<Int, CollectionsPresenterEntity>()
 
   override fun onCreateViewHolder(
     viewGroupParent: ViewGroup,
@@ -39,7 +41,7 @@ class CollectionsImageAdapter(
     return CollectionsImageViewHolder(
         viewGroupParent.inflate(LayoutInflater.from(viewGroupParent.context),
             R.layout.item_recyclerview_collections), viewGroupParent.context,
-        collectionsImageAdapterCallbacks)
+        collectionsImageAdapterCallback)
   }
 
   override fun getItemCount(): Int {
@@ -51,13 +53,44 @@ class CollectionsImageAdapter(
         position)
   }
 
+  override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
+    collectionsImageAdapterCallback.onItemMoved(fromPosition, toPosition)
+    return true
+  }
+
+  fun getImagePathList() = imagePathList
+
+  fun setColorList(list: List<CollectionsPresenterEntity>) {
+    imagePathList = list.toMutableList()
+    notifyDataSetChanged()
+  }
+
+  fun addImageToList(image: CollectionsPresenterEntity) {
+    imagePathList.add(image)
+    notifyItemInserted(imagePathList.size - INITIAL_OFFSET)
+  }
+
+  fun getSelectedItemsMap() = selectedHashMap
+
+  fun addToSelectedItemsMap(itemPosition: Int, entity: CollectionsPresenterEntity) {
+    selectedHashMap[itemPosition] = entity
+  }
+
+  fun removeItemFromSelectedItemsMap(itemPosition: Int) {
+    selectedHashMap.remove(itemPosition)
+  }
+
+  fun clearSelectedItemsMap() = selectedHashMap.clear()
+
 }
 
 class CollectionsImageViewHolder(
   itemView: View,
   private val context: Context,
   private val callback: CollectionsImageAdapterCallbacks
-) : RecyclerView.ViewHolder(itemView), CollectionsRecyclerItemViewHolder {
+) : RecyclerView.ViewHolder(itemView),
+    CollectionsRecyclerItemViewHolder,
+    ItemTouchHelperViewHolder {
 
   override fun setImage(imagePath: String) {
     Glide.with(context)
@@ -85,5 +118,13 @@ class CollectionsImageViewHolder(
     itemView.setOnLongClickListener {
       callback.handleLongClick(adapterPosition)
     }
+  }
+
+  override fun onItemSelected() {
+    println("view holder item selected")
+  }
+
+  override fun onItemClear() {
+    println("On item clear")
   }
 }

@@ -64,6 +64,8 @@ import zebrostudio.wallr100.domain.interactor.WallpaperImagesInteractor
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsInteractor
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
+import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.CollectionRecyclerPresenter
+import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerPresenterImpl
 import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.DragSelectItemPresenter
 import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerPresenterImpl
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract.ImageRecyclerViewPresenter
@@ -174,6 +176,7 @@ class AppModule {
     unsplashClientFactory: UnsplashClientFactory,
     sharedPrefsHelper: SharedPrefsHelper,
     gsonProvider: GsonProvider,
+    collectionsDatabaseImageEntityMapper: CollectionsDatabaseImageEntityMapper,
     databaseImageTypeEntityMapper: DatabaseImageTypeEntityMapper,
     unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
     firebaseDatabaseHelper: FirebaseDatabaseHelper,
@@ -188,6 +191,7 @@ class AppModule {
       unsplashClientFactory,
       sharedPrefsHelper,
       gsonProvider,
+      collectionsDatabaseImageEntityMapper,
       databaseImageTypeEntityMapper,
       unsplashPictureEntityMapper,
       firebaseDatabaseHelper,
@@ -253,5 +257,8 @@ class AppModule {
 
   @Provides
   fun provideDragSelectRecyclerItemPresenter(): DragSelectItemPresenter = DragSelectRecyclerPresenterImpl()
+
+  @Provides
+  fun provideCollectionRecyclerPresenter(): CollectionRecyclerPresenter = CollectionRecyclerPresenterImpl()
 
 }
