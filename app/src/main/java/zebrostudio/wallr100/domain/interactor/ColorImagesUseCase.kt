@@ -5,7 +5,7 @@ import android.net.Uri
 import io.reactivex.Completable
 import io.reactivex.Single
 import zebrostudio.wallr100.domain.WallrRepository
-import zebrostudio.wallr100.domain.model.CollectionsImageModel
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
 
 interface ColorImagesUseCase {
@@ -19,7 +19,7 @@ interface ColorImagesUseCase {
   fun getBitmapFromUriSingle(uri: Uri?): Single<Bitmap>
   fun saveToCollectionsCompletable(
     data: String,
-    type: CollectionsImageModel
+    type: CollectionsImageTypeModel
   ): Completable
 
   fun getCacheSourceUri(): Uri
@@ -52,7 +52,7 @@ class ColorImagesInteractor(private val wallrRepository: WallrRepository) : Colo
 
   override fun saveToCollectionsCompletable(
     data: String,
-    type: CollectionsImageModel
+    type: CollectionsImageTypeModel
   ) = wallrRepository.saveImageToCollections(data, type)
 
   override fun getCacheSourceUri() = wallrRepository.getCacheSourceUri()

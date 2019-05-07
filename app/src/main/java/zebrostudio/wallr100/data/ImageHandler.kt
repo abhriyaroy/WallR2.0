@@ -57,6 +57,11 @@ interface ImageHandler {
     hexValueList: List<String>,
     multiColorImageType: MultiColorImageType
   ): Single<Bitmap>
+
+  fun getAllImagesInCollection(): Single<List<CollectionDatabaseImageEntity>>
+  fun addImageToCollection(): Single<List<CollectionDatabaseImageEntity>>
+  fun reorderImagesInCollection(): Single<List<CollectionDatabaseImageEntity>>
+  fun deleteImagesInCollection(): Single<List<CollectionDatabaseImageEntity>>
 }
 
 const val BYTE_ARRAY_SIZE = 2048
@@ -248,6 +253,22 @@ class ImageHandlerImpl(
         emitter.onError(exception)
       }
     }
+  }
+
+  override fun getAllImagesInCollection(): Single<List<CollectionDatabaseImageEntity>> {
+    return databaseHelper.getDatabase().collectionsDao().getAllData()
+  }
+
+  override fun addImageToCollection(): Single<List<CollectionDatabaseImageEntity>> {
+    return Single.error(IllegalStateException())
+  }
+
+  override fun reorderImagesInCollection(): Single<List<CollectionDatabaseImageEntity>> {
+    return Single.error(IllegalStateException())
+  }
+
+  override fun deleteImagesInCollection(): Single<List<CollectionDatabaseImageEntity>> {
+    return Single.error(IllegalStateException())
   }
 
   private fun saveToCollection(emitter: CompletableEmitter, data: String, type: DatabaseImageType) {

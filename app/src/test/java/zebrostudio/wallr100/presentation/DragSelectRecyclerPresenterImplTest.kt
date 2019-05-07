@@ -10,19 +10,19 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.DragSelectItemViewHolder
-import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerIPresenterImpl
+import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerPresenterImpl
 import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class DragSelectRecyclerPresenterImplTest {
 
   @Mock private lateinit var dragSelectItemViewHolder: DragSelectItemViewHolder
-  private lateinit var dragSelectRecyclerIPresenterImpl: DragSelectRecyclerIPresenterImpl
+  private lateinit var dragSelectRecyclerIPresenterImpl: DragSelectRecyclerPresenterImpl
   private val randomString = randomUUID().toString()
 
   @Before
   fun before() {
-    dragSelectRecyclerIPresenterImpl = DragSelectRecyclerIPresenterImpl()
+    dragSelectRecyclerIPresenterImpl = DragSelectRecyclerPresenterImpl()
   }
 
   @Test fun `should return size of list incremented by 1 on getItemCount call success`() {

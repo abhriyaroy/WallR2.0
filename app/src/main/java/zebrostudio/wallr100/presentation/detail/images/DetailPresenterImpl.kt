@@ -18,7 +18,7 @@ import zebrostudio.wallr100.data.exception.ImageDownloadException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
-import zebrostudio.wallr100.domain.model.CollectionsImageModel
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
@@ -57,7 +57,7 @@ class DetailPresenterImpl(
   internal var isSlidingPanelExpanded = false
   internal var imageHasBeenCrystallized = false
   internal var imageHasBeenEdited = false
-  internal var lastImageOperationType = CollectionsImageModel.WALLPAPER
+  internal var lastImageOperationType = CollectionsImageTypeModel.WALLPAPER
   private var downloadProgress: Long = 0
   private var detailView: DetailContract.DetailView? = null
 
@@ -74,11 +74,11 @@ class DetailPresenterImpl(
     if (imageTypeOrdinal == SEARCH.ordinal) {
       imageType = SEARCH
       searchImage = detailView!!.getSearchImageDetails()
-      lastImageOperationType = CollectionsImageModel.SEARCH
+      lastImageOperationType = CollectionsImageTypeModel.SEARCH
     } else {
       imageType = WALLPAPERS
       wallpaperImage = detailView!!.getWallpaperImageDetails()
-      lastImageOperationType = CollectionsImageModel.WALLPAPER
+      lastImageOperationType = CollectionsImageTypeModel.WALLPAPER
     }
     decorateView()
   }
@@ -319,9 +319,9 @@ class DetailPresenterImpl(
     if (isSlidingPanelExpanded) {
       detailView?.collapseSlidingPanel()
     } else {
-      if (lastImageOperationType == CollectionsImageModel.CRYSTALLIZED) {
+      if (lastImageOperationType == CollectionsImageTypeModel.CRYSTALLIZED) {
         detailView?.showCrystallizedExpandedImage()
-      } else if (lastImageOperationType == CollectionsImageModel.EDITED) {
+      } else if (lastImageOperationType == CollectionsImageTypeModel.EDITED) {
         detailView?.showEditedExpandedImage()
       } else {
         if (imageType == SEARCH) {
@@ -473,7 +473,7 @@ class DetailPresenterImpl(
         .autoDisposable(detailView?.getScope()!!)
         .subscribe({
           if (it.first) {
-            lastImageOperationType = CollectionsImageModel.CRYSTALLIZED
+            lastImageOperationType = CollectionsImageTypeModel.CRYSTALLIZED
             detailView?.showImage(it.second!!)
             detailView?.hideScreenBlur()
             detailView?.showCrystallizeSuccessMessage()
@@ -605,7 +605,7 @@ class DetailPresenterImpl(
         .observeOn(postExecutionThread.scheduler)
         .autoDisposable(detailView?.getScope()!!)
         .subscribe({
-          lastImageOperationType = CollectionsImageModel.EDITED
+          lastImageOperationType = CollectionsImageTypeModel.EDITED
           if (hasWallpaperBeenSet) {
             detailView?.showImage(it)
             detailView?.showWallpaperSetSuccessMessage()

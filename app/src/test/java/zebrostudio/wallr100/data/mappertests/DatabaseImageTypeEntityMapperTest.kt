@@ -10,46 +10,51 @@ import zebrostudio.wallr100.data.database.DatabaseImageType.EDITED
 import zebrostudio.wallr100.data.database.DatabaseImageType.MINIMAL_COLOR
 import zebrostudio.wallr100.data.database.DatabaseImageType.SEARCH
 import zebrostudio.wallr100.data.database.DatabaseImageType.WALLPAPER
-import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapper
-import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapperImpl
-import zebrostudio.wallr100.domain.model.CollectionsImageModel
+import zebrostudio.wallr100.data.mapper.DatabaseImageTypeEntityMapper
+import zebrostudio.wallr100.data.mapper.DatabaseImageTypeEntityMapperImpl
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel
 
 @RunWith(MockitoJUnitRunner::class)
-class DatabaseImageTypeMapperTest {
+class DatabaseImageTypeEntityMapperTest {
 
-  private lateinit var databaseImageTypeMapper: DatabaseImageTypeMapper
+  private lateinit var databaseImageTypeEntityMapper: DatabaseImageTypeEntityMapper
 
   @Before fun setup() {
-    databaseImageTypeMapper = DatabaseImageTypeMapperImpl()
+    databaseImageTypeEntityMapper = DatabaseImageTypeEntityMapperImpl()
   }
 
   @Test
   fun `should return Wallpaper type on mapToDatabaseImageType call success with input of CollectionsImageModel's Wallpaper type`() {
     assertEquals(WALLPAPER,
-        databaseImageTypeMapper.mapToDatabaseImageType(CollectionsImageModel.WALLPAPER))
+        databaseImageTypeEntityMapper.mapToDatabaseImageType(
+            CollectionsImageTypeModel.WALLPAPER))
   }
 
   @Test
   fun `should return Search type on mapToDatabaseImageType call success with input of CollectionsImageModel's Search type`() {
     assertEquals(SEARCH,
-        databaseImageTypeMapper.mapToDatabaseImageType(CollectionsImageModel.SEARCH))
+        databaseImageTypeEntityMapper.mapToDatabaseImageType(
+            CollectionsImageTypeModel.SEARCH))
   }
 
   @Test
   fun `should return Crystallized type on mapToDatabaseImageType call success with input of CollectionsImageModel's Crystallized type`() {
     assertEquals(CRYSTALLIZED,
-        databaseImageTypeMapper.mapToDatabaseImageType(CollectionsImageModel.CRYSTALLIZED))
+        databaseImageTypeEntityMapper.mapToDatabaseImageType(
+            CollectionsImageTypeModel.CRYSTALLIZED))
   }
 
   @Test
   fun `should return Edited type on mapToDatabaseImageType call success with input of CollectionsImageModel's Edited type`() {
     assertEquals(EDITED,
-        databaseImageTypeMapper.mapToDatabaseImageType(CollectionsImageModel.EDITED))
+        databaseImageTypeEntityMapper.mapToDatabaseImageType(
+            CollectionsImageTypeModel.EDITED))
   }
 
   @Test
   fun `should return Minimal color type on mapToDatabaseImageType call success with input of CollectionsImageModel's Minimal color type`() {
     assertEquals(MINIMAL_COLOR,
-        databaseImageTypeMapper.mapToDatabaseImageType(CollectionsImageModel.MINIMAL_COLOR))
+        databaseImageTypeEntityMapper.mapToDatabaseImageType(
+            CollectionsImageTypeModel.MINIMAL_COLOR))
   }
 }

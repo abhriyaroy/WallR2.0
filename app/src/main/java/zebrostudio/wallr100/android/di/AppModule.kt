@@ -33,8 +33,10 @@ import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactoryImpl
 import zebrostudio.wallr100.data.database.DatabaseHelper
 import zebrostudio.wallr100.data.database.DatabaseHelperImpl
-import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapper
-import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapperImpl
+import zebrostudio.wallr100.data.mapper.CollectionsDatabaseImageEntityMapper
+import zebrostudio.wallr100.data.mapper.CollectionsDatabaseImageEntityMapperImpl
+import zebrostudio.wallr100.data.mapper.DatabaseImageTypeEntityMapper
+import zebrostudio.wallr100.data.mapper.DatabaseImageTypeEntityMapperImpl
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapperImpl
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
@@ -46,6 +48,8 @@ import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseInteractor
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
+import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
+import zebrostudio.wallr100.domain.interactor.CollectionsImagesInteractor
 import zebrostudio.wallr100.domain.interactor.ColorImagesInteractor
 import zebrostudio.wallr100.domain.interactor.ColorImagesUseCase
 import zebrostudio.wallr100.domain.interactor.ImageOptionsInteractor
@@ -61,7 +65,7 @@ import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsInteractor
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.DragSelectItemPresenter
-import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerIPresenterImpl
+import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerPresenterImpl
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract.ImageRecyclerViewPresenter
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
 import javax.inject.Singleton
@@ -127,7 +131,11 @@ class AppModule {
   fun provideUnsplashClientFactory(): UnsplashClientFactory = UnsplashClientFactoryImpl()
 
   @Provides
-  fun provideDataBaseImageTypeMapper(): DatabaseImageTypeMapper = DatabaseImageTypeMapperImpl()
+  fun provideCollectionsDatabaseImageEntityMapper():
+      CollectionsDatabaseImageEntityMapper = CollectionsDatabaseImageEntityMapperImpl()
+
+  @Provides
+  fun provideDataBaseImageTypeEntityMapper(): DatabaseImageTypeEntityMapper = DatabaseImageTypeEntityMapperImpl()
 
   @Provides
   fun provideUnspalshPictureEntityMapper(): UnsplashPictureEntityMapper = UnsplashPictureEntityMapperImpl()
@@ -166,7 +174,7 @@ class AppModule {
     unsplashClientFactory: UnsplashClientFactory,
     sharedPrefsHelper: SharedPrefsHelper,
     gsonProvider: GsonProvider,
-    databaseImageTypeMapper: DatabaseImageTypeMapper,
+    databaseImageTypeEntityMapper: DatabaseImageTypeEntityMapper,
     unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
     firebaseDatabaseHelper: FirebaseDatabaseHelper,
     firebasePictureEntityMapper: FirebasePictureEntityMapper,
@@ -180,7 +188,7 @@ class AppModule {
       unsplashClientFactory,
       sharedPrefsHelper,
       gsonProvider,
-      databaseImageTypeMapper,
+      databaseImageTypeEntityMapper,
       unsplashPictureEntityMapper,
       firebaseDatabaseHelper,
       firebasePictureEntityMapper,
@@ -235,10 +243,15 @@ class AppModule {
   ): WidgetHintsUseCase = WidgetHintsInteractor(wallrRepository)
 
   @Provides
+  fun provideCollectionImagesUseCase(
+    wallrRepository: WallrRepository
+  ): CollectionImagesUseCase = CollectionsImagesInteractor(wallrRepository)
+
+  @Provides
   fun provideImageRecyclerViewPresenter()
       : ImageRecyclerViewPresenter = ImageRecyclerViewPresenterImpl()
 
   @Provides
-  fun provideDragSelectRecyclerItemPresenter(): DragSelectItemPresenter = DragSelectRecyclerIPresenterImpl()
+  fun provideDragSelectRecyclerItemPresenter(): DragSelectItemPresenter = DragSelectRecyclerPresenterImpl()
 
 }

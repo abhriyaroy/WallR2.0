@@ -5,7 +5,7 @@ import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.Dra
 import zebrostudio.wallr100.presentation.minimal.INITIAL_OFFSET
 import zebrostudio.wallr100.presentation.minimal.INITIAL_SIZE
 
-class DragSelectRecyclerIPresenterImpl : DragSelectItemPresenter {
+class DragSelectRecyclerPresenterImpl : DragSelectItemPresenter {
 
   override fun getItemCount(list: List<String>): Int {
     return list.size + INITIAL_OFFSET

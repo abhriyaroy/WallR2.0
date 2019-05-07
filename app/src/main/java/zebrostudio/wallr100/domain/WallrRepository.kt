@@ -5,8 +5,9 @@ import android.net.Uri
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import zebrostudio.wallr100.domain.model.CollectionsImageModel
 import zebrostudio.wallr100.domain.model.RestoreColorsModel
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageModel
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
@@ -59,7 +60,7 @@ interface WallrRepository {
 
   fun saveImageToCollections(
     data: String,
-    collectionsImageModel: CollectionsImageModel
+    collectionsImageTypeModel: CollectionsImageTypeModel
   ): Completable
 
   fun isMultiColorModesHintShown(): Boolean
@@ -80,4 +81,8 @@ interface WallrRepository {
     multiColorImageType: MultiColorImageType
   ): Single<Bitmap>
 
+  fun getImagesInCollection(): Single<List<CollectionsImageModel>>
+  fun addImageToCollection(): Single<List<CollectionsImageModel>>
+  fun reorderInCollection(): Single<List<CollectionsImageModel>>
+  fun deleteImageFromCollection(): Single<List<CollectionsImageModel>>
 }

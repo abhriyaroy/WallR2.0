@@ -16,8 +16,8 @@ import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ColorImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
-import zebrostudio.wallr100.domain.model.CollectionsImageModel.EDITED
-import zebrostudio.wallr100.domain.model.CollectionsImageModel.MINIMAL_COLOR
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel.EDITED
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel.MINIMAL_COLOR
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.ADD_TO_COLLECTION
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.DOWNLOAD
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.EDIT_SET
