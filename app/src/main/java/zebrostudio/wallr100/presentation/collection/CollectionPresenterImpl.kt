@@ -7,6 +7,7 @@ import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionPresenter
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionView
+import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEntity
 import zebrostudio.wallr100.presentation.collection.mapper.CollectionImagesPresenterEntityMapper
 
 class CollectionPresenterImpl(
@@ -67,22 +68,22 @@ class CollectionPresenterImpl(
 
   }
 
-  override fun handleItemMoved(fromPosition: Int, toPosition: Int, imagePathList: List<String>) {
+  override fun handleItemMoved(fromPosition: Int, toPosition: Int, imagePathList: List<CollectionsPresenterEntity>) {
 
   }
 
   override fun handleItemClicked(
     position: Int,
-    imagePathList: List<String>,
-    selectedItemsMap: HashMap<Int, String>
+    imageList: List<CollectionsPresenterEntity>,
+    selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
   ) {
 
   }
 
   override fun handleItemLongClicked(
     position: Int,
-    imagePathList: List<String>,
-    selectedItemsMap: HashMap<Int, String>
+    imageList: List<CollectionsPresenterEntity>,
+    selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
   ) {
 
   }

@@ -2,10 +2,14 @@ package zebrostudio.wallr100.android.ui.collection
 
 import dagger.Module
 import dagger.Provides
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
+import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionPresenter
 import zebrostudio.wallr100.presentation.collection.CollectionPresenterImpl
+import zebrostudio.wallr100.presentation.collection.mapper.CollectionImagesPresenterEntityMapper
+import zebrostudio.wallr100.presentation.collection.mapper.CollectionsImagesPresenterEntityMapperImpl
 
 @Module
 class CollectionModule {
@@ -13,7 +17,15 @@ class CollectionModule {
   @Provides
   fun provideCollectionPresenter(
     widgetHintsUseCase: WidgetHintsUseCase,
-    userPremiumStatusUseCase: UserPremiumStatusUseCase
-  ): CollectionPresenter = CollectionPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase)
+    userPremiumStatusUseCase: UserPremiumStatusUseCase,
+    collectionImagesUseCase: CollectionImagesUseCase,
+    collectionImagesPresenterEntityMapper: CollectionImagesPresenterEntityMapper,
+    postExecutionThread: PostExecutionThread
+  ): CollectionPresenter = CollectionPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase,
+      collectionImagesUseCase, collectionImagesPresenterEntityMapper, postExecutionThread)
+
+  @Provides
+  fun provideCollectionPresenterEntityMapper()
+      : CollectionImagesPresenterEntityMapper = CollectionsImagesPresenterEntityMapperImpl()
 
 }

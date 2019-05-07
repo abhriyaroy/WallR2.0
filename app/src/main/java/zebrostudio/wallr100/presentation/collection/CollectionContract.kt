@@ -25,17 +25,22 @@ interface CollectionContract {
     fun handleWallpaperChangerDeactivated()
     fun handleImageOptionsHintDismissed()
     fun handleReorderImagesHintHintDismissed()
-    fun handleItemMoved(fromPosition: Int, toPosition: Int, imagePathList: List<String>)
+    fun handleItemMoved(
+      fromPosition: Int,
+      toPosition: Int,
+      imagePathList: List<CollectionsPresenterEntity>
+    )
+
     fun handleItemClicked(
       position: Int,
-      imagePathList: List<String>,
-      selectedItemsMap: HashMap<Int, String>
+      imageList: List<CollectionsPresenterEntity>,
+      selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
     )
 
     fun handleItemLongClicked(
       position: Int,
-      imagePathList: List<String>,
-      selectedItemsMap: HashMap<Int, String>
+      imageList: List<CollectionsPresenterEntity>,
+      selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
     )
   }
 

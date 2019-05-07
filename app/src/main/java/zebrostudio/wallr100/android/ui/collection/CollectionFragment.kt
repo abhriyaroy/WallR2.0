@@ -1,12 +1,14 @@
 package zebrostudio.wallr100.android.ui.collection
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.ContextCompat
 import android.support.v7.view.menu.MenuBuilder
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.support.v7.widget.Toolbar
 import android.support.v7.widget.Toolbar.OnMenuItemClickListener
@@ -19,6 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.afollestad.materialcab.MaterialCab
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_collection.collectionsRecyclerView
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.ui.adapters.CollectionsImageAdapter
@@ -26,7 +29,9 @@ import zebrostudio.wallr100.android.ui.adapters.CollectionsImageAdapterCallbacks
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.CollectionRecyclerTouchHelperCallback
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.OnStartDragListener
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
+import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
 import zebrostudio.wallr100.android.utils.inflate
+import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.CollectionRecyclerPresenter
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionPresenter
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionView
@@ -63,6 +68,17 @@ class CollectionFragment : BaseFragment(),
     collectionRecyclerTouchHelperCallback =
         CollectionRecyclerTouchHelperCallback(collectionsImageAdapter)
     itemTouchHelper = ItemTouchHelper(collectionRecyclerTouchHelperCallback)
+    collectionsRecyclerView?.apply {
+      GridLayoutManager(context,
+          integerRes(R.integer.recycler_view_span_count)).let {
+        layoutManager = it
+      }
+      addItemDecoration(
+          RecyclerViewItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
+              integerRes(R.integer.minimal_image_recycler_view_grid_size)))
+      adapter = collectionsImageAdapter
+      itemTouchHelper.attachToRecyclerView(this)
+    }
     presenter.handleViewCreated()
   }
 
@@ -76,6 +92,7 @@ class CollectionFragment : BaseFragment(),
     setHasOptionsMenu(true)
   }
 
+  @SuppressLint("RestrictedApi")
   override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
     activity!!.menuInflater.inflate(R.menu.collection, menu)
     if (menu is MenuBuilder) {
