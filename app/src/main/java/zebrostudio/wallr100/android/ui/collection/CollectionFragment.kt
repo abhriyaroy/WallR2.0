@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.view.menu.MenuBuilder
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView.ViewHolder
+import android.support.v7.widget.SwitchCompat
 import android.support.v7.widget.Toolbar
 import android.support.v7.widget.Toolbar.OnMenuItemClickListener
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -19,6 +20,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import com.afollestad.materialcab.MaterialCab
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_collection.collectionsRecyclerView
@@ -31,9 +33,11 @@ import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelpe
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.OnStartDragListener
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
+import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
+import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.CollectionRecyclerPresenter
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionPresenter
@@ -66,23 +70,10 @@ class CollectionFragment : BaseFragment(),
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    activity?.findViewById<Toolbar>(R.id.toolbar)?.setOnMenuItemClickListener(this)
-    collectionsImageAdapter = CollectionsImageAdapter(this, recyclerPresenter)
-    collectionRecyclerTouchHelperCallback =
-        CollectionRecyclerTouchHelperCallback(collectionsImageAdapter)
-    itemTouchHelper = ItemTouchHelper(collectionRecyclerTouchHelperCallback)
-    collectionsRecyclerView?.apply {
-      GridLayoutManager(context,
-          integerRes(R.integer.recycler_view_span_count)).let {
-        layoutManager = it
-      }
-      addItemDecoration(
-          RecyclerViewItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
-              integerRes(R.integer.minimal_image_recycler_view_grid_size)))
-      adapter = collectionsImageAdapter
-      itemTouchHelper.attachToRecyclerView(this)
-    }
     presenter.attachView(this)
+    activity?.findViewById<Toolbar>(R.id.toolbar)?.setOnMenuItemClickListener(this)
+    initRecyclerViewWithListeners()
+    attachAutomaticWallpaperChangerListener()
     presenter.handleViewCreated()
   }
 
@@ -184,6 +175,55 @@ class CollectionFragment : BaseFragment(),
 
   override fun showImagesAbsentLayout() {
     imagesAbsentLayout.visible()
+  }
+
+  override fun hideAutomaticWallpaperChangerLayout() {
+    activity?.findViewById<RelativeLayout>(R.id.switchLayout)?.gone()
+  }
+
+  override fun showAutomaticWallpaperChangerLayout() {
+    activity?.findViewById<RelativeLayout>(R.id.switchLayout)?.visible()
+  }
+
+  override fun showAutomaticWallpaperStateAsActive() {
+    activity?.findViewById<SwitchCompat>(R.id.switchView)?.isChecked = true
+  }
+
+  override fun showAutomaticWallpaperStateAsInActive() {
+    activity?.findViewById<SwitchCompat>(R.id.switchView)?.isChecked = false
+  }
+
+  override fun showGenericErrorMessage() {
+    errorToast(stringRes(R.string.generic_error_message))
+  }
+
+  private fun initRecyclerViewWithListeners() {
+    collectionsImageAdapter = CollectionsImageAdapter(this, recyclerPresenter)
+    collectionRecyclerTouchHelperCallback =
+        CollectionRecyclerTouchHelperCallback(collectionsImageAdapter)
+    itemTouchHelper = ItemTouchHelper(collectionRecyclerTouchHelperCallback)
+    collectionsRecyclerView?.apply {
+      GridLayoutManager(context,
+          integerRes(R.integer.recycler_view_span_count)).let {
+        layoutManager = it
+      }
+      addItemDecoration(
+          RecyclerViewItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
+              integerRes(R.integer.minimal_image_recycler_view_grid_size)))
+      adapter = collectionsImageAdapter
+      itemTouchHelper.attachToRecyclerView(this)
+    }
+  }
+
+  private fun attachAutomaticWallpaperChangerListener() {
+    activity?.findViewById<SwitchCompat>(R.id.switchView)
+        ?.setOnCheckedChangeListener { _, isChecked ->
+          if (isChecked) {
+            presenter.handleAutomaticWallpaperChangerEnabled()
+          } else {
+            presenter.handleAutomaticWallpaperChangerDisabled()
+          }
+        }
   }
 
   companion object {

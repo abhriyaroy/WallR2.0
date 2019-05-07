@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
+import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionPresenter
@@ -18,11 +19,13 @@ class CollectionModule {
   fun provideCollectionPresenter(
     widgetHintsUseCase: WidgetHintsUseCase,
     userPremiumStatusUseCase: UserPremiumStatusUseCase,
+    imageOptionsUseCase: ImageOptionsUseCase,
     collectionImagesUseCase: CollectionImagesUseCase,
     collectionImagesPresenterEntityMapper: CollectionImagesPresenterEntityMapper,
     postExecutionThread: PostExecutionThread
   ): CollectionPresenter = CollectionPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase,
-      collectionImagesUseCase, collectionImagesPresenterEntityMapper, postExecutionThread)
+      imageOptionsUseCase, collectionImagesUseCase, collectionImagesPresenterEntityMapper,
+      postExecutionThread)
 
   @Provides
   fun provideCollectionPresenterEntityMapper()

@@ -85,4 +85,10 @@ interface WallrRepository {
   fun addImageToCollection(): Single<List<CollectionsImageModel>>
   fun reorderInCollection(): Single<List<CollectionsImageModel>>
   fun deleteImageFromCollection(): Single<List<CollectionsImageModel>>
+  fun getAutomaticWallpaperChangerState(): Boolean
+  fun setAutomaticWallpaperChangerState(state: Boolean)
+  fun isCollectionsImageOptionsHintDisplayedOnce(): Boolean
+  fun saveCollectionsImageOptionHintShownState()
+  fun isCollectionsImageReorderHintDisplayedOnce(): Boolean
+  fun saveCollectionsImageReorderHintShownState()
 }

@@ -68,7 +68,7 @@
           app:stl_drawDecorationAfterTab="true"/>
 
       <RelativeLayout
-          android:id="@+id/SwitchLayout"
+          android:id="@+id/switchLayout"
           android:layout_width="match_parent"
           android:layout_height="@dimen/main_activity_switch_layout_height"
           android:background="@color/primary"

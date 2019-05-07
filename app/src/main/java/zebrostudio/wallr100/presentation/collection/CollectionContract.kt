@@ -16,6 +16,11 @@ interface CollectionContract {
     fun showImages(imageList: List<CollectionsPresenterEntity>)
     fun hideImagesAbsentLayout()
     fun showImagesAbsentLayout()
+    fun hideAutomaticWallpaperChangerLayout()
+    fun showAutomaticWallpaperChangerLayout()
+    fun showAutomaticWallpaperStateAsActive()
+    fun showAutomaticWallpaperStateAsInActive()
+    fun showGenericErrorMessage()
   }
 
   interface CollectionPresenter : BasePresenter<CollectionView> {
@@ -23,9 +28,9 @@ interface CollectionContract {
     fun handleImportFromLocalStorageClicked()
     fun handlePurchaseClicked()
     fun handleChangeWallpaperIntervalClicked()
-    fun handleWallpaperChangerActivated()
-    fun handleWallpaperChangerDeactivated()
-    fun handleImageOptionsHintDismissed()
+    fun handleWallpaperChangerEnabled()
+    fun handleWallpaperChangerDisabled()
+    fun handleImageOptionsHintDismissed(listSize: Int)
     fun handleReorderImagesHintHintDismissed()
     fun handleItemMoved(
       fromPosition: Int,
@@ -44,6 +49,9 @@ interface CollectionContract {
       imageList: List<CollectionsPresenterEntity>,
       selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
     )
+
+    fun handleAutomaticWallpaperChangerEnabled()
+    fun handleAutomaticWallpaperChangerDisabled()
   }
 
 }
