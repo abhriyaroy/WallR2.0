@@ -34,7 +34,7 @@ class CollectionsImagesInteractor(
 
   override fun deleteImages(collectionImagesModelList: List<CollectionsImageModel>)
       : Single<List<CollectionsImageModel>> {
-    return wallrRepository.deleteImageFromCollection()
+    return wallrRepository.deleteImageFromCollection(collectionImagesModelList)
   }
 
 }

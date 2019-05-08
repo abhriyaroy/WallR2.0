@@ -394,7 +394,6 @@ class WallrDataRepository(
   }
 
   override fun getImagesInCollection(): Single<List<CollectionsImageModel>> {
-    println("here 3")
     return imageHandler.getAllImagesInCollection()
         .subscribeOn(executionThread.computationScheduler)
         .map {
@@ -403,7 +402,8 @@ class WallrDataRepository(
   }
 
   override fun addImagesToCollection(uriList: List<Uri>): Single<List<CollectionsImageModel>> {
-    return imageHandler.addToCollection(uriList)
+    return imageHandler.addExternalImageToCollection(uriList)
+        .andThen(imageHandler.getAllImagesInCollection())
         .subscribeOn(executionThread.computationScheduler)
         .map {
           collectionsDatabaseImageEntityMapper.mapFromEntity(it)
@@ -418,8 +418,11 @@ class WallrDataRepository(
         }
   }
 
-  override fun deleteImageFromCollection(): Single<List<CollectionsImageModel>> {
-    return imageHandler.deleteImagesInCollection()
+  override fun deleteImageFromCollection(
+    collectionsImageModelList: List<CollectionsImageModel>
+  ): Single<List<CollectionsImageModel>> {
+    return imageHandler.deleteImagesInCollection(
+        collectionsDatabaseImageEntityMapper.mapToEntity(collectionsImageModelList))
         .subscribeOn(executionThread.computationScheduler)
         .map {
           collectionsDatabaseImageEntityMapper.mapFromEntity(it)

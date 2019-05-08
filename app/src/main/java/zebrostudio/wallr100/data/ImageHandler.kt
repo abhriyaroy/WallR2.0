@@ -59,9 +59,11 @@ interface ImageHandler {
   ): Single<Bitmap>
 
   fun getAllImagesInCollection(): Single<List<CollectionDatabaseImageEntity>>
-  fun addToCollection(uriList: List<Uri>): Single<List<CollectionDatabaseImageEntity>>
+  fun addExternalImageToCollection(uriList: List<Uri>): Completable
   fun reorderImagesInCollection(): Single<List<CollectionDatabaseImageEntity>>
-  fun deleteImagesInCollection(): Single<List<CollectionDatabaseImageEntity>>
+  fun deleteImagesInCollection(
+    collectionDatabaseImageEntityList: List<CollectionDatabaseImageEntity>
+  ): Single<List<CollectionDatabaseImageEntity>>
 }
 
 const val BYTE_ARRAY_SIZE = 2048
@@ -259,16 +261,33 @@ class ImageHandlerImpl(
     return databaseHelper.getDatabase().collectionsDao().getAllData()
   }
 
-  override fun addToCollection(uriList: List<Uri>): Single<List<CollectionDatabaseImageEntity>> {
-    return Single.error(IllegalStateException())
+  override fun addExternalImageToCollection(uriList: List<Uri>): Completable {
+    return Completable.create {
+      try {
+        uriList.forEach { uri ->
+          fileHandler.saveFileToCollections(uri)
+        }
+        it.onComplete()
+      } catch (ioException: IOException) {
+        it.onError(ioException)
+      }
+    }
   }
 
   override fun reorderImagesInCollection(): Single<List<CollectionDatabaseImageEntity>> {
     return Single.error(IllegalStateException())
   }
 
-  override fun deleteImagesInCollection(): Single<List<CollectionDatabaseImageEntity>> {
-    return Single.error(IllegalStateException())
+  override fun deleteImagesInCollection(
+    collectionDatabaseImageEntityList: List<CollectionDatabaseImageEntity>
+  ): Single<List<CollectionDatabaseImageEntity>> {
+    return databaseHelper.getDatabase().collectionsDao().getAllData()
+        .doOnSubscribe {
+          println("the thread is ${Thread.currentThread().name}")
+          collectionDatabaseImageEntityList.forEach {
+            databaseHelper.getDatabase().collectionsDao().deleteData(it)
+          }
+        }
   }
 
   private fun saveToCollection(emitter: CompletableEmitter, data: String, type: DatabaseImageType) {

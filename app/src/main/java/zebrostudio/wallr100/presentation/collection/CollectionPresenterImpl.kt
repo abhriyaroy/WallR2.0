@@ -147,6 +147,8 @@ class CollectionPresenterImpl(
           collectionView?.showImages(it)
           collectionView?.showImagesAddedSuccessfullyMessage(uriList.size)
         }, {
+          println("error")
+          println(it.message)
           collectionView?.showGenericErrorMessage()
         })
   }
