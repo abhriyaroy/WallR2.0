@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.ContextCompat
@@ -24,6 +25,10 @@ import com.afollestad.materialcab.MaterialCab
 import com.afollestad.materialdialogs.MaterialDialog
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetView
+import com.qingmei2.rximagepicker.core.RxImagePicker
+import com.qingmei2.rximagepicker_extension.MimeType
+import com.qingmei2.rximagepicker_extension_zhihu.ZhihuConfigurationBuilder
+import com.uber.autodispose.autoDisposable
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_collection.collectionsRecyclerView
 import kotlinx.android.synthetic.main.fragment_collection.imagesAbsentLayout
@@ -49,6 +54,7 @@ import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEn
 import javax.inject.Inject
 
 const val REQUEST_CODE = 1
+const val MAXIMUM_SELECTED_IMAGES = 10
 
 class CollectionFragment : BaseFragment(),
     CollectionView,
@@ -104,8 +110,8 @@ class CollectionFragment : BaseFragment(),
     super.onDestroy()
   }
 
-  override fun onMenuItemClick(item: MenuItem?): Boolean {
-    when (item?.itemId) {
+  override fun onMenuItemClick(item: MenuItem): Boolean {
+    when (item.itemId) {
       R.id.change_wallpaper_interval -> presenter.handleChangeWallpaperIntervalClicked()
       else -> presenter.handleImportFromLocalStorageClicked()
     }
@@ -259,7 +265,22 @@ class CollectionFragment : BaseFragment(),
   }
 
   override fun showImagePicker() {
-
+    mutableListOf<Uri>().let { list ->
+      RxImagePicker
+          .create(ImagePickerHelper::class.java)
+          .fromGallery(context!!, ZhihuConfigurationBuilder(MimeType.ofImage(), false)
+              .maxSelectable(MAXIMUM_SELECTED_IMAGES)
+              .countable(true)
+              .theme(R.style.Zhihu_Normal)
+              .build())
+          .doOnComplete {
+            presenter.handleImagePickerResult(list)
+          }
+          .autoDisposable(getScope())
+          .subscribe {
+            list.add(it.uri)
+          }
+    }
   }
 
   override fun showGenericErrorMessage() {

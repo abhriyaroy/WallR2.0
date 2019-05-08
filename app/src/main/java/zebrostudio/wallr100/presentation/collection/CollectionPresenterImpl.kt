@@ -42,21 +42,15 @@ class CollectionPresenterImpl(
   }
 
   override fun handleViewCreated() {
-    println("here 1")
-    if (true) { // check if user is premium
-      if (collectionView?.hasStoragePermission() == true) {
-        println("here 2")
-        showPictures()
-      } else {
-        collectionView?.requestStoragePermission()
-      }
-    } else {
-      collectionView?.showPurchasePremiumToContinueDialog()
+    if (true && isStoragePermissionAvailable()) {
+      showPictures()
     }
   }
 
   override fun handleImportFromLocalStorageClicked() {
-
+    if (true && isStoragePermissionAvailable()) {
+      collectionView?.showImagePicker()
+    }
   }
 
   override fun handlePurchaseClicked() {
@@ -64,7 +58,7 @@ class CollectionPresenterImpl(
   }
 
   override fun handleChangeWallpaperIntervalClicked() {
-
+    imageOptionsUseCase.getAutomaticWallpaperChangerInterval()
   }
 
   override fun handleWallpaperChangerEnabled() {
@@ -133,6 +127,24 @@ class CollectionPresenterImpl(
 
   override fun handleImagePickerResult(uriList: List<Uri>) {
 
+  }
+
+  private fun isUserPremium(): Boolean {
+    return if (userPremiumStatusUseCase.isUserPremium()) {
+      true
+    } else {
+      collectionView?.showPurchasePremiumToContinueDialog()
+      false
+    }
+  }
+
+  private fun isStoragePermissionAvailable(): Boolean {
+    return if (collectionView?.hasStoragePermission() == true) {
+      true
+    } else {
+      collectionView?.requestStoragePermission()
+      false
+    }
   }
 
   private fun showPictures() {
