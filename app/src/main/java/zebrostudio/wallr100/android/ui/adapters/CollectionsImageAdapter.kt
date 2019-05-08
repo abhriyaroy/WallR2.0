@@ -21,9 +21,8 @@ import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEn
 import zebrostudio.wallr100.presentation.minimal.INITIAL_OFFSET
 
 interface CollectionsImageAdapterCallbacks {
-  fun onItemMoved(fromPosition: Int, toPosition: Int)
+  fun handleItemMoved(fromPosition: Int, toPosition: Int)
   fun handleClick(index: Int)
-  fun handleLongClick(index: Int): Boolean
 }
 
 class CollectionsImageAdapter(
@@ -54,7 +53,7 @@ class CollectionsImageAdapter(
   }
 
   override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-    collectionsImageAdapterCallback.onItemMoved(fromPosition, toPosition)
+    collectionsImageAdapterCallback.handleItemMoved(fromPosition, toPosition)
     return true
   }
 
@@ -111,12 +110,6 @@ class CollectionsImageViewHolder(
   override fun attachClickListener() {
     itemView.setOnClickListener {
       callback.handleClick(adapterPosition)
-    }
-  }
-
-  override fun attachLongClickListener() {
-    itemView.setOnLongClickListener {
-      callback.handleLongClick(adapterPosition)
     }
   }
 

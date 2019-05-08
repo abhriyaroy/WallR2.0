@@ -46,12 +46,6 @@ interface CollectionContract {
       selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
     )
 
-    fun handleItemLongClicked(
-      position: Int,
-      imageList: List<CollectionsPresenterEntity>,
-      selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
-    )
-
     fun handleAutomaticWallpaperChangerEnabled()
     fun handleAutomaticWallpaperChangerDisabled()
     fun handleAutomaticWallpaperIntervalChangerMenuItemClicked()

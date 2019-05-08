@@ -20,7 +20,6 @@ class CollectionRecyclerPresenterImpl : CollectionRecyclerPresenter {
   ) {
     dragSelectItemViewHolder.setImage(imagePathList[position].path)
     dragSelectItemViewHolder.attachClickListener()
-    dragSelectItemViewHolder.attachLongClickListener()
     if (selectedItemsMap.size != INITIAL_SIZE) {
       if (selectedItemsMap.containsKey(position - INITIAL_OFFSET)) {
         dragSelectItemViewHolder.showSelectedIndicator()

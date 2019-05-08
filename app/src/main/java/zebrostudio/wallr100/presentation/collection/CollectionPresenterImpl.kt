@@ -108,15 +108,7 @@ class CollectionPresenterImpl(
     imageList: List<CollectionsPresenterEntity>,
     selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
   ) {
-
-  }
-
-  override fun handleItemLongClicked(
-    position: Int,
-    imageList: List<CollectionsPresenterEntity>,
-    selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
-  ) {
-
+    println("$position clicked")
   }
 
   override fun handleAutomaticWallpaperChangerEnabled() {
@@ -183,11 +175,11 @@ class CollectionPresenterImpl(
         .autoDisposable(collectionView!!.getScope())
         .subscribe({
           if (it.isNotEmpty()) {
-            collectionView?.showImages(it)
             collectionView?.hideImagesAbsentLayout()
           } else {
             collectionView?.showImagesAbsentLayout()
           }
+          collectionView?.showImages(it)
           //showHintsIfSuitable(it.size)
         }, {
           collectionView?.showImagesAbsentLayout()

@@ -9,7 +9,6 @@ interface CollectionRecyclerContract {
     fun showSelectedIndicator()
     fun hideSelectedIndicator()
     fun attachClickListener()
-    fun attachLongClickListener()
   }
 
   interface CollectionRecyclerPresenter {

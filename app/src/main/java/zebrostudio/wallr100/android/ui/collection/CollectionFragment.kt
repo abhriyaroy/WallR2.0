@@ -126,19 +126,13 @@ class CollectionFragment : BaseFragment(),
     itemTouchHelper.startDrag(viewHolder)
   }
 
-  override fun onItemMoved(fromPosition: Int, toPosition: Int) {
+  override fun handleItemMoved(fromPosition: Int, toPosition: Int) {
     presenter.handleItemMoved(fromPosition, toPosition, collectionsImageAdapter.getImagePathList())
   }
 
   override fun handleClick(index: Int) {
     presenter.handleItemClicked(index, collectionsImageAdapter.getImagePathList(),
         collectionsImageAdapter.getSelectedItemsMap())
-  }
-
-  override fun handleLongClick(index: Int): Boolean {
-    presenter.handleItemLongClicked(index, collectionsImageAdapter.getImagePathList(),
-        collectionsImageAdapter.getSelectedItemsMap())
-    return true
   }
 
   override fun showPurchasePremiumToContinueDialog() {
