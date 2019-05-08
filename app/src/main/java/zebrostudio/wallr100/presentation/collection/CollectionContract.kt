@@ -8,13 +8,15 @@ import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEn
 interface CollectionContract {
 
   interface CollectionView : BaseView {
+    fun expandToolbar()
+    fun collapseToolbar()
     fun showPurchasePremiumToContinueDialog()
     fun redirectToBuyPro()
     fun hasStoragePermission(): Boolean
     fun requestStoragePermission()
-    fun showImagePinchHint()
     fun showReorderImagesHint()
     fun showImages(imageList: List<CollectionsPresenterEntity>)
+    fun clearImages()
     fun hideImagesAbsentLayout()
     fun showImagesAbsentLayout()
     fun showAutomaticWallpaperStateAsActive()
@@ -22,6 +24,15 @@ interface CollectionContract {
     fun showWallpaperChangerIntervalDialog(choice: Int)
     fun showImagePicker()
     fun showImagesAddedSuccessfullyMessage(count: Int)
+    fun updateAllItemViews()
+    fun updateItemView(position: Int)
+    fun addToSelectedItems(position: Int, collectionsPresenterEntity: CollectionsPresenterEntity)
+    fun removeFromSelectedItems(position: Int)
+    fun clearAllSelectedItems()
+    fun isCabActive(): Boolean
+    fun showSingleImageSelectedCab()
+    fun showMultipleImagesSelectedCab()
+    fun hideCab()
     fun showGenericErrorMessage()
   }
 
@@ -32,7 +43,6 @@ interface CollectionContract {
     fun handleChangeWallpaperIntervalClicked()
     fun handleWallpaperChangerEnabled()
     fun handleWallpaperChangerDisabled()
-    fun handleImageOptionsHintDismissed(listSize: Int)
     fun handleReorderImagesHintHintDismissed()
     fun handleItemMoved(
       fromPosition: Int,
@@ -51,6 +61,10 @@ interface CollectionContract {
     fun handleAutomaticWallpaperIntervalChangerMenuItemClicked()
     fun updateWallpaperChangerInterval(choice: Int)
     fun handleImagePickerResult(uriList: List<Uri>)
+    fun handleSetWallpaperMenuItemClicked()
+    fun handleCrystallizeWallpaperMenuItemClicked()
+    fun handleDeleteWallpaperMenuItemClicked()
+    fun handleCabDestroyed()
   }
 
 }

@@ -6,8 +6,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.menu.MenuBuilder
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView.ViewHolder
@@ -39,6 +41,7 @@ import zebrostudio.wallr100.android.ui.adapters.CollectionsImageAdapterCallbacks
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.CollectionRecyclerTouchHelperCallback
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.OnStartDragListener
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
+import zebrostudio.wallr100.android.ui.minimal.SINGLE_ITEM_SIZE
 import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
@@ -56,6 +59,7 @@ import javax.inject.Inject
 
 const val REQUEST_CODE = 1
 const val MAXIMUM_SELECTED_IMAGES = 10
+private const val REORDER_HINT_VIEW_POSITION = 1
 
 class CollectionFragment : BaseFragment(),
     CollectionView,
@@ -111,6 +115,14 @@ class CollectionFragment : BaseFragment(),
     super.onDestroy()
   }
 
+  override fun expandToolbar() {
+    activity?.findViewById<AppBarLayout>(R.id.appbar)?.setExpanded(true, true)
+  }
+
+  override fun collapseToolbar() {
+    activity?.findViewById<AppBarLayout>(R.id.appbar)?.setExpanded(false, true)
+  }
+
   override fun onMenuItemClick(item: MenuItem): Boolean {
     when (item.itemId) {
       R.id.change_wallpaper_interval -> presenter.handleChangeWallpaperIntervalClicked()
@@ -162,39 +174,9 @@ class CollectionFragment : BaseFragment(),
         Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CODE)
   }
 
-  override fun showImagePinchHint() {
-    val targetView = collectionsRecyclerView.getChildAt(0).findViewById<View>(R.id.hintStubView)
-    TapTargetView.showFor(activity!!,
-        TapTarget.forView(targetView,
-            stringRes(R.string.collections_fragment_pinch_to_zoom_hint_title),
-            stringRes(R.string.collections_fragment_pinch_to_zoom_hint_description))
-            .dimColor(android.R.color.transparent)
-            .outerCircleColor(R.color.accent)
-            .transparentTarget(true)
-            .targetCircleColor(R.color.concrete)
-            .textColor(android.R.color.white)
-            .cancelable(true),
-        object : TapTargetView.Listener() {
-          override fun onTargetClick(view: TapTargetView) {
-            super.onTargetClick(view)
-            presenter.handleImageOptionsHintDismissed(
-                collectionsImageAdapter.getImagePathList().size)
-          }
-
-          override fun onTargetDismissed(view: TapTargetView?, userInitiated: Boolean) {
-            presenter.handleImageOptionsHintDismissed(
-                collectionsImageAdapter.getImagePathList().size)
-          }
-
-          override fun onOuterCircleClick(view: TapTargetView?) {
-            super.onTargetClick(view!!)
-            view.dismiss(true)
-          }
-        })
-  }
-
   override fun showReorderImagesHint() {
-    val targetView = collectionsRecyclerView.getChildAt(1).findViewById<View>(R.id.hintStubView)
+    val targetView = collectionsRecyclerView.getChildAt(REORDER_HINT_VIEW_POSITION)
+        .findViewById<View>(R.id.hintStubView)
     TapTargetView.showFor(activity!!,
         TapTarget.forView(targetView,
             getString(R.string.collections_fragment_drag_to_reorder_hint_title),
@@ -223,7 +205,11 @@ class CollectionFragment : BaseFragment(),
   }
 
   override fun showImages(imageList: List<CollectionsPresenterEntity>) {
-    collectionsImageAdapter.setColorList(imageList)
+    collectionsImageAdapter.setImagesList(imageList)
+  }
+
+  override fun clearImages() {
+    collectionsImageAdapter.clearImagesList()
   }
 
   override fun hideImagesAbsentLayout() {
@@ -279,12 +265,93 @@ class CollectionFragment : BaseFragment(),
   }
 
   override fun showImagesAddedSuccessfullyMessage(count: Int) {
-    if (count == 1) {
+    if (count == SINGLE_ITEM_SIZE) {
       successToast(stringRes(R.string.collection_fragment_add_single_image_success_message))
     } else {
       successToast(
           stringRes(R.string.collection_fragment_add_multiple_image_success_message, count))
     }
+  }
+
+  override fun addToSelectedItems(
+    position: Int,
+    collectionsPresenterEntity: CollectionsPresenterEntity
+  ) {
+    collectionsImageAdapter.addToSelectedItemsMap(position, collectionsPresenterEntity)
+  }
+
+  override fun removeFromSelectedItems(position: Int) {
+    collectionsImageAdapter.removeItemFromSelectedItemsMap(position)
+  }
+
+  override fun updateAllItemViews() {
+    collectionsImageAdapter.notifyDataSetChanged()
+  }
+
+  override fun updateItemView(position: Int) {
+    collectionsImageAdapter.notifyItemChanged(position)
+  }
+
+  override fun clearAllSelectedItems() {
+    collectionsImageAdapter.clearSelectedItemsMap()
+  }
+
+  override fun isCabActive(): Boolean {
+    return MaterialCab.isActive
+  }
+
+  override fun showSingleImageSelectedCab() {
+    MaterialCab.attach(activity as AppCompatActivity, R.id.cabStub) {
+      menuRes = R.menu.collection_single_selected
+      closeDrawableRes = R.drawable.ic_close_white
+      titleColor = colorRes(R.color.white)
+      title = stringRes(R.string.minimal_fragment_cab_title,
+          collectionsImageAdapter.getSelectedItemsMap().size)
+      backgroundColor = colorRes(R.color.primary)
+      backgroundColorRes(R.color.primary)
+
+      onSelection {
+        when (it.itemId) {
+          R.id.setWallpaperMenuItem -> presenter.handleSetWallpaperMenuItemClicked()
+          R.id.crystallizeWallpaperMenuItem -> presenter.handleCrystallizeWallpaperMenuItemClicked()
+          R.id.deleteWallpaperMenuItem -> presenter.handleDeleteWallpaperMenuItemClicked()
+        }
+        true
+      }
+
+      onDestroy {
+        presenter.handleCabDestroyed()
+        true
+      }
+    }
+  }
+
+  override fun showMultipleImagesSelectedCab() {
+    MaterialCab.attach(activity as AppCompatActivity, R.id.cabStub) {
+      menuRes = R.menu.collection_multiple_selected
+      closeDrawableRes = R.drawable.ic_close_white
+      titleColor = colorRes(R.color.white)
+      title = stringRes(R.string.minimal_fragment_cab_title,
+          collectionsImageAdapter.getSelectedItemsMap().size)
+      backgroundColor = colorRes(R.color.primary)
+      backgroundColorRes(R.color.primary)
+
+      onSelection {
+        if (it.itemId == R.id.deleteWallpaperMenuItem) {
+          presenter.handleDeleteWallpaperMenuItemClicked()
+        }
+        true
+      }
+
+      onDestroy {
+        presenter.handleCabDestroyed()
+        true
+      }
+    }
+  }
+
+  override fun hideCab() {
+    MaterialCab.destroy()
   }
 
   override fun showGenericErrorMessage() {

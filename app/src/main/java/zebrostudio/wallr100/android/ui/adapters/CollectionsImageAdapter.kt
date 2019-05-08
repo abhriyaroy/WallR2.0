@@ -18,7 +18,6 @@ import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.CollectionRecyclerPresenter
 import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.CollectionsRecyclerItemViewHolder
 import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEntity
-import zebrostudio.wallr100.presentation.minimal.INITIAL_OFFSET
 
 interface CollectionsImageAdapterCallbacks {
   fun handleItemMoved(fromPosition: Int, toPosition: Int)
@@ -59,14 +58,8 @@ class CollectionsImageAdapter(
 
   fun getImagePathList() = imagePathList
 
-  fun setColorList(list: List<CollectionsPresenterEntity>) {
+  fun setImagesList(list: List<CollectionsPresenterEntity>) {
     imagePathList = list.toMutableList()
-    notifyDataSetChanged()
-  }
-
-  fun addImageToList(image: CollectionsPresenterEntity) {
-    imagePathList.add(image)
-    notifyItemInserted(imagePathList.size - INITIAL_OFFSET)
   }
 
   fun getSelectedItemsMap() = selectedHashMap
@@ -79,7 +72,13 @@ class CollectionsImageAdapter(
     selectedHashMap.remove(itemPosition)
   }
 
-  fun clearSelectedItemsMap() = selectedHashMap.clear()
+  fun clearSelectedItemsMap() {
+    selectedHashMap.clear()
+  }
+
+  fun clearImagesList() {
+    imagePathList.clear()
+  }
 
 }
 

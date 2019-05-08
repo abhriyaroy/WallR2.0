@@ -12,7 +12,8 @@ import zebrostudio.wallr100.presentation.collection.CollectionContract.Collectio
 import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEntity
 import zebrostudio.wallr100.presentation.collection.mapper.CollectionImagesPresenterEntityMapper
 
-private const val SIZE_OF_LIST_WITH_ONE_ELEMENT = 1
+private const val MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_HINT = 2
+private const val MINIMUM_NUMBER_OF_SELECTED_ITEMS = 1
 private const val INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL = 0
 private const val INDEX_OF_THREE_DAYS_WALLPAPER_CHANGER_INTERVAL = 4
 
@@ -84,13 +85,6 @@ class CollectionPresenterImpl(
 
   }
 
-  override fun handleImageOptionsHintDismissed(listSize: Int) {
-    widgetHintsUseCase.saveCollectionsImageOptionHintShown()
-    if (listSize > SIZE_OF_LIST_WITH_ONE_ELEMENT) {
-      collectionView?.showReorderImagesHint()
-    }
-  }
-
   override fun handleReorderImagesHintHintDismissed() {
     widgetHintsUseCase.saveCollectionsImageReorderHintShown()
   }
@@ -108,7 +102,13 @@ class CollectionPresenterImpl(
     imageList: List<CollectionsPresenterEntity>,
     selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
   ) {
-    println("$position clicked")
+    if (selectedItemsMap.containsKey(position)) {
+      collectionView?.removeFromSelectedItems(position)
+    } else {
+      collectionView?.addToSelectedItems(position, imageList[position])
+    }
+    println("the map is $selectedItemsMap")
+    updateSelectionChangesInCab(position, selectedItemsMap.size)
   }
 
   override fun handleAutomaticWallpaperChangerEnabled() {
@@ -137,12 +137,29 @@ class CollectionPresenterImpl(
         .autoDisposable(collectionView!!.getScope())
         .subscribe({
           collectionView?.showImages(it)
+          collectionView?.updateAllItemViews()
           collectionView?.showImagesAddedSuccessfullyMessage(uriList.size)
         }, {
-          println("error")
           println(it.message)
           collectionView?.showGenericErrorMessage()
         })
+  }
+
+  override fun handleSetWallpaperMenuItemClicked() {
+
+  }
+
+  override fun handleCrystallizeWallpaperMenuItemClicked() {
+
+  }
+
+  override fun handleDeleteWallpaperMenuItemClicked() {
+
+  }
+
+  override fun handleCabDestroyed() {
+    collectionView?.expandToolbar()
+    collectionView?.clearAllSelectedItems()
   }
 
   private fun isUserPremium(): Boolean {
@@ -175,12 +192,14 @@ class CollectionPresenterImpl(
         .autoDisposable(collectionView!!.getScope())
         .subscribe({
           if (it.isNotEmpty()) {
+            collectionView?.showImages(it)
             collectionView?.hideImagesAbsentLayout()
+            //showHintsIfSuitable(it.size)
           } else {
+            collectionView?.clearImages()
             collectionView?.showImagesAbsentLayout()
           }
-          collectionView?.showImages(it)
-          //showHintsIfSuitable(it.size)
+          collectionView?.updateAllItemViews()
         }, {
           collectionView?.showImagesAbsentLayout()
           collectionView?.showGenericErrorMessage()
@@ -188,12 +207,20 @@ class CollectionPresenterImpl(
   }
 
   private fun showHintsIfSuitable(listSize: Int) {
-    if (listSize >= SIZE_OF_LIST_WITH_ONE_ELEMENT
-        && !widgetHintsUseCase.isCollectionsImageOptionHintShown()) {
-      collectionView?.showImagePinchHint()
-    } else if (listSize > SIZE_OF_LIST_WITH_ONE_ELEMENT
-        && widgetHintsUseCase.isCollectionsImageOptionHintShown()) {
+    if (listSize > MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_HINT) {
       collectionView?.showReorderImagesHint()
+    }
+  }
+
+  private fun updateSelectionChangesInCab(position: Int, selectedMapSize: Int) {
+    println("udate position $position")
+    collectionView?.updateItemView(position)
+    if (selectedMapSize > MINIMUM_NUMBER_OF_SELECTED_ITEMS) {
+      collectionView?.showMultipleImagesSelectedCab()
+    } else if (selectedMapSize == MINIMUM_NUMBER_OF_SELECTED_ITEMS) {
+      collectionView?.showSingleImageSelectedCab()
+    } else {
+      collectionView?.hideCab()
     }
   }
 

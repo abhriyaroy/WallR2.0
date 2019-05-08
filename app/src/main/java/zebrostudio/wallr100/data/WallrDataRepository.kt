@@ -40,7 +40,6 @@ const val ERROR_STATUS = "error"
 const val HINT_PREFERENCE_NAME = "HINT_PREF"
 const val NAVIGATION_HAMBURGER_HINT_PREFERENCE_TAG = "navigation_hamburger_hint"
 const val MULTI_COLOR_IMAGE_HINT_PREFERENCE_TAG = "multi_color_image_hint"
-const val COLLECTION_IMAGE_PINCH_HINT_PREFERENCE_TAG = "pinch_image_hint"
 const val COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG = "reorder_image_hint"
 const val PURCHASE_PREFERENCE_NAME = "PURCHASE_PREF"
 const val PREMIUM_USER_TAG = "premium_user"
@@ -436,16 +435,6 @@ class WallrDataRepository(
 
   override fun setAutomaticWallpaperChangerState(state: Boolean) {
     sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_STATE_TAG, true)
-  }
-
-  override fun isCollectionsImagePinchHintDisplayedOnce(): Boolean {
-    return sharedPrefsHelper.getBoolean(HINT_PREFERENCE_NAME,
-        COLLECTION_IMAGE_PINCH_HINT_PREFERENCE_TAG)
-  }
-
-  override fun saveCollectionsImagePinchHintShownState() {
-    sharedPrefsHelper.setBoolean(HINT_PREFERENCE_NAME, COLLECTION_IMAGE_PINCH_HINT_PREFERENCE_TAG,
-        true)
   }
 
   override fun isCollectionsImageReorderHintDisplayedOnce(): Boolean {

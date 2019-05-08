@@ -3,8 +3,6 @@ package zebrostudio.wallr100.presentation.adapters
 import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.CollectionRecyclerPresenter
 import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.CollectionsRecyclerItemViewHolder
 import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEntity
-import zebrostudio.wallr100.presentation.minimal.INITIAL_OFFSET
-import zebrostudio.wallr100.presentation.minimal.INITIAL_SIZE
 
 class CollectionRecyclerPresenterImpl : CollectionRecyclerPresenter {
 
@@ -20,10 +18,10 @@ class CollectionRecyclerPresenterImpl : CollectionRecyclerPresenter {
   ) {
     dragSelectItemViewHolder.setImage(imagePathList[position].path)
     dragSelectItemViewHolder.attachClickListener()
-    if (selectedItemsMap.size != INITIAL_SIZE) {
-      if (selectedItemsMap.containsKey(position - INITIAL_OFFSET)) {
-        dragSelectItemViewHolder.showSelectedIndicator()
-      }
+    if (selectedItemsMap.containsKey(position)) {
+      dragSelectItemViewHolder.showSelectedIndicator()
+    } else {
+      dragSelectItemViewHolder.hideSelectedIndicator()
     }
   }
 

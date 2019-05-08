@@ -197,13 +197,14 @@
   <string name="collections_fragment_empty_collection_textview_text">Empty Collection</string>
   <string name="collections_fragment_import_from_local_menu_title">Import from local storage</string>
   <string name="collections_fragment_change_wallpaper_interval_menu_title">Change wallpaper interval</string>
-  <string name="collections_fragment_pinch_to_zoom_hint_title">Pinch To Zoom</string>
-  <string name="collections_fragment_pinch_to_zoom_hint_description">You can pinch to zoom on any image in your collection to enlarge it \\n</string>
   <string name="collections_fragment_drag_to_reorder_hint_title">Drag-Drop To Reorder</string>
   <string name="collections_fragment_drag_to_reorder_hint_description">You can drag and drop wallpapers to change their order of appearance \\n</string>
   <string name="collections_fragment_wallpaper_changer_diloag_title">Change Wallpaper Interval</string>
   <string name="collections_fragment_wallpaper_changer_dilog_positive_text">CHOOSE</string>
   <string name="collection_fragment_add_single_image_success_message">1 image has been added successfully</string>
   <string name="collection_fragment_add_multiple_image_success_message">%1$d images have been added successfully</string>
+  <string name="collection_single_selected_menu_quick_set_title">Quick Set Wallpaper</string>
+  <string name="collection_single_selected_menu_crystallize_title">Crystallize Wallpaper</string>
+  <string name="collection_selected_menu_delete_title">Delete Wallpaper</string>
 
 </resources>

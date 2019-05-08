@@ -7,8 +7,6 @@ interface WidgetHintsUseCase {
   fun saveNavigationMenuHamburgerHintShownState()
   fun isMultiColorImageModesHintShown(): Boolean
   fun saveMultiColorImageHintShownState()
-  fun isCollectionsImageOptionHintShown(): Boolean
-  fun saveCollectionsImageOptionHintShown()
   fun isCollectionsImageReorderHintShown(): Boolean
   fun saveCollectionsImageReorderHintShown()
 }
@@ -28,14 +26,6 @@ class WidgetHintsInteractor(private val wallrRepository: WallrRepository) : Widg
 
   override fun saveMultiColorImageHintShownState() {
     wallrRepository.saveMultiColorModesHintShownState()
-  }
-
-  override fun isCollectionsImageOptionHintShown(): Boolean {
-    return wallrRepository.isCollectionsImagePinchHintDisplayedOnce()
-  }
-
-  override fun saveCollectionsImageOptionHintShown() {
-    wallrRepository.saveCollectionsImagePinchHintShownState()
   }
 
   override fun isCollectionsImageReorderHintShown(): Boolean {

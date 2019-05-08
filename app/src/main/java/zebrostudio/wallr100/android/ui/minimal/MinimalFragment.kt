@@ -137,7 +137,6 @@ class MinimalFragment : BaseFragment(), MinimalView {
         true
       }
     }
-
   }
 
   override fun hideCab() {
