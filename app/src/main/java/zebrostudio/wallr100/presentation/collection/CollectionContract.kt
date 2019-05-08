@@ -21,6 +21,7 @@ interface CollectionContract {
     fun showAutomaticWallpaperStateAsInActive()
     fun showWallpaperChangerIntervalDialog(choice: Int)
     fun showImagePicker()
+    fun showImagesAddedSuccessfullyMessage(count: Int)
     fun showGenericErrorMessage()
   }
 
@@ -54,7 +55,6 @@ interface CollectionContract {
     fun handleAutomaticWallpaperChangerEnabled()
     fun handleAutomaticWallpaperChangerDisabled()
     fun handleAutomaticWallpaperIntervalChangerMenuItemClicked()
-    fun handleImportImagesMenuItemClicked()
     fun updateWallpaperChangerInterval(choice: Int)
     fun handleImagePickerResult(uriList: List<Uri>)
   }

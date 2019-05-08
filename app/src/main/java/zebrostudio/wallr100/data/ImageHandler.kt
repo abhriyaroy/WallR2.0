@@ -59,7 +59,7 @@ interface ImageHandler {
   ): Single<Bitmap>
 
   fun getAllImagesInCollection(): Single<List<CollectionDatabaseImageEntity>>
-  fun addImageToCollection(): Single<List<CollectionDatabaseImageEntity>>
+  fun addToCollection(uriList: List<Uri>): Single<List<CollectionDatabaseImageEntity>>
   fun reorderImagesInCollection(): Single<List<CollectionDatabaseImageEntity>>
   fun deleteImagesInCollection(): Single<List<CollectionDatabaseImageEntity>>
 }
@@ -259,7 +259,7 @@ class ImageHandlerImpl(
     return databaseHelper.getDatabase().collectionsDao().getAllData()
   }
 
-  override fun addImageToCollection(): Single<List<CollectionDatabaseImageEntity>> {
+  override fun addToCollection(uriList: List<Uri>): Single<List<CollectionDatabaseImageEntity>> {
     return Single.error(IllegalStateException())
   }
 

@@ -8,8 +8,7 @@ import com.qingmei2.rximagepicker_extension_zhihu.ui.ZhihuImagePickerActivity
 import io.reactivex.Observable
 
 interface ImagePickerHelper {
-  @Gallery(componentClazz = ZhihuImagePickerActivity::class,
-      openAsFragment = false)
+  @Gallery(ZhihuImagePickerActivity::class, false)
   fun fromGallery(
     context: Context,
     config: ICustomPickerConfiguration

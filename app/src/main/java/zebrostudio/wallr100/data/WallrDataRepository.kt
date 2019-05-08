@@ -402,8 +402,8 @@ class WallrDataRepository(
         }
   }
 
-  override fun addImageToCollection(): Single<List<CollectionsImageModel>> {
-    return imageHandler.addImageToCollection()
+  override fun addImagesToCollection(uriList: List<Uri>): Single<List<CollectionsImageModel>> {
+    return imageHandler.addToCollection(uriList)
         .subscribeOn(executionThread.computationScheduler)
         .map {
           collectionsDatabaseImageEntityMapper.mapFromEntity(it)

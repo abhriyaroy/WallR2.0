@@ -24,7 +24,7 @@ class CollectionsImagesInteractor(
   }
 
   override fun addImage(imagesUriList: List<Uri>): Single<List<CollectionsImageModel>> {
-    return wallrRepository.addImageToCollection()
+    return wallrRepository.addImagesToCollection(imagesUriList)
   }
 
   override fun reorderImage(collectionImagesModelList: List<CollectionsImageModel>)

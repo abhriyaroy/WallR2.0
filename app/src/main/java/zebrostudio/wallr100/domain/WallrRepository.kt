@@ -82,7 +82,7 @@ interface WallrRepository {
   ): Single<Bitmap>
 
   fun getImagesInCollection(): Single<List<CollectionsImageModel>>
-  fun addImageToCollection(): Single<List<CollectionsImageModel>>
+  fun addImagesToCollection(uriList: List<Uri>): Single<List<CollectionsImageModel>>
   fun reorderInCollection(): Single<List<CollectionsImageModel>>
   fun deleteImageFromCollection(): Single<List<CollectionsImageModel>>
   fun getAutomaticWallpaperChangerState(): Boolean

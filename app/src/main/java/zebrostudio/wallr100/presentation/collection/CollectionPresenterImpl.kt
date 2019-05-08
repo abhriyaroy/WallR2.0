@@ -13,6 +13,8 @@ import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEn
 import zebrostudio.wallr100.presentation.collection.mapper.CollectionImagesPresenterEntityMapper
 
 private const val SIZE_OF_LIST_WITH_ONE_ELEMENT = 1
+private const val INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL = 0
+private const val INDEX_OF_THREE_DAYS_WALLPAPER_CHANGER_INTERVAL = 4
 
 class CollectionPresenterImpl(
   private val widgetHintsUseCase: WidgetHintsUseCase,
@@ -58,7 +60,20 @@ class CollectionPresenterImpl(
   }
 
   override fun handleChangeWallpaperIntervalClicked() {
-    imageOptionsUseCase.getAutomaticWallpaperChangerInterval()
+    imageOptionsUseCase.getAutomaticWallpaperChangerInterval().let {
+      var isDialogShown = false
+      wallpaperChangerIntervals.forEachIndexed { index, interval ->
+        if (it == interval) {
+          collectionView?.showWallpaperChangerIntervalDialog(index)
+          isDialogShown = true
+        } else if (index == INDEX_OF_THREE_DAYS_WALLPAPER_CHANGER_INTERVAL && !isDialogShown) {
+          imageOptionsUseCase.setAutomaticWallpaperChangerInterval(
+              wallpaperChangerIntervals[INDEX_OF_THREE_DAYS_WALLPAPER_CHANGER_INTERVAL])
+          collectionView?.showWallpaperChangerIntervalDialog(
+              INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL)
+        }
+      }
+    }
   }
 
   override fun handleWallpaperChangerEnabled() {
@@ -116,17 +131,24 @@ class CollectionPresenterImpl(
 
   }
 
-  override fun handleImportImagesMenuItemClicked() {
-
-  }
-
   override fun updateWallpaperChangerInterval(choice: Int) {
     imageOptionsUseCase.setAutomaticWallpaperChangerInterval(wallpaperChangerIntervals[choice])
     // Restart service for changing wallpaper
   }
 
   override fun handleImagePickerResult(uriList: List<Uri>) {
-
+    collectionImagesUseCase.addImage(uriList)
+        .map {
+          collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
+        }
+        .observeOn(postExecutionThread.scheduler)
+        .autoDisposable(collectionView!!.getScope())
+        .subscribe({
+          collectionView?.showImages(it)
+          collectionView?.showImagesAddedSuccessfullyMessage(uriList.size)
+        }, {
+          collectionView?.showGenericErrorMessage()
+        })
   }
 
   private fun isUserPremium(): Boolean {

@@ -46,6 +46,7 @@ import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.stringRes
+import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.CollectionRecyclerPresenter
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionPresenter
@@ -280,6 +281,15 @@ class CollectionFragment : BaseFragment(),
           .subscribe {
             list.add(it.uri)
           }
+    }
+  }
+
+  override fun showImagesAddedSuccessfullyMessage(count: Int) {
+    if (count == 1) {
+      successToast(stringRes(R.string.collection_fragment_add_single_image_success_message))
+    } else {
+      successToast(
+          stringRes(R.string.collection_fragment_add_multiple_image_success_message, count))
     }
   }
 
