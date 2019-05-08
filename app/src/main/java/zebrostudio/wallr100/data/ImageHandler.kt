@@ -31,6 +31,8 @@ import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
+import java.io.BufferedOutputStream
+import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
@@ -265,7 +267,15 @@ class ImageHandlerImpl(
     return Completable.create {
       try {
         uriList.forEach { uri ->
-          fileHandler.saveFileToCollections(uri)
+          saveFileToCollections(uri).let { outputFile ->
+            databaseHelper.getDatabase().collectionsDao().insert(CollectionDatabaseImageEntity(
+                UID_AUTO_INCREMENT,
+                outputFile.name,
+                outputFile.path,
+                uri.toString(),
+                DatabaseImageType.EXTERNAL.ordinal
+            ))
+          }
         }
         it.onComplete()
       } catch (ioException: IOException) {
@@ -305,6 +315,23 @@ class ImageHandlerImpl(
       }
       inputStream.close()
       emitter.onComplete()
+    }
+  }
+
+  fun saveFileToCollections(sourceUri: Uri): File {
+    fileHandler.getCollectionsFile().let { collectionsFile ->
+      context.contentResolver.openInputStream(sourceUri)!!.let { inputStream ->
+        BufferedOutputStream(FileOutputStream(collectionsFile, false)).let { outputStream ->
+          val byteArray = ByteArray(BYTE_ARRAY_SIZE)
+          inputStream.read(byteArray)
+          do {
+            outputStream.write(byteArray)
+          } while (inputStream.read(byteArray) != -1)
+          outputStream.close()
+        }
+        inputStream.close()
+      }
+      return collectionsFile
     }
   }
 

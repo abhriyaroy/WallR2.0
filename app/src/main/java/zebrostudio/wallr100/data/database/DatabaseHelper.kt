@@ -29,5 +29,6 @@ enum class DatabaseImageType {
   SEARCH,
   CRYSTALLIZED,
   EDITED,
-  MINIMAL_COLOR
+  MINIMAL_COLOR,
+  EXTERNAL
 }

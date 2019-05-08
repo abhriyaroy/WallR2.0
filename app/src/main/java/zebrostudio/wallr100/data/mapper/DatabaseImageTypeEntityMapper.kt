@@ -15,5 +15,6 @@ class DatabaseImageTypeEntityMapperImpl : DatabaseImageTypeEntityMapper {
     CollectionsImageTypeModel.CRYSTALLIZED -> DatabaseImageType.CRYSTALLIZED
     CollectionsImageTypeModel.EDITED -> DatabaseImageType.EDITED
     CollectionsImageTypeModel.MINIMAL_COLOR -> DatabaseImageType.MINIMAL_COLOR
+    CollectionsImageTypeModel.EXTERNAL -> DatabaseImageType.EXTERNAL
   }
 }

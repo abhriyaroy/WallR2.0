@@ -18,7 +18,6 @@ interface FileHandler {
   fun getShareableFle(): File
   fun freeSpaceAvailable(): Boolean
   fun checkIfFileExists(filePath: String): Boolean
-  fun saveFileToCollections(sourceUri: Uri)
 }
 
 const val APP_DIRECTORY_NAME = "WallR"
@@ -29,7 +28,7 @@ const val JPG_EXTENSION = ".jpg"
 const val MINIMUM_FREE_STORAGE_IN_MB = 20
 const val BYTES_TO_MEGA_BYTES = 1048576
 
-class FileHandlerImpl(private val context: Context) : FileHandler {
+class FileHandlerImpl(context: Context) : FileHandler {
 
   private val cacheFolder: File =
       File(Environment.getExternalStorageDirectory().path + File.separator + APP_DIRECTORY_NAME
@@ -101,20 +100,6 @@ class FileHandlerImpl(private val context: Context) : FileHandler {
       return true
     }
     return false
-  }
-
-  override fun saveFileToCollections(sourceUri: Uri) {
-    context.contentResolver.openInputStream(sourceUri)!!.let { inputStream ->
-      BufferedOutputStream(FileOutputStream(getCollectionsFile(), false)).let { outputStream ->
-        val byteArray = ByteArray(BYTE_ARRAY_SIZE)
-        inputStream.read(byteArray)
-        do {
-          outputStream.write(byteArray)
-        } while (inputStream.read(byteArray) != -1)
-        outputStream.close()
-      }
-      inputStream.close()
-    }
   }
 
   private fun createCacheFolderIfNotPresent() {
