@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.presentation.collection
 
+import android.net.Uri
 import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
@@ -24,6 +25,13 @@ class CollectionPresenterImpl(
 
   private var collectionView: CollectionView? = null
   private var isWallpaperChangerEnabled = false
+  private val wallpaperChangerIntervals = arrayListOf<Long>(
+      1800000,
+      3600000,
+      21600000,
+      86400000,
+      259200000
+  )
 
   override fun attachView(view: CollectionView) {
     collectionView = view
@@ -107,6 +115,23 @@ class CollectionPresenterImpl(
   }
 
   override fun handleAutomaticWallpaperChangerDisabled() {
+
+  }
+
+  override fun handleAutomaticWallpaperIntervalChangerMenuItemClicked() {
+
+  }
+
+  override fun handleImportImagesMenuItemClicked() {
+
+  }
+
+  override fun updateWallpaperChangerInterval(choice: Int) {
+    imageOptionsUseCase.setAutomaticWallpaperChangerInterval(wallpaperChangerIntervals[choice])
+    // Restart service for changing wallpaper
+  }
+
+  override fun handleImagePickerResult(uriList: List<Uri>) {
 
   }
 

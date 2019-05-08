@@ -49,6 +49,7 @@ const val CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG = "crystallize_click_dialog"
 const val CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG = "custom_minimal_color_list_availability"
 const val CUSTOM_MINIMAL_COLOR_LIST_TAG = "custom_solid_color_list"
 const val AUTOMATIC_WALLPAPER_CHANGER_STATE_TAG = "automatic_wallpaper_changer"
+const val AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_TAG = "automatic_wallpaper_changer_interval"
 const val UNABLE_TO_RESOLVE_HOST_EXCEPTION_MESSAGE = "Unable to resolve host " +
     "\"api.unsplash.com\": No address associated with hostname"
 const val FIREBASE_DATABASE_PATH = "wallr"
@@ -452,6 +453,16 @@ class WallrDataRepository(
   override fun saveCollectionsImageReorderHintShownState() {
     sharedPrefsHelper.setBoolean(HINT_PREFERENCE_NAME, COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG,
         true)
+  }
+
+  override fun getWallpaperChangerInterval(): Long {
+    return sharedPrefsHelper.getLong(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_TAG)
+  }
+
+  override fun setWallpaperChangerInterval(interval: Long) {
+    sharedPrefsHelper.setLong(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_TAG, interval)
   }
 
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()

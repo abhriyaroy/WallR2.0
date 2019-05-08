@@ -91,6 +91,8 @@ android {
     kapt "android.arch.persistence.room:compiler:$ROOM_VERSION"
     // Taptarget view
     implementation "com.getkeepsafe.taptargetview:taptargetview:$TAP_TARGER_VIEW_VERSION"
+    // Rx Image Picker
+    implementation "com.github.qingmei2:rximagepicker:$RX_IMAGE_PICKER_VERSION"
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
     implementation project(':librarySearch')

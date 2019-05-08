@@ -201,5 +201,7 @@
   <string name="collections_fragment_pinch_to_zoom_hint_description">You can pinch to zoom on any image in your collection to enlarge it \\n</string>
   <string name="collections_fragment_drag_to_reorder_hint_title">Drag-Drop To Reorder</string>
   <string name="collections_fragment_drag_to_reorder_hint_description">You can drag and drop wallpapers to change their order of appearance \\n</string>
+  <string name="collections_fragment_wallpaper_changer_diloag_title">Change Wallpaper Interval</string>
+  <string name="collections_fragment_wallpaper_changer_dilog_positive_text">CHOOSE</string>
 
 </resources>

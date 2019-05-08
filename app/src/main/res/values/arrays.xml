@@ -83,4 +83,12 @@
     <item>#CECE8E</item>
   </string-array>
 
+  <string-array name="wallpaperChangerIntervals">
+    <item>30 Minutes</item>
+    <item>1 Hour</item>
+    <item>6 Hours</item>
+    <item>1 Day</item>
+    <item>3 Days</item>
+  </string-array>
+
 </resources>

@@ -26,7 +26,9 @@ interface ImageOptionsUseCase {
   fun setCrystallizeDescriptionShownOnce()
   fun getCrystallizedImageSingle(): Single<Bitmap>
   fun addImageToCollection(data: String, type: CollectionsImageTypeModel): Completable
-  fun isAutomaticWallpaperChangerEnabled() : Boolean
+  fun isAutomaticWallpaperChangerEnabled(): Boolean
+  fun getAutomaticWallpaperChangerInterval(): Long
+  fun setAutomaticWallpaperChangerInterval(interval: Long)
 }
 
 class ImageOptionsInteractor(
@@ -95,5 +97,13 @@ class ImageOptionsInteractor(
 
   override fun isAutomaticWallpaperChangerEnabled(): Boolean {
     return wallrRepository.getAutomaticWallpaperChangerState()
+  }
+
+  override fun getAutomaticWallpaperChangerInterval(): Long {
+    return wallrRepository.getWallpaperChangerInterval()
+  }
+
+  override fun setAutomaticWallpaperChangerInterval(interval: Long) {
+    wallrRepository.setWallpaperChangerInterval(interval)
   }
 }

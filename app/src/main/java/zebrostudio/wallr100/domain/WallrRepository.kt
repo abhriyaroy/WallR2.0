@@ -91,4 +91,6 @@ interface WallrRepository {
   fun saveCollectionsImagePinchHintShownState()
   fun isCollectionsImageReorderHintDisplayedOnce(): Boolean
   fun saveCollectionsImageReorderHintShownState()
+  fun getWallpaperChangerInterval(): Long
+  fun setWallpaperChangerInterval(interval: Long)
 }

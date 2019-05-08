@@ -21,6 +21,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.afollestad.materialcab.MaterialCab
+import com.afollestad.materialdialogs.MaterialDialog
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetView
 import dagger.android.support.AndroidSupportInjection
@@ -34,6 +35,7 @@ import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelpe
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.OnStartDragListener
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
+import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
@@ -239,6 +241,27 @@ class CollectionFragment : BaseFragment(),
     activity?.findViewById<SwitchCompat>(R.id.switchView)?.isChecked = false
   }
 
+  override fun showWallpaperChangerIntervalDialog(choice: Int) {
+    MaterialDialog.Builder(activity!!)
+        .backgroundColor(colorRes(R.color.primary))
+        .title(getString(R.string.collections_fragment_wallpaper_changer_diloag_title))
+        .items(R.array.wallpaperChangerIntervals)
+        .contentColor(colorRes(R.color.white))
+        .widgetColor(colorRes(R.color.accent))
+        .positiveColor(colorRes(R.color.accent))
+        .itemsCallbackSingleChoice(choice) { _, _, which, _ ->
+          presenter.updateWallpaperChangerInterval(which)
+          true
+        }
+        .positiveText(
+            stringRes(R.string.collections_fragment_wallpaper_changer_dilog_positive_text))
+        .show()
+  }
+
+  override fun showImagePicker() {
+
+  }
+
   override fun showGenericErrorMessage() {
     errorToast(stringRes(R.string.generic_error_message))
   }
@@ -255,7 +278,7 @@ class CollectionFragment : BaseFragment(),
       }
       addItemDecoration(
           RecyclerViewItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
-              integerRes(R.integer.minimal_image_recycler_view_grid_size)))
+              integerRes(R.integer.recycler_view_grid_size)))
       adapter = collectionsImageAdapter
       itemTouchHelper.attachToRecyclerView(this)
     }
