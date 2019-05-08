@@ -17,7 +17,7 @@ interface FileHandler {
   fun getCollectionsFile(): File
   fun getShareableFle(): File
   fun freeSpaceAvailable(): Boolean
-  fun checkIfFileExists(filePath: String): Boolean
+  fun ifFileExists(filePath: String): Boolean
 }
 
 const val APP_DIRECTORY_NAME = "WallR"
@@ -95,7 +95,7 @@ class FileHandlerImpl(context: Context) : FileHandler {
     return megBytesAvailable > MINIMUM_FREE_STORAGE_IN_MB
   }
 
-  override fun checkIfFileExists(filePath: String): Boolean {
+  override fun ifFileExists(filePath: String): Boolean {
     if (File(filePath).exists()) {
       return true
     }

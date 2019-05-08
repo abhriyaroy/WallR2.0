@@ -261,6 +261,19 @@ class ImageHandlerImpl(
 
   override fun getAllImagesInCollection(): Single<List<CollectionDatabaseImageEntity>> {
     return databaseHelper.getDatabase().collectionsDao().getAllData()
+        .flatMap { originalList ->
+          mutableListOf<CollectionDatabaseImageEntity>().let { newList ->
+            originalList.forEach { collectionDatabaseImageEntity ->
+              if (fileHandler.ifFileExists(collectionDatabaseImageEntity.path)) {
+                newList.add(collectionDatabaseImageEntity)
+              } else {
+                databaseHelper.getDatabase().collectionsDao()
+                    .deleteData(collectionDatabaseImageEntity)
+              }
+            }
+            Single.just(newList)
+          }
+        }
   }
 
   override fun addExternalImageToCollection(uriList: List<Uri>): Completable {

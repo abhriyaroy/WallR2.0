@@ -182,8 +182,12 @@ class CollectionPresenterImpl(
         .observeOn(postExecutionThread.scheduler)
         .autoDisposable(collectionView!!.getScope())
         .subscribe({
-          collectionView?.showImages(it)
-          collectionView?.hideImagesAbsentLayout()
+          if (it.isNotEmpty()) {
+            collectionView?.showImages(it)
+            collectionView?.hideImagesAbsentLayout()
+          } else {
+            collectionView?.showImagesAbsentLayout()
+          }
           //showHintsIfSuitable(it.size)
         }, {
           collectionView?.showImagesAbsentLayout()
