@@ -2,6 +2,7 @@ package zebrostudio.wallr100.presentation.collection
 
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
+import zebrostudio.wallr100.data.INITIAL_SIZE
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
@@ -158,8 +159,8 @@ class CollectionPresenterImpl(
   }
 
   override fun handleCabDestroyed() {
-    collectionView?.expandToolbar()
     collectionView?.clearAllSelectedItems()
+    collectionView?.updateAllItemViews()
   }
 
   private fun isUserPremium(): Boolean {

@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.presentation.main
 
+import zebrostudio.wallr100.android.utils.FragmentTag.COLLECTIONS_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.MINIMAL_TAG
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
@@ -43,7 +44,8 @@ class MainPresenterImpl(
         }
       } else {
         mainView?.showAppBar()
-        if (mainView?.getFragmentTagAtStackTop() == MINIMAL_TAG &&
+        if ((mainView?.getFragmentTagAtStackTop() == MINIMAL_TAG
+                || mainView?.getFragmentTagAtStackTop() == COLLECTIONS_TAG) &&
             mainView?.isCabActive() == true) {
           mainView?.dismissCab()
         } else {

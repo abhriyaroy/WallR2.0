@@ -8,8 +8,6 @@ import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEn
 interface CollectionContract {
 
   interface CollectionView : BaseView {
-    fun expandToolbar()
-    fun collapseToolbar()
     fun showPurchasePremiumToContinueDialog()
     fun redirectToBuyPro()
     fun hasStoragePermission(): Boolean

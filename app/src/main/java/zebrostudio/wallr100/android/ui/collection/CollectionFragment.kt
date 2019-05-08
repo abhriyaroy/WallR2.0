@@ -23,6 +23,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import com.afollestad.materialcab.MaterialCab
 import com.afollestad.materialdialogs.MaterialDialog
 import com.getkeepsafe.taptargetview.TapTarget
@@ -48,6 +49,7 @@ import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
+import zebrostudio.wallr100.android.utils.showAnimation
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
@@ -113,14 +115,6 @@ class CollectionFragment : BaseFragment(),
   override fun onDestroy() {
     presenter.detachView()
     super.onDestroy()
-  }
-
-  override fun expandToolbar() {
-    activity?.findViewById<AppBarLayout>(R.id.appbar)?.setExpanded(true, true)
-  }
-
-  override fun collapseToolbar() {
-    activity?.findViewById<AppBarLayout>(R.id.appbar)?.setExpanded(false, true)
   }
 
   override fun onMenuItemClick(item: MenuItem): Boolean {
