@@ -8,6 +8,7 @@ import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEn
 interface CollectionContract {
 
   interface CollectionView : BaseView {
+    fun showAppBar()
     fun showPurchasePremiumToContinueDialog()
     fun redirectToBuyPro()
     fun hasStoragePermission(): Boolean
@@ -21,10 +22,12 @@ interface CollectionContract {
     fun showAutomaticWallpaperStateAsInActive()
     fun showWallpaperChangerIntervalDialog(choice: Int)
     fun showImagePicker()
-    fun showImagesAddedSuccessfullyMessage(count: Int)
+    fun showSingleImageAddedSuccessfullyMessage()
+    fun showMultipleImagesAddedSuccessfullyMessage(count: Int)
     fun updateChangesInEveryItemView()
     fun updateChangesInSingleItemView(position: Int)
     fun updateItemViewMovement(fromPosition: Int, toPosition: Int)
+    fun removeItemView(position: Int)
     fun addToSelectedItems(position: Int, collectionsPresenterEntity: CollectionsPresenterEntity)
     fun removeFromSelectedItems(position: Int)
     fun clearAllSelectedItems()
@@ -32,7 +35,11 @@ interface CollectionContract {
     fun showSingleImageSelectedCab()
     fun showMultipleImagesSelectedCab()
     fun hideCab()
+    fun showReorderSuccessMessage()
     fun showUnableToReorderErrorMessage()
+    fun showSingleImageDeleteSuccessMessage()
+    fun showMultipleImageDeleteSuccessMessage(count : Int)
+    fun showUnableToDeleteErrorMessage()
     fun showGenericErrorMessage()
   }
 
@@ -62,9 +69,14 @@ interface CollectionContract {
     fun handleAutomaticWallpaperIntervalChangerMenuItemClicked()
     fun updateWallpaperChangerInterval(choice: Int)
     fun handleImagePickerResult(uriList: List<Uri>)
-    fun handleSetWallpaperMenuItemClicked()
-    fun handleCrystallizeWallpaperMenuItemClicked()
-    fun handleDeleteWallpaperMenuItemClicked()
+    fun handleSetWallpaperMenuItemClicked(selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>)
+    fun handleCrystallizeWallpaperMenuItemClicked(selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>)
+
+    fun handleDeleteWallpaperMenuItemClicked(
+      imageList: MutableList<CollectionsPresenterEntity>,
+      selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
+    )
+
     fun handleCabDestroyed()
   }
 

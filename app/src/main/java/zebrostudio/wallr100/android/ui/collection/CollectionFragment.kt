@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -40,7 +41,6 @@ import zebrostudio.wallr100.android.ui.adapters.CollectionsImageAdapterCallbacks
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.CollectionRecyclerTouchHelperCallback
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.OnStartDragListener
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
-import zebrostudio.wallr100.android.ui.minimal.SINGLE_ITEM_SIZE
 import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
@@ -88,6 +88,7 @@ class CollectionFragment : BaseFragment(),
     initRecyclerViewWithListeners()
     attachAutomaticWallpaperChangerListener()
     showAutomaticWallpaperStateAsInActive()
+    attachToolbarCollapseListener()
     presenter.handleViewCreated()
   }
 
@@ -123,7 +124,7 @@ class CollectionFragment : BaseFragment(),
   }
 
   override fun onStartDrag(viewHolder: ViewHolder) {
-    presenter?.notifyDragStarted()
+    presenter.notifyDragStarted()
     itemTouchHelper.startDrag(viewHolder)
   }
 
@@ -134,6 +135,10 @@ class CollectionFragment : BaseFragment(),
   override fun handleClick(index: Int) {
     presenter.handleItemClicked(index, collectionsImageAdapter.getImagePathList(),
         collectionsImageAdapter.getSelectedItemsMap())
+  }
+
+  override fun showAppBar() {
+    activity?.findViewById<AppBarLayout>(R.id.appbar)?.setExpanded(true, true)
   }
 
   override fun showPurchasePremiumToContinueDialog() {
@@ -253,13 +258,17 @@ class CollectionFragment : BaseFragment(),
     }
   }
 
-  override fun showImagesAddedSuccessfullyMessage(count: Int) {
-    if (count == SINGLE_ITEM_SIZE) {
-      successToast(stringRes(R.string.collection_fragment_add_single_image_success_message))
-    } else {
-      successToast(
-          stringRes(R.string.collection_fragment_add_multiple_image_success_message, count))
-    }
+  override fun showSingleImageAddedSuccessfullyMessage() {
+    successToast(stringRes(R.string.collection_fragment_add_single_image_success_message))
+  }
+
+  override fun showMultipleImagesAddedSuccessfullyMessage(count: Int) {
+    successToast(
+        stringRes(R.string.collection_fragment_add_multiple_image_success_message, count))
+  }
+
+  override fun removeItemView(position: Int) {
+    collectionsImageAdapter.notifyItemRemoved(position)
   }
 
   override fun addToSelectedItems(
@@ -305,9 +314,14 @@ class CollectionFragment : BaseFragment(),
 
       onSelection {
         when (it.itemId) {
-          R.id.setWallpaperMenuItem -> presenter.handleSetWallpaperMenuItemClicked()
-          R.id.crystallizeWallpaperMenuItem -> presenter.handleCrystallizeWallpaperMenuItemClicked()
-          R.id.deleteWallpaperMenuItem -> presenter.handleDeleteWallpaperMenuItemClicked()
+          R.id.setWallpaperMenuItem -> presenter.handleSetWallpaperMenuItemClicked(
+              collectionsImageAdapter.getSelectedItemsMap())
+          R.id.crystallizeWallpaperMenuItem -> presenter.handleCrystallizeWallpaperMenuItemClicked(
+              collectionsImageAdapter.getSelectedItemsMap())
+          R.id.deleteWallpaperMenuItem -> presenter.handleDeleteWallpaperMenuItemClicked(
+              collectionsImageAdapter.getImagePathList(),
+              collectionsImageAdapter.getSelectedItemsMap()
+          )
         }
         true
       }
@@ -331,7 +345,10 @@ class CollectionFragment : BaseFragment(),
 
       onSelection {
         if (it.itemId == R.id.deleteWallpaperMenuItem) {
-          presenter.handleDeleteWallpaperMenuItemClicked()
+          presenter.handleDeleteWallpaperMenuItemClicked(
+              collectionsImageAdapter.getImagePathList(),
+              collectionsImageAdapter.getSelectedItemsMap()
+          )
         }
         true
       }
@@ -347,8 +364,24 @@ class CollectionFragment : BaseFragment(),
     MaterialCab.destroy()
   }
 
+  override fun showReorderSuccessMessage() {
+    successToast(stringRes(R.string.collections_fragment_image_reordering_success_message))
+  }
+
   override fun showUnableToReorderErrorMessage() {
     errorToast(stringRes(R.string.collections_fragment_unable_to_reorder_images_error_message))
+  }
+
+  override fun showSingleImageDeleteSuccessMessage() {
+    successToast(stringRes(R.string.collections_fragment_single_images_deleted_success_message))
+  }
+
+  override fun showMultipleImageDeleteSuccessMessage(count: Int) {
+    successToast(stringRes(R.string.collections_fragment_multiple_images_deleted_success_message))
+  }
+
+  override fun showUnableToDeleteErrorMessage() {
+    errorToast(stringRes(R.string.collections_fragment_unable_to_delete_images_error_message))
   }
 
   override fun showGenericErrorMessage() {
@@ -383,6 +416,10 @@ class CollectionFragment : BaseFragment(),
             presenter.handleAutomaticWallpaperChangerDisabled()
           }
         }
+  }
+
+  private fun attachToolbarCollapseListener(){
+
   }
 
   companion object {

@@ -115,12 +115,10 @@ class CollectionsImageViewHolder(
     }
   }
 
-  override fun attachstartDragListener() {
-    itemView.setOnTouchListener { v, event ->
-      if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
-        startDragListener.onStartDrag(this)
-      }
-      false
+  override fun attachLongClickToDragListener() {
+    itemView.setOnLongClickListener {
+      startDragListener.onStartDrag(this)
+      true
     }
   }
 }

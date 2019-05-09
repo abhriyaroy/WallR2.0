@@ -207,5 +207,9 @@
   <string name="collection_single_selected_menu_crystallize_title">Crystallize Wallpaper</string>
   <string name="collection_selected_menu_delete_title">Delete Wallpaper</string>
   <string name="collections_fragment_unable_to_reorder_images_error_message">Unable to reorder images. Please try again</string>
+  <string name="collections_fragment_unable_to_delete_images_error_message">Unable to delete images. Please try again</string>
+  <string name="collections_fragment_multiple_images_deleted_success_message">Images have been successfully deleted</string>
+  <string name="collections_fragment_single_images_deleted_success_message">Image has been successfully deleted</string>
+  <string name="collections_fragment_image_reordering_success_message">Successfully reordered images</string>
 
 </resources>

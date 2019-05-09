@@ -330,6 +330,7 @@ class ImageHandlerImpl(
         .doOnSubscribe {
           collectionDatabaseImageEntityList.forEach {
             databaseHelper.getDatabase().collectionsDao().deleteData(it)
+            fileHandler.deleteFile(it.path)
           }
         }
   }

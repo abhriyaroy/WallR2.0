@@ -3,11 +3,7 @@ package zebrostudio.wallr100.data
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
-import java.io.BufferedInputStream
-import java.io.BufferedOutputStream
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 
 interface FileHandler {
   fun getCacheFile(): File
@@ -18,6 +14,7 @@ interface FileHandler {
   fun getShareableFle(): File
   fun freeSpaceAvailable(): Boolean
   fun ifFileExists(filePath: String): Boolean
+  fun deleteFile(filePath: String)
 }
 
 const val APP_DIRECTORY_NAME = "WallR"
@@ -100,6 +97,14 @@ class FileHandlerImpl(context: Context) : FileHandler {
       return true
     }
     return false
+  }
+
+  override fun deleteFile(filePath: String) {
+    File(filePath).let {
+      if (it.exists()) {
+        it.delete()
+      }
+    }
   }
 
   private fun createCacheFolderIfNotPresent() {

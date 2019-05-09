@@ -2,6 +2,7 @@ package zebrostudio.wallr100.presentation.collection
 
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
+import zebrostudio.wallr100.android.ui.minimal.SINGLE_ITEM_SIZE
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
@@ -12,6 +13,7 @@ import zebrostudio.wallr100.presentation.collection.CollectionContract.Collectio
 import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEntity
 import zebrostudio.wallr100.presentation.collection.mapper.CollectionImagesPresenterEntityMapper
 import java.util.Collections
+import java.util.TreeMap
 
 private const val MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_HINT = 2
 private const val MINIMUM_NUMBER_OF_SELECTED_ITEMS = 1
@@ -95,9 +97,7 @@ class CollectionPresenterImpl(
     toPosition: Int,
     imagePathList: MutableList<CollectionsPresenterEntity>
   ) {
-    println("pre item moved $imagePathList")
     Collections.swap(imagePathList, fromPosition, toPosition)
-    println("post item moved $imagePathList")
     collectionView?.updateItemViewMovement(fromPosition, toPosition)
     collectionImagesUseCase.reorderImage(
         collectionImagesPresenterEntityMapper.mapFromPresenterEntity(imagePathList))
@@ -107,8 +107,8 @@ class CollectionPresenterImpl(
         }
         .autoDisposable(collectionView!!.getScope())
         .subscribe({
-          println("post result item moved $it")
           collectionView?.setImagesList(it)
+          collectionView?.showReorderSuccessMessage()
         }, {
           collectionView?.updateChangesInEveryItemView()
           collectionView?.showUnableToReorderErrorMessage()
@@ -120,6 +120,7 @@ class CollectionPresenterImpl(
     imageList: List<CollectionsPresenterEntity>,
     selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
   ) {
+    collectionView?.showAppBar()
     if (selectedItemsMap.containsKey(position)) {
       collectionView?.removeFromSelectedItems(position)
     } else {
@@ -129,9 +130,7 @@ class CollectionPresenterImpl(
   }
 
   override fun notifyDragStarted() {
-    if (collectionView?.isCabActive() == true) {
-      collectionView?.hideCab()
-    }
+    hideCabIfActive()
   }
 
   override fun handleAutomaticWallpaperChangerEnabled() {
@@ -161,23 +160,61 @@ class CollectionPresenterImpl(
         .subscribe({
           collectionView?.setImagesList(it)
           collectionView?.updateChangesInEveryItemView()
-          collectionView?.showImagesAddedSuccessfullyMessage(uriList.size)
+          uriList.size.let {
+            if (it == SINGLE_ITEM_SIZE) {
+              collectionView?.showSingleImageAddedSuccessfullyMessage()
+            } else {
+              collectionView?.showMultipleImagesAddedSuccessfullyMessage(it)
+            }
+          }
         }, {
           println(it.message)
           collectionView?.showGenericErrorMessage()
         })
   }
 
-  override fun handleSetWallpaperMenuItemClicked() {
+  override fun handleSetWallpaperMenuItemClicked(selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>) {
 
   }
 
-  override fun handleCrystallizeWallpaperMenuItemClicked() {
+  override fun handleCrystallizeWallpaperMenuItemClicked(selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>) {
 
   }
 
-  override fun handleDeleteWallpaperMenuItemClicked() {
-
+  override fun handleDeleteWallpaperMenuItemClicked(
+    imageList: MutableList<CollectionsPresenterEntity>,
+    selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
+  ) {
+    hideCabIfActive()
+    val reversedSelectedItems = TreeMap<Int, CollectionsPresenterEntity>(Collections.reverseOrder())
+    reversedSelectedItems.putAll(selectedItemsMap)
+    mutableListOf<CollectionsPresenterEntity>().let { listOfDeletableImages ->
+      reversedSelectedItems.keys.forEach {
+        imageList.removeAt(it)
+        listOfDeletableImages.add(selectedItemsMap[it]!!)
+        collectionView?.removeItemView(it)
+      }
+      collectionImagesUseCase.deleteImages(
+          collectionImagesPresenterEntityMapper.mapFromPresenterEntity(
+              listOfDeletableImages.toList()))
+          .map {
+            collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
+          }
+          .observeOn(postExecutionThread.scheduler)
+          .autoDisposable(collectionView!!.getScope())
+          .subscribe({
+            collectionView?.setImagesList(it)
+            selectedItemsMap.size.let {
+              if (it == SINGLE_ITEM_SIZE) {
+                collectionView?.showSingleImageDeleteSuccessMessage()
+              } else {
+                collectionView?.showMultipleImageDeleteSuccessMessage(it)
+              }
+            }
+          }, {
+            collectionView?.showUnableToDeleteErrorMessage()
+          })
+    }
   }
 
   override fun handleCabDestroyed() {
@@ -236,13 +273,18 @@ class CollectionPresenterImpl(
   }
 
   private fun updateSelectionChangesInCab(position: Int, selectedMapSize: Int) {
-    println("udate position $position")
     collectionView?.updateChangesInSingleItemView(position)
     if (selectedMapSize > MINIMUM_NUMBER_OF_SELECTED_ITEMS) {
       collectionView?.showMultipleImagesSelectedCab()
     } else if (selectedMapSize == MINIMUM_NUMBER_OF_SELECTED_ITEMS) {
       collectionView?.showSingleImageSelectedCab()
     } else {
+      collectionView?.hideCab()
+    }
+  }
+
+  private fun hideCabIfActive() {
+    if (collectionView?.isCabActive() == true) {
       collectionView?.hideCab()
     }
   }
