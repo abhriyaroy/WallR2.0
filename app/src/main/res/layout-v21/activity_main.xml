@@ -91,7 +91,7 @@
             android:layout_alignParentLeft="true"
             android:paddingLeft="@dimen/main_activity_switch_layout_textview_padding_left"
             android:text="@string/main_activity_switch_layout_automatic_wallpaper_changer"
-            android:textColor="@color/concrete"
+            android:textColor="@color/dove_gray"
             android:textSize="@dimen/main_activity_switch_layout_text_size"
             android:maxLines="1"
             android:ellipsize="end"/>
@@ -99,6 +99,11 @@
       </RelativeLayout>
 
     </android.support.design.widget.AppBarLayout>
+
+    <ViewStub
+        android:id="@+id/cabStub"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"/>
 
     <FrameLayout
         android:id="@+id/fragmentContainer"

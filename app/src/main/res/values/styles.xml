@@ -85,7 +85,7 @@
   <style name="SwitchTheme" parent="Theme.AppCompat.Light">
     <item name="colorControlActivated">@color/accent</item>
     <item name="colorSwitchThumbNormal">@color/white</item>
-    <item name="android:colorForeground">@color/white</item>
+    <item name="android:colorForeground">@color/dove_gray</item>
   </style>
 
 </resources>

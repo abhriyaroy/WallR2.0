@@ -47,6 +47,7 @@ import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
+import zebrostudio.wallr100.android.utils.showAnimation
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
@@ -407,7 +408,7 @@ class CollectionFragment : BaseFragment(),
         }
   }
 
-  private fun attachToolbarCollapseListener(){
+  private fun attachToolbarCollapseListener() {
 
   }
 
