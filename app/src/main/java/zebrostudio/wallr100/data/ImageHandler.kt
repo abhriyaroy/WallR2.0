@@ -62,7 +62,10 @@ interface ImageHandler {
 
   fun getAllImagesInCollection(): Single<List<CollectionDatabaseImageEntity>>
   fun addExternalImageToCollection(uriList: List<Uri>): Completable
-  fun reorderImagesInCollection(): Single<List<CollectionDatabaseImageEntity>>
+  fun reorderImagesInCollection(
+    collectionDatabaseImageEntityList: List<CollectionDatabaseImageEntity>
+  ): Single<List<CollectionDatabaseImageEntity>>
+
   fun deleteImagesInCollection(
     collectionDatabaseImageEntityList: List<CollectionDatabaseImageEntity>
   ): Single<List<CollectionDatabaseImageEntity>>
@@ -75,6 +78,7 @@ const val BITMAP_COMPRESS_QUALITY = 100
 const val INITIAL_SIZE = 0
 const val UID_AUTO_INCREMENT: Long = 0
 const val COLOR_BITMAP_SIZE: Int = 512
+private const val END_OF_BYTE_STREAM: Int = -1
 
 class ImageHandlerImpl(
   private val context: Context,
@@ -297,8 +301,26 @@ class ImageHandlerImpl(
     }
   }
 
-  override fun reorderImagesInCollection(): Single<List<CollectionDatabaseImageEntity>> {
-    return Single.error(IllegalStateException())
+  override fun reorderImagesInCollection(
+    collectionDatabaseImageEntityList: List<CollectionDatabaseImageEntity>
+  ): Single<List<CollectionDatabaseImageEntity>> {
+    return databaseHelper.getDatabase().collectionsDao().getAllData()
+        .doOnSubscribe {
+          databaseHelper.getDatabase().collectionsDao().let { collectionsDao ->
+            collectionsDao.deleteAllData()
+            collectionDatabaseImageEntityList.forEach {
+              collectionsDao.insert(
+                  CollectionDatabaseImageEntity(
+                      UID_AUTO_INCREMENT,
+                      it.name,
+                      it.path,
+                      it.data,
+                      it.type
+                  )
+              )
+            }
+          }
+        }
   }
 
   override fun deleteImagesInCollection(
@@ -306,7 +328,6 @@ class ImageHandlerImpl(
   ): Single<List<CollectionDatabaseImageEntity>> {
     return databaseHelper.getDatabase().collectionsDao().getAllData()
         .doOnSubscribe {
-          println("the thread is ${Thread.currentThread().name}")
           collectionDatabaseImageEntityList.forEach {
             databaseHelper.getDatabase().collectionsDao().deleteData(it)
           }
@@ -331,7 +352,7 @@ class ImageHandlerImpl(
     }
   }
 
-  fun saveFileToCollections(sourceUri: Uri): File {
+  private fun saveFileToCollections(sourceUri: Uri): File {
     fileHandler.getCollectionsFile().let { collectionsFile ->
       context.contentResolver.openInputStream(sourceUri)!!.let { inputStream ->
         BufferedOutputStream(FileOutputStream(collectionsFile, false)).let { outputStream ->
@@ -339,7 +360,7 @@ class ImageHandlerImpl(
           inputStream.read(byteArray)
           do {
             outputStream.write(byteArray)
-          } while (inputStream.read(byteArray) != -1)
+          } while (inputStream.read(byteArray) != END_OF_BYTE_STREAM)
           outputStream.close()
         }
         inputStream.close()

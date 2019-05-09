@@ -1,8 +1,10 @@
 package zebrostudio.wallr100.android.ui.adapters
 
 import android.content.Context
+import android.support.v4.view.MotionEventCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
@@ -11,7 +13,7 @@ import kotlinx.android.synthetic.main.item_recyclerview_minimal_fragment.view.se
 import kotlinx.android.synthetic.main.item_recyclerview_minimal_fragment.view.selectedOverlay
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.ItemTouchHelperAdapter
-import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.ItemTouchHelperViewHolder
+import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.OnStartDragListener
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.visible
@@ -26,6 +28,7 @@ interface CollectionsImageAdapterCallbacks {
 
 class CollectionsImageAdapter(
   private val collectionsImageAdapterCallback: CollectionsImageAdapterCallbacks,
+  private val startDragListener: OnStartDragListener,
   private val presenter: CollectionRecyclerPresenter
 ) : RecyclerView.Adapter<CollectionsImageViewHolder>(), ItemTouchHelperAdapter {
 
@@ -39,7 +42,7 @@ class CollectionsImageAdapter(
     return CollectionsImageViewHolder(
         viewGroupParent.inflate(LayoutInflater.from(viewGroupParent.context),
             R.layout.item_recyclerview_collections), viewGroupParent.context,
-        collectionsImageAdapterCallback)
+        collectionsImageAdapterCallback, startDragListener)
   }
 
   override fun getItemCount(): Int {
@@ -85,10 +88,10 @@ class CollectionsImageAdapter(
 class CollectionsImageViewHolder(
   itemView: View,
   private val context: Context,
-  private val callback: CollectionsImageAdapterCallbacks
+  private val callback: CollectionsImageAdapterCallbacks,
+  private val startDragListener: OnStartDragListener
 ) : RecyclerView.ViewHolder(itemView),
-    CollectionsRecyclerItemViewHolder,
-    ItemTouchHelperViewHolder {
+    CollectionsRecyclerItemViewHolder {
 
   override fun setImage(imagePath: String) {
     Glide.with(context)
@@ -112,11 +115,12 @@ class CollectionsImageViewHolder(
     }
   }
 
-  override fun onItemSelected() {
-    println("view holder item selected")
-  }
-
-  override fun onItemClear() {
-    println("On item clear")
+  override fun attachstartDragListener() {
+    itemView.setOnTouchListener { v, event ->
+      if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+        startDragListener.onStartDrag(this)
+      }
+      false
+    }
   }
 }

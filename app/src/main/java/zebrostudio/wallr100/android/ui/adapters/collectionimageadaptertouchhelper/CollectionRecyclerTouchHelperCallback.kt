@@ -3,33 +3,43 @@ package zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelp
 import android.graphics.Canvas
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
+import android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_IDLE
+import android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_SWIPE
 import android.support.v7.widget.helper.ItemTouchHelper.Callback
+import android.support.v7.widget.helper.ItemTouchHelper.DOWN
+import android.support.v7.widget.helper.ItemTouchHelper.END
+import android.support.v7.widget.helper.ItemTouchHelper.LEFT
+import android.support.v7.widget.helper.ItemTouchHelper.RIGHT
+import android.support.v7.widget.helper.ItemTouchHelper.START
+import android.support.v7.widget.helper.ItemTouchHelper.UP
 
 private const val ALPHA_FULL = 1.0f
 
-class CollectionRecyclerTouchHelperCallback(private val adapter: ItemTouchHelperAdapter) : Callback() {
+class CollectionRecyclerTouchHelperCallback(
+  private val adapter: ItemTouchHelperAdapter
+) : Callback() {
 
   override fun isLongPressDragEnabled(): Boolean {
     return true
   }
 
   override fun isItemViewSwipeEnabled(): Boolean {
-    return false
+    return true
   }
 
   override fun getMovementFlags(
     recyclerView: RecyclerView,
     viewHolder: RecyclerView.ViewHolder
   ): Int {
-    val swipeFlags = 0
     return if (recyclerView.layoutManager is GridLayoutManager) {
+      val swipeFlags = 0
       val dragFlags =
-          ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+          UP or DOWN or LEFT or RIGHT
       makeMovementFlags(dragFlags, swipeFlags)
     } else {
-      val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-      makeMovementFlags(dragFlags, swipeFlags)
+      val dragFlags = UP or DOWN
+      val swipeFlags = START or END
+      return makeMovementFlags(dragFlags, swipeFlags)
     }
   }
 
@@ -58,7 +68,7 @@ class CollectionRecyclerTouchHelperCallback(private val adapter: ItemTouchHelper
     actionState: Int,
     isCurrentlyActive: Boolean
   ) {
-    if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+    if (actionState == ACTION_STATE_SWIPE) {
       val alpha = ALPHA_FULL - Math.abs(dX) / viewHolder.itemView.width.toFloat()
       viewHolder.itemView.alpha = alpha
       viewHolder.itemView.translationX = dX
@@ -67,22 +77,4 @@ class CollectionRecyclerTouchHelperCallback(private val adapter: ItemTouchHelper
     }
   }
 
-  override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
-    if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
-      if (viewHolder is ItemTouchHelperViewHolder) {
-        val itemViewHolder = viewHolder as ItemTouchHelperViewHolder
-        itemViewHolder.onItemSelected()
-      }
-    }
-    super.onSelectedChanged(viewHolder, actionState)
-  }
-
-  override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-    super.clearView(recyclerView, viewHolder)
-    viewHolder.itemView.alpha = ALPHA_FULL
-    if (viewHolder is ItemTouchHelperViewHolder) {
-      val itemViewHolder = viewHolder as ItemTouchHelperViewHolder
-      itemViewHolder.onItemClear()
-    }
-  }
 }

@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -23,7 +22,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import com.afollestad.materialcab.MaterialCab
 import com.afollestad.materialdialogs.MaterialDialog
 import com.getkeepsafe.taptargetview.TapTarget
@@ -49,7 +47,6 @@ import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
-import zebrostudio.wallr100.android.utils.showAnimation
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
@@ -126,9 +123,7 @@ class CollectionFragment : BaseFragment(),
   }
 
   override fun onStartDrag(viewHolder: ViewHolder) {
-    if (MaterialCab.isActive) {
-      MaterialCab.destroy()
-    }
+    presenter?.notifyDragStarted()
     itemTouchHelper.startDrag(viewHolder)
   }
 
@@ -198,7 +193,7 @@ class CollectionFragment : BaseFragment(),
     )
   }
 
-  override fun showImages(imageList: List<CollectionsPresenterEntity>) {
+  override fun setImagesList(imageList: List<CollectionsPresenterEntity>) {
     collectionsImageAdapter.setImagesList(imageList)
   }
 
@@ -278,12 +273,16 @@ class CollectionFragment : BaseFragment(),
     collectionsImageAdapter.removeItemFromSelectedItemsMap(position)
   }
 
-  override fun updateAllItemViews() {
+  override fun updateChangesInEveryItemView() {
     collectionsImageAdapter.notifyDataSetChanged()
   }
 
-  override fun updateItemView(position: Int) {
+  override fun updateChangesInSingleItemView(position: Int) {
     collectionsImageAdapter.notifyItemChanged(position)
+  }
+
+  override fun updateItemViewMovement(fromPosition: Int, toPosition: Int) {
+    collectionsImageAdapter.notifyItemMoved(fromPosition, toPosition)
   }
 
   override fun clearAllSelectedItems() {
@@ -348,12 +347,17 @@ class CollectionFragment : BaseFragment(),
     MaterialCab.destroy()
   }
 
+  override fun showUnableToReorderErrorMessage() {
+    errorToast(stringRes(R.string.collections_fragment_unable_to_reorder_images_error_message))
+  }
+
   override fun showGenericErrorMessage() {
     errorToast(stringRes(R.string.generic_error_message))
   }
 
   private fun initRecyclerViewWithListeners() {
-    collectionsImageAdapter = CollectionsImageAdapter(this, recyclerPresenter)
+    collectionsImageAdapter = CollectionsImageAdapter(
+        this, this, recyclerPresenter)
     collectionRecyclerTouchHelperCallback =
         CollectionRecyclerTouchHelperCallback(collectionsImageAdapter)
     itemTouchHelper = ItemTouchHelper(collectionRecyclerTouchHelperCallback)

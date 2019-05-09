@@ -2,7 +2,6 @@ package zebrostudio.wallr100.presentation.collection
 
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
-import zebrostudio.wallr100.data.INITIAL_SIZE
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
@@ -12,6 +11,7 @@ import zebrostudio.wallr100.presentation.collection.CollectionContract.Collectio
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionView
 import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEntity
 import zebrostudio.wallr100.presentation.collection.mapper.CollectionImagesPresenterEntityMapper
+import java.util.Collections
 
 private const val MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_HINT = 2
 private const val MINIMUM_NUMBER_OF_SELECTED_ITEMS = 1
@@ -93,9 +93,26 @@ class CollectionPresenterImpl(
   override fun handleItemMoved(
     fromPosition: Int,
     toPosition: Int,
-    imagePathList: List<CollectionsPresenterEntity>
+    imagePathList: MutableList<CollectionsPresenterEntity>
   ) {
-
+    println("pre item moved $imagePathList")
+    Collections.swap(imagePathList, fromPosition, toPosition)
+    println("post item moved $imagePathList")
+    collectionView?.updateItemViewMovement(fromPosition, toPosition)
+    collectionImagesUseCase.reorderImage(
+        collectionImagesPresenterEntityMapper.mapFromPresenterEntity(imagePathList))
+        .observeOn(postExecutionThread.scheduler)
+        .map {
+          collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
+        }
+        .autoDisposable(collectionView!!.getScope())
+        .subscribe({
+          println("post result item moved $it")
+          collectionView?.setImagesList(it)
+        }, {
+          collectionView?.updateChangesInEveryItemView()
+          collectionView?.showUnableToReorderErrorMessage()
+        })
   }
 
   override fun handleItemClicked(
@@ -108,8 +125,13 @@ class CollectionPresenterImpl(
     } else {
       collectionView?.addToSelectedItems(position, imageList[position])
     }
-    println("the map is $selectedItemsMap")
     updateSelectionChangesInCab(position, selectedItemsMap.size)
+  }
+
+  override fun notifyDragStarted() {
+    if (collectionView?.isCabActive() == true) {
+      collectionView?.hideCab()
+    }
   }
 
   override fun handleAutomaticWallpaperChangerEnabled() {
@@ -137,8 +159,8 @@ class CollectionPresenterImpl(
         .observeOn(postExecutionThread.scheduler)
         .autoDisposable(collectionView!!.getScope())
         .subscribe({
-          collectionView?.showImages(it)
-          collectionView?.updateAllItemViews()
+          collectionView?.setImagesList(it)
+          collectionView?.updateChangesInEveryItemView()
           collectionView?.showImagesAddedSuccessfullyMessage(uriList.size)
         }, {
           println(it.message)
@@ -160,7 +182,7 @@ class CollectionPresenterImpl(
 
   override fun handleCabDestroyed() {
     collectionView?.clearAllSelectedItems()
-    collectionView?.updateAllItemViews()
+    collectionView?.updateChangesInEveryItemView()
   }
 
   private fun isUserPremium(): Boolean {
@@ -193,14 +215,14 @@ class CollectionPresenterImpl(
         .autoDisposable(collectionView!!.getScope())
         .subscribe({
           if (it.isNotEmpty()) {
-            collectionView?.showImages(it)
+            collectionView?.setImagesList(it)
             collectionView?.hideImagesAbsentLayout()
             //showHintsIfSuitable(it.size)
           } else {
             collectionView?.clearImages()
             collectionView?.showImagesAbsentLayout()
           }
-          collectionView?.updateAllItemViews()
+          collectionView?.updateChangesInEveryItemView()
         }, {
           collectionView?.showImagesAbsentLayout()
           collectionView?.showGenericErrorMessage()
@@ -215,7 +237,7 @@ class CollectionPresenterImpl(
 
   private fun updateSelectionChangesInCab(position: Int, selectedMapSize: Int) {
     println("udate position $position")
-    collectionView?.updateItemView(position)
+    collectionView?.updateChangesInSingleItemView(position)
     if (selectedMapSize > MINIMUM_NUMBER_OF_SELECTED_ITEMS) {
       collectionView?.showMultipleImagesSelectedCab()
     } else if (selectedMapSize == MINIMUM_NUMBER_OF_SELECTED_ITEMS) {

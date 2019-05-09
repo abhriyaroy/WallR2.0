@@ -13,7 +13,7 @@ interface CollectionContract {
     fun hasStoragePermission(): Boolean
     fun requestStoragePermission()
     fun showReorderImagesHint()
-    fun showImages(imageList: List<CollectionsPresenterEntity>)
+    fun setImagesList(imageList: List<CollectionsPresenterEntity>)
     fun clearImages()
     fun hideImagesAbsentLayout()
     fun showImagesAbsentLayout()
@@ -22,8 +22,9 @@ interface CollectionContract {
     fun showWallpaperChangerIntervalDialog(choice: Int)
     fun showImagePicker()
     fun showImagesAddedSuccessfullyMessage(count: Int)
-    fun updateAllItemViews()
-    fun updateItemView(position: Int)
+    fun updateChangesInEveryItemView()
+    fun updateChangesInSingleItemView(position: Int)
+    fun updateItemViewMovement(fromPosition: Int, toPosition: Int)
     fun addToSelectedItems(position: Int, collectionsPresenterEntity: CollectionsPresenterEntity)
     fun removeFromSelectedItems(position: Int)
     fun clearAllSelectedItems()
@@ -31,6 +32,7 @@ interface CollectionContract {
     fun showSingleImageSelectedCab()
     fun showMultipleImagesSelectedCab()
     fun hideCab()
+    fun showUnableToReorderErrorMessage()
     fun showGenericErrorMessage()
   }
 
@@ -45,7 +47,7 @@ interface CollectionContract {
     fun handleItemMoved(
       fromPosition: Int,
       toPosition: Int,
-      imagePathList: List<CollectionsPresenterEntity>
+      imagePathList: MutableList<CollectionsPresenterEntity>
     )
 
     fun handleItemClicked(
@@ -54,6 +56,7 @@ interface CollectionContract {
       selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
     )
 
+    fun notifyDragStarted()
     fun handleAutomaticWallpaperChangerEnabled()
     fun handleAutomaticWallpaperChangerDisabled()
     fun handleAutomaticWallpaperIntervalChangerMenuItemClicked()

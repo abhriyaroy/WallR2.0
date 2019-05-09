@@ -409,10 +409,14 @@ class WallrDataRepository(
         }
   }
 
-  override fun reorderInCollection(): Single<List<CollectionsImageModel>> {
-    return imageHandler.reorderImagesInCollection()
+  override fun reorderInCollection(collectionImagesModelList: List<CollectionsImageModel>)
+      : Single<List<CollectionsImageModel>> {
+    return imageHandler.reorderImagesInCollection(
+        collectionsDatabaseImageEntityMapper.mapToEntity(collectionImagesModelList))
         .subscribeOn(executionThread.computationScheduler)
         .map {
+          println(it.size)
+          println(it)
           collectionsDatabaseImageEntityMapper.mapFromEntity(it)
         }
   }
