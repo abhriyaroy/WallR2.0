@@ -47,10 +47,10 @@ import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
-import zebrostudio.wallr100.android.utils.showAnimation
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
+import zebrostudio.wallr100.android.utils.withDelayOnMain
 import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.CollectionRecyclerPresenter
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionPresenter
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionView
@@ -60,6 +60,7 @@ import javax.inject.Inject
 const val REQUEST_CODE = 1
 const val MAXIMUM_SELECTED_IMAGES = 10
 private const val REORDER_HINT_VIEW_POSITION = 1
+private const val DELAY_400_MILLISECONDS: Long = 400
 
 class CollectionFragment : BaseFragment(),
     CollectionView,
@@ -139,7 +140,24 @@ class CollectionFragment : BaseFragment(),
   }
 
   override fun showAppBar() {
-    activity?.findViewById<AppBarLayout>(R.id.appbar)?.setExpanded(true, true)
+    activity?.let {
+      it.findViewById<Toolbar>(R.id.toolbar)?.layoutParams.let {
+        (it as AppBarLayout.LayoutParams).scrollFlags = (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+            or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
+      }
+      it.findViewById<AppBarLayout>(R.id.appbar)?.setExpanded(true, true)
+    }
+  }
+
+  override fun hideAppBar() {
+    activity?.let {
+      it.findViewById<AppBarLayout>(R.id.appbar)?.setExpanded(false, true)
+      withDelayOnMain(DELAY_400_MILLISECONDS, block = {
+        it.findViewById<Toolbar>(R.id.toolbar)?.layoutParams.let {
+          (it as AppBarLayout.LayoutParams).scrollFlags = 0
+        }
+      })
+    }
   }
 
   override fun showPurchasePremiumToContinueDialog() {

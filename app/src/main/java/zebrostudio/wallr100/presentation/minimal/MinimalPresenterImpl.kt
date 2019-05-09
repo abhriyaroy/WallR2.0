@@ -105,6 +105,7 @@ class MinimalPresenterImpl(
   }
 
   override fun handleCabDestroyed() {
+    minimalView?.showAppBar()
     minimalView?.clearSelectedItemsMap()
     if (isBottomPanelEnabled) {
       hideBottomPanelWithAnimationInView()

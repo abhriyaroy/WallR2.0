@@ -128,7 +128,9 @@ class CollectionPresenterImpl(
     imageList: List<CollectionsPresenterEntity>,
     selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
   ) {
-    collectionView?.showAppBar()
+    if (selectedItemsMap.isEmpty()) {
+      collectionView?.hideAppBar()
+    }
     if (selectedItemsMap.containsKey(position)) {
       selectedItemsMap.remove(position)
     } else {
@@ -231,6 +233,7 @@ class CollectionPresenterImpl(
   override fun handleCabDestroyed() {
     collectionView?.clearAllSelectedItems()
     collectionView?.updateChangesInEveryItemView()
+    collectionView?.showAppBar()
   }
 
   private fun isUserPremium(): Boolean {

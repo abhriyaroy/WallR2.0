@@ -9,6 +9,7 @@ interface CollectionContract {
 
   interface CollectionView : BaseView {
     fun showAppBar()
+    fun hideAppBar()
     fun showPurchasePremiumToContinueDialog()
     fun redirectToBuyPro()
     fun hasStoragePermission(): Boolean
