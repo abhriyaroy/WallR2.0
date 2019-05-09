@@ -271,17 +271,6 @@ class CollectionFragment : BaseFragment(),
     collectionsImageAdapter.notifyItemRemoved(position)
   }
 
-  override fun addToSelectedItems(
-    position: Int,
-    collectionsPresenterEntity: CollectionsPresenterEntity
-  ) {
-    collectionsImageAdapter.addToSelectedItemsMap(position, collectionsPresenterEntity)
-  }
-
-  override fun removeFromSelectedItems(position: Int) {
-    collectionsImageAdapter.removeItemFromSelectedItemsMap(position)
-  }
-
   override fun updateChangesInEveryItemView() {
     collectionsImageAdapter.notifyDataSetChanged()
   }

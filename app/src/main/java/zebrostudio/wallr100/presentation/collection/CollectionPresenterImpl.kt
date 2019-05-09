@@ -97,7 +97,15 @@ class CollectionPresenterImpl(
     toPosition: Int,
     imagePathList: MutableList<CollectionsPresenterEntity>
   ) {
-    Collections.swap(imagePathList, fromPosition, toPosition)
+    if (fromPosition < toPosition) {
+      for (i in fromPosition until toPosition) {
+        Collections.swap(imagePathList, i, i + 1)
+      }
+    } else {
+      for (i in fromPosition downTo toPosition + 1) {
+        Collections.swap(imagePathList, i, i - 1)
+      }
+    }
     collectionView?.updateItemViewMovement(fromPosition, toPosition)
     collectionImagesUseCase.reorderImage(
         collectionImagesPresenterEntityMapper.mapFromPresenterEntity(imagePathList))
@@ -122,9 +130,9 @@ class CollectionPresenterImpl(
   ) {
     collectionView?.showAppBar()
     if (selectedItemsMap.containsKey(position)) {
-      collectionView?.removeFromSelectedItems(position)
+      selectedItemsMap.remove(position)
     } else {
-      collectionView?.addToSelectedItems(position, imageList[position])
+      selectedItemsMap[position] = imageList[position]
     }
     updateSelectionChangesInCab(position, selectedItemsMap.size)
   }
@@ -185,26 +193,28 @@ class CollectionPresenterImpl(
     imageList: MutableList<CollectionsPresenterEntity>,
     selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
   ) {
-    hideCabIfActive()
     val reversedSelectedItems = TreeMap<Int, CollectionsPresenterEntity>(Collections.reverseOrder())
-    reversedSelectedItems.putAll(selectedItemsMap)
+    selectedItemsMap.keys.forEach {
+      reversedSelectedItems[it] = selectedItemsMap[it]!!
+    }
     mutableListOf<CollectionsPresenterEntity>().let { listOfDeletableImages ->
       reversedSelectedItems.keys.forEach {
         imageList.removeAt(it)
         listOfDeletableImages.add(selectedItemsMap[it]!!)
+        selectedItemsMap.remove(it)
         collectionView?.removeItemView(it)
       }
       collectionImagesUseCase.deleteImages(
-          collectionImagesPresenterEntityMapper.mapFromPresenterEntity(
-              listOfDeletableImages.toList()))
+          collectionImagesPresenterEntityMapper.mapFromPresenterEntity(listOfDeletableImages))
           .map {
             collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
           }
           .observeOn(postExecutionThread.scheduler)
           .autoDisposable(collectionView!!.getScope())
           .subscribe({
+            hideCabIfActive()
             collectionView?.setImagesList(it)
-            selectedItemsMap.size.let {
+            listOfDeletableImages.size.let {
               if (it == SINGLE_ITEM_SIZE) {
                 collectionView?.showSingleImageDeleteSuccessMessage()
               } else {
@@ -212,6 +222,7 @@ class CollectionPresenterImpl(
               }
             }
           }, {
+            hideCabIfActive()
             collectionView?.showUnableToDeleteErrorMessage()
           })
     }

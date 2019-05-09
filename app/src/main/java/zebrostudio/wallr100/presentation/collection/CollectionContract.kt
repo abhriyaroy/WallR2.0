@@ -28,8 +28,6 @@ interface CollectionContract {
     fun updateChangesInSingleItemView(position: Int)
     fun updateItemViewMovement(fromPosition: Int, toPosition: Int)
     fun removeItemView(position: Int)
-    fun addToSelectedItems(position: Int, collectionsPresenterEntity: CollectionsPresenterEntity)
-    fun removeFromSelectedItems(position: Int)
     fun clearAllSelectedItems()
     fun isCabActive(): Boolean
     fun showSingleImageSelectedCab()

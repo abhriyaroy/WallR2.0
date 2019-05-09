@@ -67,14 +67,6 @@ class CollectionsImageAdapter(
 
   fun getSelectedItemsMap() = selectedHashMap
 
-  fun addToSelectedItemsMap(itemPosition: Int, entity: CollectionsPresenterEntity) {
-    selectedHashMap[itemPosition] = entity
-  }
-
-  fun removeItemFromSelectedItemsMap(itemPosition: Int) {
-    selectedHashMap.remove(itemPosition)
-  }
-
   fun clearSelectedItemsMap() {
     selectedHashMap.clear()
   }
