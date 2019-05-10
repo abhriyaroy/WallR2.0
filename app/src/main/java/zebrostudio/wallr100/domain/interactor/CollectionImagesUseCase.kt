@@ -2,6 +2,7 @@ package zebrostudio.wallr100.domain.interactor
 
 import android.graphics.Bitmap
 import android.net.Uri
+import io.reactivex.Completable
 import io.reactivex.Single
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageModel
@@ -18,6 +19,9 @@ interface CollectionImagesUseCase {
   fun getImageBitmap(collectionsImageModel: CollectionsImageModel): Single<Bitmap>
   fun saveCrystallizedImage(collectionsImageModel: CollectionsImageModel)
       : Single<List<CollectionsImageModel>>
+
+  fun startAutomaticWallpaperChanger(): Completable
+  fun stopAutomaticWallpaperChanger(): Completable
 }
 
 class CollectionsImagesInteractor(
@@ -49,6 +53,14 @@ class CollectionsImagesInteractor(
   override fun saveCrystallizedImage(collectionsImageModel: CollectionsImageModel)
       : Single<List<CollectionsImageModel>> {
     return wallrRepository.saveCrystallizedImageInDatabase(collectionsImageModel)
+  }
+
+  override fun startAutomaticWallpaperChanger(): Completable {
+    return wallrRepository.enableWallpaperChangerService()
+  }
+
+  override fun stopAutomaticWallpaperChanger(): Completable {
+    return wallrRepository.disableWallpaperChangerService()
   }
 
 }

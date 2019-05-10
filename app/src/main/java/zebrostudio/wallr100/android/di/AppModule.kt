@@ -41,6 +41,9 @@ import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapperImpl
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapperImpl
+import zebrostudio.wallr100.data.service.AutomaticWallpaperChangerHelper
+import zebrostudio.wallr100.data.service.AutomaticWallpaperChangerHelperImpl
+import zebrostudio.wallr100.data.service.AutomaticWallpaperChangerService
 import zebrostudio.wallr100.data.urlshortener.UrlShortener
 import zebrostudio.wallr100.data.urlshortener.UrlShortenerImpl
 import zebrostudio.wallr100.domain.WallrRepository
@@ -260,5 +263,20 @@ class AppModule {
 
   @Provides
   fun provideCollectionRecyclerPresenter(): CollectionRecyclerPresenter = CollectionRecyclerPresenterImpl()
+
+  @Provides
+  fun provideAutomaticWallpaperChangerHelper(
+    wallrRepository: WallrRepository,
+    wallpaperSetter: WallpaperSetter,
+    executionThread: ExecutionThread
+  ): AutomaticWallpaperChangerHelper = AutomaticWallpaperChangerHelperImpl(wallrRepository,
+      wallpaperSetter, executionThread)
+
+  @Provides
+  fun provideAutomaticWallpaperChangerService(
+    automaticWallpaperChangerHelper: AutomaticWallpaperChangerHelper,
+    postExecutionThread: PostExecutionThread
+  ): AutomaticWallpaperChangerService = AutomaticWallpaperChangerService(
+      automaticWallpaperChangerHelper, postExecutionThread)
 
 }

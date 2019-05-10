@@ -51,8 +51,6 @@ interface CollectionContract {
     fun handleViewCreated()
     fun handleImportFromLocalStorageClicked()
     fun handlePurchaseClicked()
-    fun handleWallpaperChangerEnabled()
-    fun handleWallpaperChangerDisabled()
     fun handleReorderImagesHintHintDismissed()
     fun handleItemMoved(
       fromPosition: Int,

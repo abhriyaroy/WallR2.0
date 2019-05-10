@@ -68,14 +68,6 @@ class CollectionPresenterImpl(
     collectionView?.redirectToBuyPro()
   }
 
-  override fun handleWallpaperChangerEnabled() {
-
-  }
-
-  override fun handleWallpaperChangerDisabled() {
-
-  }
-
   override fun handleReorderImagesHintHintDismissed() {
     widgetHintsUseCase.saveCollectionsImageReorderHintShown()
   }

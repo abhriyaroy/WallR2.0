@@ -483,6 +483,14 @@ class WallrDataRepository(
         AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_TAG, interval)
   }
 
+  override fun enableWallpaperChangerService(): Completable {
+
+  }
+
+  override fun disableWallpaperChangerService(): Completable {
+
+  }
+
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()
       .getReference(FIREBASE_DATABASE_PATH)
       .child(CHILD_PATH_EXPLORE)
