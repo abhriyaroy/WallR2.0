@@ -6,6 +6,10 @@ import dagger.Module
 import dagger.Provides
 import zebrostudio.wallr100.android.AndroidBackgroundThreads
 import zebrostudio.wallr100.android.AndroidMainThread
+import zebrostudio.wallr100.android.service.AutomaticWallpaperChangerHelper
+import zebrostudio.wallr100.android.service.AutomaticWallpaperChangerHelperImpl
+import zebrostudio.wallr100.android.service.ServiceManager
+import zebrostudio.wallr100.android.service.ServiceManagerImpl
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcherImpl
 import zebrostudio.wallr100.android.utils.GsonProvider
@@ -41,10 +45,6 @@ import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapperImpl
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapperImpl
-import zebrostudio.wallr100.android.service.AutomaticWallpaperChangerHelper
-import zebrostudio.wallr100.android.service.AutomaticWallpaperChangerHelperImpl
-import zebrostudio.wallr100.android.service.ServiceManager
-import zebrostudio.wallr100.android.service.ServiceManagerImpl
 import zebrostudio.wallr100.data.urlshortener.UrlShortener
 import zebrostudio.wallr100.data.urlshortener.UrlShortenerImpl
 import zebrostudio.wallr100.domain.WallrRepository
@@ -252,8 +252,9 @@ class AppModule {
 
   @Provides
   fun provideCollectionImagesUseCase(
+    serviceManager: ServiceManager,
     wallrRepository: WallrRepository
-  ): CollectionImagesUseCase = CollectionsImagesInteractor(wallrRepository)
+  ): CollectionImagesUseCase = CollectionsImagesInteractor(serviceManager, wallrRepository)
 
   @Provides
   fun provideImageRecyclerViewPresenter()
@@ -274,5 +275,5 @@ class AppModule {
       wallpaperSetter, executionThread)
 
   @Provides
-  fun provideServiceManager(context: Context) : ServiceManager = ServiceManagerImpl(context)
+  fun provideServiceManager(context: Context): ServiceManager = ServiceManagerImpl(context)
 }

@@ -3,15 +3,13 @@ package zebrostudio.wallr100.presentation.collection
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.service.ServiceManager
 import zebrostudio.wallr100.android.ui.minimal.SINGLE_ITEM_SIZE
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
-import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
-import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerIntervalUpdateResultState.INTERVAL_UPDATED
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerIntervalUpdateResultState.SERVICE_RESTARTED
+import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionPresenter
@@ -29,17 +27,14 @@ private const val INDEX_OF_THREE_DAYS_WALLPAPER_CHANGER_INTERVAL = 4
 class CollectionPresenterImpl(
   private val widgetHintsUseCase: WidgetHintsUseCase,
   private val userPremiumStatusUseCase: UserPremiumStatusUseCase,
-  private val imageOptionsUseCase: ImageOptionsUseCase,
   private val collectionImagesUseCase: CollectionImagesUseCase,
   private val collectionImagesPresenterEntityMapper: CollectionImagesPresenterEntityMapper,
   private val wallpaperSetter: WallpaperSetter,
   private val resourceUtils: ResourceUtils,
-  private val serviceManager: ServiceManager,
   private val postExecutionThread: PostExecutionThread
 ) : CollectionPresenter {
 
   private var collectionView: CollectionView? = null
-  private var isWallpaperChangerEnabled = false
   private val wallpaperChangerIntervals = arrayListOf<Long>(
       1800000,
       3600000,
@@ -171,6 +166,9 @@ class CollectionPresenterImpl(
           .subscribe({
             collectionView?.setImagesList(it)
             collectionView?.updateChangesInEveryItemView()
+            if (it.isNotEmpty()) {
+              showNonEmptyCollectionView()
+            }
             uriList.size.let {
               if (it == SINGLE_ITEM_SIZE) {
                 collectionView?.showSingleImageAddedSuccessfullyMessage()
@@ -256,10 +254,20 @@ class CollectionPresenterImpl(
             collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
           }
           .observeOn(postExecutionThread.scheduler)
+          .doOnSuccess {
+            if (collectionImagesUseCase.isAutomaticWallpaperChangerRunning()) {
+              collectionView?.showAutomaticWallpaperStateAsActive()
+            } else {
+              collectionView?.showAutomaticWallpaperStateAsInActive()
+            }
+          }
           .autoDisposable(collectionView!!.getScope())
           .subscribe({
             hideCabIfActive()
             collectionView?.setImagesList(it)
+            if (it.isEmpty()) {
+              showEmptyCollectionView()
+            }
             listOfDeletableImages.size.let {
               if (it == SINGLE_ITEM_SIZE) {
                 collectionView?.showSingleImageDeleteSuccessMessage()
@@ -300,22 +308,25 @@ class CollectionPresenterImpl(
 
   private fun showPictures() {
     collectionImagesUseCase.getAllImages()
-        .doOnSuccess {
-          isWallpaperChangerEnabled = imageOptionsUseCase.isAutomaticWallpaperChangerEnabled()
-        }
         .map {
           collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
         }
         .observeOn(postExecutionThread.scheduler)
+        .doOnSuccess {
+          if (collectionImagesUseCase.isAutomaticWallpaperChangerRunning()) {
+            collectionView?.showAutomaticWallpaperStateAsActive()
+          } else {
+            collectionView?.showAutomaticWallpaperStateAsInActive()
+          }
+        }
         .autoDisposable(collectionView!!.getScope())
         .subscribe({
           if (it.isNotEmpty()) {
             collectionView?.setImagesList(it)
-            collectionView?.hideImagesAbsentLayout()
+            showNonEmptyCollectionView()
             //showHintsIfSuitable(it.size)
           } else {
-            collectionView?.clearImages()
-            collectionView?.showImagesAbsentLayout()
+            showEmptyCollectionView()
           }
           collectionView?.updateChangesInEveryItemView()
         }, {
@@ -345,6 +356,18 @@ class CollectionPresenterImpl(
     if (collectionView?.isCabActive() == true) {
       collectionView?.hideCab()
     }
+  }
+
+  private fun showEmptyCollectionView() {
+    collectionView?.clearImages()
+    collectionView?.clearAllSelectedItems()
+    collectionView?.showImagesAbsentLayout()
+    collectionView?.hideWallpaperChangerLayout()
+  }
+
+  private fun showNonEmptyCollectionView() {
+    collectionView?.hideImagesAbsentLayout()
+    collectionView?.showWallpaperChangerLayout()
   }
 
 }

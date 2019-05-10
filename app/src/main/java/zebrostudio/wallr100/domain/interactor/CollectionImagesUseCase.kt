@@ -22,6 +22,7 @@ interface CollectionImagesUseCase {
   fun saveCrystallizedImage(collectionsImageModel: CollectionsImageModel)
       : Single<List<CollectionsImageModel>>
 
+  fun isAutomaticWallpaperChangerRunning(): Boolean
   fun enableAutomaticWallpaperChanger()
   fun disableAutomaticWallpaperChanger()
   fun getAutomaticWallpaperChangerInterval(): Long
@@ -62,6 +63,10 @@ class CollectionsImagesInteractor(
     return wallrRepository.saveCrystallizedImageInDatabase(collectionsImageModel)
   }
 
+  override fun isAutomaticWallpaperChangerRunning(): Boolean {
+    return serviceManager.isAutomaticWallpaperChangerRunning()
+  }
+
   override fun enableAutomaticWallpaperChanger() {
     serviceManager.startAutomaticWallpaperChangerService()
   }
@@ -78,7 +83,7 @@ class CollectionsImagesInteractor(
     interval: Long
   ): AutomaticWallpaperChangerIntervalUpdateResultState {
     wallrRepository.setWallpaperChangerInterval(interval)
-    if (serviceManager.isAutomaticWallpaperChangerRunning()) {
+    if (isAutomaticWallpaperChangerRunning()) {
       serviceManager.stopAutomaticWallpaperChangerService()
       serviceManager.startAutomaticWallpaperChangerService()
       return SERVICE_RESTARTED

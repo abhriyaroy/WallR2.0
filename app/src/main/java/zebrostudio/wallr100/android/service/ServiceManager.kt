@@ -14,9 +14,7 @@ interface ServiceManager {
 class ServiceManagerImpl(private val context: Context) : ServiceManager {
 
   override fun startAutomaticWallpaperChangerService(): Boolean {
-    Intent(context, AutomaticWallpaperChangerService::class.java).let {
-      startForegroundService(context, it)
-    }
+    startForegroundService(context, Intent(context, AutomaticWallpaperChangerService::class.java))
     if (isAutomaticWallpaperChangerRunning()) {
       return true
     }

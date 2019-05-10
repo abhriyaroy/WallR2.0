@@ -19,6 +19,8 @@ interface CollectionContract {
     fun clearImages()
     fun hideImagesAbsentLayout()
     fun showImagesAbsentLayout()
+    fun showWallpaperChangerLayout()
+    fun hideWallpaperChangerLayout()
     fun showAutomaticWallpaperStateAsActive()
     fun showAutomaticWallpaperStateAsInActive()
     fun showWallpaperChangerIntervalUpdatedSuccessMessage()
