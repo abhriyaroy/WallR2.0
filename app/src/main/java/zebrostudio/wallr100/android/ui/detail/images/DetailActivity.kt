@@ -459,7 +459,7 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showCrystallizeSuccessMessage() {
-    successToast(stringRes(R.string.detail_activity_crystallizing_wallpaper_successful_message))
+    successToast(stringRes(R.string.crystallizing_wallpaper_successful_message))
   }
 
   override fun showImageHasAlreadyBeenCrystallizedMessage() {

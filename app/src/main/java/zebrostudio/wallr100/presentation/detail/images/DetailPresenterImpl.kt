@@ -297,7 +297,7 @@ class DetailPresenterImpl(
           .doOnSubscribe {
             detailView?.blurScreen()
             detailView?.showIndefiniteLoader(resourceUtils.getStringResource(
-                R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
+                R.string.crystallizing_wallpaper_wait_message))
           }
           .autoDisposable(detailView?.getScope()!!)
           .subscribe({

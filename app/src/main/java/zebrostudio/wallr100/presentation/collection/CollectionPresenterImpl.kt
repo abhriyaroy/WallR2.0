@@ -2,7 +2,9 @@ package zebrostudio.wallr100.presentation.collection
 
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
+import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.minimal.SINGLE_ITEM_SIZE
+import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
@@ -28,6 +30,7 @@ class CollectionPresenterImpl(
   private val collectionImagesUseCase: CollectionImagesUseCase,
   private val collectionImagesPresenterEntityMapper: CollectionImagesPresenterEntityMapper,
   private val wallpaperSetter: WallpaperSetter,
+  private val resourceUtils: ResourceUtils,
   private val postExecutionThread: PostExecutionThread
 ) : CollectionPresenter {
 
@@ -191,18 +194,46 @@ class CollectionPresenterImpl(
           wallpaperSetter.setWallpaper(it)
         }
         .observeOn(postExecutionThread.scheduler)
+        .doOnSubscribe {
+          collectionView?.blurScreen()
+          collectionView?.showIndefiniteLoaderWithMessage(
+              resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
+        }
         .autoDisposable(collectionView!!.getScope())
         .subscribe({
           hideCabIfActive()
+          collectionView?.removeBlurFromScreen()
           collectionView?.showSetWallpaperSuccessMessage()
         }, {
           hideCabIfActive()
+          collectionView?.removeBlurFromScreen()
           collectionView?.showGenericErrorMessage()
         })
   }
 
-  override fun handleCrystallizeWallpaperMenuItemClicked(selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>) {
-
+  override fun handleCrystallizeWallpaperMenuItemClicked(
+    selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
+  ) {
+    collectionImagesUseCase.saveCrystallizedImage(
+        collectionImagesPresenterEntityMapper.mapFromPresenterEntity(
+            listOf(selectedItemsMap.values.first())).first())
+        .observeOn(postExecutionThread.scheduler)
+        .doOnSubscribe {
+          collectionView?.blurScreen()
+          collectionView?.showIndefiniteLoaderWithMessage(
+              resourceUtils.getStringResource(R.string.crystallizing_wallpaper_wait_message)
+          )
+        }.autoDisposable(collectionView!!.getScope())
+        .subscribe({
+          hideCabIfActive()
+          collectionView?.updateChangesInEveryItemView()
+          collectionView?.removeBlurFromScreen()
+          collectionView?.showCrystallizeWallpaperSuccessMessage()
+        }, {
+          hideCabIfActive()
+          collectionView?.removeBlurFromScreen()
+          collectionView?.showGenericErrorMessage()
+        })
   }
 
   override fun handleDeleteWallpaperMenuItemClicked(

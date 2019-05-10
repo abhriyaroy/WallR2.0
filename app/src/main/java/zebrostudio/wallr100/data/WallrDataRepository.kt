@@ -463,7 +463,7 @@ class WallrDataRepository(
       : Single<List<CollectionsImageModel>> {
     return collectionsDatabaseImageEntityMapper.mapToEntity(
         listOf(collectionsImageModel)).first().path.let { path ->
-      imageHandler.convertImageToLowpolyCacheFile(path)
+      imageHandler.convertAndCacheLowpolyImage(path)
           .andThen(imageHandler.addImageToCollections(path, DatabaseImageType.CRYSTALLIZED))
           .andThen(imageHandler.getAllImagesInCollection())
           .map {

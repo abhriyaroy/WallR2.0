@@ -37,8 +37,12 @@ interface CollectionContract {
     fun showReorderSuccessMessage()
     fun showUnableToReorderErrorMessage()
     fun showSingleImageDeleteSuccessMessage()
-    fun showMultipleImageDeleteSuccessMessage(count : Int)
+    fun showMultipleImageDeleteSuccessMessage(count: Int)
+    fun blurScreen()
+    fun removeBlurFromScreen()
+    fun showIndefiniteLoaderWithMessage(message: String)
     fun showSetWallpaperSuccessMessage()
+    fun showCrystallizeWallpaperSuccessMessage()
     fun showUnableToDeleteErrorMessage()
     fun showGenericErrorMessage()
   }

@@ -2,6 +2,7 @@ package zebrostudio.wallr100.android.ui.collection
 
 import dagger.Module
 import dagger.Provides
+import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
@@ -24,10 +25,11 @@ class CollectionModule {
     collectionImagesUseCase: CollectionImagesUseCase,
     collectionImagesPresenterEntityMapper: CollectionImagesPresenterEntityMapper,
     wallpaperSetter: WallpaperSetter,
+    resourceUtils: ResourceUtils,
     postExecutionThread: PostExecutionThread
   ): CollectionPresenter = CollectionPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase,
       imageOptionsUseCase, collectionImagesUseCase, collectionImagesPresenterEntityMapper,
-      wallpaperSetter, postExecutionThread)
+      wallpaperSetter, resourceUtils, postExecutionThread)
 
   @Provides
   fun provideCollectionPresenterEntityMapper()

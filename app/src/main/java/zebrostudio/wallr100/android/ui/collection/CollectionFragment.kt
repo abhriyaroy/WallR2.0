@@ -32,6 +32,11 @@ import com.qingmei2.rximagepicker_extension.MimeType
 import com.qingmei2.rximagepicker_extension_zhihu.ZhihuConfigurationBuilder
 import com.uber.autodispose.autoDisposable
 import dagger.android.support.AndroidSupportInjection
+import eightbitlab.com.blurview.RenderScriptBlur
+import kotlinx.android.synthetic.main.activity_main.blurView
+import kotlinx.android.synthetic.main.activity_main.loadingHintBelowProgressSpinkit
+import kotlinx.android.synthetic.main.activity_main.rootFrameLayout
+import kotlinx.android.synthetic.main.activity_main.wallpaperActionProgressSpinkit
 import kotlinx.android.synthetic.main.fragment_collection.collectionsRecyclerView
 import kotlinx.android.synthetic.main.fragment_collection.imagesAbsentLayout
 import zebrostudio.wallr100.R
@@ -41,6 +46,7 @@ import zebrostudio.wallr100.android.ui.adapters.CollectionsImageAdapterCallbacks
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.CollectionRecyclerTouchHelperCallback
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.OnStartDragListener
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
+import zebrostudio.wallr100.android.ui.detail.images.BLUR_RADIUS
 import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
@@ -90,7 +96,7 @@ class CollectionFragment : BaseFragment(),
     initRecyclerViewWithListeners()
     attachAutomaticWallpaperChangerListener()
     showAutomaticWallpaperStateAsInActive()
-    attachToolbarCollapseListener()
+    setUpBlurView()
     presenter.handleViewCreated()
   }
 
@@ -394,8 +400,28 @@ class CollectionFragment : BaseFragment(),
     errorToast(stringRes(R.string.collections_fragment_unable_to_delete_images_error_message))
   }
 
+  override fun blurScreen() {
+    activity?.blurView?.visible()
+  }
+
+  override fun removeBlurFromScreen() {
+    activity?.blurView?.gone()
+  }
+
+  override fun showIndefiniteLoaderWithMessage(message: String) {
+    activity?.let {
+      it.wallpaperActionProgressSpinkit.visible()
+      it.loadingHintBelowProgressSpinkit.text = message
+      it.loadingHintBelowProgressSpinkit.visible()
+    }
+  }
+
   override fun showSetWallpaperSuccessMessage() {
     successToast(stringRes(R.string.set_wallpaper_success_message))
+  }
+
+  override fun showCrystallizeWallpaperSuccessMessage() {
+    successToast(stringRes(R.string.crystallizing_wallpaper_successful_message))
   }
 
   override fun showGenericErrorMessage() {
@@ -432,8 +458,10 @@ class CollectionFragment : BaseFragment(),
         }
   }
 
-  private fun attachToolbarCollapseListener() {
-
+  private fun setUpBlurView() {
+    activity?.blurView?.setupWith(activity!!.rootFrameLayout)
+        ?.setBlurAlgorithm(RenderScriptBlur(context!!))
+        ?.setBlurRadius(BLUR_RADIUS)
   }
 
   companion object {

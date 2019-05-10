@@ -71,7 +71,7 @@ interface ImageHandler {
   ): Single<List<CollectionDatabaseImageEntity>>
 
   fun getImageBitmap(path: String): Bitmap
-  fun convertImageToLowpolyCacheFile(path: String): Completable
+  fun convertAndCacheLowpolyImage(path: String): Completable
 }
 
 const val BYTE_ARRAY_SIZE = 2048
@@ -380,7 +380,7 @@ class ImageHandlerImpl(
     }
   }
 
-  override fun convertImageToLowpolyCacheFile(path: String): Completable {
+  override fun convertAndCacheLowpolyImage(path: String): Completable {
     return Completable.create { emitter ->
       getImageBitmap(path).let {
         LowPoly.generate(it).let { bitmap ->

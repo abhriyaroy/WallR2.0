@@ -680,7 +680,7 @@ class ColorsDetailPresenterImplTest {
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.downloadImage()).thenReturn(Completable.error(Exception()))
     `when`(resourceUtils
-        .getStringResource(R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
+        .getStringResource(R.string.crystallizing_wallpaper_wait_message))
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handleDownloadClick()
@@ -689,7 +689,7 @@ class ColorsDetailPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(colorImagesUseCase).downloadImage()
     verify(resourceUtils)
-        .getStringResource(R.string.detail_activity_crystallizing_wallpaper_please_wait_message)
+        .getStringResource(R.string.crystallizing_wallpaper_wait_message)
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).getScope()
@@ -705,7 +705,7 @@ class ColorsDetailPresenterImplTest {
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.downloadImage()).thenReturn(Completable.error(Exception()))
     `when`(resourceUtils
-        .getStringResource(R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
+        .getStringResource(R.string.crystallizing_wallpaper_wait_message))
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handleDownloadClick()
@@ -714,7 +714,7 @@ class ColorsDetailPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(colorImagesUseCase).downloadImage()
     verify(resourceUtils)
-        .getStringResource(R.string.detail_activity_crystallizing_wallpaper_please_wait_message)
+        .getStringResource(R.string.crystallizing_wallpaper_wait_message)
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).getScope()
@@ -730,7 +730,7 @@ class ColorsDetailPresenterImplTest {
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.downloadImage()).thenReturn(Completable.error(Exception()))
     `when`(resourceUtils
-        .getStringResource(R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
+        .getStringResource(R.string.crystallizing_wallpaper_wait_message))
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal,
@@ -742,7 +742,7 @@ class ColorsDetailPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(colorImagesUseCase).downloadImage()
     verify(resourceUtils)
-        .getStringResource(R.string.detail_activity_crystallizing_wallpaper_please_wait_message)
+        .getStringResource(R.string.crystallizing_wallpaper_wait_message)
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).getScope()
@@ -758,7 +758,7 @@ class ColorsDetailPresenterImplTest {
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.downloadImage()).thenReturn(Completable.error(Exception()))
     `when`(resourceUtils
-        .getStringResource(R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
+        .getStringResource(R.string.crystallizing_wallpaper_wait_message))
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal,
@@ -770,7 +770,7 @@ class ColorsDetailPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(colorImagesUseCase).downloadImage()
     verify(resourceUtils)
-        .getStringResource(R.string.detail_activity_crystallizing_wallpaper_please_wait_message)
+        .getStringResource(R.string.crystallizing_wallpaper_wait_message)
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).getScope()
@@ -810,7 +810,7 @@ class ColorsDetailPresenterImplTest {
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.downloadImage()).thenReturn(Completable.error(Exception()))
     `when`(resourceUtils
-        .getStringResource(R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
+        .getStringResource(R.string.crystallizing_wallpaper_wait_message))
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
@@ -820,7 +820,7 @@ class ColorsDetailPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(colorImagesUseCase).downloadImage()
     verify(resourceUtils)
-        .getStringResource(R.string.detail_activity_crystallizing_wallpaper_please_wait_message)
+        .getStringResource(R.string.crystallizing_wallpaper_wait_message)
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).getScope()
@@ -836,7 +836,7 @@ class ColorsDetailPresenterImplTest {
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(colorImagesUseCase.downloadImage()).thenReturn(Completable.complete())
     `when`(resourceUtils
-        .getStringResource(R.string.detail_activity_crystallizing_wallpaper_please_wait_message))
+        .getStringResource(R.string.crystallizing_wallpaper_wait_message))
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
@@ -846,7 +846,7 @@ class ColorsDetailPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(colorImagesUseCase).downloadImage()
     verify(resourceUtils)
-        .getStringResource(R.string.detail_activity_crystallizing_wallpaper_please_wait_message)
+        .getStringResource(R.string.crystallizing_wallpaper_wait_message)
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).getScope()

@@ -165,4 +165,46 @@
       android:elevation="8dp"
       android:visibility="visible"/>
 
+  <eightbitlab.com.blurview.BlurView
+      android:id="@+id/blurView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:visibility="gone"
+      android:clickable="true"
+      android:longClickable="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+      <com.github.ybq.android.spinkit.SpinKitView
+          android:id="@+id/wallpaperActionProgressSpinkit"
+          style="@style/SpinKitView.Large.FoldingCube"
+          android:layout_width="wrap_content"
+          android:layout_height="@dimen/wallpaper_action_progress_spinkit_height"
+          android:layout_centerInParent="true"
+          android:padding="@dimen/wallpaper_action_progress_spinkit_padding"
+          android:visibility="gone"
+          app:SpinKit_Color="@color/white"/>
+
+
+      <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+          android:id="@+id/loadingHintBelowProgressSpinkit"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/wallpaperActionProgressSpinkit"
+          android:layout_centerHorizontal="true"
+          android:layout_marginTop="@dimen/detail_activity_loading_hint_below_progress_spinkit_margin_top"
+          android:paddingTop="@dimen/detail_activity_loading_hint_below_progress_spinkit_padding_top"
+          android:text="@string/finalizing_wallpaper_messsage"
+          android:textSize="@dimen/detail_activity_loading_hint_below_progress_spinkit_text_size"
+          android:visibility="gone"
+          android:maxLines="1"
+          android:ellipsize="end"/>
+
+    </RelativeLayout>
+
+  </eightbitlab.com.blurview.BlurView>
+
 </FrameLayout>

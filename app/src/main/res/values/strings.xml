@@ -44,6 +44,8 @@
   <string name="not_enough_free_space_error_message">Low on memory. Please free some memory for app to work</string>
   <string name="set_wallpaper_success_message">Your wallpaper has been set!</string>
   <string name="set_wallpaper_error_message">Couldn\'t set wallpaper</string>
+  <string name="crystallizing_wallpaper_wait_message">Crystallizing wallpaper. Please wait…</string>
+  <string name="crystallizing_wallpaper_successful_message">Wallpaper has been crystallized!</string>
 
   <!-- Main activity strings -->
   <string name="main_activity_no_email_client_error">There is no email client installed</string>
@@ -119,7 +121,6 @@
   <!-- Detail activity strings -->
   <string name="detail_activity_enable_automatic_wallpaper_changer_from_her_messagee">
     Then you can enable the Automatic Wallpaper Changer from here</string>
-  <string name="detail_activity_crystallizing_wallpaper_please_wait_message">Crystallizing wallpaper. Please wait…</string>
   <string name="detail_activity_download_options_super_high">Super High</string>
   <string name="detail_activity_download_options_high">High</string>
   <string name="detail_activity_download_options_medium">Medium</string>
@@ -135,7 +136,6 @@
   <string name="detail_activity_setting_up_resources_message">Setting up the necessary resources...</string>
   <string name="detail_activity_editing_tool_message">Firing up the editing tool...</string>
   <string name="detail_activity_crystallizing_wallpaper_message">Crystallizing wallpaper...</string>
-  <string name="detail_activity_crystallizing_wallpaper_successful_message">Wallpaper has been crystallized!</string>
   <string name="detail_activity_fetching_sharable_link_message">Fetching sharable link...</string>
   <string name="detail_activity_options_download">DOWNLOAD</string>
   <string name="detail_activity_options_save">SAVE</string>
