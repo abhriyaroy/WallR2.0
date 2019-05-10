@@ -91,6 +91,10 @@ interface WallrRepository {
   fun setAutomaticWallpaperChangerState(state: Boolean)
   fun isCollectionsImageReorderHintDisplayedOnce(): Boolean
   fun saveCollectionsImageReorderHintShownState()
+  fun getBitmapFromDatabaseImage(collectionsImageModel: CollectionsImageModel): Single<Bitmap>
+  fun saveCrystallizedImageInDatabase(collectionsImageModel: CollectionsImageModel)
+      : Single<List<CollectionsImageModel>>
+
   fun getWallpaperChangerInterval(): Long
   fun setWallpaperChangerInterval(interval: Long)
 }

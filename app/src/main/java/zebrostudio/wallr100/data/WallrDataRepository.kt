@@ -10,6 +10,7 @@ import zebrostudio.wallr100.android.utils.GsonProvider
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
+import zebrostudio.wallr100.data.database.DatabaseImageType
 import zebrostudio.wallr100.data.exception.EmptyRecentlyDeletedMapException
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.NoResultFoundException
@@ -449,6 +450,27 @@ class WallrDataRepository(
   override fun saveCollectionsImageReorderHintShownState() {
     sharedPrefsHelper.setBoolean(HINT_PREFERENCE_NAME, COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG,
         true)
+  }
+
+  override fun getBitmapFromDatabaseImage(collectionsImageModel: CollectionsImageModel)
+      : Single<Bitmap> {
+    return Single.just(imageHandler.getImageBitmap(collectionsDatabaseImageEntityMapper.mapToEntity(
+        listOf(collectionsImageModel)).first().path))
+        .subscribeOn(executionThread.computationScheduler)
+  }
+
+  override fun saveCrystallizedImageInDatabase(collectionsImageModel: CollectionsImageModel)
+      : Single<List<CollectionsImageModel>> {
+    return collectionsDatabaseImageEntityMapper.mapToEntity(
+        listOf(collectionsImageModel)).first().path.let { path ->
+      imageHandler.convertImageToLowpolyCacheFile(path)
+          .andThen(imageHandler.addImageToCollections(path, DatabaseImageType.CRYSTALLIZED))
+          .andThen(imageHandler.getAllImagesInCollection())
+          .map {
+            collectionsDatabaseImageEntityMapper.mapFromEntity(it)
+          }
+          .subscribeOn(executionThread.computationScheduler)
+    }
   }
 
   override fun getWallpaperChangerInterval(): Long {

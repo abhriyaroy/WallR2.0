@@ -69,6 +69,9 @@ interface ImageHandler {
   fun deleteImagesInCollection(
     collectionDatabaseImageEntityList: List<CollectionDatabaseImageEntity>
   ): Single<List<CollectionDatabaseImageEntity>>
+
+  fun getImageBitmap(path: String): Bitmap
+  fun convertImageToLowpolyCacheFile(path: String): Completable
 }
 
 const val BYTE_ARRAY_SIZE = 2048
@@ -263,6 +266,23 @@ class ImageHandlerImpl(
     }
   }
 
+  override fun getMultiColorBitmap(
+    hexValueList: List<String>,
+    multiColorImageType: MultiColorImageType
+  ): Single<Bitmap> {
+    return Single.create { emitter ->
+      when (multiColorImageType) {
+        MATERIAL -> createMaterialBitmap(hexValueList as ArrayList<String>)
+        GRADIENT -> createGradientBitmap(hexValueList as ArrayList<String>)
+        PLASMA -> createPlasmaBitmap(hexValueList as ArrayList<String>)
+      }.let {
+        fileHandler.getCacheFile().outputStream()
+            .compressBitmap(it, JPEG, BITMAP_COMPRESS_QUALITY)
+        emitter.onSuccess(it)
+      }
+    }
+  }
+
   override fun getAllImagesInCollection(): Single<List<CollectionDatabaseImageEntity>> {
     return databaseHelper.getDatabase().collectionsDao().getAllData()
         .flatMap { originalList ->
@@ -335,6 +355,47 @@ class ImageHandlerImpl(
         }
   }
 
+  override fun getSingleColorBitmap(hexValue: String): Single<Bitmap> {
+    return Single.create {
+      (COLOR_BITMAP_SIZE * COLOR_BITMAP_SIZE).let {
+        val bitmapArray = IntArray(it)
+        val colorValue = Color.parseColor(hexValue)
+        for (i in 0 until it) {
+          bitmapArray[i] = colorValue
+        }
+        Bitmap.createBitmap(bitmapArray, COLOR_BITMAP_SIZE, COLOR_BITMAP_SIZE,
+            Bitmap.Config.ARGB_8888)
+      }.let { bitmap ->
+        fileHandler.getCacheFile().outputStream()
+            .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
+        it.onSuccess(bitmap)
+      }
+    }
+  }
+
+  override fun getImageBitmap(path: String): Bitmap {
+    return BitmapFactory.Options().let {
+      it.inPreferredConfig = Bitmap.Config.ARGB_8888
+      BitmapFactory.decodeFile(path, it)
+    }
+  }
+
+  override fun convertImageToLowpolyCacheFile(path: String): Completable {
+    return Completable.create { emitter ->
+      getImageBitmap(path).let {
+        LowPoly.generate(it).let { bitmap ->
+          try {
+            fileHandler.getCacheFile().outputStream()
+                .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
+            emitter.onComplete()
+          } catch (exception: IOException) {
+            emitter.onError(exception)
+          }
+        }
+      }
+    }
+  }
+
   private fun saveToCollection(emitter: CompletableEmitter, data: String, type: DatabaseImageType) {
     fileHandler.getCacheFile().inputStream().let { inputStream ->
       fileHandler.getCollectionsFile().let { file ->
@@ -367,41 +428,6 @@ class ImageHandlerImpl(
         inputStream.close()
       }
       return collectionsFile
-    }
-  }
-
-  override fun getSingleColorBitmap(hexValue: String): Single<Bitmap> {
-    return Single.create {
-      (COLOR_BITMAP_SIZE * COLOR_BITMAP_SIZE).let {
-        val bitmapArray = IntArray(it)
-        val colorValue = Color.parseColor(hexValue)
-        for (i in 0 until it) {
-          bitmapArray[i] = colorValue
-        }
-        Bitmap.createBitmap(bitmapArray, COLOR_BITMAP_SIZE, COLOR_BITMAP_SIZE,
-            Bitmap.Config.ARGB_8888)
-      }.let { bitmap ->
-        fileHandler.getCacheFile().outputStream()
-            .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
-        it.onSuccess(bitmap)
-      }
-    }
-  }
-
-  override fun getMultiColorBitmap(
-    hexValueList: List<String>,
-    multiColorImageType: MultiColorImageType
-  ): Single<Bitmap> {
-    return Single.create { emitter ->
-      when (multiColorImageType) {
-        MATERIAL -> createMaterialBitmap(hexValueList as ArrayList<String>)
-        GRADIENT -> createGradientBitmap(hexValueList as ArrayList<String>)
-        PLASMA -> createPlasmaBitmap(hexValueList as ArrayList<String>)
-      }.let {
-        fileHandler.getCacheFile().outputStream()
-            .compressBitmap(it, JPEG, BITMAP_COMPRESS_QUALITY)
-        emitter.onSuccess(it)
-      }
     }
   }
 

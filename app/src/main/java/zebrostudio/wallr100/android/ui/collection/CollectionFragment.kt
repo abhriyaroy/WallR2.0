@@ -119,7 +119,8 @@ class CollectionFragment : BaseFragment(),
 
   override fun onMenuItemClick(item: MenuItem): Boolean {
     when (item.itemId) {
-      R.id.change_wallpaper_interval -> presenter.handleChangeWallpaperIntervalClicked()
+      R.id.change_wallpaper_interval ->
+        presenter.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
       else -> presenter.handleImportFromLocalStorageClicked()
     }
     return true
@@ -142,8 +143,9 @@ class CollectionFragment : BaseFragment(),
   override fun showAppBar() {
     activity?.let {
       it.findViewById<Toolbar>(R.id.toolbar)?.layoutParams.let {
-        (it as AppBarLayout.LayoutParams).scrollFlags = (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-            or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
+        (it as AppBarLayout.LayoutParams).scrollFlags =
+            (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
       }
       it.findViewById<AppBarLayout>(R.id.appbar)?.setExpanded(true, true)
     }
@@ -390,6 +392,10 @@ class CollectionFragment : BaseFragment(),
 
   override fun showUnableToDeleteErrorMessage() {
     errorToast(stringRes(R.string.collections_fragment_unable_to_delete_images_error_message))
+  }
+
+  override fun showSetWallpaperSuccessMessage() {
+    successToast(stringRes(R.string.set_wallpaper_success_message))
   }
 
   override fun showGenericErrorMessage() {

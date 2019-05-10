@@ -3,6 +3,7 @@ package zebrostudio.wallr100.presentation.collection
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.android.ui.minimal.SINGLE_ITEM_SIZE
+import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
@@ -26,6 +27,7 @@ class CollectionPresenterImpl(
   private val imageOptionsUseCase: ImageOptionsUseCase,
   private val collectionImagesUseCase: CollectionImagesUseCase,
   private val collectionImagesPresenterEntityMapper: CollectionImagesPresenterEntityMapper,
+  private val wallpaperSetter: WallpaperSetter,
   private val postExecutionThread: PostExecutionThread
 ) : CollectionPresenter {
 
@@ -61,23 +63,6 @@ class CollectionPresenterImpl(
 
   override fun handlePurchaseClicked() {
     collectionView?.redirectToBuyPro()
-  }
-
-  override fun handleChangeWallpaperIntervalClicked() {
-    imageOptionsUseCase.getAutomaticWallpaperChangerInterval().let {
-      var isDialogShown = false
-      wallpaperChangerIntervals.forEachIndexed { index, interval ->
-        if (it == interval) {
-          collectionView?.showWallpaperChangerIntervalDialog(index)
-          isDialogShown = true
-        } else if (index == INDEX_OF_THREE_DAYS_WALLPAPER_CHANGER_INTERVAL && !isDialogShown) {
-          imageOptionsUseCase.setAutomaticWallpaperChangerInterval(
-              wallpaperChangerIntervals[INDEX_OF_THREE_DAYS_WALLPAPER_CHANGER_INTERVAL])
-          collectionView?.showWallpaperChangerIntervalDialog(
-              INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL)
-        }
-      }
-    }
   }
 
   override fun handleWallpaperChangerEnabled() {
@@ -151,8 +136,21 @@ class CollectionPresenterImpl(
 
   }
 
-  override fun handleAutomaticWallpaperIntervalChangerMenuItemClicked() {
-
+  override fun handleAutomaticWallpaperChangerIntervalMenuItemClicked() {
+    imageOptionsUseCase.getAutomaticWallpaperChangerInterval().let {
+      var isDialogShown = false
+      wallpaperChangerIntervals.forEachIndexed { index, interval ->
+        if (it == interval) {
+          collectionView?.showWallpaperChangerIntervalDialog(index)
+          isDialogShown = true
+        } else if (index == INDEX_OF_THREE_DAYS_WALLPAPER_CHANGER_INTERVAL && !isDialogShown) {
+          imageOptionsUseCase.setAutomaticWallpaperChangerInterval(
+              wallpaperChangerIntervals[INDEX_OF_THREE_DAYS_WALLPAPER_CHANGER_INTERVAL])
+          collectionView?.showWallpaperChangerIntervalDialog(
+              INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL)
+        }
+      }
+    }
   }
 
   override fun updateWallpaperChangerInterval(choice: Int) {
@@ -161,30 +159,46 @@ class CollectionPresenterImpl(
   }
 
   override fun handleImagePickerResult(uriList: List<Uri>) {
-    collectionImagesUseCase.addImage(uriList)
-        .map {
-          collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
+    if (uriList.isNotEmpty()) {
+      collectionImagesUseCase.addImage(uriList)
+          .map {
+            collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
+          }
+          .observeOn(postExecutionThread.scheduler)
+          .autoDisposable(collectionView!!.getScope())
+          .subscribe({
+            collectionView?.setImagesList(it)
+            collectionView?.updateChangesInEveryItemView()
+            uriList.size.let {
+              if (it == SINGLE_ITEM_SIZE) {
+                collectionView?.showSingleImageAddedSuccessfullyMessage()
+              } else {
+                collectionView?.showMultipleImagesAddedSuccessfullyMessage(it)
+              }
+            }
+          }, {
+            println(it.message)
+            collectionView?.showGenericErrorMessage()
+          })
+    }
+  }
+
+  override fun handleSetWallpaperMenuItemClicked(selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>) {
+    collectionImagesUseCase.getImageBitmap(
+        collectionImagesPresenterEntityMapper.mapFromPresenterEntity(
+            listOf(selectedItemsMap.values.first())).first())
+        .doOnSuccess {
+          wallpaperSetter.setWallpaper(it)
         }
         .observeOn(postExecutionThread.scheduler)
         .autoDisposable(collectionView!!.getScope())
         .subscribe({
-          collectionView?.setImagesList(it)
-          collectionView?.updateChangesInEveryItemView()
-          uriList.size.let {
-            if (it == SINGLE_ITEM_SIZE) {
-              collectionView?.showSingleImageAddedSuccessfullyMessage()
-            } else {
-              collectionView?.showMultipleImagesAddedSuccessfullyMessage(it)
-            }
-          }
+          hideCabIfActive()
+          collectionView?.showSetWallpaperSuccessMessage()
         }, {
-          println(it.message)
+          hideCabIfActive()
           collectionView?.showGenericErrorMessage()
         })
-  }
-
-  override fun handleSetWallpaperMenuItemClicked(selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>) {
-
   }
 
   override fun handleCrystallizeWallpaperMenuItemClicked(selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>) {

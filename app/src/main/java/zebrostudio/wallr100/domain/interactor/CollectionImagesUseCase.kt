@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.domain.interactor
 
+import android.graphics.Bitmap
 import android.net.Uri
 import io.reactivex.Single
 import zebrostudio.wallr100.domain.WallrRepository
@@ -12,6 +13,10 @@ interface CollectionImagesUseCase {
       : Single<List<CollectionsImageModel>>
 
   fun deleteImages(collectionImagesModelList: List<CollectionsImageModel>)
+      : Single<List<CollectionsImageModel>>
+
+  fun getImageBitmap(collectionsImageModel: CollectionsImageModel): Single<Bitmap>
+  fun saveCrystallizedImage(collectionsImageModel: CollectionsImageModel)
       : Single<List<CollectionsImageModel>>
 }
 
@@ -35,6 +40,15 @@ class CollectionsImagesInteractor(
   override fun deleteImages(collectionImagesModelList: List<CollectionsImageModel>)
       : Single<List<CollectionsImageModel>> {
     return wallrRepository.deleteImageFromCollection(collectionImagesModelList)
+  }
+
+  override fun getImageBitmap(collectionsImageModel: CollectionsImageModel): Single<Bitmap> {
+    return wallrRepository.getBitmapFromDatabaseImage(collectionsImageModel)
+  }
+
+  override fun saveCrystallizedImage(collectionsImageModel: CollectionsImageModel)
+      : Single<List<CollectionsImageModel>> {
+    return wallrRepository.saveCrystallizedImageInDatabase(collectionsImageModel)
   }
 
 }
