@@ -8,8 +8,8 @@ import zebrostudio.wallr100.android.WallrApplication
 import javax.inject.Singleton
 
 @Singleton
-@Component(
-    modules = [(AndroidSupportInjectionModule::class), (AppModule::class), (ActivityBuilder::class)])
+@Component(modules = [(AndroidSupportInjectionModule::class), (AppModule::class),
+  (ActivityBuilder::class), (ServiceBuilder::class)])
 interface AppComponent {
 
   @Component.Builder

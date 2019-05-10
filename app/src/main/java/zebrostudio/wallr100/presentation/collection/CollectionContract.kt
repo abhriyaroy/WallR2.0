@@ -21,6 +21,8 @@ interface CollectionContract {
     fun showImagesAbsentLayout()
     fun showAutomaticWallpaperStateAsActive()
     fun showAutomaticWallpaperStateAsInActive()
+    fun showWallpaperChangerIntervalUpdatedSuccessMessage()
+    fun showWallpaperChangerRestartedSuccessMessage()
     fun showWallpaperChangerIntervalDialog(choice: Int)
     fun showImagePicker()
     fun showSingleImageAddedSuccessfullyMessage()

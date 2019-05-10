@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.data.service
+package zebrostudio.wallr100.android.service
 
 import io.reactivex.Completable
 import zebrostudio.wallr100.android.utils.WallpaperSetter
@@ -22,7 +22,7 @@ class AutomaticWallpaperChangerHelperImpl(
 
   override fun setWallpaper(): Completable {
     return Completable.create {
-      Thread.sleep(10000)
+      Thread.sleep(1800000)
       it.onComplete()
     }.subscribeOn(executionThread.ioScheduler)
   }

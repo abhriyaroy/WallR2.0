@@ -214,5 +214,7 @@
 
   <!-- Automatic wallpaper changer strings -->
   <string name="automatic_wallpaper_changer_notification_title">Automatic wallpaper changer</string>
+  <string name="collections_fragment_wallpaper_changer_interval_updated_success_message">Automatic wallpaper changer interval updated</string>
+  <string name="collections_fragment_wallpaper_changer_service_restarted_success_message">Automatic wallpaper changer restarted</string>
 
 </resources>

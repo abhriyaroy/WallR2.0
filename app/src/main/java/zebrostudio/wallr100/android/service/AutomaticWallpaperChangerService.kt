@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.data.service
+package zebrostudio.wallr100.android.service
 
 import android.app.PendingIntent
 import android.app.Service
@@ -7,21 +7,29 @@ import android.os.Handler
 import android.os.IBinder
 import android.support.annotation.Nullable
 import android.support.v4.app.NotificationCompat
-import android.util.Log
-import com.uber.autodispose.autoDisposable
+import dagger.android.AndroidInjection
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.NOTIFICATION_CHANNEL_ID
 import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
+import javax.inject.Inject
 
-class AutomaticWallpaperChangerService(
-  private val automaticWallpaperChangerHelper: AutomaticWallpaperChangerHelper,
-    private val postExecutionThread: PostExecutionThread
-) : Service() {
+class AutomaticWallpaperChangerService : Service() {
+
+  @Inject lateinit var automaticWallpaperChangerHelper: AutomaticWallpaperChangerHelper
+  @Inject lateinit var postExecutionThread: PostExecutionThread
+
+  private var handler: Handler? = null
+  private var runnable : Runnable? = null
+
+  override fun onCreate() {
+    AndroidInjection.inject(this)
+    super.onCreate()
+  }
 
   override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-
+    println("Started on star command")
     val notificationIntent = Intent(this, MainActivity::class.java)
     val pendingIntent = PendingIntent.getActivity(this,
         0, notificationIntent, 0)
@@ -38,24 +46,30 @@ class AutomaticWallpaperChangerService(
     //do heavy work on a background thread
     //stopSelf();
 
-    val handler = Handler()
+    handler = Handler()
     // Define the code block to be executed
-    val runnableCode = object : Runnable {
+    runnable =  object : Runnable {
       override fun run() {
         automaticWallpaperChangerHelper.setWallpaper()
             .observeOn(postExecutionThread.scheduler)
-            .subscribe( {
+            .subscribe({
               println("Subscribe success ")
-              handler.postDelayed(this, 2000)
-            },{
+              handler?.post(this)
+            }, {
               println("subscribe error")
             })
       }
     }
 // Start the initial runnable task by posting through the handler
-    handler.post(runnableCode)
+    handler?.post(runnable)
 
     return START_STICKY
+  }
+
+  override fun onDestroy() {
+    handler = null
+    runnable = null
+    super.onDestroy()
   }
 
   @Nullable

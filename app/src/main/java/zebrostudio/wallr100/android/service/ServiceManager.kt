@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.data.service
+package zebrostudio.wallr100.android.service
 
 import android.app.ActivityManager
 import android.content.Context
@@ -44,7 +44,6 @@ class ServiceManagerImpl(private val context: Context) : ServiceManager {
           return service.foreground
         }
       }
-      println("service false part")
       return false
     }
   }

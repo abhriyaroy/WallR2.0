@@ -4,12 +4,14 @@ import android.app.Activity
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.Service
 import android.content.Context
 import android.os.Build
 import android.support.multidex.MultiDex
 import com.bumptech.glide.request.target.ViewTarget
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
+import dagger.android.HasServiceInjector
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.di.DaggerAppComponent
 import javax.inject.Inject
@@ -17,10 +19,12 @@ import javax.inject.Inject
 const val NOTIFICATION_CHANNEL_ID = "WallrNotificationChannel"
 const val NOTIFICATION_CHANNEL_NAME = "WallrNotification"
 
-class WallrApplication : Application(), HasActivityInjector {
+class WallrApplication : Application(), HasActivityInjector, HasServiceInjector {
 
   @Inject
   internal lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
+  @Inject
+  internal lateinit var serviceDispatchingAndroidInjector: DispatchingAndroidInjector<Service>
 
   override fun attachBaseContext(base: Context) {
     super.attachBaseContext(base)
@@ -38,6 +42,8 @@ class WallrApplication : Application(), HasActivityInjector {
   }
 
   override fun activityInjector() = activityDispatchingAndroidInjector
+
+  override fun serviceInjector() = serviceDispatchingAndroidInjector
 
   private fun createNotificationChannel() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

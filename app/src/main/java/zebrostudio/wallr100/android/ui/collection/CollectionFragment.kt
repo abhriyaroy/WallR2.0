@@ -249,6 +249,16 @@ class CollectionFragment : BaseFragment(),
     activity?.findViewById<SwitchCompat>(R.id.switchView)?.isChecked = false
   }
 
+  override fun showWallpaperChangerIntervalUpdatedSuccessMessage() {
+    successToast(
+        stringRes(R.string.collections_fragment_wallpaper_changer_interval_updated_success_message))
+  }
+
+  override fun showWallpaperChangerRestartedSuccessMessage() {
+    successToast(stringRes(
+        R.string.collections_fragment_wallpaper_changer_service_restarted_success_message))
+  }
+
   override fun showWallpaperChangerIntervalDialog(choice: Int) {
     MaterialDialog.Builder(activity!!)
         .backgroundColor(colorRes(R.color.primary))

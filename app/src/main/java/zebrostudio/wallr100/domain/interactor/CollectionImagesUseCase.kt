@@ -2,9 +2,11 @@ package zebrostudio.wallr100.domain.interactor
 
 import android.graphics.Bitmap
 import android.net.Uri
-import io.reactivex.Completable
 import io.reactivex.Single
+import zebrostudio.wallr100.android.service.ServiceManager
 import zebrostudio.wallr100.domain.WallrRepository
+import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerIntervalUpdateResultState.INTERVAL_UPDATED
+import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerIntervalUpdateResultState.SERVICE_RESTARTED
 import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageModel
 
 interface CollectionImagesUseCase {
@@ -20,11 +22,16 @@ interface CollectionImagesUseCase {
   fun saveCrystallizedImage(collectionsImageModel: CollectionsImageModel)
       : Single<List<CollectionsImageModel>>
 
-  fun startAutomaticWallpaperChanger(): Completable
-  fun stopAutomaticWallpaperChanger(): Completable
+  fun enableAutomaticWallpaperChanger()
+  fun disableAutomaticWallpaperChanger()
+  fun getAutomaticWallpaperChangerInterval(): Long
+  fun setAutomaticWallpaperChangerInterval(
+    interval: Long
+  ): AutomaticWallpaperChangerIntervalUpdateResultState
 }
 
 class CollectionsImagesInteractor(
+  private val serviceManager: ServiceManager,
   private val wallrRepository: WallrRepository
 ) : CollectionImagesUseCase {
 
@@ -55,12 +62,32 @@ class CollectionsImagesInteractor(
     return wallrRepository.saveCrystallizedImageInDatabase(collectionsImageModel)
   }
 
-  override fun startAutomaticWallpaperChanger(): Completable {
-    return wallrRepository.enableWallpaperChangerService()
+  override fun enableAutomaticWallpaperChanger() {
+    serviceManager.startAutomaticWallpaperChangerService()
   }
 
-  override fun stopAutomaticWallpaperChanger(): Completable {
-    return wallrRepository.disableWallpaperChangerService()
+  override fun disableAutomaticWallpaperChanger() {
+    serviceManager.stopAutomaticWallpaperChangerService()
   }
 
+  override fun getAutomaticWallpaperChangerInterval(): Long {
+    return wallrRepository.getWallpaperChangerInterval()
+  }
+
+  override fun setAutomaticWallpaperChangerInterval(
+    interval: Long
+  ): AutomaticWallpaperChangerIntervalUpdateResultState {
+    wallrRepository.setWallpaperChangerInterval(interval)
+    if (serviceManager.isAutomaticWallpaperChangerRunning()) {
+      serviceManager.stopAutomaticWallpaperChangerService()
+      serviceManager.startAutomaticWallpaperChangerService()
+      return SERVICE_RESTARTED
+    }
+    return INTERVAL_UPDATED
+  }
+}
+
+enum class AutomaticWallpaperChangerIntervalUpdateResultState {
+  INTERVAL_UPDATED,
+  SERVICE_RESTARTED
 }

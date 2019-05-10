@@ -3,12 +3,15 @@ package zebrostudio.wallr100.presentation.collection
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.service.ServiceManager
 import zebrostudio.wallr100.android.ui.minimal.SINGLE_ITEM_SIZE
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
+import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerIntervalUpdateResultState.INTERVAL_UPDATED
+import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerIntervalUpdateResultState.SERVICE_RESTARTED
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionPresenter
@@ -31,6 +34,7 @@ class CollectionPresenterImpl(
   private val collectionImagesPresenterEntityMapper: CollectionImagesPresenterEntityMapper,
   private val wallpaperSetter: WallpaperSetter,
   private val resourceUtils: ResourceUtils,
+  private val serviceManager: ServiceManager,
   private val postExecutionThread: PostExecutionThread
 ) : CollectionPresenter {
 
@@ -124,22 +128,22 @@ class CollectionPresenterImpl(
   }
 
   override fun handleAutomaticWallpaperChangerEnabled() {
-
+    collectionImagesUseCase.enableAutomaticWallpaperChanger()
   }
 
   override fun handleAutomaticWallpaperChangerDisabled() {
-
+    collectionImagesUseCase.disableAutomaticWallpaperChanger()
   }
 
   override fun handleAutomaticWallpaperChangerIntervalMenuItemClicked() {
-    imageOptionsUseCase.getAutomaticWallpaperChangerInterval().let {
+    collectionImagesUseCase.getAutomaticWallpaperChangerInterval().let {
       var isDialogShown = false
       wallpaperChangerIntervals.forEachIndexed { index, interval ->
         if (it == interval) {
           collectionView?.showWallpaperChangerIntervalDialog(index)
           isDialogShown = true
         } else if (index == INDEX_OF_THREE_DAYS_WALLPAPER_CHANGER_INTERVAL && !isDialogShown) {
-          imageOptionsUseCase.setAutomaticWallpaperChangerInterval(
+          collectionImagesUseCase.setAutomaticWallpaperChangerInterval(
               wallpaperChangerIntervals[INDEX_OF_THREE_DAYS_WALLPAPER_CHANGER_INTERVAL])
           collectionView?.showWallpaperChangerIntervalDialog(
               INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL)
@@ -149,8 +153,11 @@ class CollectionPresenterImpl(
   }
 
   override fun updateWallpaperChangerInterval(choice: Int) {
-    imageOptionsUseCase.setAutomaticWallpaperChangerInterval(wallpaperChangerIntervals[choice])
-    // Restart service for changing wallpaper
+    when (collectionImagesUseCase.setAutomaticWallpaperChangerInterval(
+        wallpaperChangerIntervals[choice])) {
+      INTERVAL_UPDATED -> collectionView?.showWallpaperChangerIntervalUpdatedSuccessMessage()
+      SERVICE_RESTARTED -> collectionView?.showWallpaperChangerRestartedSuccessMessage()
+    }
   }
 
   override fun handleImagePickerResult(uriList: List<Uri>) {

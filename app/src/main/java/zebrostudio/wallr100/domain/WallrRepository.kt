@@ -97,6 +97,4 @@ interface WallrRepository {
 
   fun getWallpaperChangerInterval(): Long
   fun setWallpaperChangerInterval(interval: Long)
-  fun enableWallpaperChangerService() : Completable
-  fun disableWallpaperChangerService() : Completable
 }
