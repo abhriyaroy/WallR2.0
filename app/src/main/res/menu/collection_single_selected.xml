@@ -8,7 +8,7 @@
       app:showAsAction="ifRoom"/>
   <item
       android:id="@+id/crystallizeWallpaperMenuItem"
-      android:icon="@drawable/ic_crystallize_wallpaper"
+      android:icon="@drawable/ic_crystallize_collection_menu"
       android:title="@string/collection_single_selected_menu_crystallize_title"
       app:showAsAction="ifRoom"/>
   <item
