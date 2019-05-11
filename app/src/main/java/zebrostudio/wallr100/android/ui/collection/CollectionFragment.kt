@@ -2,6 +2,7 @@ package zebrostudio.wallr100.android.ui.collection
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -59,9 +60,18 @@ import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.android.utils.withDelayOnMain
 import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.CollectionRecyclerPresenter
+import zebrostudio.wallr100.presentation.collection.AUTOSTART_CLASS_NAME_OPPO
+import zebrostudio.wallr100.presentation.collection.AUTOSTART_CLASS_NAME_VIVO
+import zebrostudio.wallr100.presentation.collection.AUTOSTART_CLASS_NAME_XIAOMI
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionPresenter
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionView
+import zebrostudio.wallr100.presentation.collection.MANUFACTURER_NAME_OPPO
+import zebrostudio.wallr100.presentation.collection.MANUFACTURER_NAME_VIVO
+import zebrostudio.wallr100.presentation.collection.MANUFACTURER_NAME_XIAOMI
 import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEntity
+import zebrostudio.wallr100.presentation.collection.SECURITY_PACKAGE_OPPO
+import zebrostudio.wallr100.presentation.collection.SECURITY_PACKAGE_VIVO
+import zebrostudio.wallr100.presentation.collection.SECURITY_PACKAGE_XIAOMI
 import javax.inject.Inject
 
 const val REQUEST_CODE = 1
@@ -121,6 +131,10 @@ class CollectionFragment : BaseFragment(),
   override fun onDestroy() {
     presenter.detachView()
     super.onDestroy()
+  }
+
+  override fun getManufacturerName(): String {
+    return android.os.Build.MANUFACTURER
   }
 
   override fun onMenuItemClick(item: MenuItem): Boolean {
@@ -447,6 +461,17 @@ class CollectionFragment : BaseFragment(),
     errorToast(stringRes(R.string.generic_error_message))
   }
 
+  override fun showAutoStartPermissionRequiredDialog() {
+    MaterialDialog.Builder(activity!!)
+        .title(getString(R.string.collection_fragment_autostart_permission_title))
+        .content(stringRes(R.string.collection_fragment_autostart_permission_description))
+        .onPositive { _, _ -> openAutoStartSettings() }
+        .cancelable(true)
+        .positiveText(stringRes(R.string.collection_fragment_autostart_permission_positive_text))
+        .negativeText(stringRes(R.string.collection_fragment_autostart_permission_negative_text))
+        .show()
+  }
+
   private fun initRecyclerViewWithListeners() {
     collectionsImageAdapter = CollectionsImageAdapter(
         this, this, recyclerPresenter)
@@ -481,6 +506,27 @@ class CollectionFragment : BaseFragment(),
     activity?.blurView?.setupWith(activity!!.rootFrameLayout)
         ?.setBlurAlgorithm(RenderScriptBlur(context!!))
         ?.setBlurRadius(BLUR_RADIUS)
+  }
+
+  private fun openAutoStartSettings() {
+    Intent().apply {
+
+      getManufacturerName().let {
+        if (it.equals(MANUFACTURER_NAME_XIAOMI, true)) {
+          component = ComponentName(SECURITY_PACKAGE_XIAOMI, AUTOSTART_CLASS_NAME_XIAOMI)
+        } else if (it.equals(MANUFACTURER_NAME_OPPO, true)) {
+          component = ComponentName(SECURITY_PACKAGE_OPPO, AUTOSTART_CLASS_NAME_OPPO)
+        } else if (it.equals(MANUFACTURER_NAME_VIVO, true)) {
+          component = ComponentName(SECURITY_PACKAGE_VIVO, AUTOSTART_CLASS_NAME_VIVO)
+        }
+      }
+    }.let {
+      val list = context!!.packageManager
+          .queryIntentActivities(it, PackageManager.MATCH_DEFAULT_ONLY)
+      if (list.isNotEmpty()) {
+        startActivity(it)
+      }
+    }
   }
 
   companion object {

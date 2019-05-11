@@ -3,6 +3,7 @@ package zebrostudio.wallr100.presentation.collection
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.service.wallpaperChangerIntervals
 import zebrostudio.wallr100.android.ui.minimal.SINGLE_ITEM_SIZE
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
@@ -18,6 +19,16 @@ import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEn
 import zebrostudio.wallr100.presentation.collection.mapper.CollectionImagesPresenterEntityMapper
 import java.util.Collections
 import java.util.TreeMap
+
+const val MANUFACTURER_NAME_XIAOMI = "xiaomi"
+const val SECURITY_PACKAGE_XIAOMI = "com.miui.securitycenter"
+const val AUTOSTART_CLASS_NAME_XIAOMI = "com.miui.permcenter.autostart.AutoStartManagementActivity"
+const val MANUFACTURER_NAME_OPPO = "oppo"
+const val SECURITY_PACKAGE_OPPO = "com.coloros.safecenter"
+const val AUTOSTART_CLASS_NAME_OPPO = "com.coloros.safecenter.permission.startup.StartupAppListActivity"
+const val MANUFACTURER_NAME_VIVO = "vivo"
+const val SECURITY_PACKAGE_VIVO = "com.vivo.permissionmanager"
+const val AUTOSTART_CLASS_NAME_VIVO = "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"
 
 private const val MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_HINT = 2
 private const val MINIMUM_NUMBER_OF_SELECTED_ITEMS = 1
@@ -35,13 +46,6 @@ class CollectionPresenterImpl(
 ) : CollectionPresenter {
 
   private var collectionView: CollectionView? = null
-  private val wallpaperChangerIntervals = arrayListOf<Long>(
-      1800000,
-      3600000,
-      21600000,
-      86400000,
-      259200000
-  )
 
   override fun attachView(view: CollectionView) {
     collectionView = view
@@ -131,6 +135,13 @@ class CollectionPresenterImpl(
 
   override fun handleAutomaticWallpaperChangerEnabled() {
     collectionImagesUseCase.startAutomaticWallpaperChanger()
+    collectionView?.getManufacturerName()?.let {
+      if (it.equals(MANUFACTURER_NAME_XIAOMI, true)
+          || it.equals(MANUFACTURER_NAME_OPPO, true)
+          || it.equals(MANUFACTURER_NAME_VIVO, true)) {
+        collectionView?.showAutoStartPermissionRequiredDialog()
+      }
+    }
   }
 
   override fun handleAutomaticWallpaperChangerDisabled() {

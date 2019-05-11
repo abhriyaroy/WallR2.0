@@ -8,6 +8,7 @@ import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEn
 interface CollectionContract {
 
   interface CollectionView : BaseView {
+    fun getManufacturerName() : String
     fun showAppBar()
     fun hideAppBar()
     fun showPurchasePremiumToContinueDialog()
@@ -49,6 +50,7 @@ interface CollectionContract {
     fun showCrystallizeWallpaperSuccessMessage()
     fun showUnableToDeleteErrorMessage()
     fun showGenericErrorMessage()
+    fun showAutoStartPermissionRequiredDialog()
   }
 
   interface CollectionPresenter : BasePresenter<CollectionView> {
