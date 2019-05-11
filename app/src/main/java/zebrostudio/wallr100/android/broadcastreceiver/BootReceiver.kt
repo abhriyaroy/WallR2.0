@@ -5,21 +5,22 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.support.v4.content.ContextCompat
 import zebrostudio.wallr100.android.service.AutomaticWallpaperChangerService
 import zebrostudio.wallr100.android.service.WALLPAPER_CHANGER_SERVICE_CODE
 import zebrostudio.wallr100.android.service.WALLPAPER_CHANGER_SERVICE_RESTART_DELAY
 
-class AutomaticWallpaperChangerBroadCastReceiver : BroadcastReceiver() {
+class BootReceiver : BroadcastReceiver() {
 
-  override fun onReceive(context: Context?, intent: Intent?) {
+  override fun onReceive(context: Context, intent: Intent?) {
+
     val service = PendingIntent.getService(
-        context?.applicationContext,
+        context.applicationContext,
         WALLPAPER_CHANGER_SERVICE_CODE,
-        Intent(context?.applicationContext, AutomaticWallpaperChangerService::class.java),
+        Intent(context.applicationContext, AutomaticWallpaperChangerService::class.java),
         PendingIntent.FLAG_ONE_SHOT)
 
-    val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, WALLPAPER_CHANGER_SERVICE_RESTART_DELAY,
-        service)
+    ContextCompat.startForegroundService(context,
+        Intent(context, AutomaticWallpaperChangerService::class.java))
   }
 }

@@ -54,6 +54,7 @@ import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
+import zebrostudio.wallr100.android.utils.infoToast
 import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
@@ -77,7 +78,8 @@ import javax.inject.Inject
 const val REQUEST_CODE = 1
 const val MAXIMUM_SELECTED_IMAGES = 10
 private const val REORDER_HINT_VIEW_POSITION = 1
-private const val DELAY_400_MILLISECONDS: Long = 400
+private const val DISABLE_APP_BAR_DELAY: Long = 400
+private const val AUTOSTART_HINT_DELAY: Long = 2000
 
 class CollectionFragment : BaseFragment(),
     CollectionView,
@@ -174,7 +176,7 @@ class CollectionFragment : BaseFragment(),
   override fun hideAppBar() {
     activity?.let {
       it.findViewById<AppBarLayout>(R.id.appbar)?.setExpanded(false, true)
-      withDelayOnMain(DELAY_400_MILLISECONDS, block = {
+      withDelayOnMain(DISABLE_APP_BAR_DELAY, block = {
         it.findViewById<Toolbar>(R.id.toolbar)?.layoutParams.let {
           (it as AppBarLayout.LayoutParams).scrollFlags = 0
         }
@@ -268,7 +270,6 @@ class CollectionFragment : BaseFragment(),
   }
 
   override fun showAutomaticWallpaperStateAsInActive() {
-    println("state changed to inactive")
     activity?.findViewById<SwitchCompat>(R.id.switchView)?.isChecked = false
   }
 
@@ -510,20 +511,24 @@ class CollectionFragment : BaseFragment(),
 
   private fun openAutoStartSettings() {
     Intent().apply {
-
       getManufacturerName().let {
-        if (it.equals(MANUFACTURER_NAME_XIAOMI, true)) {
-          component = ComponentName(SECURITY_PACKAGE_XIAOMI, AUTOSTART_CLASS_NAME_XIAOMI)
-        } else if (it.equals(MANUFACTURER_NAME_OPPO, true)) {
-          component = ComponentName(SECURITY_PACKAGE_OPPO, AUTOSTART_CLASS_NAME_OPPO)
-        } else if (it.equals(MANUFACTURER_NAME_VIVO, true)) {
-          component = ComponentName(SECURITY_PACKAGE_VIVO, AUTOSTART_CLASS_NAME_VIVO)
+        when {
+          it.equals(MANUFACTURER_NAME_XIAOMI, true) ->
+            component = ComponentName(SECURITY_PACKAGE_XIAOMI, AUTOSTART_CLASS_NAME_XIAOMI)
+          it.equals(MANUFACTURER_NAME_OPPO, true) ->
+            component = ComponentName(SECURITY_PACKAGE_OPPO, AUTOSTART_CLASS_NAME_OPPO)
+          it.equals(MANUFACTURER_NAME_VIVO, true) ->
+            component = ComponentName(SECURITY_PACKAGE_VIVO,
+                AUTOSTART_CLASS_NAME_VIVO)
         }
       }
     }.let {
       val list = context!!.packageManager
           .queryIntentActivities(it, PackageManager.MATCH_DEFAULT_ONLY)
       if (list.isNotEmpty()) {
+        withDelayOnMain(AUTOSTART_HINT_DELAY) {
+          infoToast(stringRes(R.string.collections_fragment_enable_autostart_settings_hint))
+        }
         startActivity(it)
       }
     }
