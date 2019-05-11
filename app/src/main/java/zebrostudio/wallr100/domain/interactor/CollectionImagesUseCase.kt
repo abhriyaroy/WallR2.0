@@ -23,8 +23,8 @@ interface CollectionImagesUseCase {
       : Single<List<CollectionsImageModel>>
 
   fun isAutomaticWallpaperChangerRunning(): Boolean
-  fun enableAutomaticWallpaperChanger()
-  fun disableAutomaticWallpaperChanger()
+  fun startAutomaticWallpaperChanger()
+  fun stopAutomaticWallpaperChanger()
   fun getAutomaticWallpaperChangerInterval(): Long
   fun setAutomaticWallpaperChangerInterval(
     interval: Long
@@ -67,11 +67,11 @@ class CollectionsImagesInteractor(
     return serviceManager.isAutomaticWallpaperChangerRunning()
   }
 
-  override fun enableAutomaticWallpaperChanger() {
+  override fun startAutomaticWallpaperChanger() {
     serviceManager.startAutomaticWallpaperChangerService()
   }
 
-  override fun disableAutomaticWallpaperChanger() {
+  override fun stopAutomaticWallpaperChanger() {
     serviceManager.stopAutomaticWallpaperChangerService()
   }
 

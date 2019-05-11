@@ -6,8 +6,6 @@ import dagger.Module
 import dagger.Provides
 import zebrostudio.wallr100.android.AndroidBackgroundThreads
 import zebrostudio.wallr100.android.AndroidMainThread
-import zebrostudio.wallr100.android.service.AutomaticWallpaperChangerHelper
-import zebrostudio.wallr100.android.service.AutomaticWallpaperChangerHelperImpl
 import zebrostudio.wallr100.android.service.ServiceManager
 import zebrostudio.wallr100.android.service.ServiceManagerImpl
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
@@ -52,6 +50,8 @@ import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseInteractor
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
+import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerInteractor
+import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerUseCase
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.CollectionsImagesInteractor
 import zebrostudio.wallr100.domain.interactor.ColorImagesInteractor
@@ -257,6 +257,11 @@ class AppModule {
   ): CollectionImagesUseCase = CollectionsImagesInteractor(serviceManager, wallrRepository)
 
   @Provides
+  fun provideAutomaticWallpaperChangerUseCase(
+    wallrRepository: WallrRepository
+  ): AutomaticWallpaperChangerUseCase = AutomaticWallpaperChangerInteractor(wallrRepository)
+
+  @Provides
   fun provideImageRecyclerViewPresenter()
       : ImageRecyclerViewPresenter = ImageRecyclerViewPresenterImpl()
 
@@ -265,14 +270,6 @@ class AppModule {
 
   @Provides
   fun provideCollectionRecyclerPresenter(): CollectionRecyclerPresenter = CollectionRecyclerPresenterImpl()
-
-  @Provides
-  fun provideAutomaticWallpaperChangerHelper(
-    wallrRepository: WallrRepository,
-    wallpaperSetter: WallpaperSetter,
-    executionThread: ExecutionThread
-  ): AutomaticWallpaperChangerHelper = AutomaticWallpaperChangerHelperImpl(wallrRepository,
-      wallpaperSetter, executionThread)
 
   @Provides
   fun provideServiceManager(context: Context): ServiceManager = ServiceManagerImpl(context)

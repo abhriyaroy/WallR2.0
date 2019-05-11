@@ -50,6 +50,8 @@ const val CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG = "custom_minimal_color_list_a
 const val CUSTOM_MINIMAL_COLOR_LIST_TAG = "custom_solid_color_list"
 const val AUTOMATIC_WALLPAPER_CHANGER_STATE_TAG = "automatic_wallpaper_changer"
 const val AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_TAG = "automatic_wallpaper_changer_interval"
+const val AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_TAG =
+    "automatic_wallpaper_changer_last_used_uid"
 const val UNABLE_TO_RESOLVE_HOST_EXCEPTION_MESSAGE = "Unable to resolve host " +
     "\"api.unsplash.com\": No address associated with hostname"
 const val FIREBASE_DATABASE_PATH = "wallr"
@@ -394,8 +396,9 @@ class WallrDataRepository(
   }
 
   override fun getImagesInCollection(): Single<List<CollectionsImageModel>> {
+    println("subscribe collection images")
     return imageHandler.getAllImagesInCollection()
-        .subscribeOn(executionThread.computationScheduler)
+        .subscribeOn(executionThread.ioScheduler)
         .map {
           collectionsDatabaseImageEntityMapper.mapFromEntity(it)
         }
@@ -404,7 +407,7 @@ class WallrDataRepository(
   override fun addImagesToCollection(uriList: List<Uri>): Single<List<CollectionsImageModel>> {
     return imageHandler.addExternalImageToCollection(uriList)
         .andThen(imageHandler.getAllImagesInCollection())
-        .subscribeOn(executionThread.computationScheduler)
+        .subscribeOn(executionThread.ioScheduler)
         .map {
           collectionsDatabaseImageEntityMapper.mapFromEntity(it)
         }
@@ -414,7 +417,7 @@ class WallrDataRepository(
       : Single<List<CollectionsImageModel>> {
     return imageHandler.reorderImagesInCollection(
         collectionsDatabaseImageEntityMapper.mapToEntity(collectionImagesModelList))
-        .subscribeOn(executionThread.computationScheduler)
+        .subscribeOn(executionThread.ioScheduler)
         .map {
           println(it.size)
           println(it)
@@ -427,7 +430,7 @@ class WallrDataRepository(
   ): Single<List<CollectionsImageModel>> {
     return imageHandler.deleteImagesInCollection(
         collectionsDatabaseImageEntityMapper.mapToEntity(collectionsImageModelList))
-        .subscribeOn(executionThread.computationScheduler)
+        .subscribeOn(executionThread.ioScheduler)
         .map {
           collectionsDatabaseImageEntityMapper.mapFromEntity(it)
         }
@@ -456,7 +459,7 @@ class WallrDataRepository(
       : Single<Bitmap> {
     return Single.just(imageHandler.getImageBitmap(collectionsDatabaseImageEntityMapper.mapToEntity(
         listOf(collectionsImageModel)).first().path))
-        .subscribeOn(executionThread.computationScheduler)
+        .subscribeOn(executionThread.ioScheduler)
   }
 
   override fun saveCrystallizedImageInDatabase(collectionsImageModel: CollectionsImageModel)
@@ -469,7 +472,7 @@ class WallrDataRepository(
           .map {
             collectionsDatabaseImageEntityMapper.mapFromEntity(it)
           }
-          .subscribeOn(executionThread.computationScheduler)
+          .subscribeOn(executionThread.ioScheduler)
     }
   }
 
@@ -481,6 +484,16 @@ class WallrDataRepository(
   override fun setWallpaperChangerInterval(interval: Long) {
     sharedPrefsHelper.setLong(IMAGE_PREFERENCE_NAME,
         AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_TAG, interval)
+  }
+
+  override fun getLastUsedWallpaperUid(): Long {
+    return sharedPrefsHelper.getLong(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_TAG)
+  }
+
+  override fun setLastUsedWallpaperUid(uid: Long) {
+    sharedPrefsHelper.setLong(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_TAG, uid)
   }
 
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()

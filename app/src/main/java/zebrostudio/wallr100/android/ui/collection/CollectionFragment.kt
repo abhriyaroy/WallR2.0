@@ -23,6 +23,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import com.afollestad.materialcab.MaterialCab
 import com.afollestad.materialdialogs.MaterialDialog
 import com.getkeepsafe.taptargetview.TapTarget
@@ -95,7 +96,6 @@ class CollectionFragment : BaseFragment(),
     activity?.findViewById<Toolbar>(R.id.toolbar)?.setOnMenuItemClickListener(this)
     initRecyclerViewWithListeners()
     attachAutomaticWallpaperChangerListener()
-    showAutomaticWallpaperStateAsInActive()
     setUpBlurView()
     presenter.handleViewCreated()
   }
@@ -241,11 +241,20 @@ class CollectionFragment : BaseFragment(),
     imagesAbsentLayout.visible()
   }
 
+  override fun showWallpaperChangerLayout() {
+    activity?.findViewById<RelativeLayout>(R.id.switchLayout)?.visible()
+  }
+
+  override fun hideWallpaperChangerLayout() {
+    activity?.findViewById<RelativeLayout>(R.id.switchLayout)?.gone()
+  }
+
   override fun showAutomaticWallpaperStateAsActive() {
     activity?.findViewById<SwitchCompat>(R.id.switchView)?.isChecked = true
   }
 
   override fun showAutomaticWallpaperStateAsInActive() {
+    println("state changed to inactive")
     activity?.findViewById<SwitchCompat>(R.id.switchView)?.isChecked = false
   }
 

@@ -53,6 +53,13 @@ class CollectionPresenterImpl(
 
   override fun handleViewCreated() {
     if (true && isStoragePermissionAvailable()) {
+      if (collectionImagesUseCase.isAutomaticWallpaperChangerRunning()) {
+        println("set switch to active")
+        collectionView?.showAutomaticWallpaperStateAsActive()
+      } else {
+        println("set switch to in active")
+        collectionView?.showAutomaticWallpaperStateAsInActive()
+      }
       showPictures()
     }
   }
@@ -123,11 +130,11 @@ class CollectionPresenterImpl(
   }
 
   override fun handleAutomaticWallpaperChangerEnabled() {
-    collectionImagesUseCase.enableAutomaticWallpaperChanger()
+    collectionImagesUseCase.startAutomaticWallpaperChanger()
   }
 
   override fun handleAutomaticWallpaperChangerDisabled() {
-    collectionImagesUseCase.disableAutomaticWallpaperChanger()
+    collectionImagesUseCase.stopAutomaticWallpaperChanger()
   }
 
   override fun handleAutomaticWallpaperChangerIntervalMenuItemClicked() {
