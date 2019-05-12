@@ -188,6 +188,7 @@ class CollectionPresenterImpl(
             if (it.isNotEmpty()) {
               showNonEmptyCollectionView()
             }
+            showHintIfSuitable(it.size)
             uriList.size.let {
               if (it == SINGLE_ITEM_SIZE) {
                 collectionView?.showSingleImageAddedSuccessfullyMessage()
@@ -345,7 +346,7 @@ class CollectionPresenterImpl(
           if (it.isNotEmpty()) {
             collectionView?.setImagesList(it)
             showNonEmptyCollectionView()
-            //showHintsIfSuitable(it.size)
+            showHintIfSuitable(it.size)
           } else {
             showEmptyCollectionView()
           }
@@ -356,9 +357,9 @@ class CollectionPresenterImpl(
         })
   }
 
-  private fun showHintsIfSuitable(listSize: Int) {
-    if (listSize > MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_HINT) {
-      collectionView?.showReorderImagesHint()
+  private fun showHintIfSuitable(listSize: Int) {
+    if (listSize >= MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_HINT) {
+      collectionView?.showReorderImagesHintWithDelay()
     }
   }
 

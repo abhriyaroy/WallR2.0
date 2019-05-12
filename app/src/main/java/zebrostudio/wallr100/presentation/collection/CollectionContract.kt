@@ -16,7 +16,7 @@ interface CollectionContract {
     fun redirectToBuyPro()
     fun hasStoragePermission(): Boolean
     fun requestStoragePermission()
-    fun showReorderImagesHint()
+    fun showReorderImagesHintWithDelay()
     fun setImagesList(imageList: List<CollectionsPresenterEntity>)
     fun clearImages()
     fun hideImagesAbsentLayout()

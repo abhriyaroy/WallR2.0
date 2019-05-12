@@ -201,7 +201,7 @@
   <string name="collections_fragment_import_from_local_menu_title">Import from local storage</string>
   <string name="collections_fragment_change_wallpaper_interval_menu_title">Change wallpaper interval</string>
   <string name="collections_fragment_drag_to_reorder_hint_title">Drag-Drop To Reorder</string>
-  <string name="collections_fragment_drag_to_reorder_hint_description">You can drag and drop wallpapers to change their order of appearance \\n</string>
+  <string name="collections_fragment_drag_to_reorder_hint_description">You can drag and drop wallpapers to change their order of appearance</string>
   <string name="collections_fragment_wallpaper_changer_diloag_title">Change Wallpaper Interval</string>
   <string name="collections_fragment_wallpaper_changer_dilog_positive_text">CHOOSE</string>
   <string name="collection_fragment_add_single_image_success_message">1 image has been added successfully</string>

@@ -15,7 +15,8 @@
   <View
       android:id="@+id/hintStubView"
       android:layout_width="@dimen/collection_recycler_view_hint_stub_width"
-      android:layout_height="@dimen/collection_recycler_view_hint_stub_height"/>
+      android:layout_height="@dimen/collection_recycler_view_hint_stub_height"
+      android:layout_gravity="center"/>
 
   <View
       android:id="@+id/selectedOverlay"

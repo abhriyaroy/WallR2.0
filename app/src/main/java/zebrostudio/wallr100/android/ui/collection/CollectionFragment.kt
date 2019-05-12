@@ -164,7 +164,7 @@ class CollectionFragment : BaseFragment(),
   }
 
   override fun showAppBarWithDelay() {
-    withDelayOnMain(APP_BAR_DELAY){
+    withDelayOnMain(APP_BAR_DELAY) {
       activity?.findViewById<AppBarLayout>(R.id.appbar)?.setExpanded(true, true)
     }
   }
@@ -185,11 +185,11 @@ class CollectionFragment : BaseFragment(),
 
   override fun enableToolbar() {
     activity?.findViewById<Toolbar>(R.id.toolbar)?.apply {
-        layoutParams.let {
-          (it as AppBarLayout.LayoutParams).scrollFlags =
-              (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                  or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
-        }
+      layoutParams.let {
+        (it as AppBarLayout.LayoutParams).scrollFlags =
+            (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
+      }
       visible()
     }
   }
@@ -221,34 +221,35 @@ class CollectionFragment : BaseFragment(),
         Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CODE)
   }
 
-  override fun showReorderImagesHint() {
-    val targetView = collectionsRecyclerView.getChildAt(REORDER_HINT_VIEW_POSITION)
-        .findViewById<View>(R.id.hintStubView)
-    TapTargetView.showFor(activity!!,
-        TapTarget.forView(targetView,
-            getString(R.string.collections_fragment_drag_to_reorder_hint_title),
-            getString(R.string.collections_fragment_drag_to_reorder_hint_description))
-            .dimColor(android.R.color.transparent)
-            .outerCircleColor(R.color.accent)
-            .targetCircleColor(R.color.concrete)
-            .transparentTarget(true)
-            .textColor(android.R.color.white)
-            .cancelable(true),
-        object : TapTargetView.Listener() {
-          override fun onTargetClick(view: TapTargetView) {
-            super.onTargetClick(view)
-            presenter.handleReorderImagesHintHintDismissed()
-          }
+  override fun showReorderImagesHintWithDelay() {
+    withDelayOnMain(AUTOSTART_HINT_DELAY) {
+      val targetView = collectionsRecyclerView.getChildAt(REORDER_HINT_VIEW_POSITION)
+          .findViewById<View>(R.id.hintStubView)
+      TapTargetView.showFor(activity!!,
+          TapTarget.forView(targetView,
+              getString(R.string.collections_fragment_drag_to_reorder_hint_title),
+              getString(R.string.collections_fragment_drag_to_reorder_hint_description))
+              .dimColor(android.R.color.transparent)
+              .outerCircleColor(R.color.accent)
+              .targetCircleColor(R.color.concrete)
+              .transparentTarget(true)
+              .textColor(android.R.color.white)
+              .cancelable(true),
+          object : TapTargetView.Listener() {
+            override fun onTargetClick(view: TapTargetView) {
+              super.onTargetClick(view)
+              presenter.handleReorderImagesHintHintDismissed()
+            }
 
-          override fun onTargetDismissed(view: TapTargetView, userInitiated: Boolean) {
-            presenter.handleReorderImagesHintHintDismissed()
-          }
+            override fun onTargetDismissed(view: TapTargetView, userInitiated: Boolean) {
+              presenter.handleReorderImagesHintHintDismissed()
+            }
 
-          override fun onOuterCircleClick(view: TapTargetView) {
-            view.dismiss(true)
-          }
-        }
-    )
+            override fun onOuterCircleClick(view: TapTargetView) {
+              view.dismiss(true)
+            }
+          })
+    }
   }
 
   override fun setImagesList(imageList: List<CollectionsPresenterEntity>) {
