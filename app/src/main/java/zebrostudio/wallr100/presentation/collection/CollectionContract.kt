@@ -9,8 +9,9 @@ interface CollectionContract {
 
   interface CollectionView : BaseView {
     fun getManufacturerName() : String
-    fun showAppBar()
+    fun showAppBarWithDelay()
     fun hideAppBar()
+    fun enableToolbar()
     fun showPurchasePremiumToContinueDialog()
     fun redirectToBuyPro()
     fun hasStoragePermission(): Boolean
@@ -31,7 +32,7 @@ interface CollectionContract {
     fun showSingleImageAddedSuccessfullyMessage()
     fun showMultipleImagesAddedSuccessfullyMessage(count: Int)
     fun updateChangesInEveryItemView()
-    fun updateChangesInSingleItemView(position: Int)
+    fun updateChangesInItemView(position: Int)
     fun updateItemViewMovement(fromPosition: Int, toPosition: Int)
     fun removeItemView(position: Int)
     fun clearAllSelectedItems()

@@ -14,14 +14,16 @@ import dagger.android.AndroidInjection
 import io.reactivex.disposables.Disposable
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.NOTIFICATION_CHANNEL_ID
+import zebrostudio.wallr100.android.ui.collection.REQUEST_CODE
 import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerUseCase
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-const val WALLPAPER_CHANGER_SERVICE_RESTART_DELAY: Long = 1000
+const val WALLPAPER_CHANGER_SERVICE_RESTART_DELAY: Long = 2000
 const val WALLPAPER_CHANGER_SERVICE_CODE = 1
 
 val wallpaperChangerIntervals = arrayListOf<Long>(
@@ -51,12 +53,12 @@ class AutomaticWallpaperChangerService : Service() {
     println("Started on star command")
     val notificationIntent = Intent(this, MainActivity::class.java)
     val pendingIntent = PendingIntent.getActivity(this,
-        0, notificationIntent, 0)
+        REQUEST_CODE, notificationIntent, 0)
 
     val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
         .setContentTitle(stringRes(R.string.wallpaper_changer_service_notification_title))
         .setContentText("${stringRes(
-            R.string.wallpaper_changer_service_notification_description)} ${getInterval(
+            R.string.wallpaper_changer_service_notification_description)} ${getIntervalString(
             automaticWallpaperChangerUseCase.getInterval())}")
         .setSmallIcon(R.drawable.ic_wallr)
         .setContentIntent(pendingIntent)
@@ -66,33 +68,17 @@ class AutomaticWallpaperChangerService : Service() {
 
     startForeground(WALLPAPER_CHANGER_SERVICE_CODE, notification)
 
-    handler = Handler()
-    runnable = object : Runnable {
-      override fun run() {
-        println("subscribe run")
-        println("thread is ${Thread.currentThread().name}")
-        if (disposable?.isDisposed == false) {
-          disposable?.dispose()
-        }
-        disposable = automaticWallpaperChangerUseCase.getWallpaperBitmap()
-            .doOnSuccess {
-              println("on success")
-              wallpaperSetter.setWallpaper(it)
-              if (!it.isRecycled) {
-                it.recycle()
-              }
-            }.observeOn(postExecutionThread.scheduler)
-            .subscribe({
-              println("Subscribe success ")
-              handler?.postDelayed(this, automaticWallpaperChangerUseCase.getInterval())
-            }, {
-              println(it.message)
-              println("subscribe error")
-              stopSelf()
-            })
-      }
-    }
-    handler?.post(runnable)
+    /*val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
+    val currentTime = System.currentTimeMillis()
+    alarmManager.setRepeating(
+        AlarmManager.RTC_WAKEUP,
+        currentTime + oneMinute,
+        oneMinute,
+        pendingIntent)*/
+
+    changeWallpaper()
 
     return START_REDELIVER_INTENT
   }
@@ -117,7 +103,7 @@ class AutomaticWallpaperChangerService : Service() {
         PendingIntent.FLAG_ONE_SHOT)
 
     val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, WALLPAPER_CHANGER_SERVICE_RESTART_DELAY,
+    alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+WALLPAPER_CHANGER_SERVICE_RESTART_DELAY,
         service)
   }
 
@@ -126,15 +112,49 @@ class AutomaticWallpaperChangerService : Service() {
     throw IllegalAccessError()
   }
 
-  private fun getInterval(interval: Long): String {
+  private fun getIntervalString(interval: Long): String {
     return when (interval) {
-      wallpaperChangerIntervals[0] -> stringRes(
-          R.string.wallpaper_changer_service_interval_30_minutes)
       wallpaperChangerIntervals[1] -> stringRes(R.string.wallpaper_changer_service_interval_1_hour)
       wallpaperChangerIntervals[2] -> stringRes(R.string.wallpaper_changer_service_interval_6_hours)
       wallpaperChangerIntervals[3] -> stringRes(R.string.wallpaper_changer_service_interval_1_day)
-      else -> stringRes(R.string.wallpaper_changer_service_interval_3_days)
+      wallpaperChangerIntervals[4] -> stringRes(R.string.wallpaper_changer_service_interval_3_days)
+      else -> stringRes(R.string.wallpaper_changer_service_interval_30_minutes)
     }
+  }
+
+  private fun getInterval(): Long {
+    automaticWallpaperChangerUseCase.getInterval().let {
+      if (wallpaperChangerIntervals.contains(it)) {
+        return it
+      } else {
+        return wallpaperChangerIntervals.first()
+      }
+    }
+  }
+
+  private fun changeWallpaper() {
+    println("subscribe run")
+    println("thread is ${Thread.currentThread().name}")
+    if (disposable?.isDisposed == false) {
+      disposable?.dispose()
+    }
+    disposable = automaticWallpaperChangerUseCase.getWallpaperBitmap()
+        .doOnSuccess {
+          println("on success")
+          wallpaperSetter.setWallpaper(it)
+          if (!it.isRecycled) {
+            it.recycle()
+          }
+        }.observeOn(postExecutionThread.scheduler)
+        .delaySubscription(getInterval(), TimeUnit.MILLISECONDS)
+        .subscribe({
+          println("Subscribe success ")
+          changeWallpaper()
+        }, {
+          println(it.message)
+          println("subscribe error")
+          stopSelf()
+        })
   }
 
 }

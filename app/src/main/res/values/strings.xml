@@ -214,7 +214,7 @@
   <string name="collections_fragment_multiple_images_deleted_success_message">Images have been successfully deleted</string>
   <string name="collections_fragment_single_images_deleted_success_message">Image has been successfully deleted</string>
   <string name="collections_fragment_image_reordering_success_message">Successfully reordered images</string>
-  <string name="collection_fragment_autostart_permission_description">Please ensure Autostart Permission is enabled for WallR so that the automatic wallpaper changer to work properly</string>
+  <string name="collection_fragment_autostart_permission_description">Please ensure Autostart Permission is enabled for WallR so that the automatic wallpaper changer can work properly</string>
   <string name="collection_fragment_autostart_permission_title">Grant Autostart Permission</string>
   <string name="collection_fragment_autostart_permission_positive_text">Open Settings</string>
   <string name="collection_fragment_autostart_permission_negative_text">Already Enabled</string>

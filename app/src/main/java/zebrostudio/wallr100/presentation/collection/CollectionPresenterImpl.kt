@@ -127,6 +127,7 @@ class CollectionPresenterImpl(
       selectedItemsMap[position] = imageList[position]
     }
     updateSelectionChangesInCab(position, selectedItemsMap.size)
+
   }
 
   override fun notifyDragStarted() {
@@ -301,9 +302,11 @@ class CollectionPresenterImpl(
   }
 
   override fun handleCabDestroyed() {
+    println("handle cab destoryed")
     collectionView?.clearAllSelectedItems()
     collectionView?.updateChangesInEveryItemView()
-    collectionView?.showAppBar()
+    collectionView?.enableToolbar()
+    collectionView?.showAppBarWithDelay()
   }
 
   private fun isUserPremium(): Boolean {
@@ -360,7 +363,7 @@ class CollectionPresenterImpl(
   }
 
   private fun updateSelectionChangesInCab(position: Int, selectedMapSize: Int) {
-    collectionView?.updateChangesInSingleItemView(position)
+    collectionView?.updateChangesInItemView(position)
     if (selectedMapSize > MINIMUM_NUMBER_OF_SELECTED_ITEMS) {
       collectionView?.showMultipleImagesSelectedCab()
     } else if (selectedMapSize == MINIMUM_NUMBER_OF_SELECTED_ITEMS) {

@@ -1,9 +1,14 @@
 package zebrostudio.wallr100.android.service
 
 import android.app.ActivityManager
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.support.v4.content.ContextCompat.startForegroundService
+import android.support.v4.content.ContextCompat.getSystemService
+
+
 
 interface ServiceManager {
   fun startAutomaticWallpaperChangerService(): Boolean
@@ -13,9 +18,15 @@ interface ServiceManager {
 
 class ServiceManagerImpl(private val context: Context) : ServiceManager {
 
+  private var alarmManager: AlarmManager? = null
+  private var pendingIntent: PendingIntent? = null
+
   override fun startAutomaticWallpaperChangerService(): Boolean {
     if (!isAutomaticWallpaperChangerRunning()) {
       startForegroundService(context, Intent(context, AutomaticWallpaperChangerService::class.java))
+      /*alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+      val intent = Intent(context, AutomaticWallpaperChangerService::class.java)
+      pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)*/
     }
     if (isAutomaticWallpaperChangerRunning()) {
       return true
@@ -24,6 +35,7 @@ class ServiceManagerImpl(private val context: Context) : ServiceManager {
   }
 
   override fun stopAutomaticWallpaperChangerService(): Boolean {
+    //alarmManager?.cancel(pendingIntent)
     Intent(context, AutomaticWallpaperChangerService::class.java).let {
       context.stopService(it)
     }
