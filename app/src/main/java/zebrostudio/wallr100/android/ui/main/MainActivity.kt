@@ -95,6 +95,7 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
     if (requestCode == PurchaseTransactionConfig.PURCHASE_REQUEST_CODE &&
         resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
       buyProMenuItem?.gone()

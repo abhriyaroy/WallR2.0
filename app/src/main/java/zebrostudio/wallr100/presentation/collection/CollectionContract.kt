@@ -12,7 +12,7 @@ interface CollectionContract {
     fun showAppBarWithDelay()
     fun hideAppBar()
     fun enableToolbar()
-    fun showPurchasePremiumToContinueDialog()
+    fun showPurchaseProToContinueDialog()
     fun redirectToBuyPro()
     fun hasStoragePermission(): Boolean
     fun requestStoragePermission()

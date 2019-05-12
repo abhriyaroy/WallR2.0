@@ -108,6 +108,7 @@ class CollectionFragment : BaseFragment(),
     presenter.attachView(this)
     activity?.findViewById<Toolbar>(R.id.toolbar)?.setOnMenuItemClickListener(this)
     initRecyclerViewWithListeners()
+    showAutomaticWallpaperStateAsInActive()
     attachAutomaticWallpaperChangerListener()
     setUpBlurView()
     presenter.handleViewCreated()
@@ -134,6 +135,12 @@ class CollectionFragment : BaseFragment(),
   override fun onDestroy() {
     presenter.detachView()
     super.onDestroy()
+  }
+
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+    println("On activity result")
+    presenter.handleViewCreated()
   }
 
   override fun getManufacturerName(): String {
@@ -194,8 +201,14 @@ class CollectionFragment : BaseFragment(),
     }
   }
 
-  override fun showPurchasePremiumToContinueDialog() {
-
+  override fun showPurchaseProToContinueDialog() {
+    MaterialDialog.Builder(activity!!)
+        .title(stringRes(R.string.collections_fragment_purchase_pro_diloag_title))
+        .content(stringRes(R.string.collections_fragment_purchase_pro_diloag_description))
+        .onPositive { _, _ -> redirectToBuyProActivity() }
+        .cancelable(false)
+        .positiveText(stringRes(R.string.collections_fragment_purchase_pro_diloag_positive_text))
+        .show()
   }
 
   override fun redirectToBuyPro() {
@@ -227,8 +240,8 @@ class CollectionFragment : BaseFragment(),
           .findViewById<View>(R.id.hintStubView)
       TapTargetView.showFor(activity!!,
           TapTarget.forView(targetView,
-              getString(R.string.collections_fragment_drag_to_reorder_hint_title),
-              getString(R.string.collections_fragment_drag_to_reorder_hint_description))
+              stringRes(R.string.collections_fragment_drag_to_reorder_hint_title),
+              stringRes(R.string.collections_fragment_drag_to_reorder_hint_description))
               .dimColor(android.R.color.transparent)
               .outerCircleColor(R.color.accent)
               .targetCircleColor(R.color.concrete)
@@ -297,7 +310,7 @@ class CollectionFragment : BaseFragment(),
   override fun showWallpaperChangerIntervalDialog(choice: Int) {
     MaterialDialog.Builder(activity!!)
         .backgroundColor(colorRes(R.color.primary))
-        .title(getString(R.string.collections_fragment_wallpaper_changer_diloag_title))
+        .title(stringRes(R.string.collections_fragment_wallpaper_changer_diloag_title))
         .items(R.array.wallpaperChangerIntervals)
         .contentColor(colorRes(R.color.white))
         .widgetColor(colorRes(R.color.accent))
@@ -475,7 +488,7 @@ class CollectionFragment : BaseFragment(),
 
   override fun showAutoStartPermissionRequiredDialog() {
     MaterialDialog.Builder(activity!!)
-        .title(getString(R.string.collection_fragment_autostart_permission_title))
+        .title(stringRes(R.string.collection_fragment_autostart_permission_title))
         .content(stringRes(R.string.collection_fragment_autostart_permission_description))
         .onPositive { _, _ -> openAutoStartSettings() }
         .cancelable(true)
@@ -543,6 +556,10 @@ class CollectionFragment : BaseFragment(),
         startActivity(it)
       }
     }
+  }
+
+  private fun redirectToBuyProActivity() {
+    startActivityForResult(Intent(context!!, BuyProActivity::class.java), REQUEST_CODE)
   }
 
   companion object {

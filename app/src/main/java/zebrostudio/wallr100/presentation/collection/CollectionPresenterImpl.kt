@@ -56,7 +56,7 @@ class CollectionPresenterImpl(
   }
 
   override fun handleViewCreated() {
-    if (true && isStoragePermissionAvailable()) {
+    if (isUserPremium() && isStoragePermissionAvailable()) {
       if (collectionImagesUseCase.isAutomaticWallpaperChangerRunning()) {
         println("set switch to active")
         collectionView?.showAutomaticWallpaperStateAsActive()
@@ -69,7 +69,7 @@ class CollectionPresenterImpl(
   }
 
   override fun handleImportFromLocalStorageClicked() {
-    if (true && isStoragePermissionAvailable()) {
+    if (isUserPremium() && isStoragePermissionAvailable()) {
       collectionView?.showImagePicker()
     }
   }
@@ -314,7 +314,7 @@ class CollectionPresenterImpl(
     return if (userPremiumStatusUseCase.isUserPremium()) {
       true
     } else {
-      collectionView?.showPurchasePremiumToContinueDialog()
+      collectionView?.showPurchaseProToContinueDialog()
       false
     }
   }
