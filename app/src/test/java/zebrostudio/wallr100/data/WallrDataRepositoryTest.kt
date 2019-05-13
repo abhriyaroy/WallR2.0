@@ -40,6 +40,7 @@ import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.NotEnoughFreeSpaceException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
+import zebrostudio.wallr100.data.mapper.CollectionsDatabaseImageEntityMapper
 import zebrostudio.wallr100.data.mapper.DatabaseImageTypeEntityMapper
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
@@ -48,8 +49,8 @@ import zebrostudio.wallr100.data.urlshortener.UrlShortener
 import zebrostudio.wallr100.domain.datafactory.ImageModelFactory
 import zebrostudio.wallr100.domain.datafactory.SearchPicturesModelFactory
 import zebrostudio.wallr100.domain.executor.ExecutionThread
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel
 import zebrostudio.wallr100.domain.model.RestoreColorsModel
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
@@ -75,6 +76,7 @@ class WallrDataRepositoryTest {
   @Mock lateinit var mockBitmap: Bitmap
   @Mock lateinit var mockUri: Uri
   @Mock lateinit var gsonProvider: GsonProvider
+  @Mock lateinit var collectionsDatabaseImageEntityMapper: CollectionsDatabaseImageEntityMapper
   @Mock lateinit var databaseImageTypeEntityMapper: DatabaseImageTypeEntityMapper
   @Mock lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
   @Mock lateinit var firebasePictureEntityMapper: FirebasePictureEntityMapper
@@ -88,9 +90,9 @@ class WallrDataRepositoryTest {
   fun setup() {
     wallrDataRepository =
         WallrDataRepository(remoteAuthServiceFactory, unsplashClientFactory, sharedPrefs,
-            gsonProvider, databaseImageTypeEntityMapper, unsplashPictureEntityMapper,
-            firebaseDatabaseHelper,
-            firebasePictureEntityMapper, urlShortener, imageHandler, fileHandler, downloadHelper,
+            gsonProvider, collectionsDatabaseImageEntityMapper, databaseImageTypeEntityMapper,
+            unsplashPictureEntityMapper, firebaseDatabaseHelper, firebasePictureEntityMapper,
+            urlShortener, imageHandler, fileHandler, downloadHelper,
             minimalColorHelper, executionThread)
 
     `when`(executionThread.ioScheduler).thenReturn(Schedulers.trampoline())
@@ -456,7 +458,8 @@ class WallrDataRepositoryTest {
     `when`(imageHandler.addImageToCollections(randomString, WALLPAPER)).thenReturn(
         Completable.complete())
 
-    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageTypeModel.WALLPAPER).test()
+    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageTypeModel.WALLPAPER)
+        .test()
         .assertComplete()
 
     verify(imageHandler).addImageToCollections(randomString, WALLPAPER)
@@ -470,7 +473,8 @@ class WallrDataRepositoryTest {
     `when`(imageHandler.addImageToCollections(randomString, SEARCH))
         .thenReturn(Completable.complete())
 
-    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageTypeModel.SEARCH).test()
+    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageTypeModel.SEARCH)
+        .test()
         .assertComplete()
 
     verify(imageHandler).addImageToCollections(randomString, SEARCH)
@@ -484,7 +488,8 @@ class WallrDataRepositoryTest {
     `when`(imageHandler.addImageToCollections(randomString, EDITED)).thenReturn(
         Completable.complete())
 
-    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageTypeModel.EDITED).test()
+    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageTypeModel.EDITED)
+        .test()
         .assertComplete()
 
     verify(imageHandler).addImageToCollections(randomString, EDITED)
@@ -511,7 +516,8 @@ class WallrDataRepositoryTest {
     `when`(imageHandler.addImageToCollections(randomString, MINIMAL_COLOR)).thenReturn(
         Completable.complete())
 
-    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageTypeModel.MINIMAL_COLOR)
+    wallrDataRepository.saveImageToCollections(randomString,
+        CollectionsImageTypeModel.MINIMAL_COLOR)
         .test()
         .assertComplete()
 
@@ -1079,6 +1085,8 @@ class WallrDataRepositoryTest {
         mockBitmap,
         mockUri,
         gsonProvider,
+        collectionsDatabaseImageEntityMapper,
+        databaseImageTypeEntityMapper,
         unsplashPictureEntityMapper,
         firebasePictureEntityMapper)
   }
