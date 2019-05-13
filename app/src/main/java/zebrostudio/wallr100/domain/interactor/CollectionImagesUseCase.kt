@@ -46,7 +46,7 @@ class CollectionsImagesInteractor(
 
   override fun reorderImage(collectionImagesModelList: List<CollectionsImageModel>)
       : Single<List<CollectionsImageModel>> {
-    return wallrRepository.reorderInCollection(collectionImagesModelList)
+    return wallrRepository.reorderImagesInCollectionDatabase(collectionImagesModelList)
   }
 
   override fun deleteImages(collectionImagesModelList: List<CollectionsImageModel>)

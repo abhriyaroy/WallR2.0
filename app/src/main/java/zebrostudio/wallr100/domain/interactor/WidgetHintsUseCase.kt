@@ -29,11 +29,11 @@ class WidgetHintsInteractor(private val wallrRepository: WallrRepository) : Widg
   }
 
   override fun isCollectionsImageReorderHintShown(): Boolean {
-    return wallrRepository.isCollectionsImageReorderHintDisplayedOnce()
+    return wallrRepository.isCollectionReorderHintDisplayedBefore()
   }
 
   override fun saveCollectionsImageReorderHintShown() {
-    wallrRepository.saveCollectionsImageReorderHintShownState()
+    wallrRepository.saveCollectionReorderHintShownState()
   }
 
 }

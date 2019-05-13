@@ -413,7 +413,7 @@ class WallrDataRepository(
         }
   }
 
-  override fun reorderInCollection(collectionImagesModelList: List<CollectionsImageModel>)
+  override fun reorderImagesInCollectionDatabase(collectionImagesModelList: List<CollectionsImageModel>)
       : Single<List<CollectionsImageModel>> {
     return imageHandler.reorderImagesInCollection(
         collectionsDatabaseImageEntityMapper.mapToEntity(collectionImagesModelList))
@@ -441,16 +441,12 @@ class WallrDataRepository(
         AUTOMATIC_WALLPAPER_CHANGER_STATE_TAG)
   }
 
-  override fun setAutomaticWallpaperChangerState(state: Boolean) {
-    sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_STATE_TAG, true)
-  }
-
-  override fun isCollectionsImageReorderHintDisplayedOnce(): Boolean {
+  override fun isCollectionReorderHintDisplayedBefore(): Boolean {
     return sharedPrefsHelper.getBoolean(HINT_PREFERENCE_NAME,
         COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG)
   }
 
-  override fun saveCollectionsImageReorderHintShownState() {
+  override fun saveCollectionReorderHintShownState() {
     sharedPrefsHelper.setBoolean(HINT_PREFERENCE_NAME, COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG,
         true)
   }

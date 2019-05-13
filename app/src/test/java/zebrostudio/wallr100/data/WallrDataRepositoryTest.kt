@@ -5,6 +5,8 @@ import android.net.Uri
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.Gson
+import com.nhaarman.mockitokotlin2.inOrder
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.Completable
@@ -32,6 +34,7 @@ import zebrostudio.wallr100.data.database.DatabaseImageType.EDITED
 import zebrostudio.wallr100.data.database.DatabaseImageType.MINIMAL_COLOR
 import zebrostudio.wallr100.data.database.DatabaseImageType.SEARCH
 import zebrostudio.wallr100.data.database.DatabaseImageType.WALLPAPER
+import zebrostudio.wallr100.data.datafactory.CollectionsDatabaseImageEntityModelFactory
 import zebrostudio.wallr100.data.datafactory.FirebaseImageEntityModelFactory
 import zebrostudio.wallr100.data.datafactory.UnsplashPictureEntityModelFactory
 import zebrostudio.wallr100.data.exception.EmptyRecentlyDeletedMapException
@@ -46,6 +49,7 @@ import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 import zebrostudio.wallr100.data.urlshortener.UrlShortener
+import zebrostudio.wallr100.domain.datafactory.CollectionsImageModelFactory
 import zebrostudio.wallr100.domain.datafactory.ImageModelFactory
 import zebrostudio.wallr100.domain.datafactory.SearchPicturesModelFactory
 import zebrostudio.wallr100.domain.executor.ExecutionThread
@@ -54,6 +58,7 @@ import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeM
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
+import java.util.Random
 import java.util.TreeMap
 import java.util.UUID.randomUUID
 import java.util.concurrent.TimeUnit
@@ -462,6 +467,8 @@ class WallrDataRepositoryTest {
         .test()
         .assertComplete()
 
+    verify(databaseImageTypeEntityMapper).mapToDatabaseImageType(
+        CollectionsImageTypeModel.WALLPAPER)
     verify(imageHandler).addImageToCollections(randomString, WALLPAPER)
     verifyComputationSchedulerCall()
   }
@@ -477,6 +484,7 @@ class WallrDataRepositoryTest {
         .test()
         .assertComplete()
 
+    verify(databaseImageTypeEntityMapper).mapToDatabaseImageType(CollectionsImageTypeModel.SEARCH)
     verify(imageHandler).addImageToCollections(randomString, SEARCH)
     verifyComputationSchedulerCall()
   }
@@ -492,6 +500,7 @@ class WallrDataRepositoryTest {
         .test()
         .assertComplete()
 
+    verify(databaseImageTypeEntityMapper).mapToDatabaseImageType(CollectionsImageTypeModel.EDITED)
     verify(imageHandler).addImageToCollections(randomString, EDITED)
     verifyComputationSchedulerCall()
   }
@@ -506,6 +515,8 @@ class WallrDataRepositoryTest {
         .test()
         .assertComplete()
 
+    verify(databaseImageTypeEntityMapper).mapToDatabaseImageType(
+        CollectionsImageTypeModel.CRYSTALLIZED)
     verify(imageHandler).addImageToCollections(randomString, CRYSTALLIZED)
     verifyComputationSchedulerCall()
   }
@@ -521,6 +532,8 @@ class WallrDataRepositoryTest {
         .test()
         .assertComplete()
 
+    verify(databaseImageTypeEntityMapper).mapToDatabaseImageType(
+        CollectionsImageTypeModel.MINIMAL_COLOR)
     verify(imageHandler).addImageToCollections(randomString, MINIMAL_COLOR)
     verifyComputationSchedulerCall()
   }
@@ -1066,6 +1079,297 @@ class WallrDataRepositoryTest {
     verify(fileHandler).freeSpaceAvailable()
     verify(imageHandler).getMultiColorBitmap(list, PLASMA)
     verifyComputationSchedulerCall()
+  }
+
+  @Test
+  fun `should return single of list of collections image model on getImagesInCollection call success`() {
+    val collectionsDatabaseImageEntityList =
+        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+    `when`(imageHandler.getAllImagesInCollection()).thenReturn(
+        Single.just(collectionsDatabaseImageEntityList))
+
+    val result = wallrDataRepository.getImagesInCollection().test().values()[0]
+
+    assertEquals(collectionsDatabaseImageEntityMapper
+        .mapFromEntity(collectionsDatabaseImageEntityList), result)
+    verify(collectionsDatabaseImageEntityMapper, times(2))
+        .mapFromEntity(collectionsDatabaseImageEntityList)
+    verify(imageHandler).getAllImagesInCollection()
+    verifyIoSchedulerSubscription()
+  }
+
+  @Test
+  fun `should return single of error image model on getImagesInCollection call failure`() {
+    `when`(imageHandler.getAllImagesInCollection()).thenReturn(
+        Single.error(Exception()))
+
+    wallrDataRepository.getImagesInCollection().test().assertError(Exception::class.java)
+
+    verify(imageHandler).getAllImagesInCollection()
+    verifyIoSchedulerSubscription()
+  }
+
+  @Test
+  fun `should return single of list of collections image model on addImagesToCollection call success`() {
+    val mockUriList = listOf(mockUri)
+    val collectionsImageModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionsDatabaseImageEntityList =
+        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+    `when`(collectionsDatabaseImageEntityMapper.mapFromEntity(collectionsDatabaseImageEntityList))
+        .thenReturn(collectionsImageModelList)
+    `when`(imageHandler.addExternalImageToCollection(mockUriList)).thenReturn(
+        Completable.complete())
+    `when`(imageHandler.getAllImagesInCollection()).thenReturn(
+        Single.just(collectionsDatabaseImageEntityList))
+
+    val result = wallrDataRepository.addImagesToCollection(mockUriList).test().values()[0]
+
+    assertEquals(collectionsImageModelList, result)
+    verify(collectionsDatabaseImageEntityMapper).mapFromEntity(collectionsDatabaseImageEntityList)
+    verify(imageHandler).addExternalImageToCollection(mockUriList)
+    verify(imageHandler).getAllImagesInCollection()
+    verifyIoSchedulerSubscription()
+  }
+
+  @Test
+  fun `should return error on addImagesToCollection call failure`() {
+    val mockUriList = listOf(mockUri)
+    val collectionsDatabaseImageEntityList =
+        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+    `when`(imageHandler.addExternalImageToCollection(mockUriList)).thenReturn(
+        Completable.error(Exception()))
+    `when`(imageHandler.getAllImagesInCollection()).thenReturn(
+        Single.just(collectionsDatabaseImageEntityList))
+
+    wallrDataRepository.addImagesToCollection(mockUriList).test().assertError(Exception::class.java)
+
+    verify(imageHandler).addExternalImageToCollection(mockUriList)
+    verify(imageHandler).getAllImagesInCollection()
+    verifyIoSchedulerSubscription()
+  }
+
+  @Test
+  fun `should return single of list of collections image model on reorderImagesInCollectionDatabase call success`() {
+    val collectionImageModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionDatabaseImageEntityList =
+        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+    `when`(collectionsDatabaseImageEntityMapper.mapToEntity(collectionImageModelList))
+        .thenReturn(collectionDatabaseImageEntityList)
+    `when`(collectionsDatabaseImageEntityMapper.mapFromEntity(collectionDatabaseImageEntityList))
+        .thenReturn(collectionImageModelList)
+    `when`(imageHandler.reorderImagesInCollection(collectionDatabaseImageEntityList)).thenReturn(
+        Single.just(collectionDatabaseImageEntityList))
+
+    val result = wallrDataRepository.reorderImagesInCollectionDatabase(collectionImageModelList)
+        .test().values()[0]
+
+    assertEquals(collectionImageModelList, result)
+    verify(collectionsDatabaseImageEntityMapper).mapToEntity(collectionImageModelList)
+    verify(collectionsDatabaseImageEntityMapper).mapFromEntity(collectionDatabaseImageEntityList)
+    verify(imageHandler).reorderImagesInCollection(collectionDatabaseImageEntityList)
+    verifyIoSchedulerSubscription()
+  }
+
+  @Test
+  fun `should return single of error image model on reorderImagesInCollectionDatabase call failure`() {
+    val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionDatabaseImageEntityList =
+        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+    `when`(collectionsDatabaseImageEntityMapper.mapToEntity(collectionImagesModelList))
+        .thenReturn(collectionDatabaseImageEntityList)
+    `when`(imageHandler.reorderImagesInCollection(collectionDatabaseImageEntityList)).thenReturn(
+        Single.error(Exception()))
+
+    wallrDataRepository.reorderImagesInCollectionDatabase(collectionImagesModelList).test()
+        .assertError(Exception::class.java)
+
+    verify(collectionsDatabaseImageEntityMapper).mapToEntity(collectionImagesModelList)
+    verify(imageHandler).reorderImagesInCollection(collectionDatabaseImageEntityList)
+    verifyIoSchedulerSubscription()
+  }
+
+  @Test
+  fun `should return single of list of collections image model on deleteImageFromCollection call success`() {
+    val collectionImageModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionDatabaseImageEntityList =
+        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+    `when`(collectionsDatabaseImageEntityMapper.mapToEntity(collectionImageModelList))
+        .thenReturn(collectionDatabaseImageEntityList)
+    `when`(collectionsDatabaseImageEntityMapper.mapFromEntity(collectionDatabaseImageEntityList))
+        .thenReturn(collectionImageModelList)
+    `when`(imageHandler.deleteImagesInCollection(collectionDatabaseImageEntityList)).thenReturn(
+        Single.just(collectionDatabaseImageEntityList))
+
+    val result = wallrDataRepository.deleteImageFromCollection(collectionImageModelList)
+        .test().values()[0]
+
+    assertEquals(collectionImageModelList, result)
+    verify(collectionsDatabaseImageEntityMapper).mapToEntity(collectionImageModelList)
+    verify(collectionsDatabaseImageEntityMapper).mapFromEntity(collectionDatabaseImageEntityList)
+    verify(imageHandler).deleteImagesInCollection(collectionDatabaseImageEntityList)
+    verifyIoSchedulerSubscription()
+  }
+
+  @Test
+  fun `should return single of error image model on deleteImageFromCollection call failure`() {
+    val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionDatabaseImageEntityList =
+        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+    `when`(collectionsDatabaseImageEntityMapper.mapToEntity(collectionImagesModelList))
+        .thenReturn(collectionDatabaseImageEntityList)
+    `when`(imageHandler.deleteImagesInCollection(collectionDatabaseImageEntityList)).thenReturn(
+        Single.error(Exception()))
+
+    wallrDataRepository.deleteImageFromCollection(collectionImagesModelList).test()
+        .assertError(Exception::class.java)
+
+    verify(collectionsDatabaseImageEntityMapper).mapToEntity(collectionImagesModelList)
+    verify(imageHandler).deleteImagesInCollection(collectionDatabaseImageEntityList)
+    verifyIoSchedulerSubscription()
+  }
+
+  @Test
+  fun `should return true on getAutomaticWallpaperChangerState call success as wallpaper changer is enabled`() {
+    `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_STATE_TAG)).thenReturn(true)
+
+    assertTrue(wallrDataRepository.getAutomaticWallpaperChangerState())
+
+    verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_STATE_TAG)
+  }
+
+  @Test
+  fun `should return false on getAutomaticWallpaperChangerState call success as wallpaper changer is disabled`() {
+    `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_STATE_TAG)).thenReturn(false)
+
+    assertFalse(wallrDataRepository.getAutomaticWallpaperChangerState())
+
+    verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_STATE_TAG)
+  }
+
+  @Test
+  fun `should return true on isCollectionReorderHintDisplayedBefore call success as hint was displayed earlier once`() {
+    `when`(sharedPrefs.getBoolean(HINT_PREFERENCE_NAME,
+        COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG)).thenReturn(true)
+
+    assertTrue(wallrDataRepository.isCollectionReorderHintDisplayedBefore())
+
+    verify(sharedPrefs).getBoolean(HINT_PREFERENCE_NAME,
+        COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG)
+  }
+
+  @Test
+  fun `should return false on isCollectionReorderHintDisplayedBefore call success as hint was never displayed`() {
+    `when`(sharedPrefs.getBoolean(HINT_PREFERENCE_NAME,
+        COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG)).thenReturn(false)
+
+    assertFalse(wallrDataRepository.isCollectionReorderHintDisplayedBefore())
+
+    verify(sharedPrefs).getBoolean(HINT_PREFERENCE_NAME,
+        COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG)
+  }
+
+  @Test
+  fun `should save reorder hint shown state on saveCollectionReorderHintShownState call success`() {
+    wallrDataRepository.saveCollectionReorderHintShownState()
+
+    verify(sharedPrefs).setBoolean(HINT_PREFERENCE_NAME,
+        COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG,
+        true)
+  }
+
+  @Test fun `should return bitmap on getBitmapFromDatabaseImage call success`() {
+    val collectionsImageModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionDatabaseImageEntityList =
+        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+    `when`(collectionsDatabaseImageEntityMapper.mapToEntity(collectionsImageModelList))
+        .thenReturn(collectionDatabaseImageEntityList)
+    `when`(imageHandler.getImageBitmap(collectionDatabaseImageEntityList.first().path))
+        .thenReturn(mockBitmap)
+
+    wallrDataRepository.getBitmapFromDatabaseImage(collectionsImageModelList.first())
+
+    verify(collectionsDatabaseImageEntityMapper).mapToEntity(collectionsImageModelList)
+    verify(imageHandler).getImageBitmap(collectionDatabaseImageEntityList.first().path)
+    verifyIoSchedulerSubscription()
+  }
+
+  @Test
+  fun `should return single of list of collections image model on saveCrystallizedImageInDatabase call success`() {
+    val collectionImageModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionDatabaseImageEntityList =
+        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+    `when`(collectionsDatabaseImageEntityMapper.mapToEntity(collectionImageModelList))
+        .thenReturn(collectionDatabaseImageEntityList)
+    `when`(collectionsDatabaseImageEntityMapper.mapFromEntity(collectionDatabaseImageEntityList))
+        .thenReturn(collectionImageModelList)
+    `when`(imageHandler.convertAndCacheLowpolyImage(collectionDatabaseImageEntityList.first().path))
+        .thenReturn(Completable.complete())
+    `when`(imageHandler.addImageToCollections(collectionDatabaseImageEntityList.first().path,
+        CRYSTALLIZED)).thenReturn(Completable.complete())
+    `when`(imageHandler.getAllImagesInCollection())
+        .thenReturn(Single.just(collectionDatabaseImageEntityList))
+
+    val result =
+        wallrDataRepository.saveCrystallizedImageInDatabase(collectionImageModelList.first())
+            .test().values()[0]
+
+    val inOrder = inOrder(imageHandler)
+    assertEquals(collectionImageModelList, result)
+    verify(collectionsDatabaseImageEntityMapper).mapToEntity(collectionImageModelList)
+    verify(collectionsDatabaseImageEntityMapper).mapFromEntity(collectionDatabaseImageEntityList)
+    inOrder.verify(imageHandler)
+        .convertAndCacheLowpolyImage(collectionDatabaseImageEntityList.first().path)
+    inOrder.verify(imageHandler)
+        .addImageToCollections(collectionDatabaseImageEntityList.first().path,
+            CRYSTALLIZED)
+    inOrder.verify(imageHandler).getAllImagesInCollection()
+    verifyIoSchedulerSubscription()
+  }
+
+  @Test
+  fun `should return interval at which wallpaper changer runs on getWallpaperChangerInterval call success`() {
+    val interval = Random().nextLong()
+    `when`(sharedPrefs.getLong(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_TAG)).thenReturn(interval)
+
+    assertEquals(interval, wallrDataRepository.getWallpaperChangerInterval())
+
+    verify(sharedPrefs).getLong(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_TAG)
+  }
+
+  @Test fun `should set wallpaper changer interval on setWallpaperChangerInterval call success`() {
+    val interval = Random().nextLong()
+
+    wallrDataRepository.setWallpaperChangerInterval(interval)
+
+    verify(sharedPrefs).setLong(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_TAG, interval)
+  }
+
+  @Test
+  fun `should return uid on getLastUsedWallpaperUid call success`() {
+    val uid = Random().nextLong()
+    `when`(sharedPrefs.getLong(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_TAG)).thenReturn(uid)
+
+    assertEquals(uid, wallrDataRepository.getLastUsedWallpaperUid())
+
+    verify(sharedPrefs).getLong(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_TAG)
+  }
+
+  @Test fun `should save uid on setLastUsedWallpaperUid call success`() {
+    val uid = Random().nextLong()
+
+    wallrDataRepository.setLastUsedWallpaperUid(uid)
+
+    verify(sharedPrefs).setLong(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_TAG, uid)
   }
 
   @After fun tearDown() {

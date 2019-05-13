@@ -83,14 +83,13 @@ interface WallrRepository {
 
   fun getImagesInCollection(): Single<List<CollectionsImageModel>>
   fun addImagesToCollection(uriList: List<Uri>): Single<List<CollectionsImageModel>>
-  fun reorderInCollection(collectionImagesModelList: List<CollectionsImageModel>): Single<List<CollectionsImageModel>>
+  fun reorderImagesInCollectionDatabase(collectionImagesModelList: List<CollectionsImageModel>): Single<List<CollectionsImageModel>>
   fun deleteImageFromCollection(collectionsImageModelList: List<CollectionsImageModel>)
       : Single<List<CollectionsImageModel>>
 
   fun getAutomaticWallpaperChangerState(): Boolean
-  fun setAutomaticWallpaperChangerState(state: Boolean)
-  fun isCollectionsImageReorderHintDisplayedOnce(): Boolean
-  fun saveCollectionsImageReorderHintShownState()
+  fun isCollectionReorderHintDisplayedBefore(): Boolean
+  fun saveCollectionReorderHintShownState()
   fun getBitmapFromDatabaseImage(collectionsImageModel: CollectionsImageModel): Single<Bitmap>
   fun saveCrystallizedImageInDatabase(collectionsImageModel: CollectionsImageModel)
       : Single<List<CollectionsImageModel>>
