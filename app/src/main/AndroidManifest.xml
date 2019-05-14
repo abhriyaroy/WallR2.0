@@ -8,7 +8,7 @@
   <uses-permission android:name="com.android.vending.BILLING"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
   <application
@@ -33,6 +33,7 @@
     <activity
         android:name="com.yalantis.ucrop.UCropActivity"
         android:screenOrientation="portrait"/>
+
     <provider
         android:name="android.support.v4.content.FileProvider"
         android:authorities="${applicationId}.provider"
@@ -43,7 +44,11 @@
           android:resource="@xml/provider_paths"/>
     </provider>
 
-    <service android:name="zebrostudio.wallr100.android.service.AutomaticWallpaperChangerService"/>
+    <service
+        android:name="zebrostudio.wallr100.android.service.AutomaticWallpaperChangerService"
+        android:enabled="true"
+        android:exported="false"
+        android:stopWithTask="false"/>
 
     <receiver
         android:name=".android.broadcastreceiver.BootReceiver"
@@ -54,6 +59,7 @@
         <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
         <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
         <action android:name="android.intent.action.REBOOT"/>
+
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
     </receiver>

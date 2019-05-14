@@ -18,6 +18,7 @@ import zebrostudio.wallr100.android.ui.collection.REQUEST_CODE
 import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.android.utils.stringRes
+import zebrostudio.wallr100.android.utils.withDelayOnMain
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerUseCase
 import javax.inject.Inject
@@ -98,12 +99,11 @@ class AutomaticWallpaperChangerService : Service() {
 
     //changeWallpaper()
 
-    return START_REDELIVER_INTENT
+    return START_STICKY
   }
 
   override fun onDestroy() {
-    handler = null
-    runnable = null
+    handler?.removeCallbacks(runnable)
     println("service wallapper changer destroyed")
     if (disposable?.isDisposed == false) {
       disposable?.dispose()
@@ -112,9 +112,11 @@ class AutomaticWallpaperChangerService : Service() {
   }
 
   override fun onTaskRemoved(rootIntent: Intent?) {
-    super.onTaskRemoved(rootIntent)
+    /*withDelayOnMain(WALLPAPER_CHANGER_SERVICE_RESTART_DELAY) {
+      serviceManager.startAutomaticWallpaperChangerService()
+    }*/
 
-    serviceManager.startAutomaticWallpaperChangerService()
+    super.onTaskRemoved(rootIntent)
   }
 
   @Nullable
