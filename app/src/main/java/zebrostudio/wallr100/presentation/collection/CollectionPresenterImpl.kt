@@ -69,6 +69,10 @@ class CollectionPresenterImpl(
     }
   }
 
+  override fun handleActivityResult() {
+    handleViewCreated()
+  }
+
   override fun handleImportFromLocalStorageClicked() {
     if (isUserPremium() && isStoragePermissionAvailable()) {
       collectionView?.showImagePicker()
@@ -335,13 +339,6 @@ class CollectionPresenterImpl(
           collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
         }
         .observeOn(postExecutionThread.scheduler)
-        .doOnSuccess {
-          if (collectionImagesUseCase.isAutomaticWallpaperChangerRunning()) {
-            collectionView?.showAutomaticWallpaperStateAsActive()
-          } else {
-            collectionView?.showAutomaticWallpaperStateAsInActive()
-          }
-        }
         .autoDisposable(collectionView!!.getScope())
         .subscribe({
           if (it.isNotEmpty()) {

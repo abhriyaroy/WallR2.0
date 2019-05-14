@@ -17,7 +17,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.android.service.ServiceManager
-import zebrostudio.wallr100.domain.datafactory.CollectionsImageModelFactory
+import zebrostudio.wallr100.domain.datafactory.CollectionsImageModelFactory.getCollectionsImageModel
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerIntervalUpdateResultState.INTERVAL_UPDATED
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerIntervalUpdateResultState.SERVICE_RESTARTED
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
@@ -39,7 +39,7 @@ class CollectionImagesUseCaseTest {
   }
 
   @Test fun `should return single of list of CollectionsImageModel on getAllImages call success`() {
-    val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionImagesModelList))
 
@@ -59,7 +59,7 @@ class CollectionImagesUseCaseTest {
 
   @Test fun `should return single of list of CollectionsImageModel on addImages call success`() {
     val uriList = listOf(uri)
-    val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
     `when`(wallrRepository.addImagesToCollection(uriList)).thenReturn(
         Single.just(collectionImagesModelList))
 
@@ -80,7 +80,7 @@ class CollectionImagesUseCaseTest {
   }
 
   @Test fun `should return single of list of CollectionsImageModel on reorderImage call success`() {
-    val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
     `when`(wallrRepository.reorderImagesInCollectionDatabase(collectionImagesModelList)).thenReturn(
         Single.just(collectionImagesModelList))
 
@@ -91,7 +91,7 @@ class CollectionImagesUseCaseTest {
   }
 
   @Test fun `should return error on reorderImage call failure`() {
-    val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
     `when`(wallrRepository.reorderImagesInCollectionDatabase(collectionImagesModelList))
         .thenReturn(Single.error(Exception()))
 
@@ -102,7 +102,7 @@ class CollectionImagesUseCaseTest {
   }
 
   @Test fun `should return single of list of CollectionsImageModel on deleteImages call success`() {
-    val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
     `when`(wallrRepository.deleteImageFromCollection(collectionImagesModelList)).thenReturn(
         Single.just(collectionImagesModelList))
 
@@ -113,7 +113,7 @@ class CollectionImagesUseCaseTest {
   }
 
   @Test fun `should return error on deleteImages call failure`() {
-    val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
     `when`(wallrRepository.deleteImageFromCollection(collectionImagesModelList))
         .thenReturn(Single.error(Exception()))
 
@@ -125,7 +125,7 @@ class CollectionImagesUseCaseTest {
 
   @Test
   fun `should return single of list of CollectionsImageModel on getImageBitmap call success`() {
-    val collectionImagesModel = CollectionsImageModelFactory.getCollectionsImageModel()
+    val collectionImagesModel = getCollectionsImageModel()
     `when`(wallrRepository.getBitmapFromDatabaseImage(collectionImagesModel)).thenReturn(
         Single.just(bitmap))
 
@@ -136,7 +136,7 @@ class CollectionImagesUseCaseTest {
   }
 
   @Test fun `should return error on getImageBitmap call failure`() {
-    val collectionImagesModel = CollectionsImageModelFactory.getCollectionsImageModel()
+    val collectionImagesModel = getCollectionsImageModel()
     `when`(wallrRepository.getBitmapFromDatabaseImage(collectionImagesModel))
         .thenReturn(Single.error(Exception()))
 
@@ -147,7 +147,7 @@ class CollectionImagesUseCaseTest {
   }
 
   @Test fun `should return single of list of saveCrystallizedImage on deleteImages call success`() {
-    val collectionImagesModel = CollectionsImageModelFactory.getCollectionsImageModel()
+    val collectionImagesModel = getCollectionsImageModel()
     val collectionImagesModelList = listOf(collectionImagesModel)
     `when`(wallrRepository.saveCrystallizedImageInDatabase(collectionImagesModel)).thenReturn(
         Single.just(collectionImagesModelList))
@@ -160,7 +160,7 @@ class CollectionImagesUseCaseTest {
   }
 
   @Test fun `should return error on saveCrystallizedImage call failure`() {
-    val collectionImagesModel = CollectionsImageModelFactory.getCollectionsImageModel()
+    val collectionImagesModel = getCollectionsImageModel()
     `when`(wallrRepository.saveCrystallizedImageInDatabase(collectionImagesModel))
         .thenReturn(Single.error(Exception()))
 

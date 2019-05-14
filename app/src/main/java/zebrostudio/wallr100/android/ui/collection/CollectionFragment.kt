@@ -140,7 +140,7 @@ class CollectionFragment : BaseFragment(),
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     println("On activity result")
-    presenter.handleViewCreated()
+    presenter.handleActivityResult()
   }
 
   override fun getManufacturerName(): String {

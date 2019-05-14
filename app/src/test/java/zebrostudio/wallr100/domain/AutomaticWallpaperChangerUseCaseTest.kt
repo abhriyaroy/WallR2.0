@@ -13,7 +13,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
-import zebrostudio.wallr100.domain.datafactory.CollectionsImageModelFactory
+import zebrostudio.wallr100.domain.datafactory.CollectionsImageModelFactory.getCollectionsImageModel
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerInteractor
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerUseCase
 import java.util.Random
@@ -33,8 +33,8 @@ class AutomaticWallpaperChangerUseCaseTest {
   @Test
   fun `should return single of bitmap of first image on getWallpaperBitmap call success when last used uid is not present`() {
     val inorder = inOrder(wallrRepository)
-    val firstCollectionsImageModel = CollectionsImageModelFactory.getCollectionsImageModel()
-    val secondCollectionsImageModel = CollectionsImageModelFactory.getCollectionsImageModel()
+    val firstCollectionsImageModel = getCollectionsImageModel()
+    val secondCollectionsImageModel = getCollectionsImageModel()
     val collectionsImageModelList = listOf(firstCollectionsImageModel, secondCollectionsImageModel)
     `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(Long.MIN_VALUE)
     `when`(wallrRepository.getBitmapFromDatabaseImage(firstCollectionsImageModel)).thenReturn(
@@ -54,8 +54,8 @@ class AutomaticWallpaperChangerUseCaseTest {
   @Test
   fun `should return single of bitmap of second image on getWallpaperBitmap call success when last used uid is of first image in list`() {
     val inorder = inOrder(wallrRepository)
-    val firstCollectionsImageModel = CollectionsImageModelFactory.getCollectionsImageModel()
-    val secondCollectionsImageModel = CollectionsImageModelFactory.getCollectionsImageModel()
+    val firstCollectionsImageModel = getCollectionsImageModel()
+    val secondCollectionsImageModel = getCollectionsImageModel()
     val collectionsImageModelList = listOf(firstCollectionsImageModel, secondCollectionsImageModel)
     `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(firstCollectionsImageModel.uid)
     `when`(wallrRepository.getBitmapFromDatabaseImage(secondCollectionsImageModel)).thenReturn(
@@ -75,8 +75,8 @@ class AutomaticWallpaperChangerUseCaseTest {
   @Test
   fun `should return single of bitmap of first image on getWallpaperBitmap call success when last used uid is of last image in list`() {
     val inorder = inOrder(wallrRepository)
-    val firstCollectionsImageModel = CollectionsImageModelFactory.getCollectionsImageModel()
-    val secondCollectionsImageModel = CollectionsImageModelFactory.getCollectionsImageModel()
+    val firstCollectionsImageModel = getCollectionsImageModel()
+    val secondCollectionsImageModel = getCollectionsImageModel()
     val collectionsImageModelList = listOf(firstCollectionsImageModel, secondCollectionsImageModel)
     `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(secondCollectionsImageModel.uid)
     `when`(wallrRepository.getBitmapFromDatabaseImage(firstCollectionsImageModel)).thenReturn(

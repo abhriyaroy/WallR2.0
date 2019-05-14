@@ -34,9 +34,9 @@ import zebrostudio.wallr100.data.database.DatabaseImageType.EDITED
 import zebrostudio.wallr100.data.database.DatabaseImageType.MINIMAL_COLOR
 import zebrostudio.wallr100.data.database.DatabaseImageType.SEARCH
 import zebrostudio.wallr100.data.database.DatabaseImageType.WALLPAPER
-import zebrostudio.wallr100.data.datafactory.CollectionsDatabaseImageEntityModelFactory
-import zebrostudio.wallr100.data.datafactory.FirebaseImageEntityModelFactory
-import zebrostudio.wallr100.data.datafactory.UnsplashPictureEntityModelFactory
+import zebrostudio.wallr100.data.datafactory.CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity
+import zebrostudio.wallr100.data.datafactory.FirebaseImageEntityModelFactory.getFirebaseImageEntity
+import zebrostudio.wallr100.data.datafactory.UnsplashPictureEntityModelFactory.getUnsplashPictureEntityModel
 import zebrostudio.wallr100.data.exception.EmptyRecentlyDeletedMapException
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.NoResultFoundException
@@ -49,9 +49,9 @@ import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
 import zebrostudio.wallr100.data.urlshortener.UrlShortener
-import zebrostudio.wallr100.domain.datafactory.CollectionsImageModelFactory
-import zebrostudio.wallr100.domain.datafactory.ImageModelFactory
-import zebrostudio.wallr100.domain.datafactory.SearchPicturesModelFactory
+import zebrostudio.wallr100.domain.datafactory.CollectionsImageModelFactory.getCollectionsImageModel
+import zebrostudio.wallr100.domain.datafactory.ImageModelFactory.getImageModel
+import zebrostudio.wallr100.domain.datafactory.SearchPicturesModelFactory.getSearchPicturesModel
 import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.model.RestoreColorsModel
 import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel
@@ -225,9 +225,8 @@ class WallrDataRepositoryTest {
 
   @Test fun `should return mapped search pictures model list on getPictures call failure`() {
     val unsplashPicturesEntityList = mutableListOf(
-        UnsplashPictureEntityModelFactory.getUnsplashPictureEntityModel())
-    val searchPicturesModelList = listOf(SearchPicturesModelFactory
-        .getSearchPicturesModel())
+        getUnsplashPictureEntityModel())
+    val searchPicturesModelList = listOf(getSearchPicturesModel())
     `when`(unsplashPictureEntityMapper.mapFromEntity(unsplashPicturesEntityList)).thenReturn(
         searchPicturesModelList)
     `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
@@ -540,9 +539,9 @@ class WallrDataRepositoryTest {
 
   @Test fun `should return Single of ImageModel list on getExplorePictures call success`() {
     val map = hashMapOf<String, String>()
-    val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
+    val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
@@ -572,9 +571,9 @@ class WallrDataRepositoryTest {
 
   @Test fun `should return Single of ImageModel list on getRecentPictures call success`() {
     val map = hashMapOf<String, String>()
-    val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
+    val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
@@ -603,9 +602,9 @@ class WallrDataRepositoryTest {
 
   @Test fun `should return Single of ImageModel list on getPopularPictures call success`() {
     val map = hashMapOf<String, String>()
-    val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
+    val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
@@ -634,9 +633,9 @@ class WallrDataRepositoryTest {
 
   @Test fun `should return Single of ImageModel list on getStandoutPictures call success`() {
     val map = hashMapOf<String, String>()
-    val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
+    val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
@@ -665,9 +664,9 @@ class WallrDataRepositoryTest {
 
   @Test fun `should return Single of ImageModel list on getBuildingsPictures call success`() {
     val map = hashMapOf<String, String>()
-    val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
+    val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
@@ -696,9 +695,9 @@ class WallrDataRepositoryTest {
 
   @Test fun `should return Single of ImageModel list on getFoodPictures call success`() {
     val map = hashMapOf<String, String>()
-    val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
+    val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
@@ -727,9 +726,9 @@ class WallrDataRepositoryTest {
 
   @Test fun `should return Single of ImageModel list on getNaturePictures call success`() {
     val map = hashMapOf<String, String>()
-    val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
+    val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
@@ -758,9 +757,9 @@ class WallrDataRepositoryTest {
 
   @Test fun `should return Single of ImageModel list on getObjectsPictures call success`() {
     val map = hashMapOf<String, String>()
-    val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
+    val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
@@ -789,9 +788,9 @@ class WallrDataRepositoryTest {
 
   @Test fun `should return Single of ImageModel list on getPeoplePictures call success`() {
     val map = hashMapOf<String, String>()
-    val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
+    val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
@@ -820,9 +819,9 @@ class WallrDataRepositoryTest {
 
   @Test fun `should return Single of ImageModel list on getTechnologyPictures call success`() {
     val map = hashMapOf<String, String>()
-    val firebaseImageEntity = FirebaseImageEntityModelFactory.getFirebaseImageEntity()
+    val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     val testScheduler = TestScheduler()
     val testObserver = TestObserver<Any>()
     val gson = Gson()
@@ -1084,7 +1083,7 @@ class WallrDataRepositoryTest {
   @Test
   fun `should return single of list of collections image model on getImagesInCollection call success`() {
     val collectionsDatabaseImageEntityList =
-        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+        listOf(getCollectionsDatabaseImageEntity())
     `when`(imageHandler.getAllImagesInCollection()).thenReturn(
         Single.just(collectionsDatabaseImageEntityList))
 
@@ -1112,9 +1111,9 @@ class WallrDataRepositoryTest {
   @Test
   fun `should return single of list of collections image model on addImagesToCollection call success`() {
     val mockUriList = listOf(mockUri)
-    val collectionsImageModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionsImageModelList = listOf(getCollectionsImageModel())
     val collectionsDatabaseImageEntityList =
-        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+        listOf(getCollectionsDatabaseImageEntity())
     `when`(collectionsDatabaseImageEntityMapper.mapFromEntity(collectionsDatabaseImageEntityList))
         .thenReturn(collectionsImageModelList)
     `when`(imageHandler.addExternalImageToCollection(mockUriList)).thenReturn(
@@ -1135,7 +1134,7 @@ class WallrDataRepositoryTest {
   fun `should return error on addImagesToCollection call failure`() {
     val mockUriList = listOf(mockUri)
     val collectionsDatabaseImageEntityList =
-        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+        listOf(getCollectionsDatabaseImageEntity())
     `when`(imageHandler.addExternalImageToCollection(mockUriList)).thenReturn(
         Completable.error(Exception()))
     `when`(imageHandler.getAllImagesInCollection()).thenReturn(
@@ -1150,9 +1149,9 @@ class WallrDataRepositoryTest {
 
   @Test
   fun `should return single of list of collections image model on reorderImagesInCollectionDatabase call success`() {
-    val collectionImageModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionImageModelList = listOf(getCollectionsImageModel())
     val collectionDatabaseImageEntityList =
-        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+        listOf(getCollectionsDatabaseImageEntity())
     `when`(collectionsDatabaseImageEntityMapper.mapToEntity(collectionImageModelList))
         .thenReturn(collectionDatabaseImageEntityList)
     `when`(collectionsDatabaseImageEntityMapper.mapFromEntity(collectionDatabaseImageEntityList))
@@ -1172,9 +1171,9 @@ class WallrDataRepositoryTest {
 
   @Test
   fun `should return single of error image model on reorderImagesInCollectionDatabase call failure`() {
-    val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
     val collectionDatabaseImageEntityList =
-        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+        listOf(getCollectionsDatabaseImageEntity())
     `when`(collectionsDatabaseImageEntityMapper.mapToEntity(collectionImagesModelList))
         .thenReturn(collectionDatabaseImageEntityList)
     `when`(imageHandler.reorderImagesInCollection(collectionDatabaseImageEntityList)).thenReturn(
@@ -1190,9 +1189,9 @@ class WallrDataRepositoryTest {
 
   @Test
   fun `should return single of list of collections image model on deleteImageFromCollection call success`() {
-    val collectionImageModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionImageModelList = listOf(getCollectionsImageModel())
     val collectionDatabaseImageEntityList =
-        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+        listOf(getCollectionsDatabaseImageEntity())
     `when`(collectionsDatabaseImageEntityMapper.mapToEntity(collectionImageModelList))
         .thenReturn(collectionDatabaseImageEntityList)
     `when`(collectionsDatabaseImageEntityMapper.mapFromEntity(collectionDatabaseImageEntityList))
@@ -1212,9 +1211,9 @@ class WallrDataRepositoryTest {
 
   @Test
   fun `should return single of error image model on deleteImageFromCollection call failure`() {
-    val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
     val collectionDatabaseImageEntityList =
-        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+        listOf(getCollectionsDatabaseImageEntity())
     `when`(collectionsDatabaseImageEntityMapper.mapToEntity(collectionImagesModelList))
         .thenReturn(collectionDatabaseImageEntityList)
     `when`(imageHandler.deleteImagesInCollection(collectionDatabaseImageEntityList)).thenReturn(
@@ -1282,9 +1281,9 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should return bitmap on getBitmapFromDatabaseImage call success`() {
-    val collectionsImageModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionsImageModelList = listOf(getCollectionsImageModel())
     val collectionDatabaseImageEntityList =
-        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+        listOf(getCollectionsDatabaseImageEntity())
     `when`(collectionsDatabaseImageEntityMapper.mapToEntity(collectionsImageModelList))
         .thenReturn(collectionDatabaseImageEntityList)
     `when`(imageHandler.getImageBitmap(collectionDatabaseImageEntityList.first().path))
@@ -1299,9 +1298,9 @@ class WallrDataRepositoryTest {
 
   @Test
   fun `should return single of list of collections image model on saveCrystallizedImageInDatabase call success`() {
-    val collectionImageModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
+    val collectionImageModelList = listOf(getCollectionsImageModel())
     val collectionDatabaseImageEntityList =
-        listOf(CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity())
+        listOf(getCollectionsDatabaseImageEntity())
     `when`(collectionsDatabaseImageEntityMapper.mapToEntity(collectionImageModelList))
         .thenReturn(collectionDatabaseImageEntityList)
     `when`(collectionsDatabaseImageEntityMapper.mapFromEntity(collectionDatabaseImageEntityList))
