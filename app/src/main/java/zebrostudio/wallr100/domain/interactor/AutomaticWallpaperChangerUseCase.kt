@@ -7,7 +7,6 @@ import zebrostudio.wallr100.domain.WallrRepository
 interface AutomaticWallpaperChangerUseCase {
   fun getWallpaperBitmap(): Single<Bitmap>
   fun getInterval(): Long
-  fun saveLastUsedWallpaperUid(uid: Long)
 }
 
 const val LIST_FIRST_ELEMENT_INDEX = 0
@@ -38,10 +37,6 @@ class AutomaticWallpaperChangerInteractor(private val wallrRepository: WallrRepo
             wallrRepository.getBitmapFromDatabaseImage(list[index])
           }
         }
-  }
-
-  override fun saveLastUsedWallpaperUid(uid: Long) {
-    wallrRepository.setLastUsedWallpaperUid(uid)
   }
 
   override fun getInterval(): Long {

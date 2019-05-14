@@ -25,7 +25,8 @@ const val SECURITY_PACKAGE_XIAOMI = "com.miui.securitycenter"
 const val AUTOSTART_CLASS_NAME_XIAOMI = "com.miui.permcenter.autostart.AutoStartManagementActivity"
 const val MANUFACTURER_NAME_OPPO = "oppo"
 const val SECURITY_PACKAGE_OPPO = "com.coloros.safecenter"
-const val AUTOSTART_CLASS_NAME_OPPO = "com.coloros.safecenter.permission.startup.StartupAppListActivity"
+const val AUTOSTART_CLASS_NAME_OPPO =
+    "com.coloros.safecenter.permission.startup.StartupAppListActivity"
 const val MANUFACTURER_NAME_VIVO = "vivo"
 const val SECURITY_PACKAGE_VIVO = "com.vivo.permissionmanager"
 const val AUTOSTART_CLASS_NAME_VIVO = "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"
@@ -358,7 +359,8 @@ class CollectionPresenterImpl(
   }
 
   private fun showHintIfSuitable(listSize: Int) {
-    if (listSize >= MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_HINT) {
+    if (listSize >= MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_HINT
+        && !widgetHintsUseCase.isCollectionsImageReorderHintShown()) {
       collectionView?.showReorderImagesHintWithDelay()
     }
   }

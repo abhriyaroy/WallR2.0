@@ -214,12 +214,16 @@
   <string name="collections_fragment_multiple_images_deleted_success_message">Images have been successfully deleted</string>
   <string name="collections_fragment_single_images_deleted_success_message">Image has been successfully deleted</string>
   <string name="collections_fragment_image_reordering_success_message">Successfully reordered images</string>
-  <string name="collection_fragment_autostart_permission_description">Please ensure Autostart Permission is enabled for WallR so that the automatic wallpaper changer can work properly</string>
-  <string name="collection_fragment_autostart_permission_title">Grant Autostart Permission</string>
+  <string name="collection_fragment_autostart_permission_description">Please ensure Autostart Permission is enabled for WallR and also please lock wallr in the recent apps screen so that the automatic wallpaper changer can work properly.</string>
+  <string name="collection_fragment_autostart_permission_title">Grant Autostart Permission And Lock In Recent Apps</string>
   <string name="collection_fragment_autostart_permission_positive_text">Open Settings</string>
   <string name="collection_fragment_autostart_permission_negative_text">Already Enabled</string>
   <string name="collections_fragment_wallpaper_changer_interval_updated_success_message">Automatic wallpaper changer interval updated</string>
   <string name="collections_fragment_wallpaper_changer_service_restarted_success_message">Automatic wallpaper changer restarted</string>
+  <string name="collections_fragment_enable_autostart_settings_hint">Now, Please enable WallR</string>
+  <string name="collections_fragment_purchase_pro_diloag_description">This is a pro user only section. Please purchase pro to continue adding images to collection and using them offline and also to enable Automatic wallpaper changer</string>
+  <string name="collections_fragment_purchase_pro_diloag_title">WallR Pro Required</string>
+  <string name="collections_fragment_purchase_pro_diloag_positive_text">Purchase Pro</string>
 
   <!-- Wallpaper changer service strings -->
   <string name="wallpaper_changer_service_notification_title">Automatic wallpaper changer</string>
@@ -229,10 +233,6 @@
   <string name="wallpaper_changer_service_interval_6_hours">6 hours</string>
   <string name="wallpaper_changer_service_interval_1_day">1 day</string>
   <string name="wallpaper_changer_service_interval_3_days">3 days</string>
-  <string name="collections_fragment_enable_autostart_settings_hint">Now, Please enable WallR</string>
-  <string name="collections_fragment_purchase_pro_diloag_description">This is a pro user only section. Please purchase pro to continue adding images to collection and using them offline and also to enable Automatic wallpaper changer</string>
-  <string name="collections_fragment_purchase_pro_diloag_title">WallR Pro Required</string>
-  <string name="collections_fragment_purchase_pro_diloag_positive_text">Purchase Pro</string>
 
 
 </resources>

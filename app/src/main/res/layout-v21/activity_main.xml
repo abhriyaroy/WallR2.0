@@ -81,7 +81,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/main_activity_switch_view_margin_right"
             android:layout_centerVertical="true"
-            android:checked="true"/>
+            android:checked="false"/>
 
         <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
             android:layout_width="fill_parent"

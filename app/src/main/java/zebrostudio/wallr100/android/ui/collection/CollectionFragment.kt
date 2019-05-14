@@ -81,6 +81,7 @@ const val MAXIMUM_SELECTED_IMAGES = 10
 private const val REORDER_HINT_VIEW_POSITION = 1
 private const val APP_BAR_DELAY: Long = 200
 private const val AUTOSTART_HINT_DELAY: Long = 2000
+private const val ATTACH_SWITCH_LISTENER_DELAY: Long = 1000
 
 class CollectionFragment : BaseFragment(),
     CollectionView,
@@ -108,7 +109,6 @@ class CollectionFragment : BaseFragment(),
     presenter.attachView(this)
     activity?.findViewById<Toolbar>(R.id.toolbar)?.setOnMenuItemClickListener(this)
     initRecyclerViewWithListeners()
-    showAutomaticWallpaperStateAsInActive()
     attachAutomaticWallpaperChangerListener()
     setUpBlurView()
     presenter.handleViewCreated()

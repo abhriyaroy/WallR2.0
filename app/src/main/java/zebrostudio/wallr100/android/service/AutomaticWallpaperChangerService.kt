@@ -20,12 +20,10 @@ import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerUseCase
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 const val WALLPAPER_CHANGER_SERVICE_RESTART_DELAY: Long = 2000
 const val WALLPAPER_CHANGER_SERVICE_CODE = 1
-
 val wallpaperChangerIntervals = arrayListOf<Long>(
     1800000,
     3600000,
@@ -34,8 +32,11 @@ val wallpaperChangerIntervals = arrayListOf<Long>(
     259200000
 )
 
+private const val TIME_CHECKER_DELAY: Long = 300000
+
 class AutomaticWallpaperChangerService : Service() {
 
+  @Inject lateinit var serviceManager: ServiceManager
   @Inject lateinit var automaticWallpaperChangerUseCase: AutomaticWallpaperChangerUseCase
   @Inject lateinit var wallpaperSetter: WallpaperSetter
   @Inject lateinit var postExecutionThread: PostExecutionThread
@@ -43,6 +44,8 @@ class AutomaticWallpaperChangerService : Service() {
   private var handler: Handler? = null
   private var runnable: Runnable? = null
   private var disposable: Disposable? = null
+  private var interval: Long = wallpaperChangerIntervals.first()
+  private var timeElapsed: Long = 0
 
   override fun onCreate() {
     AndroidInjection.inject(this)
@@ -68,6 +71,21 @@ class AutomaticWallpaperChangerService : Service() {
 
     startForeground(WALLPAPER_CHANGER_SERVICE_CODE, notification)
 
+    interval = getInterval()
+
+    handler = Handler()
+    runnable = Runnable {
+      println("Runnable fired $timeElapsed")
+      if (timeElapsed == interval) {
+        timeElapsed = 0
+        changeWallpaper()
+      } else {
+        timeElapsed += TIME_CHECKER_DELAY
+      }
+      handler?.postDelayed(runnable, TIME_CHECKER_DELAY)
+    }
+    handler?.postDelayed(runnable, TIME_CHECKER_DELAY)
+
     /*val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
@@ -78,7 +96,7 @@ class AutomaticWallpaperChangerService : Service() {
         oneMinute,
         pendingIntent)*/
 
-    changeWallpaper()
+    //changeWallpaper()
 
     return START_REDELIVER_INTENT
   }
@@ -96,15 +114,7 @@ class AutomaticWallpaperChangerService : Service() {
   override fun onTaskRemoved(rootIntent: Intent?) {
     super.onTaskRemoved(rootIntent)
 
-    val service = PendingIntent.getService(
-        applicationContext,
-        WALLPAPER_CHANGER_SERVICE_CODE,
-        Intent(applicationContext, AutomaticWallpaperChangerService::class.java),
-        PendingIntent.FLAG_ONE_SHOT)
-
-    val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+WALLPAPER_CHANGER_SERVICE_RESTART_DELAY,
-        service)
+    serviceManager.startAutomaticWallpaperChangerService()
   }
 
   @Nullable
@@ -146,10 +156,8 @@ class AutomaticWallpaperChangerService : Service() {
             it.recycle()
           }
         }.observeOn(postExecutionThread.scheduler)
-        .delaySubscription(getInterval(), TimeUnit.MILLISECONDS)
         .subscribe({
           println("Subscribe success ")
-          changeWallpaper()
         }, {
           println(it.message)
           println("subscribe error")
