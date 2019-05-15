@@ -491,23 +491,77 @@ class CollectionPresenterImplTest {
     verify(collectionView).showImagePicker()
   }
 
-  @Test fun `should redirect to buy pro on handlePurchaseClick call success`(){
+  @Test fun `should redirect to buy pro on handlePurchaseClick call success`() {
     collectionPresenterImpl.handlePurchaseClicked()
 
     verify(collectionView).redirectToBuyPro()
   }
 
-  @Test fun `should save reorder hint shown state on handleReorderImagesHintHintDismissed call success`(){
+  @Test
+  fun `should save reorder hint shown state on handleReorderImagesHintHintDismissed call success`() {
     collectionPresenterImpl.handleReorderImagesHintHintDismissed()
 
     verify(widgetHintsUseCase).saveCollectionsImageReorderHintShown()
   }
 
-  @Test fun `should reorder images on handleItemMoved call success`(){
+  @Test fun `should reorder images on handleItemMoved call success`() {
     val fromPosition = 0
-    val toPosition = 3
+    val toPosition = 2
     val firstItem = getCollectionImagesPresenterEntity()
+    val secondItem = getCollectionImagesPresenterEntity()
+    val thirdItem = getCollectionImagesPresenterEntity()
+    val fourthItem = getCollectionImagesPresenterEntity()
+    val originalList = mutableListOf(firstItem, secondItem, thirdItem, fourthItem)
+    val reorderedList = listOf(secondItem, thirdItem, firstItem, fourthItem)
+    val collectionImageModelList = listOf(getCollectionsImageModel())
+    `when`(collectionImagesPresenterEntityMapper.mapFromPresenterEntity(originalList)).thenReturn(
+        collectionImageModelList)
+    `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(collectionImageModelList))
+        .thenReturn(reorderedList)
+    `when`(collectionImagesUseCase.reorderImage(collectionImageModelList))
+        .thenReturn(Single.just(collectionImageModelList))
+
+    collectionPresenterImpl.handleItemMoved(fromPosition, toPosition, originalList)
+
+    verify(collectionImagesPresenterEntityMapper).mapFromPresenterEntity(originalList)
+    verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionImageModelList)
+    verify(collectionImagesUseCase).reorderImage(collectionImageModelList)
+    verify(collectionView).getScope()
+    verify(collectionView).updateItemViewMovement(fromPosition, toPosition)
+    verify(collectionView).setImagesList(reorderedList)
+    verify(collectionView).showReorderSuccessMessage()
+    verifyPostExecutionThreadSchedulerCall()
   }
+
+  @Test
+  fun `should show failure message and restore images order on handleItemMoved call failure`() {
+    val fromPosition = 0
+    val toPosition = 2
+    val firstItem = getCollectionImagesPresenterEntity()
+    val secondItem = getCollectionImagesPresenterEntity()
+    val thirdItem = getCollectionImagesPresenterEntity()
+    val fourthItem = getCollectionImagesPresenterEntity()
+    val originalList = mutableListOf(firstItem, secondItem, thirdItem, fourthItem)
+    val restoredList = listOf(firstItem, secondItem, thirdItem, fourthItem)
+    val collectionImageModelList = listOf(getCollectionsImageModel())
+    `when`(collectionImagesPresenterEntityMapper.mapFromPresenterEntity(originalList)).thenReturn(
+        collectionImageModelList)
+    `when`(collectionImagesUseCase.reorderImage(collectionImageModelList))
+        .thenReturn(Single.error(Exception()))
+
+    collectionPresenterImpl.handleItemMoved(fromPosition, toPosition, originalList)
+
+    verify(collectionImagesPresenterEntityMapper).mapFromPresenterEntity(originalList)
+    verify(collectionImagesUseCase).reorderImage(collectionImageModelList)
+    verify(collectionView).getScope()
+    verify(collectionView).updateItemViewMovement(fromPosition, toPosition)
+    verify(collectionView).setImagesList(restoredList)
+    verify(collectionView).updateChangesInEveryItemView()
+    verify(collectionView).showUnableToReorderErrorMessage()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+
 
   @After fun tearDown() {
     verifyNoMoreInteractions(collectionView, widgetHintsUseCase, userPremiumStatusUseCase,

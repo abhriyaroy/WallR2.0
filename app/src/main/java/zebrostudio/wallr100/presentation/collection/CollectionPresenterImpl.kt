@@ -134,7 +134,6 @@ class CollectionPresenterImpl(
       selectedItemsMap[position] = imageList[position]
     }
     updateSelectionChangesInCab(position, selectedItemsMap.size)
-
   }
 
   override fun notifyDragStarted() {
