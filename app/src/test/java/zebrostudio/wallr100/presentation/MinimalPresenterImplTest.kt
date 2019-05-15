@@ -22,7 +22,7 @@ import zebrostudio.wallr100.data.exception.UnableToGetMinimalColorsException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.MinimalImagesUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
-import zebrostudio.wallr100.presentation.datafactory.RestoreColorsModelFactory
+import zebrostudio.wallr100.domain.datafactory.RestoreColorsModelFactory
 import zebrostudio.wallr100.presentation.minimal.INITIAL_OFFSET
 import zebrostudio.wallr100.presentation.minimal.INITIAL_SIZE
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
@@ -250,6 +250,7 @@ class MinimalPresenterImplTest {
     assertFalse(minimalPresenter.isBottomPanelEnabled)
     assertTrue(minimalPresenter.shouldUpdateAllItems)
     assertEquals(INITIAL_SIZE, minimalPresenter.selectionSize)
+    verify(minimalView).showAppBar()
     verify(minimalView).clearSelectedItemsMap()
     verify(minimalView).updateAllItems()
     verify(minimalView).hideBottomLayoutWithAnimation()
@@ -265,6 +266,7 @@ class MinimalPresenterImplTest {
     assertFalse(minimalPresenter.isBottomPanelEnabled)
     assertTrue(minimalPresenter.shouldUpdateAllItems)
     assertEquals(INITIAL_SIZE, minimalPresenter.selectionSize)
+    verify(minimalView).showAppBar()
     verify(minimalView).clearSelectedItemsMap()
     verify(minimalView).hideBottomLayoutWithAnimation()
   }
@@ -276,6 +278,7 @@ class MinimalPresenterImplTest {
     minimalPresenter.handleCabDestroyed()
 
     assertTrue(minimalPresenter.shouldUpdateAllItems)
+    verify(minimalView).showAppBar()
     verify(minimalView).clearSelectedItemsMap()
   }
 

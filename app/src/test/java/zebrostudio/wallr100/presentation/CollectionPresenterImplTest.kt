@@ -25,7 +25,7 @@ import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionView
 import zebrostudio.wallr100.presentation.collection.CollectionPresenterImpl
 import zebrostudio.wallr100.presentation.collection.mapper.CollectionImagesPresenterEntityMapper
-import zebrostudio.wallr100.presentation.datafactory.CollectionImagesPresenterEntityFactory.getCollectionImagesPresenterEntityFactory
+import zebrostudio.wallr100.presentation.datafactory.CollectionImagesPresenterEntityFactory.getCollectionImagesPresenterEntity
 
 @RunWith(MockitoJUnitRunner::class)
 class CollectionPresenterImplTest {
@@ -79,7 +79,7 @@ class CollectionPresenterImplTest {
   fun `should set automatic wallpaper changer as active and show pictures on handleViewCreated call success`() {
     val collectionsImageModelList = listOf(getCollectionsImageModel())
     val collectionsPresenterEntityList =
-        listOf(getCollectionImagesPresenterEntityFactory())
+        listOf(getCollectionImagesPresenterEntity())
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(collectionView.hasStoragePermission()).thenReturn(true)
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(true)
@@ -108,8 +108,8 @@ class CollectionPresenterImplTest {
   fun `should set automatic wallpaper changer as active and show pictures and hint on handleViewCreated call success`() {
     val collectionsImageModelList = listOf(getCollectionsImageModel(), getCollectionsImageModel())
     val collectionsPresenterEntityList =
-        listOf(getCollectionImagesPresenterEntityFactory(),
-            getCollectionImagesPresenterEntityFactory())
+        listOf(getCollectionImagesPresenterEntity(),
+            getCollectionImagesPresenterEntity())
     `when`(widgetHintsUseCase.isCollectionsImageReorderHintShown()).thenReturn(false)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(collectionView.hasStoragePermission()).thenReturn(true)
@@ -162,7 +162,7 @@ class CollectionPresenterImplTest {
   fun `should set automatic wallpaper changer as inactive and show pictures on handleViewCreated call success`() {
     val collectionsImageModelList = listOf(getCollectionsImageModel())
     val collectionsPresenterEntityList =
-        listOf(getCollectionImagesPresenterEntityFactory())
+        listOf(getCollectionImagesPresenterEntity())
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(collectionView.hasStoragePermission()).thenReturn(true)
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
@@ -191,8 +191,8 @@ class CollectionPresenterImplTest {
   fun `should set automatic wallpaper changer as inactive and show pictures and hint on handleViewCreated call success`() {
     val collectionsImageModelList = listOf(getCollectionsImageModel(), getCollectionsImageModel())
     val collectionsPresenterEntityList =
-        listOf(getCollectionImagesPresenterEntityFactory(),
-            getCollectionImagesPresenterEntityFactory())
+        listOf(getCollectionImagesPresenterEntity(),
+            getCollectionImagesPresenterEntity())
     `when`(widgetHintsUseCase.isCollectionsImageReorderHintShown()).thenReturn(false)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(collectionView.hasStoragePermission()).thenReturn(true)
@@ -270,7 +270,7 @@ class CollectionPresenterImplTest {
   fun `should set automatic wallpaper changer as active and show pictures on handleActivityResult call failure due to missing storage permission`() {
     val collectionsImageModelList = listOf(getCollectionsImageModel())
     val collectionsPresenterEntityList =
-        listOf(getCollectionImagesPresenterEntityFactory())
+        listOf(getCollectionImagesPresenterEntity())
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(collectionView.hasStoragePermission()).thenReturn(true)
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(true)
@@ -299,8 +299,8 @@ class CollectionPresenterImplTest {
   fun `should set automatic wallpaper changer as active and show pictures and hint on handleActivityResult call failure due to missing storage permission`() {
     val collectionsImageModelList = listOf(getCollectionsImageModel(), getCollectionsImageModel())
     val collectionsPresenterEntityList =
-        listOf(getCollectionImagesPresenterEntityFactory(),
-            getCollectionImagesPresenterEntityFactory())
+        listOf(getCollectionImagesPresenterEntity(),
+            getCollectionImagesPresenterEntity())
     `when`(widgetHintsUseCase.isCollectionsImageReorderHintShown()).thenReturn(false)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(collectionView.hasStoragePermission()).thenReturn(true)
@@ -353,7 +353,7 @@ class CollectionPresenterImplTest {
   fun `should set automatic wallpaper changer as inactive and show pictures on handleActivityResult call failure due to missing storage permission`() {
     val collectionsImageModelList = listOf(getCollectionsImageModel())
     val collectionsPresenterEntityList =
-        listOf(getCollectionImagesPresenterEntityFactory())
+        listOf(getCollectionImagesPresenterEntity())
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(collectionView.hasStoragePermission()).thenReturn(true)
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
@@ -382,8 +382,8 @@ class CollectionPresenterImplTest {
   fun `should set automatic wallpaper changer as inactive and show pictures and hint on handleActivityResult call failure due to missing storage permission`() {
     val collectionsImageModelList = listOf(getCollectionsImageModel(), getCollectionsImageModel())
     val collectionsPresenterEntityList =
-        listOf(getCollectionImagesPresenterEntityFactory(),
-            getCollectionImagesPresenterEntityFactory())
+        listOf(getCollectionImagesPresenterEntity(),
+            getCollectionImagesPresenterEntity())
     `when`(widgetHintsUseCase.isCollectionsImageReorderHintShown()).thenReturn(false)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(collectionView.hasStoragePermission()).thenReturn(true)
@@ -489,6 +489,24 @@ class CollectionPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(collectionView).hasStoragePermission()
     verify(collectionView).showImagePicker()
+  }
+
+  @Test fun `should redirect to buy pro on handlePurchaseClick call success`(){
+    collectionPresenterImpl.handlePurchaseClicked()
+
+    verify(collectionView).redirectToBuyPro()
+  }
+
+  @Test fun `should save reorder hint shown state on handleReorderImagesHintHintDismissed call success`(){
+    collectionPresenterImpl.handleReorderImagesHintHintDismissed()
+
+    verify(widgetHintsUseCase).saveCollectionsImageReorderHintShown()
+  }
+
+  @Test fun `should reorder images on handleItemMoved call success`(){
+    val fromPosition = 0
+    val toPosition = 3
+    val firstItem = getCollectionImagesPresenterEntity()
   }
 
   @After fun tearDown() {

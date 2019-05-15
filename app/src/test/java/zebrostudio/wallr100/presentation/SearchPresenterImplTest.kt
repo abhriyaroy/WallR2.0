@@ -20,9 +20,9 @@ import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.data.api.UrlMap.getQueryString
 import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
+import zebrostudio.wallr100.domain.datafactory.SearchPicturesModelFactory.getSearchPicturesModel
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
-import zebrostudio.wallr100.presentation.datafactory.SearchPicturesModelFactory.getSearchPicturesModelList
 import zebrostudio.wallr100.presentation.search.SearchContract
 import zebrostudio.wallr100.presentation.search.SearchPresenterImpl
 import zebrostudio.wallr100.presentation.search.mapper.SearchPicturesPresenterEntityMapper
@@ -105,7 +105,7 @@ class SearchPresenterImplTest {
 
   @Test
   fun `should return list of searchPicturesPresenterEntity on notifyQuerySubmitted call success`() {
-    val searchPicturesModelList = getSearchPicturesModelList()
+    val searchPicturesModelList = listOf(getSearchPicturesModel())
     val searchPicturesPresenterEntity =
         searchPicturesPresenterEntityMapper.mapToPresenterEntity(searchPicturesModelList)
     `when`(searchPicturesUseCase.buildUseCaseSingle(getQueryString(randomString, queryPage)))
@@ -155,7 +155,7 @@ class SearchPresenterImplTest {
 
   @Test
   fun `should return list of search pictures presenter entity on fetchMoreImages call success`() {
-    val searchPicturesModelList = getSearchPicturesModelList()
+    val searchPicturesModelList = listOf(getSearchPicturesModel())
     val searchPicturesPresenterEntity =
         searchPicturesPresenterEntityMapper.mapToPresenterEntity(searchPicturesModelList)
     `when`(searchPicturesUseCase.buildUseCaseSingle(getQueryString("", queryPage)))
@@ -211,8 +211,7 @@ class SearchPresenterImplTest {
 
   @Test
   fun `should return list of searchPicturesPresenterEntity when retry button is pressed and search keyword is valid and notifyQuerySubmitted call succeeds`() {
-    val searchPicturesModelList =
-        getSearchPicturesModelList()
+    val searchPicturesModelList = listOf(getSearchPicturesModel())
     val searchPicturesPresenterEntity =
         searchPicturesPresenterEntityMapper.mapToPresenterEntity(searchPicturesModelList)
     searchPresenterImpl.keyword = randomString

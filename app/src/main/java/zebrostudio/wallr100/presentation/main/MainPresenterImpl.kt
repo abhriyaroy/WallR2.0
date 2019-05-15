@@ -34,22 +34,24 @@ class MainPresenterImpl(
     if (isGuillotineMenuOpen) {
       mainView?.closeNavigationMenu()
     } else {
-      if (mainView?.getFragmentTagAtStackTop() == EXPLORE_TAG) {
-        if (backPressedOnce) {
-          mainView?.exitApp()
+      mainView?.getFragmentTagAtStackTop().let {
+        if (it == EXPLORE_TAG) {
+          if (backPressedOnce) {
+            mainView?.exitApp()
+          } else {
+            backPressedOnce = true
+            mainView?.showExitConfirmation()
+            mainView?.startBackPressedFlagResetTimer()
+          }
         } else {
-          backPressedOnce = true
-          mainView?.showExitConfirmation()
-          mainView?.startBackPressedFlagResetTimer()
-        }
-      } else {
-        mainView?.showAppBar()
-        if ((mainView?.getFragmentTagAtStackTop() == MINIMAL_TAG
-                || mainView?.getFragmentTagAtStackTop() == COLLECTIONS_TAG) &&
-            mainView?.isCabActive() == true) {
-          mainView?.dismissCab()
-        } else {
-          mainView?.showPreviousFragment()
+          mainView?.showAppBar()
+          if ((it == MINIMAL_TAG
+                  || it == COLLECTIONS_TAG) &&
+              mainView?.isCabActive() == true) {
+            mainView?.dismissCab()
+          } else {
+            mainView?.showPreviousFragment()
+          }
         }
       }
     }

@@ -17,10 +17,10 @@ import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.android.utils.FragmentTag.CATEGORIES_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.TOP_PICKS_TAG
+import zebrostudio.wallr100.domain.datafactory.ImageModelFactory.getImageModel
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.domain.model.images.ImageModel
-import zebrostudio.wallr100.presentation.datafactory.ImageModelFactory
 import zebrostudio.wallr100.presentation.wallpaper.ImageListContract
 import zebrostudio.wallr100.presentation.wallpaper.ImageListPresenterImpl
 import zebrostudio.wallr100.presentation.wallpaper.mapper.ImagePresenterEntityMapper
@@ -54,7 +54,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of explore images when fetchImages call with refresh false is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.exploreImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(EXPLORE_TAG, 0)
 
@@ -68,7 +68,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of explore images when fetchImages call with refresh true is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.exploreImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(EXPLORE_TAG, 0)
 
@@ -82,7 +82,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of recent images when fetchImages call with refresh false is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.recentImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(TOP_PICKS_TAG, 0)
 
@@ -96,7 +96,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of recent images when fetchImages call with refresh true is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.recentImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(TOP_PICKS_TAG, 0)
 
@@ -110,7 +110,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of popular images when fetchImages call with refresh false is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.popularImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(TOP_PICKS_TAG, 1)
 
@@ -124,7 +124,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of popular images when fetchImages call with refresh true is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.popularImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(TOP_PICKS_TAG, 1)
 
@@ -138,7 +138,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of standout images when fetchImages call with refresh false is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.standoutImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(TOP_PICKS_TAG, 2)
 
@@ -152,7 +152,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of standout images when fetchImages call with refresh true is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.standoutImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(TOP_PICKS_TAG, 2)
 
@@ -166,7 +166,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of building images when fetchImages call with refresh false is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.buildingsImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(CATEGORIES_TAG, 0)
 
@@ -180,7 +180,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of building images when fetchImages call with refresh true is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.buildingsImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(CATEGORIES_TAG, 0)
 
@@ -194,7 +194,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of food images when fetchImages call with refresh false is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.foodImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(CATEGORIES_TAG, 1)
 
@@ -208,7 +208,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of food images when fetchImages call with refresh true is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.foodImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(CATEGORIES_TAG, 1)
 
@@ -222,7 +222,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of nature images when fetchImages call with refresh false is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.natureImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(CATEGORIES_TAG, 2)
 
@@ -236,7 +236,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of nature images when fetchImages call with refresh true is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.natureImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(CATEGORIES_TAG, 2)
 
@@ -250,7 +250,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of object images when fetchImages call with refresh false is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.objectsImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(CATEGORIES_TAG, 3)
 
@@ -264,7 +264,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of object images when fetchImages call with refresh true is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.objectsImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(CATEGORIES_TAG, 3)
 
@@ -278,7 +278,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of people images when fetchImages call with refresh false is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.peopleImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(CATEGORIES_TAG, 4)
 
@@ -292,7 +292,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of people images when fetchImages call with refresh true is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.peopleImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(CATEGORIES_TAG, 4)
 
@@ -306,7 +306,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of technology images when fetchImages call with refresh false is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.technologyImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(CATEGORIES_TAG, 5)
 
@@ -320,7 +320,7 @@ class ImageListPresenterImplTest {
 
   @Test
   fun `should return imagePresenterEntity list of technology images when fetchImages call with refresh true is success`() {
-    val imageModelList = listOf(ImageModelFactory.getImageModel())
+    val imageModelList = listOf(getImageModel())
     `when`(wallpaperImagesUseCase.technologyImagesSingle()).thenReturn(Single.just(imageModelList))
     imageListPresenter.setImageListType(CATEGORIES_TAG, 5)
 

@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.presentation.datafactory
+package zebrostudio.wallr100.domain.datafactory
 
 import zebrostudio.wallr100.domain.model.RestoreColorsModel
 import java.util.TreeMap

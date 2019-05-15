@@ -90,6 +90,8 @@ class CollectionPresenterImpl(
     toPosition: Int,
     imagePathList: MutableList<CollectionsPresenterEntity>
   ) {
+    val copyOfImageListPriorToReordering = mutableListOf<CollectionsPresenterEntity>()
+    copyOfImageListPriorToReordering.addAll(imagePathList)
     if (fromPosition < toPosition) {
       for (i in fromPosition until toPosition) {
         Collections.swap(imagePathList, i, i + 1)
@@ -110,7 +112,9 @@ class CollectionPresenterImpl(
         .subscribe({
           collectionView?.setImagesList(it)
           collectionView?.showReorderSuccessMessage()
+          copyOfImageListPriorToReordering.clear()
         }, {
+          collectionView?.setImagesList(copyOfImageListPriorToReordering)
           collectionView?.updateChangesInEveryItemView()
           collectionView?.showUnableToReorderErrorMessage()
         })
@@ -306,7 +310,6 @@ class CollectionPresenterImpl(
   }
 
   override fun handleCabDestroyed() {
-    println("handle cab destoryed")
     collectionView?.clearAllSelectedItems()
     collectionView?.updateChangesInEveryItemView()
     collectionView?.enableToolbar()

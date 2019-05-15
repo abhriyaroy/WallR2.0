@@ -74,7 +74,7 @@ class MainPresenterImplTest {
 
     mainPresenter.handleBackPress()
 
-    verify(mainView, times(2)).getFragmentTagAtStackTop()
+    verify(mainView).getFragmentTagAtStackTop()
     verify(mainView).showAppBar()
     verify(mainView).showPreviousFragment()
   }
@@ -86,7 +86,7 @@ class MainPresenterImplTest {
 
     mainPresenter.handleBackPress()
 
-    verify(mainView, times(2)).getFragmentTagAtStackTop()
+    verify(mainView).getFragmentTagAtStackTop()
     verify(mainView).showAppBar()
     verify(mainView).showPreviousFragment()
   }
@@ -99,7 +99,7 @@ class MainPresenterImplTest {
 
     mainPresenter.handleBackPress()
 
-    verify(mainView, times(2)).getFragmentTagAtStackTop()
+    verify(mainView).getFragmentTagAtStackTop()
     verify(mainView).showAppBar()
     verify(mainView).isCabActive()
     verify(mainView).dismissCab()
@@ -113,7 +113,7 @@ class MainPresenterImplTest {
 
     mainPresenter.handleBackPress()
 
-    verify(mainView, times(2)).getFragmentTagAtStackTop()
+    verify(mainView).getFragmentTagAtStackTop()
     verify(mainView).showAppBar()
     verify(mainView).isCabActive()
     verify(mainView).showPreviousFragment()
@@ -126,7 +126,8 @@ class MainPresenterImplTest {
 
     mainPresenter.handleBackPress()
 
-    verify(mainView, times(2)).getFragmentTagAtStackTop()
+    verify(mainView).getFragmentTagAtStackTop()
+    verify(mainView).isCabActive()
     verify(mainView).showAppBar()
     verify(mainView).showPreviousFragment()
   }

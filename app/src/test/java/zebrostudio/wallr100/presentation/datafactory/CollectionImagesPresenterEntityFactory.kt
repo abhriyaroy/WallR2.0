@@ -5,7 +5,7 @@ import java.util.Random
 import java.util.UUID
 
 object CollectionImagesPresenterEntityFactory {
-  fun getCollectionImagesPresenterEntityFactory() =
+  fun getCollectionImagesPresenterEntity() =
       CollectionsPresenterEntity(
           Random().nextLong(),
           UUID.randomUUID().toString(),
