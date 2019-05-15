@@ -28,6 +28,7 @@ import zebrostudio.wallr100.presentation.collection.CollectionPresenterImpl
 import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEntity
 import zebrostudio.wallr100.presentation.collection.mapper.CollectionImagesPresenterEntityMapper
 import zebrostudio.wallr100.presentation.datafactory.CollectionImagesPresenterEntityFactory.getCollectionImagesPresenterEntity
+import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class CollectionPresenterImplTest {
@@ -670,6 +671,130 @@ class CollectionPresenterImplTest {
     assertEquals(resultantSelectedItemsMap, selectedItemsMap)
     verify(collectionView).updateChangesInItemView(position)
     verify(collectionView).hideCab()
+  }
+
+  @Test fun `should hide cab on notifyDragStarted call success as cab is active`() {
+    `when`(collectionView.isCabActive()).thenReturn(true)
+
+    collectionPresenterImpl.notifyDragStarted()
+
+    verify(collectionView).isCabActive()
+    verify(collectionView).hideCab()
+  }
+
+  @Test fun `should do nothing on notifyDragStarted call success as cab is not active`() {
+    `when`(collectionView.isCabActive()).thenReturn(false)
+
+    collectionPresenterImpl.notifyDragStarted()
+
+    verify(collectionView).isCabActive()
+  }
+
+  @Test
+  fun `should start automatic wallpaper changer on handleAutomaticWallpaperChangerEnabled call success on a non chinese oem`() {
+    `when`(collectionView.getManufacturerName()).thenReturn(randomUUID().toString())
+    collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
+
+    verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
+    verify(collectionView).getManufacturerName()
+  }
+
+  @Test
+  fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a xiaomi oem`() {
+    `when`(collectionView.getManufacturerName()).thenReturn("xiaomi")
+    collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
+
+    verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
+    verify(collectionView).getManufacturerName()
+    verify(collectionView).showAutoStartPermissionRequiredDialog()
+  }
+
+  @Test
+  fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a oppo oem`() {
+    `when`(collectionView.getManufacturerName()).thenReturn("oppo")
+    collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
+
+    verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
+    verify(collectionView).getManufacturerName()
+    verify(collectionView).showAutoStartPermissionRequiredDialog()
+  }
+
+  @Test
+  fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a vivo oem`() {
+    `when`(collectionView.getManufacturerName()).thenReturn("vivo")
+    collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
+
+    verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
+    verify(collectionView).getManufacturerName()
+    verify(collectionView).showAutoStartPermissionRequiredDialog()
+  }
+
+  @Test
+  fun `should stop automatic wallpaper changer on handleAutomaticWallpaperChangerDisabled call success`() {
+    collectionPresenterImpl.handleAutomaticWallpaperChangerDisabled()
+
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
+  }
+
+  @Test
+  fun `should show wallpaper changer interval dialog with 30 minutes highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call success`() {
+    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(1800000)
+
+    collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
+
+    verify(collectionImagesUseCase).getAutomaticWallpaperChangerInterval()
+    verify(collectionView).showWallpaperChangerIntervalDialog(0)
+  }
+  
+  @Test
+  fun `should show wallpaper changer interval dialog with 1 hour highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call success`() {
+    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(3600000)
+
+    collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
+
+    verify(collectionImagesUseCase).getAutomaticWallpaperChangerInterval()
+    verify(collectionView).showWallpaperChangerIntervalDialog(1)
+  }
+
+  @Test
+  fun `should show wallpaper changer interval dialog with 6 hours highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call success`() {
+    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(21600000)
+
+    collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
+
+    verify(collectionImagesUseCase).getAutomaticWallpaperChangerInterval()
+    verify(collectionView).showWallpaperChangerIntervalDialog(2)
+  }
+
+  @Test
+  fun `should show wallpaper changer interval dialog with 1 day highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call success`() {
+    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(86400000)
+
+    collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
+
+    verify(collectionImagesUseCase).getAutomaticWallpaperChangerInterval()
+    verify(collectionView).showWallpaperChangerIntervalDialog(3)
+  }
+
+  @Test
+  fun `should show wallpaper changer interval dialog with 3 days highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call success`() {
+    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(259200000)
+
+    collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
+
+    verify(collectionImagesUseCase).getAutomaticWallpaperChangerInterval()
+    verify(collectionView).showWallpaperChangerIntervalDialog(4)
+  }
+
+  @Test
+  fun `should show wallpaper changer interval dialog with 30 minutes highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call failure`() {
+    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(999999999999)
+
+    collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
+
+    verify(collectionImagesUseCase).getAutomaticWallpaperChangerInterval()
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(1800000)
+    verify(collectionView).showWallpaperChangerIntervalDialog(0)
   }
 
   @After fun tearDown() {

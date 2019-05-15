@@ -162,12 +162,13 @@ class CollectionPresenterImpl(
         if (it == interval) {
           collectionView?.showWallpaperChangerIntervalDialog(index)
           isDialogShown = true
-        } else if (index == INDEX_OF_THREE_DAYS_WALLPAPER_CHANGER_INTERVAL && !isDialogShown) {
-          collectionImagesUseCase.setAutomaticWallpaperChangerInterval(
-              wallpaperChangerIntervals[INDEX_OF_THREE_DAYS_WALLPAPER_CHANGER_INTERVAL])
-          collectionView?.showWallpaperChangerIntervalDialog(
-              INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL)
         }
+      }
+      if (!isDialogShown) {
+        collectionImagesUseCase.setAutomaticWallpaperChangerInterval(
+            wallpaperChangerIntervals[INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL])
+        collectionView?.showWallpaperChangerIntervalDialog(
+            INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL)
       }
     }
   }
