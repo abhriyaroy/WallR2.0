@@ -20,9 +20,16 @@ import zebrostudio.wallr100.presentation.collection.mapper.CollectionImagesPrese
 import java.util.Collections
 import java.util.TreeMap
 
+const val MANUFACTURER_NAME_SAMSUNG = "samsung"
+const val SECURITY_PACKAGE_SAMSUNG = "com.samsung.android.lool"
+const val AUTOSTART_CLASS_NAME_SAMSUNG = "com.samsung.android.sm.ui.battery.BatteryActivity"
 const val MANUFACTURER_NAME_XIAOMI = "xiaomi"
 const val SECURITY_PACKAGE_XIAOMI = "com.miui.securitycenter"
 const val AUTOSTART_CLASS_NAME_XIAOMI = "com.miui.permcenter.autostart.AutoStartManagementActivity"
+const val MANUFACTURER_NAME_ONEPLUS = "oneplus"
+const val SECURITY_PACKAGE_ONEPLUS = "com.oneplus.security"
+const val AUTOSTART_CLASS_NAME_ONEPLUS =
+    "com.oneplus.security.chainlaunch.view.ChainLaunchAppListActivity"
 const val MANUFACTURER_NAME_OPPO = "oppo"
 const val SECURITY_PACKAGE_OPPO = "com.coloros.safecenter"
 const val AUTOSTART_CLASS_NAME_OPPO =
@@ -30,11 +37,13 @@ const val AUTOSTART_CLASS_NAME_OPPO =
 const val MANUFACTURER_NAME_VIVO = "vivo"
 const val SECURITY_PACKAGE_VIVO = "com.vivo.permissionmanager"
 const val AUTOSTART_CLASS_NAME_VIVO = "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"
+const val MANUFACTURER_NAME_ASUS = "asus"
+const val SECURITY_PACKAGE_ASUS = "com.asus.mobilemanager"
+const val AUTOSTART_CLASS_NAME_ASUS = "com.asus.mobilemanager.entry.FunctionActivity"
 
 private const val MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_HINT = 2
 private const val MINIMUM_NUMBER_OF_SELECTED_ITEMS = 1
 private const val INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL = 0
-private const val INDEX_OF_THREE_DAYS_WALLPAPER_CHANGER_INTERVAL = 4
 
 class CollectionPresenterImpl(
   private val widgetHintsUseCase: WidgetHintsUseCase,
@@ -143,10 +152,13 @@ class CollectionPresenterImpl(
   override fun handleAutomaticWallpaperChangerEnabled() {
     collectionImagesUseCase.startAutomaticWallpaperChanger()
     collectionView?.getManufacturerName()?.let {
-      if (it.equals(MANUFACTURER_NAME_XIAOMI, true)
+      if (it.equals(MANUFACTURER_NAME_SAMSUNG, true)
+          || it.equals(MANUFACTURER_NAME_XIAOMI, true)
+          || it.equals(MANUFACTURER_NAME_ONEPLUS, true)
           || it.equals(MANUFACTURER_NAME_OPPO, true)
-          || it.equals(MANUFACTURER_NAME_VIVO, true)) {
-        collectionView?.showAutoStartPermissionRequiredDialog()
+          || it.equals(MANUFACTURER_NAME_VIVO, true)
+          || it.equals(MANUFACTURER_NAME_ASUS, true)) {
+        collectionView?.showWallpaperChangerPermissionsRequiredDialog()
       }
     }
   }

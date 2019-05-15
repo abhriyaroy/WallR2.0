@@ -62,16 +62,25 @@ import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.android.utils.withDelayOnMain
 import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.CollectionRecyclerPresenter
+import zebrostudio.wallr100.presentation.collection.AUTOSTART_CLASS_NAME_ASUS
+import zebrostudio.wallr100.presentation.collection.AUTOSTART_CLASS_NAME_ONEPLUS
 import zebrostudio.wallr100.presentation.collection.AUTOSTART_CLASS_NAME_OPPO
+import zebrostudio.wallr100.presentation.collection.AUTOSTART_CLASS_NAME_SAMSUNG
 import zebrostudio.wallr100.presentation.collection.AUTOSTART_CLASS_NAME_VIVO
 import zebrostudio.wallr100.presentation.collection.AUTOSTART_CLASS_NAME_XIAOMI
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionPresenter
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionView
+import zebrostudio.wallr100.presentation.collection.MANUFACTURER_NAME_ASUS
+import zebrostudio.wallr100.presentation.collection.MANUFACTURER_NAME_ONEPLUS
 import zebrostudio.wallr100.presentation.collection.MANUFACTURER_NAME_OPPO
+import zebrostudio.wallr100.presentation.collection.MANUFACTURER_NAME_SAMSUNG
 import zebrostudio.wallr100.presentation.collection.MANUFACTURER_NAME_VIVO
 import zebrostudio.wallr100.presentation.collection.MANUFACTURER_NAME_XIAOMI
 import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEntity
+import zebrostudio.wallr100.presentation.collection.SECURITY_PACKAGE_ASUS
+import zebrostudio.wallr100.presentation.collection.SECURITY_PACKAGE_ONEPLUS
 import zebrostudio.wallr100.presentation.collection.SECURITY_PACKAGE_OPPO
+import zebrostudio.wallr100.presentation.collection.SECURITY_PACKAGE_SAMSUNG
 import zebrostudio.wallr100.presentation.collection.SECURITY_PACKAGE_VIVO
 import zebrostudio.wallr100.presentation.collection.SECURITY_PACKAGE_XIAOMI
 import javax.inject.Inject
@@ -486,14 +495,13 @@ class CollectionFragment : BaseFragment(),
     errorToast(stringRes(R.string.generic_error_message))
   }
 
-  override fun showAutoStartPermissionRequiredDialog() {
+  override fun showWallpaperChangerPermissionsRequiredDialog() {
     MaterialDialog.Builder(activity!!)
-        .title(stringRes(R.string.collection_fragment_autostart_permission_title))
-        .content(stringRes(R.string.collection_fragment_autostart_permission_description))
-        .onPositive { _, _ -> openAutoStartSettings() }
+        .title(stringRes(R.string.collection_fragment_lock_in_recents_instruction_title))
+        .content(stringRes(R.string.collection_fragment_lock_in_recents_instruction_description))
+        .onPositive { _, _ -> showAutoStartSettingsDialog() }
         .cancelable(true)
-        .positiveText(stringRes(R.string.collection_fragment_autostart_permission_positive_text))
-        .negativeText(stringRes(R.string.collection_fragment_autostart_permission_negative_text))
+        .positiveText(stringRes(R.string.collection_fragment_lock_in_recents_positive_text))
         .show()
   }
 
@@ -537,13 +545,19 @@ class CollectionFragment : BaseFragment(),
     Intent().apply {
       getManufacturerName().let {
         when {
+          it.equals(MANUFACTURER_NAME_SAMSUNG, true) ->
+            component = ComponentName(SECURITY_PACKAGE_SAMSUNG, AUTOSTART_CLASS_NAME_SAMSUNG)
           it.equals(MANUFACTURER_NAME_XIAOMI, true) ->
             component = ComponentName(SECURITY_PACKAGE_XIAOMI, AUTOSTART_CLASS_NAME_XIAOMI)
+          it.equals(MANUFACTURER_NAME_ONEPLUS, true) ->
+            component = ComponentName(SECURITY_PACKAGE_ONEPLUS, AUTOSTART_CLASS_NAME_ONEPLUS)
           it.equals(MANUFACTURER_NAME_OPPO, true) ->
             component = ComponentName(SECURITY_PACKAGE_OPPO, AUTOSTART_CLASS_NAME_OPPO)
           it.equals(MANUFACTURER_NAME_VIVO, true) ->
             component = ComponentName(SECURITY_PACKAGE_VIVO,
                 AUTOSTART_CLASS_NAME_VIVO)
+          it.equals(MANUFACTURER_NAME_ASUS, true) ->
+            component = ComponentName(SECURITY_PACKAGE_ASUS, AUTOSTART_CLASS_NAME_ASUS)
         }
       }
     }.let {
@@ -560,6 +574,17 @@ class CollectionFragment : BaseFragment(),
 
   private fun redirectToBuyProActivity() {
     startActivityForResult(Intent(context!!, BuyProActivity::class.java), REQUEST_CODE)
+  }
+
+  private fun showAutoStartSettingsDialog() {
+    MaterialDialog.Builder(activity!!)
+        .title(stringRes(R.string.collection_fragment_autostart_permission_title))
+        .content(stringRes(R.string.collection_fragment_autostart_permission_description))
+        .onPositive { _, _ -> openAutoStartSettings() }
+        .cancelable(true)
+        .positiveText(stringRes(R.string.collection_fragment_autostart_permission_positive_text))
+        .negativeText(stringRes(R.string.collection_fragment_autostart_permission_negative_text))
+        .show()
   }
 
   companion object {

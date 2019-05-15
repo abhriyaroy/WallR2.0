@@ -110,16 +110,6 @@ class AutomaticWallpaperChangerService : Service() {
     super.onDestroy()
   }
 
-  override fun onTaskRemoved(rootIntent: Intent?) {
-    /*withDelayOnMain(WALLPAPER_CHANGER_SERVICE_RESTART_DELAY) {
-      serviceManager.startAutomaticWallpaperChangerService()
-    }*/
-
-    sendBroadcast(Intent(WALLPAPER_CHANGER_BROADCAST))
-
-    super.onTaskRemoved(rootIntent)
-  }
-
   @Nullable
   override fun onBind(intent: Intent): IBinder? {
     throw IllegalAccessError()

@@ -6,7 +6,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
-import android.content.IntentFilter
 import android.os.Build
 import android.support.multidex.MultiDex
 import com.bumptech.glide.request.target.ViewTarget
@@ -14,7 +13,6 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.HasServiceInjector
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.broadcastreceiver.BootReceiver
 import zebrostudio.wallr100.android.di.DaggerAppComponent
 import javax.inject.Inject
 
@@ -41,10 +39,6 @@ class WallrApplication : Application(), HasActivityInjector, HasServiceInjector 
         .inject(this)
     ViewTarget.setTagId(R.id.glide_tag)
     createNotificationChannel()
-
-    /*val filter = IntentFilter()
-    val bootReceiver = BootReceiver()
-    registerReceiver(bootReceiver, filter);*/
   }
 
   override fun activityInjector() = activityDispatchingAndroidInjector

@@ -699,12 +699,22 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should start automatic wallpaper changer on handleAutomaticWallpaperChangerEnabled call success on a non chinese oem`() {
+  fun `should start automatic wallpaper changer on handleAutomaticWallpaperChangerEnabled call success on a first party oem`() {
     `when`(collectionView.getManufacturerName()).thenReturn(randomUUID().toString())
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
     verify(collectionView).getManufacturerName()
+  }
+
+  @Test
+  fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a samsung oem`() {
+    `when`(collectionView.getManufacturerName()).thenReturn("samsung")
+    collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
+
+    verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
+    verify(collectionView).getManufacturerName()
+    verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
   }
 
   @Test
@@ -714,7 +724,17 @@ class CollectionPresenterImplTest {
 
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
     verify(collectionView).getManufacturerName()
-    verify(collectionView).showAutoStartPermissionRequiredDialog()
+    verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
+  }
+
+  @Test
+  fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a oneplus oem`() {
+    `when`(collectionView.getManufacturerName()).thenReturn("oneplus")
+    collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
+
+    verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
+    verify(collectionView).getManufacturerName()
+    verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
   }
 
   @Test
@@ -724,7 +744,7 @@ class CollectionPresenterImplTest {
 
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
     verify(collectionView).getManufacturerName()
-    verify(collectionView).showAutoStartPermissionRequiredDialog()
+    verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
   }
 
   @Test
@@ -734,7 +754,17 @@ class CollectionPresenterImplTest {
 
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
     verify(collectionView).getManufacturerName()
-    verify(collectionView).showAutoStartPermissionRequiredDialog()
+    verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
+  }
+
+  @Test
+  fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a asus oem`() {
+    `when`(collectionView.getManufacturerName()).thenReturn("asus")
+    collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
+
+    verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
+    verify(collectionView).getManufacturerName()
+    verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
   }
 
   @Test
@@ -1112,6 +1142,15 @@ class CollectionPresenterImplTest {
     verify(collectionView).removeBlurFromScreen()
     verify(collectionView).showGenericErrorMessage()
     verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test fun `should refresh screen on handleCabDestroyed call success`() {
+    collectionPresenterImpl.handleCabDestroyed()
+
+    verify(collectionView).clearAllSelectedItems()
+    verify(collectionView).updateChangesInEveryItemView()
+    verify(collectionView).enableToolbar()
+    verify(collectionView).showAppBarWithDelay()
   }
 
   @After fun tearDown() {

@@ -60,8 +60,16 @@
         <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
 
         <action android:name="restart_wallpaper_changer_service"/>
+
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
+    </receiver>
+
+    <receiver
+        android:name=".android.broadcastreceiver.RestartReceiver"
+        android:enabled="true"
+        android:exported="true"
+        android:label="RestartServiceWhenStopped">
     </receiver>
   </application>
 

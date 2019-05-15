@@ -51,7 +51,7 @@ interface CollectionContract {
     fun showCrystallizeWallpaperSuccessMessage()
     fun showUnableToDeleteErrorMessage()
     fun showGenericErrorMessage()
-    fun showAutoStartPermissionRequiredDialog()
+    fun showWallpaperChangerPermissionsRequiredDialog()
   }
 
   interface CollectionPresenter : BasePresenter<CollectionView> {
