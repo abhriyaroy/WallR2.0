@@ -238,7 +238,10 @@ class CollectionPresenterImpl(
   ) {
     collectionImagesUseCase.saveCrystallizedImage(
         collectionImagesPresenterEntityMapper.mapFromPresenterEntity(
-            listOf(selectedItemsMap.values.first())).first())
+            selectedItemsMap.values.first()).first())
+        .map {
+          collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
+        }
         .observeOn(postExecutionThread.scheduler)
         .doOnSubscribe {
           collectionView?.blurScreen()
@@ -248,6 +251,7 @@ class CollectionPresenterImpl(
         }.autoDisposable(collectionView!!.getScope())
         .subscribe({
           hideCabIfActive()
+          collectionView?.setImagesList(it)
           collectionView?.updateChangesInEveryItemView()
           collectionView?.removeBlurFromScreen()
           collectionView?.showCrystallizeWallpaperSuccessMessage()
@@ -262,12 +266,13 @@ class CollectionPresenterImpl(
     imageList: MutableList<CollectionsPresenterEntity>,
     selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
   ) {
-    val reverseSortedSelectedItems = TreeMap<Int, CollectionsPresenterEntity>(Collections.reverseOrder())
+    val reverseSortedMapOfSelectedItems =
+        TreeMap<Int, CollectionsPresenterEntity>(Collections.reverseOrder())
     selectedItemsMap.keys.forEach {
-      reverseSortedSelectedItems[it] = selectedItemsMap[it]!!
+      reverseSortedMapOfSelectedItems[it] = selectedItemsMap[it]!!
     }
     mutableListOf<CollectionsPresenterEntity>().let { listOfDeletableImages ->
-      reverseSortedSelectedItems.keys.forEach {
+      reverseSortedMapOfSelectedItems.keys.forEach {
         imageList.removeAt(it)
         listOfDeletableImages.add(selectedItemsMap[it]!!)
         selectedItemsMap.remove(it)

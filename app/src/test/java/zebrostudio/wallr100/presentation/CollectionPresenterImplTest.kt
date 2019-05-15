@@ -1045,6 +1045,75 @@ class CollectionPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
+  @Test
+  fun `should crystallize and add to collection on handleCrystallizeWallpaperMenuItemClicked call success`() {
+    val collectionImagesModelList =
+        listOf(getCollectionsImageModel())
+    val collectionPresenterEntityList =
+        listOf(getCollectionImagesPresenterEntity())
+    val selectedItemsMap = hashMapOf(Pair(0, collectionPresenterEntityList.first()))
+    `when`(resourceUtils.getStringResource(R.string.crystallizing_wallpaper_wait_message))
+        .thenReturn(randomString)
+    `when`(collectionView.isCabActive()).thenReturn(true)
+    `when`(collectionImagesPresenterEntityMapper
+        .mapFromPresenterEntity(collectionPresenterEntityList.first()))
+        .thenReturn(collectionImagesModelList)
+    `when`(collectionImagesPresenterEntityMapper
+        .mapToPresenterEntity(collectionImagesModelList)).thenReturn(collectionPresenterEntityList)
+    `when`(collectionImagesUseCase.saveCrystallizedImage(collectionImagesModelList.first()))
+        .thenReturn(Single.just(collectionImagesModelList))
+
+    collectionPresenterImpl.handleCrystallizeWallpaperMenuItemClicked(selectedItemsMap)
+
+    verify(resourceUtils).getStringResource(R.string.crystallizing_wallpaper_wait_message)
+    verify(collectionImagesPresenterEntityMapper).mapFromPresenterEntity(
+        collectionPresenterEntityList.first())
+    verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionImagesModelList)
+    verify(collectionImagesUseCase).saveCrystallizedImage(collectionImagesModelList.first())
+    verify(collectionView).getScope()
+    verify(collectionView).blurScreen()
+    verify(collectionView).showIndefiniteLoaderWithMessage(randomString)
+    verify(collectionView).isCabActive()
+    verify(collectionView).hideCab()
+    verify(collectionView).setImagesList(collectionPresenterEntityList)
+    verify(collectionView).updateChangesInEveryItemView()
+    verify(collectionView).removeBlurFromScreen()
+    verify(collectionView).showCrystallizeWallpaperSuccessMessage()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show generic error message on handleCrystallizeWallpaperMenuItemClicked call failure`() {
+    val collectionImagesModelList =
+        listOf(getCollectionsImageModel())
+    val collectionPresenterEntityList =
+        listOf(getCollectionImagesPresenterEntity())
+    val selectedItemsMap = hashMapOf(Pair(0, collectionPresenterEntityList.first()))
+    `when`(resourceUtils.getStringResource(R.string.crystallizing_wallpaper_wait_message))
+        .thenReturn(randomString)
+    `when`(collectionView.isCabActive()).thenReturn(true)
+    `when`(collectionImagesPresenterEntityMapper
+        .mapFromPresenterEntity(collectionPresenterEntityList.first()))
+        .thenReturn(collectionImagesModelList)
+    `when`(collectionImagesUseCase.saveCrystallizedImage(collectionImagesModelList.first()))
+        .thenReturn(Single.error(Exception()))
+
+    collectionPresenterImpl.handleCrystallizeWallpaperMenuItemClicked(selectedItemsMap)
+
+    verify(resourceUtils).getStringResource(R.string.crystallizing_wallpaper_wait_message)
+    verify(collectionImagesPresenterEntityMapper).mapFromPresenterEntity(
+        collectionPresenterEntityList.first())
+    verify(collectionImagesUseCase).saveCrystallizedImage(collectionImagesModelList.first())
+    verify(collectionView).getScope()
+    verify(collectionView).blurScreen()
+    verify(collectionView).showIndefiniteLoaderWithMessage(randomString)
+    verify(collectionView).isCabActive()
+    verify(collectionView).hideCab()
+    verify(collectionView).removeBlurFromScreen()
+    verify(collectionView).showGenericErrorMessage()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
   @After fun tearDown() {
     verifyNoMoreInteractions(collectionView, widgetHintsUseCase, userPremiumStatusUseCase,
         collectionImagesUseCase, collectionImagesPresenterEntityMapper, wallpaperSetter,
