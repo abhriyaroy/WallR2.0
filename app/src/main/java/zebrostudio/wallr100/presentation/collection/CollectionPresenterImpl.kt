@@ -59,10 +59,8 @@ class CollectionPresenterImpl(
   override fun handleViewCreated() {
     if (isUserPremium() && isStoragePermissionAvailable()) {
       if (collectionImagesUseCase.isAutomaticWallpaperChangerRunning()) {
-        println("set switch to active")
         collectionView?.showAutomaticWallpaperStateAsActive()
       } else {
-        println("set switch to in active")
         collectionView?.showAutomaticWallpaperStateAsInActive()
       }
       showPictures()
@@ -345,10 +343,10 @@ class CollectionPresenterImpl(
             collectionView?.setImagesList(it)
             showNonEmptyCollectionView()
             showHintIfSuitable(it.size)
+            collectionView?.updateChangesInEveryItemView()
           } else {
             showEmptyCollectionView()
           }
-          collectionView?.updateChangesInEveryItemView()
         }, {
           collectionView?.showImagesAbsentLayout()
           collectionView?.showGenericErrorMessage()
