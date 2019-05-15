@@ -9,7 +9,6 @@ import zebrostudio.wallr100.android.service.AutomaticWallpaperChangerService
 class BootReceiver : BroadcastReceiver() {
 
   override fun onReceive(context: Context, intent: Intent?) {
-    println("broadcast recieved boot wallpaper")
     startForegroundService(context,
         Intent(context, AutomaticWallpaperChangerService::class.java))
   }

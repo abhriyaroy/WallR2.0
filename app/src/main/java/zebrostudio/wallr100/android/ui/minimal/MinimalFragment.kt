@@ -321,7 +321,6 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun showMultiColorImageModesHint() {
-    println("show multi color image mode")
     TapTargetView.showFor(activity,
         TapTarget.forView(activity?.spinnerStubView,
             stringRes(R.string.minimal_fragment_multi_color_hint_title),

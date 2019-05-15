@@ -292,7 +292,6 @@ class CollectionPresenterImpl(
         selectedItemsMap.remove(it)
         collectionView?.removeItemView(it)
       }
-      println(listOfDeletableImages.size)
       collectionImagesUseCase.deleteImages(
           collectionImagesPresenterEntityMapper.mapFromPresenterEntity(listOfDeletableImages))
           .map {

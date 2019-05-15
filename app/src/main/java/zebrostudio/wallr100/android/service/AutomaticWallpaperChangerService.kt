@@ -52,7 +52,6 @@ class AutomaticWallpaperChangerService : Service() {
   }
 
   override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-    println("Started on star command")
     val notificationIntent = Intent(this, MainActivity::class.java)
     val pendingIntent = PendingIntent.getActivity(this,
         REQUEST_CODE, notificationIntent, 0)
@@ -75,7 +74,6 @@ class AutomaticWallpaperChangerService : Service() {
 
     handler = Handler()
     runnable = Runnable {
-      println("Runnable fired $timeElapsed")
       if (timeElapsed == interval) {
         timeElapsed = 0
         changeWallpaper()
@@ -103,7 +101,6 @@ class AutomaticWallpaperChangerService : Service() {
 
   override fun onDestroy() {
     handler?.removeCallbacks(runnable)
-    println("service wallapper changer destroyed")
     if (disposable?.isDisposed == false) {
       disposable?.dispose()
     }
@@ -136,24 +133,18 @@ class AutomaticWallpaperChangerService : Service() {
   }
 
   private fun changeWallpaper() {
-    println("subscribe run")
-    println("thread is ${Thread.currentThread().name}")
     if (disposable?.isDisposed == false) {
       disposable?.dispose()
     }
     disposable = automaticWallpaperChangerUseCase.getWallpaperBitmap()
         .doOnSuccess {
-          println("on success")
           wallpaperSetter.setWallpaper(it)
           if (!it.isRecycled) {
             it.recycle()
           }
         }.observeOn(postExecutionThread.scheduler)
         .subscribe({
-          println("Subscribe success ")
         }, {
-          println(it.message)
-          println("subscribe error")
           stopSelf()
         })
   }

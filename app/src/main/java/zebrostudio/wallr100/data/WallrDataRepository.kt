@@ -396,7 +396,6 @@ class WallrDataRepository(
   }
 
   override fun getImagesInCollection(): Single<List<CollectionsImageModel>> {
-    println("subscribe collection images")
     return imageHandler.getAllImagesInCollection()
         .subscribeOn(executionThread.ioScheduler)
         .map {
@@ -419,8 +418,6 @@ class WallrDataRepository(
         collectionsDatabaseImageEntityMapper.mapToEntity(collectionImagesModelList))
         .subscribeOn(executionThread.ioScheduler)
         .map {
-          println(it.size)
-          println(it)
           collectionsDatabaseImageEntityMapper.mapFromEntity(it)
         }
   }

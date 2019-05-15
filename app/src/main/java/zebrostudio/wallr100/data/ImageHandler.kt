@@ -285,14 +285,7 @@ class ImageHandlerImpl(
 
   override fun getAllImagesInCollection(): Single<List<CollectionDatabaseImageEntity>> {
     return databaseHelper.getDatabase().collectionsDao().getAllData()
-        .doOnSubscribe {
-          println("thread is ${Thread.currentThread().name}")
-        }
-        .doOnError {
-          println("error database ${it.message}")
-        }
         .flatMap { originalList ->
-          println("subscribe database helpre flatmap")
           mutableListOf<CollectionDatabaseImageEntity>().let { newList ->
             originalList.forEach { collectionDatabaseImageEntity ->
               if (fileHandler.ifFileExists(collectionDatabaseImageEntity.path)) {
