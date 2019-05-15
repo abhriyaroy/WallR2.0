@@ -278,6 +278,8 @@ class CollectionPresenterImpl(
     imageList: MutableList<CollectionsPresenterEntity>,
     selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
   ) {
+    val backupOfOriginalImageList = mutableListOf<CollectionsPresenterEntity>()
+    backupOfOriginalImageList.addAll(imageList)
     val reverseSortedMapOfSelectedItems =
         TreeMap<Int, CollectionsPresenterEntity>(Collections.reverseOrder())
     selectedItemsMap.keys.forEach {
@@ -290,19 +292,13 @@ class CollectionPresenterImpl(
         selectedItemsMap.remove(it)
         collectionView?.removeItemView(it)
       }
+      println(listOfDeletableImages.size)
       collectionImagesUseCase.deleteImages(
           collectionImagesPresenterEntityMapper.mapFromPresenterEntity(listOfDeletableImages))
           .map {
             collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
           }
           .observeOn(postExecutionThread.scheduler)
-          .doOnSuccess {
-            if (collectionImagesUseCase.isAutomaticWallpaperChangerRunning()) {
-              collectionView?.showAutomaticWallpaperStateAsActive()
-            } else {
-              collectionView?.showAutomaticWallpaperStateAsInActive()
-            }
-          }
           .autoDisposable(collectionView!!.getScope())
           .subscribe({
             hideCabIfActive()
@@ -319,6 +315,8 @@ class CollectionPresenterImpl(
             }
           }, {
             hideCabIfActive()
+            collectionView?.setImagesList(backupOfOriginalImageList)
+            collectionView?.updateChangesInEveryItemView()
             collectionView?.showUnableToDeleteErrorMessage()
           })
     }
