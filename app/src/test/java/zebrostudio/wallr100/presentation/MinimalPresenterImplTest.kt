@@ -19,10 +19,10 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.data.exception.UnableToGetMinimalColorsException
+import zebrostudio.wallr100.domain.datafactory.RestoreColorsModelFactory
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.MinimalImagesUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
-import zebrostudio.wallr100.domain.datafactory.RestoreColorsModelFactory
 import zebrostudio.wallr100.presentation.minimal.INITIAL_OFFSET
 import zebrostudio.wallr100.presentation.minimal.INITIAL_SIZE
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
@@ -687,7 +687,8 @@ class MinimalPresenterImplTest {
     verify(minimalView).showCab(map.size)
   }
 
-  @Test fun `should show multi color image mode hint on setItemSelected call success success with image mode hint not shown before and isHintBeingShown set to false`(){
+  @Test
+  fun `should show multi color image mode hint on setItemSelected call success success with image mode hint not shown before and isHintBeingShown set to false`() {
     val position = 1
     val list = mutableListOf<String>()
     list.add(randomString)
@@ -713,7 +714,8 @@ class MinimalPresenterImplTest {
     verify(minimalView).showMultiColorImageModesHint()
   }
 
-  @Test fun `should not show multi color image mode hint on setItemSelected call success success with image mode hint not shown before and hint is not being shown`(){
+  @Test
+  fun `should not show multi color image mode hint on setItemSelected call success success with image mode hint not shown before and hint is not being shown`() {
     val position = 1
     val list = mutableListOf<String>()
     list.add(randomString)
@@ -739,7 +741,8 @@ class MinimalPresenterImplTest {
     verify(minimalView).showMultiColorImageModesHint()
   }
 
-  @Test fun `should not show multi color image mode hint on setItemSelected call success success with image mode hint not shown before and hint is already being shown`(){
+  @Test
+  fun `should not show multi color image mode hint on setItemSelected call success success with image mode hint not shown before and hint is already being shown`() {
     val position = 1
     val list = mutableListOf<String>()
     list.add(randomString)
@@ -764,7 +767,8 @@ class MinimalPresenterImplTest {
     verify(minimalView).showBottomPanelWithAnimation()
   }
 
-  @Test fun `should not show multi color image mode hint on setItemSelected call success success with image mode hint shown before`(){
+  @Test
+  fun `should not show multi color image mode hint on setItemSelected call success success with image mode hint shown before`() {
     val position = 1
     val list = mutableListOf<String>()
     list.add(randomString)
@@ -788,7 +792,7 @@ class MinimalPresenterImplTest {
     verify(minimalView).showBottomPanelWithAnimation()
   }
 
-  @Test fun `should save hint dismissed sate on handleHintDismissed call success`(){
+  @Test fun `should save hint dismissed sate on handleHintDismissed call success`() {
     minimalPresenter.handleHintDismissed()
 
     verify(widgetHintsUseCase).saveMultiColorImageHintShownState()

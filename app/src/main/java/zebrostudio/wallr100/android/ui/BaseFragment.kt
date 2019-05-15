@@ -5,11 +5,9 @@ import android.arch.lifecycle.Lifecycle
 import android.graphics.PorterDuff.Mode.MULTIPLY
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.SwitchCompat
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import android.widget.Switch
 import com.getbase.floatingactionbutton.FloatingActionButton
 import com.ogaclejapan.smarttablayout.SmartTabLayout
 import com.uber.autodispose.ScopeProvider
@@ -115,9 +113,9 @@ abstract class BaseFragment : Fragment(), BaseView {
     }
   }
 
-  private fun configureWallpaperChangerVisibility(){
+  private fun configureWallpaperChangerVisibility() {
     activity?.let {
-      if (fragmentTag == COLLECTIONS_TAG){
+      if (fragmentTag == COLLECTIONS_TAG) {
         it.findViewById<RelativeLayout>(R.id.switchLayout)?.visible()
       } else {
         it.findViewById<RelativeLayout>(R.id.switchLayout)?.gone()

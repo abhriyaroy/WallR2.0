@@ -3,7 +3,6 @@ package zebrostudio.wallr100.data.urlshortener
 import android.net.Uri
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import io.reactivex.Single
-import zebrostudio.wallr100.BuildConfig
 import zebrostudio.wallr100.data.api.UrlMap
 
 interface UrlShortener {

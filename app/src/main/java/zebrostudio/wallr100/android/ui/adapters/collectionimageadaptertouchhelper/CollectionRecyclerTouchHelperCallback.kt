@@ -3,7 +3,6 @@ package zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelp
 import android.graphics.Canvas
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_IDLE
 import android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_SWIPE
 import android.support.v7.widget.helper.ItemTouchHelper.Callback
 import android.support.v7.widget.helper.ItemTouchHelper.DOWN
