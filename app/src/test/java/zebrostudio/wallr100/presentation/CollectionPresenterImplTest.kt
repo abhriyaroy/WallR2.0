@@ -8,6 +8,7 @@ import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -24,6 +25,7 @@ import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionView
 import zebrostudio.wallr100.presentation.collection.CollectionPresenterImpl
+import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEntity
 import zebrostudio.wallr100.presentation.collection.mapper.CollectionImagesPresenterEntityMapper
 import zebrostudio.wallr100.presentation.datafactory.CollectionImagesPresenterEntityFactory.getCollectionImagesPresenterEntity
 
@@ -561,7 +563,114 @@ class CollectionPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
+  @Test
+  fun `should add image to selected items and update single image selection changes in cab on handleItemClicked call success`() {
+    val position = 1
+    val collectionPresenterEntityList = listOf(
+        getCollectionImagesPresenterEntity(),
+        getCollectionImagesPresenterEntity(),
+        getCollectionImagesPresenterEntity(),
+        getCollectionImagesPresenterEntity())
+    val selectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
+    val resultantSelectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
+    resultantSelectedItemsMap[position] = collectionPresenterEntityList[position]
 
+    collectionPresenterImpl.handleItemClicked(position, collectionPresenterEntityList,
+        selectedItemsMap)
+
+    assertEquals(resultantSelectedItemsMap, selectedItemsMap)
+    verify(collectionView).hideAppBar()
+    verify(collectionView).updateChangesInItemView(position)
+    verify(collectionView).showSingleImageSelectedCab()
+  }
+
+  @Test
+  fun `should add image to selected items and update multiple image selection changes in cab on handleItemClicked call success`() {
+    val position = 2
+    val collectionPresenterEntityList = listOf(
+        getCollectionImagesPresenterEntity(),
+        getCollectionImagesPresenterEntity(),
+        getCollectionImagesPresenterEntity(),
+        getCollectionImagesPresenterEntity())
+    val selectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
+    selectedItemsMap[1] = collectionPresenterEntityList[1]
+    val resultantSelectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
+    resultantSelectedItemsMap.putAll(selectedItemsMap)
+    resultantSelectedItemsMap[position] = collectionPresenterEntityList[position]
+
+    collectionPresenterImpl.handleItemClicked(position, collectionPresenterEntityList,
+        selectedItemsMap)
+
+    assertEquals(resultantSelectedItemsMap, selectedItemsMap)
+    verify(collectionView).updateChangesInItemView(position)
+    verify(collectionView).showMultipleImagesSelectedCab()
+  }
+
+  @Test
+  fun `should remove image from selected items and update single image selection changes in cab on handleItemClicked call success`() {
+    val position = 2
+    val collectionPresenterEntityList = listOf(
+        getCollectionImagesPresenterEntity(),
+        getCollectionImagesPresenterEntity(),
+        getCollectionImagesPresenterEntity(),
+        getCollectionImagesPresenterEntity())
+    val selectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
+    selectedItemsMap[1] = collectionPresenterEntityList[1]
+    selectedItemsMap[position] = collectionPresenterEntityList[position]
+    val resultantSelectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
+    resultantSelectedItemsMap[1] = collectionPresenterEntityList[1]
+
+    collectionPresenterImpl.handleItemClicked(position, collectionPresenterEntityList,
+        selectedItemsMap)
+
+    assertEquals(resultantSelectedItemsMap, selectedItemsMap)
+    verify(collectionView).updateChangesInItemView(position)
+    verify(collectionView).showSingleImageSelectedCab()
+  }
+
+  @Test
+  fun `should remove image from selected items and update multiple image selection changes in cab on handleItemClicked call success`() {
+    val position = 2
+    val collectionPresenterEntityList = listOf(
+        getCollectionImagesPresenterEntity(),
+        getCollectionImagesPresenterEntity(),
+        getCollectionImagesPresenterEntity(),
+        getCollectionImagesPresenterEntity())
+    val selectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
+    selectedItemsMap[1] = collectionPresenterEntityList[1]
+    selectedItemsMap[3] = collectionPresenterEntityList[3]
+    selectedItemsMap[position] = collectionPresenterEntityList[position]
+    val resultantSelectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
+    resultantSelectedItemsMap[1] = collectionPresenterEntityList[1]
+    resultantSelectedItemsMap[3] = collectionPresenterEntityList[3]
+
+    collectionPresenterImpl.handleItemClicked(position, collectionPresenterEntityList,
+        selectedItemsMap)
+
+    assertEquals(resultantSelectedItemsMap, selectedItemsMap)
+    verify(collectionView).updateChangesInItemView(position)
+    verify(collectionView).showMultipleImagesSelectedCab()
+  }
+
+  @Test
+  fun `should remove image from selected items and hide cab on handleItemClicked call success`() {
+    val position = 2
+    val collectionPresenterEntityList = listOf(
+        getCollectionImagesPresenterEntity(),
+        getCollectionImagesPresenterEntity(),
+        getCollectionImagesPresenterEntity(),
+        getCollectionImagesPresenterEntity())
+    val selectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
+    selectedItemsMap[position] = collectionPresenterEntityList[position]
+    val resultantSelectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
+
+    collectionPresenterImpl.handleItemClicked(position, collectionPresenterEntityList,
+        selectedItemsMap)
+
+    assertEquals(resultantSelectedItemsMap, selectedItemsMap)
+    verify(collectionView).updateChangesInItemView(position)
+    verify(collectionView).hideCab()
+  }
 
   @After fun tearDown() {
     verifyNoMoreInteractions(collectionView, widgetHintsUseCase, userPremiumStatusUseCase,
