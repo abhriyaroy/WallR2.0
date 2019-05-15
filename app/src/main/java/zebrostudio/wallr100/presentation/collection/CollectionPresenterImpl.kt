@@ -192,9 +192,7 @@ class CollectionPresenterImpl(
           .subscribe({
             collectionView?.setImagesList(it)
             collectionView?.updateChangesInEveryItemView()
-            if (it.isNotEmpty()) {
-              showNonEmptyCollectionView()
-            }
+            showNonEmptyCollectionView()
             showHintIfSuitable(it.size)
             uriList.size.let {
               if (it == SINGLE_ITEM_SIZE) {
@@ -204,7 +202,6 @@ class CollectionPresenterImpl(
               }
             }
           }, {
-            println(it.message)
             collectionView?.showGenericErrorMessage()
           })
     }
@@ -213,7 +210,8 @@ class CollectionPresenterImpl(
   override fun handleSetWallpaperMenuItemClicked(selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>) {
     collectionImagesUseCase.getImageBitmap(
         collectionImagesPresenterEntityMapper.mapFromPresenterEntity(
-            listOf(selectedItemsMap.values.first())).first())
+            selectedItemsMap.values.first())
+            .first())
         .doOnSuccess {
           wallpaperSetter.setWallpaper(it)
         }
@@ -264,12 +262,12 @@ class CollectionPresenterImpl(
     imageList: MutableList<CollectionsPresenterEntity>,
     selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
   ) {
-    val reversedSelectedItems = TreeMap<Int, CollectionsPresenterEntity>(Collections.reverseOrder())
+    val reverseSortedSelectedItems = TreeMap<Int, CollectionsPresenterEntity>(Collections.reverseOrder())
     selectedItemsMap.keys.forEach {
-      reversedSelectedItems[it] = selectedItemsMap[it]!!
+      reverseSortedSelectedItems[it] = selectedItemsMap[it]!!
     }
     mutableListOf<CollectionsPresenterEntity>().let { listOfDeletableImages ->
-      reversedSelectedItems.keys.forEach {
+      reverseSortedSelectedItems.keys.forEach {
         imageList.removeAt(it)
         listOfDeletableImages.add(selectedItemsMap[it]!!)
         selectedItemsMap.remove(it)

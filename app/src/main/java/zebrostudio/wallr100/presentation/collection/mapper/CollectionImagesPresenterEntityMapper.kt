@@ -6,6 +6,7 @@ import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEn
 interface CollectionImagesPresenterEntityMapper {
   fun mapToPresenterEntity(modelList: List<CollectionsImageModel>): List<CollectionsPresenterEntity>
   fun mapFromPresenterEntity(presenterEntityList: List<CollectionsPresenterEntity>): List<CollectionsImageModel>
+  fun mapFromPresenterEntity(presenterEntity: CollectionsPresenterEntity): List<CollectionsImageModel>
 }
 
 class CollectionsImagesPresenterEntityMapperImpl : CollectionImagesPresenterEntityMapper {
@@ -31,5 +32,15 @@ class CollectionsImagesPresenterEntityMapperImpl : CollectionImagesPresenterEnti
           it.type
       )
     }.toList()
+  }
+
+  override fun mapFromPresenterEntity(presenterEntity: CollectionsPresenterEntity): List<CollectionsImageModel> {
+    return listOf(CollectionsImageModel(
+        presenterEntity.uid,
+        presenterEntity.name,
+        presenterEntity.path,
+        presenterEntity.data,
+        presenterEntity.type
+    ))
   }
 }

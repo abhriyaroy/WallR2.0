@@ -1,5 +1,7 @@
 package zebrostudio.wallr100.presentation
 
+import android.graphics.Bitmap
+import android.net.Uri
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -16,10 +18,13 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
+import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.datafactory.CollectionsImageModelFactory.getCollectionsImageModel
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
+import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerIntervalUpdateResultState.INTERVAL_UPDATED
+import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerIntervalUpdateResultState.SERVICE_RESTARTED
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
@@ -41,6 +46,9 @@ class CollectionPresenterImplTest {
   @Mock lateinit var resourceUtils: ResourceUtils
   @Mock lateinit var postExecutionThread: PostExecutionThread
   @Mock lateinit var collectionView: CollectionView
+  @Mock lateinit var mockUri: Uri
+  @Mock lateinit var mockBitmap: Bitmap
+  private val randomString = randomUUID().toString()
   private lateinit var collectionPresenterImpl: CollectionPresenterImpl
 
   @Before fun setUp() {
@@ -745,7 +753,7 @@ class CollectionPresenterImplTest {
     verify(collectionImagesUseCase).getAutomaticWallpaperChangerInterval()
     verify(collectionView).showWallpaperChangerIntervalDialog(0)
   }
-  
+
   @Test
   fun `should show wallpaper changer interval dialog with 1 hour highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call success`() {
     `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(3600000)
@@ -795,6 +803,246 @@ class CollectionPresenterImplTest {
     verify(collectionImagesUseCase).getAutomaticWallpaperChangerInterval()
     verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(1800000)
     verify(collectionView).showWallpaperChangerIntervalDialog(0)
+  }
+
+  @Test
+  fun `should show interval updated message on updateWallpaperChangerInterval call success with 30 minutes interval`() {
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(1800000))
+        .thenReturn(INTERVAL_UPDATED)
+
+    collectionPresenterImpl.updateWallpaperChangerInterval(0)
+
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(1800000)
+    verify(collectionView).showWallpaperChangerIntervalUpdatedSuccessMessage()
+  }
+
+  @Test
+  fun `should show service restarted message on updateWallpaperChangerInterval call success with 30 minutes interval`() {
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(1800000))
+        .thenReturn(SERVICE_RESTARTED)
+
+    collectionPresenterImpl.updateWallpaperChangerInterval(0)
+
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(1800000)
+    verify(collectionView).showWallpaperChangerRestartedSuccessMessage()
+  }
+
+  @Test
+  fun `should show interval updated message on updateWallpaperChangerInterval call success with 1 hour interval`() {
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(3600000))
+        .thenReturn(INTERVAL_UPDATED)
+
+    collectionPresenterImpl.updateWallpaperChangerInterval(1)
+
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(3600000)
+    verify(collectionView).showWallpaperChangerIntervalUpdatedSuccessMessage()
+  }
+
+  @Test
+  fun `should show service restarted message on updateWallpaperChangerInterval call success with 1 hour interval`() {
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(3600000))
+        .thenReturn(SERVICE_RESTARTED)
+
+    collectionPresenterImpl.updateWallpaperChangerInterval(1)
+
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(3600000)
+    verify(collectionView).showWallpaperChangerRestartedSuccessMessage()
+  }
+
+  @Test
+  fun `should show interval updated message on updateWallpaperChangerInterval call success with 3 hours interval`() {
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(21600000))
+        .thenReturn(INTERVAL_UPDATED)
+
+    collectionPresenterImpl.updateWallpaperChangerInterval(2)
+
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(21600000)
+    verify(collectionView).showWallpaperChangerIntervalUpdatedSuccessMessage()
+  }
+
+  @Test
+  fun `should show service restarted message on updateWallpaperChangerInterval call success with 3 hours interval`() {
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(21600000))
+        .thenReturn(SERVICE_RESTARTED)
+
+    collectionPresenterImpl.updateWallpaperChangerInterval(2)
+
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(21600000)
+    verify(collectionView).showWallpaperChangerRestartedSuccessMessage()
+  }
+
+  @Test
+  fun `should show interval updated message on updateWallpaperChangerInterval call success with 1 day interval`() {
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(86400000))
+        .thenReturn(INTERVAL_UPDATED)
+
+    collectionPresenterImpl.updateWallpaperChangerInterval(3)
+
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(86400000)
+    verify(collectionView).showWallpaperChangerIntervalUpdatedSuccessMessage()
+  }
+
+  @Test
+  fun `should show service restarted message on updateWallpaperChangerInterval call success with 1 day interval`() {
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(86400000))
+        .thenReturn(SERVICE_RESTARTED)
+
+    collectionPresenterImpl.updateWallpaperChangerInterval(3)
+
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(86400000)
+    verify(collectionView).showWallpaperChangerRestartedSuccessMessage()
+  }
+
+  @Test
+  fun `should show interval updated message on updateWallpaperChangerInterval call success with 3 days interval`() {
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(259200000))
+        .thenReturn(INTERVAL_UPDATED)
+
+    collectionPresenterImpl.updateWallpaperChangerInterval(4)
+
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(259200000)
+    verify(collectionView).showWallpaperChangerIntervalUpdatedSuccessMessage()
+  }
+
+  @Test
+  fun `should show service restarted message on updateWallpaperChangerInterval call success with 3 days interval`() {
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(259200000))
+        .thenReturn(SERVICE_RESTARTED)
+
+    collectionPresenterImpl.updateWallpaperChangerInterval(4)
+
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(259200000)
+    verify(collectionView).showWallpaperChangerRestartedSuccessMessage()
+  }
+
+  @Test fun `should add image to collection on handleImagePickerResult call success`() {
+    val uriList = listOf(mockUri)
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
+    val collectionPresenterEntityList = listOf(getCollectionImagesPresenterEntity())
+    `when`(collectionImagesUseCase.addImage(uriList))
+        .thenReturn(Single.just(collectionImagesModelList))
+    `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(collectionImagesModelList))
+        .thenReturn(collectionPresenterEntityList)
+
+    collectionPresenterImpl.handleImagePickerResult(uriList)
+
+    verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionImagesModelList)
+    verify(collectionImagesUseCase).addImage(uriList)
+    verify(collectionView).getScope()
+    verify(collectionView).setImagesList(collectionPresenterEntityList)
+    verify(collectionView).updateChangesInEveryItemView()
+    verify(collectionView).hideImagesAbsentLayout()
+    verify(collectionView).showWallpaperChangerLayout()
+    verify(collectionView).showSingleImageAddedSuccessfullyMessage()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should add image to collection and show hint on handleImagePickerResult call success`() {
+    val uriList = listOf(mockUri, mockUri)
+    val collectionImagesModelList =
+        listOf(getCollectionsImageModel(), getCollectionsImageModel())
+    val collectionPresenterEntityList =
+        listOf(getCollectionImagesPresenterEntity(), getCollectionImagesPresenterEntity())
+    `when`(widgetHintsUseCase.isCollectionsImageReorderHintShown()).thenReturn(false)
+    `when`(collectionImagesUseCase.addImage(uriList))
+        .thenReturn(Single.just(collectionImagesModelList))
+    `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(collectionImagesModelList))
+        .thenReturn(collectionPresenterEntityList)
+
+    collectionPresenterImpl.handleImagePickerResult(uriList)
+
+    verify(widgetHintsUseCase).isCollectionsImageReorderHintShown()
+    verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionImagesModelList)
+    verify(collectionImagesUseCase).addImage(uriList)
+    verify(collectionView).getScope()
+    verify(collectionView).setImagesList(collectionPresenterEntityList)
+    verify(collectionView).updateChangesInEveryItemView()
+    verify(collectionView).hideImagesAbsentLayout()
+    verify(collectionView).showWallpaperChangerLayout()
+    verify(collectionView).showMultipleImagesAddedSuccessfullyMessage(uriList.size)
+    verify(collectionView).showReorderImagesHintWithDelay()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show generic error on handleImagePickerResult call failure`() {
+    val uriList = listOf(mockUri)
+    `when`(collectionImagesUseCase.addImage(uriList))
+        .thenReturn(Single.error(Exception()))
+
+    collectionPresenterImpl.handleImagePickerResult(uriList)
+
+    verify(collectionImagesUseCase).addImage(uriList)
+    verify(collectionView).getScope()
+    verify(collectionView).showGenericErrorMessage()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test fun `should set wallpaper on handleSetWallpaperMenuItemClicked call success`() {
+    val collectionImagesModelList =
+        listOf(getCollectionsImageModel())
+    val collectionPresenterEntityList =
+        listOf(getCollectionImagesPresenterEntity())
+    val selectedItemsMap = hashMapOf(Pair(0, collectionPresenterEntityList.first()))
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)).thenReturn(
+        randomString)
+    `when`(collectionView.isCabActive()).thenReturn(true)
+    `when`(
+        collectionImagesPresenterEntityMapper.mapFromPresenterEntity(
+            collectionPresenterEntityList.first()))
+        .thenReturn(collectionImagesModelList)
+    `when`(collectionImagesUseCase.getImageBitmap(collectionImagesModelList.first()))
+        .thenReturn(Single.just(mockBitmap))
+
+    collectionPresenterImpl.handleSetWallpaperMenuItemClicked(selectedItemsMap)
+
+    verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
+    verify(wallpaperSetter).setWallpaper(mockBitmap)
+    verify(collectionImagesPresenterEntityMapper).mapFromPresenterEntity(
+        collectionPresenterEntityList.first())
+    verify(collectionImagesUseCase).getImageBitmap(collectionImagesModelList.first())
+    verify(collectionView).getScope()
+    verify(collectionView).blurScreen()
+    verify(collectionView).showIndefiniteLoaderWithMessage(randomString)
+    verify(collectionView).isCabActive()
+    verify(collectionView).hideCab()
+    verify(collectionView).removeBlurFromScreen()
+    verify(collectionView).showSetWallpaperSuccessMessage()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show generic error message on handleSetWallpaperMenuItemClicked call failure`() {
+    val collectionImagesModelList =
+        listOf(getCollectionsImageModel())
+    val collectionPresenterEntityList =
+        listOf(getCollectionImagesPresenterEntity())
+    val selectedItemsMap = hashMapOf(Pair(0, collectionPresenterEntityList.first()))
+    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)).thenReturn(
+        randomString)
+    `when`(collectionView.isCabActive()).thenReturn(true)
+    `when`(
+        collectionImagesPresenterEntityMapper.mapFromPresenterEntity(
+            collectionPresenterEntityList.first()))
+        .thenReturn(collectionImagesModelList)
+    `when`(collectionImagesUseCase.getImageBitmap(collectionImagesModelList.first()))
+        .thenReturn(Single.error(Exception()))
+
+    collectionPresenterImpl.handleSetWallpaperMenuItemClicked(selectedItemsMap)
+
+    verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
+    verify(collectionImagesPresenterEntityMapper).mapFromPresenterEntity(
+        collectionPresenterEntityList.first())
+    verify(collectionImagesUseCase).getImageBitmap(collectionImagesModelList.first())
+    verify(collectionView).getScope()
+    verify(collectionView).blurScreen()
+    verify(collectionView).showIndefiniteLoaderWithMessage(randomString)
+    verify(collectionView).isCabActive()
+    verify(collectionView).hideCab()
+    verify(collectionView).removeBlurFromScreen()
+    verify(collectionView).showGenericErrorMessage()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @After fun tearDown() {

@@ -1,9 +1,7 @@
 package zebrostudio.wallr100.android.service
 
-import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.IBinder
@@ -18,11 +16,11 @@ import zebrostudio.wallr100.android.ui.collection.REQUEST_CODE
 import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.android.utils.stringRes
-import zebrostudio.wallr100.android.utils.withDelayOnMain
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerUseCase
 import javax.inject.Inject
 
+const val WALLPAPER_CHANGER_BROADCAST = "restart_wallpaper_changer_service"
 const val WALLPAPER_CHANGER_SERVICE_RESTART_DELAY: Long = 2000
 const val WALLPAPER_CHANGER_SERVICE_CODE = 1
 val wallpaperChangerIntervals = arrayListOf<Long>(
@@ -66,6 +64,7 @@ class AutomaticWallpaperChangerService : Service() {
             automaticWallpaperChangerUseCase.getInterval())}")
         .setSmallIcon(R.drawable.ic_wallr)
         .setContentIntent(pendingIntent)
+        .setAutoCancel(false)
         .setOngoing(true)
         .setPriority(PRIORITY_MAX)
         .build()
@@ -115,6 +114,8 @@ class AutomaticWallpaperChangerService : Service() {
     /*withDelayOnMain(WALLPAPER_CHANGER_SERVICE_RESTART_DELAY) {
       serviceManager.startAutomaticWallpaperChangerService()
     }*/
+
+    sendBroadcast(Intent(WALLPAPER_CHANGER_BROADCAST))
 
     super.onTaskRemoved(rootIntent)
   }
