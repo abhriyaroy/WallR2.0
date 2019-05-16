@@ -8,7 +8,6 @@ import zebrostudio.wallr100.android.AndroidBackgroundThreads
 import zebrostudio.wallr100.android.AndroidMainThread
 import zebrostudio.wallr100.android.service.ServiceManager
 import zebrostudio.wallr100.android.service.ServiceManagerImpl
-import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcherImpl
 import zebrostudio.wallr100.android.utils.GsonProvider
