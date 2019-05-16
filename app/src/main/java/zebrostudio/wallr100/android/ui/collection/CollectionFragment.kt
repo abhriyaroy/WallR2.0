@@ -62,35 +62,36 @@ import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.android.utils.withDelayOnMain
 import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.CollectionRecyclerPresenter
-import zebrostudio.wallr100.presentation.collection.AUTOSTART_CLASS_NAME_ASUS
-import zebrostudio.wallr100.presentation.collection.AUTOSTART_CLASS_NAME_ONEPLUS
-import zebrostudio.wallr100.presentation.collection.AUTOSTART_CLASS_NAME_OPPO
-import zebrostudio.wallr100.presentation.collection.AUTOSTART_CLASS_NAME_SAMSUNG
-import zebrostudio.wallr100.presentation.collection.AUTOSTART_CLASS_NAME_VIVO
-import zebrostudio.wallr100.presentation.collection.AUTOSTART_CLASS_NAME_XIAOMI
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionPresenter
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionView
-import zebrostudio.wallr100.presentation.collection.MANUFACTURER_NAME_ASUS
-import zebrostudio.wallr100.presentation.collection.MANUFACTURER_NAME_ONEPLUS
-import zebrostudio.wallr100.presentation.collection.MANUFACTURER_NAME_OPPO
-import zebrostudio.wallr100.presentation.collection.MANUFACTURER_NAME_SAMSUNG
-import zebrostudio.wallr100.presentation.collection.MANUFACTURER_NAME_VIVO
-import zebrostudio.wallr100.presentation.collection.MANUFACTURER_NAME_XIAOMI
 import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEntity
-import zebrostudio.wallr100.presentation.collection.SECURITY_PACKAGE_ASUS
-import zebrostudio.wallr100.presentation.collection.SECURITY_PACKAGE_ONEPLUS
-import zebrostudio.wallr100.presentation.collection.SECURITY_PACKAGE_OPPO
-import zebrostudio.wallr100.presentation.collection.SECURITY_PACKAGE_SAMSUNG
-import zebrostudio.wallr100.presentation.collection.SECURITY_PACKAGE_VIVO
-import zebrostudio.wallr100.presentation.collection.SECURITY_PACKAGE_XIAOMI
 import javax.inject.Inject
 
+const val MANUFACTURER_NAME_SAMSUNG = "samsung"
+const val SECURITY_PACKAGE_SAMSUNG = "com.samsung.android.lool"
+const val AUTOSTART_CLASS_NAME_SAMSUNG = "com.samsung.android.sm.ui.battery.BatteryActivity"
+const val MANUFACTURER_NAME_XIAOMI = "xiaomi"
+const val SECURITY_PACKAGE_XIAOMI = "com.miui.securitycenter"
+const val AUTOSTART_CLASS_NAME_XIAOMI = "com.miui.permcenter.autostart.AutoStartManagementActivity"
+const val MANUFACTURER_NAME_ONEPLUS = "oneplus"
+const val SECURITY_PACKAGE_ONEPLUS = "com.oneplus.security"
+const val AUTOSTART_CLASS_NAME_ONEPLUS =
+    "com.oneplus.security.chainlaunch.view.ChainLaunchAppListActivity"
+const val MANUFACTURER_NAME_OPPO = "oppo"
+const val SECURITY_PACKAGE_OPPO = "com.coloros.safecenter"
+const val AUTOSTART_CLASS_NAME_OPPO =
+    "com.coloros.safecenter.permission.startup.StartupAppListActivity"
+const val MANUFACTURER_NAME_VIVO = "vivo"
+const val SECURITY_PACKAGE_VIVO = "com.vivo.permissionmanager"
+const val AUTOSTART_CLASS_NAME_VIVO = "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"
+const val MANUFACTURER_NAME_ASUS = "asus"
+const val SECURITY_PACKAGE_ASUS = "com.asus.mobilemanager"
+const val AUTOSTART_CLASS_NAME_ASUS = "com.asus.mobilemanager.entry.FunctionActivity"
 const val REQUEST_CODE = 1
 const val MAXIMUM_SELECTED_IMAGES = 10
 private const val REORDER_HINT_VIEW_POSITION = 1
 private const val APP_BAR_DELAY: Long = 200
 private const val AUTOSTART_HINT_DELAY: Long = 2000
-private const val ATTACH_SWITCH_LISTENER_DELAY: Long = 1000
 
 class CollectionFragment : BaseFragment(),
     CollectionView,
@@ -244,32 +245,33 @@ class CollectionFragment : BaseFragment(),
 
   override fun showReorderImagesHintWithDelay() {
     withDelayOnMain(AUTOSTART_HINT_DELAY) {
-      val targetView = collectionsRecyclerView.getChildAt(REORDER_HINT_VIEW_POSITION)
-          .findViewById<View>(R.id.hintStubView)
-      TapTargetView.showFor(activity!!,
-          TapTarget.forView(targetView,
-              stringRes(R.string.collections_fragment_drag_to_reorder_hint_title),
-              stringRes(R.string.collections_fragment_drag_to_reorder_hint_description))
-              .dimColor(android.R.color.transparent)
-              .outerCircleColor(R.color.accent)
-              .targetCircleColor(R.color.concrete)
-              .transparentTarget(true)
-              .textColor(android.R.color.white)
-              .cancelable(true),
-          object : TapTargetView.Listener() {
-            override fun onTargetClick(view: TapTargetView) {
-              super.onTargetClick(view)
-              presenter.handleReorderImagesHintHintDismissed()
-            }
+      collectionsRecyclerView.getChildAt(REORDER_HINT_VIEW_POSITION)
+          .findViewById<View>(R.id.hintStubView).let {
+            TapTargetView.showFor(activity!!,
+                TapTarget.forView(it,
+                    stringRes(R.string.collections_fragment_drag_to_reorder_hint_title),
+                    stringRes(R.string.collections_fragment_drag_to_reorder_hint_description))
+                    .dimColor(android.R.color.transparent)
+                    .outerCircleColor(R.color.accent)
+                    .targetCircleColor(R.color.concrete)
+                    .transparentTarget(true)
+                    .textColor(android.R.color.white)
+                    .cancelable(true),
+                object : TapTargetView.Listener() {
+                  override fun onTargetClick(view: TapTargetView) {
+                    super.onTargetClick(view)
+                    presenter.handleReorderImagesHintHintDismissed()
+                  }
 
-            override fun onTargetDismissed(view: TapTargetView, userInitiated: Boolean) {
-              presenter.handleReorderImagesHintHintDismissed()
-            }
+                  override fun onTargetDismissed(view: TapTargetView, userInitiated: Boolean) {
+                    presenter.handleReorderImagesHintHintDismissed()
+                  }
 
-            override fun onOuterCircleClick(view: TapTargetView) {
-              view.dismiss(true)
-            }
-          })
+                  override fun onOuterCircleClick(view: TapTargetView) {
+                    view.dismiss(true)
+                  }
+                })
+          }
     }
   }
 
@@ -498,6 +500,8 @@ class CollectionFragment : BaseFragment(),
     MaterialDialog.Builder(activity!!)
         .title(stringRes(R.string.collection_fragment_lock_in_recents_instruction_title))
         .content(stringRes(R.string.collection_fragment_lock_in_recents_instruction_description))
+        .positiveColor(colorRes(R.color.accent))
+        .negativeColor(colorRes(R.color.accent))
         .onPositive { _, _ -> showAutoStartSettingsDialog() }
         .cancelable(true)
         .positiveText(stringRes(R.string.collection_fragment_lock_in_recents_positive_text))
@@ -511,8 +515,7 @@ class CollectionFragment : BaseFragment(),
         CollectionRecyclerTouchHelperCallback(collectionsImageAdapter)
     itemTouchHelper = ItemTouchHelper(collectionRecyclerTouchHelperCallback)
     collectionsRecyclerView?.apply {
-      GridLayoutManager(context,
-          integerRes(R.integer.recycler_view_span_count)).let {
+      GridLayoutManager(context, integerRes(R.integer.recycler_view_span_count)).let {
         layoutManager = it
       }
       addItemDecoration(
@@ -553,8 +556,7 @@ class CollectionFragment : BaseFragment(),
           it.equals(MANUFACTURER_NAME_OPPO, true) ->
             component = ComponentName(SECURITY_PACKAGE_OPPO, AUTOSTART_CLASS_NAME_OPPO)
           it.equals(MANUFACTURER_NAME_VIVO, true) ->
-            component = ComponentName(SECURITY_PACKAGE_VIVO,
-                AUTOSTART_CLASS_NAME_VIVO)
+            component = ComponentName(SECURITY_PACKAGE_VIVO, AUTOSTART_CLASS_NAME_VIVO)
           it.equals(MANUFACTURER_NAME_ASUS, true) ->
             component = ComponentName(SECURITY_PACKAGE_ASUS, AUTOSTART_CLASS_NAME_ASUS)
         }
@@ -580,6 +582,8 @@ class CollectionFragment : BaseFragment(),
         .title(stringRes(R.string.collection_fragment_autostart_permission_title))
         .content(stringRes(R.string.collection_fragment_autostart_permission_description))
         .onPositive { _, _ -> openAutoStartSettings() }
+        .positiveColor(colorRes(R.color.accent))
+        .negativeColor(colorRes(R.color.accent))
         .cancelable(true)
         .positiveText(stringRes(R.string.collection_fragment_autostart_permission_positive_text))
         .negativeText(stringRes(R.string.collection_fragment_autostart_permission_negative_text))

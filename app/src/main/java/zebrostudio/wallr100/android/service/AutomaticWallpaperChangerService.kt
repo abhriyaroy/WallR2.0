@@ -20,8 +20,6 @@ import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerUseCase
 import javax.inject.Inject
 
-const val WALLPAPER_CHANGER_BROADCAST = "restart_wallpaper_changer_service"
-const val WALLPAPER_CHANGER_SERVICE_RESTART_DELAY: Long = 2000
 const val WALLPAPER_CHANGER_SERVICE_CODE = 1
 val wallpaperChangerIntervals = arrayListOf<Long>(
     1800000,
@@ -83,18 +81,6 @@ class AutomaticWallpaperChangerService : Service() {
       handler?.postDelayed(runnable, TIME_CHECKER_DELAY)
     }
     handler?.postDelayed(runnable, TIME_CHECKER_DELAY)
-
-    /*val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
-
-    val currentTime = System.currentTimeMillis()
-    alarmManager.setRepeating(
-        AlarmManager.RTC_WAKEUP,
-        currentTime + oneMinute,
-        oneMinute,
-        pendingIntent)*/
-
-    //changeWallpaper()
 
     return START_STICKY
   }
