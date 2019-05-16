@@ -48,10 +48,13 @@ interface CollectionContract {
     fun removeBlurFromScreen()
     fun showIndefiniteLoaderWithMessage(message: String)
     fun showSetWallpaperSuccessMessage()
-    fun showCrystallizeWallpaperSuccessMessage()
+    fun showCrystallizedImageAlreadyPresentInCollectionErrorMessage()
+    fun showCrystallizeSuccessMessage()
     fun showUnableToDeleteErrorMessage()
     fun showGenericErrorMessage()
     fun showWallpaperChangerPermissionsRequiredDialog()
+    fun blockBackPress()
+    fun releaseBlockPress()
   }
 
   interface CollectionPresenter : BasePresenter<CollectionView> {

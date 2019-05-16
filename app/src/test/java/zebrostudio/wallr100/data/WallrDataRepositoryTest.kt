@@ -37,6 +37,7 @@ import zebrostudio.wallr100.data.database.DatabaseImageType.WALLPAPER
 import zebrostudio.wallr100.data.datafactory.CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity
 import zebrostudio.wallr100.data.datafactory.FirebaseImageEntityModelFactory.getFirebaseImageEntity
 import zebrostudio.wallr100.data.datafactory.UnsplashPictureEntityModelFactory.getUnsplashPictureEntityModel
+import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
 import zebrostudio.wallr100.data.exception.EmptyRecentlyDeletedMapException
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.NoResultFoundException
@@ -1305,7 +1306,8 @@ class WallrDataRepositoryTest {
         .thenReturn(collectionDatabaseImageEntityList)
     `when`(collectionsDatabaseImageEntityMapper.mapFromEntity(collectionDatabaseImageEntityList))
         .thenReturn(collectionImageModelList)
-    `when`(imageHandler.convertAndCacheLowpolyImage(collectionDatabaseImageEntityList.first().path))
+    `when`(imageHandler.convertAndCacheLowpolyImage(collectionDatabaseImageEntityList.first().path,
+        CRYSTALLIZED))
         .thenReturn(Completable.complete())
     `when`(imageHandler.addImageToCollections(collectionDatabaseImageEntityList.first().path,
         CRYSTALLIZED)).thenReturn(Completable.complete())
@@ -1321,7 +1323,35 @@ class WallrDataRepositoryTest {
     verify(collectionsDatabaseImageEntityMapper).mapToEntity(collectionImageModelList)
     verify(collectionsDatabaseImageEntityMapper).mapFromEntity(collectionDatabaseImageEntityList)
     inOrder.verify(imageHandler)
-        .convertAndCacheLowpolyImage(collectionDatabaseImageEntityList.first().path)
+        .convertAndCacheLowpolyImage(collectionDatabaseImageEntityList.first().path, CRYSTALLIZED)
+    inOrder.verify(imageHandler)
+        .addImageToCollections(collectionDatabaseImageEntityList.first().path,
+            CRYSTALLIZED)
+    inOrder.verify(imageHandler).getAllImagesInCollection()
+    verifyIoSchedulerSubscription()
+  }
+
+  @Test
+  fun `should return single already present in collection error on saveCrystallizedImageInDatabase call failure`() {
+    val collectionImageModelList = listOf(getCollectionsImageModel())
+    val collectionDatabaseImageEntityList =
+        listOf(getCollectionsDatabaseImageEntity())
+    `when`(collectionsDatabaseImageEntityMapper.mapToEntity(collectionImageModelList))
+        .thenReturn(collectionDatabaseImageEntityList)
+    `when`(imageHandler.convertAndCacheLowpolyImage(collectionDatabaseImageEntityList.first().path,
+        CRYSTALLIZED)).thenReturn(Completable.error(AlreadyPresentInCollectionException()))
+    `when`(imageHandler.addImageToCollections(collectionDatabaseImageEntityList.first().path,
+        CRYSTALLIZED)).thenReturn(Completable.complete())
+    `when`(imageHandler.getAllImagesInCollection())
+        .thenReturn(Single.just(collectionDatabaseImageEntityList))
+
+    wallrDataRepository.saveCrystallizedImageInDatabase(collectionImageModelList.first())
+        .test().assertError(AlreadyPresentInCollectionException::class.java)
+
+    val inOrder = inOrder(imageHandler)
+    verify(collectionsDatabaseImageEntityMapper).mapToEntity(collectionImageModelList)
+    inOrder.verify(imageHandler)
+        .convertAndCacheLowpolyImage(collectionDatabaseImageEntityList.first().path, CRYSTALLIZED)
     inOrder.verify(imageHandler)
         .addImageToCollections(collectionDatabaseImageEntityList.first().path,
             CRYSTALLIZED)

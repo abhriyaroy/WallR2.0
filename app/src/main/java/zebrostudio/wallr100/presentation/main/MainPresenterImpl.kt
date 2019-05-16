@@ -14,6 +14,7 @@ class MainPresenterImpl(
 
   internal var backPressedOnce = false
   internal var isGuillotineMenuOpen = false
+  private var isBackPressBlocked = false
   private var mainView: MainContract.MainView? = null
 
   override fun attachView(view: MainContract.MainView) {
@@ -31,27 +32,31 @@ class MainPresenterImpl(
   }
 
   override fun handleBackPress() {
-    if (isGuillotineMenuOpen) {
-      mainView?.closeNavigationMenu()
-    } else {
-      mainView?.getFragmentTagAtStackTop().let {
-        if (it == EXPLORE_TAG) {
-          if (backPressedOnce) {
-            mainView?.exitApp()
+    if (!isBackPressBlocked) {
+      if (isGuillotineMenuOpen) {
+        mainView?.closeNavigationMenu()
+      } else {
+        mainView?.getFragmentTagAtStackTop().let {
+          if (it == EXPLORE_TAG) {
+            if (backPressedOnce) {
+              mainView?.exitApp()
+            } else {
+              backPressedOnce = true
+              mainView?.showExitConfirmation()
+              mainView?.startBackPressedFlagResetTimer()
+            }
           } else {
-            backPressedOnce = true
-            mainView?.showExitConfirmation()
-            mainView?.startBackPressedFlagResetTimer()
-          }
-        } else {
-          mainView?.showAppBar()
-          if ((it == MINIMAL_TAG || it == COLLECTIONS_TAG) && mainView?.isCabActive() == true) {
-            mainView?.dismissCab()
-          } else {
-            mainView?.showPreviousFragment()
+            mainView?.showAppBar()
+            if ((it == MINIMAL_TAG || it == COLLECTIONS_TAG) && mainView?.isCabActive() == true) {
+              mainView?.dismissCab()
+            } else {
+              mainView?.showPreviousFragment()
+            }
           }
         }
       }
+    } else {
+      mainView?.showOperationInProgressMessage()
     }
   }
 
@@ -71,6 +76,14 @@ class MainPresenterImpl(
 
   override fun handleHamburgerHintDismissed() {
     widgetHintsUseCase.saveNavigationMenuHamburgerHintShownState()
+  }
+
+  override fun blockBackPress() {
+    isBackPressBlocked = true
+  }
+
+  override fun enableBackPress() {
+    isBackPressBlocked = false
   }
 
 }

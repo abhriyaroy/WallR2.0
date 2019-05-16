@@ -488,7 +488,12 @@ class CollectionFragment : BaseFragment(),
     successToast(stringRes(R.string.set_wallpaper_success_message))
   }
 
-  override fun showCrystallizeWallpaperSuccessMessage() {
+  override fun showCrystallizedImageAlreadyPresentInCollectionErrorMessage() {
+    infoToast(
+        stringRes(R.string.collection_fragment_crystallized_image_already_present_error_message))
+  }
+
+  override fun showCrystallizeSuccessMessage() {
     successToast(stringRes(R.string.crystallizing_wallpaper_successful_message))
   }
 
@@ -506,6 +511,14 @@ class CollectionFragment : BaseFragment(),
         .cancelable(true)
         .positiveText(stringRes(R.string.collections_fragment_lock_in_recents_positive_text))
         .show()
+  }
+
+  override fun blockBackPress() {
+    MainActivity.blockBackPress()
+  }
+
+  override fun releaseBlockPress() {
+    MainActivity.releaseBackPressBlock()
   }
 
   private fun initRecyclerViewWithListeners() {

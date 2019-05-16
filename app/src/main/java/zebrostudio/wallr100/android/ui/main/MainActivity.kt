@@ -86,7 +86,11 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
   }
 
   override fun onBackPressed() {
-    presenter.handleBackPress()
+    if (!isBackPressBlocked) {
+      presenter.handleBackPress()
+    } else {
+      infoToast(stringRes(R.string.finalizing_stuff_wait_message), Toast.LENGTH_SHORT)
+    }
   }
 
   override fun onDestroy() {
@@ -174,6 +178,10 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
 
   override fun showAppBar() {
     appbar.setExpanded(true, true)
+  }
+
+  override fun showOperationInProgressMessage() {
+    infoToast(stringRes(R.string.finalizing_stuff_wait_message), Toast.LENGTH_SHORT)
   }
 
   private inline fun <reified T : BaseFragment> addFragment(
@@ -370,6 +378,18 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
             window)
         true
       }
+    }
+  }
+
+  companion object {
+    private var isBackPressBlocked = false
+
+    fun blockBackPress() {
+      isBackPressBlocked = true
+    }
+
+    fun releaseBackPressBlock() {
+      isBackPressBlocked = false
     }
   }
 

@@ -14,6 +14,7 @@ import zebrostudio.wallr100.android.ui.minimal.SINGLE_ITEM_SIZE
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.android.utils.equalsIgnoreCase
+import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerIntervalUpdateResultState.INTERVAL_UPDATED
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerIntervalUpdateResultState.SERVICE_RESTARTED
@@ -218,16 +219,19 @@ class CollectionPresenterImpl(
           collectionView?.blurScreen()
           collectionView?.showIndefiniteLoaderWithMessage(
               resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
+          collectionView?.blockBackPress()
         }
         .autoDisposable(collectionView!!.getScope())
         .subscribe({
           hideCabIfActive()
           collectionView?.removeBlurFromScreen()
           collectionView?.showSetWallpaperSuccessMessage()
+          collectionView?.releaseBlockPress()
         }, {
           hideCabIfActive()
           collectionView?.removeBlurFromScreen()
           collectionView?.showGenericErrorMessage()
+          collectionView?.releaseBlockPress()
         })
   }
 
@@ -246,17 +250,24 @@ class CollectionPresenterImpl(
           collectionView?.showIndefiniteLoaderWithMessage(
               resourceUtils.getStringResource(R.string.crystallizing_wallpaper_wait_message)
           )
+          collectionView?.blockBackPress()
         }.autoDisposable(collectionView!!.getScope())
         .subscribe({
           hideCabIfActive()
           collectionView?.setImagesList(it)
           collectionView?.updateChangesInEveryItemView()
           collectionView?.removeBlurFromScreen()
-          collectionView?.showCrystallizeWallpaperSuccessMessage()
+          collectionView?.showCrystallizeSuccessMessage()
+          collectionView?.releaseBlockPress()
         }, {
           hideCabIfActive()
           collectionView?.removeBlurFromScreen()
-          collectionView?.showGenericErrorMessage()
+          if (it is AlreadyPresentInCollectionException) {
+            collectionView?.showCrystallizedImageAlreadyPresentInCollectionErrorMessage()
+          } else {
+            collectionView?.showGenericErrorMessage()
+          }
+          collectionView?.releaseBlockPress()
         })
   }
 

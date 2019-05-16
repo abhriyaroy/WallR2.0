@@ -25,9 +25,9 @@ class CollectionModule {
     wallpaperSetter: WallpaperSetter,
     resourceUtils: ResourceUtils,
     postExecutionThread: PostExecutionThread
-  ): CollectionPresenter = CollectionPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase,
-      collectionImagesUseCase, collectionImagesPresenterEntityMapper, wallpaperSetter,
-      resourceUtils, postExecutionThread)
+  ): CollectionPresenter = CollectionPresenterImpl(widgetHintsUseCase,
+      userPremiumStatusUseCase, collectionImagesUseCase, collectionImagesPresenterEntityMapper,
+      wallpaperSetter, resourceUtils, postExecutionThread)
 
   @Provides
   fun provideCollectionPresenterEntityMapper()

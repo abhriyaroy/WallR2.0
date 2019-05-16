@@ -21,6 +21,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
+import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
 import zebrostudio.wallr100.domain.datafactory.CollectionsImageModelFactory.getCollectionsImageModel
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerIntervalUpdateResultState.INTERVAL_UPDATED
@@ -1033,12 +1034,14 @@ class CollectionPresenterImplTest {
         collectionPresenterEntityList.first())
     verify(collectionImagesUseCase).getImageBitmap(collectionImagesModelList.first())
     verify(collectionView).getScope()
+    verify(collectionView).blockBackPress()
     verify(collectionView).blurScreen()
     verify(collectionView).showIndefiniteLoaderWithMessage(randomString)
     verify(collectionView).isCabActive()
     verify(collectionView).hideCab()
     verify(collectionView).removeBlurFromScreen()
     verify(collectionView).showSetWallpaperSuccessMessage()
+    verify(collectionView).releaseBlockPress()
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -1066,12 +1069,14 @@ class CollectionPresenterImplTest {
         collectionPresenterEntityList.first())
     verify(collectionImagesUseCase).getImageBitmap(collectionImagesModelList.first())
     verify(collectionView).getScope()
+    verify(collectionView).blockBackPress()
     verify(collectionView).blurScreen()
     verify(collectionView).showIndefiniteLoaderWithMessage(randomString)
     verify(collectionView).isCabActive()
     verify(collectionView).hideCab()
     verify(collectionView).removeBlurFromScreen()
     verify(collectionView).showGenericErrorMessage()
+    verify(collectionView).releaseBlockPress()
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -1101,6 +1106,7 @@ class CollectionPresenterImplTest {
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionImagesModelList)
     verify(collectionImagesUseCase).saveCrystallizedImage(collectionImagesModelList.first())
     verify(collectionView).getScope()
+    verify(collectionView).blockBackPress()
     verify(collectionView).blurScreen()
     verify(collectionView).showIndefiniteLoaderWithMessage(randomString)
     verify(collectionView).isCabActive()
@@ -1108,7 +1114,42 @@ class CollectionPresenterImplTest {
     verify(collectionView).setImagesList(collectionPresenterEntityList)
     verify(collectionView).updateChangesInEveryItemView()
     verify(collectionView).removeBlurFromScreen()
-    verify(collectionView).showCrystallizeWallpaperSuccessMessage()
+    verify(collectionView).showCrystallizeSuccessMessage()
+    verify(collectionView).releaseBlockPress()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should show already present in collection error message on handleCrystallizeWallpaperMenuItemClicked call failure`() {
+    val collectionImagesModelList =
+        listOf(getCollectionsImageModel())
+    val collectionPresenterEntityList =
+        listOf(getCollectionImagesPresenterEntity())
+    val selectedItemsMap = hashMapOf(Pair(0, collectionPresenterEntityList.first()))
+    `when`(resourceUtils.getStringResource(R.string.crystallizing_wallpaper_wait_message))
+        .thenReturn(randomString)
+    `when`(collectionView.isCabActive()).thenReturn(true)
+    `when`(collectionImagesPresenterEntityMapper
+        .mapFromPresenterEntity(collectionPresenterEntityList.first()))
+        .thenReturn(collectionImagesModelList)
+    `when`(collectionImagesUseCase.saveCrystallizedImage(collectionImagesModelList.first()))
+        .thenReturn(Single.error(AlreadyPresentInCollectionException()))
+
+    collectionPresenterImpl.handleCrystallizeWallpaperMenuItemClicked(selectedItemsMap)
+
+    verify(resourceUtils).getStringResource(R.string.crystallizing_wallpaper_wait_message)
+    verify(collectionImagesPresenterEntityMapper).mapFromPresenterEntity(
+        collectionPresenterEntityList.first())
+    verify(collectionImagesUseCase).saveCrystallizedImage(collectionImagesModelList.first())
+    verify(collectionView).getScope()
+    verify(collectionView).blockBackPress()
+    verify(collectionView).blurScreen()
+    verify(collectionView).showIndefiniteLoaderWithMessage(randomString)
+    verify(collectionView).isCabActive()
+    verify(collectionView).hideCab()
+    verify(collectionView).removeBlurFromScreen()
+    verify(collectionView).showCrystallizedImageAlreadyPresentInCollectionErrorMessage()
+    verify(collectionView).releaseBlockPress()
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -1135,12 +1176,14 @@ class CollectionPresenterImplTest {
         collectionPresenterEntityList.first())
     verify(collectionImagesUseCase).saveCrystallizedImage(collectionImagesModelList.first())
     verify(collectionView).getScope()
+    verify(collectionView).blockBackPress()
     verify(collectionView).blurScreen()
     verify(collectionView).showIndefiniteLoaderWithMessage(randomString)
     verify(collectionView).isCabActive()
     verify(collectionView).hideCab()
     verify(collectionView).removeBlurFromScreen()
     verify(collectionView).showGenericErrorMessage()
+    verify(collectionView).releaseBlockPress()
     verifyPostExecutionThreadSchedulerCall()
   }
 

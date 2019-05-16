@@ -16,6 +16,7 @@ interface MainContract {
     fun isCabActive(): Boolean
     fun dismissCab()
     fun showAppBar()
+    fun showOperationInProgressMessage()
   }
 
   interface MainPresenter : BasePresenter<MainView> {
@@ -26,5 +27,7 @@ interface MainContract {
     fun setBackPressedFlagToFalse()
     fun shouldShowPurchaseOption(): Boolean
     fun handleHamburgerHintDismissed()
+    fun blockBackPress()
+    fun enableBackPress()
   }
 }

@@ -71,7 +71,7 @@ interface ImageHandler {
   ): Single<List<CollectionDatabaseImageEntity>>
 
   fun getImageBitmap(path: String): Bitmap
-  fun convertAndCacheLowpolyImage(path: String): Completable
+  fun convertAndCacheLowpolyImage(path: String, databaseImageType: DatabaseImageType): Completable
 }
 
 const val BYTE_ARRAY_SIZE = 2048
@@ -380,8 +380,23 @@ class ImageHandlerImpl(
     }
   }
 
-  override fun convertAndCacheLowpolyImage(path: String): Completable {
+  override fun convertAndCacheLowpolyImage(
+    path: String,
+    databaseImageType: DatabaseImageType
+  ): Completable {
     return Completable.create { emitter ->
+      databaseHelper.getDatabase().collectionsDao().getAllData().subscribe { it ->
+        var isEntryAlreadyPresent = false
+        it.forEach {
+          if (it.type == databaseImageType.ordinal && it.data == path) {
+            isEntryAlreadyPresent = true
+          }
+        }
+        if (isEntryAlreadyPresent) {
+          emitter.onError(AlreadyPresentInCollectionException())
+        }
+      }
+
       getImageBitmap(path).let {
         LowPoly.generate(it).let { bitmap ->
           try {
@@ -396,7 +411,11 @@ class ImageHandlerImpl(
     }
   }
 
-  private fun saveToCollection(emitter: CompletableEmitter, data: String, type: DatabaseImageType) {
+  private fun saveToCollection(
+    emitter: CompletableEmitter,
+    data: String,
+    type: DatabaseImageType
+  ) {
     fileHandler.getCacheFile().inputStream().let { inputStream ->
       fileHandler.getCollectionsFile().let { file ->
         file.outputStream()
@@ -524,7 +543,8 @@ class ImageHandlerImpl(
         val value = (128.0 + 128.0 * Math.sin(x / period1)
             + 128.0 + 128.0 * Math.sin(y / period2)
             + 128.0 + 128.0 * Math.sin((x + y) / period1)
-            + 128.0 + 128.0 * Math.sin(Math.sqrt((x * x + y * y).toDouble()) / period3)).toInt() / 4
+            + 128.0 + 128.0 * Math.sin(
+            Math.sqrt((x * x + y * y).toDouble()) / period3)).toInt() / 4
         plasma[x][y] = value
       }
     for (x in 0 until height)
