@@ -47,8 +47,8 @@ interface ImageHandler {
   fun fetchImage(link: String): Observable<Long>
   fun cancelFetchingImage()
   fun getImageBitmap(): Bitmap
-  fun clearImageCache(): Completable
   fun getImageUri(): Uri
+  fun clearImageCache(): Completable
   fun getShareableUri(): Single<Uri>
   fun convertUriToBitmap(uri: Uri?): Single<Bitmap>
   fun convertImageInCacheToLowpoly(): Single<Bitmap>

@@ -448,8 +448,8 @@ class WallrDataRepositoryTest {
     verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME, CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG)
   }
 
-  @Test fun `should call shared preference on rememberCrystallizeDescriptionShown call success`() {
-    wallrDataRepository.rememberCrystallizeDescriptionShown()
+  @Test fun `should call shared preference on saveCrystallizeDescriptionShown call success`() {
+    wallrDataRepository.saveCrystallizeDescriptionShown()
 
     verify(sharedPrefs).setBoolean(IMAGE_PREFERENCE_NAME, CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG,
         true)

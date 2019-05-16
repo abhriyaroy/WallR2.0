@@ -135,10 +135,10 @@ class ImageOptionsUseCaseTest {
   }
 
   @Test
-  fun `should invoke rememberCrystallizeDescriptionShown on setCrystallizeDescriptionShownOnce call success`() {
+  fun `should invoke saveCrystallizeDescriptionShown on setCrystallizeDescriptionShownOnce call success`() {
     imageOptionsUseCase.setCrystallizeDescriptionShownOnce()
 
-    verify(wallrRepository).rememberCrystallizeDescriptionShown()
+    verify(wallrRepository).saveCrystallizeDescriptionShown()
   }
 
   @Test fun `should return Single of bitmap on getCrystallizedBitmapSingle call success`() {

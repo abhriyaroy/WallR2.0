@@ -81,7 +81,7 @@ class ImageOptionsInteractor(
   }
 
   override fun setCrystallizeDescriptionShownOnce() {
-    wallrRepository.rememberCrystallizeDescriptionShown()
+    wallrRepository.saveCrystallizeDescriptionShown()
   }
 
   override fun getCrystallizedImageSingle(): Single<Bitmap> {

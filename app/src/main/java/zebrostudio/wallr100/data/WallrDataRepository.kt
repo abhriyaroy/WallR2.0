@@ -291,7 +291,7 @@ class WallrDataRepository(
         CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG)
   }
 
-  override fun rememberCrystallizeDescriptionShown() {
+  override fun saveCrystallizeDescriptionShown() {
     sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME, CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG,
         true)
   }
