@@ -45,7 +45,7 @@ import zebrostudio.wallr100.data.exception.NotEnoughFreeSpaceException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.data.mapper.CollectionsDatabaseImageEntityMapper
-import zebrostudio.wallr100.data.mapper.DatabaseImageTypeEntityMapper
+import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapper
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
@@ -55,7 +55,7 @@ import zebrostudio.wallr100.domain.datafactory.ImageModelFactory.getImageModel
 import zebrostudio.wallr100.domain.datafactory.SearchPicturesModelFactory.getSearchPicturesModel
 import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.model.RestoreColorsModel
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
@@ -83,7 +83,7 @@ class WallrDataRepositoryTest {
   @Mock lateinit var mockUri: Uri
   @Mock lateinit var gsonProvider: GsonProvider
   @Mock lateinit var collectionsDatabaseImageEntityMapper: CollectionsDatabaseImageEntityMapper
-  @Mock lateinit var databaseImageTypeEntityMapper: DatabaseImageTypeEntityMapper
+  @Mock lateinit var databaseImageTypeMapper: DatabaseImageTypeMapper
   @Mock lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
   @Mock lateinit var firebasePictureEntityMapper: FirebasePictureEntityMapper
 
@@ -96,7 +96,7 @@ class WallrDataRepositoryTest {
   fun setup() {
     wallrDataRepository =
         WallrDataRepository(remoteAuthServiceFactory, unsplashClientFactory, sharedPrefs,
-            gsonProvider, collectionsDatabaseImageEntityMapper, databaseImageTypeEntityMapper,
+            gsonProvider, collectionsDatabaseImageEntityMapper, databaseImageTypeMapper,
             unsplashPictureEntityMapper, firebaseDatabaseHelper, firebasePictureEntityMapper,
             urlShortener, imageHandler, fileHandler, downloadHelper,
             minimalColorHelper, executionThread)
@@ -457,83 +457,83 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should complete on saveImageToCollections call success of type wallpaper`() {
-    `when`(databaseImageTypeEntityMapper.mapToDatabaseImageType(
-        CollectionsImageTypeModel.WALLPAPER))
+    `when`(databaseImageTypeMapper.mapToDatabaseImageType(
+        CollectionsImageType.WALLPAPER))
         .thenReturn(WALLPAPER)
     `when`(imageHandler.addImageToCollections(randomString, WALLPAPER)).thenReturn(
         Completable.complete())
 
-    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageTypeModel.WALLPAPER)
+    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageType.WALLPAPER)
         .test()
         .assertComplete()
 
-    verify(databaseImageTypeEntityMapper).mapToDatabaseImageType(
-        CollectionsImageTypeModel.WALLPAPER)
+    verify(databaseImageTypeMapper).mapToDatabaseImageType(
+        CollectionsImageType.WALLPAPER)
     verify(imageHandler).addImageToCollections(randomString, WALLPAPER)
     verifyComputationSchedulerCall()
   }
 
   @Test fun `should complete on saveImageToCollections call success of type search`() {
-    `when`(databaseImageTypeEntityMapper.mapToDatabaseImageType(
-        CollectionsImageTypeModel.SEARCH))
+    `when`(databaseImageTypeMapper.mapToDatabaseImageType(
+        CollectionsImageType.SEARCH))
         .thenReturn(SEARCH)
     `when`(imageHandler.addImageToCollections(randomString, SEARCH))
         .thenReturn(Completable.complete())
 
-    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageTypeModel.SEARCH)
+    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageType.SEARCH)
         .test()
         .assertComplete()
 
-    verify(databaseImageTypeEntityMapper).mapToDatabaseImageType(CollectionsImageTypeModel.SEARCH)
+    verify(databaseImageTypeMapper).mapToDatabaseImageType(CollectionsImageType.SEARCH)
     verify(imageHandler).addImageToCollections(randomString, SEARCH)
     verifyComputationSchedulerCall()
   }
 
   @Test fun `should complete on saveImageToCollections call success of type edited`() {
-    `when`(databaseImageTypeEntityMapper.mapToDatabaseImageType(
-        CollectionsImageTypeModel.EDITED))
+    `when`(databaseImageTypeMapper.mapToDatabaseImageType(
+        CollectionsImageType.EDITED))
         .thenReturn(EDITED)
     `when`(imageHandler.addImageToCollections(randomString, EDITED)).thenReturn(
         Completable.complete())
 
-    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageTypeModel.EDITED)
+    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageType.EDITED)
         .test()
         .assertComplete()
 
-    verify(databaseImageTypeEntityMapper).mapToDatabaseImageType(CollectionsImageTypeModel.EDITED)
+    verify(databaseImageTypeMapper).mapToDatabaseImageType(CollectionsImageType.EDITED)
     verify(imageHandler).addImageToCollections(randomString, EDITED)
     verifyComputationSchedulerCall()
   }
 
   @Test fun `should complete on saveImageToCollections call success of type crystallized`() {
-    `when`(databaseImageTypeEntityMapper.mapToDatabaseImageType(
-        CollectionsImageTypeModel.CRYSTALLIZED)).thenReturn(CRYSTALLIZED)
+    `when`(databaseImageTypeMapper.mapToDatabaseImageType(
+        CollectionsImageType.CRYSTALLIZED)).thenReturn(CRYSTALLIZED)
     `when`(imageHandler.addImageToCollections(randomString, CRYSTALLIZED)).thenReturn(
         Completable.complete())
 
-    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageTypeModel.CRYSTALLIZED)
+    wallrDataRepository.saveImageToCollections(randomString, CollectionsImageType.CRYSTALLIZED)
         .test()
         .assertComplete()
 
-    verify(databaseImageTypeEntityMapper).mapToDatabaseImageType(
-        CollectionsImageTypeModel.CRYSTALLIZED)
+    verify(databaseImageTypeMapper).mapToDatabaseImageType(
+        CollectionsImageType.CRYSTALLIZED)
     verify(imageHandler).addImageToCollections(randomString, CRYSTALLIZED)
     verifyComputationSchedulerCall()
   }
 
   @Test fun `should complete on saveImageToCollections call success of type minimal color`() {
-    `when`(databaseImageTypeEntityMapper.mapToDatabaseImageType(
-        CollectionsImageTypeModel.MINIMAL_COLOR)).thenReturn(MINIMAL_COLOR)
+    `when`(databaseImageTypeMapper.mapToDatabaseImageType(
+        CollectionsImageType.MINIMAL_COLOR)).thenReturn(MINIMAL_COLOR)
     `when`(imageHandler.addImageToCollections(randomString, MINIMAL_COLOR)).thenReturn(
         Completable.complete())
 
     wallrDataRepository.saveImageToCollections(randomString,
-        CollectionsImageTypeModel.MINIMAL_COLOR)
+        CollectionsImageType.MINIMAL_COLOR)
         .test()
         .assertComplete()
 
-    verify(databaseImageTypeEntityMapper).mapToDatabaseImageType(
-        CollectionsImageTypeModel.MINIMAL_COLOR)
+    verify(databaseImageTypeMapper).mapToDatabaseImageType(
+        CollectionsImageType.MINIMAL_COLOR)
     verify(imageHandler).addImageToCollections(randomString, MINIMAL_COLOR)
     verifyComputationSchedulerCall()
   }
@@ -1419,7 +1419,7 @@ class WallrDataRepositoryTest {
         mockUri,
         gsonProvider,
         collectionsDatabaseImageEntityMapper,
-        databaseImageTypeEntityMapper,
+        databaseImageTypeMapper,
         unsplashPictureEntityMapper,
         firebasePictureEntityMapper)
   }

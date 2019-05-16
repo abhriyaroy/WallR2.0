@@ -490,7 +490,7 @@ class CollectionFragment : BaseFragment(),
 
   override fun showCrystallizedImageAlreadyPresentInCollectionErrorMessage() {
     infoToast(
-        stringRes(R.string.collection_fragment_crystallized_image_already_present_error_message))
+        stringRes(R.string.collections_fragment_crystallized_image_already_present_error_message))
   }
 
   override fun showCrystallizeSuccessMessage() {

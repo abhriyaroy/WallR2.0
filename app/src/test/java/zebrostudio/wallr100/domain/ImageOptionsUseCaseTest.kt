@@ -20,7 +20,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.domain.interactor.ImageOptionsInteractor
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel.WALLPAPER
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.WALLPAPER
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.util.UUID.randomUUID

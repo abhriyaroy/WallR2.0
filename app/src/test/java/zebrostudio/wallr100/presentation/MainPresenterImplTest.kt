@@ -35,14 +35,6 @@ class MainPresenterImplTest {
     mainPresenter.attachView(mainView)
   }
 
-  @Test fun `should close guillotine menu on handleBackPress call success`() {
-    mainPresenter.isGuillotineMenuOpen = true
-
-    mainPresenter.handleBackPress()
-
-    verify(mainView).closeNavigationMenu()
-  }
-
   @Test fun `should show hint on handleViewCreated call success and hint is not shown before`() {
     `when`(widgetHintsUseCase.isNavigationMenuHamburgerHintShown()).thenReturn(false)
 
@@ -66,13 +58,35 @@ class MainPresenterImplTest {
     verify(widgetHintsUseCase).saveNavigationMenuHamburgerHintShownState()
   }
 
+  @Test fun `should close guillotine menu on handleBackPress call success`() {
+    mainPresenter.isGuillotineMenuOpen = true
+    `when`(mainView.isOperationActive()).thenReturn(false)
+
+    mainPresenter.handleBackPress()
+
+    verify(mainView).isOperationActive()
+    verify(mainView).closeNavigationMenu()
+  }
+
+  @Test
+  fun `should block back press on handleBackPress call success with operation still being active`() {
+    `when`(mainView.isOperationActive()).thenReturn(true)
+
+    mainPresenter.handleBackPress()
+
+    verify(mainView).isOperationActive()
+    verify(mainView).showOperationInProgressMessage()
+  }
+
   @Test
   fun `should show previous fragment on handleBackPress call success with top picks fragment on stack top`() {
     mainPresenter.isGuillotineMenuOpen = false
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(TOP_PICKS_TAG)
+    `when`(mainView.isOperationActive()).thenReturn(false)
 
     mainPresenter.handleBackPress()
 
+    verify(mainView).isOperationActive()
     verify(mainView).getFragmentTagAtStackTop()
     verify(mainView).showAppBar()
     verify(mainView).showPreviousFragment()
@@ -82,9 +96,11 @@ class MainPresenterImplTest {
   fun `should show previous fragment on handleBackPress call success with categories fragment on stack top`() {
     mainPresenter.isGuillotineMenuOpen = false
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(CATEGORIES_TAG)
+    `when`(mainView.isOperationActive()).thenReturn(false)
 
     mainPresenter.handleBackPress()
 
+    verify(mainView).isOperationActive()
     verify(mainView).getFragmentTagAtStackTop()
     verify(mainView).showAppBar()
     verify(mainView).showPreviousFragment()
@@ -95,9 +111,11 @@ class MainPresenterImplTest {
     mainPresenter.isGuillotineMenuOpen = false
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(MINIMAL_TAG)
     `when`(mainView.isCabActive()).thenReturn(true)
+    `when`(mainView.isOperationActive()).thenReturn(false)
 
     mainPresenter.handleBackPress()
 
+    verify(mainView).isOperationActive()
     verify(mainView).getFragmentTagAtStackTop()
     verify(mainView).showAppBar()
     verify(mainView).isCabActive()
@@ -109,9 +127,11 @@ class MainPresenterImplTest {
     mainPresenter.isGuillotineMenuOpen = false
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(MINIMAL_TAG)
     `when`(mainView.isCabActive()).thenReturn(false)
+    `when`(mainView.isOperationActive()).thenReturn(false)
 
     mainPresenter.handleBackPress()
 
+    verify(mainView).isOperationActive()
     verify(mainView).getFragmentTagAtStackTop()
     verify(mainView).showAppBar()
     verify(mainView).isCabActive()
@@ -122,9 +142,11 @@ class MainPresenterImplTest {
   fun `should show previous fragment on handleBackPress call success with collections fragment on stack top`() {
     mainPresenter.isGuillotineMenuOpen = false
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(COLLECTIONS_TAG)
+    `when`(mainView.isOperationActive()).thenReturn(false)
 
     mainPresenter.handleBackPress()
 
+    verify(mainView).isOperationActive()
     verify(mainView).getFragmentTagAtStackTop()
     verify(mainView).isCabActive()
     verify(mainView).showAppBar()
@@ -136,9 +158,11 @@ class MainPresenterImplTest {
     mainPresenter.isGuillotineMenuOpen = false
     mainPresenter.backPressedOnce = false
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(EXPLORE_TAG)
+    `when`(mainView.isOperationActive()).thenReturn(false)
 
     mainPresenter.handleBackPress()
 
+    verify(mainView).isOperationActive()
     verify(mainView).getFragmentTagAtStackTop()
     verify(mainView).showExitConfirmation()
     verify(mainView).startBackPressedFlagResetTimer()
@@ -149,9 +173,11 @@ class MainPresenterImplTest {
     mainPresenter.isGuillotineMenuOpen = false
     mainPresenter.backPressedOnce = true
     `when`(mainView.getFragmentTagAtStackTop()).thenReturn(EXPLORE_TAG)
+    `when`(mainView.isOperationActive()).thenReturn(false)
 
     mainPresenter.handleBackPress()
 
+    verify(mainView).isOperationActive()
     verify(mainView).getFragmentTagAtStackTop()
     verify(mainView).exitApp()
   }

@@ -32,9 +32,9 @@ import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel.CRYSTALLIZED
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel.EDITED
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.CRYSTALLIZED
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.EDITED
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
@@ -2200,7 +2200,7 @@ class DetailPresenterImplTest {
   fun `should add image to collection on handleAddToCollectionClick call success of search image type with progress value at 100`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
     detailPresenterImpl.imageType = SEARCH
-    detailPresenterImpl.lastImageOperationType = CollectionsImageTypeModel.SEARCH
+    detailPresenterImpl.lastImageOperationType = CollectionsImageType.SEARCH
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
@@ -2240,7 +2240,7 @@ class DetailPresenterImplTest {
   fun `should add image to collection on handleAddToCollectionClick call success of wallpaper image type with progress value at 100`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
     detailPresenterImpl.imageType = WALLPAPERS
-    detailPresenterImpl.lastImageOperationType = CollectionsImageTypeModel.WALLPAPER
+    detailPresenterImpl.lastImageOperationType = CollectionsImageType.WALLPAPER
     detailPresenterImpl.wallpaperImage =
         ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
@@ -2423,7 +2423,7 @@ class DetailPresenterImplTest {
   fun `should add image to collection on handlePermissionRequestResult of add to collection type call success of search image type with progress value at 100`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
     detailPresenterImpl.imageType = SEARCH
-    detailPresenterImpl.lastImageOperationType = CollectionsImageTypeModel.SEARCH
+    detailPresenterImpl.lastImageOperationType = CollectionsImageType.SEARCH
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
@@ -2464,7 +2464,7 @@ class DetailPresenterImplTest {
   fun `should add image to collection on handlePermissionRequestResult of add to collection type call success of wallpaper image type with progress value at 100`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
     detailPresenterImpl.imageType = WALLPAPERS
-    detailPresenterImpl.lastImageOperationType = CollectionsImageTypeModel.WALLPAPER
+    detailPresenterImpl.lastImageOperationType = CollectionsImageType.WALLPAPER
     detailPresenterImpl.wallpaperImage =
         ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
@@ -2647,7 +2647,7 @@ class DetailPresenterImplTest {
   fun `should add image to collection on handleViewResult of add to collection type call success of search image type with progress value at 100`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
     detailPresenterImpl.imageType = SEARCH
-    detailPresenterImpl.lastImageOperationType = CollectionsImageTypeModel.SEARCH
+    detailPresenterImpl.lastImageOperationType = CollectionsImageType.SEARCH
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
@@ -2688,7 +2688,7 @@ class DetailPresenterImplTest {
   fun `should add image to collection on handleViewResult of add to collection type call success of wallpaper image type with progress value at 100`() {
     val imageDownloadModel = ImageDownloadModel(downloadProgressCompletedValue, mockBitmap)
     detailPresenterImpl.imageType = WALLPAPERS
-    detailPresenterImpl.lastImageOperationType = CollectionsImageTypeModel.WALLPAPER
+    detailPresenterImpl.lastImageOperationType = CollectionsImageType.WALLPAPER
     detailPresenterImpl.wallpaperImage =
         ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)

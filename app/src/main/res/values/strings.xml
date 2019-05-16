@@ -227,6 +227,7 @@
   <string name="collections_fragment_purchase_pro_diloag_description">This is a pro user only section. Please purchase pro to continue adding images to collection and using them offline and also to enable Automatic wallpaper changer</string>
   <string name="collections_fragment_purchase_pro_diloag_title">WallR Pro Required</string>
   <string name="collections_fragment_purchase_pro_diloag_positive_text">Purchase Pro</string>
+  <string name="collections_fragment_crystallized_image_already_present_error_message">This image has already been crystallized and added to your collection</string>
 
   <!-- Wallpaper changer service strings -->
   <string name="wallpaper_changer_service_notification_title">Automatic wallpaper changer</string>
@@ -236,7 +237,6 @@
   <string name="wallpaper_changer_service_interval_6_hours">6 hours</string>
   <string name="wallpaper_changer_service_interval_1_day">1 day</string>
   <string name="wallpaper_changer_service_interval_3_days">3 days</string>
-  <string name="collection_fragment_crystallized_image_already_present_error_message">This image has already been crystallized and added to your collection</string>
 
 
 </resources>

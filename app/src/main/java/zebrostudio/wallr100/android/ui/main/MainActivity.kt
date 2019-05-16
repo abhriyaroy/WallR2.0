@@ -86,11 +86,7 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
   }
 
   override fun onBackPressed() {
-    if (!isBackPressBlocked) {
-      presenter.handleBackPress()
-    } else {
-      infoToast(stringRes(R.string.finalizing_stuff_wait_message), Toast.LENGTH_SHORT)
-    }
+    presenter.handleBackPress()
   }
 
   override fun onDestroy() {
@@ -182,6 +178,10 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
 
   override fun showOperationInProgressMessage() {
     infoToast(stringRes(R.string.finalizing_stuff_wait_message), Toast.LENGTH_SHORT)
+  }
+
+  override fun isOperationActive(): Boolean {
+    return operationInProcess
   }
 
   private inline fun <reified T : BaseFragment> addFragment(
@@ -382,14 +382,14 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
   }
 
   companion object {
-    private var isBackPressBlocked = false
+    private var operationInProcess = false
 
     fun blockBackPress() {
-      isBackPressBlocked = true
+      operationInProcess = true
     }
 
     fun releaseBackPressBlock() {
-      isBackPressBlocked = false
+      operationInProcess = false
     }
   }
 

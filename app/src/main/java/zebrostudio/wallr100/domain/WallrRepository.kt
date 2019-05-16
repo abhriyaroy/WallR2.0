@@ -7,7 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import zebrostudio.wallr100.domain.model.RestoreColorsModel
 import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageModel
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
@@ -60,7 +60,7 @@ interface WallrRepository {
 
   fun saveImageToCollections(
     data: String,
-    collectionsImageTypeModel: CollectionsImageTypeModel
+    collectionsImageType: CollectionsImageType
   ): Completable
 
   fun isMultiColorModesHintShown(): Boolean

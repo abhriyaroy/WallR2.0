@@ -177,7 +177,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
       <com.github.ybq.android.spinkit.SpinKitView
           android:id="@+id/wallpaperActionProgressSpinkit"
           style="@style/SpinKitView.Large.FoldingCube"

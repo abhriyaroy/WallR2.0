@@ -18,7 +18,7 @@ import zebrostudio.wallr100.data.exception.NotEnoughFreeSpaceException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.data.mapper.CollectionsDatabaseImageEntityMapper
-import zebrostudio.wallr100.data.mapper.DatabaseImageTypeEntityMapper
+import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapper
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.firebasedatabase.FirebaseImageEntity
@@ -27,7 +27,7 @@ import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.model.RestoreColorsModel
 import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageModel
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
@@ -77,7 +77,7 @@ class WallrDataRepository(
   private val sharedPrefsHelper: SharedPrefsHelper,
   private val gsonProvider: GsonProvider,
   private val collectionsDatabaseImageEntityMapper: CollectionsDatabaseImageEntityMapper,
-  private val databaseImageTypeEntityMapper: DatabaseImageTypeEntityMapper,
+  private val databaseImageTypeMapper: DatabaseImageTypeMapper,
   private val unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
   private val firebaseDatabaseHelper: FirebaseDatabaseHelper,
   private val firebasePictureEntityMapper: FirebasePictureEntityMapper,
@@ -302,10 +302,10 @@ class WallrDataRepository(
 
   override fun saveImageToCollections(
     data: String,
-    collectionsImageTypeModel: CollectionsImageTypeModel
+    collectionsImageType: CollectionsImageType
   ): Completable {
     return imageHandler.addImageToCollections(data,
-        databaseImageTypeEntityMapper.mapToDatabaseImageType(collectionsImageTypeModel))
+        databaseImageTypeMapper.mapToDatabaseImageType(collectionsImageType))
         .subscribeOn(executionThread.computationScheduler)
   }
 

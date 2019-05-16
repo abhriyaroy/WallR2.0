@@ -33,10 +33,10 @@ private const val TIME_CHECKER_DELAY: Long = 300000
 
 class AutomaticWallpaperChangerService : Service() {
 
-  @Inject lateinit var serviceManager: ServiceManager
-  @Inject lateinit var automaticWallpaperChangerUseCase: AutomaticWallpaperChangerUseCase
-  @Inject lateinit var wallpaperSetter: WallpaperSetter
-  @Inject lateinit var postExecutionThread: PostExecutionThread
+  @Inject internal lateinit var serviceManager: ServiceManager
+  @Inject internal lateinit var automaticWallpaperChangerUseCase: AutomaticWallpaperChangerUseCase
+  @Inject internal lateinit var wallpaperSetter: WallpaperSetter
+  @Inject internal lateinit var postExecutionThread: PostExecutionThread
 
   private var handler: Handler? = null
   private var runnable: Runnable? = null

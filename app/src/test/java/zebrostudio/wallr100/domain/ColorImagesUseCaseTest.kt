@@ -15,11 +15,11 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.domain.interactor.ColorImagesInteractor
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel.CRYSTALLIZED
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel.EDITED
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel.MINIMAL_COLOR
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel.SEARCH
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel.WALLPAPER
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.CRYSTALLIZED
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.EDITED
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.MINIMAL_COLOR
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.SEARCH
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.WALLPAPER
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA

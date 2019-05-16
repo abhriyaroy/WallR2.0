@@ -14,7 +14,6 @@ class MainPresenterImpl(
 
   internal var backPressedOnce = false
   internal var isGuillotineMenuOpen = false
-  private var isBackPressBlocked = false
   private var mainView: MainContract.MainView? = null
 
   override fun attachView(view: MainContract.MainView) {
@@ -32,7 +31,7 @@ class MainPresenterImpl(
   }
 
   override fun handleBackPress() {
-    if (!isBackPressBlocked) {
+    if (mainView?.isOperationActive() != true) {
       if (isGuillotineMenuOpen) {
         mainView?.closeNavigationMenu()
       } else {
@@ -76,14 +75,6 @@ class MainPresenterImpl(
 
   override fun handleHamburgerHintDismissed() {
     widgetHintsUseCase.saveNavigationMenuHamburgerHintShownState()
-  }
-
-  override fun blockBackPress() {
-    isBackPressBlocked = true
-  }
-
-  override fun enableBackPress() {
-    isBackPressBlocked = false
   }
 
 }

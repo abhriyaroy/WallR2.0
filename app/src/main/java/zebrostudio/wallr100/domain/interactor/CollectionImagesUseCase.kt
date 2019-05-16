@@ -26,9 +26,8 @@ interface CollectionImagesUseCase {
   fun startAutomaticWallpaperChanger()
   fun stopAutomaticWallpaperChanger()
   fun getAutomaticWallpaperChangerInterval(): Long
-  fun setAutomaticWallpaperChangerInterval(
-    interval: Long
-  ): AutomaticWallpaperChangerIntervalUpdateResultState
+  fun setAutomaticWallpaperChangerInterval(interval: Long)
+      : AutomaticWallpaperChangerIntervalUpdateResultState
 }
 
 class CollectionsImagesInteractor(

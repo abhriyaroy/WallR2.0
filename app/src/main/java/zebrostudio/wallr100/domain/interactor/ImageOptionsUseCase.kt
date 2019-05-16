@@ -6,7 +6,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import zebrostudio.wallr100.domain.WallrRepository
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageTypeModel
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 
 interface ImageOptionsUseCase {
@@ -25,7 +25,7 @@ interface ImageOptionsUseCase {
   fun isCrystallizeDescriptionDialogShown(): Boolean
   fun setCrystallizeDescriptionShownOnce()
   fun getCrystallizedImageSingle(): Single<Bitmap>
-  fun addImageToCollection(data: String, type: CollectionsImageTypeModel): Completable
+  fun addImageToCollection(data: String, type: CollectionsImageType): Completable
 }
 
 class ImageOptionsInteractor(
@@ -88,7 +88,7 @@ class ImageOptionsInteractor(
     return wallrRepository.getCacheImageBitmap()
   }
 
-  override fun addImageToCollection(data: String, type: CollectionsImageTypeModel): Completable {
+  override fun addImageToCollection(data: String, type: CollectionsImageType): Completable {
     return wallrRepository.saveImageToCollections(data, type)
   }
 

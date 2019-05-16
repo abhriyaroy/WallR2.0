@@ -47,13 +47,11 @@
     <service
         android:name="zebrostudio.wallr100.android.service.AutomaticWallpaperChangerService"
         android:enabled="true"
-        android:exported="false"
         android:stopWithTask="false"/>
 
     <receiver
         android:name=".android.broadcastreceiver.BootReceiver"
-        android:enabled="true"
-        android:exported="true">
+        android:enabled="true">
       <intent-filter android:priority="1000">
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
         <action android:name="android.intent.action.QUICKBOOT_POWERON"/>

@@ -37,8 +37,8 @@ import zebrostudio.wallr100.data.database.DatabaseHelper
 import zebrostudio.wallr100.data.database.DatabaseHelperImpl
 import zebrostudio.wallr100.data.mapper.CollectionsDatabaseImageEntityMapper
 import zebrostudio.wallr100.data.mapper.CollectionsDatabaseImageEntityMapperImpl
-import zebrostudio.wallr100.data.mapper.DatabaseImageTypeEntityMapper
-import zebrostudio.wallr100.data.mapper.DatabaseImageTypeEntityMapperImpl
+import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapper
+import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapperImpl
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapperImpl
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
@@ -141,7 +141,7 @@ class AppModule {
       CollectionsDatabaseImageEntityMapper = CollectionsDatabaseImageEntityMapperImpl()
 
   @Provides
-  fun provideDataBaseImageTypeEntityMapper(): DatabaseImageTypeEntityMapper = DatabaseImageTypeEntityMapperImpl()
+  fun provideDataBaseImageTypeEntityMapper(): DatabaseImageTypeMapper = DatabaseImageTypeMapperImpl()
 
   @Provides
   fun provideUnspalshPictureEntityMapper(): UnsplashPictureEntityMapper = UnsplashPictureEntityMapperImpl()
@@ -181,7 +181,7 @@ class AppModule {
     sharedPrefsHelper: SharedPrefsHelper,
     gsonProvider: GsonProvider,
     collectionsDatabaseImageEntityMapper: CollectionsDatabaseImageEntityMapper,
-    databaseImageTypeEntityMapper: DatabaseImageTypeEntityMapper,
+    databaseImageTypeMapper: DatabaseImageTypeMapper,
     unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
     firebaseDatabaseHelper: FirebaseDatabaseHelper,
     firebasePictureEntityMapper: FirebasePictureEntityMapper,
@@ -196,7 +196,7 @@ class AppModule {
       sharedPrefsHelper,
       gsonProvider,
       collectionsDatabaseImageEntityMapper,
-      databaseImageTypeEntityMapper,
+      databaseImageTypeMapper,
       unsplashPictureEntityMapper,
       firebaseDatabaseHelper,
       firebasePictureEntityMapper,
