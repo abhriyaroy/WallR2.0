@@ -32,8 +32,7 @@ class CollectionRecyclerTouchHelperCallback(
   ): Int {
     return if (recyclerView.layoutManager is GridLayoutManager) {
       val swipeFlags = 0
-      val dragFlags =
-          UP or DOWN or LEFT or RIGHT
+      val dragFlags = UP or DOWN or LEFT or RIGHT
       makeMovementFlags(dragFlags, swipeFlags)
     } else {
       val dragFlags = UP or DOWN

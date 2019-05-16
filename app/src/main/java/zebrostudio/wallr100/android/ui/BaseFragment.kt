@@ -62,7 +62,7 @@ abstract class BaseFragment : Fragment(), BaseView {
     showToolbarMenuIcon()
     configureTabs()
     adjustTitlePadding()
-    configureWallpaperChangerVisibility()
+    configureWallpaperChangerLayoutVisibility()
   }
 
   private fun highlightCurrentMenuItem() {
@@ -112,7 +112,7 @@ abstract class BaseFragment : Fragment(), BaseView {
     }
   }
 
-  private fun configureWallpaperChangerVisibility() {
+  private fun configureWallpaperChangerLayoutVisibility() {
     activity?.let {
       if (fragmentTag == COLLECTIONS_TAG) {
         it.findViewById<RelativeLayout>(R.id.switchLayout)?.visible()

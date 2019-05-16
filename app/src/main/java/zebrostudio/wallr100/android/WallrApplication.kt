@@ -52,7 +52,6 @@ class WallrApplication : Application(), HasActivityInjector, HasServiceInjector 
           NOTIFICATION_CHANNEL_NAME,
           NotificationManager.IMPORTANCE_DEFAULT
       )
-
       val manager = getSystemService(NotificationManager::class.java)
       manager!!.createNotificationChannel(serviceChannel)
     }

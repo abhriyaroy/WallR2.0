@@ -72,7 +72,6 @@ class CollectionsImageAdapter(
   fun clearImagesList() {
     imagePathList.clear()
   }
-
 }
 
 class CollectionsImageViewHolder(

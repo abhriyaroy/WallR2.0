@@ -49,14 +49,15 @@ import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelpe
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.OnStartDragListener
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.ui.detail.images.BLUR_RADIUS
+import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
 import zebrostudio.wallr100.android.utils.colorRes
+import zebrostudio.wallr100.android.utils.equalsIgnoreCase
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.infoToast
 import zebrostudio.wallr100.android.utils.integerRes
-import zebrostudio.wallr100.android.utils.invisible
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.android.utils.visible
@@ -187,14 +188,13 @@ class CollectionFragment : BaseFragment(),
 
   override fun hideAppBar() {
     activity?.let {
-      it.findViewById<AppBarLayout>(R.id.appbar)?.setExpanded(false, true)
       withDelayOnMain(APP_BAR_DELAY) {
         it.findViewById<Toolbar>(R.id.toolbar)?.layoutParams.let {
           (it as AppBarLayout.LayoutParams).scrollFlags = 0
         }
       }
       withDelayOnMain(APP_BAR_DELAY) {
-        it.findViewById<RelativeLayout>(R.id.toolbar).invisible()
+        it.findViewById<RelativeLayout>(R.id.toolbar).gone()
       }
     }
   }
@@ -354,12 +354,12 @@ class CollectionFragment : BaseFragment(),
   }
 
   override fun showSingleImageAddedSuccessfullyMessage() {
-    successToast(stringRes(R.string.collection_fragment_add_single_image_success_message))
+    successToast(stringRes(R.string.collections_fragment_add_single_image_success_message))
   }
 
   override fun showMultipleImagesAddedSuccessfullyMessage(count: Int) {
     successToast(
-        stringRes(R.string.collection_fragment_add_multiple_image_success_message, count))
+        stringRes(R.string.collections_fragment_add_multiple_image_success_message, count))
   }
 
   override fun removeItemView(position: Int) {
@@ -498,13 +498,13 @@ class CollectionFragment : BaseFragment(),
 
   override fun showWallpaperChangerPermissionsRequiredDialog() {
     MaterialDialog.Builder(activity!!)
-        .title(stringRes(R.string.collection_fragment_lock_in_recents_instruction_title))
-        .content(stringRes(R.string.collection_fragment_lock_in_recents_instruction_description))
+        .title(stringRes(R.string.collections_fragment_lock_in_recents_instruction_title))
+        .content(stringRes(R.string.collections_fragment_lock_in_recents_instruction_description))
         .positiveColor(colorRes(R.color.accent))
         .negativeColor(colorRes(R.color.accent))
         .onPositive { _, _ -> showAutoStartSettingsDialog() }
         .cancelable(true)
-        .positiveText(stringRes(R.string.collection_fragment_lock_in_recents_positive_text))
+        .positiveText(stringRes(R.string.collections_fragment_lock_in_recents_positive_text))
         .show()
   }
 
@@ -547,17 +547,17 @@ class CollectionFragment : BaseFragment(),
     Intent().apply {
       getManufacturerName().let {
         when {
-          it.equals(MANUFACTURER_NAME_SAMSUNG, true) ->
+          it.equalsIgnoreCase(MANUFACTURER_NAME_SAMSUNG) ->
             component = ComponentName(SECURITY_PACKAGE_SAMSUNG, AUTOSTART_CLASS_NAME_SAMSUNG)
-          it.equals(MANUFACTURER_NAME_XIAOMI, true) ->
+          it.equalsIgnoreCase(MANUFACTURER_NAME_XIAOMI) ->
             component = ComponentName(SECURITY_PACKAGE_XIAOMI, AUTOSTART_CLASS_NAME_XIAOMI)
-          it.equals(MANUFACTURER_NAME_ONEPLUS, true) ->
+          it.equalsIgnoreCase(MANUFACTURER_NAME_ONEPLUS) ->
             component = ComponentName(SECURITY_PACKAGE_ONEPLUS, AUTOSTART_CLASS_NAME_ONEPLUS)
-          it.equals(MANUFACTURER_NAME_OPPO, true) ->
+          it.equalsIgnoreCase(MANUFACTURER_NAME_OPPO) ->
             component = ComponentName(SECURITY_PACKAGE_OPPO, AUTOSTART_CLASS_NAME_OPPO)
-          it.equals(MANUFACTURER_NAME_VIVO, true) ->
+          it.equalsIgnoreCase(MANUFACTURER_NAME_VIVO) ->
             component = ComponentName(SECURITY_PACKAGE_VIVO, AUTOSTART_CLASS_NAME_VIVO)
-          it.equals(MANUFACTURER_NAME_ASUS, true) ->
+          it.equalsIgnoreCase(MANUFACTURER_NAME_ASUS) ->
             component = ComponentName(SECURITY_PACKAGE_ASUS, AUTOSTART_CLASS_NAME_ASUS)
         }
       }
@@ -579,14 +579,14 @@ class CollectionFragment : BaseFragment(),
 
   private fun showAutoStartSettingsDialog() {
     MaterialDialog.Builder(activity!!)
-        .title(stringRes(R.string.collection_fragment_autostart_permission_title))
-        .content(stringRes(R.string.collection_fragment_autostart_permission_description))
+        .title(stringRes(R.string.collections_fragment_autostart_permission_title))
+        .content(stringRes(R.string.collections_fragment_autostart_permission_description))
         .onPositive { _, _ -> openAutoStartSettings() }
         .positiveColor(colorRes(R.color.accent))
         .negativeColor(colorRes(R.color.accent))
         .cancelable(true)
-        .positiveText(stringRes(R.string.collection_fragment_autostart_permission_positive_text))
-        .negativeText(stringRes(R.string.collection_fragment_autostart_permission_negative_text))
+        .positiveText(stringRes(R.string.collections_fragment_autostart_permission_positive_text))
+        .negativeText(stringRes(R.string.collections_fragment_autostart_permission_negative_text))
         .show()
   }
 

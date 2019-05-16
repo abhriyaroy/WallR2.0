@@ -45,9 +45,7 @@ class MainPresenterImpl(
           }
         } else {
           mainView?.showAppBar()
-          if ((it == MINIMAL_TAG
-                  || it == COLLECTIONS_TAG) &&
-              mainView?.isCabActive() == true) {
+          if ((it == MINIMAL_TAG || it == COLLECTIONS_TAG) && mainView?.isCabActive() == true) {
             mainView?.dismissCab()
           } else {
             mainView?.showPreviousFragment()

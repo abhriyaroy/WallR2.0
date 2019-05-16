@@ -83,7 +83,9 @@ interface WallrRepository {
 
   fun getImagesInCollection(): Single<List<CollectionsImageModel>>
   fun addImagesToCollection(uriList: List<Uri>): Single<List<CollectionsImageModel>>
-  fun reorderImagesInCollectionDatabase(collectionImagesModelList: List<CollectionsImageModel>): Single<List<CollectionsImageModel>>
+  fun reorderImagesInCollectionDatabase(collectionImagesModelList: List<CollectionsImageModel>)
+      : Single<List<CollectionsImageModel>>
+
   fun deleteImageFromCollection(collectionsImageModelList: List<CollectionsImageModel>)
       : Single<List<CollectionsImageModel>>
 

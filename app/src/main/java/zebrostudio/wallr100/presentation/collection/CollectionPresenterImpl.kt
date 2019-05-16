@@ -13,6 +13,7 @@ import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_XIAOMI
 import zebrostudio.wallr100.android.ui.minimal.SINGLE_ITEM_SIZE
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
+import zebrostudio.wallr100.android.utils.equalsIgnoreCase
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerIntervalUpdateResultState.INTERVAL_UPDATED
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerIntervalUpdateResultState.SERVICE_RESTARTED
@@ -137,12 +138,12 @@ class CollectionPresenterImpl(
   override fun handleAutomaticWallpaperChangerEnabled() {
     collectionImagesUseCase.startAutomaticWallpaperChanger()
     collectionView?.getManufacturerName()?.let {
-      if (it.equals(MANUFACTURER_NAME_SAMSUNG, true)
-          || it.equals(MANUFACTURER_NAME_XIAOMI, true)
-          || it.equals(MANUFACTURER_NAME_ONEPLUS, true)
-          || it.equals(MANUFACTURER_NAME_OPPO, true)
-          || it.equals(MANUFACTURER_NAME_VIVO, true)
-          || it.equals(MANUFACTURER_NAME_ASUS, true)) {
+      if (it.equalsIgnoreCase(MANUFACTURER_NAME_SAMSUNG)
+          || it.equalsIgnoreCase(MANUFACTURER_NAME_XIAOMI)
+          || it.equalsIgnoreCase(MANUFACTURER_NAME_ONEPLUS)
+          || it.equalsIgnoreCase(MANUFACTURER_NAME_OPPO)
+          || it.equalsIgnoreCase(MANUFACTURER_NAME_VIVO)
+          || it.equalsIgnoreCase(MANUFACTURER_NAME_ASUS)) {
         collectionView?.showWallpaperChangerPermissionsRequiredDialog()
       }
     }
