@@ -700,76 +700,97 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should start automatic wallpaper changer on handleAutomaticWallpaperChangerEnabled call success on a first party oem`() {
+  fun `should save state and start automatic wallpaper changer on handleAutomaticWallpaperChangerEnabled call success on a first party oem`() {
+    `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionView.getManufacturerName()).thenReturn(randomUUID().toString())
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
+    verify(collectionImagesUseCase).saveAutomaticWallpaperChangerStateAsEnabled()
+    verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
     verify(collectionView).getManufacturerName()
   }
 
   @Test
-  fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a samsung oem`() {
+  fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a samsung oem`() {
+    `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionView.getManufacturerName()).thenReturn("samsung")
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
+    verify(collectionImagesUseCase).saveAutomaticWallpaperChangerStateAsEnabled()
+    verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
     verify(collectionView).getManufacturerName()
     verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
   }
 
   @Test
-  fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a xiaomi oem`() {
+  fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a xiaomi oem`() {
+    `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionView.getManufacturerName()).thenReturn("xiaomi")
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
+    verify(collectionImagesUseCase).saveAutomaticWallpaperChangerStateAsEnabled()
+    verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
     verify(collectionView).getManufacturerName()
     verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
   }
 
   @Test
-  fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a oneplus oem`() {
+  fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a oneplus oem`() {
+    `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionView.getManufacturerName()).thenReturn("oneplus")
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
+    verify(collectionImagesUseCase).saveAutomaticWallpaperChangerStateAsEnabled()
+    verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
     verify(collectionView).getManufacturerName()
     verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
   }
 
   @Test
-  fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a oppo oem`() {
+  fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a oppo oem`() {
+    `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionView.getManufacturerName()).thenReturn("oppo")
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
+    verify(collectionImagesUseCase).saveAutomaticWallpaperChangerStateAsEnabled()
+    verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
     verify(collectionView).getManufacturerName()
     verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
   }
 
   @Test
-  fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a vivo oem`() {
+  fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a vivo oem`() {
+    `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionView.getManufacturerName()).thenReturn("vivo")
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
+    verify(collectionImagesUseCase).saveAutomaticWallpaperChangerStateAsEnabled()
+    verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
     verify(collectionView).getManufacturerName()
     verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
   }
 
   @Test
-  fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a asus oem`() {
+  fun `should save state, save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a asus oem`() {
+    `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionView.getManufacturerName()).thenReturn("asus")
     
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
+    verify(collectionImagesUseCase).saveAutomaticWallpaperChangerStateAsEnabled()
+    verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
     verify(collectionView).getManufacturerName()
     verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
@@ -779,6 +800,7 @@ class CollectionPresenterImplTest {
   fun `should stop automatic wallpaper changer on handleAutomaticWallpaperChangerDisabled call success`() {
     collectionPresenterImpl.handleAutomaticWallpaperChangerDisabled()
 
+    verify(collectionImagesUseCase).saveAutomaticWallpaperChangerStateAsDisabled()
     verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
   }
 

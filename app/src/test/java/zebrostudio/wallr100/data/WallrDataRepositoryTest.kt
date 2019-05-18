@@ -1401,6 +1401,39 @@ class WallrDataRepositoryTest {
         AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_TAG, uid)
   }
 
+  @Test
+  fun `should save automatic wallpaper changer as enabled on saveAutomaticWallpaperChangerEnabledState call success`() {
+    wallrDataRepository.saveAutomaticWallpaperChangerEnabledState()
+
+    verify(sharedPrefs).setBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED, true)
+  }
+
+  @Test
+  fun `should save automatic wallpaper changer as disabled on saveAutomaticWallpaperChangerDisabledState call success`() {
+    wallrDataRepository.saveAutomaticWallpaperChangerDisabledState()
+
+    verify(sharedPrefs).setBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED,
+        false)
+  }
+
+  @Test fun `should return true on wasAutomaticWallpaperChangerEnabled call success`() {
+    `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED))
+        .thenReturn(true)
+
+    assertTrue(wallrDataRepository.wasAutomaticWallpaperChangerEnabled())
+
+    verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED)
+  }
+
+  @Test fun `should return false on wasAutomaticWallpaperChangerEnabled call success`() {
+    `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED))
+        .thenReturn(false)
+
+    assertFalse(wallrDataRepository.wasAutomaticWallpaperChangerEnabled())
+
+    verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED)
+  }
+
   @After fun tearDown() {
     verifyNoMoreInteractions(
         executionThread,
