@@ -28,6 +28,10 @@ interface CollectionImagesUseCase {
   fun getAutomaticWallpaperChangerInterval(): Long
   fun setAutomaticWallpaperChangerInterval(interval: Long)
       : AutomaticWallpaperChangerIntervalUpdateResultState
+
+  fun saveAutomaticWallpaperChangerStateAsEnabled()
+  fun saveAutomaticWallpaperChangerStateAsDisabled()
+  fun wasAutomaticWallpaperChangerEnabled(): Boolean
 }
 
 class CollectionsImagesInteractor(
@@ -88,6 +92,18 @@ class CollectionsImagesInteractor(
       return SERVICE_RESTARTED
     }
     return INTERVAL_UPDATED
+  }
+
+  override fun saveAutomaticWallpaperChangerStateAsEnabled() {
+    wallrRepository.saveAutomaticWallpaperChangerEnabledState()
+  }
+
+  override fun saveAutomaticWallpaperChangerStateAsDisabled() {
+    wallrRepository.saveAutomaticWallpaperChangerDisabledState()
+  }
+
+  override fun wasAutomaticWallpaperChangerEnabled(): Boolean {
+    return wallrRepository.wasAutomaticWallpaperChangerEnabled()
   }
 }
 

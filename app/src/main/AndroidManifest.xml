@@ -48,19 +48,6 @@
         android:name="zebrostudio.wallr100.android.service.AutomaticWallpaperChangerService"
         android:enabled="true"
         android:stopWithTask="false"/>
-
-    <receiver
-        android:name=".android.broadcastreceiver.BootReceiver"
-        android:enabled="true">
-      <intent-filter android:priority="1000">
-        <action android:name="android.intent.action.BOOT_COMPLETED"/>
-        <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
-        <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
-        <action android:name="android.intent.action.REBOOT"/>
-
-        <category android:name="android.intent.category.DEFAULT"/>
-      </intent-filter>
-    </receiver>
   </application>
 
 </manifest>

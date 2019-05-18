@@ -52,6 +52,7 @@ const val AUTOMATIC_WALLPAPER_CHANGER_STATE_TAG = "automatic_wallpaper_changer"
 const val AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_TAG = "automatic_wallpaper_changer_interval"
 const val AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_TAG =
     "automatic_wallpaper_changer_last_used_uid"
+const val AUTOMATIC_WALLPAPER_CHANGER_ENABLED = "automatic_wallpaper_changer_enabled"
 const val UNABLE_TO_RESOLVE_HOST_EXCEPTION_MESSAGE = "Unable to resolve host " +
     "\"api.unsplash.com\": No address associated with hostname"
 const val FIREBASE_DATABASE_PATH = "wallr"
@@ -487,6 +488,18 @@ class WallrDataRepository(
   override fun setLastUsedWallpaperUid(uid: Long) {
     sharedPrefsHelper.setLong(IMAGE_PREFERENCE_NAME,
         AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_TAG, uid)
+  }
+
+  override fun saveAutomaticWallpaperChangerEnabledState() {
+    sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED, true)
+  }
+
+  override fun saveAutomaticWallpaperChangerDisabledState() {
+    sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED, false)
+  }
+
+  override fun wasAutomaticWallpaperChangerEnabled(): Boolean {
+    return sharedPrefsHelper.getBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED)
   }
 
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()

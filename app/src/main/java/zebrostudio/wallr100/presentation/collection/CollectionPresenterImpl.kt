@@ -138,6 +138,7 @@ class CollectionPresenterImpl(
   }
 
   override fun handleAutomaticWallpaperChangerEnabled() {
+    collectionImagesUseCase.saveAutomaticWallpaperChangerStateAsEnabled()
     collectionImagesUseCase.startAutomaticWallpaperChanger()
     collectionView?.getManufacturerName()?.let {
       if (it.equalsIgnoreCase(MANUFACTURER_NAME_SAMSUNG)
@@ -152,6 +153,7 @@ class CollectionPresenterImpl(
   }
 
   override fun handleAutomaticWallpaperChangerDisabled() {
+    collectionImagesUseCase.saveAutomaticWallpaperChangerStateAsDisabled()
     collectionImagesUseCase.stopAutomaticWallpaperChanger()
   }
 

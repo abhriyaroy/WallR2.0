@@ -2,6 +2,8 @@ package zebrostudio.wallr100.android.ui.main
 
 import dagger.Module
 import dagger.Provides
+import zebrostudio.wallr100.android.service.ServiceManager
+import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.main.MainContract.MainPresenter
@@ -13,7 +15,10 @@ class MainActivityModule {
   @Provides
   fun provideMainPresenter(
     widgetHintsUseCase: WidgetHintsUseCase,
-    userPremiumStatusUseCase: UserPremiumStatusUseCase
-  ): MainPresenter = MainPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase)
+    userPremiumStatusUseCase: UserPremiumStatusUseCase,
+    collectionImagesUseCase: CollectionImagesUseCase,
+    serviceManager: ServiceManager
+  ): MainPresenter = MainPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase,
+      collectionImagesUseCase, serviceManager)
 
 }

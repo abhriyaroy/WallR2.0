@@ -1,15 +1,19 @@
 package zebrostudio.wallr100.presentation.main
 
+import zebrostudio.wallr100.android.service.ServiceManager
 import zebrostudio.wallr100.android.utils.FragmentTag.COLLECTIONS_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.MINIMAL_TAG
+import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.main.MainContract.MainPresenter
 
 class MainPresenterImpl(
   private val widgetHintsUseCase: WidgetHintsUseCase,
-  private val userPremiumStatusUseCase: UserPremiumStatusUseCase
+  private val userPremiumStatusUseCase: UserPremiumStatusUseCase,
+  private val collectionImagesUseCase: CollectionImagesUseCase,
+  private val serviceManager: ServiceManager
 ) : MainPresenter {
 
   internal var backPressedOnce = false
@@ -27,6 +31,9 @@ class MainPresenterImpl(
   override fun handleViewCreated() {
     if (!widgetHintsUseCase.isNavigationMenuHamburgerHintShown()) {
       mainView?.showHamburgerHint()
+    }
+    if (collectionImagesUseCase.wasAutomaticWallpaperChangerEnabled()) {
+      serviceManager.startAutomaticWallpaperChangerService()
     }
   }
 
