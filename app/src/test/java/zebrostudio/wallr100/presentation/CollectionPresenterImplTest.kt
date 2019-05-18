@@ -15,7 +15,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.R
@@ -59,7 +58,7 @@ class CollectionPresenterImplTest {
 
     val testScopeProvider = TestLifecycleScopeProvider.createInitial(
         TestLifecycleScopeProvider.TestLifecycle.STARTED)
-    Mockito.`when`(collectionView.getScope()).thenReturn(testScopeProvider)
+    `when`(collectionView.getScope()).thenReturn(testScopeProvider)
     whenever(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
 
     collectionPresenterImpl.attachView(collectionView)
@@ -541,6 +540,7 @@ class CollectionPresenterImplTest {
     verify(collectionView).getScope()
     verify(collectionView).updateItemViewMovement(fromPosition, toPosition)
     verify(collectionView).setImagesList(reorderedList)
+    verify(collectionView).updateChangesInEveryItemViewWithDelay()
     verify(collectionView).showReorderSuccessMessage()
     verifyPostExecutionThreadSchedulerCall()
   }
@@ -702,6 +702,7 @@ class CollectionPresenterImplTest {
   @Test
   fun `should start automatic wallpaper changer on handleAutomaticWallpaperChangerEnabled call success on a first party oem`() {
     `when`(collectionView.getManufacturerName()).thenReturn(randomUUID().toString())
+
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
@@ -711,6 +712,7 @@ class CollectionPresenterImplTest {
   @Test
   fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a samsung oem`() {
     `when`(collectionView.getManufacturerName()).thenReturn("samsung")
+
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
@@ -721,6 +723,7 @@ class CollectionPresenterImplTest {
   @Test
   fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a xiaomi oem`() {
     `when`(collectionView.getManufacturerName()).thenReturn("xiaomi")
+
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
@@ -731,6 +734,7 @@ class CollectionPresenterImplTest {
   @Test
   fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a oneplus oem`() {
     `when`(collectionView.getManufacturerName()).thenReturn("oneplus")
+
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
@@ -741,6 +745,7 @@ class CollectionPresenterImplTest {
   @Test
   fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a oppo oem`() {
     `when`(collectionView.getManufacturerName()).thenReturn("oppo")
+
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
@@ -751,6 +756,7 @@ class CollectionPresenterImplTest {
   @Test
   fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a vivo oem`() {
     `when`(collectionView.getManufacturerName()).thenReturn("vivo")
+
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
@@ -761,6 +767,7 @@ class CollectionPresenterImplTest {
   @Test
   fun `should start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a asus oem`() {
     `when`(collectionView.getManufacturerName()).thenReturn("asus")
+    
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()

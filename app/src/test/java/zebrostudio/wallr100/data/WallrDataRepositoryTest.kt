@@ -1099,7 +1099,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test
-  fun `should return single of error image model on getImagesInCollection call failure`() {
+  fun `should return error image model on getImagesInCollection call failure`() {
     `when`(imageHandler.getAllImagesInCollection()).thenReturn(
         Single.error(Exception()))
 
@@ -1171,7 +1171,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test
-  fun `should return single of error image model on reorderImagesInCollectionDatabase call failure`() {
+  fun `should return error image model on reorderImagesInCollectionDatabase call failure`() {
     val collectionImagesModelList = listOf(getCollectionsImageModel())
     val collectionDatabaseImageEntityList =
         listOf(getCollectionsDatabaseImageEntity())
@@ -1211,7 +1211,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test
-  fun `should return single of error image model on deleteImageFromCollection call failure`() {
+  fun `should return error image model on deleteImageFromCollection call failure`() {
     val collectionImagesModelList = listOf(getCollectionsImageModel())
     val collectionDatabaseImageEntityList =
         listOf(getCollectionsDatabaseImageEntity())

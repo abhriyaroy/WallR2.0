@@ -107,6 +107,7 @@ class CollectionPresenterImpl(
         .autoDisposable(collectionView!!.getScope())
         .subscribe({
           collectionView?.setImagesList(it)
+          collectionView?.updateChangesInEveryItemViewWithDelay()
           collectionView?.showReorderSuccessMessage()
           copyOfImageListPriorToReordering.clear()
         }, {

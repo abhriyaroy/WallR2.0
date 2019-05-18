@@ -93,6 +93,7 @@ const val MAXIMUM_SELECTED_IMAGES = 10
 private const val REORDER_HINT_VIEW_POSITION = 1
 private const val APP_BAR_DELAY: Long = 200
 private const val AUTOSTART_HINT_DELAY: Long = 2000
+private const val UPDATE_EVERY_ITEM_VIEW_DELAY: Long = 700
 
 class CollectionFragment : BaseFragment(),
     CollectionView,
@@ -188,15 +189,16 @@ class CollectionFragment : BaseFragment(),
 
   override fun hideAppBar() {
     activity?.let {
-      withDelayOnMain(APP_BAR_DELAY) {
-        it.findViewById<Toolbar>(R.id.toolbar)?.layoutParams.let {
-          (it as AppBarLayout.LayoutParams).scrollFlags = 0
+      it.findViewById<Toolbar>(R.id.toolbar)?.let {
+        withDelayOnMain(APP_BAR_DELAY) {
+          it.layoutParams.apply {
+            (this as AppBarLayout.LayoutParams).scrollFlags = 0
+          }
+          it.findViewById<Toolbar>(R.id.toolbar).gone()
         }
       }
-      withDelayOnMain(APP_BAR_DELAY) {
-        it.findViewById<RelativeLayout>(R.id.toolbar).gone()
-      }
     }
+
   }
 
   override fun enableToolbar() {
@@ -368,6 +370,12 @@ class CollectionFragment : BaseFragment(),
 
   override fun updateChangesInEveryItemView() {
     collectionsImageAdapter.notifyDataSetChanged()
+  }
+
+  override fun updateChangesInEveryItemViewWithDelay() {
+    withDelayOnMain(UPDATE_EVERY_ITEM_VIEW_DELAY) {
+      collectionsImageAdapter.notifyDataSetChanged()
+    }
   }
 
   override fun updateChangesInItemView(position: Int) {

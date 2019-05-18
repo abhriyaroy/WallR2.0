@@ -32,6 +32,7 @@ interface CollectionContract {
     fun showSingleImageAddedSuccessfullyMessage()
     fun showMultipleImagesAddedSuccessfullyMessage(count: Int)
     fun updateChangesInEveryItemView()
+    fun updateChangesInEveryItemViewWithDelay()
     fun updateChangesInItemView(position: Int)
     fun updateItemViewMovement(fromPosition: Int, toPosition: Int)
     fun removeItemView(position: Int)
