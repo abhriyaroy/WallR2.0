@@ -239,6 +239,24 @@ class CollectionImagesUseCaseTest {
     inorder.verify(serviceManager).startAutomaticWallpaperChangerService()
   }
 
+  @Test
+  fun `should return true on wasAutomaticWallpaperChangerEnabled call success when wallpaper changer was enabled`() {
+    `when`(wallrRepository.wasAutomaticWallpaperChangerEnabled()).thenReturn(true)
+
+    assertTrue(collectionsImagesUseCase.wasAutomaticWallpaperChangerEnabled())
+
+    verify(wallrRepository).wasAutomaticWallpaperChangerEnabled()
+  }
+
+  @Test
+  fun `should return false on wasAutomaticWallpaperChangerEnabled call success when wallpaper changer was not enabled`() {
+    `when`(wallrRepository.wasAutomaticWallpaperChangerEnabled()).thenReturn(false)
+
+    assertFalse(collectionsImagesUseCase.wasAutomaticWallpaperChangerEnabled())
+
+    verify(wallrRepository).wasAutomaticWallpaperChangerEnabled()
+  }
+
   @After
   fun teardown() {
     verifyNoMoreInteractions(serviceManager, wallrRepository)

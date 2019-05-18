@@ -16,6 +16,7 @@ import zebrostudio.wallr100.android.utils.FragmentTag.COLLECTIONS_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.MINIMAL_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.TOP_PICKS_TAG
+import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.main.MainContract.MainView
@@ -26,30 +27,49 @@ class MainPresenterImplTest {
 
   @Mock lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
   @Mock lateinit var widgetHintsUseCase: WidgetHintsUseCase
+  @Mock lateinit var collectionImagesUseCase: CollectionImagesUseCase
   @Mock lateinit var mainView: MainView
   private lateinit var mainPresenter: MainPresenterImpl
 
   @Before
   fun setup() {
-    mainPresenter = MainPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase)
+    mainPresenter =
+        MainPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase, collectionImagesUseCase)
     mainPresenter.attachView(mainView)
   }
 
   @Test fun `should show hint on handleViewCreated call success and hint is not shown before`() {
     `when`(widgetHintsUseCase.isNavigationMenuHamburgerHintShown()).thenReturn(false)
+    `when`(collectionImagesUseCase.wasAutomaticWallpaperChangerEnabled()).thenReturn(false)
 
     mainPresenter.handleViewCreated()
 
     verify(widgetHintsUseCase).isNavigationMenuHamburgerHintShown()
+    verify(collectionImagesUseCase).wasAutomaticWallpaperChangerEnabled()
     verify(mainView).showHamburgerHint()
   }
 
   @Test fun `should not show hint on handleViewCreated call success and hint is shown before`() {
     `when`(widgetHintsUseCase.isNavigationMenuHamburgerHintShown()).thenReturn(true)
+    `when`(collectionImagesUseCase.wasAutomaticWallpaperChangerEnabled()).thenReturn(false)
 
     mainPresenter.handleViewCreated()
 
     verify(widgetHintsUseCase).isNavigationMenuHamburgerHintShown()
+    verify(collectionImagesUseCase).wasAutomaticWallpaperChangerEnabled()
+  }
+
+  @Test
+  fun `should start wallpaper changer and show hint on handleViewCreated call success and hint is not shown before`() {
+    `when`(widgetHintsUseCase.isNavigationMenuHamburgerHintShown()).thenReturn(false)
+    `when`(collectionImagesUseCase.wasAutomaticWallpaperChangerEnabled()).thenReturn(true)
+
+    mainPresenter.handleViewCreated()
+
+    verify(widgetHintsUseCase).isNavigationMenuHamburgerHintShown()
+    verify(collectionImagesUseCase).wasAutomaticWallpaperChangerEnabled()
+    verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
+    verify(mainView).showHamburgerHint()
   }
 
   @Test fun `should save hint shown state on handleHamburgerHintDismissed call success`() {
@@ -212,7 +232,8 @@ class MainPresenterImplTest {
 
   @After
   fun tearDown() {
-    verifyNoMoreInteractions(userPremiumStatusUseCase, widgetHintsUseCase, mainView)
+    verifyNoMoreInteractions(userPremiumStatusUseCase, widgetHintsUseCase, collectionImagesUseCase,
+        mainView)
     mainPresenter.detachView()
   }
 
