@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.android.utils
 
+import android.app.ActivityManager
 import android.content.Context
 import android.net.ConnectivityManager
 import android.support.annotation.ColorRes
@@ -41,3 +42,14 @@ fun Context.checkDataConnection(): Boolean {
 }
 
 fun Context.getDimensionInPixelSize(id: Int) = resources.getDimensionPixelSize(id)
+
+fun Context.isServiceRunningInForeground(serviceClass: Class<*>): Boolean {
+  (getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).let { manager ->
+    for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
+      if (serviceClass.name == service.service.className) {
+        return service.foreground
+      }
+    }
+    return false
+  }
+}

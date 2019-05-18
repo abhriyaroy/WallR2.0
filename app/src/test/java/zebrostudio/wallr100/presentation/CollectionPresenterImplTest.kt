@@ -881,7 +881,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should show interval updated message on updateWallpaperChangerInterval call success with 3 hours interval`() {
+  fun `should show interval updated message on updateWallpaperChangerInterval call success with 6 hours interval`() {
     `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(21600000))
         .thenReturn(INTERVAL_UPDATED)
 
@@ -892,7 +892,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should show service restarted message on updateWallpaperChangerInterval call success with 3 hours interval`() {
+  fun `should show service restarted message on updateWallpaperChangerInterval call success with 6 hours interval`() {
     `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(21600000))
         .thenReturn(SERVICE_RESTARTED)
 

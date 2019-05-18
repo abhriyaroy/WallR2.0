@@ -141,10 +141,10 @@ class AppModule {
       CollectionsDatabaseImageEntityMapper = CollectionsDatabaseImageEntityMapperImpl()
 
   @Provides
-  fun provideDataBaseImageTypeEntityMapper(): DatabaseImageTypeMapper = DatabaseImageTypeMapperImpl()
+  fun provideDataBaseImageTypeMapper(): DatabaseImageTypeMapper = DatabaseImageTypeMapperImpl()
 
   @Provides
-  fun provideUnspalshPictureEntityMapper(): UnsplashPictureEntityMapper = UnsplashPictureEntityMapperImpl()
+  fun provideUnsplashPictureEntityMapper(): UnsplashPictureEntityMapper = UnsplashPictureEntityMapperImpl()
 
   @Provides
   fun provideFirebasePictureEntityMapper(): FirebasePictureEntityMapper = FirebasePictureEntityMapperImpl()
