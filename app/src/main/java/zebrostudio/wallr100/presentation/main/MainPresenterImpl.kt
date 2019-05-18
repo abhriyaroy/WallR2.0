@@ -43,7 +43,7 @@ class MainPresenterImpl(
         mainView?.getFragmentTagAtStackTop().let {
           if (it == EXPLORE_TAG) {
             if (backPressedOnce) {
-              mainView?.exitApp()
+                mainView?.exitApp()
             } else {
               backPressedOnce = true
               mainView?.showExitConfirmation()

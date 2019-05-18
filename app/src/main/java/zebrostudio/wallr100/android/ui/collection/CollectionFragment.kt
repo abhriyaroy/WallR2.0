@@ -603,11 +603,25 @@ class CollectionFragment : BaseFragment(),
         .title(stringRes(R.string.collections_fragment_autostart_permission_title))
         .content(stringRes(R.string.collections_fragment_autostart_permission_description))
         .onPositive { _, _ -> openAutoStartSettings() }
+        .onAny { _, _ -> showRestartAppToRestartWallpaperChangerDialog() }
         .positiveColor(colorRes(R.color.accent))
         .negativeColor(colorRes(R.color.accent))
         .cancelable(true)
         .positiveText(stringRes(R.string.collections_fragment_autostart_permission_positive_text))
         .negativeText(stringRes(R.string.collections_fragment_autostart_permission_negative_text))
+        .show()
+  }
+
+  private fun showRestartAppToRestartWallpaperChangerDialog() {
+    MaterialDialog.Builder(activity!!)
+        .title(stringRes(R.string.collection_fragment_open_app_to_restart_service_dialog_title))
+        .content(stringRes(R.string.collection_fragment_open_app_to_restart_service_dialog_content))
+        .positiveColor(colorRes(R.color.accent))
+        .negativeColor(colorRes(R.color.accent))
+        .cancelable(true)
+        .positiveText(
+            stringRes(
+                R.string.collection_fragment_open_app_to_restart_service_dialog_positive_text))
         .show()
   }
 
