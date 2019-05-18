@@ -786,7 +786,7 @@ class CollectionPresenterImplTest {
   fun `should save state, save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a asus oem`() {
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionView.getManufacturerName()).thenReturn("asus")
-    
+
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
     verify(collectionImagesUseCase).saveAutomaticWallpaperChangerStateAsEnabled()

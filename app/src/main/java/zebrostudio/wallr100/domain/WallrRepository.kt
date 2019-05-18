@@ -102,5 +102,5 @@ interface WallrRepository {
   fun setLastUsedWallpaperUid(uid: Long)
   fun saveAutomaticWallpaperChangerEnabledState()
   fun saveAutomaticWallpaperChangerDisabledState()
-  fun wasAutomaticWallpaperChangerEnabled() : Boolean
+  fun wasAutomaticWallpaperChangerEnabled(): Boolean
 }

@@ -17,7 +17,7 @@ interface MainContract {
     fun dismissCab()
     fun showAppBar()
     fun showOperationInProgressMessage()
-    fun isOperationActive() : Boolean
+    fun isOperationActive(): Boolean
   }
 
   interface MainPresenter : BasePresenter<MainView> {
