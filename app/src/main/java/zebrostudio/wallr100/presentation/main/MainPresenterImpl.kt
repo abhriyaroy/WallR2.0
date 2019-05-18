@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.presentation.main
 
-import zebrostudio.wallr100.android.service.ServiceManager
 import zebrostudio.wallr100.android.utils.FragmentTag.COLLECTIONS_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.MINIMAL_TAG
@@ -12,8 +11,7 @@ import zebrostudio.wallr100.presentation.main.MainContract.MainPresenter
 class MainPresenterImpl(
   private val widgetHintsUseCase: WidgetHintsUseCase,
   private val userPremiumStatusUseCase: UserPremiumStatusUseCase,
-  private val collectionImagesUseCase: CollectionImagesUseCase,
-  private val serviceManager: ServiceManager
+  private val collectionImagesUseCase: CollectionImagesUseCase
 ) : MainPresenter {
 
   internal var backPressedOnce = false
@@ -33,7 +31,7 @@ class MainPresenterImpl(
       mainView?.showHamburgerHint()
     }
     if (collectionImagesUseCase.wasAutomaticWallpaperChangerEnabled()) {
-      serviceManager.startAutomaticWallpaperChangerService()
+      collectionImagesUseCase.startAutomaticWallpaperChanger()
     }
   }
 

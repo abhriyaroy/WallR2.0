@@ -139,17 +139,19 @@ class CollectionPresenterImpl(
 
   override fun handleAutomaticWallpaperChangerEnabled() {
     collectionImagesUseCase.saveAutomaticWallpaperChangerStateAsEnabled()
-    collectionImagesUseCase.startAutomaticWallpaperChanger()
-    collectionView?.getManufacturerName()?.let {
-      if (it.equalsIgnoreCase(MANUFACTURER_NAME_SAMSUNG)
-          || it.equalsIgnoreCase(MANUFACTURER_NAME_XIAOMI)
-          || it.equalsIgnoreCase(MANUFACTURER_NAME_ONEPLUS)
-          || it.equalsIgnoreCase(MANUFACTURER_NAME_OPPO)
-          || it.equalsIgnoreCase(MANUFACTURER_NAME_VIVO)
-          || it.equalsIgnoreCase(MANUFACTURER_NAME_ASUS)) {
-        collectionView?.showWallpaperChangerPermissionsRequiredDialog()
+    if (!collectionImagesUseCase.isAutomaticWallpaperChangerRunning()) {
+      collectionView?.getManufacturerName()?.let {
+        if (it.equalsIgnoreCase(MANUFACTURER_NAME_SAMSUNG)
+            || it.equalsIgnoreCase(MANUFACTURER_NAME_XIAOMI)
+            || it.equalsIgnoreCase(MANUFACTURER_NAME_ONEPLUS)
+            || it.equalsIgnoreCase(MANUFACTURER_NAME_OPPO)
+            || it.equalsIgnoreCase(MANUFACTURER_NAME_VIVO)
+            || it.equalsIgnoreCase(MANUFACTURER_NAME_ASUS)) {
+          collectionView?.showWallpaperChangerPermissionsRequiredDialog()
+        }
       }
     }
+    collectionImagesUseCase.startAutomaticWallpaperChanger()
   }
 
   override fun handleAutomaticWallpaperChangerDisabled() {

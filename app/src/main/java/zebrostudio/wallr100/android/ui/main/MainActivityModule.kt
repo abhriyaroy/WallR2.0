@@ -16,9 +16,8 @@ class MainActivityModule {
   fun provideMainPresenter(
     widgetHintsUseCase: WidgetHintsUseCase,
     userPremiumStatusUseCase: UserPremiumStatusUseCase,
-    collectionImagesUseCase: CollectionImagesUseCase,
-    serviceManager: ServiceManager
+    collectionImagesUseCase: CollectionImagesUseCase
   ): MainPresenter = MainPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase,
-      collectionImagesUseCase, serviceManager)
+      collectionImagesUseCase)
 
 }
