@@ -223,7 +223,8 @@ class CollectionFragment : BaseFragment(),
   }
 
   override fun redirectToBuyPro() {
-    startActivityForResult(Intent(context, BuyProActivity::class.java), COLLECTION_FRAGMENT_REQUEST_CODE)
+    startActivityForResult(Intent(context, BuyProActivity::class.java),
+        COLLECTION_FRAGMENT_REQUEST_CODE)
   }
 
   override fun hasStoragePermission(): Boolean {
@@ -595,7 +596,8 @@ class CollectionFragment : BaseFragment(),
   }
 
   private fun redirectToBuyProActivity() {
-    startActivityForResult(Intent(context!!, BuyProActivity::class.java), COLLECTION_FRAGMENT_REQUEST_CODE)
+    startActivityForResult(Intent(context!!, BuyProActivity::class.java),
+        COLLECTION_FRAGMENT_REQUEST_CODE)
   }
 
   private fun showAutoStartSettingsDialog() {
