@@ -228,6 +228,9 @@
   <string name="collections_fragment_purchase_pro_diloag_title">WallR Pro Required</string>
   <string name="collections_fragment_purchase_pro_diloag_positive_text">Purchase Pro</string>
   <string name="collections_fragment_crystallized_image_already_present_error_message">This image has already been crystallized and added to your collection</string>
+  <string name="collections_fragment_open_app_to_restart_service_dialog_title">Automatic Wallpaper Changer Is Enabled</string>
+  <string name="collections_fragment_open_app_to_restart_service_dialog_content">If you reboot your device, please open the app once to restart the automatic wallpaper changer</string>
+  <string name="collections_fragment_open_app_to_restart_service_dialog_positive_text">GOT IT</string>
 
   <!-- Wallpaper changer service strings -->
   <string name="wallpaper_changer_service_notification_title">Automatic wallpaper changer</string>
@@ -237,8 +240,5 @@
   <string name="wallpaper_changer_service_interval_6_hours">6 hours</string>
   <string name="wallpaper_changer_service_interval_1_day">1 day</string>
   <string name="wallpaper_changer_service_interval_3_days">3 days</string>
-  <string name="collection_fragment_open_app_to_restart_service_dialog_title">Automatic Wallpaper Changer Is Enabled</string>
-  <string name="collection_fragment_open_app_to_restart_service_dialog_content">If you reboot your device, please open the app once to restart the automatic wallpaper changer</string>
-  <string name="collection_fragment_open_app_to_restart_service_dialog_positive_text">GOT IT</string>
 
 </resources>

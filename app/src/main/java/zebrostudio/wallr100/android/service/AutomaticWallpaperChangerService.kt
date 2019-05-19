@@ -12,7 +12,6 @@ import dagger.android.AndroidInjection
 import io.reactivex.disposables.Disposable
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.NOTIFICATION_CHANNEL_ID
-import zebrostudio.wallr100.android.ui.collection.REQUEST_CODE
 import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.android.utils.stringRes
@@ -21,6 +20,7 @@ import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerUseCase
 import javax.inject.Inject
 
 const val WALLPAPER_CHANGER_SERVICE_CODE = 1
+const val WALLPAPER_CHANGER_REQUEST_CODE = 2
 val wallpaperChangerIntervals = arrayListOf<Long>(
     1800000,
     3600000,
@@ -52,8 +52,7 @@ class AutomaticWallpaperChangerService : Service() {
   override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
     val notificationIntent = Intent(this, MainActivity::class.java)
     val pendingIntent = PendingIntent.getActivity(this,
-        REQUEST_CODE, notificationIntent, 0)
-
+        WALLPAPER_CHANGER_REQUEST_CODE, notificationIntent, 0)
     val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
         .setContentTitle(stringRes(R.string.wallpaper_changer_service_notification_title))
         .setContentText("${stringRes(
@@ -65,11 +64,9 @@ class AutomaticWallpaperChangerService : Service() {
         .setOngoing(true)
         .setPriority(PRIORITY_MAX)
         .build()
-
     startForeground(WALLPAPER_CHANGER_SERVICE_CODE, notification)
 
     interval = getInterval()
-
     handler = Handler()
     runnable = Runnable {
       if (timeElapsed == interval) {

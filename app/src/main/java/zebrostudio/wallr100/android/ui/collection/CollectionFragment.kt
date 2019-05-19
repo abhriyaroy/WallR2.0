@@ -88,7 +88,7 @@ const val AUTOSTART_CLASS_NAME_VIVO = "com.vivo.permissionmanager.activity.BgSta
 const val MANUFACTURER_NAME_ASUS = "asus"
 const val SECURITY_PACKAGE_ASUS = "com.asus.mobilemanager"
 const val AUTOSTART_CLASS_NAME_ASUS = "com.asus.mobilemanager.entry.FunctionActivity"
-const val REQUEST_CODE = 1
+const val COLLECTION_FRAGMENT_REQUEST_CODE = 1
 const val MAXIMUM_SELECTED_IMAGES = 10
 private const val REORDER_HINT_VIEW_POSITION = 1
 private const val APP_BAR_DELAY: Long = 200
@@ -223,7 +223,7 @@ class CollectionFragment : BaseFragment(),
   }
 
   override fun redirectToBuyPro() {
-    startActivityForResult(Intent(context, BuyProActivity::class.java), REQUEST_CODE)
+    startActivityForResult(Intent(context, BuyProActivity::class.java), COLLECTION_FRAGMENT_REQUEST_CODE)
   }
 
   override fun hasStoragePermission(): Boolean {
@@ -242,7 +242,7 @@ class CollectionFragment : BaseFragment(),
 
   override fun requestStoragePermission() {
     requestPermissions(activity!!, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CODE)
+        Manifest.permission.WRITE_EXTERNAL_STORAGE), COLLECTION_FRAGMENT_REQUEST_CODE)
   }
 
   override fun showReorderImagesHintWithDelay() {
@@ -595,7 +595,7 @@ class CollectionFragment : BaseFragment(),
   }
 
   private fun redirectToBuyProActivity() {
-    startActivityForResult(Intent(context!!, BuyProActivity::class.java), REQUEST_CODE)
+    startActivityForResult(Intent(context!!, BuyProActivity::class.java), COLLECTION_FRAGMENT_REQUEST_CODE)
   }
 
   private fun showAutoStartSettingsDialog() {
@@ -603,25 +603,11 @@ class CollectionFragment : BaseFragment(),
         .title(stringRes(R.string.collections_fragment_autostart_permission_title))
         .content(stringRes(R.string.collections_fragment_autostart_permission_description))
         .onPositive { _, _ -> openAutoStartSettings() }
-        .onAny { _, _ -> showRestartAppToRestartWallpaperChangerDialog() }
         .positiveColor(colorRes(R.color.accent))
         .negativeColor(colorRes(R.color.accent))
         .cancelable(true)
         .positiveText(stringRes(R.string.collections_fragment_autostart_permission_positive_text))
         .negativeText(stringRes(R.string.collections_fragment_autostart_permission_negative_text))
-        .show()
-  }
-
-  private fun showRestartAppToRestartWallpaperChangerDialog() {
-    MaterialDialog.Builder(activity!!)
-        .title(stringRes(R.string.collection_fragment_open_app_to_restart_service_dialog_title))
-        .content(stringRes(R.string.collection_fragment_open_app_to_restart_service_dialog_content))
-        .positiveColor(colorRes(R.color.accent))
-        .negativeColor(colorRes(R.color.accent))
-        .cancelable(true)
-        .positiveText(
-            stringRes(
-                R.string.collection_fragment_open_app_to_restart_service_dialog_positive_text))
         .show()
   }
 

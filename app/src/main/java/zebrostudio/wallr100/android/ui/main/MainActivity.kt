@@ -181,7 +181,7 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
   }
 
   override fun isOperationActive(): Boolean {
-    return operationInProcess
+    return isOperationInProcess
   }
 
   private inline fun <reified T : BaseFragment> addFragment(
@@ -339,11 +339,11 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
     withDelayOnMain(100) {
       var emailSubject = "Debug-infos:"
       emailSubject += "\n OS Version: " + System.getProperty(
-          "os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")"
-      emailSubject += "\n OS API Level: " + android.os.Build.VERSION.SDK_INT
-      emailSubject += "\n Device: " + android.os.Build.DEVICE
-      emailSubject += "\n Model (and Product): " + android.os.Build.MODEL +
-          " (" + android.os.Build.PRODUCT + ")"
+          "os.version") + "(" + Build.VERSION.INCREMENTAL + ")"
+      emailSubject += "\n OS API Level: " + Build.VERSION.SDK_INT
+      emailSubject += "\n Device: " + Build.DEVICE
+      emailSubject += "\n Model (and Product): " + Build.MODEL +
+          " (" + Build.PRODUCT + ")"
       val emailIntent = Intent(Intent.ACTION_SEND)
       emailIntent.type = "plain/text"
       val emailAddress = arrayOf("studio.zebro@gmail.com")
@@ -382,14 +382,14 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
   }
 
   companion object {
-    private var operationInProcess = false
+    private var isOperationInProcess = false
 
     fun blockBackPress() {
-      operationInProcess = true
+      isOperationInProcess = true
     }
 
     fun releaseBackPressBlock() {
-      operationInProcess = false
+      isOperationInProcess = false
     }
   }
 
