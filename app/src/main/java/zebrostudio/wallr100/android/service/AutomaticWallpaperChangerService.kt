@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 const val WALLPAPER_CHANGER_SERVICE_CODE = 1
 const val WALLPAPER_CHANGER_REQUEST_CODE = 2
-val wallpaperChangerIntervals = arrayListOf<Long>(
+val wallpaperChangerIntervals = listOf<Long>(
     1800000,
     3600000,
     21600000,
