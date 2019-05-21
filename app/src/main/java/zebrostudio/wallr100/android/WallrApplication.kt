@@ -50,7 +50,7 @@ class WallrApplication : Application(), HasActivityInjector, HasServiceInjector 
       val serviceChannel = NotificationChannel(
           NOTIFICATION_CHANNEL_ID,
           NOTIFICATION_CHANNEL_NAME,
-          NotificationManager.IMPORTANCE_DEFAULT
+          NotificationManager.IMPORTANCE_HIGH
       )
       val manager = getSystemService(NotificationManager::class.java)
       manager!!.createNotificationChannel(serviceChannel)
