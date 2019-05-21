@@ -71,13 +71,14 @@ class AutomaticWallpaperChangerService : Service() {
     interval = getInterval()
     handler = Handler()
     runnable = Runnable {
-      println("runnable fired $timeElapsed")
+      println(
+          "runnable fired $lastWallpaperChangeTime and current time ${System.currentTimeMillis()}")
       Toast.makeText(this, "runnable fired", Toast.LENGTH_LONG).show()
-      if (timeElapsed == interval) {
-        timeElapsed = 0
-        changeWallpaper()
-      } else {
-        timeElapsed += TIME_CHECKER_DELAY
+      System.currentTimeMillis().let {
+        if (it - lastWallpaperChangeTime >= interval) {
+          changeWallpaper()
+          lastWallpaperChangeTime = it
+        }
       }
       handler?.postDelayed(runnable, TIME_CHECKER_DELAY)
     }
