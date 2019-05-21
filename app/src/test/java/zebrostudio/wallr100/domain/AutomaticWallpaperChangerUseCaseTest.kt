@@ -2,8 +2,11 @@ package zebrostudio.wallr100.domain
 
 import android.graphics.Bitmap
 import com.nhaarman.mockitokotlin2.inOrder
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -13,98 +16,252 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
+import zebrostudio.wallr100.android.service.AutomaticWallpaperChangerService
+import zebrostudio.wallr100.android.service.WALLPAPER_CHANGER_INTERVALS_LIST
+import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.datafactory.CollectionsImageModelFactory.getCollectionsImageModel
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerInteractor
-import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerUseCase
 import java.util.Random
 
 @RunWith(MockitoJUnitRunner::class)
 class AutomaticWallpaperChangerUseCaseTest {
 
+  @Mock lateinit var automaticWallpaperChangerService: AutomaticWallpaperChangerService
+  @Mock lateinit var wallpaperSetter: WallpaperSetter
+  @Mock lateinit var postExecutionThread: PostExecutionThread
   @Mock lateinit var wallrRepository: WallrRepository
   @Mock lateinit var mockBitmap: Bitmap
-  private lateinit var automaticWallpaperChangerUseCase: AutomaticWallpaperChangerUseCase
+  private lateinit var automaticWallpaperChangerUseCase: AutomaticWallpaperChangerInteractor
 
   @Before
   fun setup() {
-    automaticWallpaperChangerUseCase = AutomaticWallpaperChangerInteractor(wallrRepository)
+    automaticWallpaperChangerUseCase =
+        AutomaticWallpaperChangerInteractor(wallpaperSetter, wallrRepository, postExecutionThread)
+
+    automaticWallpaperChangerUseCase.attachService(automaticWallpaperChangerService)
+    stubPostExecutionThreadReturnsIoScheduler()
+  }
+
+  @Test fun `should not change wallpaper on handleRunnableCall success`() {
+    automaticWallpaperChangerUseCase.lastWallpaperChangeTime = System.currentTimeMillis()
+    `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
+        WALLPAPER_CHANGER_INTERVALS_LIST.first())
+
+    automaticWallpaperChangerUseCase.handleRunnableCall()
+
+    verify(wallrRepository).getWallpaperChangerInterval()
   }
 
   @Test
-  fun `should return single of bitmap of first image on getWallpaperBitmap call success when last used uid is not present`() {
+  fun `should change wallpaper when interval is of 30 minutes on handleRunnableCall success`() {
+    automaticWallpaperChangerUseCase.lastWallpaperChangeTime =
+        System.currentTimeMillis() - 1800000
     val inorder = inOrder(wallrRepository)
     val firstCollectionsImageModel = getCollectionsImageModel()
     val secondCollectionsImageModel = getCollectionsImageModel()
     val collectionsImageModelList = listOf(firstCollectionsImageModel, secondCollectionsImageModel)
+    `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
+        WALLPAPER_CHANGER_INTERVALS_LIST.first())
     `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(Long.MIN_VALUE)
     `when`(wallrRepository.getBitmapFromDatabaseImage(firstCollectionsImageModel)).thenReturn(
         Single.just(mockBitmap))
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionsImageModelList))
 
-    val result = automaticWallpaperChangerUseCase.getWallpaperBitmap().test().values()[0]
+    automaticWallpaperChangerUseCase.handleRunnableCall()
 
-    assertEquals(mockBitmap, result)
+    verify(wallpaperSetter).setWallpaper(mockBitmap)
     inorder.verify(wallrRepository).getImagesInCollection()
     inorder.verify(wallrRepository).getLastUsedWallpaperUid()
     inorder.verify(wallrRepository).setLastUsedWallpaperUid(firstCollectionsImageModel.uid)
     inorder.verify(wallrRepository).getBitmapFromDatabaseImage(firstCollectionsImageModel)
+    verify(wallrRepository).getWallpaperChangerInterval()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test
-  fun `should return single of bitmap of second image on getWallpaperBitmap call success when last used uid is of first image in list`() {
+  @Test fun `should change wallpaper when interval is of 1 hour on handleRunnableCall success`() {
+    automaticWallpaperChangerUseCase.lastWallpaperChangeTime =
+        System.currentTimeMillis() - 3600000
     val inorder = inOrder(wallrRepository)
     val firstCollectionsImageModel = getCollectionsImageModel()
     val secondCollectionsImageModel = getCollectionsImageModel()
     val collectionsImageModelList = listOf(firstCollectionsImageModel, secondCollectionsImageModel)
-    `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(firstCollectionsImageModel.uid)
-    `when`(wallrRepository.getBitmapFromDatabaseImage(secondCollectionsImageModel)).thenReturn(
-        Single.just(mockBitmap))
-    `when`(wallrRepository.getImagesInCollection()).thenReturn(
-        Single.just(collectionsImageModelList))
-
-    val result = automaticWallpaperChangerUseCase.getWallpaperBitmap().test().values()[0]
-
-    assertEquals(mockBitmap, result)
-    inorder.verify(wallrRepository).getImagesInCollection()
-    inorder.verify(wallrRepository).getLastUsedWallpaperUid()
-    inorder.verify(wallrRepository).setLastUsedWallpaperUid(secondCollectionsImageModel.uid)
-    inorder.verify(wallrRepository).getBitmapFromDatabaseImage(secondCollectionsImageModel)
-  }
-
-  @Test
-  fun `should return single of bitmap of first image on getWallpaperBitmap call success when last used uid is of last image in list`() {
-    val inorder = inOrder(wallrRepository)
-    val firstCollectionsImageModel = getCollectionsImageModel()
-    val secondCollectionsImageModel = getCollectionsImageModel()
-    val collectionsImageModelList = listOf(firstCollectionsImageModel, secondCollectionsImageModel)
-    `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(secondCollectionsImageModel.uid)
+    `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
+        WALLPAPER_CHANGER_INTERVALS_LIST.component2())
+    `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(Long.MIN_VALUE)
     `when`(wallrRepository.getBitmapFromDatabaseImage(firstCollectionsImageModel)).thenReturn(
         Single.just(mockBitmap))
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionsImageModelList))
 
-    val result = automaticWallpaperChangerUseCase.getWallpaperBitmap().test().values()[0]
+    automaticWallpaperChangerUseCase.handleRunnableCall()
 
-    assertEquals(mockBitmap, result)
+    verify(wallpaperSetter).setWallpaper(mockBitmap)
     inorder.verify(wallrRepository).getImagesInCollection()
     inorder.verify(wallrRepository).getLastUsedWallpaperUid()
     inorder.verify(wallrRepository).setLastUsedWallpaperUid(firstCollectionsImageModel.uid)
     inorder.verify(wallrRepository).getBitmapFromDatabaseImage(firstCollectionsImageModel)
+    verify(wallrRepository).getWallpaperChangerInterval()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should return interval on getInterval call success`() {
+  @Test fun `should change wallpaper when interval is of 6 hours on handleRunnableCall success`() {
+    automaticWallpaperChangerUseCase.lastWallpaperChangeTime =
+        System.currentTimeMillis() - 21600000
+    val inorder = inOrder(wallrRepository)
+    val firstCollectionsImageModel = getCollectionsImageModel()
+    val secondCollectionsImageModel = getCollectionsImageModel()
+    val collectionsImageModelList = listOf(firstCollectionsImageModel, secondCollectionsImageModel)
+    `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
+        WALLPAPER_CHANGER_INTERVALS_LIST.component3())
+    `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(Long.MIN_VALUE)
+    `when`(wallrRepository.getBitmapFromDatabaseImage(firstCollectionsImageModel)).thenReturn(
+        Single.just(mockBitmap))
+    `when`(wallrRepository.getImagesInCollection()).thenReturn(
+        Single.just(collectionsImageModelList))
+
+    automaticWallpaperChangerUseCase.handleRunnableCall()
+
+    verify(wallpaperSetter).setWallpaper(mockBitmap)
+    inorder.verify(wallrRepository).getImagesInCollection()
+    inorder.verify(wallrRepository).getLastUsedWallpaperUid()
+    inorder.verify(wallrRepository).setLastUsedWallpaperUid(firstCollectionsImageModel.uid)
+    inorder.verify(wallrRepository).getBitmapFromDatabaseImage(firstCollectionsImageModel)
+    verify(wallrRepository).getWallpaperChangerInterval()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test fun `should change wallpaper when interval is of 1 day on handleRunnableCall success`() {
+    automaticWallpaperChangerUseCase.lastWallpaperChangeTime =
+        System.currentTimeMillis() - 86400000
+    val inorder = inOrder(wallrRepository)
+    val firstCollectionsImageModel = getCollectionsImageModel()
+    val secondCollectionsImageModel = getCollectionsImageModel()
+    val collectionsImageModelList = listOf(firstCollectionsImageModel, secondCollectionsImageModel)
+    `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
+        WALLPAPER_CHANGER_INTERVALS_LIST.component4())
+    `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(Long.MIN_VALUE)
+    `when`(wallrRepository.getBitmapFromDatabaseImage(firstCollectionsImageModel)).thenReturn(
+        Single.just(mockBitmap))
+    `when`(wallrRepository.getImagesInCollection()).thenReturn(
+        Single.just(collectionsImageModelList))
+
+    automaticWallpaperChangerUseCase.handleRunnableCall()
+
+    verify(wallpaperSetter).setWallpaper(mockBitmap)
+    inorder.verify(wallrRepository).getImagesInCollection()
+    inorder.verify(wallrRepository).getLastUsedWallpaperUid()
+    inorder.verify(wallrRepository).setLastUsedWallpaperUid(firstCollectionsImageModel.uid)
+    inorder.verify(wallrRepository).getBitmapFromDatabaseImage(firstCollectionsImageModel)
+    verify(wallrRepository).getWallpaperChangerInterval()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test fun `should change wallpaper when interval is of 3 days on handleRunnableCall success`() {
+    automaticWallpaperChangerUseCase.lastWallpaperChangeTime =
+        System.currentTimeMillis() - 259200000
+    val inorder = inOrder(wallrRepository)
+    val firstCollectionsImageModel = getCollectionsImageModel()
+    val secondCollectionsImageModel = getCollectionsImageModel()
+    val collectionsImageModelList = listOf(firstCollectionsImageModel, secondCollectionsImageModel)
+    `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
+        WALLPAPER_CHANGER_INTERVALS_LIST.component5())
+    `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(Long.MIN_VALUE)
+    `when`(wallrRepository.getBitmapFromDatabaseImage(firstCollectionsImageModel)).thenReturn(
+        Single.just(mockBitmap))
+    `when`(wallrRepository.getImagesInCollection()).thenReturn(
+        Single.just(collectionsImageModelList))
+
+    automaticWallpaperChangerUseCase.handleRunnableCall()
+
+    verify(wallpaperSetter).setWallpaper(mockBitmap)
+    inorder.verify(wallrRepository).getImagesInCollection()
+    inorder.verify(wallrRepository).getLastUsedWallpaperUid()
+    inorder.verify(wallrRepository).setLastUsedWallpaperUid(firstCollectionsImageModel.uid)
+    inorder.verify(wallrRepository).getBitmapFromDatabaseImage(firstCollectionsImageModel)
+    verify(wallrRepository).getWallpaperChangerInterval()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should return 30 minutes interval when unknown value is returned by repository on getInterval call success `() {
     val interval = Random().nextLong()
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(interval)
 
     val result = automaticWallpaperChangerUseCase.getInterval()
 
-    assertEquals(interval, result)
+    assertEquals(1800000, result)
+    verify(wallrRepository).getWallpaperChangerInterval()
+  }
+
+  @Test
+  fun `should return 30 minutes interval on getInterval call success`() {
+    val interval: Long = 1800000
+    `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(interval)
+
+    val result = automaticWallpaperChangerUseCase.getInterval()
+
+    assertEquals(WALLPAPER_CHANGER_INTERVALS_LIST.first(), result)
+    verify(wallrRepository).getWallpaperChangerInterval()
+  }
+
+  @Test
+  fun `should return 1 hour interval on getInterval call success`() {
+    val interval: Long = 3600000
+    `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(interval)
+
+    val result = automaticWallpaperChangerUseCase.getInterval()
+
+    assertEquals(WALLPAPER_CHANGER_INTERVALS_LIST.component2(), result)
+    verify(wallrRepository).getWallpaperChangerInterval()
+  }
+
+  @Test
+  fun `should return 6 hours interval on getInterval call success`() {
+    val interval: Long = 21600000
+    `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(interval)
+
+    val result = automaticWallpaperChangerUseCase.getInterval()
+
+    assertEquals(WALLPAPER_CHANGER_INTERVALS_LIST.component3(), result)
+    verify(wallrRepository).getWallpaperChangerInterval()
+  }
+
+  @Test
+  fun `should return 1 day interval on getInterval call success`() {
+    val interval: Long = 86400000
+    `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(interval)
+
+    val result = automaticWallpaperChangerUseCase.getInterval()
+
+    assertEquals(WALLPAPER_CHANGER_INTERVALS_LIST.component4(), result)
+    verify(wallrRepository).getWallpaperChangerInterval()
+  }
+
+  @Test
+  fun `should return 3 days interval on getInterval call success`() {
+    val interval: Long = 259200000
+    `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(interval)
+
+    val result = automaticWallpaperChangerUseCase.getInterval()
+
+    assertEquals(WALLPAPER_CHANGER_INTERVALS_LIST.component5(), result)
     verify(wallrRepository).getWallpaperChangerInterval()
   }
 
   @After
   fun tearDown() {
-    verifyNoMoreInteractions(wallrRepository)
+    verifyNoMoreInteractions(wallpaperSetter, wallrRepository, postExecutionThread,
+        automaticWallpaperChangerService)
+    automaticWallpaperChangerUseCase.detachService()
+  }
+
+  private fun verifyPostExecutionThreadSchedulerCall(times: Int = 1) {
+    com.nhaarman.mockitokotlin2.verify(postExecutionThread, times(times)).scheduler
+  }
+
+  private fun stubPostExecutionThreadReturnsIoScheduler() {
+    whenever(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 }

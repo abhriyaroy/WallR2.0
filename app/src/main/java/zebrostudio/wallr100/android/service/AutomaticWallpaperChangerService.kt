@@ -8,21 +8,21 @@ import android.os.IBinder
 import android.support.annotation.Nullable
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationCompat.PRIORITY_MAX
-import android.widget.Toast
 import dagger.android.AndroidInjection
-import io.reactivex.disposables.Disposable
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.NOTIFICATION_CHANNEL_ID
 import zebrostudio.wallr100.android.ui.main.MainActivity
-import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.android.utils.stringRes
-import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerUseCase
 import javax.inject.Inject
 
+interface AutomaticWallpaperChangerService {
+  fun stopService()
+}
+
 const val WALLPAPER_CHANGER_SERVICE_CODE = 1
 const val WALLPAPER_CHANGER_REQUEST_CODE = 2
-val wallpaperChangerIntervals = listOf<Long>(
+val WALLPAPER_CHANGER_INTERVALS_LIST = listOf<Long>(
     1800000,
     3600000,
     21600000,
@@ -32,18 +32,13 @@ val wallpaperChangerIntervals = listOf<Long>(
 
 private const val TIME_CHECKER_DELAY: Long = 300000
 
-class AutomaticWallpaperChangerService : Service() {
+class AutomaticWallpaperChangerServiceImpl : Service(),
+    AutomaticWallpaperChangerService {
 
-  @Inject internal lateinit var serviceManager: ServiceManager
   @Inject internal lateinit var automaticWallpaperChangerUseCase: AutomaticWallpaperChangerUseCase
-  @Inject internal lateinit var wallpaperSetter: WallpaperSetter
-  @Inject internal lateinit var postExecutionThread: PostExecutionThread
 
   private var handler: Handler? = null
   private var runnable: Runnable? = null
-  private var disposable: Disposable? = null
-  private var interval: Long = wallpaperChangerIntervals.first()
-  private var lastWallpaperChangeTime: Long = 0
 
   override fun onCreate() {
     AndroidInjection.inject(this)
@@ -51,6 +46,35 @@ class AutomaticWallpaperChangerService : Service() {
   }
 
   override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    createNotification()
+    automaticWallpaperChangerUseCase.attachService(this)
+    handler = Handler()
+    runnable = Runnable {
+      automaticWallpaperChangerUseCase.handleRunnableCall()
+      handler?.postDelayed(runnable, TIME_CHECKER_DELAY)
+    }
+    handler?.postDelayed(runnable, TIME_CHECKER_DELAY)
+    return START_STICKY
+  }
+
+  override fun onDestroy() {
+    handler?.removeCallbacks(runnable)
+    handler = null
+    runnable = null
+    automaticWallpaperChangerUseCase.detachService()
+    super.onDestroy()
+  }
+
+  @Nullable
+  override fun onBind(intent: Intent): IBinder? {
+    throw IllegalAccessError()
+  }
+
+  override fun stopService() {
+    stopService()
+  }
+
+  private fun createNotification() {
     val notificationIntent = Intent(this, MainActivity::class.java)
     val pendingIntent = PendingIntent.getActivity(this,
         WALLPAPER_CHANGER_REQUEST_CODE, notificationIntent, 0)
@@ -66,83 +90,16 @@ class AutomaticWallpaperChangerService : Service() {
         .setPriority(PRIORITY_MAX)
         .build()
     startForeground(WALLPAPER_CHANGER_SERVICE_CODE, notification)
-
-    lastWallpaperChangeTime = System.currentTimeMillis()
-    interval = getInterval()
-    handler = Handler()
-    runnable = Runnable {
-      println(
-          "runnable fired $lastWallpaperChangeTime and current time ${System.currentTimeMillis()}")
-      Toast.makeText(this, "runnable fired", Toast.LENGTH_LONG).show()
-      System.currentTimeMillis().let {
-        if (it - lastWallpaperChangeTime >= interval) {
-          changeWallpaper()
-          lastWallpaperChangeTime = it
-        }
-      }
-      handler?.postDelayed(runnable, TIME_CHECKER_DELAY)
-    }
-    handler?.postDelayed(runnable, TIME_CHECKER_DELAY)
-
-    return START_NOT_STICKY
-  }
-
-  override fun onDestroy() {
-    handler?.removeCallbacks(runnable)
-    handler = null
-    runnable = null
-    if (disposable?.isDisposed == false) {
-      disposable?.dispose()
-    }
-    super.onDestroy()
-  }
-
-  @Nullable
-  override fun onBind(intent: Intent): IBinder? {
-    throw IllegalAccessError()
   }
 
   private fun getIntervalString(interval: Long): String {
     return when (interval) {
-      wallpaperChangerIntervals[1] -> stringRes(R.string.wallpaper_changer_service_interval_1_hour)
-      wallpaperChangerIntervals[2] -> stringRes(R.string.wallpaper_changer_service_interval_6_hours)
-      wallpaperChangerIntervals[3] -> stringRes(R.string.wallpaper_changer_service_interval_1_day)
-      wallpaperChangerIntervals[4] -> stringRes(R.string.wallpaper_changer_service_interval_3_days)
+      WALLPAPER_CHANGER_INTERVALS_LIST[1] -> stringRes(R.string.wallpaper_changer_service_interval_1_hour)
+      WALLPAPER_CHANGER_INTERVALS_LIST[2] -> stringRes(R.string.wallpaper_changer_service_interval_6_hours)
+      WALLPAPER_CHANGER_INTERVALS_LIST[3] -> stringRes(R.string.wallpaper_changer_service_interval_1_day)
+      WALLPAPER_CHANGER_INTERVALS_LIST[4] -> stringRes(R.string.wallpaper_changer_service_interval_3_days)
       else -> stringRes(R.string.wallpaper_changer_service_interval_30_minutes)
     }
-  }
-
-  private fun getInterval(): Long {
-    automaticWallpaperChangerUseCase.getInterval().let {
-      if (wallpaperChangerIntervals.contains(it)) {
-        return it
-      } else {
-        return wallpaperChangerIntervals.first()
-      }
-    }
-  }
-
-  private fun changeWallpaper() {
-    if (disposable?.isDisposed == false) {
-      disposable?.dispose()
-    }
-    println("change wallpaper")
-    disposable = automaticWallpaperChangerUseCase.getWallpaperBitmap()
-        .doOnSubscribe {
-          println("subscribed to wallpaper bitmap")
-        }
-        .doOnSuccess {
-          println("change wallpaper success")
-          wallpaperSetter.setWallpaper(it)
-          if (!it.isRecycled) {
-            it.recycle()
-          }
-        }.observeOn(postExecutionThread.scheduler)
-        .subscribe({
-        }, {
-          println("runnable fired error ${it.message}")
-          stopSelf()
-        })
   }
 
 }

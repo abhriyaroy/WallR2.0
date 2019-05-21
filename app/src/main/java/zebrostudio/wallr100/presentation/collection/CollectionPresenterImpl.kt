@@ -3,7 +3,7 @@ package zebrostudio.wallr100.presentation.collection
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.service.wallpaperChangerIntervals
+import zebrostudio.wallr100.android.service.WALLPAPER_CHANGER_INTERVALS_LIST
 import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_ASUS
 import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_ONEPLUS
 import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_OPPO
@@ -162,7 +162,7 @@ class CollectionPresenterImpl(
   override fun handleAutomaticWallpaperChangerIntervalMenuItemClicked() {
     collectionImagesUseCase.getAutomaticWallpaperChangerInterval().let {
       var isDialogShown = false
-      wallpaperChangerIntervals.forEachIndexed { index, interval ->
+      WALLPAPER_CHANGER_INTERVALS_LIST.forEachIndexed { index, interval ->
         if (it == interval) {
           collectionView?.showWallpaperChangerIntervalDialog(index)
           isDialogShown = true
@@ -170,7 +170,7 @@ class CollectionPresenterImpl(
       }
       if (!isDialogShown) {
         collectionImagesUseCase.setAutomaticWallpaperChangerInterval(
-            wallpaperChangerIntervals[INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL])
+            WALLPAPER_CHANGER_INTERVALS_LIST[INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL])
         collectionView?.showWallpaperChangerIntervalDialog(
             INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL)
       }
@@ -179,7 +179,7 @@ class CollectionPresenterImpl(
 
   override fun updateWallpaperChangerInterval(choice: Int) {
     when (collectionImagesUseCase.setAutomaticWallpaperChangerInterval(
-        wallpaperChangerIntervals[choice])) {
+        WALLPAPER_CHANGER_INTERVALS_LIST[choice])) {
       INTERVAL_UPDATED -> collectionView?.showWallpaperChangerIntervalUpdatedSuccessMessage()
       SERVICE_RESTARTED -> collectionView?.showWallpaperChangerRestartedSuccessMessage()
     }

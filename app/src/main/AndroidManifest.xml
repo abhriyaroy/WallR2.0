@@ -44,7 +44,7 @@
     </provider>
 
     <service
-        android:name="zebrostudio.wallr100.android.service.AutomaticWallpaperChangerService"
+        android:name=".android.service.AutomaticWallpaperChangerServiceImpl"
         android:enabled="true"
         android:stopWithTask="false"/>
 
