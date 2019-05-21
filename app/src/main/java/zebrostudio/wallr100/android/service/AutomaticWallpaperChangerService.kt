@@ -42,7 +42,7 @@ class AutomaticWallpaperChangerService : Service() {
   private var runnable: Runnable? = null
   private var disposable: Disposable? = null
   private var interval: Long = wallpaperChangerIntervals.first()
-  private var timeElapsed: Long = 0
+  private var lastWallpaperChangeTime: Long = 0
 
   override fun onCreate() {
     AndroidInjection.inject(this)
@@ -66,20 +66,21 @@ class AutomaticWallpaperChangerService : Service() {
         .build()
     startForeground(WALLPAPER_CHANGER_SERVICE_CODE, notification)
 
+    lastWallpaperChangeTime = System.currentTimeMillis()
     interval = getInterval()
     handler = Handler()
     runnable = Runnable {
-      if (timeElapsed == interval) {
-        timeElapsed = 0
-        changeWallpaper()
-      } else {
-        timeElapsed += TIME_CHECKER_DELAY
+      System.currentTimeMillis().let {
+        if (it - lastWallpaperChangeTime >= interval) {
+          changeWallpaper()
+          lastWallpaperChangeTime = it
+        }
       }
       handler?.postDelayed(runnable, TIME_CHECKER_DELAY)
     }
     handler?.postDelayed(runnable, TIME_CHECKER_DELAY)
 
-    return START_STICKY
+    return START_NOT_STICKY
   }
 
   override fun onDestroy() {
