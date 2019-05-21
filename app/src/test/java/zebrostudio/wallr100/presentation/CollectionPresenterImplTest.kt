@@ -233,7 +233,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should set automatic wallpaper changer as inactive and show empty collection view on handleViewCreated call success due to empty collection`() {
+  fun `should set automatic wallpaper changer as inactive and show empty collection view on handleViewCreated call success`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(collectionView.hasStoragePermission()).thenReturn(true)
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
@@ -258,7 +258,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should set automatic wallpaper changer as inactive and images show absent layout on handleViewCreated call failure`() {
+  fun `should set automatic wallpaper changer as inactive and show images absent layout on handleViewCreated call failure`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(collectionView.hasStoragePermission()).thenReturn(true)
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
@@ -278,7 +278,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should set automatic wallpaper changer as active and show pictures on handleActivityResult call failure due to missing storage permission`() {
+  fun `should set automatic wallpaper changer as active and show pictures on handleActivityResult call success`() {
     val collectionsImageModelList = listOf(getCollectionsImageModel())
     val collectionsPresenterEntityList =
         listOf(getCollectionImagesPresenterEntity())
@@ -307,7 +307,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should set automatic wallpaper changer as active and show pictures and hint on handleActivityResult call failure due to missing storage permission`() {
+  fun `should set automatic wallpaper changer as active and show pictures and hint on handleActivityResult call success`() {
     val collectionsImageModelList = listOf(getCollectionsImageModel(), getCollectionsImageModel())
     val collectionsPresenterEntityList =
         listOf(getCollectionImagesPresenterEntity(),
@@ -341,7 +341,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should set automatic wallpaper changer as active and images absent layout on handleActivityResult call failure`() {
+  fun `should set automatic wallpaper changer as active and show images absent layout on handleActivityResult call failure`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(collectionView.hasStoragePermission()).thenReturn(true)
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(true)
@@ -361,7 +361,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should set automatic wallpaper changer as inactive and show pictures on handleActivityResult call failure due to missing storage permission`() {
+  fun `should set automatic wallpaper changer as inactive and show pictures on handleActivityResult call success`() {
     val collectionsImageModelList = listOf(getCollectionsImageModel())
     val collectionsPresenterEntityList =
         listOf(getCollectionImagesPresenterEntity())
@@ -390,7 +390,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should set automatic wallpaper changer as inactive and show pictures and hint on handleActivityResult call failure due to missing storage permission`() {
+  fun `should set automatic wallpaper changer as inactive and show pictures and hint on handleActivityResult call success`() {
     val collectionsImageModelList = listOf(getCollectionsImageModel(), getCollectionsImageModel())
     val collectionsPresenterEntityList =
         listOf(getCollectionImagesPresenterEntity(),
@@ -424,7 +424,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should set automatic wallpaper changer as inactive and show empty collection view on handleActivityResult call success due to empty collection`() {
+  fun `should set automatic wallpaper changer as inactive and show empty collection view on handleActivityResult call success`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(collectionView.hasStoragePermission()).thenReturn(true)
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
@@ -449,7 +449,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should set automatic wallpaper changer as inactive and images absent layout on handleActivityResult call failure`() {
+  fun `should set automatic wallpaper changer as inactive and show images absent layout on handleActivityResult call failure`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(collectionView.hasStoragePermission()).thenReturn(true)
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
@@ -682,7 +682,7 @@ class CollectionPresenterImplTest {
     verify(collectionView).hideCab()
   }
 
-  @Test fun `should hide cab on notifyDragStarted call success as cab is active`() {
+  @Test fun `should hide cab on notifyDragStarted call success when cab is active`() {
     `when`(collectionView.isCabActive()).thenReturn(true)
 
     collectionPresenterImpl.notifyDragStarted()
@@ -691,7 +691,7 @@ class CollectionPresenterImplTest {
     verify(collectionView).hideCab()
   }
 
-  @Test fun `should do nothing on notifyDragStarted call success as cab is not active`() {
+  @Test fun `should do nothing on notifyDragStarted call success when cab is not active`() {
     `when`(collectionView.isCabActive()).thenReturn(false)
 
     collectionPresenterImpl.notifyDragStarted()
@@ -1063,14 +1063,14 @@ class CollectionPresenterImplTest {
         collectionPresenterEntityList.first())
     verify(collectionImagesUseCase).getImageBitmap(collectionImagesModelList.first())
     verify(collectionView).getScope()
-    verify(collectionView).blockBackPress()
+    verify(collectionView).disableBackPress()
     verify(collectionView).blurScreen()
     verify(collectionView).showIndefiniteLoaderWithMessage(randomString)
     verify(collectionView).isCabActive()
     verify(collectionView).hideCab()
     verify(collectionView).removeBlurFromScreen()
     verify(collectionView).showSetWallpaperSuccessMessage()
-    verify(collectionView).releaseBlockPress()
+    verify(collectionView).enableBackPress()
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -1098,14 +1098,14 @@ class CollectionPresenterImplTest {
         collectionPresenterEntityList.first())
     verify(collectionImagesUseCase).getImageBitmap(collectionImagesModelList.first())
     verify(collectionView).getScope()
-    verify(collectionView).blockBackPress()
+    verify(collectionView).disableBackPress()
     verify(collectionView).blurScreen()
     verify(collectionView).showIndefiniteLoaderWithMessage(randomString)
     verify(collectionView).isCabActive()
     verify(collectionView).hideCab()
     verify(collectionView).removeBlurFromScreen()
     verify(collectionView).showGenericErrorMessage()
-    verify(collectionView).releaseBlockPress()
+    verify(collectionView).enableBackPress()
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -1135,7 +1135,7 @@ class CollectionPresenterImplTest {
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionImagesModelList)
     verify(collectionImagesUseCase).saveCrystallizedImage(collectionImagesModelList.first())
     verify(collectionView).getScope()
-    verify(collectionView).blockBackPress()
+    verify(collectionView).disableBackPress()
     verify(collectionView).blurScreen()
     verify(collectionView).showIndefiniteLoaderWithMessage(randomString)
     verify(collectionView).isCabActive()
@@ -1144,7 +1144,7 @@ class CollectionPresenterImplTest {
     verify(collectionView).updateChangesInEveryItemView()
     verify(collectionView).removeBlurFromScreen()
     verify(collectionView).showCrystallizeSuccessMessage()
-    verify(collectionView).releaseBlockPress()
+    verify(collectionView).enableBackPress()
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -1171,14 +1171,14 @@ class CollectionPresenterImplTest {
         collectionPresenterEntityList.first())
     verify(collectionImagesUseCase).saveCrystallizedImage(collectionImagesModelList.first())
     verify(collectionView).getScope()
-    verify(collectionView).blockBackPress()
+    verify(collectionView).disableBackPress()
     verify(collectionView).blurScreen()
     verify(collectionView).showIndefiniteLoaderWithMessage(randomString)
     verify(collectionView).isCabActive()
     verify(collectionView).hideCab()
     verify(collectionView).removeBlurFromScreen()
     verify(collectionView).showCrystallizedImageAlreadyPresentInCollectionErrorMessage()
-    verify(collectionView).releaseBlockPress()
+    verify(collectionView).enableBackPress()
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -1205,14 +1205,14 @@ class CollectionPresenterImplTest {
         collectionPresenterEntityList.first())
     verify(collectionImagesUseCase).saveCrystallizedImage(collectionImagesModelList.first())
     verify(collectionView).getScope()
-    verify(collectionView).blockBackPress()
+    verify(collectionView).disableBackPress()
     verify(collectionView).blurScreen()
     verify(collectionView).showIndefiniteLoaderWithMessage(randomString)
     verify(collectionView).isCabActive()
     verify(collectionView).hideCab()
     verify(collectionView).removeBlurFromScreen()
     verify(collectionView).showGenericErrorMessage()
-    verify(collectionView).releaseBlockPress()
+    verify(collectionView).enableBackPress()
     verifyPostExecutionThreadSchedulerCall()
   }
 

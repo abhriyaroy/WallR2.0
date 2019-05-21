@@ -54,8 +54,8 @@ interface CollectionContract {
     fun showUnableToDeleteErrorMessage()
     fun showGenericErrorMessage()
     fun showWallpaperChangerPermissionsRequiredDialog()
-    fun blockBackPress()
-    fun releaseBlockPress()
+    fun disableBackPress()
+    fun enableBackPress()
   }
 
   interface CollectionPresenter : BasePresenter<CollectionView> {

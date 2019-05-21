@@ -93,10 +93,7 @@ class FileHandlerImpl(context: Context) : FileHandler {
   }
 
   override fun ifFileExists(filePath: String): Boolean {
-    if (File(filePath).exists()) {
-      return true
-    }
-    return false
+    return File(filePath).exists()
   }
 
   override fun deleteFile(filePath: String) {

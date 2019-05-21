@@ -146,7 +146,7 @@ class CollectionImagesUseCaseTest {
     verify(wallrRepository).getBitmapFromDatabaseImage(collectionImagesModel)
   }
 
-  @Test fun `should return single of list of saveCrystallizedImage on deleteImages call success`() {
+  @Test fun `should return single of list of collectionsImageModel on saveCrystallizedImage call success`() {
     val collectionImagesModel = CollectionsImageModelFactory.getCollectionsImageModel()
     val collectionImagesModelList = listOf(collectionImagesModel)
     `when`(wallrRepository.saveCrystallizedImageInDatabase(collectionImagesModel)).thenReturn(

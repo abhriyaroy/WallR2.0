@@ -9,7 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.v4.app.ActivityCompat.requestPermissions
-import android.support.v4.content.ContextCompat
+import android.support.v4.content.ContextCompat.checkSelfPermission
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.menu.MenuBuilder
 import android.support.v7.widget.GridLayoutManager
@@ -189,16 +189,15 @@ class CollectionFragment : BaseFragment(),
 
   override fun hideAppBar() {
     activity?.let {
-      it.findViewById<Toolbar>(R.id.toolbar)?.let {
+      it.findViewById<Toolbar>(R.id.toolbar)?.apply {
         withDelayOnMain(APP_BAR_DELAY) {
-          it.layoutParams.apply {
+          layoutParams.apply {
             (this as AppBarLayout.LayoutParams).scrollFlags = 0
           }
-          it.findViewById<Toolbar>(R.id.toolbar).gone()
+          gone()
         }
       }
     }
-
   }
 
   override fun enableToolbar() {
@@ -230,9 +229,9 @@ class CollectionFragment : BaseFragment(),
   override fun hasStoragePermission(): Boolean {
     context!!.let {
       val readPermission =
-          ContextCompat.checkSelfPermission(it, Manifest.permission.READ_EXTERNAL_STORAGE)
+          checkSelfPermission(it, Manifest.permission.READ_EXTERNAL_STORAGE)
       val writePermission =
-          ContextCompat.checkSelfPermission(it, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+          checkSelfPermission(it, Manifest.permission.WRITE_EXTERNAL_STORAGE)
       if (readPermission != PackageManager.PERMISSION_GRANTED ||
           writePermission != PackageManager.PERMISSION_GRANTED) {
         return false
@@ -311,8 +310,8 @@ class CollectionFragment : BaseFragment(),
   }
 
   override fun showWallpaperChangerIntervalUpdatedSuccessMessage() {
-    successToast(
-        stringRes(R.string.collections_fragment_wallpaper_changer_interval_updated_success_message))
+    successToast(stringRes(
+        R.string.collections_fragment_wallpaper_changer_interval_updated_success_message))
   }
 
   override fun showWallpaperChangerRestartedSuccessMessage() {
@@ -522,11 +521,11 @@ class CollectionFragment : BaseFragment(),
         .show()
   }
 
-  override fun blockBackPress() {
+  override fun disableBackPress() {
     MainActivity.blockBackPress()
   }
 
-  override fun releaseBlockPress() {
+  override fun enableBackPress() {
     MainActivity.releaseBackPressBlock()
   }
 

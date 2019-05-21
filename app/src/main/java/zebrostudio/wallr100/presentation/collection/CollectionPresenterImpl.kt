@@ -224,19 +224,19 @@ class CollectionPresenterImpl(
           collectionView?.blurScreen()
           collectionView?.showIndefiniteLoaderWithMessage(
               resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
-          collectionView?.blockBackPress()
+          collectionView?.disableBackPress()
         }
         .autoDisposable(collectionView!!.getScope())
         .subscribe({
           hideCabIfActive()
           collectionView?.removeBlurFromScreen()
           collectionView?.showSetWallpaperSuccessMessage()
-          collectionView?.releaseBlockPress()
+          collectionView?.enableBackPress()
         }, {
           hideCabIfActive()
           collectionView?.removeBlurFromScreen()
           collectionView?.showGenericErrorMessage()
-          collectionView?.releaseBlockPress()
+          collectionView?.enableBackPress()
         })
   }
 
@@ -255,7 +255,7 @@ class CollectionPresenterImpl(
           collectionView?.showIndefiniteLoaderWithMessage(
               resourceUtils.getStringResource(R.string.crystallizing_wallpaper_wait_message)
           )
-          collectionView?.blockBackPress()
+          collectionView?.disableBackPress()
         }.autoDisposable(collectionView!!.getScope())
         .subscribe({
           hideCabIfActive()
@@ -263,7 +263,7 @@ class CollectionPresenterImpl(
           collectionView?.updateChangesInEveryItemView()
           collectionView?.removeBlurFromScreen()
           collectionView?.showCrystallizeSuccessMessage()
-          collectionView?.releaseBlockPress()
+          collectionView?.enableBackPress()
         }, {
           hideCabIfActive()
           collectionView?.removeBlurFromScreen()
@@ -272,7 +272,7 @@ class CollectionPresenterImpl(
           } else {
             collectionView?.showGenericErrorMessage()
           }
-          collectionView?.releaseBlockPress()
+          collectionView?.enableBackPress()
         })
   }
 

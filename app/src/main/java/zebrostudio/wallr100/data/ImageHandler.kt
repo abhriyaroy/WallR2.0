@@ -396,7 +396,6 @@ class ImageHandlerImpl(
           emitter.onError(AlreadyPresentInCollectionException())
         }
       }
-
       getImageBitmap(path).let {
         LowPoly.generate(it).let { bitmap ->
           try {
