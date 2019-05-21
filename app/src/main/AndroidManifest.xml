@@ -47,6 +47,10 @@
         android:name="zebrostudio.wallr100.android.service.AutomaticWallpaperChangerService"
         android:enabled="true"
         android:stopWithTask="false"/>
+
+    <meta-data
+        android:name="android.max_aspect"
+        android:value="2.1"/>
   </application>
 
 </manifest>

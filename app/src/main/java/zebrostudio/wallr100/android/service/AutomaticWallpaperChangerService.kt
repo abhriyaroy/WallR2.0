@@ -8,6 +8,7 @@ import android.os.IBinder
 import android.support.annotation.Nullable
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationCompat.PRIORITY_MAX
+import android.widget.Toast
 import dagger.android.AndroidInjection
 import io.reactivex.disposables.Disposable
 import zebrostudio.wallr100.R
@@ -70,11 +71,13 @@ class AutomaticWallpaperChangerService : Service() {
     interval = getInterval()
     handler = Handler()
     runnable = Runnable {
-      System.currentTimeMillis().let {
-        if (it - lastWallpaperChangeTime >= interval) {
-          changeWallpaper()
-          lastWallpaperChangeTime = it
-        }
+      println("runnable fired $timeElapsed")
+      Toast.makeText(this, "runnable fired", Toast.LENGTH_LONG).show()
+      if (timeElapsed == interval) {
+        timeElapsed = 0
+        changeWallpaper()
+      } else {
+        timeElapsed += TIME_CHECKER_DELAY
       }
       handler?.postDelayed(runnable, TIME_CHECKER_DELAY)
     }
@@ -85,6 +88,8 @@ class AutomaticWallpaperChangerService : Service() {
 
   override fun onDestroy() {
     handler?.removeCallbacks(runnable)
+    handler = null
+    runnable = null
     if (disposable?.isDisposed == false) {
       disposable?.dispose()
     }
@@ -120,8 +125,13 @@ class AutomaticWallpaperChangerService : Service() {
     if (disposable?.isDisposed == false) {
       disposable?.dispose()
     }
+    println("change wallpaper")
     disposable = automaticWallpaperChangerUseCase.getWallpaperBitmap()
+        .doOnSubscribe {
+          println("subscribed to wallpaper bitmap")
+        }
         .doOnSuccess {
+          println("change wallpaper success")
           wallpaperSetter.setWallpaper(it)
           if (!it.isRecycled) {
             it.recycle()
@@ -129,6 +139,7 @@ class AutomaticWallpaperChangerService : Service() {
         }.observeOn(postExecutionThread.scheduler)
         .subscribe({
         }, {
+          println("runnable fired error ${it.message}")
           stopSelf()
         })
   }
