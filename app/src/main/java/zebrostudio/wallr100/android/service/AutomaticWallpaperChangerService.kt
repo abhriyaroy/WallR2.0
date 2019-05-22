@@ -8,6 +8,7 @@ import android.os.IBinder
 import android.support.annotation.Nullable
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationCompat.PRIORITY_MAX
+import android.widget.Toast
 import dagger.android.AndroidInjection
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.NOTIFICATION_CHANNEL_ID
@@ -30,7 +31,7 @@ val WALLPAPER_CHANGER_INTERVALS_LIST = listOf<Long>(
     259200000
 )
 
-private const val TIME_CHECKER_DELAY: Long = 300000
+private const val TIME_CHECKER_DELAY: Long = 120000
 
 class AutomaticWallpaperChangerServiceImpl : Service(),
     AutomaticWallpaperChangerService {
