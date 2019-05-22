@@ -1,4 +1,3 @@
-
 <p align="center">
  <a href="https://play.google.com/store/apps/details?id=zebrostudio.wallr100">
  <img src="https://i.imgur.com/PWzM7sn.png" alt="Explore Wallpapers" width=800 height=400 hspace="2">
@@ -221,4 +220,3 @@ Open source contributor.
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
