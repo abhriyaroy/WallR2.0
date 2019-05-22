@@ -38,7 +38,7 @@ class CollectionImagesUseCaseTest {
     collectionsImagesUseCase = CollectionsImagesInteractor(serviceManager, wallrRepository)
   }
 
-  @Test fun `should return single of list of CollectionsImageModel on getAllImages call success`() {
+  @Test fun `should return Single of list of CollectionsImageModel on getAllImages call success`() {
     val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionImagesModelList))
@@ -57,7 +57,7 @@ class CollectionImagesUseCaseTest {
     verify(wallrRepository).getImagesInCollection()
   }
 
-  @Test fun `should return single of list of CollectionsImageModel on addImages call success`() {
+  @Test fun `should return Single of list of CollectionsImageModel on addImages call success`() {
     val uriList = listOf(uri)
     val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
     `when`(wallrRepository.addImagesToCollection(uriList)).thenReturn(
@@ -79,7 +79,7 @@ class CollectionImagesUseCaseTest {
     verify(wallrRepository).addImagesToCollection(uriList)
   }
 
-  @Test fun `should return single of list of CollectionsImageModel on reorderImage call success`() {
+  @Test fun `should return Single of list of CollectionsImageModel on reorderImage call success`() {
     val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
     `when`(wallrRepository.reorderImagesInCollectionDatabase(collectionImagesModelList)).thenReturn(
         Single.just(collectionImagesModelList))
@@ -101,7 +101,7 @@ class CollectionImagesUseCaseTest {
     verify(wallrRepository).reorderImagesInCollectionDatabase(collectionImagesModelList)
   }
 
-  @Test fun `should return single of list of CollectionsImageModel on deleteImages call success`() {
+  @Test fun `should return Single of list of CollectionsImageModel on deleteImages call success`() {
     val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
     `when`(wallrRepository.deleteImageFromCollection(collectionImagesModelList)).thenReturn(
         Single.just(collectionImagesModelList))
@@ -124,7 +124,7 @@ class CollectionImagesUseCaseTest {
   }
 
   @Test
-  fun `should return single of list of CollectionsImageModel on getImageBitmap call success`() {
+  fun `should return Single of list of CollectionsImageModel on getImageBitmap call success`() {
     val collectionImagesModel = CollectionsImageModelFactory.getCollectionsImageModel()
     `when`(wallrRepository.getBitmapFromDatabaseImage(collectionImagesModel)).thenReturn(
         Single.just(bitmap))
@@ -147,7 +147,7 @@ class CollectionImagesUseCaseTest {
   }
 
   @Test
-  fun `should return single of list of collectionsImageModel on saveCrystallizedImage call success`() {
+  fun `should return Single of list of collectionsImageModel on saveCrystallizedImage call success`() {
     val collectionImagesModel = CollectionsImageModelFactory.getCollectionsImageModel()
     val collectionImagesModelList = listOf(collectionImagesModel)
     `when`(wallrRepository.saveCrystallizedImageInDatabase(collectionImagesModel)).thenReturn(
@@ -214,7 +214,7 @@ class CollectionImagesUseCaseTest {
   }
 
   @Test
-  fun `should update interval on setAutomaticWallpaperChangerInterval call success when wallpaper changer was not running`() {
+  fun `should update interval on setAutomaticWallpaperChangerInterval call success when wallpaper changer is not running`() {
     val interval = Random().nextLong()
     `when`(serviceManager.isAutomaticWallpaperChangerRunning()).thenReturn(false)
 
@@ -226,7 +226,7 @@ class CollectionImagesUseCaseTest {
   }
 
   @Test
-  fun `should update interval and restart wallpaper changer on setAutomaticWallpaperChangerInterval call success when wallpaper changer was already running`() {
+  fun `should update interval and restart wallpaper changer on setAutomaticWallpaperChangerInterval call success when wallpaper changer is already running`() {
     val interval = Random().nextLong()
     val inorder = inOrder(serviceManager)
     `when`(serviceManager.isAutomaticWallpaperChangerRunning()).thenReturn(true)

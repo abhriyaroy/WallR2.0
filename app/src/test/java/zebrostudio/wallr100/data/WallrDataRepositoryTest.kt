@@ -105,7 +105,7 @@ class WallrDataRepositoryTest {
     `when`(executionThread.computationScheduler).thenReturn(Schedulers.trampoline())
   }
 
-  @Test fun `should return single on server success response`() {
+  @Test fun `should return Single on server success response`() {
     `when`(remoteAuthServiceFactory.verifyPurchaseService(
         UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString)))
         .thenReturn(Single.just(PurchaseAuthResponseEntity("success", dummyInt, randomString)))
@@ -858,7 +858,7 @@ class WallrDataRepositoryTest {
     verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG)
   }
 
-  @Test fun `should return single of list of string on getCustomColorList call success`() {
+  @Test fun `should return Single of list of string on getCustomColorList call success`() {
     val list = listOf(randomString)
     `when`(minimalColorHelper.getCustomColors()).thenReturn(Single.just(list))
 
@@ -868,7 +868,7 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return single of list of string on getDefaultColorList call success`() {
+  @Test fun `should return Single of list of string on getDefaultColorList call success`() {
     val list = listOf(randomString)
     `when`(minimalColorHelper.getDefaultColors()).thenReturn(Single.just(list))
 
@@ -893,7 +893,7 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return single of list of strings on modifyColorList call success`() {
+  @Test fun `should return Single of list of strings on modifyColorList call success`() {
     val list = listOf(randomString, randomString)
     val modifiedList = listOf(randomString)
     val gsonString = Gson().toJson(modifiedList)
@@ -935,7 +935,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test
-  fun `should return single of list of restore colors model on restoreDeletedColors call success`() {
+  fun `should return Single of list of restore colors model on restoreDeletedColors call success`() {
     val list = listOf(randomString)
     val modifiedList = listOf(randomString, randomString)
     val selectedIndices = TreeMap<Int, String>(mapOf(Pair(firstElementIndex, randomString)))
@@ -969,7 +969,7 @@ class WallrDataRepositoryTest {
     verifyComputationSchedulerCall()
   }
 
-  @Test fun `should return single of uri on geShareableImageUri call success`() {
+  @Test fun `should return Single of uri on geShareableImageUri call success`() {
     `when`(imageHandler.getShareableUri()).thenReturn(Single.just(mockUri))
 
     val result = wallrDataRepository.getShareableImageUri().test().values()[0]
@@ -990,7 +990,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test
-  fun `should return single of bitmap on getSingleColorBitmap call success`() {
+  fun `should return Single of bitmap on getSingleColorBitmap call success`() {
     `when`(fileHandler.freeSpaceAvailable()).thenReturn(true)
     `when`(imageHandler.getSingleColorBitmap(randomString)).thenReturn(Single.just(mockBitmap))
 
@@ -1015,7 +1015,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test
-  fun `should return single of bitmap on getMultiColorBitmap  call of type Material success`() {
+  fun `should return Single of bitmap on getMultiColorBitmap  call of type Material success`() {
     val list = listOf(randomString)
     `when`(fileHandler.freeSpaceAvailable()).thenReturn(true)
     `when`(imageHandler.getMultiColorBitmap(list, MATERIAL)).thenReturn(Single.just(mockBitmap))
@@ -1041,7 +1041,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test
-  fun `should return single of bitmap on getMultiColorBitmap  call of type Gradient success`() {
+  fun `should return Single of bitmap on getMultiColorBitmap  call of type Gradient success`() {
     val list = listOf(randomString)
     `when`(fileHandler.freeSpaceAvailable()).thenReturn(true)
     `when`(imageHandler.getMultiColorBitmap(list, GRADIENT)).thenReturn(Single.just(mockBitmap))
@@ -1067,7 +1067,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test
-  fun `should return single of bitmap on getMultiColorBitmap  call of type Plasma success`() {
+  fun `should return Single of bitmap on getMultiColorBitmap  call of type Plasma success`() {
     val list = listOf(randomString)
     `when`(fileHandler.freeSpaceAvailable()).thenReturn(true)
     `when`(imageHandler.getMultiColorBitmap(list, PLASMA)).thenReturn(Single.just(mockBitmap))
@@ -1082,7 +1082,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test
-  fun `should return single of list of collections image model on getImagesInCollection call success`() {
+  fun `should return Single of list of collections image model on getImagesInCollection call success`() {
     val collectionsDatabaseImageEntityList =
         listOf(getCollectionsDatabaseImageEntity())
     `when`(imageHandler.getAllImagesInCollection()).thenReturn(
@@ -1110,7 +1110,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test
-  fun `should return single of list of collections image model on addImagesToCollection call success`() {
+  fun `should return Single of list of collections image model on addImagesToCollection call success`() {
     val mockUriList = listOf(mockUri)
     val collectionsImageModelList = listOf(getCollectionsImageModel())
     val collectionsDatabaseImageEntityList =
@@ -1149,7 +1149,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test
-  fun `should return single of list of collections image model on reorderImagesInCollectionDatabase call success`() {
+  fun `should return Single of list of collections image model on reorderImagesInCollectionDatabase call success`() {
     val collectionImageModelList = listOf(getCollectionsImageModel())
     val collectionDatabaseImageEntityList =
         listOf(getCollectionsDatabaseImageEntity())
@@ -1189,7 +1189,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test
-  fun `should return single of list of collections image model on deleteImageFromCollection call success`() {
+  fun `should return Single of list of collections image model on deleteImageFromCollection call success`() {
     val collectionImageModelList = listOf(getCollectionsImageModel())
     val collectionDatabaseImageEntityList =
         listOf(getCollectionsDatabaseImageEntity())
@@ -1298,7 +1298,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test
-  fun `should return single of list of collections image model on saveCrystallizedImageInDatabase call success`() {
+  fun `should return Single of list of collections image model on saveCrystallizedImageInDatabase call success`() {
     val collectionImageModelList = listOf(getCollectionsImageModel())
     val collectionDatabaseImageEntityList =
         listOf(getCollectionsDatabaseImageEntity())
@@ -1332,7 +1332,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test
-  fun `should return single already present in collection error on saveCrystallizedImageInDatabase call failure`() {
+  fun `should return Single already present in collection error on saveCrystallizedImageInDatabase call failure`() {
     val collectionImageModelList = listOf(getCollectionsImageModel())
     val collectionDatabaseImageEntityList =
         listOf(getCollectionsDatabaseImageEntity())

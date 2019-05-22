@@ -700,7 +700,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should save state and start automatic wallpaper changer on handleAutomaticWallpaperChangerEnabled call success on a first party oem`() {
+  fun `should save state and start automatic wallpaper changer on handleAutomaticWallpaperChangerEnabled call success on first party oem`() {
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionView.getManufacturerName()).thenReturn(randomUUID().toString())
 
@@ -713,7 +713,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a samsung oem`() {
+  fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on samsung oem`() {
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionView.getManufacturerName()).thenReturn("samsung")
 
@@ -727,7 +727,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a xiaomi oem`() {
+  fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on xiaomi oem`() {
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionView.getManufacturerName()).thenReturn("xiaomi")
 
@@ -741,7 +741,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a oneplus oem`() {
+  fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on oneplus oem`() {
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionView.getManufacturerName()).thenReturn("oneplus")
 
@@ -755,7 +755,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a oppo oem`() {
+  fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on oppo oem`() {
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionView.getManufacturerName()).thenReturn("oppo")
 
@@ -769,7 +769,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a vivo oem`() {
+  fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on vivo oem`() {
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionView.getManufacturerName()).thenReturn("vivo")
 
@@ -783,7 +783,7 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should save state, save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on a asus oem`() {
+  fun `should save state, save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on asus oem`() {
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionView.getManufacturerName()).thenReturn("asus")
 
