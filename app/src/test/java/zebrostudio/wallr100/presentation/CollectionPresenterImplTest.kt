@@ -1040,10 +1040,8 @@ class CollectionPresenterImplTest {
   }
 
   @Test fun `should set wallpaper on handleSetWallpaperMenuItemClicked call success`() {
-    val collectionImagesModelList =
-        listOf(getCollectionsImageModel())
-    val collectionPresenterEntityList =
-        listOf(getCollectionImagesPresenterEntity())
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
+    val collectionPresenterEntityList = listOf(getCollectionImagesPresenterEntity())
     val selectedItemsMap = hashMapOf(Pair(0, collectionPresenterEntityList.first()))
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)).thenReturn(
         randomString)
@@ -1076,10 +1074,8 @@ class CollectionPresenterImplTest {
 
   @Test
   fun `should show generic error message on handleSetWallpaperMenuItemClicked call failure`() {
-    val collectionImagesModelList =
-        listOf(getCollectionsImageModel())
-    val collectionPresenterEntityList =
-        listOf(getCollectionImagesPresenterEntity())
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
+    val collectionPresenterEntityList = listOf(getCollectionImagesPresenterEntity())
     val selectedItemsMap = hashMapOf(Pair(0, collectionPresenterEntityList.first()))
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)).thenReturn(
         randomString)
@@ -1111,10 +1107,8 @@ class CollectionPresenterImplTest {
 
   @Test
   fun `should crystallize and add to collection on handleCrystallizeWallpaperMenuItemClicked call success`() {
-    val collectionImagesModelList =
-        listOf(getCollectionsImageModel())
-    val collectionPresenterEntityList =
-        listOf(getCollectionImagesPresenterEntity())
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
+    val collectionPresenterEntityList = listOf(getCollectionImagesPresenterEntity())
     val selectedItemsMap = hashMapOf(Pair(0, collectionPresenterEntityList.first()))
     `when`(resourceUtils.getStringResource(R.string.crystallizing_wallpaper_wait_message))
         .thenReturn(randomString)
@@ -1150,10 +1144,8 @@ class CollectionPresenterImplTest {
 
   @Test
   fun `should show already present in collection error message on handleCrystallizeWallpaperMenuItemClicked call failure`() {
-    val collectionImagesModelList =
-        listOf(getCollectionsImageModel())
-    val collectionPresenterEntityList =
-        listOf(getCollectionImagesPresenterEntity())
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
+    val collectionPresenterEntityList = listOf(getCollectionImagesPresenterEntity())
     val selectedItemsMap = hashMapOf(Pair(0, collectionPresenterEntityList.first()))
     `when`(resourceUtils.getStringResource(R.string.crystallizing_wallpaper_wait_message))
         .thenReturn(randomString)
@@ -1184,8 +1176,7 @@ class CollectionPresenterImplTest {
 
   @Test
   fun `should show generic error message on handleCrystallizeWallpaperMenuItemClicked call failure`() {
-    val collectionImagesModelList =
-        listOf(getCollectionsImageModel())
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
     val collectionPresenterEntityList =
         listOf(getCollectionImagesPresenterEntity())
     val selectedItemsMap = hashMapOf(Pair(0, collectionPresenterEntityList.first()))

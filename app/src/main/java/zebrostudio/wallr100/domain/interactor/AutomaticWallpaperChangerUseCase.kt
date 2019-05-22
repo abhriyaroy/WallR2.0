@@ -41,7 +41,6 @@ class AutomaticWallpaperChangerInteractor(
     System.currentTimeMillis().let {
       if (it - lastWallpaperChangeTime >= getInterval()) {
         changeWallpaper()
-        lastWallpaperChangeTime = it
       }
     }
   }
@@ -68,6 +67,7 @@ class AutomaticWallpaperChangerInteractor(
           }
         }.observeOn(postExecutionThread.scheduler)
         .subscribe({
+          lastWallpaperChangeTime = System.currentTimeMillis()
         }, {
           automaticWallpaperChangerService?.stopService()
         })
