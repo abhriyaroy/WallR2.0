@@ -3,26 +3,18 @@ package zebrostudio.wallr100.android.service
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
-import android.os.Environment
 import android.os.Handler
 import android.os.IBinder
 import android.support.annotation.Nullable
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationCompat.PRIORITY_MAX
+import android.widget.Toast
 import dagger.android.AndroidInjection
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.NOTIFICATION_CHANNEL_ID
 import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.android.utils.stringRes
-import zebrostudio.wallr100.android.utils.successToast
-import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerInteractor.Companion.appendLog
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerUseCase
-import java.io.BufferedWriter
-import java.io.File
-import java.io.FileWriter
-import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.Date
 import javax.inject.Inject
 
 interface AutomaticWallpaperChangerService {
@@ -39,41 +31,44 @@ val WALLPAPER_CHANGER_INTERVALS_LIST = listOf<Long>(
     259200000
 )
 
+private const val TIME_CHECKER_DELAY: Long = 120000
+
 class AutomaticWallpaperChangerServiceImpl : Service(),
     AutomaticWallpaperChangerService {
 
   @Inject internal lateinit var automaticWallpaperChangerUseCase: AutomaticWallpaperChangerUseCase
 
+  private var handler: Handler? = null
+  private var runnable: Runnable? = null
+
   override fun onCreate() {
     AndroidInjection.inject(this)
-    appendLog("on create service  called")
     super.onCreate()
   }
 
   override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
     createNotification()
     automaticWallpaperChangerUseCase.attachService(this)
-    automaticWallpaperChangerUseCase.handleServiceStarted()
-    appendLog("on start command service called")
-    return START_NOT_STICKY
+    handler = Handler()
+    runnable = Runnable {
+      automaticWallpaperChangerUseCase.handleRunnableCall()
+      handler?.postDelayed(runnable, TIME_CHECKER_DELAY)
+    }
+    handler?.postDelayed(runnable, TIME_CHECKER_DELAY)
+    return START_STICKY
   }
 
   override fun onDestroy() {
-    automaticWallpaperChangerUseCase.handleServiceDestroyed()
+    handler?.removeCallbacks(runnable)
+    handler = null
+    runnable = null
     automaticWallpaperChangerUseCase.detachService()
-    appendLog("on destroy service called")
     super.onDestroy()
   }
 
   @Nullable
   override fun onBind(intent: Intent): IBinder? {
     throw IllegalAccessError()
-  }
-
-  override fun onTaskRemoved(rootIntent: Intent?) {
-    appendLog("on task remove service called at")
-    automaticWallpaperChangerUseCase.handleServiceDestroyed()
-    super.onTaskRemoved(rootIntent)
   }
 
   override fun stopService() {
@@ -100,14 +95,10 @@ class AutomaticWallpaperChangerServiceImpl : Service(),
 
   private fun getIntervalString(interval: Long): String {
     return when (interval) {
-      WALLPAPER_CHANGER_INTERVALS_LIST[1] -> stringRes(
-          R.string.wallpaper_changer_service_interval_1_hour)
-      WALLPAPER_CHANGER_INTERVALS_LIST[2] -> stringRes(
-          R.string.wallpaper_changer_service_interval_6_hours)
-      WALLPAPER_CHANGER_INTERVALS_LIST[3] -> stringRes(
-          R.string.wallpaper_changer_service_interval_1_day)
-      WALLPAPER_CHANGER_INTERVALS_LIST[4] -> stringRes(
-          R.string.wallpaper_changer_service_interval_3_days)
+      WALLPAPER_CHANGER_INTERVALS_LIST[1] -> stringRes(R.string.wallpaper_changer_service_interval_1_hour)
+      WALLPAPER_CHANGER_INTERVALS_LIST[2] -> stringRes(R.string.wallpaper_changer_service_interval_6_hours)
+      WALLPAPER_CHANGER_INTERVALS_LIST[3] -> stringRes(R.string.wallpaper_changer_service_interval_1_day)
+      WALLPAPER_CHANGER_INTERVALS_LIST[4] -> stringRes(R.string.wallpaper_changer_service_interval_3_days)
       else -> stringRes(R.string.wallpaper_changer_service_interval_30_minutes)
     }
   }

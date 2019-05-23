@@ -46,8 +46,7 @@
     <service
         android:name=".android.service.AutomaticWallpaperChangerServiceImpl"
         android:enabled="true"
-        android:stopWithTask="false"
-        android:exported="true"/>
+        android:stopWithTask="false"/>
 
     <meta-data
         android:name="android.max_aspect"
