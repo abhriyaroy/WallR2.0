@@ -8,12 +8,15 @@ import android.app.Service
 import android.content.Context
 import android.os.Build
 import android.support.multidex.MultiDex
+import androidx.work.Configuration
+import androidx.work.WorkManager
 import com.bumptech.glide.request.target.ViewTarget
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.HasServiceInjector
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.di.DaggerAppComponent
+import zebrostudio.wallr100.android.service.AutomaticWallpaperChangerWorkerFactory
 import javax.inject.Inject
 
 const val NOTIFICATION_CHANNEL_ID = "WallrNotificationChannel"
@@ -39,6 +42,8 @@ class WallrApplication : Application(), HasActivityInjector, HasServiceInjector 
         .inject(this)
     ViewTarget.setTagId(R.id.glide_tag)
     createNotificationChannel()
+    val factory: AutomaticWallpaperChangerWorkerFactory.SampleWorkerFactory = DaggerSampleComponent.create().factory()
+    WorkManager.initialize(this, Configuration.Builder().setWorkerFactory(factory).build())
   }
 
   override fun activityInjector() = activityDispatchingAndroidInjector

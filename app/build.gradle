@@ -95,6 +95,8 @@ android {
     implementation "com.github.qingmei2:rximagepicker:$RX_IMAGE_PICKER_VERSION"
     implementation "com.github.qingmei2:rximagepicker_support:$RX_IMAGE_PICKER_VERSION"
     implementation "com.github.qingmei2:rximagepicker_support_zhihu:$RX_IMAGE_PICKER_VERSION"
+    // Workmanager
+    implementation "android.arch.work:work-runtime-ktx:$WORK_MANAGER_VERSION"
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
     implementation project(':librarySearch')

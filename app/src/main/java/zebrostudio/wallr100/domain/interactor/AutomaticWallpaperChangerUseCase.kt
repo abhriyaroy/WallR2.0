@@ -2,7 +2,6 @@ package zebrostudio.wallr100.domain.interactor
 
 import android.graphics.Bitmap
 import android.os.Environment
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import zebrostudio.wallr100.android.service.AutomaticWallpaperChangerService
@@ -50,7 +49,13 @@ class AutomaticWallpaperChangerInteractor(
   }
 
   override fun handleServiceStarted() {
-    timerDisposable = Observable.timer(TIME_CHECKER_INTERVAL, MILLISECONDS)
+    appendLog("on handle service started called")
+    appendLog(
+        "current time is ${System.currentTimeMillis()} and last changed at $lastWallpaperChangeTime")
+    if (System.currentTimeMillis() - lastWallpaperChangeTime >= getInterval()) {
+      changeWallpaper()
+    }
+    /*timerDisposable = Observable.timer(TIME_CHECKER_INTERVAL, MILLISECONDS)
         .repeat()
         .doOnNext {
           appendLog("on next in timer disposable called")
@@ -61,7 +66,7 @@ class AutomaticWallpaperChangerInteractor(
         .doOnError {
           appendLog("on error in timer disposable called ${it.message}")
         }
-        .subscribe()
+        .subscribe()*/
   }
 
   override fun handleServiceDestroyed() {
