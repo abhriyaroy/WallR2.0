@@ -48,7 +48,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
         WALLPAPER_CHANGER_INTERVALS_LIST.first())
 
-    automaticWallpaperChangerUseCase.handleRunnableCall()
+    automaticWallpaperChangerUseCase.handleServiceCreated()
 
     verify(wallrRepository).getWallpaperChangerInterval()
   }
@@ -69,7 +69,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionsImageModelList))
 
-    automaticWallpaperChangerUseCase.handleRunnableCall()
+    automaticWallpaperChangerUseCase.handleServiceCreated()
 
     verify(wallpaperSetter).setWallpaper(mockBitmap)
     inorder.verify(wallrRepository).getImagesInCollection()
@@ -95,7 +95,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionsImageModelList))
 
-    automaticWallpaperChangerUseCase.handleRunnableCall()
+    automaticWallpaperChangerUseCase.handleServiceCreated()
 
     verify(wallpaperSetter).setWallpaper(mockBitmap)
     inorder.verify(wallrRepository).getImagesInCollection()
@@ -121,7 +121,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionsImageModelList))
 
-    automaticWallpaperChangerUseCase.handleRunnableCall()
+    automaticWallpaperChangerUseCase.handleServiceCreated()
 
     verify(wallpaperSetter).setWallpaper(mockBitmap)
     inorder.verify(wallrRepository).getImagesInCollection()
@@ -147,7 +147,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionsImageModelList))
 
-    automaticWallpaperChangerUseCase.handleRunnableCall()
+    automaticWallpaperChangerUseCase.handleServiceCreated()
 
     verify(wallpaperSetter).setWallpaper(mockBitmap)
     inorder.verify(wallrRepository).getImagesInCollection()
@@ -173,7 +173,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionsImageModelList))
 
-    automaticWallpaperChangerUseCase.handleRunnableCall()
+    automaticWallpaperChangerUseCase.handleServiceCreated()
 
     verify(wallpaperSetter).setWallpaper(mockBitmap)
     inorder.verify(wallrRepository).getImagesInCollection()
