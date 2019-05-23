@@ -170,7 +170,7 @@ class CollectionPresenterImpl(
       }
       if (!isDialogShown) {
         collectionImagesUseCase.setAutomaticWallpaperChangerInterval(
-            WALLPAPER_CHANGER_INTERVALS_LIST[INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL])
+            WALLPAPER_CHANGER_INTERVALS_LIST.first())
         collectionView?.showWallpaperChangerIntervalDialog(
             INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL)
       }
