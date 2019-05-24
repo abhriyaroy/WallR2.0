@@ -115,9 +115,7 @@ public class GuillotineAnimation {
       @Override
       public void onAnimationEnd(Animator animation) {
         isOpening = false;
-        Log.d("animation.java prev", "open");
         if (listener != null) {
-          Log.d("animation.java", "open");
           listener.onGuillotineOpened();
         }
       }
@@ -152,10 +150,7 @@ public class GuillotineAnimation {
         isClosing = false;
         guillotineView.setVisibility(View.GONE);
         startActionBarAnimation();
-        Log.d("animation.java prev", "close");
-
         if (listener != null) {
-          Log.d("animation.java", "close");
           listener.onGuillotineClosed();
         }
       }
