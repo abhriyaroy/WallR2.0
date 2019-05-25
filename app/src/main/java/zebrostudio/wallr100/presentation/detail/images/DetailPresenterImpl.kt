@@ -498,8 +498,8 @@ class DetailPresenterImpl(
         .doOnNext {
           if (it.progress == DOWNLOAD_COMPLETED_VALUE) {
             detailView?.startCroppingActivity(
-                imageOptionsUseCase.getCroppingSourceUri(),
-                imageOptionsUseCase.getCroppingDestinationUri(),
+                imageOptionsUseCase.getCroppingSourceUri().blockingGet(),
+                imageOptionsUseCase.getCroppingDestinationUri().blockingGet(),
                 wallpaperSetter.getDesiredMinimumWidth(),
                 wallpaperSetter.getDesiredMinimumHeight()
             )

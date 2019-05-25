@@ -43,6 +43,11 @@
           android:resource="@xml/provider_paths"/>
     </provider>
 
+    <service
+        android:name=".android.service.AutomaticWallpaperChangerServiceImpl"
+        android:enabled="true"
+        android:stopWithTask="false"/>
+
     <meta-data
         android:name="android.max_aspect"
         android:value="2.1"/>

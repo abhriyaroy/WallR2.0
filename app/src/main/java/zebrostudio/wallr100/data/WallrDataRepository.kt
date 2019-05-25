@@ -256,11 +256,11 @@ class WallrDataRepository(
     imageHandler.cancelFetchingImage()
   }
 
-  override fun getCacheSourceUri() = imageHandler.getImageUri()
+  override fun getCacheSourceUri(): Single<Uri> = imageHandler.getImageUri()
+      .subscribeOn(executionThread.ioScheduler)
 
-  override fun getCacheResultUri(): Single<Uri> {
-    return fileHandler.getCacheFileUriForCropping()
-  }
+  override fun getCacheResultUri(): Single<Uri> = fileHandler.getCacheFileUriForCropping()
+      .subscribeOn(executionThread.ioScheduler)
 
   override fun getBitmapFromUri(uri: Uri?): Single<Bitmap> {
     return imageHandler.convertUriToBitmap(uri)

@@ -1,9 +1,17 @@
 package zebrostudio.wallr100.android.service
 
-import android.content.Context
-import androidx.work.Worker
-import androidx.work.WorkerParameters
-import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerInteractor.Companion.appendLog
+import android.app.PendingIntent
+import android.app.Service
+import android.content.Intent
+import android.os.IBinder
+import android.support.annotation.Nullable
+import android.support.v4.app.NotificationCompat
+import android.support.v4.app.NotificationCompat.PRIORITY_MAX
+import dagger.android.AndroidInjection
+import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.NOTIFICATION_CHANNEL_ID
+import zebrostudio.wallr100.android.ui.main.MainActivity
+import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerUseCase
 import javax.inject.Inject
 
@@ -13,6 +21,7 @@ interface AutomaticWallpaperChangerService {
 
 const val WALLPAPER_CHANGER_SERVICE_CODE = 1
 const val WALLPAPER_CHANGER_REQUEST_CODE = 2
+const val ILLEGAL_ACCESS_ERROR_MESSAGE = "Wallpaper changer service cannot be bounded to"
 val WALLPAPER_CHANGER_INTERVALS_LIST = listOf<Long>(
     1800000,
     3600000,
@@ -21,55 +30,31 @@ val WALLPAPER_CHANGER_INTERVALS_LIST = listOf<Long>(
     259200000
 )
 
-class AutomaticWallpaperChangerServiceImpl
-@Inject constructor(
-  private val automaticWallpaperChangerUseCase: AutomaticWallpaperChangerUseCase,
-  private val appContext: Context,
-  private val workerParams: WorkerParameters
-) : Worker(appContext, workerParams),
-    AutomaticWallpaperChangerService {
+class AutomaticWallpaperChangerServiceImpl() : Service(), AutomaticWallpaperChangerService {
 
+  @Inject
+  internal lateinit var automaticWallpaperChangerUseCase: AutomaticWallpaperChangerUseCase
 
-  override fun doWork(): Result {
-    appendLog("dowork called in wallpaper changer service")
-    automaticWallpaperChangerUseCase.handleServiceStarted()
-    return Result.success()
-  }
-
-  override fun stopService() {
-
-  }
-
-  /*override fun onCreate() {
+  override fun onCreate() {
     AndroidInjection.inject(this)
-    appendLog("on create service  called")
     super.onCreate()
+    automaticWallpaperChangerUseCase.attachService(this)
   }
 
   override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
     createNotification()
-    automaticWallpaperChangerUseCase.attachService(this)
-    automaticWallpaperChangerUseCase.handleServiceStarted()
-    appendLog("on start command service called")
+    automaticWallpaperChangerUseCase.handleServiceCreated()
     return START_NOT_STICKY
   }
 
   override fun onDestroy() {
-    automaticWallpaperChangerUseCase.handleServiceDestroyed()
     automaticWallpaperChangerUseCase.detachService()
-    appendLog("on destroy service called")
     super.onDestroy()
   }
 
   @Nullable
   override fun onBind(intent: Intent): IBinder? {
-    throw IllegalAccessError()
-  }
-
-  override fun onTaskRemoved(rootIntent: Intent?) {
-    appendLog("on task remove service called at")
-    automaticWallpaperChangerUseCase.handleServiceDestroyed()
-    super.onTaskRemoved(rootIntent)
+    throw IllegalAccessError(ILLEGAL_ACCESS_ERROR_MESSAGE)
   }
 
   override fun stopService() {
@@ -87,8 +72,6 @@ class AutomaticWallpaperChangerServiceImpl
             automaticWallpaperChangerUseCase.getInterval())}")
         .setSmallIcon(R.drawable.ic_wallr)
         .setContentIntent(pendingIntent)
-        .setAutoCancel(false)
-        .setOngoing(true)
         .setPriority(PRIORITY_MAX)
         .build()
     startForeground(WALLPAPER_CHANGER_SERVICE_CODE, notification)
@@ -106,6 +89,6 @@ class AutomaticWallpaperChangerServiceImpl
           R.string.wallpaper_changer_service_interval_3_days)
       else -> stringRes(R.string.wallpaper_changer_service_interval_30_minutes)
     }
-  }*/
+  }
 
 }

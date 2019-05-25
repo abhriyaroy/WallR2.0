@@ -162,7 +162,7 @@ class ColorImagesUseCaseTest {
   @Test fun `should return uri on getCacheSourceUri call success`() {
     `when`(wallrRepository.getCacheSourceUri()).thenReturn(mockUri)
 
-    val result = colorImagesInteractor.getCacheSourceUri()
+    val result = colorImagesInteractor.getCroppingSourceUri()
 
     assertEquals(mockUri, result)
     verify(wallrRepository).getCacheSourceUri()
