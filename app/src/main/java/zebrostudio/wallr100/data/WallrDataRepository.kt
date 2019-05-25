@@ -208,7 +208,7 @@ class WallrDataRepository(
     if (!fileHandler.freeSpaceAvailable()) {
       return Single.error(NotEnoughFreeSpaceException())
     }
-    return Single.just(imageHandler.getImageBitmap())
+    return Single.just(imageHandler.getImageBitmap().blockingGet())
         .subscribeOn(executionThread.computationScheduler)
   }
 
@@ -219,7 +219,8 @@ class WallrDataRepository(
     if (imageHandler.isImageCached(link)) {
       val observable: Observable<ImageDownloadModel> = Observable.create {
         it.onNext(ImageDownloadModel(IMAGE_DOWNLOAD_PROGRESS_VALUE_99, null))
-        it.onNext(ImageDownloadModel(IMAGE_DOWNLOAD_FINISHED_VALUE, imageHandler.getImageBitmap()))
+        it.onNext(ImageDownloadModel(IMAGE_DOWNLOAD_FINISHED_VALUE,
+            imageHandler.getImageBitmap().blockingGet()))
         it.onComplete()
       }
       return observable.subscribeOn(executionThread.ioScheduler)
@@ -228,7 +229,7 @@ class WallrDataRepository(
         .subscribeOn(executionThread.ioScheduler)
         .flatMap {
           if (it == IMAGE_DOWNLOAD_FINISHED_VALUE) {
-            Observable.just(ImageDownloadModel(it, imageHandler.getImageBitmap()))
+            Observable.just(ImageDownloadModel(it, imageHandler.getImageBitmap().blockingGet()))
           } else {
             Observable.just(ImageDownloadModel(it, null))
           }
@@ -236,7 +237,8 @@ class WallrDataRepository(
   }
 
   override fun getCacheImageBitmap(): Single<Bitmap> {
-    val single: Single<Bitmap> = Single.create { it.onSuccess(imageHandler.getImageBitmap()) }
+    val single: Single<Bitmap> =
+        Single.create { it.onSuccess(imageHandler.getImageBitmap().blockingGet()) }
     return single.subscribeOn(executionThread.computationScheduler)
   }
 
@@ -256,7 +258,9 @@ class WallrDataRepository(
 
   override fun getCacheSourceUri() = imageHandler.getImageUri()
 
-  override fun getCacheResultUri() = fileHandler.getCacheFileUriForCropping()
+  override fun getCacheResultUri(): Single<Uri> {
+    return fileHandler.getCacheFileUriForCropping()
+  }
 
   override fun getBitmapFromUri(uri: Uri?): Single<Bitmap> {
     return imageHandler.convertUriToBitmap(uri)

@@ -3,11 +3,12 @@ package zebrostudio.wallr100.data
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import io.reactivex.Single
 import java.io.File
 
 interface FileHandler {
   fun getCacheFile(): File
-  fun getCacheFileUriForCropping(): Uri
+  fun getCacheFileUriForCropping(): Single<Uri>
   fun getDownloadFile(): File
   fun deleteCacheFiles()
   fun getCollectionsFile(): File
@@ -50,12 +51,14 @@ class FileHandlerImpl(context: Context) : FileHandler {
     return cacheFile
   }
 
-  override fun getCacheFileUriForCropping(): Uri {
-    createCacheFolderIfNotPresent()
-    if (!cacheCroppedFile.exists()) {
-      cacheCroppedFile.createNewFile()
+  override fun getCacheFileUriForCropping(): Single<Uri> {
+    return Single.create { emitter ->
+      createCacheFolderIfNotPresent()
+      if (!cacheCroppedFile.exists()) {
+        cacheCroppedFile.createNewFile()
+      }
+      emitter.onSuccess(Uri.fromFile(cacheCroppedFile))
     }
-    return Uri.fromFile(cacheCroppedFile)
   }
 
   override fun getDownloadFile(): File {

@@ -46,8 +46,8 @@ interface WallrRepository {
   fun clearImageCaches(): Completable
   fun cancelImageBitmapFetchOperation()
 
-  fun getCacheSourceUri(): Uri
-  fun getCacheResultUri(): Uri
+  fun getCacheSourceUri(): Single<Uri>
+  fun getCacheResultUri(): Single<Uri>
   fun getShareableImageUri(): Single<Uri>
 
   fun getBitmapFromUri(uri: Uri?): Single<Bitmap>
