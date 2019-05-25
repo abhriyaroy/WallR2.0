@@ -14,7 +14,7 @@ Did you know that an average user checks their device more than 80 times a day? 
 - [Features](#features) <br>
 - [Usage Tips](#usage-tips) <br>
 - [Project Setup Notes](#project-setup-notes) <br>
-- [Acclaimations](#acclamations) <br>
+- [Acclamations](#acclamations) <br>
 - [References](#references) <br>
 
 ## Introduction
