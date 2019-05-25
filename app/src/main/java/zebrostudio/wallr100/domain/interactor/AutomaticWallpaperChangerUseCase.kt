@@ -28,7 +28,6 @@ class AutomaticWallpaperChangerInteractor(
   private val postExecutionThread: PostExecutionThread
 ) : AutomaticWallpaperChangerUseCase {
 
-  internal var lastWallpaperChangeTime: Long = System.currentTimeMillis()
   private var timerDisposable: Disposable? = null
   private var wallpaperChangerDisposable: Disposable? = null
   private var automaticWallpaperChangerService: AutomaticWallpaperChangerService? = null
@@ -48,7 +47,8 @@ class AutomaticWallpaperChangerInteractor(
     timerDisposable = Observable.timer(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
         .repeat()
         .doOnNext {
-          if (System.currentTimeMillis() - lastWallpaperChangeTime >= getInterval()) {
+          if (System.currentTimeMillis() - wallrRepository.getLastWallpaperChangeTimeStamp()
+              >= getInterval()) {
             changeWallpaper()
           }
         }
@@ -77,7 +77,7 @@ class AutomaticWallpaperChangerInteractor(
           }
         }.observeOn(postExecutionThread.scheduler)
         .subscribe({
-          lastWallpaperChangeTime = System.currentTimeMillis()
+          wallrRepository.setLastWallpaperChangeTimeStamp(System.currentTimeMillis())
         }, {
           automaticWallpaperChangerService?.stopService()
         })

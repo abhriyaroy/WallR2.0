@@ -30,7 +30,7 @@ val WALLPAPER_CHANGER_INTERVALS_LIST = listOf<Long>(
     259200000
 )
 
-class AutomaticWallpaperChangerServiceImpl() : Service(), AutomaticWallpaperChangerService {
+class AutomaticWallpaperChangerServiceImpl : Service(), AutomaticWallpaperChangerService {
 
   @Inject
   internal lateinit var automaticWallpaperChangerUseCase: AutomaticWallpaperChangerUseCase

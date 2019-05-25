@@ -443,18 +443,21 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should return false on isCrystallizeDescriptionShown call success`() {
-    `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME, CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG))
+    `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME,
+        CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_PREFERENCE_TAG))
         .thenReturn(false)
 
     assertFalse(wallrDataRepository.isCrystallizeDescriptionShown())
 
-    verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME, CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG)
+    verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME,
+        CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_PREFERENCE_TAG)
   }
 
   @Test fun `should call shared preference on saveCrystallizeDescriptionShown call success`() {
     wallrDataRepository.saveCrystallizeDescriptionShown()
 
-    verify(sharedPrefs).setBoolean(IMAGE_PREFERENCE_NAME, CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG,
+    verify(sharedPrefs).setBoolean(IMAGE_PREFERENCE_NAME,
+        CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_PREFERENCE_TAG,
         true)
   }
 
@@ -853,11 +856,12 @@ class WallrDataRepositoryTest {
 
   @Test fun `should return true on isCustomColorListPresent call success`() {
     `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME,
-        CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG)).thenReturn(true)
+        CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_PREFERENCE_TAG)).thenReturn(true)
 
     assertTrue(wallrDataRepository.isCustomMinimalColorListPresent())
 
-    verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG)
+    verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME,
+        CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_PREFERENCE_TAG)
   }
 
   @Test fun `should return Single of list of string on getCustomColorList call success`() {
@@ -884,13 +888,14 @@ class WallrDataRepositoryTest {
     val list = listOf(randomString)
     val gsonString = Gson().toJson(list)
     `when`(gsonProvider.getGson()).thenReturn(Gson())
-    `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG, gsonString))
+    `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
+        gsonString))
         .thenReturn(true)
 
     wallrDataRepository.saveCustomMinimalColorList(list).test().assertComplete()
 
     verify(gsonProvider).getGson()
-    verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
+    verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
         gsonString)
     verifyIoSchedulerSubscription()
   }
@@ -902,17 +907,17 @@ class WallrDataRepositoryTest {
     val selectedIndices = hashMapOf(Pair(firstElementIndex, randomString))
     `when`(gsonProvider.getGson()).thenReturn(Gson())
     `when`(minimalColorHelper.cacheDeletedItems(selectedIndices)).thenReturn(Completable.complete())
-    `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
+    `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
         gsonString)).thenReturn(true)
 
     wallrDataRepository.modifyColorList(list, selectedIndices).test().assertValue(modifiedList)
 
     verify(gsonProvider).getGson()
     verify(minimalColorHelper).cacheDeletedItems(selectedIndices)
-    verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
+    verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
         gsonString)
     verify(sharedPrefs).setBoolean(IMAGE_PREFERENCE_NAME,
-        CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG, true)
+        CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_PREFERENCE_TAG, true)
     verifyComputationSchedulerCall()
   }
 
@@ -923,7 +928,7 @@ class WallrDataRepositoryTest {
     val selectedIndices = hashMapOf(Pair(firstElementIndex, randomString))
     `when`(gsonProvider.getGson()).thenReturn(Gson())
     `when`(minimalColorHelper.cacheDeletedItems(selectedIndices)).thenReturn(Completable.complete())
-    `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
+    `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
         gsonString)).thenReturn(false)
 
     wallrDataRepository.modifyColorList(list, selectedIndices).test()
@@ -931,7 +936,7 @@ class WallrDataRepositoryTest {
 
     verify(gsonProvider).getGson()
     verify(minimalColorHelper).cacheDeletedItems(selectedIndices)
-    verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
+    verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
         gsonString)
     verifyComputationSchedulerCall()
   }
@@ -952,7 +957,7 @@ class WallrDataRepositoryTest {
     verify(minimalColorHelper).getCustomColors()
     verify(minimalColorHelper).getDeletedItemsFromCache()
     verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME,
-        CUSTOM_MINIMAL_COLOR_LIST_TAG, Gson().toJson(modifiedList))
+        CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG, Gson().toJson(modifiedList))
     verifyComputationSchedulerCall()
   }
 
@@ -1233,23 +1238,23 @@ class WallrDataRepositoryTest {
   @Test
   fun `should return true on getAutomaticWallpaperChangerState call success as wallpaper changer is enabled`() {
     `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_STATE_TAG)).thenReturn(true)
+        AUTOMATIC_WALLPAPER_CHANGER_STATE_PREFERENCE_TAG)).thenReturn(true)
 
     assertTrue(wallrDataRepository.getAutomaticWallpaperChangerState())
 
     verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_STATE_TAG)
+        AUTOMATIC_WALLPAPER_CHANGER_STATE_PREFERENCE_TAG)
   }
 
   @Test
   fun `should return false on getAutomaticWallpaperChangerState call success as wallpaper changer is disabled`() {
     `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_STATE_TAG)).thenReturn(false)
+        AUTOMATIC_WALLPAPER_CHANGER_STATE_PREFERENCE_TAG)).thenReturn(false)
 
     assertFalse(wallrDataRepository.getAutomaticWallpaperChangerState())
 
     verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_STATE_TAG)
+        AUTOMATIC_WALLPAPER_CHANGER_STATE_PREFERENCE_TAG)
   }
 
   @Test
@@ -1365,12 +1370,12 @@ class WallrDataRepositoryTest {
   fun `should return interval at which wallpaper changer runs on getWallpaperChangerInterval call success`() {
     val interval = Random().nextLong()
     `when`(sharedPrefs.getLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_TAG)).thenReturn(interval)
+        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_PREFERENCE_TAG)).thenReturn(interval)
 
     assertEquals(interval, wallrDataRepository.getWallpaperChangerInterval())
 
     verify(sharedPrefs).getLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_TAG)
+        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_PREFERENCE_TAG)
   }
 
   @Test fun `should set wallpaper changer interval on setWallpaperChangerInterval call success`() {
@@ -1379,19 +1384,19 @@ class WallrDataRepositoryTest {
     wallrDataRepository.setWallpaperChangerInterval(interval)
 
     verify(sharedPrefs).setLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_TAG, interval)
+        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_PREFERENCE_TAG, interval)
   }
 
   @Test
   fun `should return uid on getLastUsedWallpaperUid call success`() {
     val uid = Random().nextLong()
     `when`(sharedPrefs.getLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_TAG)).thenReturn(uid)
+        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_PREFERENCE_TAG)).thenReturn(uid)
 
     assertEquals(uid, wallrDataRepository.getLastUsedWallpaperUid())
 
     verify(sharedPrefs).getLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_TAG)
+        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_PREFERENCE_TAG)
   }
 
   @Test fun `should save uid on setLastUsedWallpaperUid call success`() {
@@ -1400,40 +1405,66 @@ class WallrDataRepositoryTest {
     wallrDataRepository.setLastUsedWallpaperUid(uid)
 
     verify(sharedPrefs).setLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_TAG, uid)
+        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_PREFERENCE_TAG, uid)
   }
 
   @Test
   fun `should save automatic wallpaper changer as enabled on saveAutomaticWallpaperChangerEnabledState call success`() {
     wallrDataRepository.saveAutomaticWallpaperChangerEnabledState()
 
-    verify(sharedPrefs).setBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED, true)
+    verify(sharedPrefs).setBoolean(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG, true)
   }
 
   @Test
   fun `should save automatic wallpaper changer as disabled on saveAutomaticWallpaperChangerDisabledState call success`() {
     wallrDataRepository.saveAutomaticWallpaperChangerDisabledState()
 
-    verify(sharedPrefs).setBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED,
+    verify(sharedPrefs).setBoolean(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG,
         false)
   }
 
   @Test fun `should return true on wasAutomaticWallpaperChangerEnabled call success`() {
-    `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED))
+    `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG))
         .thenReturn(true)
 
     assertTrue(wallrDataRepository.wasAutomaticWallpaperChangerEnabled())
 
-    verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED)
+    verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG)
   }
 
   @Test fun `should return false on wasAutomaticWallpaperChangerEnabled call success`() {
-    `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED))
+    `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG))
         .thenReturn(false)
 
     assertFalse(wallrDataRepository.wasAutomaticWallpaperChangerEnabled())
 
-    verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED)
+    verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG)
+  }
+
+  @Test fun `should return timestamp on getLastWallpaperChangeTimeStamp call success`() {
+    val timeStamp = System.currentTimeMillis()
+    `when`(sharedPrefs.getLong(IMAGE_PREFERENCE_NAME,
+        LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG)).thenReturn(timeStamp)
+
+    assertEquals(timeStamp, wallrDataRepository.getLastWallpaperChangeTimeStamp())
+
+    verify(sharedPrefs).getLong(IMAGE_PREFERENCE_NAME,
+        LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG)
+  }
+
+  @Test fun `should save timestamp on setLastWallpaperChangeTimeStamp call success`() {
+    val timeStamp = System.currentTimeMillis()
+
+    wallrDataRepository.setLastWallpaperChangeTimeStamp(timeStamp)
+
+    verify(sharedPrefs).setLong(IMAGE_PREFERENCE_NAME,
+        LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG, timeStamp)
   }
 
   @After fun tearDown() {

@@ -44,7 +44,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test fun `should not change wallpaper on handleRunnableCall success`() {
-    automaticWallpaperChangerUseCase.lastWallpaperChangeTime = System.currentTimeMillis()
+    val timeStamp = System.currentTimeMillis()
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
         WALLPAPER_CHANGER_INTERVALS_LIST.first())
 
@@ -55,8 +55,7 @@ class AutomaticWallpaperChangerUseCaseTest {
 
   @Test
   fun `should change wallpaper when interval is of 30 minutes on handleRunnableCall success`() {
-    automaticWallpaperChangerUseCase.lastWallpaperChangeTime =
-        System.currentTimeMillis() - 1800000
+    val timeStamp = System.currentTimeMillis() - 1800000
     val inorder = inOrder(wallrRepository)
     val firstCollectionsImageModel = getCollectionsImageModel()
     val secondCollectionsImageModel = getCollectionsImageModel()
@@ -81,8 +80,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test fun `should change wallpaper when interval is of 1 hour on handleRunnableCall success`() {
-    automaticWallpaperChangerUseCase.lastWallpaperChangeTime =
-        System.currentTimeMillis() - 3600000
+    val timeStamp = System.currentTimeMillis() - 3600000
     val inorder = inOrder(wallrRepository)
     val firstCollectionsImageModel = getCollectionsImageModel()
     val secondCollectionsImageModel = getCollectionsImageModel()
@@ -107,8 +105,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test fun `should change wallpaper when interval is of 6 hours on handleRunnableCall success`() {
-    automaticWallpaperChangerUseCase.lastWallpaperChangeTime =
-        System.currentTimeMillis() - 21600000
+    val timeStamp = System.currentTimeMillis() - 21600000
     val inorder = inOrder(wallrRepository)
     val firstCollectionsImageModel = getCollectionsImageModel()
     val secondCollectionsImageModel = getCollectionsImageModel()
@@ -133,8 +130,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test fun `should change wallpaper when interval is of 1 day on handleRunnableCall success`() {
-    automaticWallpaperChangerUseCase.lastWallpaperChangeTime =
-        System.currentTimeMillis() - 86400000
+    val timeStamp = System.currentTimeMillis() - 86400000
     val inorder = inOrder(wallrRepository)
     val firstCollectionsImageModel = getCollectionsImageModel()
     val secondCollectionsImageModel = getCollectionsImageModel()
@@ -159,8 +155,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test fun `should change wallpaper when interval is of 3 days on handleRunnableCall success`() {
-    automaticWallpaperChangerUseCase.lastWallpaperChangeTime =
-        System.currentTimeMillis() - 259200000
+    val timeStamp = System.currentTimeMillis() - 259200000
     val inorder = inOrder(wallrRepository)
     val firstCollectionsImageModel = getCollectionsImageModel()
     val secondCollectionsImageModel = getCollectionsImageModel()
