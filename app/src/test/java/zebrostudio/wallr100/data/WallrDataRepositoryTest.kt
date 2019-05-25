@@ -285,7 +285,7 @@ class WallrDataRepositoryTest {
   @Test fun `should return cached bitmap on getImageBitmap call success and cache is present`() {
     `when`(fileHandler.freeSpaceAvailable()).thenReturn(true)
     `when`(imageHandler.isImageCached(randomString)).thenReturn(true)
-    `when`(imageHandler.getImageBitmap()).thenReturn(mockBitmap)
+    `when`(imageHandler.getImageBitmap()).thenReturn(Single.just(mockBitmap))
     val testObserver = wallrDataRepository.getImageBitmap(randomString).test()
     val resultImageDownloadModel = testObserver.values()[0]
     val resultImageDownloadModelCompleted = testObserver.values()[1]
@@ -325,7 +325,7 @@ class WallrDataRepositoryTest {
     `when`(imageHandler.isImageCached(randomString)).thenReturn(false)
     `when`(imageHandler.fetchImage(randomString)).thenReturn(
         Observable.just(DOWNLOAD_PROGRESS_COMPLETED_VALUE))
-    `when`(imageHandler.getImageBitmap()).thenReturn(mockBitmap)
+    `when`(imageHandler.getImageBitmap()).thenReturn(Single.just(mockBitmap))
 
     val resultImageDownloadModel =
         wallrDataRepository.getImageBitmap(randomString).test().values()[0]
@@ -340,7 +340,7 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should return Single of bitmap on getCacheImageBitmap call success`() {
-    `when`(imageHandler.getImageBitmap()).thenReturn(mockBitmap)
+    `when`(imageHandler.getImageBitmap()).thenReturn(Single.just(mockBitmap))
 
     wallrDataRepository.getCacheImageBitmap().test().assertValue(mockBitmap)
 
@@ -364,21 +364,23 @@ class WallrDataRepositoryTest {
   }
 
   @Test fun `should return image uri on getCacheSourceUri call success`() {
-    `when`(imageHandler.getImageUri()).thenReturn(mockUri)
+    `when`(imageHandler.getImageUri()).thenReturn(Single.just(mockUri))
 
-    val uri = wallrDataRepository.getCacheSourceUri()
+    val uri = wallrDataRepository.getCacheSourceUri().test().values()[0]
 
     assertEquals(mockUri, uri)
     verify(imageHandler).getImageUri()
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should return result destination file uri on getCacheResultUri call success`() {
-    `when`(fileHandler.getCacheFileUriForCropping()).thenReturn(mockUri)
+    `when`(fileHandler.getCacheFileUriForCropping()).thenReturn(Single.just(mockUri))
 
-    val uri = wallrDataRepository.getCacheResultUri()
+    val uri = wallrDataRepository.getCacheResultUri().test().values()[0]
 
     assertEquals(mockUri, uri)
     verify(fileHandler).getCacheFileUriForCropping()
+    verifyIoSchedulerSubscription()
   }
 
   @Test

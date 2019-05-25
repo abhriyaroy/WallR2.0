@@ -832,8 +832,8 @@ class DetailPresenterImplTest {
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(imageOptionsUseCase.getCroppingSourceUri()).thenReturn(mockUri)
-    `when`(imageOptionsUseCase.getCroppingDestinationUri()).thenReturn(mockDestinationUri)
+    `when`(imageOptionsUseCase.getCroppingSourceUri()).thenReturn(Single.just(mockUri))
+    `when`(imageOptionsUseCase.getCroppingDestinationUri()).thenReturn(Single.just(mockDestinationUri))
     `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(width)
     `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(height)
 
@@ -944,8 +944,8 @@ class DetailPresenterImplTest {
         Observable.create {
           it.onNext(imageDownloadModel)
         })
-    `when`(imageOptionsUseCase.getCroppingSourceUri()).thenReturn(mockUri)
-    `when`(imageOptionsUseCase.getCroppingDestinationUri()).thenReturn(mockDestinationUri)
+    `when`(imageOptionsUseCase.getCroppingSourceUri()).thenReturn(Single.just(mockUri))
+    `when`(imageOptionsUseCase.getCroppingDestinationUri()).thenReturn(Single.just(mockDestinationUri))
     `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(width)
     `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(height)
 
