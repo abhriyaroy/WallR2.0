@@ -31,7 +31,7 @@ import zebrostudio.wallr100.presentation.BaseView
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-private const val titlePadding = 48
+private const val COLLECTIONS_TITLE_PADDING = 48
 
 abstract class BaseFragment : Fragment(), BaseView {
 
@@ -103,7 +103,7 @@ abstract class BaseFragment : Fragment(), BaseView {
   private fun adjustTitlePadding() {
     activity?.let {
       if (fragmentTag == COLLECTIONS_TAG) {
-        val dpAsPixels = (titlePadding * resources.displayMetrics.density)
+        val dpAsPixels = (COLLECTIONS_TITLE_PADDING * resources.displayMetrics.density)
         it.findViewById<WallrCustomTextView>(R.id.toolbarTitle)
             ?.setPaddingRelative(dpAsPixels.roundToInt(), 0, 0, 0)
       } else {

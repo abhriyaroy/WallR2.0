@@ -3,8 +3,10 @@ package zebrostudio.wallr100.domain.interactor
 import android.graphics.Bitmap
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
+import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.service.AutomaticWallpaperChangerService
 import zebrostudio.wallr100.android.service.WALLPAPER_CHANGER_INTERVALS_LIST
+import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
@@ -13,7 +15,7 @@ interface AutomaticWallpaperChangerUseCase {
   fun attachService(automaticWallpaperChangerService: AutomaticWallpaperChangerService)
   fun detachService()
   fun handleRunnableCall()
-  fun getInterval(): Long
+  fun getIntervalString(): String
 }
 
 const val INDEX_OF_FIRST_ELEMENT_IN_LIST = 0
@@ -22,6 +24,7 @@ const val INDEX_UNDERFLOW = -1
 class AutomaticWallpaperChangerInteractor(
   private val wallpaperSetter: WallpaperSetter,
   private val wallrRepository: WallrRepository,
+  private val resourceUtils: ResourceUtils,
   private val postExecutionThread: PostExecutionThread
 ) : AutomaticWallpaperChangerUseCase {
 
@@ -45,7 +48,22 @@ class AutomaticWallpaperChangerInteractor(
     }
   }
 
-  override fun getInterval(): Long {
+  override fun getIntervalString(): String {
+    return when (getInterval()) {
+      WALLPAPER_CHANGER_INTERVALS_LIST[1] -> resourceUtils.getStringResource(
+          R.string.wallpaper_changer_service_interval_1_hour)
+      WALLPAPER_CHANGER_INTERVALS_LIST[2] -> resourceUtils.getStringResource(
+          R.string.wallpaper_changer_service_interval_6_hours)
+      WALLPAPER_CHANGER_INTERVALS_LIST[3] -> resourceUtils.getStringResource(
+          R.string.wallpaper_changer_service_interval_1_day)
+      WALLPAPER_CHANGER_INTERVALS_LIST[4] -> resourceUtils.getStringResource(
+          R.string.wallpaper_changer_service_interval_3_days)
+      else -> resourceUtils.getStringResource(
+          R.string.wallpaper_changer_service_interval_30_minutes)
+    }
+  }
+
+  fun getInterval(): Long {
     wallrRepository.getWallpaperChangerInterval().let {
       return if (WALLPAPER_CHANGER_INTERVALS_LIST.contains(it)) {
         it
