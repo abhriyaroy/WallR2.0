@@ -2,7 +2,6 @@ package zebrostudio.wallr100.android.ui.collection
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -52,7 +51,6 @@ import zebrostudio.wallr100.android.ui.detail.images.BLUR_RADIUS
 import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
 import zebrostudio.wallr100.android.utils.colorRes
-import zebrostudio.wallr100.android.utils.equalsIgnoreCase
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.inflate
@@ -69,25 +67,11 @@ import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEn
 import javax.inject.Inject
 
 const val MANUFACTURER_NAME_SAMSUNG = "samsung"
-const val SECURITY_PACKAGE_SAMSUNG = "com.samsung.android.lool"
-const val AUTOSTART_CLASS_NAME_SAMSUNG = "com.samsung.android.sm.ui.battery.BatteryActivity"
 const val MANUFACTURER_NAME_XIAOMI = "xiaomi"
-const val SECURITY_PACKAGE_XIAOMI = "com.miui.securitycenter"
-const val AUTOSTART_CLASS_NAME_XIAOMI = "com.miui.permcenter.autostart.AutoStartManagementActivity"
 const val MANUFACTURER_NAME_ONEPLUS = "oneplus"
-const val SECURITY_PACKAGE_ONEPLUS = "com.oneplus.security"
-const val AUTOSTART_CLASS_NAME_ONEPLUS =
-    "com.oneplus.security.chainlaunch.view.ChainLaunchAppListActivity"
 const val MANUFACTURER_NAME_OPPO = "oppo"
-const val SECURITY_PACKAGE_OPPO = "com.coloros.safecenter"
-const val AUTOSTART_CLASS_NAME_OPPO =
-    "com.coloros.safecenter.permission.startup.StartupAppListActivity"
 const val MANUFACTURER_NAME_VIVO = "vivo"
-const val SECURITY_PACKAGE_VIVO = "com.vivo.permissionmanager"
-const val AUTOSTART_CLASS_NAME_VIVO = "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"
 const val MANUFACTURER_NAME_ASUS = "asus"
-const val SECURITY_PACKAGE_ASUS = "com.asus.mobilemanager"
-const val AUTOSTART_CLASS_NAME_ASUS = "com.asus.mobilemanager.entry.FunctionActivity"
 const val COLLECTION_FRAGMENT_REQUEST_CODE = 1
 const val MAXIMUM_SELECTED_IMAGES = 10
 private const val REORDER_HINT_VIEW_POSITION = 1
