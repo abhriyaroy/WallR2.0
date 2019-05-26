@@ -288,7 +288,7 @@ class ImageHandlerImpl(
         .flatMap { originalList ->
           mutableListOf<CollectionDatabaseImageEntity>().let { newList ->
             originalList.forEach { collectionDatabaseImageEntity ->
-              if (fileHandler.ifFileExists(collectionDatabaseImageEntity.path)) {
+              if (fileHandler.fileExists(collectionDatabaseImageEntity.path)) {
                 newList.add(collectionDatabaseImageEntity)
               } else {
                 databaseHelper.getDatabase().collectionsDao()

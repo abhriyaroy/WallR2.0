@@ -13,7 +13,7 @@ interface FileHandler {
   fun getCollectionsFile(): File
   fun getShareableFle(): File
   fun freeSpaceAvailable(): Boolean
-  fun ifFileExists(filePath: String): Boolean
+  fun fileExists(filePath: String): Boolean
   fun deleteFile(filePath: String)
 }
 
@@ -92,7 +92,7 @@ class FileHandlerImpl(context: Context) : FileHandler {
     return megBytesAvailable > MINIMUM_FREE_STORAGE_IN_MB
   }
 
-  override fun ifFileExists(filePath: String): Boolean {
+  override fun fileExists(filePath: String): Boolean {
     return File(filePath).exists()
   }
 

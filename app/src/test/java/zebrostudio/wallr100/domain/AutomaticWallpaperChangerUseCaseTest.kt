@@ -18,6 +18,7 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.android.service.AutomaticWallpaperChangerService
 import zebrostudio.wallr100.android.service.WALLPAPER_CHANGER_INTERVALS_LIST
+import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.datafactory.CollectionsImageModelFactory.getCollectionsImageModel
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
@@ -29,6 +30,7 @@ class AutomaticWallpaperChangerUseCaseTest {
 
   @Mock lateinit var automaticWallpaperChangerService: AutomaticWallpaperChangerService
   @Mock lateinit var wallpaperSetter: WallpaperSetter
+  @Mock lateinit var resourceUtils: ResourceUtils
   @Mock lateinit var postExecutionThread: PostExecutionThread
   @Mock lateinit var wallrRepository: WallrRepository
   @Mock lateinit var mockBitmap: Bitmap
@@ -37,7 +39,8 @@ class AutomaticWallpaperChangerUseCaseTest {
   @Before
   fun setup() {
     automaticWallpaperChangerUseCase =
-        AutomaticWallpaperChangerInteractor(wallpaperSetter, wallrRepository, postExecutionThread)
+        AutomaticWallpaperChangerInteractor(wallpaperSetter, wallrRepository, resourceUtils,
+            postExecutionThread)
 
     automaticWallpaperChangerUseCase.attachService(automaticWallpaperChangerService)
     stubPostExecutionThreadReturnsIoScheduler()
@@ -258,7 +261,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   private fun verifyPostExecutionThreadSchedulerCall(times: Int = 1) {
-    com.nhaarman.mockitokotlin2.verify(postExecutionThread, times(times)).scheduler
+    verify(postExecutionThread, times(times)).scheduler
   }
 
   private fun stubPostExecutionThreadReturnsIoScheduler() {
