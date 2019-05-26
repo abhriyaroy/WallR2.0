@@ -1461,7 +1461,7 @@ class WallrDataRepositoryTest {
   @Test fun `should save timestamp on setLastWallpaperChangeTimeStamp call success`() {
     val timeStamp = System.currentTimeMillis()
 
-    wallrDataRepository.setLastWallpaperChangeTimeStamp(timeStamp)
+    wallrDataRepository.updateLastWallpaperChangeTimeStamp(timeStamp)
 
     verify(sharedPrefs).setLong(IMAGE_PREFERENCE_NAME,
         LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG, timeStamp)

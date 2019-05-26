@@ -519,7 +519,7 @@ class WallrDataRepository(
         LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG)
   }
 
-  override fun setLastWallpaperChangeTimeStamp(timeStamp: Long) {
+  override fun updateLastWallpaperChangeTimeStamp(timeStamp: Long) {
     sharedPrefsHelper.setLong(IMAGE_PREFERENCE_NAME,
         LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG,
         timeStamp)

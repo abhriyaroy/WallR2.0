@@ -73,6 +73,7 @@ class AutomaticWallpaperChangerServiceImpl : Service(), AutomaticWallpaperChange
         .setSmallIcon(R.drawable.ic_wallr)
         .setContentIntent(pendingIntent)
         .setPriority(PRIORITY_MAX)
+        .setOngoing(true)
         .build()
     startForeground(WALLPAPER_CHANGER_SERVICE_CODE, notification)
   }

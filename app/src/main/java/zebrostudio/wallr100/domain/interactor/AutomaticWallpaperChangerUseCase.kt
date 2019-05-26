@@ -8,6 +8,7 @@ import zebrostudio.wallr100.android.service.AutomaticWallpaperChangerService
 import zebrostudio.wallr100.android.service.WALLPAPER_CHANGER_INTERVALS_LIST
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.WallrRepository
+import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import java.util.concurrent.TimeUnit
 
@@ -25,6 +26,7 @@ const val TIME_CHECKER_INTERVAL: Long = 120000
 class AutomaticWallpaperChangerInteractor(
   private val wallpaperSetter: WallpaperSetter,
   private val wallrRepository: WallrRepository,
+  private val executionThread: ExecutionThread,
   private val postExecutionThread: PostExecutionThread
 ) : AutomaticWallpaperChangerUseCase {
 
@@ -44,15 +46,17 @@ class AutomaticWallpaperChangerInteractor(
   }
 
   override fun handleServiceCreated() {
-    timerDisposable = Observable.timer(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
-        .repeat()
-        .doOnNext {
-          if (System.currentTimeMillis() - wallrRepository.getLastWallpaperChangeTimeStamp()
-              >= getInterval()) {
-            changeWallpaper()
-          }
-        }
-        .subscribe()
+    timerDisposable =
+        Observable.timer(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS,
+            executionThread.computationScheduler)
+            .repeat()
+            .doOnNext {
+              if (System.currentTimeMillis() - wallrRepository.getLastWallpaperChangeTimeStamp()
+                  >= getInterval()) {
+                changeWallpaper()
+              }
+            }
+            .subscribe()
   }
 
   override fun getInterval(): Long {
@@ -66,9 +70,6 @@ class AutomaticWallpaperChangerInteractor(
   }
 
   private fun changeWallpaper() {
-    if (wallpaperChangerDisposable?.isDisposed == false) {
-      wallpaperChangerDisposable?.dispose()
-    }
     wallpaperChangerDisposable = getWallpaperBitmap()
         .doOnSuccess {
           wallpaperSetter.setWallpaper(it)
@@ -77,7 +78,10 @@ class AutomaticWallpaperChangerInteractor(
           }
         }.observeOn(postExecutionThread.scheduler)
         .subscribe({
-          wallrRepository.setLastWallpaperChangeTimeStamp(System.currentTimeMillis())
+          wallrRepository.updateLastWallpaperChangeTimeStamp(System.currentTimeMillis())
+          if (wallpaperChangerDisposable?.isDisposed == false) {
+            wallpaperChangerDisposable?.dispose()
+          }
         }, {
           automaticWallpaperChangerService?.stopService()
         })

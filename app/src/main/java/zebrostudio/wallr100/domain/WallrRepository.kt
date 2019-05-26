@@ -104,5 +104,5 @@ interface WallrRepository {
   fun saveAutomaticWallpaperChangerDisabledState()
   fun wasAutomaticWallpaperChangerEnabled(): Boolean
   fun getLastWallpaperChangeTimeStamp(): Long
-  fun setLastWallpaperChangeTimeStamp(timeStamp: Long)
+  fun updateLastWallpaperChangeTimeStamp(timeStamp: Long)
 }
