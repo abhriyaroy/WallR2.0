@@ -37,6 +37,9 @@ class AutomaticWallpaperChangerInteractor(
   }
 
   override fun detachService() {
+    if (disposable?.isDisposed == false) {
+      disposable?.dispose()
+    }
     automaticWallpaperChangerService = null
   }
 
@@ -74,9 +77,6 @@ class AutomaticWallpaperChangerInteractor(
   }
 
   private fun changeWallpaper() {
-    if (disposable?.isDisposed == false) {
-      disposable?.dispose()
-    }
     disposable = getWallpaperBitmap()
         .doOnSuccess {
           wallpaperSetter.setWallpaper(it)
