@@ -515,7 +515,6 @@ class CollectionFragment : BaseFragment(),
         .content(stringRes(R.string.collections_fragment_lock_in_recents_instruction_description))
         .positiveColor(colorRes(R.color.accent))
         .negativeColor(colorRes(R.color.accent))
-        .onPositive { _, _ -> showAutoStartSettingsDialog() }
         .cancelable(true)
         .positiveText(stringRes(R.string.collections_fragment_lock_in_recents_positive_text))
         .show()
@@ -564,52 +563,9 @@ class CollectionFragment : BaseFragment(),
         ?.setBlurRadius(BLUR_RADIUS)
   }
 
-  private fun openAutoStartSettings() {
-    Intent().apply {
-      getManufacturerName().let {
-        when {
-          it.equalsIgnoreCase(MANUFACTURER_NAME_SAMSUNG) ->
-            component = ComponentName(SECURITY_PACKAGE_SAMSUNG, AUTOSTART_CLASS_NAME_SAMSUNG)
-          it.equalsIgnoreCase(MANUFACTURER_NAME_XIAOMI) ->
-            component = ComponentName(SECURITY_PACKAGE_XIAOMI, AUTOSTART_CLASS_NAME_XIAOMI)
-          it.equalsIgnoreCase(MANUFACTURER_NAME_ONEPLUS) ->
-            component = ComponentName(SECURITY_PACKAGE_ONEPLUS, AUTOSTART_CLASS_NAME_ONEPLUS)
-          it.equalsIgnoreCase(MANUFACTURER_NAME_OPPO) ->
-            component = ComponentName(SECURITY_PACKAGE_OPPO, AUTOSTART_CLASS_NAME_OPPO)
-          it.equalsIgnoreCase(MANUFACTURER_NAME_VIVO) ->
-            component = ComponentName(SECURITY_PACKAGE_VIVO, AUTOSTART_CLASS_NAME_VIVO)
-          it.equalsIgnoreCase(MANUFACTURER_NAME_ASUS) ->
-            component = ComponentName(SECURITY_PACKAGE_ASUS, AUTOSTART_CLASS_NAME_ASUS)
-        }
-      }
-    }.let {
-      val list = context!!.packageManager
-          .queryIntentActivities(it, PackageManager.MATCH_DEFAULT_ONLY)
-      if (list.isNotEmpty()) {
-        withDelayOnMain(AUTOSTART_HINT_DELAY) {
-          infoToast(stringRes(R.string.collections_fragment_enable_autostart_settings_hint))
-        }
-        startActivity(it)
-      }
-    }
-  }
-
   private fun redirectToBuyProActivity() {
     startActivityForResult(Intent(context!!, BuyProActivity::class.java),
         COLLECTION_FRAGMENT_REQUEST_CODE)
-  }
-
-  private fun showAutoStartSettingsDialog() {
-    MaterialDialog.Builder(activity!!)
-        .title(stringRes(R.string.collections_fragment_autostart_permission_title))
-        .content(stringRes(R.string.collections_fragment_autostart_permission_description))
-        .onPositive { _, _ -> openAutoStartSettings() }
-        .positiveColor(colorRes(R.color.accent))
-        .negativeColor(colorRes(R.color.accent))
-        .cancelable(true)
-        .positiveText(stringRes(R.string.collections_fragment_autostart_permission_positive_text))
-        .negativeText(stringRes(R.string.collections_fragment_autostart_permission_negative_text))
-        .show()
   }
 
   companion object {

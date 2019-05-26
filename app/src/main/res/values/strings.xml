@@ -214,23 +214,15 @@
   <string name="collections_fragment_multiple_images_deleted_success_message">Images have been successfully deleted</string>
   <string name="collections_fragment_single_images_deleted_success_message">Image has been successfully deleted</string>
   <string name="collections_fragment_image_reordering_success_message">Successfully reordered images</string>
-  <string name="collections_fragment_autostart_permission_description">Please ensure Autostart Permission is enabled for WallR so that the automatic wallpaper changer can work properly.</string>
   <string name="collections_fragment_lock_in_recents_instruction_description">Please open recent apps screen and ensure WallR is locked so that it does not get cleared on clearing recent apps</string>
-  <string name="collections_fragment_autostart_permission_title">Grant Autostart Permission</string>
   <string name="collections_fragment_lock_in_recents_instruction_title">Lock App In Recent Apps Screen</string>
-  <string name="collections_fragment_autostart_permission_positive_text">Open Settings</string>
-  <string name="collections_fragment_lock_in_recents_positive_text">NEXT</string>
-  <string name="collections_fragment_autostart_permission_negative_text">Already Enabled</string>
+  <string name="collections_fragment_lock_in_recents_positive_text">GOT IT</string>
   <string name="collections_fragment_wallpaper_changer_interval_updated_success_message">Automatic wallpaper changer interval updated</string>
   <string name="collections_fragment_wallpaper_changer_service_restarted_success_message">Automatic wallpaper changer restarted</string>
-  <string name="collections_fragment_enable_autostart_settings_hint">Now, Please enable WallR</string>
   <string name="collections_fragment_purchase_pro_diloag_description">This is a pro user only section. Please purchase pro to continue adding images to collection and using them offline and also to enable Automatic wallpaper changer</string>
   <string name="collections_fragment_purchase_pro_diloag_title">WallR Pro Required</string>
   <string name="collections_fragment_purchase_pro_diloag_positive_text">Purchase Pro</string>
   <string name="collections_fragment_crystallized_image_already_present_error_message">This image has already been crystallized and added to your collection</string>
-  <string name="collections_fragment_open_app_to_restart_service_dialog_title">Automatic Wallpaper Changer Is Enabled</string>
-  <string name="collections_fragment_open_app_to_restart_service_dialog_content">If you reboot your device, please open the app once to restart the automatic wallpaper changer</string>
-  <string name="collections_fragment_open_app_to_restart_service_dialog_positive_text">GOT IT</string>
 
   <!-- Wallpaper changer service strings -->
   <string name="wallpaper_changer_service_notification_title">Automatic wallpaper changer</string>

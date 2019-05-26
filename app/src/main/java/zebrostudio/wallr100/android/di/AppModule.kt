@@ -260,9 +260,10 @@ class AppModule {
   fun provideAutomaticWallpaperChangerUseCase(
     wallpaperSetter: WallpaperSetter,
     wallrRepository: WallrRepository,
+    resourceUtils: ResourceUtils,
     postExecutionThread: PostExecutionThread
   ): AutomaticWallpaperChangerUseCase = AutomaticWallpaperChangerInteractor(wallpaperSetter,
-      wallrRepository, postExecutionThread)
+      wallrRepository, resourceUtils, postExecutionThread)
 
   @Provides
   fun provideImageRecyclerViewPresenter()
