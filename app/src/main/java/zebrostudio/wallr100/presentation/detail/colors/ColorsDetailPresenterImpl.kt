@@ -8,6 +8,7 @@ import com.yalantis.ucrop.UCrop.REQUEST_CROP
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.permissions.PermissionsHelper
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig.Companion.PURCHASE_SUCCESSFUL_RESULT_CODE
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.MULTIPLE
@@ -39,7 +40,8 @@ class ColorsDetailPresenterImpl(
   private val postExecutionThread: PostExecutionThread,
   private val userPremiumStatusUseCase: UserPremiumStatusUseCase,
   private val colorImagesUseCase: ColorImagesUseCase,
-  private val wallpaperSetter: WallpaperSetter
+  private val wallpaperSetter: WallpaperSetter,
+  private val permissionsHelper: PermissionsHelper
 ) : ColorsDetailPresenter {
 
   internal var colorsDetailMode: ColorsDetailMode = SINGLE
@@ -276,11 +278,9 @@ class ColorsDetailPresenterImpl(
   }
 
   private fun configureView() {
-    if (view?.hasStoragePermission() == true) {
+    if (hasStoragePermissions(LOAD_COLOR_WALLPAPER)) {
       setImageTypeText()
       loadImage()
-    } else {
-      view?.requestStoragePermission(LOAD_COLOR_WALLPAPER)
     }
   }
 
@@ -388,7 +388,7 @@ class ColorsDetailPresenterImpl(
   }
 
   private fun hasStoragePermissions(colorsActionType: ColorsActionType): Boolean {
-    if (view?.hasStoragePermission() == true) {
+    if (permissionsHelper.isReadPermissionAvailable() && permissionsHelper.isWritePermissionAvailable()) {
       return true
     } else {
       view?.requestStoragePermission(colorsActionType)

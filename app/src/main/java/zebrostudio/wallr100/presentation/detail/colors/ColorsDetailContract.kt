@@ -12,7 +12,6 @@ interface ColorsDetailContract {
   interface ColorsDetailView : BaseView {
     fun getMultiColorImageType(): MultiColorImageType
     fun showImageTypeText(text: String)
-    fun hasStoragePermission(): Boolean
     fun requestStoragePermission(colorsActionType: ColorsActionType)
     fun showPermissionRequiredMessage()
     fun redirectToBuyPro(requestCode: Int)

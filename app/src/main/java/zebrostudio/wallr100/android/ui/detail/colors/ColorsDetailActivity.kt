@@ -142,15 +142,6 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     colorStyleNameTextView.text = text
   }
 
-  override fun hasStoragePermission(): Boolean {
-    val readPermission = checkSelfPermission(this, READ_EXTERNAL_STORAGE)
-    val writePermission = checkSelfPermission(this, WRITE_EXTERNAL_STORAGE)
-    if (readPermission != PERMISSION_GRANTED || writePermission != PERMISSION_GRANTED) {
-      return false
-    }
-    return true
-  }
-
   override fun requestStoragePermission(colorsActionType: ColorsActionType) {
     requestPermissions(this,
         arrayOf(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE), colorsActionType.ordinal)

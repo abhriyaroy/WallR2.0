@@ -211,7 +211,7 @@ class WallrDataRepository(
     if (!fileHandler.freeSpaceAvailable()) {
       return Single.error(NotEnoughFreeSpaceException())
     }
-    return Single.just(imageHandler.getImageBitmap().blockingGet())
+    return imageHandler.getImageBitmap()
         .subscribeOn(executionThread.computationScheduler)
   }
 
