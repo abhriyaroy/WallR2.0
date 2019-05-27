@@ -64,6 +64,7 @@ import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.Col
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionPresenter
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionView
 import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEntity
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 const val MANUFACTURER_NAME_SAMSUNG = "samsung"

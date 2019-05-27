@@ -2,11 +2,8 @@ package zebrostudio.wallr100.android
 
 import android.app.Activity
 import android.app.Application
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
-import android.os.Build
 import android.support.multidex.MultiDex
 import com.bumptech.glide.request.target.ViewTarget
 import dagger.android.DispatchingAndroidInjector
@@ -40,6 +37,5 @@ class WallrApplication : Application(), HasActivityInjector, HasServiceInjector 
   override fun activityInjector() = activityDispatchingAndroidInjector
 
   override fun serviceInjector() = serviceDispatchingAndroidInjector
-
 
 }

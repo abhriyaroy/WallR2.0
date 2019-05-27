@@ -97,9 +97,6 @@ class AutomaticWallpaperChangerInteractor(
         }.observeOn(postExecutionThread.scheduler)
         .subscribe({
           wallrRepository.updateLastWallpaperChangeTimeStamp(System.currentTimeMillis())
-          if (wallpaperChangerDisposable?.isDisposed == false) {
-            wallpaperChangerDisposable?.dispose()
-          }
         }, {
           automaticWallpaperChangerService?.stopService()
         })
