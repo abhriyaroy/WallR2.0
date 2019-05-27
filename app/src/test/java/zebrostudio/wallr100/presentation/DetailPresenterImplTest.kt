@@ -833,7 +833,8 @@ class DetailPresenterImplTest {
           it.onNext(imageDownloadModel)
         })
     `when`(imageOptionsUseCase.getCroppingSourceUri()).thenReturn(Single.just(mockUri))
-    `when`(imageOptionsUseCase.getCroppingDestinationUri()).thenReturn(Single.just(mockDestinationUri))
+    `when`(imageOptionsUseCase.getCroppingDestinationUri()).thenReturn(
+        Single.just(mockDestinationUri))
     `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(width)
     `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(height)
 
@@ -945,7 +946,8 @@ class DetailPresenterImplTest {
           it.onNext(imageDownloadModel)
         })
     `when`(imageOptionsUseCase.getCroppingSourceUri()).thenReturn(Single.just(mockUri))
-    `when`(imageOptionsUseCase.getCroppingDestinationUri()).thenReturn(Single.just(mockDestinationUri))
+    `when`(imageOptionsUseCase.getCroppingDestinationUri()).thenReturn(
+        Single.just(mockDestinationUri))
     `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(width)
     `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(height)
 

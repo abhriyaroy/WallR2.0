@@ -1,17 +1,11 @@
 package zebrostudio.wallr100.android.service
 
-import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.support.annotation.Nullable
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationCompat.PRIORITY_MAX
 import dagger.android.AndroidInjection
-import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.NOTIFICATION_CHANNEL_ID
-import zebrostudio.wallr100.android.ui.main.MainActivity
-import zebrostudio.wallr100.android.utils.stringRes
+import zebrostudio.wallr100.android.notification.NotificationFactory
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerUseCase
 import javax.inject.Inject
 
@@ -34,6 +28,8 @@ class AutomaticWallpaperChangerServiceImpl : Service(), AutomaticWallpaperChange
 
   @Inject
   internal lateinit var automaticWallpaperChangerUseCase: AutomaticWallpaperChangerUseCase
+  @Inject
+  internal lateinit var notificationFactory: NotificationFactory
 
   override fun onCreate() {
     AndroidInjection.inject(this)
@@ -42,7 +38,9 @@ class AutomaticWallpaperChangerServiceImpl : Service(), AutomaticWallpaperChange
   }
 
   override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-    createNotification()
+    startForeground(WALLPAPER_CHANGER_SERVICE_CODE,
+        notificationFactory.getWallpaperChangerNotification(
+            automaticWallpaperChangerUseCase.getIntervalString()))
     automaticWallpaperChangerUseCase.handleServiceCreated()
     return START_NOT_STICKY
   }
@@ -61,20 +59,4 @@ class AutomaticWallpaperChangerServiceImpl : Service(), AutomaticWallpaperChange
     stopService()
   }
 
-  private fun createNotification() {
-    val pendingIntent = PendingIntent.getActivity(this,
-        WALLPAPER_CHANGER_REQUEST_CODE,
-        Intent(this, MainActivity::class.java),
-        0)
-    val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-        .setContentTitle(stringRes(R.string.wallpaper_changer_service_notification_title))
-        .setContentText("${stringRes(
-            R.string.wallpaper_changer_service_notification_description)} ${automaticWallpaperChangerUseCase.getIntervalString()}")
-        .setSmallIcon(R.drawable.ic_wallr)
-        .setContentIntent(pendingIntent)
-        .setPriority(PRIORITY_MAX)
-        .setOngoing(true)
-        .build()
-    startForeground(WALLPAPER_CHANGER_SERVICE_CODE, notification)
-  }
 }

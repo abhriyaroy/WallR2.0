@@ -6,6 +6,8 @@ import dagger.Module
 import dagger.Provides
 import zebrostudio.wallr100.android.AndroidBackgroundThreads
 import zebrostudio.wallr100.android.AndroidMainThread
+import zebrostudio.wallr100.android.notification.NotificationFactory
+import zebrostudio.wallr100.android.notification.NotificationFactoryImpl
 import zebrostudio.wallr100.android.service.ServiceManager
 import zebrostudio.wallr100.android.service.ServiceManagerImpl
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
@@ -278,4 +280,8 @@ class AppModule {
 
   @Provides
   fun provideServiceManager(context: Context): ServiceManager = ServiceManagerImpl(context)
+
+  @Provides
+  fun provideNotificationFactory(context: Context): NotificationFactory = NotificationFactoryImpl(
+      context)
 }

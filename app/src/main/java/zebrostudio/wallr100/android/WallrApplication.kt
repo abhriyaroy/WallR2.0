@@ -16,9 +16,6 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.di.DaggerAppComponent
 import javax.inject.Inject
 
-const val NOTIFICATION_CHANNEL_ID = "WallrNotificationChannel"
-const val NOTIFICATION_CHANNEL_NAME = "WallrNotification"
-
 class WallrApplication : Application(), HasActivityInjector, HasServiceInjector {
 
   @Inject
@@ -38,22 +35,11 @@ class WallrApplication : Application(), HasActivityInjector, HasServiceInjector 
         .build()
         .inject(this)
     ViewTarget.setTagId(R.id.glide_tag)
-    createNotificationChannel()
   }
 
   override fun activityInjector() = activityDispatchingAndroidInjector
 
   override fun serviceInjector() = serviceDispatchingAndroidInjector
 
-  private fun createNotificationChannel() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      val serviceChannel = NotificationChannel(
-          NOTIFICATION_CHANNEL_ID,
-          NOTIFICATION_CHANNEL_NAME,
-          NotificationManager.IMPORTANCE_HIGH
-      )
-      getSystemService(NotificationManager::class.java).createNotificationChannel(serviceChannel)
-    }
-  }
 
 }

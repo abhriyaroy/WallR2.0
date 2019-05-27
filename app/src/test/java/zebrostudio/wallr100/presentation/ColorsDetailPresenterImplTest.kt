@@ -890,7 +890,8 @@ class ColorsDetailPresenterImplTest {
     `when`(resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message))
         .thenReturn(randomString)
     `when`(colorImagesUseCase.getCroppingSourceUri()).thenReturn(Single.just(mockUri))
-    `when`(colorImagesUseCase.getCroppingDestinationUri()).thenReturn(Single.just(mockDestiationUri))
+    `when`(colorImagesUseCase.getCroppingDestinationUri()).thenReturn(
+        Single.just(mockDestiationUri))
     `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(width)
     `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(height)
 
@@ -928,7 +929,8 @@ class ColorsDetailPresenterImplTest {
     `when`(resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message))
         .thenReturn(randomString)
     `when`(colorImagesUseCase.getCroppingSourceUri()).thenReturn(Single.just(mockUri))
-    `when`(colorImagesUseCase.getCroppingDestinationUri()).thenReturn(Single.just(mockDestiationUri))
+    `when`(colorImagesUseCase.getCroppingDestinationUri()).thenReturn(
+        Single.just(mockDestiationUri))
     `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(width)
     `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(height)
 
