@@ -2,7 +2,7 @@ package zebrostudio.wallr100.android.ui.detail.colors
 
 import dagger.Module
 import dagger.Provides
-import zebrostudio.wallr100.android.permissions.PermissionsHelper
+import zebrostudio.wallr100.android.permissions.PermissionsCheckerHelper
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
@@ -21,12 +21,12 @@ class ColorsDetailModule {
     isUserPremiumStatusUseCase: UserPremiumStatusUseCase,
     colorImagesUseCase: ColorImagesUseCase,
     wallpaperSetter: WallpaperSetter,
-    permissionsHelper: PermissionsHelper
+    permissionsCheckerHelper: PermissionsCheckerHelper
   ): ColorsDetailPresenter = ColorsDetailPresenterImpl(
       resourceUtils,
       postExecutionThread,
       isUserPremiumStatusUseCase,
       colorImagesUseCase,
       wallpaperSetter,
-      permissionsHelper)
+      permissionsCheckerHelper)
 }

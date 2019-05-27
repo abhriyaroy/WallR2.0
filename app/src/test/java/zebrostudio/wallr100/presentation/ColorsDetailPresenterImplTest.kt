@@ -26,7 +26,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.permissions.PermissionsHelper
+import zebrostudio.wallr100.android.permissions.PermissionsCheckerHelper
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.MULTIPLE
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.SINGLE
@@ -59,7 +59,7 @@ class ColorsDetailPresenterImplTest {
   @Mock lateinit var wallpaperSetter: WallpaperSetter
   @Mock lateinit var colorsDetailView: ColorsDetailView
   @Mock lateinit var postExecutionThread: PostExecutionThread
-  @Mock lateinit var permissionsHelper: PermissionsHelper
+  @Mock lateinit var permissionsCheckerHelper: PermissionsCheckerHelper
   @Mock lateinit var resourceUtils: ResourceUtils
   @Mock lateinit var mockBitmap: Bitmap
   @Mock lateinit var mockUri: Uri
@@ -70,7 +70,7 @@ class ColorsDetailPresenterImplTest {
   @Before fun setup() {
     colorsDetailPresenterImpl =
         ColorsDetailPresenterImpl(resourceUtils, postExecutionThread, userPremiumStatusUseCase,
-            colorImagesUseCase, wallpaperSetter, permissionsHelper)
+            colorImagesUseCase, wallpaperSetter, permissionsCheckerHelper)
 
     colorsDetailPresenterImpl.attachView(colorsDetailView)
 
@@ -83,7 +83,7 @@ class ColorsDetailPresenterImplTest {
   @Test
   fun `should request storage permission on handleViewReadyState with type Single color call failure due to missing read storage permission`() {
     val list = listOf(randomString)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
     colorsDetailPresenterImpl.setColorsDetailMode(SINGLE)
     colorsDetailPresenterImpl.setColorList(list)
 
@@ -91,15 +91,15 @@ class ColorsDetailPresenterImplTest {
 
     assertEquals(SINGLE, colorsDetailPresenterImpl.colorsDetailMode)
     assertEquals(list, colorsDetailPresenterImpl.colorList)
-    verify(permissionsHelper).isReadPermissionAvailable()
+    verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(colorsDetailView).requestStoragePermission(LOAD_COLOR_WALLPAPER)
   }
 
   @Test
   fun `should request storage permission on handleViewReadyState with type Single color call failure due to missing write storage permission`() {
     val list = listOf(randomString)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
     colorsDetailPresenterImpl.setColorsDetailMode(SINGLE)
     colorsDetailPresenterImpl.setColorList(list)
 
@@ -115,7 +115,7 @@ class ColorsDetailPresenterImplTest {
   fun `should request storage permission on handleViewReadyState with type Material color call failure due to missing read storage permission`() {
     val list = listOf(randomString)
     `when`(colorsDetailView.getMultiColorImageType()).thenReturn(MATERIAL)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
     colorsDetailPresenterImpl.setColorsDetailMode(MULTIPLE)
     colorsDetailPresenterImpl.setColorList(list)
 
@@ -125,7 +125,7 @@ class ColorsDetailPresenterImplTest {
     assertEquals(MATERIAL, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(list, colorsDetailPresenterImpl.colorList)
     verify(colorsDetailView).getMultiColorImageType()
-    verify(permissionsHelper).isReadPermissionAvailable()
+    verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(colorsDetailView).requestStoragePermission(LOAD_COLOR_WALLPAPER)
   }
 
@@ -133,8 +133,8 @@ class ColorsDetailPresenterImplTest {
   fun `should request storage permission on handleViewReadyState with type Material color call failure due to missing write storage permission`() {
     val list = listOf(randomString)
     `when`(colorsDetailView.getMultiColorImageType()).thenReturn(MATERIAL)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
     colorsDetailPresenterImpl.setColorsDetailMode(MULTIPLE)
     colorsDetailPresenterImpl.setColorList(list)
 
@@ -151,7 +151,7 @@ class ColorsDetailPresenterImplTest {
   @Test
   fun `should request storage permission on handleViewReadyState with type Gradient color call failure due to missing read storage permission`() {
     val list = listOf(randomString)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
     `when`(colorsDetailView.getMultiColorImageType()).thenReturn(GRADIENT)
     colorsDetailPresenterImpl.setColorsDetailMode(MULTIPLE)
     colorsDetailPresenterImpl.setColorList(list)
@@ -162,15 +162,15 @@ class ColorsDetailPresenterImplTest {
     assertEquals(GRADIENT, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(list, colorsDetailPresenterImpl.colorList)
     verify(colorsDetailView).getMultiColorImageType()
-    verify(permissionsHelper).isReadPermissionAvailable()
+    verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(colorsDetailView).requestStoragePermission(LOAD_COLOR_WALLPAPER)
   }
 
   @Test
   fun `should request storage permission on handleViewReadyState with type Gradient color call failure due to missing write storage permission`() {
     val list = listOf(randomString)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
     `when`(colorsDetailView.getMultiColorImageType()).thenReturn(GRADIENT)
     colorsDetailPresenterImpl.setColorsDetailMode(MULTIPLE)
     colorsDetailPresenterImpl.setColorList(list)
@@ -188,7 +188,7 @@ class ColorsDetailPresenterImplTest {
   @Test
   fun `should request storage permission on handleViewReadyState with type Plasma color call failure due to missing read storage permission`() {
     val list = listOf(randomString)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
     `when`(colorsDetailView.getMultiColorImageType()).thenReturn(PLASMA)
     colorsDetailPresenterImpl.setColorsDetailMode(MULTIPLE)
     colorsDetailPresenterImpl.setColorList(list)
@@ -199,15 +199,15 @@ class ColorsDetailPresenterImplTest {
     assertEquals(PLASMA, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(list, colorsDetailPresenterImpl.colorList)
     verify(colorsDetailView).getMultiColorImageType()
-    verify(permissionsHelper).isReadPermissionAvailable()
+    verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(colorsDetailView).requestStoragePermission(LOAD_COLOR_WALLPAPER)
   }
 
   @Test
   fun `should request storage permission on handleViewReadyState with type Plasma color call failure due to missing write storage permission`() {
     val list = listOf(randomString)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
     `when`(colorsDetailView.getMultiColorImageType()).thenReturn(PLASMA)
     colorsDetailPresenterImpl.setColorsDetailMode(MULTIPLE)
     colorsDetailPresenterImpl.setColorList(list)
@@ -227,8 +227,8 @@ class ColorsDetailPresenterImplTest {
     val list = listOf(randomString)
     colorsDetailPresenterImpl.setColorsDetailMode(SINGLE)
     colorsDetailPresenterImpl.setColorList(list)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
     `when`(resourceUtils
         .getStringResource(R.string.colors_detail_activity_colors_style_name_solid))
         .thenReturn(randomString)
@@ -252,8 +252,8 @@ class ColorsDetailPresenterImplTest {
     val list = listOf(randomString)
     colorsDetailPresenterImpl.setColorsDetailMode(SINGLE)
     colorsDetailPresenterImpl.setColorList(list)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
     `when`(resourceUtils
         .getStringResource(R.string.colors_detail_activity_colors_style_name_solid))
         .thenReturn(randomString)
@@ -277,8 +277,8 @@ class ColorsDetailPresenterImplTest {
   fun `should set text and show image on handleViewReadyState with type Material color call success`() {
     val list = listOf(randomString)
     `when`(colorsDetailView.getMultiColorImageType()).thenReturn(MATERIAL)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
     `when`(resourceUtils
         .getStringResource(R.string.colors_detail_activity_colors_style_name_material))
         .thenReturn(randomString)
@@ -309,8 +309,8 @@ class ColorsDetailPresenterImplTest {
   fun `should set text and show image load error on handleViewReadyState with type Material color call failure`() {
     val list = listOf(randomString)
     `when`(colorsDetailView.getMultiColorImageType()).thenReturn(MATERIAL)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
     `when`(resourceUtils
         .getStringResource(R.string.colors_detail_activity_colors_style_name_material))
         .thenReturn(randomString)
@@ -337,8 +337,8 @@ class ColorsDetailPresenterImplTest {
   fun `should set text and show image on handleViewReadyState with type Gradient color call success`() {
     val list = listOf(randomString)
     `when`(colorsDetailView.getMultiColorImageType()).thenReturn(GRADIENT)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
     `when`(resourceUtils
         .getStringResource(R.string.colors_detail_activity_colors_style_name_gradient))
         .thenReturn(randomString)
@@ -365,8 +365,8 @@ class ColorsDetailPresenterImplTest {
   fun `should set text and show image load error on handleViewReadyState with type Gradient color call failure`() {
     val list = listOf(randomString)
     `when`(colorsDetailView.getMultiColorImageType()).thenReturn(GRADIENT)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
     `when`(resourceUtils
         .getStringResource(R.string.colors_detail_activity_colors_style_name_gradient))
         .thenReturn(randomString)
@@ -393,8 +393,8 @@ class ColorsDetailPresenterImplTest {
   fun `should set text and show image on handleViewReadyState with type Plasma color call success`() {
     val list = listOf(randomString)
     `when`(colorsDetailView.getMultiColorImageType()).thenReturn(PLASMA)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
     `when`(resourceUtils
         .getStringResource(R.string.colors_detail_activity_colors_style_name_plasma))
         .thenReturn(randomString)
@@ -421,8 +421,8 @@ class ColorsDetailPresenterImplTest {
   fun `should set text and show image load error on setCalledIntent of type Plasma color call failure`() {
     val list = listOf(randomString)
     `when`(colorsDetailView.getMultiColorImageType()).thenReturn(PLASMA)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
     `when`(resourceUtils
         .getStringResource(R.string.colors_detail_activity_colors_style_name_plasma))
         .thenReturn(randomString)
@@ -449,8 +449,8 @@ class ColorsDetailPresenterImplTest {
   fun `should set text and show material image on handlePermissionRequestResult call success with request code Load color wallpaper`() {
     val list = listOf(randomString)
     `when`(colorsDetailView.getMultiColorImageType()).thenReturn(MATERIAL)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
     `when`(resourceUtils
         .getStringResource(R.string.colors_detail_activity_colors_style_name_material))
         .thenReturn(randomString)
@@ -480,8 +480,8 @@ class ColorsDetailPresenterImplTest {
   fun `should set text and show gradient image on handlePermissionRequestResult call success with request code Load color wallpaper`() {
     val list = listOf(randomString)
     `when`(colorsDetailView.getMultiColorImageType()).thenReturn(GRADIENT)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
     `when`(resourceUtils
         .getStringResource(R.string.colors_detail_activity_colors_style_name_gradient))
         .thenReturn(randomString)
@@ -511,8 +511,8 @@ class ColorsDetailPresenterImplTest {
   fun `should set text and show plasma image on handlePermissionRequestResult call success with request code Load color wallpaper`() {
     val list = listOf(randomString)
     `when`(colorsDetailView.getMultiColorImageType()).thenReturn(PLASMA)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
     `when`(resourceUtils
         .getStringResource(R.string.colors_detail_activity_colors_style_name_plasma))
         .thenReturn(randomString)
@@ -541,8 +541,8 @@ class ColorsDetailPresenterImplTest {
   @Test
   fun `should set text and show solid image on handlePermissionRequestResult call success with request code Load color wallpaper`() {
     val list = listOf(randomString)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
     `when`(resourceUtils
         .getStringResource(R.string.colors_detail_activity_colors_style_name_solid))
         .thenReturn(randomString)
@@ -619,19 +619,19 @@ class ColorsDetailPresenterImplTest {
   @Test
   fun `should request storage permission on handleQuickSetClick call failure due to missing read permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
 
     colorsDetailPresenterImpl.handleQuickSetClick()
 
-    verify(permissionsHelper).isReadPermissionAvailable()
+    verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(colorsDetailView).requestStoragePermission(QUICK_SET)
   }
 
   @Test
   fun `should request storage permission on handleQuickSetClick call failure due to missing write permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
 
     colorsDetailPresenterImpl.handleQuickSetClick()
 
@@ -765,13 +765,13 @@ class ColorsDetailPresenterImplTest {
   fun `should request storage permission on handleDownloadClick call failure due to missing read permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
 
     colorsDetailPresenterImpl.handleDownloadClick()
 
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(permissionsHelper).isReadPermissionAvailable()
+    verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(colorsDetailView).requestStoragePermission(DOWNLOAD)
   }
 
@@ -779,15 +779,15 @@ class ColorsDetailPresenterImplTest {
   fun `should request storage permission on handleDownloadClick call failure due to missing write permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
 
     colorsDetailPresenterImpl.handleDownloadClick()
 
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(permissionsHelper).isReadPermissionAvailable()
-    verify(permissionsHelper).isWritePermissionAvailable()
+    verify(permissionsCheckerHelper).isReadPermissionAvailable()
+    verify(permissionsCheckerHelper).isWritePermissionAvailable()
     verify(colorsDetailView).requestStoragePermission(DOWNLOAD)
   }
 
@@ -910,13 +910,13 @@ class ColorsDetailPresenterImplTest {
   fun `should request storage permission on handleViewResult call failure with download request code due to missing read storage permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
 
     colorsDetailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(permissionsHelper).isReadPermissionAvailable()
+    verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(colorsDetailView).requestStoragePermission(DOWNLOAD)
   }
 
@@ -924,8 +924,8 @@ class ColorsDetailPresenterImplTest {
   fun `should request storage permission on handleViewResult call failure with download request code due to missing write storage permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
 
     colorsDetailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
@@ -1006,18 +1006,18 @@ class ColorsDetailPresenterImplTest {
   @Test
   fun `should request storage permission on handleEditSetClick call failure due to missing read storage permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
     colorsDetailPresenterImpl.handleEditSetClick()
 
-    verify(permissionsHelper).isReadPermissionAvailable()
+    verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(colorsDetailView).requestStoragePermission(EDIT_SET)
   }
 
   @Test
   fun `should request storage permission on handleEditSetClick call failure due to missing write storage permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
     colorsDetailPresenterImpl.handleEditSetClick()
 
     verifyStoragePermissionCheckerCall()
@@ -1207,12 +1207,12 @@ class ColorsDetailPresenterImplTest {
   fun `should request storage permission on handleAddToCollectionClick call failure due to missing read storage permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
     colorsDetailPresenterImpl.handleAddToCollectionClick()
 
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(permissionsHelper).isReadPermissionAvailable()
+    verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(colorsDetailView).requestStoragePermission(ADD_TO_COLLECTION)
   }
 
@@ -1220,8 +1220,8 @@ class ColorsDetailPresenterImplTest {
   fun `should request storage permission on handleAddToCollectionClick call failure due to missing write storage permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
     colorsDetailPresenterImpl.handleAddToCollectionClick()
 
 
@@ -1322,13 +1322,13 @@ class ColorsDetailPresenterImplTest {
   fun `should request storage permission on handleViewResult call failure due to missing read storage permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
     colorsDetailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(permissionsHelper).isReadPermissionAvailable()
+    verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(colorsDetailView).requestStoragePermission(ADD_TO_COLLECTION)
   }
 
@@ -1336,8 +1336,8 @@ class ColorsDetailPresenterImplTest {
   fun `should request storage permission on handleViewResult call failure due to missing write storage permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
 
     colorsDetailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
@@ -1558,13 +1558,13 @@ class ColorsDetailPresenterImplTest {
   fun `should request storage permission on handleShareClick call failure due to missing read storage permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
 
     colorsDetailPresenterImpl.handleShareClick()
 
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(permissionsHelper).isReadPermissionAvailable()
+    verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(colorsDetailView).requestStoragePermission(SHARE)
   }
 
@@ -1572,8 +1572,8 @@ class ColorsDetailPresenterImplTest {
   fun `should request storage permission on handleShareClick call failure due to missing write storage permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
 
     colorsDetailPresenterImpl.handleShareClick()
 
@@ -1639,13 +1639,13 @@ class ColorsDetailPresenterImplTest {
   fun `should request storage permission on handleViewResult call failure with request code share due to missing read storage permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
 
     colorsDetailPresenterImpl.handleViewResult(SHARE.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(permissionsHelper).isReadPermissionAvailable()
+    verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(colorsDetailView).requestStoragePermission(SHARE)
   }
 
@@ -1653,8 +1653,8 @@ class ColorsDetailPresenterImplTest {
   fun `should request storage permission on handleViewResult call failure with request code share due to missing write storage permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
 
     colorsDetailPresenterImpl.handleViewResult(SHARE.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
@@ -1727,8 +1727,8 @@ class ColorsDetailPresenterImplTest {
   }
 
   private fun stubGrantStoragePermissions() {
-    `when`(permissionsHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsHelper.isWritePermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
   }
 
   private fun stubPostExecutionThreadReturnsIoScheduler() {
@@ -1736,8 +1736,8 @@ class ColorsDetailPresenterImplTest {
   }
 
   private fun verifyStoragePermissionCheckerCall() {
-    verify(permissionsHelper).isReadPermissionAvailable()
-    verify(permissionsHelper).isWritePermissionAvailable()
+    verify(permissionsCheckerHelper).isReadPermissionAvailable()
+    verify(permissionsCheckerHelper).isWritePermissionAvailable()
   }
 
   private fun verifyPostExecutionThreadSchedulerCall(times: Int = 1) {

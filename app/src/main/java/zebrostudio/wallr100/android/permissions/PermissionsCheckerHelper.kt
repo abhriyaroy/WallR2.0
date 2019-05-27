@@ -5,12 +5,12 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.support.v4.content.ContextCompat
 
-interface PermissionsHelper {
+interface PermissionsCheckerHelper {
   fun isReadPermissionAvailable(): Boolean
   fun isWritePermissionAvailable(): Boolean
 }
 
-class PermissionsHelperImpl(private val context: Context) : PermissionsHelper {
+class PermissionsCheckerHelperImpl(private val context: Context) : PermissionsCheckerHelper {
 
   override fun isReadPermissionAvailable(): Boolean {
     return ContextCompat.checkSelfPermission(context,

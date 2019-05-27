@@ -9,12 +9,10 @@ import android.content.Intent.EXTRA_STREAM
 import android.content.Intent.EXTRA_TEXT
 import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import android.content.Intent.createChooser
-import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat.requestPermissions
-import android.support.v4.content.ContextCompat.checkSelfPermission
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout

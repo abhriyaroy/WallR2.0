@@ -3,12 +3,10 @@ package zebrostudio.wallr100.android.ui.collection
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.v4.app.ActivityCompat.requestPermissions
-import android.support.v4.content.ContextCompat.checkSelfPermission
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.menu.MenuBuilder
 import android.support.v7.widget.GridLayoutManager
@@ -64,7 +62,6 @@ import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.Col
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionPresenter
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionView
 import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEntity
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 const val MANUFACTURER_NAME_SAMSUNG = "samsung"
