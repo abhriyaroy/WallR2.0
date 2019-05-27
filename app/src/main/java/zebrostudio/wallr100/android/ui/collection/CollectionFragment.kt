@@ -211,20 +211,6 @@ class CollectionFragment : BaseFragment(),
         COLLECTION_FRAGMENT_REQUEST_CODE)
   }
 
-  override fun hasStoragePermission(): Boolean {
-    context!!.let {
-      val readPermission =
-          checkSelfPermission(it, Manifest.permission.READ_EXTERNAL_STORAGE)
-      val writePermission =
-          checkSelfPermission(it, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-      if (readPermission != PackageManager.PERMISSION_GRANTED ||
-          writePermission != PackageManager.PERMISSION_GRANTED) {
-        return false
-      }
-      return true
-    }
-  }
-
   override fun requestStoragePermission() {
     requestPermissions(activity!!, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE), COLLECTION_FRAGMENT_REQUEST_CODE)

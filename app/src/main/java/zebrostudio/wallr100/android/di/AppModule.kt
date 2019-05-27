@@ -8,6 +8,8 @@ import zebrostudio.wallr100.android.AndroidBackgroundThreads
 import zebrostudio.wallr100.android.AndroidMainThread
 import zebrostudio.wallr100.android.notification.NotificationFactory
 import zebrostudio.wallr100.android.notification.NotificationFactoryImpl
+import zebrostudio.wallr100.android.permissions.PermissionsHelper
+import zebrostudio.wallr100.android.permissions.PermissionsHelperImpl
 import zebrostudio.wallr100.android.service.ServiceManager
 import zebrostudio.wallr100.android.service.ServiceManagerImpl
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
@@ -284,4 +286,7 @@ class AppModule {
   @Provides
   fun provideNotificationFactory(context: Context): NotificationFactory = NotificationFactoryImpl(
       context)
+
+  @Provides
+  fun providesPermissionsHelper(context: Context) : PermissionsHelper = PermissionsHelperImpl(context)
 }

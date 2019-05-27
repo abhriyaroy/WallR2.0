@@ -3,6 +3,7 @@ package zebrostudio.wallr100.presentation.collection
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.permissions.PermissionsHelper
 import zebrostudio.wallr100.android.service.WALLPAPER_CHANGER_INTERVALS_LIST
 import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_ASUS
 import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_ONEPLUS
@@ -39,7 +40,8 @@ class CollectionPresenterImpl(
   private val collectionImagesPresenterEntityMapper: CollectionImagesPresenterEntityMapper,
   private val wallpaperSetter: WallpaperSetter,
   private val resourceUtils: ResourceUtils,
-  private val postExecutionThread: PostExecutionThread
+  private val postExecutionThread: PostExecutionThread,
+  private val permissionsHelper: PermissionsHelper
 ) : CollectionPresenter {
 
   private var collectionView: CollectionView? = null
@@ -340,7 +342,8 @@ class CollectionPresenterImpl(
   }
 
   private fun isStoragePermissionAvailable(): Boolean {
-    return if (collectionView?.hasStoragePermission() == true) {
+    return if (permissionsHelper.isReadPermissionAvailable()
+        && permissionsHelper.isWritePermissionAvailable()) {
       true
     } else {
       collectionView?.requestStoragePermission()

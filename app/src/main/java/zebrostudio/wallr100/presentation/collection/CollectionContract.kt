@@ -14,7 +14,6 @@ interface CollectionContract {
     fun enableToolbar()
     fun showPurchaseProToContinueDialog()
     fun redirectToBuyPro()
-    fun hasStoragePermission(): Boolean
     fun requestStoragePermission()
     fun showReorderImagesHintWithDelay()
     fun setImagesList(imageList: List<CollectionsPresenterEntity>)
