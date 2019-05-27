@@ -46,8 +46,8 @@ interface WallrRepository {
   fun clearImageCaches(): Completable
   fun cancelImageBitmapFetchOperation()
 
-  fun getCacheSourceUri(): Uri
-  fun getCacheResultUri(): Uri
+  fun getCacheSourceUri(): Single<Uri>
+  fun getCacheResultUri(): Single<Uri>
   fun getShareableImageUri(): Single<Uri>
 
   fun getBitmapFromUri(uri: Uri?): Single<Bitmap>
@@ -103,4 +103,6 @@ interface WallrRepository {
   fun saveAutomaticWallpaperChangerEnabledState()
   fun saveAutomaticWallpaperChangerDisabledState()
   fun wasAutomaticWallpaperChangerEnabled(): Boolean
+  fun getLastWallpaperChangeTimeStamp(): Long
+  fun updateLastWallpaperChangeTimeStamp(timeStamp: Long)
 }

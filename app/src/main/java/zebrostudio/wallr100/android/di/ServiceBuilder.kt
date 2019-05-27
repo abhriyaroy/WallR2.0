@@ -7,6 +7,7 @@ import zebrostudio.wallr100.android.service.AutomaticWallpaperChangerServiceImpl
 @Module
 abstract class ServiceBuilder {
 
-  @ContributesAndroidInjector()
-  abstract fun automaticWallpaperChangerServiceImpl(): AutomaticWallpaperChangerServiceImpl
+  @ContributesAndroidInjector
+  abstract fun automaticWallpaperChangerService(): AutomaticWallpaperChangerServiceImpl
+
 }

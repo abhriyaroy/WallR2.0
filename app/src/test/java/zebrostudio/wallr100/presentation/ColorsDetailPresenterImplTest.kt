@@ -889,22 +889,24 @@ class ColorsDetailPresenterImplTest {
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message))
         .thenReturn(randomString)
-    `when`(colorImagesUseCase.getCacheSourceUri()).thenReturn(mockUri)
-    `when`(colorImagesUseCase.getCroppingDestinationUri()).thenReturn(mockDestiationUri)
+    `when`(colorImagesUseCase.getCroppingSourceUri()).thenReturn(Single.just(mockUri))
+    `when`(colorImagesUseCase.getCroppingDestinationUri()).thenReturn(Single.just(mockDestiationUri))
     `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(width)
     `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(height)
 
     colorsDetailPresenterImpl.handleEditSetClick()
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
-    verify(colorImagesUseCase).getCacheSourceUri()
+    verify(colorImagesUseCase).getCroppingSourceUri()
     verify(colorImagesUseCase).getCroppingDestinationUri()
     verify(wallpaperSetter).getDesiredMinimumWidth()
     verify(wallpaperSetter).getDesiredMinimumHeight()
     verify(resourceUtils).getStringResource(R.string.detail_activity_editing_tool_message)
+    verify(colorsDetailView).getScope()
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).startCroppingActivity(mockUri, mockDestiationUri, width, height)
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -925,8 +927,8 @@ class ColorsDetailPresenterImplTest {
     `when`(colorsDetailView.hasStoragePermission()).thenReturn(true)
     `when`(resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message))
         .thenReturn(randomString)
-    `when`(colorImagesUseCase.getCacheSourceUri()).thenReturn(mockUri)
-    `when`(colorImagesUseCase.getCroppingDestinationUri()).thenReturn(mockDestiationUri)
+    `when`(colorImagesUseCase.getCroppingSourceUri()).thenReturn(Single.just(mockUri))
+    `when`(colorImagesUseCase.getCroppingDestinationUri()).thenReturn(Single.just(mockDestiationUri))
     `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(width)
     `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(height)
 
@@ -936,14 +938,16 @@ class ColorsDetailPresenterImplTest {
         intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
-    verify(colorImagesUseCase).getCacheSourceUri()
+    verify(colorImagesUseCase).getCroppingSourceUri()
     verify(colorImagesUseCase).getCroppingDestinationUri()
     verify(wallpaperSetter).getDesiredMinimumWidth()
     verify(wallpaperSetter).getDesiredMinimumHeight()
     verify(resourceUtils).getStringResource(R.string.detail_activity_editing_tool_message)
+    verify(colorsDetailView).getScope()
     verify(colorsDetailView).hasStoragePermission()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).startCroppingActivity(mockUri, mockDestiationUri, width, height)
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test

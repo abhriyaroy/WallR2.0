@@ -14,8 +14,8 @@ interface ImageOptionsUseCase {
   fun getImageShareableLinkSingle(link: String): Single<String>
   fun clearCachesCompletable(): Completable
   fun cancelFetchImageOperation()
-  fun getCroppingSourceUri(): Uri
-  fun getCroppingDestinationUri(): Uri
+  fun getCroppingSourceUri(): Single<Uri>
+  fun getCroppingDestinationUri(): Single<Uri>
   fun getEditedImageSingle(): Single<Bitmap>
   fun crystallizeImageSingle(): Single<Pair<Boolean, Bitmap>>
   fun getBitmapFromUriSingle(imageUri: Uri?): Single<Bitmap>

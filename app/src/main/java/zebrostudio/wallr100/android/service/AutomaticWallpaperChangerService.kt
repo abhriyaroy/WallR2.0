@@ -3,7 +3,6 @@ package zebrostudio.wallr100.android.service
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
-import android.os.Handler
 import android.os.IBinder
 import android.support.annotation.Nullable
 import android.support.v4.app.NotificationCompat
@@ -22,6 +21,7 @@ interface AutomaticWallpaperChangerService {
 
 const val WALLPAPER_CHANGER_SERVICE_CODE = 1
 const val WALLPAPER_CHANGER_REQUEST_CODE = 2
+const val ILLEGAL_ACCESS_ERROR_MESSAGE = "Wallpaper changer service cannot be bounded to"
 val WALLPAPER_CHANGER_INTERVALS_LIST = listOf<Long>(
     1800000,
     3600000,
@@ -30,44 +30,31 @@ val WALLPAPER_CHANGER_INTERVALS_LIST = listOf<Long>(
     259200000
 )
 
-private const val TIME_CHECKER_DELAY: Long = 120000
+class AutomaticWallpaperChangerServiceImpl : Service(), AutomaticWallpaperChangerService {
 
-class AutomaticWallpaperChangerServiceImpl : Service(),
-    AutomaticWallpaperChangerService {
-
-  @Inject internal lateinit var automaticWallpaperChangerUseCase: AutomaticWallpaperChangerUseCase
-
-  private var handler: Handler? = null
-  private var runnable: Runnable? = null
+  @Inject
+  internal lateinit var automaticWallpaperChangerUseCase: AutomaticWallpaperChangerUseCase
 
   override fun onCreate() {
     AndroidInjection.inject(this)
     super.onCreate()
+    automaticWallpaperChangerUseCase.attachService(this)
   }
 
   override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
     createNotification()
-    automaticWallpaperChangerUseCase.attachService(this)
-    handler = Handler()
-    runnable = Runnable {
-      automaticWallpaperChangerUseCase.handleRunnableCall()
-      handler?.postDelayed(runnable, TIME_CHECKER_DELAY)
-    }
-    handler?.postDelayed(runnable, TIME_CHECKER_DELAY)
-    return START_STICKY
+    automaticWallpaperChangerUseCase.handleServiceCreated()
+    return START_NOT_STICKY
   }
 
   override fun onDestroy() {
-    handler?.removeCallbacks(runnable)
-    handler = null
-    runnable = null
     automaticWallpaperChangerUseCase.detachService()
     super.onDestroy()
   }
 
   @Nullable
   override fun onBind(intent: Intent): IBinder? {
-    throw IllegalAccessError()
+    throw IllegalAccessError(ILLEGAL_ACCESS_ERROR_MESSAGE)
   }
 
   override fun stopService() {
@@ -85,9 +72,8 @@ class AutomaticWallpaperChangerServiceImpl : Service(),
             R.string.wallpaper_changer_service_notification_description)} ${automaticWallpaperChangerUseCase.getIntervalString()}")
         .setSmallIcon(R.drawable.ic_wallr)
         .setContentIntent(pendingIntent)
-        .setAutoCancel(false)
-        .setOngoing(true)
         .setPriority(PRIORITY_MAX)
+        .setOngoing(true)
         .build()
     startForeground(WALLPAPER_CHANGER_SERVICE_CODE, notification)
   }

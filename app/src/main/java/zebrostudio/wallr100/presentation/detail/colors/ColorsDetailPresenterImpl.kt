@@ -5,6 +5,8 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
 import com.yalantis.ucrop.UCrop.REQUEST_CROP
+import io.reactivex.Single
+import io.reactivex.functions.BiFunction
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig.Companion.PURCHASE_SUCCESSFUL_RESULT_CODE
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode
@@ -202,12 +204,23 @@ class ColorsDetailPresenterImpl(
       isColorWallpaperOperationActive = true
       view?.showIndefiniteLoader(
           resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message))
-      view?.startCroppingActivity(
-          colorImagesUseCase.getCacheSourceUri(),
+      Single.zip(colorImagesUseCase.getCroppingSourceUri(),
           colorImagesUseCase.getCroppingDestinationUri(),
-          wallpaperSetter.getDesiredMinimumWidth(),
-          wallpaperSetter.getDesiredMinimumHeight())
-      isColorWallpaperOperationActive = false
+          BiFunction<Uri, Uri, Pair<Uri, Uri>> { source, destination ->
+            Pair(source, destination)
+          })
+          .observeOn(postExecutionThread.scheduler)
+          .autoDisposable(view!!.getScope())
+          .subscribe({
+            view?.startCroppingActivity(
+                it.first,
+                it.second,
+                wallpaperSetter.getDesiredMinimumWidth(),
+                wallpaperSetter.getDesiredMinimumHeight())
+            isColorWallpaperOperationActive = false
+          }, {
+            view?.showGenericErrorMessage()
+          })
     }
   }
 

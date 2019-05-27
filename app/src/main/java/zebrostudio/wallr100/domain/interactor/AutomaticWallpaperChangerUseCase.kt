@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.domain.interactor
 
 import android.graphics.Bitmap
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import zebrostudio.wallr100.R
@@ -9,27 +10,31 @@ import zebrostudio.wallr100.android.service.WALLPAPER_CHANGER_INTERVALS_LIST
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.WallrRepository
+import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
+import java.util.concurrent.TimeUnit
 
 interface AutomaticWallpaperChangerUseCase {
   fun attachService(automaticWallpaperChangerService: AutomaticWallpaperChangerService)
   fun detachService()
-  fun handleRunnableCall()
   fun getIntervalString(): String
+  fun handleServiceCreated()
 }
 
 const val INDEX_OF_FIRST_ELEMENT_IN_LIST = 0
 const val INDEX_UNDERFLOW = -1
+const val TIME_CHECKER_INTERVAL: Long = 120000
 
 class AutomaticWallpaperChangerInteractor(
   private val wallpaperSetter: WallpaperSetter,
   private val wallrRepository: WallrRepository,
   private val resourceUtils: ResourceUtils,
+  private val executionThread: ExecutionThread,
   private val postExecutionThread: PostExecutionThread
 ) : AutomaticWallpaperChangerUseCase {
 
-  internal var lastWallpaperChangeTime: Long = System.currentTimeMillis()
-  private var disposable: Disposable? = null
+  private var timerDisposable: Disposable? = null
+  private var wallpaperChangerDisposable: Disposable? = null
   private var automaticWallpaperChangerService: AutomaticWallpaperChangerService? = null
 
   override fun attachService(automaticWallpaperChangerService: AutomaticWallpaperChangerService) {
@@ -37,18 +42,24 @@ class AutomaticWallpaperChangerInteractor(
   }
 
   override fun detachService() {
-    if (disposable?.isDisposed == false) {
-      disposable?.dispose()
-    }
     automaticWallpaperChangerService = null
+    if (timerDisposable?.isDisposed == false) {
+      timerDisposable?.dispose()
+    }
   }
 
-  override fun handleRunnableCall() {
-    System.currentTimeMillis().let {
-      if (it - lastWallpaperChangeTime >= getInterval()) {
-        changeWallpaper()
-      }
-    }
+  override fun handleServiceCreated() {
+    timerDisposable =
+        Observable.timer(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS,
+            executionThread.computationScheduler)
+            .repeat()
+            .doOnNext {
+              if (System.currentTimeMillis() - wallrRepository.getLastWallpaperChangeTimeStamp()
+                  >= getInterval()) {
+                changeWallpaper()
+              }
+            }
+            .subscribe()
   }
 
   override fun getIntervalString(): String {
@@ -77,7 +88,7 @@ class AutomaticWallpaperChangerInteractor(
   }
 
   private fun changeWallpaper() {
-    disposable = getWallpaperBitmap()
+    wallpaperChangerDisposable = getWallpaperBitmap()
         .doOnSuccess {
           wallpaperSetter.setWallpaper(it)
           if (!it.isRecycled) {
@@ -85,7 +96,10 @@ class AutomaticWallpaperChangerInteractor(
           }
         }.observeOn(postExecutionThread.scheduler)
         .subscribe({
-          lastWallpaperChangeTime = System.currentTimeMillis()
+          wallrRepository.updateLastWallpaperChangeTimeStamp(System.currentTimeMillis())
+          if (wallpaperChangerDisposable?.isDisposed == false) {
+            wallpaperChangerDisposable?.dispose()
+          }
         }, {
           automaticWallpaperChangerService?.stopService()
         })

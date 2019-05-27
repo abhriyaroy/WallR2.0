@@ -45,14 +45,17 @@ const val COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG = "reorder_image_hint"
 const val PURCHASE_PREFERENCE_NAME = "PURCHASE_PREF"
 const val PREMIUM_USER_TAG = "premium_user"
 const val IMAGE_PREFERENCE_NAME = "IMAGE_PREF"
-const val CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG = "crystallize_click_dialog"
-const val CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG = "custom_minimal_color_list_availability"
-const val CUSTOM_MINIMAL_COLOR_LIST_TAG = "custom_solid_color_list"
-const val AUTOMATIC_WALLPAPER_CHANGER_STATE_TAG = "automatic_wallpaper_changer"
-const val AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_TAG = "automatic_wallpaper_changer_interval"
-const val AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_TAG =
+const val CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_PREFERENCE_TAG = "crystallize_click_dialog"
+const val CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_PREFERENCE_TAG =
+    "custom_minimal_color_list_availability"
+const val CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG = "custom_solid_color_list"
+const val AUTOMATIC_WALLPAPER_CHANGER_STATE_PREFERENCE_TAG = "automatic_wallpaper_changer"
+const val AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_PREFERENCE_TAG =
+    "automatic_wallpaper_changer_interval"
+const val AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_PREFERENCE_TAG =
     "automatic_wallpaper_changer_last_used_uid"
-const val AUTOMATIC_WALLPAPER_CHANGER_ENABLED = "automatic_wallpaper_changer_enabled"
+const val AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG = "automatic_wallpaper_changer_enabled"
+const val LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG = "wallpaper_change_time"
 const val UNABLE_TO_RESOLVE_HOST_EXCEPTION_MESSAGE = "Unable to resolve host " +
     "\"api.unsplash.com\": No address associated with hostname"
 const val FIREBASE_DATABASE_PATH = "wallr"
@@ -208,7 +211,7 @@ class WallrDataRepository(
     if (!fileHandler.freeSpaceAvailable()) {
       return Single.error(NotEnoughFreeSpaceException())
     }
-    return Single.just(imageHandler.getImageBitmap())
+    return Single.just(imageHandler.getImageBitmap().blockingGet())
         .subscribeOn(executionThread.computationScheduler)
   }
 
@@ -219,7 +222,8 @@ class WallrDataRepository(
     if (imageHandler.isImageCached(link)) {
       val observable: Observable<ImageDownloadModel> = Observable.create {
         it.onNext(ImageDownloadModel(IMAGE_DOWNLOAD_PROGRESS_VALUE_99, null))
-        it.onNext(ImageDownloadModel(IMAGE_DOWNLOAD_FINISHED_VALUE, imageHandler.getImageBitmap()))
+        it.onNext(ImageDownloadModel(IMAGE_DOWNLOAD_FINISHED_VALUE,
+            imageHandler.getImageBitmap().blockingGet()))
         it.onComplete()
       }
       return observable.subscribeOn(executionThread.ioScheduler)
@@ -228,7 +232,7 @@ class WallrDataRepository(
         .subscribeOn(executionThread.ioScheduler)
         .flatMap {
           if (it == IMAGE_DOWNLOAD_FINISHED_VALUE) {
-            Observable.just(ImageDownloadModel(it, imageHandler.getImageBitmap()))
+            Observable.just(ImageDownloadModel(it, imageHandler.getImageBitmap().blockingGet()))
           } else {
             Observable.just(ImageDownloadModel(it, null))
           }
@@ -236,7 +240,8 @@ class WallrDataRepository(
   }
 
   override fun getCacheImageBitmap(): Single<Bitmap> {
-    val single: Single<Bitmap> = Single.create { it.onSuccess(imageHandler.getImageBitmap()) }
+    val single: Single<Bitmap> =
+        Single.create { it.onSuccess(imageHandler.getImageBitmap().blockingGet()) }
     return single.subscribeOn(executionThread.computationScheduler)
   }
 
@@ -254,9 +259,11 @@ class WallrDataRepository(
     imageHandler.cancelFetchingImage()
   }
 
-  override fun getCacheSourceUri() = imageHandler.getImageUri()
+  override fun getCacheSourceUri(): Single<Uri> = imageHandler.getImageUri()
+      .subscribeOn(executionThread.ioScheduler)
 
-  override fun getCacheResultUri() = fileHandler.getCacheFileUriForCropping()
+  override fun getCacheResultUri(): Single<Uri> = fileHandler.getCacheFileUriForCropping()
+      .subscribeOn(executionThread.ioScheduler)
 
   override fun getBitmapFromUri(uri: Uri?): Single<Bitmap> {
     return imageHandler.convertUriToBitmap(uri)
@@ -289,11 +296,12 @@ class WallrDataRepository(
 
   override fun isCrystallizeDescriptionShown(): Boolean {
     return sharedPrefsHelper.getBoolean(IMAGE_PREFERENCE_NAME,
-        CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG)
+        CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_PREFERENCE_TAG)
   }
 
   override fun saveCrystallizeDescriptionShown() {
-    sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME, CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_TAG,
+    sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME,
+        CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_PREFERENCE_TAG,
         true)
   }
 
@@ -321,7 +329,7 @@ class WallrDataRepository(
 
   override fun isCustomMinimalColorListPresent(): Boolean {
     return sharedPrefsHelper.getBoolean(IMAGE_PREFERENCE_NAME,
-        CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG, false)
+        CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_PREFERENCE_TAG, false)
   }
 
   override fun getCustomMinimalColorList(): Single<List<String>> {
@@ -337,7 +345,8 @@ class WallrDataRepository(
   override fun saveCustomMinimalColorList(colors: List<String>): Completable {
     return Completable.create {
       if (
-          sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
+          sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME,
+              CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
               gsonProvider.getGson().toJson(colors))
       ) {
         it.onComplete()
@@ -370,7 +379,7 @@ class WallrDataRepository(
               list.add(it, map[it]!!)
             }
             sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME,
-                CUSTOM_MINIMAL_COLOR_LIST_TAG, gsonProvider.getGson().toJson(list))
+                CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG, gsonProvider.getGson().toJson(list))
             Single.just(RestoreColorsModel(list, map))
           }
         }
@@ -436,7 +445,7 @@ class WallrDataRepository(
 
   override fun getAutomaticWallpaperChangerState(): Boolean {
     return sharedPrefsHelper.getBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_STATE_TAG)
+        AUTOMATIC_WALLPAPER_CHANGER_STATE_PREFERENCE_TAG)
   }
 
   override fun isCollectionReorderHintDisplayedBefore(): Boolean {
@@ -472,34 +481,48 @@ class WallrDataRepository(
 
   override fun getWallpaperChangerInterval(): Long {
     return sharedPrefsHelper.getLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_TAG)
+        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_PREFERENCE_TAG)
   }
 
   override fun setWallpaperChangerInterval(interval: Long) {
     sharedPrefsHelper.setLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_TAG, interval)
+        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_PREFERENCE_TAG, interval)
   }
 
   override fun getLastUsedWallpaperUid(): Long {
     return sharedPrefsHelper.getLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_TAG)
+        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_PREFERENCE_TAG)
   }
 
   override fun setLastUsedWallpaperUid(uid: Long) {
     sharedPrefsHelper.setLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_TAG, uid)
+        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_PREFERENCE_TAG, uid)
   }
 
   override fun saveAutomaticWallpaperChangerEnabledState() {
-    sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED, true)
+    sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG, true)
   }
 
   override fun saveAutomaticWallpaperChangerDisabledState() {
-    sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED, false)
+    sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG, false)
   }
 
   override fun wasAutomaticWallpaperChangerEnabled(): Boolean {
-    return sharedPrefsHelper.getBoolean(IMAGE_PREFERENCE_NAME, AUTOMATIC_WALLPAPER_CHANGER_ENABLED)
+    return sharedPrefsHelper.getBoolean(IMAGE_PREFERENCE_NAME,
+        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG)
+  }
+
+  override fun getLastWallpaperChangeTimeStamp(): Long {
+    return sharedPrefsHelper.getLong(IMAGE_PREFERENCE_NAME,
+        LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG)
+  }
+
+  override fun updateLastWallpaperChangeTimeStamp(timeStamp: Long) {
+    sharedPrefsHelper.setLong(IMAGE_PREFERENCE_NAME,
+        LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG,
+        timeStamp)
   }
 
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()
@@ -559,10 +582,11 @@ class WallrDataRepository(
   ): Single<List<String>> {
     return Single.create {
       if (
-          sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG,
+          sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME,
+              CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
               gsonProvider.getGson().toJson(colors))) {
         sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME,
-            CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_TAG,
+            CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_PREFERENCE_TAG,
             true)
         it.onSuccess(colors)
       } else {

@@ -29,7 +29,7 @@ class MinimalColorsHelperImpl(
 
   override fun getCustomColors(): Single<List<String>> {
     return Single.create { singleEmitter ->
-      sharedPrefsHelper.getString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_TAG)
+      sharedPrefsHelper.getString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG)
           .let { string ->
             if (string == "") {
               singleEmitter.onError(UnableToGetMinimalColorsException())

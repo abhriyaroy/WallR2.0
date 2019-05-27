@@ -11,6 +11,7 @@ public class GuillotineInterpolator implements TimeInterpolator {
   public GuillotineInterpolator() {
   }
 
+  @Override
   public float getInterpolation(float t) {
     if (t < ROTATION_TIME) {
       return rotation(t);

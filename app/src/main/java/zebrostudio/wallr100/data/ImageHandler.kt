@@ -46,8 +46,8 @@ interface ImageHandler {
   fun isImageCached(link: String): Boolean
   fun fetchImage(link: String): Observable<Long>
   fun cancelFetchingImage()
-  fun getImageBitmap(): Bitmap
-  fun getImageUri(): Uri
+  fun getImageBitmap(): Single<Bitmap>
+  fun getImageUri(): Single<Uri>
   fun clearImageCache(): Completable
   fun getShareableUri(): Single<Uri>
   fun convertUriToBitmap(uri: Uri?): Single<Bitmap>
@@ -150,10 +150,12 @@ class ImageHandlerImpl(
     shouldContinueFetchingImage = false
   }
 
-  override fun getImageBitmap(): Bitmap {
-    return BitmapFactory.Options().let {
-      it.inPreferredConfig = Bitmap.Config.ARGB_8888
-      BitmapFactory.decodeFile(fileHandler.getCacheFile().path, it)
+  override fun getImageBitmap(): Single<Bitmap> {
+    return Single.create { emitter ->
+      BitmapFactory.Options().let {
+        it.inPreferredConfig = Bitmap.Config.ARGB_8888
+        emitter.onSuccess(BitmapFactory.decodeFile(fileHandler.getCacheFile().path, it))
+      }
     }
   }
 
@@ -165,26 +167,24 @@ class ImageHandlerImpl(
     }
   }
 
-  override fun getImageUri(): Uri {
-    return getImageBitmap().let { bitmap ->
-      fileHandler.getCacheFile().outputStream()
-          .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
-      Uri.fromFile(fileHandler.getCacheFile())
-    }
+  override fun getImageUri(): Single<Uri> {
+    return getImageBitmap()
+        .map { bitmap ->
+          fileHandler.getCacheFile().outputStream()
+              .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
+          Uri.fromFile(fileHandler.getCacheFile())
+        }
   }
 
   override fun getShareableUri(): Single<Uri> {
-    return Single.create { emitter ->
-      getImageBitmap().let { bitmap ->
-        fileHandler.getShareableFle().outputStream()
-            .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
-        FileProvider.getUriForFile(context,
-            context.applicationContext.packageName + ".provider", fileHandler.getShareableFle())
-            .let {
-              emitter.onSuccess(it)
-            }
-      }
-    }
+    return getImageBitmap()
+        .map { bitmap ->
+          fileHandler.getShareableFle().outputStream()
+              .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
+          FileProvider.getUriForFile(context,
+              context.applicationContext.packageName + ".provider", fileHandler.getShareableFle())
+
+        }
   }
 
   override fun convertUriToBitmap(uri: Uri?): Single<Bitmap> {
@@ -209,17 +209,13 @@ class ImageHandlerImpl(
   }
 
   override fun convertImageInCacheToLowpoly(): Single<Bitmap> {
-    return Single.create {
-      LowPoly.generate(getImageBitmap()).let { bitmap ->
-        try {
-          fileHandler.getCacheFile().outputStream()
-              .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
-          it.onSuccess(bitmap)
-        } catch (exception: IOException) {
-          it.onError(exception)
+    return getImageBitmap()
+        .map {
+          LowPoly.generate(it).also { bitmap ->
+            fileHandler.getCacheFile().outputStream()
+                .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
+          }
         }
-      }
-    }
   }
 
   override fun addCachedImageToDownloads(): Completable {
