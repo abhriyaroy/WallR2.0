@@ -12,6 +12,8 @@ import zebrostudio.wallr100.android.permissions.PermissionsCheckerHelper
 import zebrostudio.wallr100.android.permissions.PermissionsCheckerHelperImpl
 import zebrostudio.wallr100.android.service.ServiceManager
 import zebrostudio.wallr100.android.service.ServiceManagerImpl
+import zebrostudio.wallr100.android.system.SystemDetailProviderImpl
+import zebrostudio.wallr100.android.system.SystemDetailsProvider
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcherImpl
 import zebrostudio.wallr100.android.utils.GsonProvider
@@ -90,6 +92,10 @@ class AppModule {
   fun provideContext(application: Application): Context {
     return application
   }
+
+  @Provides
+  @Singleton
+  fun provideSystemDetails(): SystemDetailsProvider = SystemDetailProviderImpl()
 
   @Provides
   @Singleton

@@ -184,6 +184,26 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
     return isOperationInProcess
   }
 
+  override fun showFeedbackClient(
+    emailSubject: String,
+    emailAddress: Array<String>,
+    emailIntentType: String
+  ) {
+    closeNavigationMenu()
+    withDelayOnMain(100) {
+      try {
+        val emailIntent = Intent(Intent.ACTION_SEND)
+        emailIntent.type = emailIntentType
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, emailAddress)
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, emailSubject)
+        startActivityForResult(Intent.createChooser(emailIntent,
+            stringRes(R.string.main_activity_feedback_contact_using_message)), 0)
+      } catch (e: ActivityNotFoundException) {
+        errorToast(stringRes(R.string.main_activity_no_email_client_error))
+      }
+    }
+  }
+
   private inline fun <reified T : BaseFragment> addFragment(
     @IdRes id: Int,
     fragment: T,
@@ -310,9 +330,7 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
       MenuItems.COLLECTION -> addFragment(fragmentContainer.id,
           CollectionFragment.newInstance(),
           COLLECTIONS_TAG)
-      MenuItems.FEEDBACK -> {
-        handleFeedbackClick()
-      }
+      MenuItems.FEEDBACK -> presenter.handleFeedbackMenuItemClick()
       MenuItems.BUY_PRO -> {
         withDelayOnMain(550, block = {
           startActivityForResult(Intent(this, BuyProActivity::class.java),
@@ -330,31 +348,6 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
       while (backStackEntry > 0) {
         supportFragmentManager.popBackStack()
         backStackEntry -= 1
-      }
-    }
-  }
-
-  private fun handleFeedbackClick() {
-    closeNavigationMenu()
-    withDelayOnMain(100) {
-      var emailSubject = "Debug-infos:"
-      emailSubject += "\n OS Version: " + System.getProperty(
-          "os.version") + "(" + Build.VERSION.INCREMENTAL + ")"
-      emailSubject += "\n OS API Level: " + Build.VERSION.SDK_INT
-      emailSubject += "\n Device: " + Build.DEVICE
-      emailSubject += "\n Model (and Product): " + Build.MODEL +
-          " (" + Build.PRODUCT + ")"
-      val emailIntent = Intent(Intent.ACTION_SEND)
-      emailIntent.type = "plain/text"
-      val emailAddress = arrayOf("studio.zebro@gmail.com")
-      emailIntent.putExtra(Intent.EXTRA_EMAIL, emailAddress)
-      emailIntent.putExtra(Intent.EXTRA_SUBJECT,
-          "Feedback/Report about WallR  $emailSubject")
-      try {
-        startActivityForResult(Intent.createChooser(emailIntent,
-            stringRes(R.string.main_activity_feedback_contact_using_message)), 0)
-      } catch (e: ActivityNotFoundException) {
-        errorToast(stringRes(R.string.main_activity_no_email_client_error))
       }
     }
   }

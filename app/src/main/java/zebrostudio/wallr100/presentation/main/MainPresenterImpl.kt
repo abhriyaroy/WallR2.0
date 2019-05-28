@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.presentation.main
 
+import zebrostudio.wallr100.android.system.SystemDetailsProvider
 import zebrostudio.wallr100.android.utils.FragmentTag.COLLECTIONS_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.MINIMAL_TAG
@@ -8,10 +9,14 @@ import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.main.MainContract.MainPresenter
 
+const val FEEDBACK_CONTENT_TYPE = "text/plain"
+const val ZEBRO_STUDIO_EMAIL_ADDRESS = "studio.zebro@gmail.com"
+
 class MainPresenterImpl(
   private val widgetHintsUseCase: WidgetHintsUseCase,
   private val userPremiumStatusUseCase: UserPremiumStatusUseCase,
-  private val collectionImagesUseCase: CollectionImagesUseCase
+  private val collectionImagesUseCase: CollectionImagesUseCase,
+  private val systemDetailsProvider: SystemDetailsProvider
 ) : MainPresenter {
 
   internal var backPressedOnce = false
@@ -80,6 +85,17 @@ class MainPresenterImpl(
 
   override fun handleHamburgerHintDismissed() {
     widgetHintsUseCase.saveNavigationMenuHamburgerHintShownState()
+  }
+
+  override fun handleFeedbackMenuItemClick() {
+    ("Feedback/Report - WallR -> Debug-infos:\n OS Version: ${systemDetailsProvider.getOsVersion()}" +
+        " (${systemDetailsProvider.getBuildNumber()})\n OS API Level: " +
+        "${systemDetailsProvider.getSdkVersion()}\n Device: ${systemDetailsProvider.getDeviceName()}" +
+        "\n Model(and Product): ${systemDetailsProvider.getModelName()} (${systemDetailsProvider.getProductName()})")
+        .let {
+          mainView?.showFeedbackClient(it, arrayOf(ZEBRO_STUDIO_EMAIL_ADDRESS),
+              FEEDBACK_CONTENT_TYPE)
+        }
   }
 
 }

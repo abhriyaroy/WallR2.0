@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
+import zebrostudio.wallr100.android.system.SystemDetailsProvider
 import zebrostudio.wallr100.android.utils.FragmentTag.CATEGORIES_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.COLLECTIONS_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
@@ -28,13 +29,15 @@ class MainPresenterImplTest {
   @Mock lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
   @Mock lateinit var widgetHintsUseCase: WidgetHintsUseCase
   @Mock lateinit var collectionImagesUseCase: CollectionImagesUseCase
+  @Mock lateinit var systemDetailsProvider: SystemDetailsProvider
   @Mock lateinit var mainView: MainView
   private lateinit var mainPresenter: MainPresenterImpl
 
   @Before
   fun setup() {
     mainPresenter =
-        MainPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase, collectionImagesUseCase)
+        MainPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase, collectionImagesUseCase,
+            systemDetailsProvider)
     mainPresenter.attachView(mainView)
   }
 
@@ -230,10 +233,41 @@ class MainPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
   }
 
+  @Test fun `should show feedback client on handleFeedbackMenuItemClick call success`() {
+    val osVersion = "os_version"
+    val buildNumber = "build_number"
+    val sdkVersion = "sdk_version"
+    val deviceName = "device_name"
+    val modelName = "model_name"
+    val productName = "product_name"
+    val messageSubject =
+        "Feedback/Report - WallR -> Debug-infos:\n OS Version: $osVersion" +
+            " ($buildNumber)\n OS API Level: " +
+            "$sdkVersion\n Device: $deviceName\n Model(and Product): $modelName ($productName)"
+    val emailAddress = "studio.zebro@gmail.com"
+    val contentType = "text/plain"
+    `when`(systemDetailsProvider.getOsVersion()).thenReturn(osVersion)
+    `when`(systemDetailsProvider.getBuildNumber()).thenReturn(buildNumber)
+    `when`(systemDetailsProvider.getSdkVersion()).thenReturn(sdkVersion)
+    `when`(systemDetailsProvider.getDeviceName()).thenReturn(deviceName)
+    `when`(systemDetailsProvider.getModelName()).thenReturn(modelName)
+    `when`(systemDetailsProvider.getProductName()).thenReturn(productName)
+
+    mainPresenter.handleFeedbackMenuItemClick()
+
+    verify(systemDetailsProvider).getOsVersion()
+    verify(systemDetailsProvider).getBuildNumber()
+    verify(systemDetailsProvider).getSdkVersion()
+    verify(systemDetailsProvider).getDeviceName()
+    verify(systemDetailsProvider).getModelName()
+    verify(systemDetailsProvider).getProductName()
+    verify(mainView).showFeedbackClient(messageSubject, arrayOf(emailAddress), contentType)
+  }
+
   @After
   fun tearDown() {
     verifyNoMoreInteractions(userPremiumStatusUseCase, widgetHintsUseCase, collectionImagesUseCase,
-        mainView)
+        mainView, systemDetailsProvider)
     mainPresenter.detachView()
   }
 
