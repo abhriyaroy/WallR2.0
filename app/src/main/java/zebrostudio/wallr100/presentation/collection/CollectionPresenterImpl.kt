@@ -5,6 +5,7 @@ import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.permissions.PermissionsCheckerHelper
 import zebrostudio.wallr100.android.service.WALLPAPER_CHANGER_INTERVALS_LIST
+import zebrostudio.wallr100.android.system.SystemDetailsProvider
 import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_ASUS
 import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_ONEPLUS
 import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_OPPO
@@ -41,7 +42,8 @@ class CollectionPresenterImpl(
   private val wallpaperSetter: WallpaperSetter,
   private val resourceUtils: ResourceUtils,
   private val postExecutionThread: PostExecutionThread,
-  private val permissionsCheckerHelper: PermissionsCheckerHelper
+  private val permissionsCheckerHelper: PermissionsCheckerHelper,
+  private val systemDetailsProvider: SystemDetailsProvider
 ) : CollectionPresenter {
 
   private var collectionView: CollectionView? = null
@@ -142,7 +144,7 @@ class CollectionPresenterImpl(
   override fun handleAutomaticWallpaperChangerEnabled() {
     collectionImagesUseCase.saveAutomaticWallpaperChangerStateAsEnabled()
     if (!collectionImagesUseCase.isAutomaticWallpaperChangerRunning()) {
-      collectionView?.getManufacturerName()?.let {
+      systemDetailsProvider.getManufacturerName().let {
         if (it.equalsIgnoreCase(MANUFACTURER_NAME_SAMSUNG)
             || it.equalsIgnoreCase(MANUFACTURER_NAME_XIAOMI)
             || it.equalsIgnoreCase(MANUFACTURER_NAME_ONEPLUS)

@@ -136,10 +136,6 @@ class CollectionFragment : BaseFragment(),
     presenter.handleActivityResult()
   }
 
-  override fun getManufacturerName(): String {
-    return android.os.Build.MANUFACTURER
-  }
-
   override fun onMenuItemClick(item: MenuItem): Boolean {
     when (item.itemId) {
       R.id.change_wallpaper_interval ->

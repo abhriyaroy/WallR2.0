@@ -8,7 +8,6 @@ import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEn
 interface CollectionContract {
 
   interface CollectionView : BaseView {
-    fun getManufacturerName(): String
     fun showAppBarWithDelay()
     fun hideAppBar()
     fun enableToolbar()

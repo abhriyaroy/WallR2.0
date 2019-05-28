@@ -1,7 +1,7 @@
 package zebrostudio.wallr100.android.ui.main
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.IdRes
@@ -47,7 +47,6 @@ import zebrostudio.wallr100.android.utils.FragmentTag.MINIMAL_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.TOP_PICKS_TAG
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.drawableRes
-import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.infoToast
 import zebrostudio.wallr100.android.utils.menuTitleToast
@@ -58,7 +57,8 @@ import zebrostudio.wallr100.presentation.main.MainContract
 import zebrostudio.wallr100.presentation.main.MainContract.MainView
 import javax.inject.Inject
 
-private const val rippleDuration = 250
+private const val RIPPLE_DURATION = 250
+private const val MAIL_URI = "mailto:"
 
 class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
 
@@ -191,15 +191,14 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
   ) {
     closeNavigationMenu()
     withDelayOnMain(100) {
-      try {
-        val emailIntent = Intent(Intent.ACTION_SEND)
-        emailIntent.type = emailIntentType
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, emailAddress)
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, emailSubject)
-        startActivityForResult(Intent.createChooser(emailIntent,
+      Intent(Intent.ACTION_SENDTO).apply {
+        type = emailIntentType
+        data = Uri.parse(MAIL_URI)
+        putExtra(Intent.EXTRA_EMAIL, emailAddress)
+        putExtra(Intent.EXTRA_SUBJECT, emailSubject)
+      }.let {
+        startActivityForResult(Intent.createChooser(it,
             stringRes(R.string.main_activity_feedback_contact_using_message)), 0)
-      } catch (e: ActivityNotFoundException) {
-        errorToast(stringRes(R.string.main_activity_no_email_client_error))
       }
     }
   }
@@ -251,7 +250,7 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
         guillotineMenu,
         guillotineMenu.hamburgerGuillotineMenu,
         contentHamburger)
-        .setStartDelay(rippleDuration.toLong())
+        .setStartDelay(RIPPLE_DURATION.toLong())
         .setActionBarViewForAnimation(toolbar)
         .setGuillotineListener(guillotineListener)
         .setClosedOnStart(true)
