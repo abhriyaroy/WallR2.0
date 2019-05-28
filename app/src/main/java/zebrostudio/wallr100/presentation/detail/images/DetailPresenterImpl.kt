@@ -104,7 +104,7 @@ class DetailPresenterImpl(
   }
 
   override fun handleCrystallizeClick() {
-    if (isUserPremium(DOWNLOAD) && hasStoragePermissions(DOWNLOAD) && isInternetAvailable()) {
+    if (isUserPremium(CRYSTALLIZE) && hasStoragePermissions(CRYSTALLIZE) && isInternetAvailable()) {
       if (imageOptionsUseCase.isCrystallizeDescriptionDialogShown()) {
         if (!imageHasBeenCrystallized) {
           crystallizeWallpaper()
@@ -118,42 +118,39 @@ class DetailPresenterImpl(
   }
 
   override fun handleEditSetClick() {
-    if (isUserPremium(EDIT_SET) && hasStoragePermissions(EDIT_SET)) {
+    if (isInternetAvailable() && hasStoragePermissions(EDIT_SET)) {
       editSetWallpaper()
-    } else {
-      detailView?.showNoInternetError()
     }
   }
 
   override fun handleAddToCollectionClick() {
-    if (isUserPremium(ADD_TO_COLLECTION) && hasStoragePermissions(ADD_TO_COLLECTION)) {
-      if (detailView?.internetAvailability() == true) {
-        addWallpaperToCollection()
-      } else {
-        detailView?.showNoInternetError()
-      }
+    if (isUserPremium(ADD_TO_COLLECTION) && hasStoragePermissions(
+            ADD_TO_COLLECTION) && isInternetAvailable()) {
+      addWallpaperToCollection()
     }
   }
 
   override fun handleShareClick() {
-    if (detailView?.internetAvailability() == true && isUserPremium(DOWNLOAD)) {
-      val link = if (imageType == SEARCH) {
-        searchImage.imageQualityUrlPresenterEntity.largeImageLink
-      } else {
-        wallpaperImage.imageLink.large
+    if (detailView?.internetAvailability() == true) {
+      if (isUserPremium(SHARE)) {
+        val link = if (imageType == SEARCH) {
+          searchImage.imageQualityUrlPresenterEntity.largeImageLink
+        } else {
+          wallpaperImage.imageLink.large
+        }
+        imageOptionsUseCase.getImageShareableLinkSingle(link)
+            .observeOn(postExecutionThread.scheduler)
+            .autoDisposable(detailView?.getScope()!!)
+            .subscribe({
+              detailView?.hideWaitLoader()
+              val message = resourceUtils.getStringResource(R.string.share_intent_message,
+                  WALLR_DOWNLOAD_LINK) + "\n\n" + "Image link - $it"
+              detailView?.shareLink(message, SHARE_INTENT_TYPE)
+            }, {
+              detailView?.hideWaitLoader()
+              detailView?.showGenericErrorMessage()
+            })
       }
-      imageOptionsUseCase.getImageShareableLinkSingle(link)
-          .observeOn(postExecutionThread.scheduler)
-          .autoDisposable(detailView?.getScope()!!)
-          .subscribe({
-            detailView?.hideWaitLoader()
-            val message = resourceUtils.getStringResource(R.string.share_intent_message,
-                WALLR_DOWNLOAD_LINK) + "\n\n" + "Image link - $it"
-            detailView?.shareLink(message, SHARE_INTENT_TYPE)
-          }, {
-            detailView?.hideWaitLoader()
-            detailView?.showGenericErrorMessage()
-          })
     } else {
       detailView?.showNoInternetToShareError()
     }
@@ -488,16 +485,6 @@ class DetailPresenterImpl(
   private fun editSetWallpaper() {
     performPreImageFetchingRituals()
     getImageBitmapFetchObservable()
-        .doOnNext {
-          if (it.progress == DOWNLOAD_COMPLETED_VALUE) {
-            detailView?.startCroppingActivity(
-                imageOptionsUseCase.getCroppingSourceUri().blockingGet(),
-                imageOptionsUseCase.getCroppingDestinationUri().blockingGet(),
-                wallpaperSetter.getDesiredMinimumWidth(),
-                wallpaperSetter.getDesiredMinimumHeight()
-            )
-          }
-        }
         .observeOn(postExecutionThread.scheduler)
         .autoDisposable(detailView?.getScope()!!)
         .subscribe(object : Observer<ImageDownloadPresenterEntity> {
@@ -512,7 +499,14 @@ class DetailPresenterImpl(
 
           override fun onNext(it: ImageDownloadPresenterEntity) {
             val progress = it.progress
-            if (progress == PROGRESS_VALUE_99) {
+            if (progress == DOWNLOAD_COMPLETED_VALUE) {
+              detailView?.startCroppingActivity(
+                  imageOptionsUseCase.getCroppingSourceUri().blockingGet(),
+                  imageOptionsUseCase.getCroppingDestinationUri().blockingGet(),
+                  wallpaperSetter.getDesiredMinimumWidth(),
+                  wallpaperSetter.getDesiredMinimumHeight()
+              )
+            } else if (progress == PROGRESS_VALUE_99) {
               isDownloadInProgress = false
               isImageOperationInProgress = true
               detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
@@ -520,6 +514,7 @@ class DetailPresenterImpl(
                   resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message)
               detailView?.showIndefiniteLoaderWithAnimation(message)
             } else {
+              isDownloadInProgress = true
               detailView?.updateProgressPercentage("$progress%")
             }
           }

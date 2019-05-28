@@ -107,7 +107,7 @@ class ColorsDetailPresenterImplTest {
 
     assertEquals(SINGLE, colorsDetailPresenterImpl.colorsDetailMode)
     assertEquals(list, colorsDetailPresenterImpl.colorList)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).requestStoragePermission(LOAD_COLOR_WALLPAPER)
   }
 
@@ -144,7 +144,7 @@ class ColorsDetailPresenterImplTest {
     assertEquals(MATERIAL, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(list, colorsDetailPresenterImpl.colorList)
     verify(colorsDetailView).getMultiColorImageType()
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).requestStoragePermission(LOAD_COLOR_WALLPAPER)
   }
 
@@ -181,7 +181,7 @@ class ColorsDetailPresenterImplTest {
     assertEquals(GRADIENT, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(list, colorsDetailPresenterImpl.colorList)
     verify(colorsDetailView).getMultiColorImageType()
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).requestStoragePermission(LOAD_COLOR_WALLPAPER)
   }
 
@@ -218,7 +218,7 @@ class ColorsDetailPresenterImplTest {
     assertEquals(PLASMA, colorsDetailPresenterImpl.multiColorImageType)
     assertEquals(list, colorsDetailPresenterImpl.colorList)
     verify(colorsDetailView).getMultiColorImageType()
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).requestStoragePermission(LOAD_COLOR_WALLPAPER)
   }
 
@@ -242,7 +242,7 @@ class ColorsDetailPresenterImplTest {
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(resourceUtils).getStringResource(R.string.colors_detail_activity_colors_style_name_solid)
     verify(colorImagesUseCase).getSingularColorBitmapSingle(randomString)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verifyImageIsShownInView()
     verifyPostExecutionThreadSchedulerCall()
   }
@@ -267,7 +267,7 @@ class ColorsDetailPresenterImplTest {
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(resourceUtils).getStringResource(R.string.colors_detail_activity_colors_style_name_solid)
     verify(colorImagesUseCase).getSingularColorBitmapSingle(randomString)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(resourceUtils).getStringResource(R.string.colors_detail_activity_colors_style_name_solid)
     verifyImageNotShown()
     verifyPostExecutionThreadSchedulerCall()
@@ -298,7 +298,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorImagesUseCase).getMultiColorBitmapSingle(list, MATERIAL)
     verify(colorsDetailView).getMultiColorImageType()
     verify(colorsDetailView).getMultiColorImageType()
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(resourceUtils)
         .getStringResource(R.string.colors_detail_activity_colors_style_name_material)
     verifyImageIsShownInView()
@@ -617,7 +617,7 @@ class ColorsDetailPresenterImplTest {
   }
 
   @Test
-  fun `should request storage permission on handleQuickSetClick call failure due to missing read permission`() {
+  fun `should request storage permission on handleQuickSetClick call failure due to missing read storage permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
 
@@ -628,14 +628,14 @@ class ColorsDetailPresenterImplTest {
   }
 
   @Test
-  fun `should request storage permission on handleQuickSetClick call failure due to missing write permission`() {
+  fun `should request storage permission on handleQuickSetClick call failure due to missing write storage permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
     `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
 
     colorsDetailPresenterImpl.handleQuickSetClick()
 
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).requestStoragePermission(QUICK_SET)
   }
 
@@ -652,7 +652,7 @@ class ColorsDetailPresenterImplTest {
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(colorImagesUseCase).getBitmapSingle()
     verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).hideIndefiniteLoader()
@@ -674,7 +674,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorImagesUseCase).getBitmapSingle()
     verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
     verify(wallpaperSetter).setWallpaper(mockBitmap)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).hideIndefiniteLoader()
@@ -698,7 +698,7 @@ class ColorsDetailPresenterImplTest {
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(colorImagesUseCase).getBitmapSingle()
     verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).hideIndefiniteLoader()
@@ -723,7 +723,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorImagesUseCase).getBitmapSingle()
     verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
     verify(wallpaperSetter).setWallpaper(mockBitmap)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).hideIndefiniteLoader()
@@ -762,7 +762,7 @@ class ColorsDetailPresenterImplTest {
   }
 
   @Test
-  fun `should request storage permission on handleDownloadClick call failure due to missing read permission`() {
+  fun `should request storage permission on handleDownloadClick call failure due to missing read storage permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
@@ -776,7 +776,7 @@ class ColorsDetailPresenterImplTest {
   }
 
   @Test
-  fun `should request storage permission on handleDownloadClick call failure due to missing write permission`() {
+  fun `should request storage permission on handleDownloadClick call failure due to missing write storage permission`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
@@ -807,7 +807,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorImagesUseCase).downloadImage()
     verify(resourceUtils)
         .getStringResource(R.string.crystallizing_wallpaper_wait_message)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).hideIndefiniteLoader()
@@ -832,7 +832,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorImagesUseCase).downloadImage()
     verify(resourceUtils)
         .getStringResource(R.string.crystallizing_wallpaper_wait_message)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).hideIndefiniteLoader()
@@ -860,7 +860,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorImagesUseCase).downloadImage()
     verify(resourceUtils)
         .getStringResource(R.string.crystallizing_wallpaper_wait_message)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).hideIndefiniteLoader()
@@ -888,7 +888,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorImagesUseCase).downloadImage()
     verify(resourceUtils)
         .getStringResource(R.string.crystallizing_wallpaper_wait_message)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).hideIndefiniteLoader()
@@ -931,7 +931,7 @@ class ColorsDetailPresenterImplTest {
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).requestStoragePermission(DOWNLOAD)
   }
 
@@ -953,7 +953,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorImagesUseCase).downloadImage()
     verify(resourceUtils)
         .getStringResource(R.string.crystallizing_wallpaper_wait_message)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).hideIndefiniteLoader()
@@ -979,7 +979,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorImagesUseCase).downloadImage()
     verify(resourceUtils)
         .getStringResource(R.string.crystallizing_wallpaper_wait_message)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).hideIndefiniteLoader()
@@ -1020,7 +1020,7 @@ class ColorsDetailPresenterImplTest {
     `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
     colorsDetailPresenterImpl.handleEditSetClick()
 
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).requestStoragePermission(EDIT_SET)
   }
 
@@ -1046,7 +1046,7 @@ class ColorsDetailPresenterImplTest {
     verify(wallpaperSetter).getDesiredMinimumHeight()
     verify(resourceUtils).getStringResource(R.string.detail_activity_editing_tool_message)
     verify(colorsDetailView).getScope()
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).startCroppingActivity(mockUri, mockDestiationUri, width, height)
     verifyPostExecutionThreadSchedulerCall()
@@ -1088,7 +1088,7 @@ class ColorsDetailPresenterImplTest {
     verify(wallpaperSetter).getDesiredMinimumHeight()
     verify(resourceUtils).getStringResource(R.string.detail_activity_editing_tool_message)
     verify(colorsDetailView).getScope()
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).startCroppingActivity(mockUri, mockDestiationUri, width, height)
     verifyPostExecutionThreadSchedulerCall()
@@ -1226,7 +1226,7 @@ class ColorsDetailPresenterImplTest {
 
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).requestStoragePermission(ADD_TO_COLLECTION)
   }
 
@@ -1249,7 +1249,7 @@ class ColorsDetailPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(colorImagesUseCase).saveToCollectionsCompletable(list.toString(), MINIMAL_COLOR)
     verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).showGenericErrorMessage()
@@ -1276,7 +1276,7 @@ class ColorsDetailPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(colorImagesUseCase).saveToCollectionsCompletable(list.toString(), MINIMAL_COLOR)
     verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).showAlreadyPresentInCollectionErrorMessage()
@@ -1303,7 +1303,7 @@ class ColorsDetailPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(colorImagesUseCase).saveToCollectionsCompletable(list.toString(), MINIMAL_COLOR)
     verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).showAddToCollectionSuccessMessage()
@@ -1344,7 +1344,7 @@ class ColorsDetailPresenterImplTest {
 
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).requestStoragePermission(ADD_TO_COLLECTION)
   }
 
@@ -1369,7 +1369,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorImagesUseCase).saveToCollectionsCompletable(list.toString(),
         MINIMAL_COLOR)
     verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).showGenericErrorMessage()
@@ -1398,7 +1398,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorImagesUseCase).saveToCollectionsCompletable(list.toString(),
         MINIMAL_COLOR)
     verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).showAlreadyPresentInCollectionErrorMessage()
@@ -1426,7 +1426,7 @@ class ColorsDetailPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(colorImagesUseCase).saveToCollectionsCompletable(list.toString(), MINIMAL_COLOR)
     verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).showAddToCollectionSuccessMessage()
@@ -1456,7 +1456,7 @@ class ColorsDetailPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(colorImagesUseCase).saveToCollectionsCompletable(list.toString(), MINIMAL_COLOR)
     verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).showGenericErrorMessage()
@@ -1484,7 +1484,7 @@ class ColorsDetailPresenterImplTest {
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorImagesUseCase).saveToCollectionsCompletable(list.toString(), MINIMAL_COLOR)
     verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
     verify(colorsDetailView).getScope()
@@ -1516,7 +1516,7 @@ class ColorsDetailPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(colorImagesUseCase).saveToCollectionsCompletable(list.toString(), MINIMAL_COLOR)
     verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).showAddToCollectionSuccessMessage()
@@ -1579,7 +1579,7 @@ class ColorsDetailPresenterImplTest {
 
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).requestStoragePermission(SHARE)
   }
 
@@ -1597,7 +1597,7 @@ class ColorsDetailPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(colorImagesUseCase).getCacheImageUri()
     verify(resourceUtils).getStringResource(R.string.preparing_shareable_wallpaper_message)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).hideIndefiniteLoader()
@@ -1620,7 +1620,7 @@ class ColorsDetailPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(colorImagesUseCase).getCacheImageUri()
     verify(resourceUtils).getStringResource(R.string.preparing_shareable_wallpaper_message)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).showShareIntent(mockUri)
@@ -1660,7 +1660,7 @@ class ColorsDetailPresenterImplTest {
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).requestStoragePermission(SHARE)
   }
 
@@ -1679,7 +1679,7 @@ class ColorsDetailPresenterImplTest {
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(colorImagesUseCase).getCacheImageUri()
     verify(resourceUtils).getStringResource(R.string.preparing_shareable_wallpaper_message)
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).getScope()
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).hideIndefiniteLoader()
@@ -1706,7 +1706,7 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).showIndefiniteLoader(randomString)
     verify(colorsDetailView).showShareIntent(mockUri)
     verify(colorsDetailView).hideIndefiniteLoader()
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -1722,7 +1722,8 @@ class ColorsDetailPresenterImplTest {
 
   @After fun tearDown() {
     verifyNoMoreInteractions(postExecutionThread, wallpaperSetter, userPremiumStatusUseCase,
-        colorImagesUseCase, colorsDetailView, resourceUtils, mockUri, mockBitmap)
+        colorImagesUseCase, colorsDetailView, resourceUtils, permissionsCheckerHelper, mockUri,
+        mockBitmap)
     colorsDetailPresenterImpl.detachView()
   }
 
@@ -1735,7 +1736,7 @@ class ColorsDetailPresenterImplTest {
     whenever(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 
-  private fun verifyStoragePermissionCheckerCall() {
+  private fun verifyStoragePermissionsCheckerCall() {
     verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(permissionsCheckerHelper).isWritePermissionAvailable()
   }
@@ -1746,7 +1747,7 @@ class ColorsDetailPresenterImplTest {
 
   private fun verifyImageIsShownInView() {
     verify(colorsDetailView).getScope()
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).showImageTypeText(randomString)
     verify(colorsDetailView).disableColorOperations()
     verify(colorsDetailView).showMainImageWaitLoader()
@@ -1757,7 +1758,7 @@ class ColorsDetailPresenterImplTest {
 
   private fun verifyImageNotShown() {
     verify(colorsDetailView).getScope()
-    verifyStoragePermissionCheckerCall()
+    verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).showImageTypeText(randomString)
     verify(colorsDetailView).disableColorOperations()
     verify(colorsDetailView).showMainImageWaitLoader()
