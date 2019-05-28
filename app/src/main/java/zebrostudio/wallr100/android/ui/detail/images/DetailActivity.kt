@@ -206,18 +206,6 @@ class DetailActivity : BaseActivity(), DetailView {
     errorToast(stringRes(R.string.no_internet_message))
   }
 
-  override fun hasStoragePermission(): Boolean {
-    val readPermission = ContextCompat.checkSelfPermission(this,
-        Manifest.permission.READ_EXTERNAL_STORAGE)
-    val writePermission = ContextCompat.checkSelfPermission(this,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    if (readPermission != PackageManager.PERMISSION_GRANTED
-        || writePermission != PackageManager.PERMISSION_GRANTED) {
-      return false
-    }
-    return true
-  }
-
   override fun requestStoragePermission(actionType: ActionType) {
     requestPermissions(this,
         arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -236,13 +224,11 @@ class DetailActivity : BaseActivity(), DetailView {
     errorToast(stringRes(R.string.unsuccessful_purchase_error))
   }
 
-  override fun shareLink(shortLink: String) {
+  override fun shareLink(intentExtra: String, intentType:String) {
     Intent().apply {
       action = Intent.ACTION_SEND
-      putExtra(Intent.EXTRA_TEXT,
-          stringRes(R.string.share_intent_message, WALLR_DOWNLOAD_LINK) + "\n\n"
-              + "Image link - $shortLink")
-      type = "text/plain"
+      putExtra(Intent.EXTRA_TEXT, intentExtra)
+      type = intentType
     }.let {
       startActivity(Intent.createChooser(it, stringRes(R.string.share_link_using)))
     }

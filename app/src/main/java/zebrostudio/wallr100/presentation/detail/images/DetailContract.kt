@@ -18,12 +18,11 @@ interface DetailContract {
     fun showImage(bitmap: Bitmap)
     fun showImageLoadError()
     fun showNoInternetError()
-    fun hasStoragePermission(): Boolean
     fun requestStoragePermission(actionType: ActionType)
     fun showPermissionRequiredMessage()
     fun showNoInternetToShareError()
     fun showUnsuccessfulPurchaseError()
-    fun shareLink(shortLink: String)
+    fun shareLink(intentExtra: String, intentType:String)
     fun showWaitLoader(message: String)
     fun hideWaitLoader()
     fun redirectToBuyPro(requestCode: Int)

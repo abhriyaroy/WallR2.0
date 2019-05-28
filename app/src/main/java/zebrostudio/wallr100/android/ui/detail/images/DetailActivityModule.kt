@@ -2,6 +2,7 @@ package zebrostudio.wallr100.android.ui.detail.images
 
 import dagger.Module
 import dagger.Provides
+import zebrostudio.wallr100.android.permissions.PermissionsCheckerHelper
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
@@ -25,12 +26,14 @@ class DetailActivityModule {
     userPremiumStatusUseCase: UserPremiumStatusUseCase,
     wallpaperSetter: WallpaperSetter,
     postExecutionThread: PostExecutionThread,
-    imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper
+    imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper,
+    permissionsCheckerHelper: PermissionsCheckerHelper
   ): DetailPresenter = DetailPresenterImpl(
       resourceUtils,
       imageOptionsUseCase,
       userPremiumStatusUseCase,
       wallpaperSetter,
       postExecutionThread,
-      imageDownloadPresenterEntityMapper)
+      imageDownloadPresenterEntityMapper,
+      permissionsCheckerHelper)
 }

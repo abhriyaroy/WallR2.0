@@ -10,7 +10,9 @@ import io.reactivex.Observer
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.permissions.PermissionsCheckerHelper
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
+import zebrostudio.wallr100.android.ui.detail.colors.WALLR_DOWNLOAD_LINK
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
@@ -38,6 +40,7 @@ const val DOWNLOAD_COMPLETED_VALUE: Long = 100
 const val PROGRESS_VALUE_99: Long = 99
 const val DOWNLOAD_STARTED_VALUE: Long = 0
 const val ILLEGAL_STATE_EXCEPTION_MESSAGE = "Activity is not invoked using getCallingIntent method"
+private const val SHARE_INTENT_TYPE = "text/plain"
 
 class DetailPresenterImpl(
   private val resourceUtils: ResourceUtils,
@@ -45,7 +48,8 @@ class DetailPresenterImpl(
   private var userPremiumStatusUseCase: UserPremiumStatusUseCase,
   private val wallpaperSetter: WallpaperSetter,
   private val postExecutionThread: PostExecutionThread,
-  private val imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper
+  private val imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper,
+  private val permissionsCheckerHelper: PermissionsCheckerHelper
 ) : DetailPresenter {
 
   internal lateinit var imageType: ImageListType
@@ -88,106 +92,68 @@ class DetailPresenterImpl(
   }
 
   override fun handleQuickSetClick() {
-    if (detailView?.hasStoragePermission() == true) {
-      if (detailView?.internetAvailability() == true) {
-        quickSetWallpaper()
-      } else {
-        detailView?.showNoInternetError()
-      }
-    } else {
-      detailView?.requestStoragePermission(QUICK_SET)
+    if (hasStoragePermissions(QUICK_SET) && isInternetAvailable()) {
+      quickSetWallpaper()
     }
   }
 
   override fun handleDownloadClick() {
-    if (userPremiumStatusUseCase.isUserPremium()) {
-      if (detailView?.hasStoragePermission() == true) {
-        if (detailView?.internetAvailability() == true) {
-          downloadWallpaper()
-        } else {
-          detailView?.showNoInternetError()
-        }
-      } else {
-        detailView?.requestStoragePermission(DOWNLOAD)
-      }
-    } else {
-      detailView?.redirectToBuyPro(DOWNLOAD.ordinal)
+    if (isUserPremium(DOWNLOAD) && hasStoragePermissions(DOWNLOAD) && isInternetAvailable()) {
+      downloadWallpaper()
     }
   }
 
   override fun handleCrystallizeClick() {
-    if (userPremiumStatusUseCase.isUserPremium()) {
-      if (detailView?.hasStoragePermission() == true) {
-        if (detailView?.internetAvailability() == true) {
-          if (imageOptionsUseCase.isCrystallizeDescriptionDialogShown()) {
-            if (!imageHasBeenCrystallized) {
-              crystallizeWallpaper()
-            } else {
-              detailView?.showImageHasAlreadyBeenCrystallizedMessage()
-            }
-          } else {
-            detailView?.showCrystallizeDescriptionDialog()
-          }
+    if (isUserPremium(DOWNLOAD) && hasStoragePermissions(DOWNLOAD) && isInternetAvailable()) {
+      if (imageOptionsUseCase.isCrystallizeDescriptionDialogShown()) {
+        if (!imageHasBeenCrystallized) {
+          crystallizeWallpaper()
         } else {
-          detailView?.showNoInternetError()
+          detailView?.showImageHasAlreadyBeenCrystallizedMessage()
         }
       } else {
-        detailView?.requestStoragePermission(CRYSTALLIZE)
+        detailView?.showCrystallizeDescriptionDialog()
       }
-    } else {
-      detailView?.redirectToBuyPro(CRYSTALLIZE.ordinal)
     }
   }
 
   override fun handleEditSetClick() {
-    if (detailView?.hasStoragePermission() == true) {
-      if (detailView?.internetAvailability() == true) {
-        editSetWallpaper()
-      } else {
-        detailView?.showNoInternetError()
-      }
+    if (isUserPremium(EDIT_SET) && hasStoragePermissions(EDIT_SET)) {
+      editSetWallpaper()
     } else {
-      detailView?.requestStoragePermission(EDIT_SET)
+      detailView?.showNoInternetError()
     }
   }
 
   override fun handleAddToCollectionClick() {
-    if (userPremiumStatusUseCase.isUserPremium()) {
-      if (detailView?.hasStoragePermission() == true) {
-        if (detailView?.internetAvailability() == true) {
-          addWallpaperToCollection()
-        } else {
-          detailView?.showNoInternetError()
-        }
+    if (isUserPremium(ADD_TO_COLLECTION) && hasStoragePermissions(ADD_TO_COLLECTION)) {
+      if (detailView?.internetAvailability() == true) {
+        addWallpaperToCollection()
       } else {
-        detailView?.requestStoragePermission(ADD_TO_COLLECTION)
+        detailView?.showNoInternetError()
       }
-    } else {
-      detailView?.redirectToBuyPro(ADD_TO_COLLECTION.ordinal)
     }
   }
 
   override fun handleShareClick() {
-    if (detailView?.internetAvailability() == true) {
-      if (userPremiumStatusUseCase.isUserPremium()) {
-        val link = if (imageType == SEARCH) {
-          searchImage.imageQualityUrlPresenterEntity.largeImageLink
-        } else {
-          wallpaperImage.imageLink.large
-        }
-        imageOptionsUseCase.getImageShareableLinkSingle(link)
-            .observeOn(postExecutionThread.scheduler)
-            .autoDisposable(detailView?.getScope()!!)
-            .subscribe({
-              detailView?.hideWaitLoader()
-              detailView?.shareLink(it)
-            }, {
-              detailView?.hideWaitLoader()
-              detailView?.showGenericErrorMessage()
-            })
+    if (detailView?.internetAvailability() == true && isUserPremium(DOWNLOAD)) {
+      val link = if (imageType == SEARCH) {
+        searchImage.imageQualityUrlPresenterEntity.largeImageLink
       } else {
-        detailView?.redirectToBuyPro(SHARE.ordinal)
+        wallpaperImage.imageLink.large
       }
+      imageOptionsUseCase.getImageShareableLinkSingle(link)
+          .observeOn(postExecutionThread.scheduler)
+          .autoDisposable(detailView?.getScope()!!)
+          .subscribe({
+            detailView?.hideWaitLoader()
+            val message = resourceUtils.getStringResource(R.string.share_intent_message,
+                WALLR_DOWNLOAD_LINK) + "\n\n" + "Image link - $it"
+            detailView?.shareLink(message, SHARE_INTENT_TYPE)
+          }, {
+            detailView?.hideWaitLoader()
+            detailView?.showGenericErrorMessage()
+          })
     } else {
       detailView?.showNoInternetToShareError()
     }
@@ -354,6 +320,33 @@ class DetailPresenterImpl(
           wallpaperImage.author.profileImageLink)
       detailView?.showImage(wallpaperImage.imageLink.thumb, wallpaperImage.imageLink.large)
     }
+  }
+
+  private fun isUserPremium(actionType: ActionType): Boolean {
+    if (userPremiumStatusUseCase.isUserPremium()) {
+      return true
+    } else {
+      detailView?.redirectToBuyPro(actionType.ordinal)
+    }
+    return false
+  }
+
+  private fun hasStoragePermissions(actionType: ActionType): Boolean {
+    if (permissionsCheckerHelper.isReadPermissionAvailable() && permissionsCheckerHelper.isWritePermissionAvailable()) {
+      return true
+    } else {
+      detailView?.requestStoragePermission(actionType)
+    }
+    return false
+  }
+
+  private fun isInternetAvailable(): Boolean {
+    if (detailView?.internetAvailability() == true) {
+      return true
+    } else {
+      detailView?.showNoInternetError()
+    }
+    return false
   }
 
   private fun handlePermissionGranted(requestCode: Int) {
