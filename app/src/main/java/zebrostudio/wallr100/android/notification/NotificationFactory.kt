@@ -23,9 +23,12 @@ const val NOTIFICATION_CHANNEL_NAME = "WallrAutomaticWallpaperChanger"
 
 class NotificationFactoryImpl(private val context: Context) : NotificationFactory {
 
-  override fun getWallpaperChangerNotification(intervalString: String): Notification {
+  init {
     createNotificationChannel()
-    return createNotification(intervalString)
+  }
+
+  override fun getWallpaperChangerNotification(interval: String): Notification {
+    return createAutomaticWallpaperChangerNotification(interval)
   }
 
   private fun createNotificationChannel() {
@@ -35,12 +38,12 @@ class NotificationFactoryImpl(private val context: Context) : NotificationFactor
           NOTIFICATION_CHANNEL_NAME,
           NotificationManager.IMPORTANCE_HIGH
       )
-      getSystemService(context, NotificationManager::class.java)!!.createNotificationChannel(
-          serviceChannel)
+      getSystemService(context, NotificationManager::class.java)!!
+          .createNotificationChannel(serviceChannel)
     }
   }
 
-  private fun createNotification(intervalString: String): Notification {
+  private fun createAutomaticWallpaperChangerNotification(interval: String): Notification {
     val pendingIntent = PendingIntent.getActivity(context,
         WALLPAPER_CHANGER_REQUEST_CODE,
         Intent(context, MainActivity::class.java),
@@ -48,7 +51,7 @@ class NotificationFactoryImpl(private val context: Context) : NotificationFactor
     return NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
         .setContentTitle(context.stringRes(R.string.wallpaper_changer_service_notification_title))
         .setContentText("${context.stringRes(
-            R.string.wallpaper_changer_service_notification_description)} $intervalString")
+            R.string.wallpaper_changer_service_notification_description)} $interval")
         .setSmallIcon(R.drawable.ic_wallr)
         .setContentIntent(pendingIntent)
         .setPriority(NotificationCompat.PRIORITY_MAX)

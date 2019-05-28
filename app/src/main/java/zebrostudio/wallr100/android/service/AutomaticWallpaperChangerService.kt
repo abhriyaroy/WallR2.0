@@ -40,7 +40,7 @@ class AutomaticWallpaperChangerServiceImpl : Service(), AutomaticWallpaperChange
   override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
     startForeground(WALLPAPER_CHANGER_SERVICE_CODE,
         notificationFactory.getWallpaperChangerNotification(
-            automaticWallpaperChangerUseCase.getIntervalString()))
+            automaticWallpaperChangerUseCase.getIntervalAsString()))
     automaticWallpaperChangerUseCase.handleServiceCreated()
     return START_NOT_STICKY
   }

@@ -49,6 +49,8 @@ import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapperImpl
 import zebrostudio.wallr100.data.urlshortener.UrlShortener
 import zebrostudio.wallr100.data.urlshortener.UrlShortenerImpl
+import zebrostudio.wallr100.domain.TimeManager
+import zebrostudio.wallr100.domain.TimeManagerImpl
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
@@ -212,6 +214,9 @@ class AppModule {
       executionThread)
 
   @Provides
+  fun providesTimeManager(): TimeManager = TimeManagerImpl()
+
+  @Provides
   @Singleton
   fun provideAuthenticatePurchaseUseCase(
     wallrRepository: WallrRepository
@@ -266,9 +271,10 @@ class AppModule {
     wallrRepository: WallrRepository,
     resourceUtils: ResourceUtils,
     executionThread: ExecutionThread,
-    postExecutionThread: PostExecutionThread
+    postExecutionThread: PostExecutionThread,
+    timeManager: TimeManager
   ): AutomaticWallpaperChangerUseCase = AutomaticWallpaperChangerInteractor(wallpaperSetter,
-      wallrRepository, resourceUtils, executionThread, postExecutionThread)
+      wallrRepository, resourceUtils, executionThread, postExecutionThread, timeManager)
 
   @Provides
   fun provideImageRecyclerViewPresenter()

@@ -9,6 +9,7 @@ import zebrostudio.wallr100.android.service.AutomaticWallpaperChangerService
 import zebrostudio.wallr100.android.service.WALLPAPER_CHANGER_INTERVALS_LIST
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
+import zebrostudio.wallr100.domain.TimeManager
 import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
@@ -17,7 +18,7 @@ import java.util.concurrent.TimeUnit
 interface AutomaticWallpaperChangerUseCase {
   fun attachService(automaticWallpaperChangerService: AutomaticWallpaperChangerService)
   fun detachService()
-  fun getIntervalString(): String
+  fun getIntervalAsString(): String
   fun handleServiceCreated()
 }
 
@@ -30,7 +31,8 @@ class AutomaticWallpaperChangerInteractor(
   private val wallrRepository: WallrRepository,
   private val resourceUtils: ResourceUtils,
   private val executionThread: ExecutionThread,
-  private val postExecutionThread: PostExecutionThread
+  private val postExecutionThread: PostExecutionThread,
+  private val timeManager: TimeManager
 ) : AutomaticWallpaperChangerUseCase {
 
   private var timerDisposable: Disposable? = null
@@ -54,7 +56,8 @@ class AutomaticWallpaperChangerInteractor(
             executionThread.computationScheduler)
             .repeat()
             .doOnNext {
-              if (System.currentTimeMillis() - wallrRepository.getLastWallpaperChangeTimeStamp()
+              if (timeManager.getCurrentTimeInMilliSeconds()
+                  - wallrRepository.getLastWallpaperChangeTimeStamp()
                   >= getInterval()) {
                 changeWallpaper()
               }
@@ -62,7 +65,7 @@ class AutomaticWallpaperChangerInteractor(
             .subscribe()
   }
 
-  override fun getIntervalString(): String {
+  override fun getIntervalAsString(): String {
     return when (getInterval()) {
       WALLPAPER_CHANGER_INTERVALS_LIST[1] -> resourceUtils.getStringResource(
           R.string.wallpaper_changer_service_interval_1_hour)
@@ -77,7 +80,7 @@ class AutomaticWallpaperChangerInteractor(
     }
   }
 
-  fun getInterval(): Long {
+  private fun getInterval(): Long {
     wallrRepository.getWallpaperChangerInterval().let {
       return if (WALLPAPER_CHANGER_INTERVALS_LIST.contains(it)) {
         it
@@ -96,7 +99,8 @@ class AutomaticWallpaperChangerInteractor(
           }
         }.observeOn(postExecutionThread.scheduler)
         .subscribe({
-          wallrRepository.updateLastWallpaperChangeTimeStamp(System.currentTimeMillis())
+          wallrRepository.updateLastWallpaperChangeTimeStamp(
+              timeManager.getCurrentTimeInMilliSeconds())
         }, {
           automaticWallpaperChangerService?.stopService()
         })
