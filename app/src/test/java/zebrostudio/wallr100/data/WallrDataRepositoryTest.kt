@@ -430,7 +430,7 @@ class WallrDataRepositoryTest {
     assertEquals(true, result.first)
     assertEquals(mockBitmap, result.second)
     verify(imageHandler).convertImageInCacheToLowpoly()
-    verifyComputationSchedulerCall()
+    verifyIoSchedulerSubscription()
   }
 
   @Test fun `should complete on saveCrystallizedImageToDownloads call success`() {
