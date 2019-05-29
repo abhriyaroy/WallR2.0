@@ -306,13 +306,8 @@ class ImageHandlerImpl(
   override fun deleteImagesInCollection(
     collectionDatabaseImageEntityList: List<CollectionDatabaseImageEntity>
   ): Single<List<CollectionDatabaseImageEntity>> {
-    return databaseHelper.getDatabase().collectionsDao().getAllData()
-        .doOnSubscribe {
-          collectionDatabaseImageEntityList.forEach {
-            databaseHelper.getDatabase().collectionsDao().deleteData(it)
-            fileHandler.deleteFile(it.path)
-          }
-        }
+    return removeImagesFromCollection(collectionDatabaseImageEntityList)
+        .andThen(databaseHelper.getDatabase().collectionsDao().getAllData())
   }
 
   override fun getSingleColorBitmap(hexValue: String): Single<Bitmap> {
@@ -344,30 +339,8 @@ class ImageHandlerImpl(
     path: String,
     databaseImageType: DatabaseImageType
   ): Completable {
-    return Completable.create { emitter ->
-      databaseHelper.getDatabase().collectionsDao().getAllData().subscribe { it ->
-        var isEntryAlreadyPresent = false
-        it.forEach {
-          if (it.type == databaseImageType.ordinal && it.data == path) {
-            isEntryAlreadyPresent = true
-          }
-        }
-        if (isEntryAlreadyPresent) {
-          emitter.onError(AlreadyPresentInCollectionException())
-        }
-      }
-      getImageBitmap(path).let {
-        LowPoly.generate(it).let { bitmap ->
-          try {
-            fileHandler.getCacheFile().outputStream()
-                .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
-            emitter.onComplete()
-          } catch (exception: IOException) {
-            emitter.onError(exception)
-          }
-        }
-      }
-    }
+    return checkIfImageIsAlreadyPresent(path, databaseImageType)
+        .andThen(generateLowpolyImage(path))
   }
 
   private fun checkIfImageIsAlreadyPresent(
@@ -388,6 +361,17 @@ class ImageHandlerImpl(
             Completable.complete()
           }
         }
+  }
+
+  private fun removeImagesFromCollection(
+    collectionDatabaseImageEntityList: List<CollectionDatabaseImageEntity>
+  ): Completable {
+    return Completable.create {
+      collectionDatabaseImageEntityList.forEach {
+        databaseHelper.getDatabase().collectionsDao().deleteData(it)
+        fileHandler.deleteFile(it.path)
+      }
+    }
   }
 
   private fun saveToCollection(
@@ -448,6 +432,22 @@ class ImageHandlerImpl(
         }
       }
       it.onComplete()
+    }
+  }
+
+  private fun generateLowpolyImage(path: String): Completable {
+    return Completable.create { emitter ->
+      getImageBitmap(path).let {
+        LowPoly.generate(it).let { bitmap ->
+          try {
+            fileHandler.getCacheFile().outputStream()
+                .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
+            emitter.onComplete()
+          } catch (exception: IOException) {
+            emitter.onError(exception)
+          }
+        }
+      }
     }
   }
 

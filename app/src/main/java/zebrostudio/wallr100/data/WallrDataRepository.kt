@@ -10,7 +10,7 @@ import zebrostudio.wallr100.android.utils.GsonProvider
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
-import zebrostudio.wallr100.data.database.DatabaseImageType
+import zebrostudio.wallr100.data.database.DatabaseImageType.CRYSTALLIZED
 import zebrostudio.wallr100.data.exception.EmptyRecentlyDeletedMapException
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.NoResultFoundException
@@ -469,8 +469,8 @@ class WallrDataRepository(
       : Single<List<CollectionsImageModel>> {
     return collectionsDatabaseImageEntityMapper.mapToEntity(
         listOf(collectionsImageModel)).first().path.let { path ->
-      imageHandler.convertAndCacheLowpolyImage(path, DatabaseImageType.CRYSTALLIZED)
-          .andThen(imageHandler.addImageToCollections(path, DatabaseImageType.CRYSTALLIZED))
+      imageHandler.convertAndCacheLowpolyImage(path, CRYSTALLIZED)
+          .andThen(imageHandler.addImageToCollections(path, CRYSTALLIZED))
           .andThen(imageHandler.getAllImagesInCollection())
           .map {
             collectionsDatabaseImageEntityMapper.mapFromEntity(it)
