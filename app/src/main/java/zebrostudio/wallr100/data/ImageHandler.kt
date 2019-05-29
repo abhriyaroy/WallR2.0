@@ -299,23 +299,8 @@ class ImageHandlerImpl(
   override fun reorderImagesInCollection(
     collectionDatabaseImageEntityList: List<CollectionDatabaseImageEntity>
   ): Single<List<CollectionDatabaseImageEntity>> {
-    return databaseHelper.getDatabase().collectionsDao().getAllData()
-        .doOnSubscribe {
-          databaseHelper.getDatabase().collectionsDao().let { collectionsDao ->
-            collectionsDao.deleteAllData()
-            collectionDatabaseImageEntityList.forEach {
-              collectionsDao.insert(
-                  CollectionDatabaseImageEntity(
-                      UID_AUTO_INCREMENT,
-                      it.name,
-                      it.path,
-                      it.data,
-                      it.type
-                  )
-              )
-            }
-          }
-        }
+    return makeNewCollection(collectionDatabaseImageEntityList)
+        .andThen(databaseHelper.getDatabase().collectionsDao().getAllData())
   }
 
   override fun deleteImagesInCollection(
@@ -442,6 +427,27 @@ class ImageHandlerImpl(
         inputStream.close()
       }
       return collectionsFile
+    }
+  }
+
+  private fun makeNewCollection(collectionDatabaseImageEntityList: List<CollectionDatabaseImageEntity>)
+      : Completable {
+    return Completable.create {
+      databaseHelper.getDatabase().collectionsDao().let { collectionsDao ->
+        collectionsDao.deleteAllData()
+        collectionDatabaseImageEntityList.forEach {
+          collectionsDao.insert(
+              CollectionDatabaseImageEntity(
+                  UID_AUTO_INCREMENT,
+                  it.name,
+                  it.path,
+                  it.data,
+                  it.type
+              )
+          )
+        }
+      }
+      it.onComplete()
     }
   }
 
