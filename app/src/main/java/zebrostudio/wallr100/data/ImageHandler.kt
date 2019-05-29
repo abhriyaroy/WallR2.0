@@ -14,7 +14,6 @@ import android.graphics.Shader.TileMode.MIRROR
 import android.net.Uri
 import com.zebrostudio.wallrcustoms.lowpoly.LowPoly
 import io.reactivex.Completable
-import io.reactivex.CompletableEmitter
 import io.reactivex.Observable
 import io.reactivex.Single
 import zebrostudio.wallr100.android.utils.WallpaperSetter
@@ -234,28 +233,11 @@ class ImageHandlerImpl(
     data: String,
     databaseImageType: DatabaseImageType
   ): Completable {
-    return Completable.create { emitter ->
-      try {
-        if (databaseImageType == EDITED) {
-          saveToCollection(emitter, data, databaseImageType)
-        } else {
-          var isEntryAlreadyPresent = false
-          databaseHelper.getDatabase().collectionsDao().getAllData().subscribe { it ->
-            it.forEach {
-              if (it.type == databaseImageType.ordinal && it.data == data) {
-                isEntryAlreadyPresent = true
-              }
-            }
-            if (!isEntryAlreadyPresent) {
-              saveToCollection(emitter, data, databaseImageType)
-            } else {
-              emitter.onError(AlreadyPresentInCollectionException())
-            }
-          }
-        }
-      } catch (exception: IOException) {
-        emitter.onError(exception)
-      }
+    return if (databaseImageType == EDITED) {
+      saveToCollection(data, databaseImageType)
+    } else {
+      checkIfImageIsAlreadyPresent(data, databaseImageType)
+          .andThen(saveToCollection(data, databaseImageType))
     }
   }
 
@@ -403,25 +385,46 @@ class ImageHandlerImpl(
     }
   }
 
-  private fun saveToCollection(
-    emitter: CompletableEmitter,
+  private fun checkIfImageIsAlreadyPresent(
     data: String,
     type: DatabaseImageType
-  ) {
-    fileHandler.getCacheFile().inputStream().let { inputStream ->
-      fileHandler.getCollectionsFile().let { file ->
-        file.outputStream()
-            .writeInputStreamUsingByteArray(inputStream, BYTE_ARRAY_SIZE)
-        databaseHelper.getDatabase().collectionsDao().insert(CollectionDatabaseImageEntity(
-            UID_AUTO_INCREMENT,
-            file.name,
-            file.path,
-            data,
-            type.ordinal
-        ))
+  ): Completable {
+    return databaseHelper.getDatabase().collectionsDao().getAllData()
+        .flatMapCompletable { it ->
+          var isPresent = false
+          it.forEach {
+            if (it.type == type.ordinal && it.data == data) {
+              isPresent = true
+            }
+          }
+          if (isPresent) {
+            Completable.error(AlreadyPresentInCollectionException())
+          } else {
+            Completable.complete()
+          }
+        }
+  }
+
+  private fun saveToCollection(
+    data: String,
+    type: DatabaseImageType
+  ): Completable {
+    return Completable.create {
+      fileHandler.getCacheFile().inputStream().let { inputStream ->
+        fileHandler.getCollectionsFile().let { file ->
+          file.outputStream()
+              .writeInputStreamUsingByteArray(inputStream, BYTE_ARRAY_SIZE)
+          databaseHelper.getDatabase().collectionsDao().insert(CollectionDatabaseImageEntity(
+              UID_AUTO_INCREMENT,
+              file.name,
+              file.path,
+              data,
+              type.ordinal
+          ))
+        }
+        inputStream.close()
+        it.onComplete()
       }
-      inputStream.close()
-      emitter.onComplete()
     }
   }
 
