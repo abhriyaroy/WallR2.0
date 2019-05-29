@@ -74,6 +74,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     verify(wallrRepository).getWallpaperChangerInterval()
     verify(wallrRepository).getLastWallpaperChangeTimeStamp()
     verifyComputationExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -94,6 +95,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     verify(wallrRepository).getWallpaperChangerInterval()
     verify(wallrRepository).getLastWallpaperChangeTimeStamp()
     verifyComputationExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -114,6 +116,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     verify(wallrRepository).getWallpaperChangerInterval()
     verify(wallrRepository).getLastWallpaperChangeTimeStamp()
     verifyComputationExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -134,6 +137,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     verify(wallrRepository).getWallpaperChangerInterval()
     verify(wallrRepository).getLastWallpaperChangeTimeStamp()
     verifyComputationExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
@@ -154,6 +158,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     verify(wallrRepository).getWallpaperChangerInterval()
     verify(wallrRepository).getLastWallpaperChangeTimeStamp()
     verifyComputationExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test

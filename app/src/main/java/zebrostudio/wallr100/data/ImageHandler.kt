@@ -12,7 +12,6 @@ import android.graphics.Paint.Style.FILL
 import android.graphics.Shader.TileMode.CLAMP
 import android.graphics.Shader.TileMode.MIRROR
 import android.net.Uri
-import android.support.v4.content.FileProvider
 import com.zebrostudio.wallrcustoms.lowpoly.LowPoly
 import io.reactivex.Completable
 import io.reactivex.CompletableEmitter
@@ -179,11 +178,9 @@ class ImageHandlerImpl(
   override fun getShareableUri(): Single<Uri> {
     return getImageBitmap()
         .map { bitmap ->
-          fileHandler.getShareableFle().outputStream()
+          fileHandler.getShareableFile().outputStream()
               .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
-          FileProvider.getUriForFile(context,
-              context.applicationContext.packageName + ".provider", fileHandler.getShareableFle())
-
+          fileHandler.getShareableUri()
         }
   }
 

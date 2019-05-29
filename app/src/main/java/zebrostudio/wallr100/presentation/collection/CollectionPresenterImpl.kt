@@ -286,44 +286,41 @@ class CollectionPresenterImpl(
   ) {
     val backupOfOriginalImageList = mutableListOf<CollectionsPresenterEntity>()
     backupOfOriginalImageList.addAll(imageList)
-    val reverseSortedMapOfSelectedItems =
-        TreeMap<Int, CollectionsPresenterEntity>(Collections.reverseOrder())
-    selectedItemsMap.keys.forEach {
-      reverseSortedMapOfSelectedItems[it] = selectedItemsMap[it]!!
-    }
-    mutableListOf<CollectionsPresenterEntity>().let { listOfDeletableImages ->
-      reverseSortedMapOfSelectedItems.keys.forEach {
-        imageList.removeAt(it)
-        listOfDeletableImages.add(selectedItemsMap[it]!!)
-        selectedItemsMap.remove(it)
-        collectionView?.removeItemView(it)
-      }
-      collectionImagesUseCase.deleteImages(
-          collectionImagesPresenterEntityMapper.mapFromPresenterEntity(listOfDeletableImages))
-          .map {
-            collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
-          }
-          .observeOn(postExecutionThread.scheduler)
-          .autoDisposable(collectionView!!.getScope())
-          .subscribe({
-            hideCabIfActive()
-            collectionView?.setImagesList(it)
-            if (it.isEmpty()) {
-              showEmptyCollectionView()
+    reverseSortSelections(selectedItemsMap).let { reverseSortedSelections ->
+      mutableListOf<CollectionsPresenterEntity>().let { listOfDeletableImages ->
+        reverseSortedSelections.keys.forEach {
+          imageList.removeAt(it)
+          listOfDeletableImages.add(selectedItemsMap[it]!!)
+          selectedItemsMap.remove(it)
+          collectionView?.removeItemView(it)
+        }
+        collectionImagesUseCase.deleteImages(
+            collectionImagesPresenterEntityMapper.mapFromPresenterEntity(listOfDeletableImages))
+            .map {
+              collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
             }
-            listOfDeletableImages.size.let {
-              if (it == SINGLE_ITEM_SIZE) {
-                collectionView?.showSingleImageDeleteSuccessMessage()
-              } else {
-                collectionView?.showMultipleImageDeleteSuccessMessage(it)
+            .observeOn(postExecutionThread.scheduler)
+            .autoDisposable(collectionView!!.getScope())
+            .subscribe({
+              hideCabIfActive()
+              collectionView?.setImagesList(it)
+              if (it.isEmpty()) {
+                showEmptyCollectionView()
               }
-            }
-          }, {
-            hideCabIfActive()
-            collectionView?.setImagesList(backupOfOriginalImageList)
-            collectionView?.updateChangesInEveryItemView()
-            collectionView?.showUnableToDeleteErrorMessage()
-          })
+              listOfDeletableImages.size.let {
+                if (it == SINGLE_ITEM_SIZE) {
+                  collectionView?.showSingleImageDeleteSuccessMessage()
+                } else {
+                  collectionView?.showMultipleImageDeleteSuccessMessage(it)
+                }
+              }
+            }, {
+              hideCabIfActive()
+              collectionView?.setImagesList(backupOfOriginalImageList)
+              collectionView?.updateChangesInEveryItemView()
+              collectionView?.showUnableToDeleteErrorMessage()
+            })
+      }
     }
   }
 
@@ -409,6 +406,15 @@ class CollectionPresenterImpl(
   private fun showNonEmptyCollectionView() {
     collectionView?.hideImagesAbsentLayout()
     collectionView?.showWallpaperChangerLayout()
+  }
+
+  private fun reverseSortSelections(map: HashMap<Int, CollectionsPresenterEntity>): TreeMap<Int, CollectionsPresenterEntity> {
+    return TreeMap<Int, CollectionsPresenterEntity>(Collections.reverseOrder()).let { treeMap ->
+      map.keys.forEach {
+        treeMap[it] = map[it]!!
+      }
+      treeMap
+    }
   }
 
 }

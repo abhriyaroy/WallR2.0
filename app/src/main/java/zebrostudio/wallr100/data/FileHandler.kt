@@ -3,6 +3,7 @@ package zebrostudio.wallr100.data
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import android.support.v4.content.FileProvider
 import io.reactivex.Single
 import java.io.File
 
@@ -12,7 +13,8 @@ interface FileHandler {
   fun getDownloadFile(): File
   fun deleteCacheFiles()
   fun getCollectionsFile(): File
-  fun getShareableFle(): File
+  fun getShareableUri(): Uri
+  fun getShareableFile(): File
   fun freeSpaceAvailable(): Boolean
   fun fileExists(filePath: String): Boolean
   fun deleteFile(filePath: String)
@@ -26,7 +28,7 @@ const val JPG_EXTENSION = ".jpg"
 const val MINIMUM_FREE_STORAGE_IN_MB = 20
 const val BYTES_TO_MEGA_BYTES = 1048576
 
-class FileHandlerImpl(context: Context) : FileHandler {
+class FileHandlerImpl(private val context: Context) : FileHandler {
 
   private val cacheFolder: File =
       File(Environment.getExternalStorageDirectory().path + File.separator + APP_DIRECTORY_NAME
@@ -85,7 +87,12 @@ class FileHandlerImpl(context: Context) : FileHandler {
     }
   }
 
-  override fun getShareableFle(): File {
+  override fun getShareableUri(): Uri {
+    return FileProvider.getUriForFile(context,
+        context.applicationContext.packageName + ".provider", shareableFile)
+  }
+
+  override fun getShareableFile(): File {
     return shareableFile
   }
 

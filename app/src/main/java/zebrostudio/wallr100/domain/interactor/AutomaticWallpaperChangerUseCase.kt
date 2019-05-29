@@ -36,7 +36,6 @@ class AutomaticWallpaperChangerInteractor(
 ) : AutomaticWallpaperChangerUseCase {
 
   private var timerDisposable: Disposable? = null
-  private var wallpaperChangerDisposable: Disposable? = null
   private var automaticWallpaperChangerService: AutomaticWallpaperChangerService? = null
 
   override fun attachService(automaticWallpaperChangerService: AutomaticWallpaperChangerService) {
@@ -55,12 +54,18 @@ class AutomaticWallpaperChangerInteractor(
         Observable.timer(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS,
             executionThread.computationScheduler)
             .repeat()
-            .doOnNext {
+            .flatMap {
               if (timeManager.getCurrentTimeInMilliSeconds()
                   - wallrRepository.getLastWallpaperChangeTimeStamp()
                   >= getInterval()) {
-                changeWallpaper()
+                changeWallpaper().toObservable()
+              } else {
+                Observable.empty<Long>()
               }
+            }
+            .observeOn(postExecutionThread.scheduler)
+            .doOnError {
+              automaticWallpaperChangerService?.stopService()
             }
             .subscribe()
   }
@@ -90,20 +95,17 @@ class AutomaticWallpaperChangerInteractor(
     }
   }
 
-  private fun changeWallpaper() {
-    wallpaperChangerDisposable = getWallpaperBitmap()
+  private fun changeWallpaper(): Single<Bitmap> {
+    return getWallpaperBitmap()
         .doOnSuccess {
+          println("wallpaper success")
           wallpaperSetter.setWallpaper(it)
           if (!it.isRecycled) {
             it.recycle()
           }
-        }.observeOn(postExecutionThread.scheduler)
-        .subscribe({
           wallrRepository.updateLastWallpaperChangeTimeStamp(
               timeManager.getCurrentTimeInMilliSeconds())
-        }, {
-          automaticWallpaperChangerService?.stopService()
-        })
+        }
   }
 
   private fun getWallpaperBitmap(): Single<Bitmap> {
