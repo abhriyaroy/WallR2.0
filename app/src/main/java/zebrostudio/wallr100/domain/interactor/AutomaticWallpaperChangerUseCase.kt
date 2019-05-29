@@ -98,7 +98,6 @@ class AutomaticWallpaperChangerInteractor(
   private fun changeWallpaper(): Single<Bitmap> {
     return getWallpaperBitmap()
         .doOnSuccess {
-          println("wallpaper success")
           wallpaperSetter.setWallpaper(it)
           if (!it.isRecycled) {
             it.recycle()

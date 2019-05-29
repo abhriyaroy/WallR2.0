@@ -207,9 +207,10 @@ class ImageHandlerImpl(
   override fun convertImageInCacheToLowpoly(): Single<Bitmap> {
     return getImageBitmap()
         .map {
-          LowPoly.generate(it).also { bitmap ->
+          LowPoly.generate(it).let { bitmap ->
             fileHandler.getCacheFile().outputStream()
                 .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
+            bitmap
           }
         }
   }

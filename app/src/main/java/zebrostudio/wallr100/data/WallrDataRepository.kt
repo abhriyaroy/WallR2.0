@@ -278,7 +278,7 @@ class WallrDataRepository(
 
   override fun crystallizeImage(): Single<Pair<Boolean, Bitmap>> {
     return imageHandler.convertImageInCacheToLowpoly()
-        .subscribeOn(executionThread.computationScheduler)
+        .subscribeOn(executionThread.ioScheduler)
         .map {
           Pair(true, it)
         }
