@@ -1,7 +1,7 @@
 
 <p align="center">
  <a href="https://play.google.com/store/apps/details?id=zebrostudio.wallr100">
- <img src="https://i.imgur.com/PWzM7sn.png" alt="Explore Wallpapers" width=600 height=300 hspace="2">
+ <img src="https://i.imgur.com/PWzM7sn.png" alt="Explore Wallpapers" width=800 height=400 hspace="2">
  </a>
 </p>
 
