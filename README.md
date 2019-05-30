@@ -1,10 +1,9 @@
+
 <p align="center">
  <a href="https://play.google.com/store/apps/details?id=zebrostudio.wallr100">
- <img src="https://i.imgur.com/GVwcmRD.png?1" alt="Explore Wallpapers" width=200 height=200 hspace="2">
+ <img src="https://i.imgur.com/PWzM7sn.png" alt="Explore Wallpapers" width=600 height=300 hspace="2">
  </a>
 </p>
-<h2 align="center"> WallR 2.0 </h2>
-
 <br>
 
 # Introduction
@@ -52,6 +51,4 @@ You can find the apk <a href="https://github.com/abhriyaroy/WallR2.0/">here</a> 
 
 <br>
 
-# Background Story
-I started coding the original WallR Android App in the second year of my college in 2016. In the next 6 months, I was able to somewhat finish it and release it on the play store. Although it did not have a maintainabe codebase, it had a pretty sleek UI which is why I was able to garner a good number of users and a huge number of crashes! Fast forward to 2018 and I find myself struggling in this huge pile of unmaintainable code, trying to fix crashes, when I understood the value of a good codebase. Thus, I decided to rewrite the app again from scratch with proper app architecture, coding guidelines, SOLID principles and unit tests. <br>
-And here I present, WallR 2.0, tested, easily maintainable and scalable.
+
