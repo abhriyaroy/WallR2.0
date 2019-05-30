@@ -10,8 +10,8 @@ Did you know that an average user checks their device more than 80 times a day? 
 
 ## Table of Contents
 - [Introduction](#introduction) <br>
-- [App Components](#app-components) <br>
-- [Features](#features) <br>
+- [App Insights](#app-insights) <br>
+- [App Features](#app-features) <br>
 - [Usage Tips](#usage-tips) <br>
 - [News](#news) <br>
 - [App Screenshots](#app-screenshots) <br>
@@ -22,36 +22,32 @@ WallR is an open-source Android wallpaper app written in <b>Kotlin</b>, keeping 
 It comes with a plethora of customization options like editing a wallpaper, crystallizing or even making a new minimal wallpaper. WallR also comes with an automatic wallpaper changer which keeps changing wallpapers automatically once enabled.
 </p>
  
-### App Components
- <ul>
-  <li> Clean Architecture with MVP </li>
-  <li> Dependency injection using Dagger </li>
-  <li> Multi-threading using RxJava2 </li>
-  <li> Unsplash Api </li>
-  <li> Firebase Realtime Database </li>
-  <li> Room database and Shared preferences for storing information locally </li>
-  <li> JUnit and Mockito for unit testing </li>
-  <li> Retrofit for networking purposes </li>
- </ul>
+### App Insights
+  - Clean Architecture with MVP 
+  - Dependency injection using Dagger 
+  - Multi-threading using RxJava2 
+  - Unsplash Api 
+  - Firebase Realtime Database 
+  - Room database and Shared preferences for storing information locally 
+  - Retrofit for networking purposes 
+  - JUnit and Mockito for unit testing
  
- ### Features
- <ul>
-  <li> Daily new wallpapers </li>
-  <li> More than 10 Categories of wallpapers </li>
-  <li> Search for wallpaper of your choice from a collection of over 100k+ images </li>
-  <li> Minimal wallpapers </li>
-  <li> Create your own Material or Gradient or Plasma wallpaper </li>
-  <li> Quick set wallpaper </li>
-  <li> Edit wallpapers before setting them </li>
-  <li> Download wallpaper to device </li>
-  <li> Crystallize any wallpaper </li>
-  <li> Share wallpapers with your contacts </li>
-  <li> Preview full screen wallpaper before setting </li>
-  <li> Add wallpapers to collection for future use </li>
-  <li> Enable automatic wallpaper changer to automatically change wallpapers periodically </li>
-  <li> Add any external image to collection to use it as a wallpaper or to crystallize it </li>
- </ul>
- 
+ ### App Features
+  - Daily new wallpapers 
+  - More than 10 Categories of wallpapers 
+  - Search for wallpaper of your choice from a collection of over 100k+ images 
+  - Minimal wallpapers 
+  - Create your own Material or Gradient or Plasma wallpaper 
+  - Quick set wallpaper 
+  - Edit wallpapers before setting them 
+  - Download wallpaper to device </li>
+  - Crystallize any wallpaper 
+  - Share wallpapers with your contacts 
+  - Preview full screen wallpaper before setting 
+  - Add wallpapers to collection for future use 
+  - Enable automatic wallpaper changer to automatically change wallpapers periodically 
+  - Add any external image to collection to use it as a wallpaper or to crystallize it 
+  
 ### Usage Tips
  - Automatic wallpaper changer is only available to pro users and can be found inside collections.
  - The option to enable automatic wallpaper changer is only available upon adding atleast 2 images to collection.
