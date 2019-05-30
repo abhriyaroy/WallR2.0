@@ -6,13 +6,21 @@
 </p>
 <br>
 
-## Introduction
+## Table of Contents
+- [Introduction](#introduction) <br>
+- [Components](#components) <br>
+- [Features](#features) <br>
+- [Usage Tips](#usage-tips) <br>
+- [News](#news) <br>
+- [App Screenshots](#app-screenshots) <br>
+
+### Introduction
 <p>
 WallR is an open-source Android wallpaper app written in <b>Kotlin</b>, keeping in mind proper coding guidelines and app architecture so that it is easy to maintain and scale.<br>
 It comes with a plethora of customization options like editing a wallpaper, crystallizing or even making a new minimal wallpaper. WallR also comes with an automatic wallpaper changer which keeps changing wallpapers automatically once enabled.
 </p>
  
- ### Components :-
+### Components
  <ul>
   <li> Clean Architecture with MVP </li>
   <li> Dependency injection using Dagger </li>
@@ -26,7 +34,7 @@ It comes with a plethora of customization options like editing a wallpaper, crys
 
 <br>
 
-### News :-
+### News
 WallR was selected as one of the best customization apps by <a href="https://www.androidauthority.com/5-android-apps-you-shouldnt-miss-this-week-android-apps-weekly-review-90-796074">Android Authority</a>, <a href="https://www.androidpolice.com/2017/08/21/11-new-notable-1-wtf-android-apps-last-week-81517-82117/">Android Police</a>. It also recieved ahuge number of warm and positive feedbacks and reviews at <a href="https://forum.xda-developers.com/android/apps-games/app-wallr-wallpapers-beta-testers-t3568221">XDA Developers</a>.
 
 <a href="https://play.google.com/store/apps/details?id=zebrostudio.wallr100">
@@ -35,7 +43,7 @@ WallR was selected as one of the best customization apps by <a href="https://www
 
 <br>
 
-## Sample images of the App
+## App Screenshots
 <p align="center">
   <img src="https://i.imgur.com/xlTXmLD.jpg" alt="Explore Wallpapers" width=425 height=650 hspace="2">
   <img src="https://i.imgur.com/Z1RekKn.jpg" alt="Top Picks Wallpapers" width=425 height=650 hspace="2">
