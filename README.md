@@ -10,11 +10,11 @@ Did you know that an average user checks their device more than 80 times a day? 
 
 ## Table of Contents
 - [Introduction](#introduction) <br>
-- [App Insights](#app-insights) <br>
-- [App Features](#app-features) <br>
+- [Insights](#insights) <br>
+- [Features](#features) <br>
 - [Usage Tips](#usage-tips) <br>
 - [Acclaimations](#acclamations) <br>
-- [App Screenshots](#app-screenshots) <br>
+- [Screenshots](#screenshots) <br>
 
 ### Introduction
 <p>
@@ -22,7 +22,7 @@ WallR is an open-source Android wallpaper app written in <b>Kotlin</b>, keeping 
 It comes with a plethora of customization options like editing a wallpaper, crystallizing or even making a new minimal wallpaper. WallR also comes with an automatic wallpaper changer which keeps changing wallpapers automatically once enabled.
 </p>
  
-### App Insights
+### Insights
   - Clean Architecture with MVP 
   - Dependency injection using Dagger 
   - Multi-threading using RxJava2 
@@ -32,7 +32,7 @@ It comes with a plethora of customization options like editing a wallpaper, crys
   - Retrofit for networking purposes 
   - JUnit and Mockito for unit testing
  
- ### App Features
+ ### Features
   - Daily new wallpapers 
   - More than 10 Categories of wallpapers 
   - Search for wallpaper of your choice from a collection of over 100k+ images 
@@ -63,7 +63,7 @@ WallR was selected as one of the best customization apps by <a href="https://www
  <img src="http://i.imgur.com/EPQlu1s.png?2" alt="Get it on Goolgel Play">
 </a>
 
-## App Screenshots
+## Screenshots
 <p align="center">
   <img src="https://i.imgur.com/xlTXmLD.jpg" alt="Explore Wallpapers" width=425 height=650 hspace="2">
   <img src="https://i.imgur.com/Z1RekKn.jpg" alt="Top Picks Wallpapers" width=425 height=650 hspace="2">
