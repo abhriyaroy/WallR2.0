@@ -2,7 +2,7 @@ package zebrostudio.wallr100.android.ui.main
 
 import dagger.Module
 import dagger.Provides
-import zebrostudio.wallr100.android.system.SystemDetailsProvider
+import zebrostudio.wallr100.android.system.SystemInfoProvider
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
@@ -17,8 +17,8 @@ class MainActivityModule {
     widgetHintsUseCase: WidgetHintsUseCase,
     userPremiumStatusUseCase: UserPremiumStatusUseCase,
     collectionImagesUseCase: CollectionImagesUseCase,
-      systemDetailsProvider: SystemDetailsProvider
+    systemInfoProvider: SystemInfoProvider
   ): MainPresenter = MainPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase,
-      collectionImagesUseCase, systemDetailsProvider)
+      collectionImagesUseCase, systemInfoProvider)
 
 }

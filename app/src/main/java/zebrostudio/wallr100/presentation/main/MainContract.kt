@@ -18,7 +18,11 @@ interface MainContract {
     fun showAppBar()
     fun showOperationInProgressMessage()
     fun isOperationActive(): Boolean
-    fun showFeedbackClient(emailSubject: String, emailAddress: Array<String>, emailIntentType: String)
+    fun showFeedbackClient(
+      emailSubject: String,
+      emailAddress: Array<String>,
+      emailIntentType: String
+    )
   }
 
   interface MainPresenter : BasePresenter<MainView> {

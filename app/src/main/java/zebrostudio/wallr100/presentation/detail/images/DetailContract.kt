@@ -22,7 +22,7 @@ interface DetailContract {
     fun showPermissionRequiredMessage()
     fun showNoInternetToShareError()
     fun showUnsuccessfulPurchaseError()
-    fun shareLink(intentExtra: String, intentType:String)
+    fun shareLink(intentExtra: String, intentType: String)
     fun showWaitLoader(message: String)
     fun hideWaitLoader()
     fun redirectToBuyPro(requestCode: Int)

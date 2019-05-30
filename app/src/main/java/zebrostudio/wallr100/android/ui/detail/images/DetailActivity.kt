@@ -3,13 +3,11 @@ package zebrostudio.wallr100.android.ui.detail.images
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat.requestPermissions
-import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -49,7 +47,6 @@ import kotlinx.android.synthetic.main.activity_detail.wallpaperDownloadProgressP
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
-import zebrostudio.wallr100.android.ui.detail.colors.WALLR_DOWNLOAD_LINK
 import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.BITMAP_CACHE
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE
@@ -224,7 +221,7 @@ class DetailActivity : BaseActivity(), DetailView {
     errorToast(stringRes(R.string.unsuccessful_purchase_error))
   }
 
-  override fun shareLink(intentExtra: String, intentType:String) {
+  override fun shareLink(intentExtra: String, intentType: String) {
     Intent().apply {
       action = Intent.ACTION_SEND
       putExtra(Intent.EXTRA_TEXT, intentExtra)

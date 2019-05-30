@@ -5,7 +5,7 @@ import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.permissions.PermissionsCheckerHelper
 import zebrostudio.wallr100.android.service.WALLPAPER_CHANGER_INTERVALS_LIST
-import zebrostudio.wallr100.android.system.SystemDetailsProvider
+import zebrostudio.wallr100.android.system.SystemInfoProvider
 import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_ASUS
 import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_ONEPLUS
 import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_OPPO
@@ -31,6 +31,7 @@ import java.util.Collections
 import java.util.TreeMap
 
 private const val MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_HINT = 2
+private const val MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_WALLPAPER_CHANGER_LAYOUT = 2
 private const val MINIMUM_NUMBER_OF_SELECTED_ITEMS = 1
 private const val INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL = 0
 
@@ -43,7 +44,7 @@ class CollectionPresenterImpl(
   private val resourceUtils: ResourceUtils,
   private val postExecutionThread: PostExecutionThread,
   private val permissionsCheckerHelper: PermissionsCheckerHelper,
-  private val systemDetailsProvider: SystemDetailsProvider
+  private val systemInfoProvider: SystemInfoProvider
 ) : CollectionPresenter {
 
   private var collectionView: CollectionView? = null
@@ -144,7 +145,7 @@ class CollectionPresenterImpl(
   override fun handleAutomaticWallpaperChangerEnabled() {
     collectionImagesUseCase.saveAutomaticWallpaperChangerStateAsEnabled()
     if (!collectionImagesUseCase.isAutomaticWallpaperChangerRunning()) {
-      systemDetailsProvider.getManufacturerName().let {
+      systemInfoProvider.getManufacturerName().let {
         if (it.equalsIgnoreCase(MANUFACTURER_NAME_SAMSUNG)
             || it.equalsIgnoreCase(MANUFACTURER_NAME_XIAOMI)
             || it.equalsIgnoreCase(MANUFACTURER_NAME_ONEPLUS)
@@ -200,7 +201,7 @@ class CollectionPresenterImpl(
           .subscribe({
             collectionView?.setImagesList(it)
             collectionView?.updateChangesInEveryItemView()
-            showNonEmptyCollectionView()
+            showNonEmptyCollectionView(it.size)
             showHintIfSuitable(it.size)
             uriList.size.let {
               if (it == SINGLE_ITEM_SIZE) {
@@ -288,12 +289,8 @@ class CollectionPresenterImpl(
     backupOfOriginalImageList.addAll(imageList)
     reverseSortSelections(selectedItemsMap).let { reverseSortedSelections ->
       mutableListOf<CollectionsPresenterEntity>().let { listOfDeletableImages ->
-        reverseSortedSelections.keys.forEach {
-          imageList.removeAt(it)
-          listOfDeletableImages.add(selectedItemsMap[it]!!)
-          selectedItemsMap.remove(it)
-          collectionView?.removeItemView(it)
-        }
+        removeItemsFromList(reverseSortedSelections, imageList, listOfDeletableImages,
+            selectedItemsMap)
         collectionImagesUseCase.deleteImages(
             collectionImagesPresenterEntityMapper.mapFromPresenterEntity(listOfDeletableImages))
             .map {
@@ -302,11 +299,11 @@ class CollectionPresenterImpl(
             .observeOn(postExecutionThread.scheduler)
             .autoDisposable(collectionView!!.getScope())
             .subscribe({
-              hideCabIfActive()
               collectionView?.setImagesList(it)
               if (it.isEmpty()) {
                 showEmptyCollectionView()
               }
+              stopWallpaperChangerIfNecessary(it.size)
               listOfDeletableImages.size.let {
                 if (it == SINGLE_ITEM_SIZE) {
                   collectionView?.showSingleImageDeleteSuccessMessage()
@@ -314,6 +311,7 @@ class CollectionPresenterImpl(
                   collectionView?.showMultipleImageDeleteSuccessMessage(it)
                 }
               }
+              hideCabIfActive()
             }, {
               hideCabIfActive()
               collectionView?.setImagesList(backupOfOriginalImageList)
@@ -360,7 +358,7 @@ class CollectionPresenterImpl(
         .subscribe({
           if (it.isNotEmpty()) {
             collectionView?.setImagesList(it)
-            showNonEmptyCollectionView()
+            showNonEmptyCollectionView(it.size)
             showHintIfSuitable(it.size)
             collectionView?.updateChangesInEveryItemView()
           } else {
@@ -403,9 +401,11 @@ class CollectionPresenterImpl(
     collectionView?.hideWallpaperChangerLayout()
   }
 
-  private fun showNonEmptyCollectionView() {
+  private fun showNonEmptyCollectionView(size: Int) {
     collectionView?.hideImagesAbsentLayout()
-    collectionView?.showWallpaperChangerLayout()
+    if (size >= MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_WALLPAPER_CHANGER_LAYOUT) {
+      collectionView?.showWallpaperChangerLayout()
+    }
   }
 
   private fun reverseSortSelections(map: HashMap<Int, CollectionsPresenterEntity>): TreeMap<Int, CollectionsPresenterEntity> {
@@ -414,6 +414,27 @@ class CollectionPresenterImpl(
         treeMap[it] = map[it]!!
       }
       treeMap
+    }
+  }
+
+  private fun removeItemsFromList(
+    reverseSortedSelections: TreeMap<Int, CollectionsPresenterEntity>,
+    imageList: MutableList<CollectionsPresenterEntity>,
+    listOfDeletableImages: MutableList<CollectionsPresenterEntity>,
+    selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
+  ) {
+    reverseSortedSelections.keys.forEach {
+      imageList.removeAt(it)
+      listOfDeletableImages.add(selectedItemsMap[it]!!)
+      selectedItemsMap.remove(it)
+      collectionView?.removeItemView(it)
+    }
+  }
+
+  private fun stopWallpaperChangerIfNecessary(size: Int){
+    if (size < MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_WALLPAPER_CHANGER_LAYOUT) {
+      collectionView?.hideWallpaperChangerLayout()
+      collectionImagesUseCase.stopAutomaticWallpaperChanger()
     }
   }
 

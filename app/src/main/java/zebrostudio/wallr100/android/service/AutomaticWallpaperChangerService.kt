@@ -7,6 +7,7 @@ import android.support.annotation.Nullable
 import dagger.android.AndroidInjection
 import zebrostudio.wallr100.android.notification.NotificationFactory
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerUseCase
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 interface AutomaticWallpaperChangerService {
@@ -17,11 +18,11 @@ const val WALLPAPER_CHANGER_SERVICE_CODE = 1
 const val WALLPAPER_CHANGER_REQUEST_CODE = 2
 const val ILLEGAL_ACCESS_ERROR_MESSAGE = "Wallpaper changer service cannot be bounded to"
 val WALLPAPER_CHANGER_INTERVALS_LIST = listOf<Long>(
-    1800000,
-    3600000,
-    21600000,
-    86400000,
-    259200000
+    TimeUnit.MINUTES.toMillis(30),
+    TimeUnit.HOURS.toMillis(1),
+    TimeUnit.HOURS.toMillis(6),
+    TimeUnit.DAYS.toMillis(1),
+    TimeUnit.DAYS.toMillis(3)
 )
 
 class AutomaticWallpaperChangerServiceImpl : Service(), AutomaticWallpaperChangerService {

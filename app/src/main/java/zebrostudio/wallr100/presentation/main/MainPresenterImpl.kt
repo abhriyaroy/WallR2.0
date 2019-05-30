@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.presentation.main
 
-import zebrostudio.wallr100.android.system.SystemDetailsProvider
+import zebrostudio.wallr100.android.system.SystemInfoProvider
 import zebrostudio.wallr100.android.utils.FragmentTag.COLLECTIONS_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
 import zebrostudio.wallr100.android.utils.FragmentTag.MINIMAL_TAG
@@ -16,7 +16,7 @@ class MainPresenterImpl(
   private val widgetHintsUseCase: WidgetHintsUseCase,
   private val userPremiumStatusUseCase: UserPremiumStatusUseCase,
   private val collectionImagesUseCase: CollectionImagesUseCase,
-  private val systemDetailsProvider: SystemDetailsProvider
+  private val systemInfoProvider: SystemInfoProvider
 ) : MainPresenter {
 
   internal var backPressedOnce = false
@@ -88,10 +88,10 @@ class MainPresenterImpl(
   }
 
   override fun handleFeedbackMenuItemClick() {
-    ("Feedback/Report - WallR -> Debug-infos:\n OS Version: ${systemDetailsProvider.getOsVersion()}" +
-        " (${systemDetailsProvider.getBuildNumber()})\n OS API Level: " +
-        "${systemDetailsProvider.getSdkVersion()}\n Device: ${systemDetailsProvider.getDeviceName()}" +
-        "\n Model(and Product): ${systemDetailsProvider.getModelName()} (${systemDetailsProvider.getProductName()})")
+    ("Feedback/Report - WallR -> Debug-infos:\n OS Version: ${systemInfoProvider.getOsVersion()}" +
+        " (${systemInfoProvider.getBuildNumber()})\n OS API Level: " +
+        "${systemInfoProvider.getSdkVersion()}\n Device: ${systemInfoProvider.getDeviceName()}" +
+        "\n Model(and Product): ${systemInfoProvider.getModelName()} (${systemInfoProvider.getProductName()})")
         .let {
           mainView?.showFeedbackClient(it, arrayOf(ZEBRO_STUDIO_EMAIL_ADDRESS),
               FEEDBACK_CONTENT_TYPE)

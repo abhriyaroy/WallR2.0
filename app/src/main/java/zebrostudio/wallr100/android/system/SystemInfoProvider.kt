@@ -2,7 +2,7 @@ package zebrostudio.wallr100.android.system
 
 import android.os.Build
 
-interface SystemDetailsProvider {
+interface SystemInfoProvider {
   fun getManufacturerName(): String
   fun getOsVersion(): String
   fun getBuildNumber(): String
@@ -12,7 +12,7 @@ interface SystemDetailsProvider {
   fun getProductName(): String
 }
 
-class SystemDetailProviderImpl : SystemDetailsProvider {
+class SystemInfoProviderImpl : SystemInfoProvider {
   override fun getManufacturerName(): String {
     return Build.MANUFACTURER
   }

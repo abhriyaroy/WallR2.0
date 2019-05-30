@@ -19,7 +19,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.permissions.PermissionsCheckerHelper
-import zebrostudio.wallr100.android.system.SystemDetailsProvider
+import zebrostudio.wallr100.android.system.SystemInfoProvider
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
@@ -48,7 +48,7 @@ class CollectionPresenterImplTest {
   @Mock lateinit var resourceUtils: ResourceUtils
   @Mock lateinit var postExecutionThread: PostExecutionThread
   @Mock lateinit var permissionsCheckerHelper: PermissionsCheckerHelper
-  @Mock lateinit var systemDetailsProvider: SystemDetailsProvider
+  @Mock lateinit var systemInfoProvider: SystemInfoProvider
   @Mock lateinit var collectionView: CollectionView
   @Mock lateinit var mockUri: Uri
   @Mock lateinit var mockBitmap: Bitmap
@@ -58,7 +58,7 @@ class CollectionPresenterImplTest {
   @Before fun setUp() {
     collectionPresenterImpl = CollectionPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase,
         collectionImagesUseCase, collectionImagesPresenterEntityMapper, wallpaperSetter,
-        resourceUtils, postExecutionThread, permissionsCheckerHelper, systemDetailsProvider)
+        resourceUtils, postExecutionThread, permissionsCheckerHelper, systemInfoProvider)
 
     val testScopeProvider = TestLifecycleScopeProvider.createInitial(
         TestLifecycleScopeProvider.TestLifecycle.STARTED)
@@ -764,97 +764,97 @@ class CollectionPresenterImplTest {
   @Test
   fun `should save state and start automatic wallpaper changer on handleAutomaticWallpaperChangerEnabled call success on first party oem`() {
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
-    `when`(systemDetailsProvider.getManufacturerName()).thenReturn(randomUUID().toString())
+    `when`(systemInfoProvider.getManufacturerName()).thenReturn(randomUUID().toString())
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
     verify(collectionImagesUseCase).saveAutomaticWallpaperChangerStateAsEnabled()
     verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
-    verify(systemDetailsProvider).getManufacturerName()
+    verify(systemInfoProvider).getManufacturerName()
   }
 
   @Test
   fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on samsung oem`() {
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
-    `when`(systemDetailsProvider.getManufacturerName()).thenReturn("samsung")
+    `when`(systemInfoProvider.getManufacturerName()).thenReturn("samsung")
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
     verify(collectionImagesUseCase).saveAutomaticWallpaperChangerStateAsEnabled()
     verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
-    verify(systemDetailsProvider).getManufacturerName()
+    verify(systemInfoProvider).getManufacturerName()
     verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
   }
 
   @Test
   fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on xiaomi oem`() {
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
-    `when`(systemDetailsProvider.getManufacturerName()).thenReturn("xiaomi")
+    `when`(systemInfoProvider.getManufacturerName()).thenReturn("xiaomi")
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
     verify(collectionImagesUseCase).saveAutomaticWallpaperChangerStateAsEnabled()
     verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
-    verify(systemDetailsProvider).getManufacturerName()
+    verify(systemInfoProvider).getManufacturerName()
     verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
   }
 
   @Test
   fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on oneplus oem`() {
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
-    `when`(systemDetailsProvider.getManufacturerName()).thenReturn("oneplus")
+    `when`(systemInfoProvider.getManufacturerName()).thenReturn("oneplus")
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
     verify(collectionImagesUseCase).saveAutomaticWallpaperChangerStateAsEnabled()
     verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
-    verify(systemDetailsProvider).getManufacturerName()
+    verify(systemInfoProvider).getManufacturerName()
     verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
   }
 
   @Test
   fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on oppo oem`() {
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
-    `when`(systemDetailsProvider.getManufacturerName()).thenReturn("oppo")
+    `when`(systemInfoProvider.getManufacturerName()).thenReturn("oppo")
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
     verify(collectionImagesUseCase).saveAutomaticWallpaperChangerStateAsEnabled()
     verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
-    verify(systemDetailsProvider).getManufacturerName()
+    verify(systemInfoProvider).getManufacturerName()
     verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
   }
 
   @Test
   fun `should save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on vivo oem`() {
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
-    `when`(systemDetailsProvider.getManufacturerName()).thenReturn("vivo")
+    `when`(systemInfoProvider.getManufacturerName()).thenReturn("vivo")
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
     verify(collectionImagesUseCase).saveAutomaticWallpaperChangerStateAsEnabled()
     verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
-    verify(systemDetailsProvider).getManufacturerName()
+    verify(systemInfoProvider).getManufacturerName()
     verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
   }
 
   @Test
   fun `should save state, save state, start automatic wallpaper changer and show autostart hint dialog on handleAutomaticWallpaperChangerEnabled call success on asus oem`() {
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
-    `when`(systemDetailsProvider.getManufacturerName()).thenReturn("asus")
+    `when`(systemInfoProvider.getManufacturerName()).thenReturn("asus")
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerEnabled()
 
     verify(collectionImagesUseCase).saveAutomaticWallpaperChangerStateAsEnabled()
     verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
-    verify(systemDetailsProvider).getManufacturerName()
+    verify(systemInfoProvider).getManufacturerName()
     verify(collectionView).showWallpaperChangerPermissionsRequiredDialog()
   }
 
@@ -1281,7 +1281,7 @@ class CollectionPresenterImplTest {
   @After fun tearDown() {
     verifyNoMoreInteractions(collectionView, widgetHintsUseCase, userPremiumStatusUseCase,
         collectionImagesUseCase, collectionImagesPresenterEntityMapper, wallpaperSetter,
-        resourceUtils, postExecutionThread, systemDetailsProvider)
+        resourceUtils, postExecutionThread, systemInfoProvider)
 
     collectionPresenterImpl.detachView()
   }

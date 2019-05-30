@@ -372,6 +372,7 @@ class ImageHandlerImpl(
         databaseHelper.getDatabase().collectionsDao().deleteData(it)
         fileHandler.deleteFile(it.path)
       }
+      it.onComplete()
     }
   }
 
