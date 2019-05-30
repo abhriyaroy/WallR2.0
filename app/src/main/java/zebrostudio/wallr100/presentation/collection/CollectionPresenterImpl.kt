@@ -263,12 +263,7 @@ class CollectionPresenterImpl(
           collectionView?.disableBackPress()
         }.autoDisposable(collectionView!!.getScope())
         .subscribe({
-          hideCabIfActive()
-          collectionView?.setImagesList(it)
-          collectionView?.updateChangesInEveryItemView()
-          collectionView?.removeBlurFromScreen()
-          collectionView?.showCrystallizeSuccessMessage()
-          collectionView?.enableBackPress()
+          redecorateViewAfterCrystallization(it)
         }, {
           hideCabIfActive()
           collectionView?.removeBlurFromScreen()
@@ -285,39 +280,28 @@ class CollectionPresenterImpl(
     imageList: MutableList<CollectionsPresenterEntity>,
     selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
   ) {
-    val backupOfOriginalImageList = mutableListOf<CollectionsPresenterEntity>()
-    backupOfOriginalImageList.addAll(imageList)
-    reverseSortSelections(selectedItemsMap).let { reverseSortedSelections ->
-      mutableListOf<CollectionsPresenterEntity>().let { listOfDeletableImages ->
-        removeItemsFromList(reverseSortedSelections, imageList, listOfDeletableImages,
-            selectedItemsMap)
-        collectionImagesUseCase.deleteImages(
-            collectionImagesPresenterEntityMapper.mapFromPresenterEntity(listOfDeletableImages))
-            .map {
-              collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
-            }
-            .observeOn(postExecutionThread.scheduler)
-            .autoDisposable(collectionView!!.getScope())
-            .subscribe({
-              collectionView?.setImagesList(it)
-              if (it.isEmpty()) {
-                showEmptyCollectionView()
+    mutableListOf<CollectionsPresenterEntity>().also { backupOfOriginalImageList ->
+      backupOfOriginalImageList.addAll(imageList)
+      reverseSortSelections(selectedItemsMap).let { reverseSortedSelections ->
+        mutableListOf<CollectionsPresenterEntity>().let { listOfDeletableImages ->
+          removeItemsFromList(reverseSortedSelections, imageList, listOfDeletableImages,
+              selectedItemsMap)
+          collectionImagesUseCase.deleteImages(
+              collectionImagesPresenterEntityMapper.mapFromPresenterEntity(listOfDeletableImages))
+              .map {
+                collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
               }
-              stopWallpaperChangerIfNecessary(it.size)
-              listOfDeletableImages.size.let {
-                if (it == SINGLE_ITEM_SIZE) {
-                  collectionView?.showSingleImageDeleteSuccessMessage()
-                } else {
-                  collectionView?.showMultipleImageDeleteSuccessMessage(it)
-                }
-              }
-              hideCabIfActive()
-            }, {
-              hideCabIfActive()
-              collectionView?.setImagesList(backupOfOriginalImageList)
-              collectionView?.updateChangesInEveryItemView()
-              collectionView?.showUnableToDeleteErrorMessage()
-            })
+              .observeOn(postExecutionThread.scheduler)
+              .autoDisposable(collectionView!!.getScope())
+              .subscribe({
+                redecorateViewAfterDeletion(it, listOfDeletableImages)
+              }, {
+                hideCabIfActive()
+                collectionView?.setImagesList(backupOfOriginalImageList)
+                collectionView?.updateChangesInEveryItemView()
+                collectionView?.showUnableToDeleteErrorMessage()
+              })
+        }
       }
     }
   }
@@ -408,6 +392,15 @@ class CollectionPresenterImpl(
     }
   }
 
+  private fun redecorateViewAfterCrystallization(list: List<CollectionsPresenterEntity>) {
+    hideCabIfActive()
+    collectionView?.setImagesList(list)
+    collectionView?.updateChangesInEveryItemView()
+    collectionView?.removeBlurFromScreen()
+    collectionView?.showCrystallizeSuccessMessage()
+    collectionView?.enableBackPress()
+  }
+
   private fun reverseSortSelections(map: HashMap<Int, CollectionsPresenterEntity>): TreeMap<Int, CollectionsPresenterEntity> {
     return TreeMap<Int, CollectionsPresenterEntity>(Collections.reverseOrder()).let { treeMap ->
       map.keys.forEach {
@@ -431,7 +424,26 @@ class CollectionPresenterImpl(
     }
   }
 
-  private fun stopWallpaperChangerIfNecessary(size: Int){
+  private fun redecorateViewAfterDeletion(
+    collectionPresenterEntityList: List<CollectionsPresenterEntity>,
+    deletableItemsList: List<CollectionsPresenterEntity>
+  ) {
+    collectionView?.setImagesList(collectionPresenterEntityList)
+    if (collectionPresenterEntityList.isEmpty()) {
+      showEmptyCollectionView()
+    }
+    stopWallpaperChangerIfNecessary(collectionPresenterEntityList.size)
+    deletableItemsList.size.let {
+      if (it == SINGLE_ITEM_SIZE) {
+        collectionView?.showSingleImageDeleteSuccessMessage()
+      } else {
+        collectionView?.showMultipleImageDeleteSuccessMessage(it)
+      }
+    }
+    hideCabIfActive()
+  }
+
+  private fun stopWallpaperChangerIfNecessary(size: Int) {
     if (size < MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_WALLPAPER_CHANGER_LAYOUT) {
       collectionView?.hideWallpaperChangerLayout()
       collectionImagesUseCase.stopAutomaticWallpaperChanger()
