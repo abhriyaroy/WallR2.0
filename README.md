@@ -5,7 +5,7 @@
  </a>
 </p>
 
-# HD Wallpapers With WallR
+# HD Wallpapers from WallR
 Did you know that an average user checks their device more than 80 times a day? Make each time a real pleasure with beautiful HD wallpapers from WallR. Let your device be a treat to your eyes every-time you check it.
 
 ## Table of Contents
