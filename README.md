@@ -82,3 +82,17 @@ WallR was selected as one of the best customization apps by <a href="https://www
 </p>
 
 <br>
+
+## About the Author
+### Abhriya Roy
+
+Android Developer with 2 years of experience in building apps that look and feel great. 
+Enthusiastic towards writing clean and maintainable code.
+Open source contributor.
+
+<a href="https://www.linkedin.com/in/abhriya-roy/"><img src="https://i.imgur.com/toWXOAd.png" alt="LinkedIn" width=40 height=40></a> &nbsp;
+<a href="https://twitter.com/AbhriyaR"><img src="https://i.imgur.com/ymEo5Iy.png" alt="Twitter" width=40 height=40></a> 
+&nbsp;
+<a href="https://stackoverflow.com/users/6197251/abhriya-roy"><img src="https://i.imgur.com/JakJaHP.png" alt="Stack Overflow" width=40 height=40></a> 
+&nbsp;
+<a href="https://angel.co/abhriya-roy?public_profile=1"><img src="https://i.imgur.com/TiwMDMK.pngg" alt="Angel List" width=40 height=40></a>
