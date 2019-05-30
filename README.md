@@ -1,10 +1,12 @@
-# HD Wallpapers With WallR
+
 <p align="center">
  <a href="https://play.google.com/store/apps/details?id=zebrostudio.wallr100">
  <img src="https://i.imgur.com/PWzM7sn.png" alt="Explore Wallpapers" width=600 height=300 hspace="2">
  </a>
 </p>
-<br>
+
+# HD Wallpapers With WallR
+
 
 ## Table of Contents
 - [Introduction](#introduction) <br>
@@ -31,8 +33,24 @@ It comes with a plethora of customization options like editing a wallpaper, crys
   <li> JUnit and Mockito for unit testing </li>
   <li> Retrofit for networking purposes </li>
  </ul>
-
-<br>
+ 
+ ### Features
+ <ul>
+  <li> Daily new wallpapers </li>
+  <li> More than 10 Categories of wallpapers </li>
+  <li> Search for wallpaper of your choice from a collection of over 100k+ images </li>
+  <li> Minimal wallpapers </li>
+  <li> Create your own Material or Gradient or Plasma wallpaper </li>
+  <li> Quick set wallpaper </li>
+  <li> Edit wallpapers before setting them </li>
+  <li> Download wallpaper to device </li>
+  <li> Crystallize any wallpaper </li>
+  <li> Share wallpapers with your contacts </li>
+  <li> Preview full screen wallpaper before setting </li>
+  <li> Add wallpapers to collection for future use </li>
+  <li> Enable automatic wallpaper changer to automatically change wallpapers periodically </li>
+  <li> Add any external image to collection to use it as a wallpaper or to crystallize it </li>
+ </ul>
 
 ### News
 WallR was selected as one of the best customization apps by <a href="https://www.androidauthority.com/5-android-apps-you-shouldnt-miss-this-week-android-apps-weekly-review-90-796074">Android Authority</a>, <a href="https://www.androidpolice.com/2017/08/21/11-new-notable-1-wtf-android-apps-last-week-81517-82117/">Android Police</a>. It also recieved ahuge number of warm and positive feedbacks and reviews at <a href="https://forum.xda-developers.com/android/apps-games/app-wallr-wallpapers-beta-testers-t3568221">XDA Developers</a>.
@@ -40,8 +58,6 @@ WallR was selected as one of the best customization apps by <a href="https://www
 <a href="https://play.google.com/store/apps/details?id=zebrostudio.wallr100">
  <img src="http://i.imgur.com/EPQlu1s.png?2" alt="Get it on Goolgel Play">
 </a>
-
-<br>
 
 ## App Screenshots
 <p align="center">
