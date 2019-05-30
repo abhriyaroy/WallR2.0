@@ -10,7 +10,7 @@ Did you know that an average user checks their device more than 80 times a day? 
 
 ## Table of Contents
 - [Introduction](#introduction) <br>
-- [App Components](#components) <br>
+- [App Components](#app-components) <br>
 - [Features](#features) <br>
 - [Usage Tips](#usage-tips) <br>
 - [News](#news) <br>
@@ -54,7 +54,7 @@ It comes with a plethora of customization options like editing a wallpaper, crys
  
 ### Usage Tips
  - Automatic wallpaper changer is only available to pro users and can be found inside collections.
- - The option to enable automatic wallpaper changer is only available upon adding atleast 1 image to collection.
+ - The option to enable automatic wallpaper changer is only available upon adding atleast 2 images to collection.
  - Create your own assorted collection of wallpapers so that automatic wallpaper changer can cycle through them periodically after the      time interval (default - 30 mins) set by you.
  - You can reorder images in collection by holding down an image and then dragging and dropping it to the desired location.
  - Clearing the app by swiping from recent apps screen might lead to the automatic wallpaper changer malfunctioning.
