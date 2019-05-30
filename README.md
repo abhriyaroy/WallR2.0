@@ -6,7 +6,7 @@
 </p>
 
 # HD Wallpapers With WallR
-
+Did you know that an average user checks their device more than 80 times a day? Make each time a real pleasure with beautiful HD wallpapers from WallR. Let your device be a treat to your eyes every-time you check it.
 
 ## Table of Contents
 - [Introduction](#introduction) <br>
@@ -51,6 +51,14 @@ It comes with a plethora of customization options like editing a wallpaper, crys
   <li> Enable automatic wallpaper changer to automatically change wallpapers periodically </li>
   <li> Add any external image to collection to use it as a wallpaper or to crystallize it </li>
  </ul>
+ 
+### Usage Tips
+ - Automatic wallpaper changer is only available to pro users and can be found inside collections.
+ - The option to enable automatic wallpaper changer is only available upon adding atleast 1 image to collection.
+ - Create your own assorted collection of wallpapers so that automatic wallpaper changer can cycle through them periodically after the      time interval (default - 30 mins) set by you.
+ - You can reorder images in collection by holding down an image and then dragging and dropping it to the desired location.
+ - Clearing the app by swiping from recent apps screen might lead to the automatic wallpaper changer malfunctioning.
+ - If WallR does not show a notification stating that automatic wallpaper changer then please restart the app so that automatic            wallpaper changer can be restarted by the app itself.
 
 ### News
 WallR was selected as one of the best customization apps by <a href="https://www.androidauthority.com/5-android-apps-you-shouldnt-miss-this-week-android-apps-weekly-review-90-796074">Android Authority</a>, <a href="https://www.androidpolice.com/2017/08/21/11-new-notable-1-wtf-android-apps-last-week-81517-82117/">Android Police</a>. It also recieved ahuge number of warm and positive feedbacks and reviews at <a href="https://forum.xda-developers.com/android/apps-games/app-wallr-wallpapers-beta-testers-t3568221">XDA Developers</a>.
