@@ -251,23 +251,12 @@ class CollectionPresenterImpl(
         }
         .observeOn(postExecutionThread.scheduler)
         .doOnSubscribe {
-          collectionView?.blurScreen()
-          collectionView?.showIndefiniteLoaderWithMessage(
-              resourceUtils.getStringResource(R.string.crystallizing_wallpaper_wait_message)
-          )
-          collectionView?.disableBackPress()
+          handleCrystallizationDoOnSubscribe()
         }.autoDisposable(collectionView!!.getScope())
         .subscribe({
           redecorateViewAfterCrystallization(it)
         }, {
-          hideCabIfActive()
-          collectionView?.removeBlurFromScreen()
-          if (it is AlreadyPresentInCollectionException) {
-            collectionView?.showCrystallizedImageAlreadyPresentInCollectionErrorMessage()
-          } else {
-            collectionView?.showGenericErrorMessage()
-          }
-          collectionView?.enableBackPress()
+          handleCrystallizationOnError(it)
         })
   }
 
@@ -292,12 +281,7 @@ class CollectionPresenterImpl(
               .observeOn(postExecutionThread.scheduler)
               .autoDisposable(collectionView!!.getScope())
               .subscribe({
-                if (it.size == backupOfOriginalImageList.size) {
-                  restoreViewAfterUnsuccessfulDeletion(it)
-                } else {
-                  redecorateViewAfterDeletion(it, listOfDeletableImages)
-                  stopWallpaperChangerIfNecessary(it.size)
-                }
+                handleDeleteWallpaperSuccess(it, backupOfOriginalImageList, listOfDeletableImages)
                 hideCabIfActive()
               }, {})
         }
@@ -408,6 +392,25 @@ class CollectionPresenterImpl(
     collectionView?.enableBackPress()
   }
 
+  private fun handleCrystallizationDoOnSubscribe(){
+    collectionView?.blurScreen()
+    collectionView?.showIndefiniteLoaderWithMessage(
+        resourceUtils.getStringResource(R.string.crystallizing_wallpaper_wait_message)
+    )
+    collectionView?.disableBackPress()
+  }
+
+  private fun handleCrystallizationOnError(throwable: Throwable){
+    hideCabIfActive()
+    collectionView?.removeBlurFromScreen()
+    if (throwable is AlreadyPresentInCollectionException) {
+      collectionView?.showCrystallizedImageAlreadyPresentInCollectionErrorMessage()
+    } else {
+      collectionView?.showGenericErrorMessage()
+    }
+    collectionView?.enableBackPress()
+  }
+
   private fun reverseSortSelections(map: HashMap<Int, CollectionsPresenterEntity>): TreeMap<Int, CollectionsPresenterEntity> {
     return TreeMap<Int, CollectionsPresenterEntity>(Collections.reverseOrder()).let { treeMap ->
       map.keys.forEach {
@@ -428,6 +431,19 @@ class CollectionPresenterImpl(
       listOfDeletableImages.add(selectedItemsMap[it]!!)
       selectedItemsMap.remove(it)
       collectionView?.removeItemView(it)
+    }
+  }
+
+  private fun handleDeleteWallpaperSuccess(
+    it: List<CollectionsPresenterEntity>,
+    backupOfOriginalImageList: List<CollectionsPresenterEntity>,
+    listOfDeletableImages: List<CollectionsPresenterEntity>
+  ) {
+    if (it.size == backupOfOriginalImageList.size) {
+      restoreViewAfterUnsuccessfulDeletion(it)
+    } else {
+      redecorateViewAfterDeletion(it, listOfDeletableImages)
+      stopWallpaperChangerIfNecessary(it.size)
     }
   }
 

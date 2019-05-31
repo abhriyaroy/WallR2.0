@@ -2,6 +2,7 @@ package zebrostudio.wallr100.presentation.detail.images
 
 import android.app.Activity.RESULT_OK
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
 import com.yalantis.ucrop.UCrop.REQUEST_CROP
@@ -21,6 +22,9 @@ import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.CRYSTALLIZED
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.EDITED
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.WALLPAPER
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
@@ -61,7 +65,7 @@ class DetailPresenterImpl(
   internal var isSlidingPanelExpanded = false
   internal var imageHasBeenCrystallized = false
   internal var imageHasBeenEdited = false
-  internal var lastImageOperationType = CollectionsImageType.WALLPAPER
+  internal var lastImageOperationType = WALLPAPER
   private var downloadProgress: Long = 0
   private var detailView: DetailContract.DetailView? = null
 
@@ -82,7 +86,7 @@ class DetailPresenterImpl(
     } else {
       imageType = WALLPAPERS
       wallpaperImage = detailView!!.getWallpaperImageDetails()
-      lastImageOperationType = CollectionsImageType.WALLPAPER
+      lastImageOperationType = WALLPAPER
     }
     decorateView()
   }
@@ -282,9 +286,9 @@ class DetailPresenterImpl(
     if (isSlidingPanelExpanded) {
       detailView?.collapseSlidingPanel()
     } else {
-      if (lastImageOperationType == CollectionsImageType.CRYSTALLIZED) {
+      if (lastImageOperationType == CRYSTALLIZED) {
         detailView?.showCrystallizedExpandedImage()
-      } else if (lastImageOperationType == CollectionsImageType.EDITED) {
+      } else if (lastImageOperationType == EDITED) {
         detailView?.showEditedExpandedImage()
       } else {
         if (imageType == SEARCH) {
@@ -377,41 +381,49 @@ class DetailPresenterImpl(
           }
 
           override fun onNext(it: ImageDownloadPresenterEntity) {
-            val progress = it.progress
-            if (progress == PROGRESS_VALUE_99) {
-              isDownloadInProgress = false
-              isImageOperationInProgress = true
-              detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
-              resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)
-                  .let {
-                    detailView?.showIndefiniteLoaderWithAnimation(it)
-                  }
-            } else if (progress == DOWNLOAD_COMPLETED_VALUE) {
-              resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage).let {
-                detailView?.showIndefiniteLoader(it)
-              }
-              if (wallpaperHasBeenSet) {
-                detailView?.showWallpaperSetSuccessMessage()
-              } else {
-                detailView?.showWallpaperSetErrorMessage()
-              }
-              isImageOperationInProgress = false
-              detailView?.hideScreenBlur()
-            } else {
-              detailView?.updateProgressPercentage("$progress%")
-            }
+            handleQuickSetWallpaperOnNext(it)
           }
 
           override fun onError(throwable: Throwable) {
-            if (throwable is ImageDownloadException) {
-              detailView?.showUnableToDownloadErrorMessage()
-            } else {
-              detailView?.showGenericErrorMessage()
-            }
-            detailView?.hideScreenBlur()
-            resetImageOperationAndImageDownloadFlags()
+            handleQuickSetWallpaperOnError(throwable)
           }
         })
+  }
+
+  private fun handleQuickSetWallpaperOnNext(it: ImageDownloadPresenterEntity) {
+    val progress = it.progress
+    if (progress == PROGRESS_VALUE_99) {
+      isDownloadInProgress = false
+      isImageOperationInProgress = true
+      detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
+      resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)
+          .let {
+            detailView?.showIndefiniteLoaderWithAnimation(it)
+          }
+    } else if (progress == DOWNLOAD_COMPLETED_VALUE) {
+      resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage).let {
+        detailView?.showIndefiniteLoader(it)
+      }
+      if (wallpaperHasBeenSet) {
+        detailView?.showWallpaperSetSuccessMessage()
+      } else {
+        detailView?.showWallpaperSetErrorMessage()
+      }
+      isImageOperationInProgress = false
+      detailView?.hideScreenBlur()
+    } else {
+      detailView?.updateProgressPercentage("$progress%")
+    }
+  }
+
+  private fun handleQuickSetWallpaperOnError(throwable: Throwable) {
+    if (throwable is ImageDownloadException) {
+      detailView?.showUnableToDownloadErrorMessage()
+    } else {
+      detailView?.showGenericErrorMessage()
+    }
+    detailView?.hideScreenBlur()
+    resetImageOperationFlags()
   }
 
   private fun downloadWallpaper() {
@@ -435,18 +447,7 @@ class DetailPresenterImpl(
     getImageBitmapFetchObservable()
         .observeOn(postExecutionThread.scheduler)
         .doOnNext {
-          val progress = it.progress
-          if (progress == PROGRESS_VALUE_99) {
-            isDownloadInProgress = false
-            isImageOperationInProgress = true
-            detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
-            val message =
-                resourceUtils.getStringResource(
-                    R.string.detail_activity_crystallizing_wallpaper_message)
-            detailView?.showIndefiniteLoaderWithAnimation(message)
-          } else if (progress != DOWNLOAD_COMPLETED_VALUE) {
-            detailView?.updateProgressPercentage("$progress%")
-          }
+          handleCrystallizeWallpaperDoOnNext(it)
         }
         .doOnSubscribe {
           isDownloadInProgress = true
@@ -462,24 +463,47 @@ class DetailPresenterImpl(
         }
         .autoDisposable(detailView?.getScope()!!)
         .subscribe({
-          if (it.first) {
-            lastImageOperationType = CollectionsImageType.CRYSTALLIZED
-            detailView?.showImage(it.second!!)
-            detailView?.hideScreenBlur()
-            detailView?.showCrystallizeSuccessMessage()
-            imageHasBeenCrystallized = true
-            isImageOperationInProgress = false
-          }
+          handleCrystallizeWallpaperOnSuccess(it)
         }, {
-          if (it is ImageDownloadException) {
-            detailView?.showUnableToDownloadErrorMessage()
-          } else {
-            detailView?.showGenericErrorMessage()
-          }
-          detailView?.hideScreenBlur()
-          resetImageOperationAndImageDownloadFlags()
+          handleCrystallizeWallpaperOnError(it)
         })
 
+  }
+
+  private fun handleCrystallizeWallpaperDoOnNext(it: ImageDownloadPresenterEntity) {
+    val progress = it.progress
+    if (progress == PROGRESS_VALUE_99) {
+      isDownloadInProgress = false
+      isImageOperationInProgress = true
+      detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
+      val message =
+          resourceUtils.getStringResource(
+              R.string.detail_activity_crystallizing_wallpaper_message)
+      detailView?.showIndefiniteLoaderWithAnimation(message)
+    } else if (progress != DOWNLOAD_COMPLETED_VALUE) {
+      detailView?.updateProgressPercentage("$progress%")
+    }
+  }
+
+  private fun handleCrystallizeWallpaperOnSuccess(it: Pair<Boolean, Bitmap?>) {
+    if (it.first) {
+      lastImageOperationType = CRYSTALLIZED
+      detailView?.showImage(it.second!!)
+      detailView?.hideScreenBlur()
+      detailView?.showCrystallizeSuccessMessage()
+      imageHasBeenCrystallized = true
+      isImageOperationInProgress = false
+    }
+  }
+
+  private fun handleCrystallizeWallpaperOnError(throwable: Throwable) {
+    if (throwable is ImageDownloadException) {
+      detailView?.showUnableToDownloadErrorMessage()
+    } else {
+      detailView?.showGenericErrorMessage()
+    }
+    detailView?.hideScreenBlur()
+    resetImageOperationFlags()
   }
 
   private fun editSetWallpaper() {
@@ -498,37 +522,45 @@ class DetailPresenterImpl(
           }
 
           override fun onNext(it: ImageDownloadPresenterEntity) {
-            val progress = it.progress
-            if (progress == DOWNLOAD_COMPLETED_VALUE) {
-              detailView?.startCroppingActivity(
-                  imageOptionsUseCase.getCroppingSourceUri().blockingGet(),
-                  imageOptionsUseCase.getCroppingDestinationUri().blockingGet(),
-                  wallpaperSetter.getDesiredMinimumWidth(),
-                  wallpaperSetter.getDesiredMinimumHeight()
-              )
-            } else if (progress == PROGRESS_VALUE_99) {
-              isDownloadInProgress = false
-              isImageOperationInProgress = true
-              detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
-              val message =
-                  resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message)
-              detailView?.showIndefiniteLoaderWithAnimation(message)
-            } else {
-              isDownloadInProgress = true
-              detailView?.updateProgressPercentage("$progress%")
-            }
+            handleEditSetWallpaperOnNext(it)
           }
 
           override fun onError(throwable: Throwable) {
-            if (throwable is ImageDownloadException) {
-              detailView?.showUnableToDownloadErrorMessage()
-            } else {
-              detailView?.showGenericErrorMessage()
-            }
-            detailView?.hideScreenBlur()
-            resetImageOperationAndImageDownloadFlags()
+            handleEditSetWallpaperOnError(throwable)
           }
         })
+  }
+
+  private fun handleEditSetWallpaperOnNext(it: ImageDownloadPresenterEntity) {
+    val progress = it.progress
+    if (progress == DOWNLOAD_COMPLETED_VALUE) {
+      detailView?.startCroppingActivity(
+          imageOptionsUseCase.getCroppingSourceUri().blockingGet(),
+          imageOptionsUseCase.getCroppingDestinationUri().blockingGet(),
+          wallpaperSetter.getDesiredMinimumWidth(),
+          wallpaperSetter.getDesiredMinimumHeight()
+      )
+    } else if (progress == PROGRESS_VALUE_99) {
+      isDownloadInProgress = false
+      isImageOperationInProgress = true
+      detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
+      val message =
+          resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message)
+      detailView?.showIndefiniteLoaderWithAnimation(message)
+    } else {
+      isDownloadInProgress = true
+      detailView?.updateProgressPercentage("$progress%")
+    }
+  }
+
+  private fun handleEditSetWallpaperOnError(throwable: Throwable) {
+    if (throwable is ImageDownloadException) {
+      detailView?.showUnableToDownloadErrorMessage()
+    } else {
+      detailView?.showGenericErrorMessage()
+    }
+    detailView?.hideScreenBlur()
+    resetImageOperationFlags()
   }
 
   private fun addWallpaperToCollection() {
@@ -536,17 +568,7 @@ class DetailPresenterImpl(
     getImageBitmapFetchObservable()
         .observeOn(postExecutionThread.scheduler)
         .doOnNext {
-          val progress = it.progress
-          if (progress == PROGRESS_VALUE_99) {
-            isDownloadInProgress = false
-            isImageOperationInProgress = true
-            detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
-            val message =
-                resourceUtils.getStringResource(R.string.adding_image_to_collections_message)
-            detailView?.showIndefiniteLoaderWithAnimation(message)
-          } else if (progress != DOWNLOAD_COMPLETED_VALUE) {
-            detailView?.updateProgressPercentage("$progress%")
-          }
+          handleAddWallpaperToCollectionDoOnNext(it)
         }
         .doOnSubscribe {
           isDownloadInProgress = true
@@ -563,22 +585,44 @@ class DetailPresenterImpl(
         }
         .autoDisposable(detailView?.getScope()!!)
         .subscribe({
-          if (it == true) {
-            detailView?.hideScreenBlur()
-            detailView?.showAddToCollectionSuccessMessage()
-            isImageOperationInProgress = false
-          }
+          handleAddWallpaperToCollectionSuccess(it)
         }, {
-          if (it is ImageDownloadException) {
-            detailView?.showUnableToDownloadErrorMessage()
-          } else if (it is AlreadyPresentInCollectionException) {
-            detailView?.showAlreadyPresentInCollectionErrorMessage()
-          } else {
-            detailView?.showGenericErrorMessage()
-          }
-          detailView?.hideScreenBlur()
-          resetImageOperationAndImageDownloadFlags()
+          handleAddWallpaperToCollectionError(it)
         })
+  }
+
+  private fun handleAddWallpaperToCollectionDoOnNext(it: ImageDownloadPresenterEntity) {
+    val progress = it.progress
+    if (progress == PROGRESS_VALUE_99) {
+      isDownloadInProgress = false
+      isImageOperationInProgress = true
+      detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
+      val message =
+          resourceUtils.getStringResource(R.string.adding_image_to_collections_message)
+      detailView?.showIndefiniteLoaderWithAnimation(message)
+    } else if (progress != DOWNLOAD_COMPLETED_VALUE) {
+      detailView?.updateProgressPercentage("$progress%")
+    }
+  }
+
+  private fun handleAddWallpaperToCollectionSuccess(it: Boolean) {
+    if (it) {
+      detailView?.hideScreenBlur()
+      detailView?.showAddToCollectionSuccessMessage()
+      isImageOperationInProgress = false
+    }
+  }
+
+  private fun handleAddWallpaperToCollectionError(error: Throwable) {
+    if (error is ImageDownloadException) {
+      detailView?.showUnableToDownloadErrorMessage()
+    } else if (error is AlreadyPresentInCollectionException) {
+      detailView?.showAlreadyPresentInCollectionErrorMessage()
+    } else {
+      detailView?.showGenericErrorMessage()
+    }
+    detailView?.hideScreenBlur()
+    resetImageOperationFlags()
   }
 
   private fun handleCropResult(cropResultUri: Uri?) {
@@ -593,7 +637,7 @@ class DetailPresenterImpl(
         .observeOn(postExecutionThread.scheduler)
         .autoDisposable(detailView?.getScope()!!)
         .subscribe({
-          lastImageOperationType = CollectionsImageType.EDITED
+          lastImageOperationType = EDITED
           if (hasWallpaperBeenSet) {
             detailView?.showImage(it)
             detailView?.showWallpaperSetSuccessMessage()
@@ -605,7 +649,7 @@ class DetailPresenterImpl(
           detailView?.hideScreenBlur()
         }, {
           detailView?.showGenericErrorMessage()
-          resetImageOperationAndImageDownloadFlags()
+          resetImageOperationFlags()
           detailView?.hideScreenBlur()
         })
   }
@@ -661,7 +705,7 @@ class DetailPresenterImpl(
         }
   }
 
-  private fun resetImageOperationAndImageDownloadFlags() {
+  private fun resetImageOperationFlags() {
     isImageOperationInProgress = false
     isDownloadInProgress = false
   }
