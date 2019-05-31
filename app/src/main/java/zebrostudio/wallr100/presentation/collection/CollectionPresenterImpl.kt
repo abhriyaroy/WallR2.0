@@ -59,11 +59,6 @@ class CollectionPresenterImpl(
 
   override fun handleViewCreated() {
     if (isUserPremium() && isStoragePermissionAvailable()) {
-      if (collectionImagesUseCase.isAutomaticWallpaperChangerRunning()) {
-        collectionView?.showAutomaticWallpaperStateAsActive()
-      } else {
-        collectionView?.showAutomaticWallpaperStateAsInActive()
-      }
       showPictures()
     }
   }
@@ -353,6 +348,7 @@ class CollectionPresenterImpl(
             showEmptyCollectionView()
           }
         }, {
+          stopWallpaperChangerAndRemoveLayout()
           collectionView?.showImagesAbsentLayout()
           collectionView?.showGenericErrorMessage()
         })
@@ -386,13 +382,20 @@ class CollectionPresenterImpl(
     collectionView?.clearImages()
     collectionView?.clearAllSelectedItems()
     collectionView?.showImagesAbsentLayout()
-    collectionView?.hideWallpaperChangerLayout()
+    stopWallpaperChangerAndRemoveLayout()
   }
 
   private fun showNonEmptyCollectionView(size: Int) {
     collectionView?.hideImagesAbsentLayout()
     if (size >= MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_WALLPAPER_CHANGER_LAYOUT) {
       collectionView?.showWallpaperChangerLayout()
+      if (collectionImagesUseCase.isAutomaticWallpaperChangerRunning()) {
+        collectionView?.showAutomaticWallpaperStateAsActive()
+      } else {
+        collectionView?.showAutomaticWallpaperStateAsInActive()
+      }
+    } else {
+      stopWallpaperChangerAndRemoveLayout()
     }
   }
 
@@ -453,9 +456,13 @@ class CollectionPresenterImpl(
 
   private fun stopWallpaperChangerIfNecessary(size: Int) {
     if (size < MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_WALLPAPER_CHANGER_LAYOUT) {
-      collectionView?.hideWallpaperChangerLayout()
-      collectionImagesUseCase.stopAutomaticWallpaperChanger()
+      stopWallpaperChangerAndRemoveLayout()
     }
+  }
+
+  private fun stopWallpaperChangerAndRemoveLayout() {
+    collectionView?.hideWallpaperChangerLayout()
+    collectionImagesUseCase.stopAutomaticWallpaperChanger()
   }
 
 }

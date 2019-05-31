@@ -108,14 +108,13 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should set automatic wallpaper changer as active and show pictures on handleViewCreated call success`() {
+  fun `should show pictures and hide wallpaper changer layout on handleViewCreated call success`() {
     val collectionsImageModelList = listOf(getCollectionsImageModel())
     val collectionsPresenterEntityList =
         listOf(getCollectionImagesPresenterEntity())
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
     `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
-    `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(true)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(
         Single.just(collectionsImageModelList))
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
@@ -125,16 +124,15 @@ class CollectionPresenterImplTest {
 
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionsImageModelList)
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).getAllImages()
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
     verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(permissionsCheckerHelper).isWritePermissionAvailable()
-    verify(collectionView).showAutomaticWallpaperStateAsActive()
     verify(collectionView).getScope()
     verify(collectionView).setImagesList(collectionsPresenterEntityList)
     verify(collectionView).hideImagesAbsentLayout()
-    verify(collectionView).showWallpaperChangerLayout()
     verify(collectionView).updateChangesInEveryItemView()
+    verify(collectionView).hideWallpaperChangerLayout()
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -179,20 +177,19 @@ class CollectionPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
     `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
-    `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(true)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(Single.error(Exception()))
 
     collectionPresenterImpl.handleViewCreated()
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).getAllImages()
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
     verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(permissionsCheckerHelper).isWritePermissionAvailable()
-    verify(collectionView).showAutomaticWallpaperStateAsActive()
     verify(collectionView).getScope()
     verify(collectionView).showImagesAbsentLayout()
     verify(collectionView).showGenericErrorMessage()
+    verify(collectionView).hideWallpaperChangerLayout()
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -200,7 +197,8 @@ class CollectionPresenterImplTest {
   fun `should set automatic wallpaper changer as inactive and show pictures on handleViewCreated call success`() {
     val collectionsImageModelList = listOf(getCollectionsImageModel())
     val collectionsPresenterEntityList =
-        listOf(getCollectionImagesPresenterEntity())
+        listOf(getCollectionImagesPresenterEntity(), getCollectionImagesPresenterEntity())
+    `when`(widgetHintsUseCase.isCollectionsImageReorderHintShown()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
     `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
@@ -212,6 +210,7 @@ class CollectionPresenterImplTest {
 
     collectionPresenterImpl.handleViewCreated()
 
+    verify(widgetHintsUseCase).isCollectionsImageReorderHintShown()
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionsImageModelList)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
@@ -264,11 +263,10 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should set automatic wallpaper changer as inactive and show empty collection view on handleViewCreated call success`() {
+  fun `should hide wallpaper changer layout and show empty collection view on handleViewCreated call success`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
     `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
-    `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(Single.just(listOf()))
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(listOf()))
         .thenReturn(listOf())
@@ -277,11 +275,10 @@ class CollectionPresenterImplTest {
 
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(listOf())
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
     verify(collectionImagesUseCase).getAllImages()
     verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(permissionsCheckerHelper).isWritePermissionAvailable()
-    verify(collectionView).showAutomaticWallpaperStateAsInActive()
     verify(collectionView).getScope()
     verify(collectionView).clearImages()
     verify(collectionView).clearAllSelectedItems()
@@ -291,32 +288,11 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should set automatic wallpaper changer as inactive and show images absent layout on handleViewCreated call failure`() {
-    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
-    `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
-    `when`(collectionImagesUseCase.getAllImages()).thenReturn(Single.error(Exception()))
-
-    collectionPresenterImpl.handleViewCreated()
-
-    verify(userPremiumStatusUseCase).isUserPremium()
-    verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
-    verify(collectionImagesUseCase).getAllImages()
-    verify(permissionsCheckerHelper).isReadPermissionAvailable()
-    verify(permissionsCheckerHelper).isWritePermissionAvailable()
-    verify(collectionView).showAutomaticWallpaperStateAsInActive()
-    verify(collectionView).getScope()
-    verify(collectionView).showImagesAbsentLayout()
-    verify(collectionView).showGenericErrorMessage()
-    verifyPostExecutionThreadSchedulerCall()
-  }
-
-  @Test
   fun `should set automatic wallpaper changer as active and show pictures on handleActivityResult call success`() {
     val collectionsImageModelList = listOf(getCollectionsImageModel())
     val collectionsPresenterEntityList =
-        listOf(getCollectionImagesPresenterEntity())
+        listOf(getCollectionImagesPresenterEntity(), getCollectionImagesPresenterEntity())
+    `when`(widgetHintsUseCase.isCollectionsImageReorderHintShown()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
     `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
@@ -328,6 +304,7 @@ class CollectionPresenterImplTest {
 
     collectionPresenterImpl.handleActivityResult()
 
+    verify(widgetHintsUseCase).isCollectionsImageReorderHintShown()
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionsImageModelList)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
@@ -380,32 +357,60 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should set automatic wallpaper changer as active and show images absent layout on handleActivityResult call failure`() {
+  fun `should show images absent layout and hide wallpaper changer layout on handleActivityResult call failure`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
     `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
-    `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(true)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(Single.error(Exception()))
 
     collectionPresenterImpl.handleActivityResult()
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).getAllImages()
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
     verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(permissionsCheckerHelper).isWritePermissionAvailable()
-    verify(collectionView).showAutomaticWallpaperStateAsActive()
     verify(collectionView).getScope()
     verify(collectionView).showImagesAbsentLayout()
     verify(collectionView).showGenericErrorMessage()
+    verify(collectionView).hideWallpaperChangerLayout()
     verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test
-  fun `should set automatic wallpaper changer as inactive and show pictures on handleActivityResult call success`() {
+  fun `should stop automatic wallpaper changer and remove wallpaper changer layout and show pictures on handleActivityResult call success with 1 image in collection`() {
+    val collectionsImageModelList = listOf(getCollectionsImageModel())
+    val collectionsPresenterEntityList = listOf(getCollectionImagesPresenterEntity())
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
+    `when`(collectionImagesUseCase.getAllImages()).thenReturn(
+        Single.just(collectionsImageModelList))
+    `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
+        collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
+
+    collectionPresenterImpl.handleActivityResult()
+
+    verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionsImageModelList)
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(collectionImagesUseCase).getAllImages()
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
+    verify(permissionsCheckerHelper).isReadPermissionAvailable()
+    verify(permissionsCheckerHelper).isWritePermissionAvailable()
+    verify(collectionView).getScope()
+    verify(collectionView).setImagesList(collectionsPresenterEntityList)
+    verify(collectionView).hideImagesAbsentLayout()
+    verify(collectionView).updateChangesInEveryItemView()
+    verify(collectionView).hideWallpaperChangerLayout()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should set automatic wallpaper changer as inactive and show pictures on handleActivityResult call success with more than 1 image in collection`() {
     val collectionsImageModelList = listOf(getCollectionsImageModel())
     val collectionsPresenterEntityList =
-        listOf(getCollectionImagesPresenterEntity())
+        listOf(getCollectionImagesPresenterEntity(), getCollectionImagesPresenterEntity())
+    `when`(widgetHintsUseCase.isCollectionsImageReorderHintShown()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
     `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
@@ -417,6 +422,7 @@ class CollectionPresenterImplTest {
 
     collectionPresenterImpl.handleActivityResult()
 
+    verify(widgetHintsUseCase).isCollectionsImageReorderHintShown()
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionsImageModelList)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
@@ -469,11 +475,10 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should set automatic wallpaper changer as inactive and show empty collection view on handleActivityResult call success`() {
+  fun `should hide wallpaper changer layout and show empty collection view on handleActivityResult call success`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
     `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
-    `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(Single.just(listOf()))
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(listOf()))
         .thenReturn(listOf())
@@ -482,11 +487,10 @@ class CollectionPresenterImplTest {
 
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(listOf())
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).getAllImages()
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
     verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(permissionsCheckerHelper).isWritePermissionAvailable()
-    verify(collectionView).showAutomaticWallpaperStateAsInActive()
     verify(collectionView).getScope()
     verify(collectionView).clearImages()
     verify(collectionView).clearAllSelectedItems()
@@ -496,24 +500,23 @@ class CollectionPresenterImplTest {
   }
 
   @Test
-  fun `should set automatic wallpaper changer as inactive and show images absent layout on handleActivityResult call failure`() {
+  fun `should hide wallpaper changer layout and show images absent layout on handleActivityResult call failure`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
     `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
-    `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(Single.error(Exception()))
 
     collectionPresenterImpl.handleActivityResult()
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionImagesUseCase).getAllImages()
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
     verify(permissionsCheckerHelper).isReadPermissionAvailable()
     verify(permissionsCheckerHelper).isWritePermissionAvailable()
-    verify(collectionView).showAutomaticWallpaperStateAsInActive()
     verify(collectionView).getScope()
     verify(collectionView).showImagesAbsentLayout()
     verify(collectionView).showGenericErrorMessage()
+    verify(collectionView).hideWallpaperChangerLayout()
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -1040,10 +1043,13 @@ class CollectionPresenterImplTest {
     verify(collectionView).showWallpaperChangerRestartedSuccessMessage()
   }
 
-  @Test fun `should add image to collection on handleImagePickerResult call success`() {
+  @Test
+  fun `should add image and show automatic wallpaper changer layout to collection on handleImagePickerResult call success`() {
     val uriList = listOf(mockUri)
     val collectionImagesModelList = listOf(getCollectionsImageModel())
-    val collectionPresenterEntityList = listOf(getCollectionImagesPresenterEntity())
+    val collectionPresenterEntityList =
+        listOf(getCollectionImagesPresenterEntity(), getCollectionImagesPresenterEntity())
+    `when`(widgetHintsUseCase.isCollectionsImageReorderHintShown()).thenReturn(true)
     `when`(collectionImagesUseCase.addImage(uriList))
         .thenReturn(Single.just(collectionImagesModelList))
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(collectionImagesModelList))
@@ -1051,12 +1057,15 @@ class CollectionPresenterImplTest {
 
     collectionPresenterImpl.handleImagePickerResult(uriList)
 
+    verify(widgetHintsUseCase).isCollectionsImageReorderHintShown()
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionImagesModelList)
     verify(collectionImagesUseCase).addImage(uriList)
+    verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionView).getScope()
     verify(collectionView).setImagesList(collectionPresenterEntityList)
     verify(collectionView).updateChangesInEveryItemView()
     verify(collectionView).hideImagesAbsentLayout()
+    verify(collectionView).showAutomaticWallpaperStateAsInActive()
     verify(collectionView).showWallpaperChangerLayout()
     verify(collectionView).showSingleImageAddedSuccessfullyMessage()
     verifyPostExecutionThreadSchedulerCall()
@@ -1080,7 +1089,9 @@ class CollectionPresenterImplTest {
     verify(widgetHintsUseCase).isCollectionsImageReorderHintShown()
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionImagesModelList)
     verify(collectionImagesUseCase).addImage(uriList)
+    verify(collectionImagesUseCase).isAutomaticWallpaperChangerRunning()
     verify(collectionView).getScope()
+    verify(collectionView).showAutomaticWallpaperStateAsInActive()
     verify(collectionView).setImagesList(collectionPresenterEntityList)
     verify(collectionView).updateChangesInEveryItemView()
     verify(collectionView).hideImagesAbsentLayout()
