@@ -42,7 +42,7 @@ class AutomaticWallpaperChangerServiceImpl : Service(), AutomaticWallpaperChange
     startForeground(WALLPAPER_CHANGER_SERVICE_CODE,
         notificationFactory.getWallpaperChangerNotification(
             automaticWallpaperChangerUseCase.getIntervalAsString()))
-    automaticWallpaperChangerUseCase.handleServiceCreated()
+    automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     return START_NOT_STICKY
   }
 

@@ -19,7 +19,7 @@ interface AutomaticWallpaperChangerUseCase {
   fun attachService(automaticWallpaperChangerService: AutomaticWallpaperChangerService)
   fun detachService()
   fun getIntervalAsString(): String
-  fun handleServiceCreated()
+  fun startAutomaticWallpaperChangerProcess()
 }
 
 const val INDEX_OF_FIRST_ELEMENT_IN_LIST = 0
@@ -49,7 +49,7 @@ class AutomaticWallpaperChangerInteractor(
     }
   }
 
-  override fun handleServiceCreated() {
+  override fun startAutomaticWallpaperChangerProcess() {
     timerDisposable =
         Observable.timer(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS,
             executionThread.computationScheduler)

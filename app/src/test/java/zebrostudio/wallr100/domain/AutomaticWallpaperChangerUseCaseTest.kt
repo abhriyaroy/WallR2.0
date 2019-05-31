@@ -57,7 +57,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test
-  fun `should not change wallpaper when interval is of 30 minutes on handleServiceCreated call success`() {
+  fun `should not change wallpaper when interval is of 30 minutes on startAutomaticWallpaperChangerProcess call success`() {
     val timeStamp = System.currentTimeMillis()
     val testScheduler = TestScheduler()
     `when`(timeManager.getCurrentTimeInMilliSeconds()).thenReturn(
@@ -67,7 +67,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
         WALLPAPER_CHANGER_INTERVALS_LIST.first())
 
-    automaticWallpaperChangerUseCase.handleServiceCreated()
+    automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
 
     verify(timeManager).getCurrentTimeInMilliSeconds()
@@ -78,7 +78,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test
-  fun `should not change wallpaper when interval is of 1 hour on handleServiceCreated call success`() {
+  fun `should not change wallpaper when interval is of 1 hour on startAutomaticWallpaperChangerProcess call success`() {
     val timeStamp = System.currentTimeMillis()
     val testScheduler = TestScheduler()
     `when`(timeManager.getCurrentTimeInMilliSeconds()).thenReturn(
@@ -88,7 +88,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
         WALLPAPER_CHANGER_INTERVALS_LIST.component2())
 
-    automaticWallpaperChangerUseCase.handleServiceCreated()
+    automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
 
     verify(timeManager).getCurrentTimeInMilliSeconds()
@@ -99,7 +99,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test
-  fun `should not change wallpaper when interval is of 6 hours on handleServiceCreated call success`() {
+  fun `should not change wallpaper when interval is of 6 hours on startAutomaticWallpaperChangerProcess call success`() {
     val timeStamp = System.currentTimeMillis()
     val testScheduler = TestScheduler()
     `when`(timeManager.getCurrentTimeInMilliSeconds()).thenReturn(
@@ -109,7 +109,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
         WALLPAPER_CHANGER_INTERVALS_LIST.component3())
 
-    automaticWallpaperChangerUseCase.handleServiceCreated()
+    automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
 
     verify(timeManager).getCurrentTimeInMilliSeconds()
@@ -120,7 +120,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test
-  fun `should not change wallpaper when interval is of 1 day on handleServiceCreated call success`() {
+  fun `should not change wallpaper when interval is of 1 day on startAutomaticWallpaperChangerProcess call success`() {
     val timeStamp = System.currentTimeMillis()
     val testScheduler = TestScheduler()
     `when`(timeManager.getCurrentTimeInMilliSeconds()).thenReturn(
@@ -130,7 +130,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
         WALLPAPER_CHANGER_INTERVALS_LIST.component4())
 
-    automaticWallpaperChangerUseCase.handleServiceCreated()
+    automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
 
     verify(timeManager).getCurrentTimeInMilliSeconds()
@@ -141,7 +141,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test
-  fun `should not change wallpaper when interval is of 3 days on handleServiceCreated call success`() {
+  fun `should not change wallpaper when interval is of 3 days on startAutomaticWallpaperChangerProcess call success`() {
     val timeStamp = System.currentTimeMillis()
     val testScheduler = TestScheduler()
     `when`(timeManager.getCurrentTimeInMilliSeconds()).thenReturn(
@@ -151,7 +151,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
         WALLPAPER_CHANGER_INTERVALS_LIST.component5())
 
-    automaticWallpaperChangerUseCase.handleServiceCreated()
+    automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
 
     verify(timeManager).getCurrentTimeInMilliSeconds()
@@ -162,7 +162,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test
-  fun `should change wallpaper when interval is of 30 minutes on handleServiceCreated call success`() {
+  fun `should change wallpaper when interval is of 30 minutes on startAutomaticWallpaperChangerProcess call success`() {
     val currentTime = System.currentTimeMillis()
     val timeStamp = currentTime - TimeUnit.MINUTES.toMillis(30)
     val testScheduler = TestScheduler()
@@ -182,7 +182,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionsImageModelList))
 
-    automaticWallpaperChangerUseCase.handleServiceCreated()
+    automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
 
     verify(timeManager, times(2)).getCurrentTimeInMilliSeconds()
@@ -200,7 +200,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test
-  fun `should change wallpaper when interval is of 30 minutes on handleServiceCreated call success and device was dozed`() {
+  fun `should change wallpaper when interval is of 30 minutes on startAutomaticWallpaperChangerProcess call success and device was dozed`() {
     val currentTime = System.currentTimeMillis()
     val timeStamp = currentTime - TimeUnit.MINUTES.toMillis(50)
     val testScheduler = TestScheduler()
@@ -220,7 +220,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionsImageModelList))
 
-    automaticWallpaperChangerUseCase.handleServiceCreated()
+    automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
 
     verify(timeManager, times(2)).getCurrentTimeInMilliSeconds()
@@ -238,7 +238,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test
-  fun `should change wallpaper when interval is of 1 hour on handleServiceCreated call success`() {
+  fun `should change wallpaper when interval is of 1 hour on startAutomaticWallpaperChangerProcess call success`() {
     val currentTime = System.currentTimeMillis()
     val timeStamp = currentTime - TimeUnit.HOURS.toMillis(1)
     val testScheduler = TestScheduler()
@@ -258,7 +258,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionsImageModelList))
 
-    automaticWallpaperChangerUseCase.handleServiceCreated()
+    automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
 
     verify(timeManager, times(2)).getCurrentTimeInMilliSeconds()
@@ -276,7 +276,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test
-  fun `should change wallpaper when interval is of 1 hour on handleServiceCreated call success and device was dozed`() {
+  fun `should change wallpaper when interval is of 1 hour on startAutomaticWallpaperChangerProcess call success and device was dozed`() {
     val currentTime = System.currentTimeMillis()
     val timeStamp = currentTime - TimeUnit.HOURS.toMillis(2)
     val testScheduler = TestScheduler()
@@ -296,7 +296,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionsImageModelList))
 
-    automaticWallpaperChangerUseCase.handleServiceCreated()
+    automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
 
     verify(timeManager, times(2)).getCurrentTimeInMilliSeconds()
@@ -314,7 +314,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test
-  fun `should change wallpaper when interval is of 6 hours on handleServiceCreated call success`() {
+  fun `should change wallpaper when interval is of 6 hours on startAutomaticWallpaperChangerProcess call success`() {
     val currentTime = System.currentTimeMillis()
     val timeStamp = currentTime - TimeUnit.HOURS.toMillis(6)
     val testScheduler = TestScheduler()
@@ -334,7 +334,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionsImageModelList))
 
-    automaticWallpaperChangerUseCase.handleServiceCreated()
+    automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
 
     verify(timeManager, times(2)).getCurrentTimeInMilliSeconds()
@@ -352,7 +352,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test
-  fun `should change wallpaper when interval is of 6 hours on handleServiceCreated call success and device was dozed`() {
+  fun `should change wallpaper when interval is of 6 hours on startAutomaticWallpaperChangerProcess call success and device was dozed`() {
     val currentTime = System.currentTimeMillis()
     val timeStamp = currentTime - TimeUnit.HOURS.toMillis(12)
     val testScheduler = TestScheduler()
@@ -372,7 +372,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionsImageModelList))
 
-    automaticWallpaperChangerUseCase.handleServiceCreated()
+    automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
 
     verify(timeManager, times(2)).getCurrentTimeInMilliSeconds()
@@ -390,7 +390,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test
-  fun `should change wallpaper when interval is of 1 day on handleServiceCreated call success`() {
+  fun `should change wallpaper when interval is of 1 day on startAutomaticWallpaperChangerProcess call success`() {
     val currentTime = System.currentTimeMillis()
     val timeStamp = currentTime - TimeUnit.DAYS.toMillis(1)
     val testScheduler = TestScheduler()
@@ -410,7 +410,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionsImageModelList))
 
-    automaticWallpaperChangerUseCase.handleServiceCreated()
+    automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
 
     verify(timeManager, times(2)).getCurrentTimeInMilliSeconds()
@@ -428,7 +428,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test
-  fun `should change wallpaper when interval is of 1 day on handleServiceCreated call success device was dozed`() {
+  fun `should change wallpaper when interval is of 1 day on startAutomaticWallpaperChangerProcess call success device was dozed`() {
     val currentTime = System.currentTimeMillis()
     val timeStamp = currentTime - TimeUnit.DAYS.toMillis(3)
     val testScheduler = TestScheduler()
@@ -448,7 +448,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionsImageModelList))
 
-    automaticWallpaperChangerUseCase.handleServiceCreated()
+    automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
 
     verify(timeManager, times(2)).getCurrentTimeInMilliSeconds()
@@ -466,7 +466,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test
-  fun `should change wallpaper when interval is of 3 days on handleServiceCreated call success`() {
+  fun `should change wallpaper when interval is of 3 days on startAutomaticWallpaperChangerProcess call success`() {
     val currentTime = System.currentTimeMillis()
     val timeStamp = currentTime - TimeUnit.DAYS.toMillis(3)
     val testScheduler = TestScheduler()
@@ -486,7 +486,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionsImageModelList))
 
-    automaticWallpaperChangerUseCase.handleServiceCreated()
+    automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
 
     verify(timeManager, times(2)).getCurrentTimeInMilliSeconds()
@@ -504,7 +504,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   }
 
   @Test
-  fun `should change wallpaper when interval is of 3 days on handleServiceCreated call success and device was dozed`() {
+  fun `should change wallpaper when interval is of 3 days on startAutomaticWallpaperChangerProcess call success and device was dozed`() {
     val currentTime = System.currentTimeMillis()
     val timeStamp = currentTime - TimeUnit.DAYS.toMillis(6)
     val testScheduler = TestScheduler()
@@ -524,7 +524,7 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
         Single.just(collectionsImageModelList))
 
-    automaticWallpaperChangerUseCase.handleServiceCreated()
+    automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
 
     verify(timeManager, times(2)).getCurrentTimeInMilliSeconds()
