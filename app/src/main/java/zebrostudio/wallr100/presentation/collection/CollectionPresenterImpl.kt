@@ -288,19 +288,23 @@ class CollectionPresenterImpl(
               selectedItemsMap)
           collectionImagesUseCase.deleteImages(
               collectionImagesPresenterEntityMapper.mapFromPresenterEntity(listOfDeletableImages))
+              .onErrorResumeNext(
+                  collectionImagesUseCase.reorderImage(collectionImagesPresenterEntityMapper
+                      .mapFromPresenterEntity(backupOfOriginalImageList)))
               .map {
                 collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
               }
               .observeOn(postExecutionThread.scheduler)
               .autoDisposable(collectionView!!.getScope())
               .subscribe({
-                redecorateViewAfterDeletion(it, listOfDeletableImages)
-              }, {
+                if (it.size == backupOfOriginalImageList.size) {
+                  restoreViewAfterUnsuccessfulDeletion(it)
+                } else {
+                  redecorateViewAfterDeletion(it, listOfDeletableImages)
+                  stopWallpaperChangerIfNecessary(it.size)
+                }
                 hideCabIfActive()
-                collectionView?.setImagesList(backupOfOriginalImageList)
-                collectionView?.updateChangesInEveryItemView()
-                collectionView?.showUnableToDeleteErrorMessage()
-              })
+              }, {})
         }
       }
     }
@@ -432,7 +436,6 @@ class CollectionPresenterImpl(
     if (collectionPresenterEntityList.isEmpty()) {
       showEmptyCollectionView()
     }
-    stopWallpaperChangerIfNecessary(collectionPresenterEntityList.size)
     deletableItemsList.size.let {
       if (it == SINGLE_ITEM_SIZE) {
         collectionView?.showSingleImageDeleteSuccessMessage()
@@ -440,7 +443,12 @@ class CollectionPresenterImpl(
         collectionView?.showMultipleImageDeleteSuccessMessage(it)
       }
     }
-    hideCabIfActive()
+  }
+
+  private fun restoreViewAfterUnsuccessfulDeletion(originalList: List<CollectionsPresenterEntity>) {
+    collectionView?.setImagesList(originalList)
+    collectionView?.updateChangesInEveryItemView()
+    collectionView?.showUnableToDeleteErrorMessage()
   }
 
   private fun stopWallpaperChangerIfNecessary(size: Int) {

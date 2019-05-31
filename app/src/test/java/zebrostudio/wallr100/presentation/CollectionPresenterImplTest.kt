@@ -2,6 +2,8 @@ package zebrostudio.wallr100.presentation
 
 import android.graphics.Bitmap
 import android.net.Uri
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -14,6 +16,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyList
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
@@ -1266,6 +1269,275 @@ class CollectionPresenterImplTest {
     verify(collectionView).removeBlurFromScreen()
     verify(collectionView).showGenericErrorMessage()
     verify(collectionView).enableBackPress()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should delete multiple wallpapers and stop wallpaper changer on handleDeleteWallpaperMenuItemClicked call success`() {
+    val item0 = getCollectionImagesPresenterEntity()
+    val item1 = getCollectionImagesPresenterEntity()
+    val item2 = getCollectionImagesPresenterEntity()
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
+    val restoreCollectionImagesModelList = listOf(getCollectionsImageModel())
+    val collectionPresenterEntityList = mutableListOf(item0, item1, item2)
+    val resultCollectionPresenterEntityList = listOf(getCollectionImagesPresenterEntity())
+    val selectedItemsMap = hashMapOf(Pair(0, item0), Pair(2, item2))
+    val selectedItemsCopy = HashMap<Int, CollectionsPresenterEntity>()
+    selectedItemsCopy.putAll(selectedItemsMap)
+    val captor = argumentCaptor<List<CollectionsPresenterEntity>>()
+    val inOrder = inOrder(collectionView)
+    `when`(collectionImagesPresenterEntityMapper
+        .mapFromPresenterEntity(anyList())).thenReturn(collectionImagesModelList,
+        restoreCollectionImagesModelList)
+    `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(collectionImagesModelList))
+        .thenReturn(resultCollectionPresenterEntityList)
+    `when`(collectionView.isCabActive()).thenReturn(true)
+    `when`(collectionImagesUseCase.deleteImages(collectionImagesModelList))
+        .thenReturn(Single.just(collectionImagesModelList))
+    `when`(collectionImagesUseCase.reorderImage(restoreCollectionImagesModelList))
+        .thenReturn(Single.just(restoreCollectionImagesModelList))
+
+    collectionPresenterImpl.handleDeleteWallpaperMenuItemClicked(collectionPresenterEntityList,
+        selectedItemsMap)
+
+    verify(collectionImagesUseCase).deleteImages(collectionImagesModelList)
+    verify(collectionImagesUseCase).reorderImage(restoreCollectionImagesModelList)
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
+    verify(collectionImagesPresenterEntityMapper, times(2)).mapFromPresenterEntity(captor.capture())
+    verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionImagesModelList)
+    assertEquals(listOf(item2, item0), captor.firstValue)
+    assertEquals(listOf(item0, item1, item2), captor.secondValue)
+    listOf(2, 0).forEach {
+      inOrder.verify(collectionView).removeItemView(it)
+    }
+    verify(collectionView).getScope()
+    verify(collectionView).setImagesList(resultCollectionPresenterEntityList)
+    verify(collectionView).showMultipleImageDeleteSuccessMessage(2)
+    verify(collectionView).isCabActive()
+    verify(collectionView).hideCab()
+    verify(collectionView).hideWallpaperChangerLayout()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should delete multiple wallpapers on handleDeleteWallpaperMenuItemClicked call success`() {
+    val item0 = getCollectionImagesPresenterEntity()
+    val item1 = getCollectionImagesPresenterEntity()
+    val item2 = getCollectionImagesPresenterEntity()
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
+    val restoreCollectionImagesModelList = listOf(getCollectionsImageModel())
+    val collectionPresenterEntityList = mutableListOf(item0, item1, item2)
+    val resultCollectionPresenterEntityList =
+        listOf(getCollectionImagesPresenterEntity(), getCollectionImagesPresenterEntity())
+    val selectedItemsMap = hashMapOf(Pair(0, item0), Pair(2, item2))
+    val selectedItemsCopy = HashMap<Int, CollectionsPresenterEntity>()
+    selectedItemsCopy.putAll(selectedItemsMap)
+    val captor = argumentCaptor<List<CollectionsPresenterEntity>>()
+    val inOrder = inOrder(collectionView)
+    `when`(collectionImagesPresenterEntityMapper
+        .mapFromPresenterEntity(anyList())).thenReturn(collectionImagesModelList,
+        restoreCollectionImagesModelList)
+    `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(collectionImagesModelList))
+        .thenReturn(resultCollectionPresenterEntityList)
+    `when`(collectionView.isCabActive()).thenReturn(true)
+    `when`(collectionImagesUseCase.deleteImages(collectionImagesModelList))
+        .thenReturn(Single.just(collectionImagesModelList))
+    `when`(collectionImagesUseCase.reorderImage(restoreCollectionImagesModelList))
+        .thenReturn(Single.just(restoreCollectionImagesModelList))
+
+    collectionPresenterImpl.handleDeleteWallpaperMenuItemClicked(collectionPresenterEntityList,
+        selectedItemsMap)
+
+    verify(collectionImagesUseCase).deleteImages(collectionImagesModelList)
+    verify(collectionImagesUseCase).reorderImage(restoreCollectionImagesModelList)
+    verify(collectionImagesPresenterEntityMapper, times(2)).mapFromPresenterEntity(captor.capture())
+    verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionImagesModelList)
+    assertEquals(listOf(item2, item0), captor.firstValue)
+    assertEquals(listOf(item0, item1, item2), captor.secondValue)
+    listOf(2, 0).forEach {
+      inOrder.verify(collectionView).removeItemView(it)
+    }
+    verify(collectionView).getScope()
+    verify(collectionView).setImagesList(resultCollectionPresenterEntityList)
+    verify(collectionView).showMultipleImageDeleteSuccessMessage(2)
+    verify(collectionView).isCabActive()
+    verify(collectionView).hideCab()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should restore multiple wallpapers on handleDeleteWallpaperMenuItemClicked call failure`() {
+    val item0 = getCollectionImagesPresenterEntity()
+    val item1 = getCollectionImagesPresenterEntity()
+    val item2 = getCollectionImagesPresenterEntity()
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
+    val restoreCollectionImagesModelList = listOf(getCollectionsImageModel())
+    val collectionPresenterEntityList = mutableListOf(item0, item1, item2)
+    val selectedItemsMap = hashMapOf(Pair(0, item0), Pair(2, item2))
+    val selectedItemsCopy = HashMap<Int, CollectionsPresenterEntity>()
+    selectedItemsCopy.putAll(selectedItemsMap)
+    val captor = argumentCaptor<List<CollectionsPresenterEntity>>()
+    val inOrder = inOrder(collectionView)
+    `when`(collectionImagesPresenterEntityMapper
+        .mapFromPresenterEntity(anyList())).thenReturn(collectionImagesModelList,
+        restoreCollectionImagesModelList)
+    `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
+        restoreCollectionImagesModelList))
+        .thenReturn(listOf(item0, item1, item2))
+    `when`(collectionView.isCabActive()).thenReturn(true)
+    `when`(collectionImagesUseCase.deleteImages(collectionImagesModelList))
+        .thenReturn(Single.error(Exception()))
+    `when`(collectionImagesUseCase.reorderImage(restoreCollectionImagesModelList))
+        .thenReturn(Single.just(restoreCollectionImagesModelList))
+
+    collectionPresenterImpl.handleDeleteWallpaperMenuItemClicked(collectionPresenterEntityList,
+        selectedItemsMap)
+
+    verify(collectionImagesUseCase).deleteImages(collectionImagesModelList)
+    verify(collectionImagesUseCase).reorderImage(restoreCollectionImagesModelList)
+    verify(collectionImagesPresenterEntityMapper, times(2)).mapFromPresenterEntity(captor.capture())
+    verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(
+        restoreCollectionImagesModelList)
+    assertEquals(listOf(item2, item0), captor.firstValue)
+    assertEquals(listOf(item0, item1, item2), captor.secondValue)
+    listOf(2, 0).forEach {
+      inOrder.verify(collectionView).removeItemView(it)
+    }
+    verify(collectionView).getScope()
+    verify(collectionView).setImagesList(listOf(item0, item1, item2))
+    verify(collectionView).updateChangesInEveryItemView()
+    verify(collectionView).isCabActive()
+    verify(collectionView).hideCab()
+    verify(collectionView).showUnableToDeleteErrorMessage()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should delete single wallpaper and stop wallpaper changer on handleDeleteWallpaperMenuItemClicked call success`() {
+    val item0 = getCollectionImagesPresenterEntity()
+    val item1 = getCollectionImagesPresenterEntity()
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
+    val restoreCollectionImagesModelList = listOf(getCollectionsImageModel())
+    val collectionPresenterEntityList = mutableListOf(item0, item1)
+    val resultCollectionPresenterEntityList = listOf(getCollectionImagesPresenterEntity())
+    val selectedItemsMap = hashMapOf(Pair(0, item0))
+    val selectedItemsCopy = HashMap<Int, CollectionsPresenterEntity>()
+    selectedItemsCopy.putAll(selectedItemsMap)
+    val captor = argumentCaptor<List<CollectionsPresenterEntity>>()
+    `when`(collectionImagesPresenterEntityMapper
+        .mapFromPresenterEntity(anyList())).thenReturn(collectionImagesModelList,
+        restoreCollectionImagesModelList)
+    `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(collectionImagesModelList))
+        .thenReturn(resultCollectionPresenterEntityList)
+    `when`(collectionView.isCabActive()).thenReturn(true)
+    `when`(collectionImagesUseCase.deleteImages(collectionImagesModelList))
+        .thenReturn(Single.just(collectionImagesModelList))
+    `when`(collectionImagesUseCase.reorderImage(restoreCollectionImagesModelList))
+        .thenReturn(Single.just(restoreCollectionImagesModelList))
+
+    collectionPresenterImpl.handleDeleteWallpaperMenuItemClicked(collectionPresenterEntityList,
+        selectedItemsMap)
+
+    verify(collectionImagesUseCase).deleteImages(collectionImagesModelList)
+    verify(collectionImagesUseCase).reorderImage(restoreCollectionImagesModelList)
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
+    verify(collectionImagesPresenterEntityMapper, times(2)).mapFromPresenterEntity(captor.capture())
+    verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionImagesModelList)
+    assertEquals(listOf(item0), captor.firstValue)
+    assertEquals(listOf(item0, item1), captor.secondValue)
+    verify(collectionView).removeItemView(0)
+    verify(collectionView).getScope()
+    verify(collectionView).setImagesList(resultCollectionPresenterEntityList)
+    verify(collectionView).showSingleImageDeleteSuccessMessage()
+    verify(collectionView).isCabActive()
+    verify(collectionView).hideCab()
+    verify(collectionView).hideWallpaperChangerLayout()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should delete single wallpaper on handleDeleteWallpaperMenuItemClicked call success`() {
+    val item0 = getCollectionImagesPresenterEntity()
+    val item1 = getCollectionImagesPresenterEntity()
+    val item2 = getCollectionImagesPresenterEntity()
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
+    val restoreCollectionImagesModelList = listOf(getCollectionsImageModel())
+    val collectionPresenterEntityList = mutableListOf(item0, item1, item2)
+    val resultCollectionPresenterEntityList =
+        listOf(getCollectionImagesPresenterEntity(), getCollectionImagesPresenterEntity())
+    val selectedItemsMap = hashMapOf(Pair(0, item0))
+    val selectedItemsCopy = HashMap<Int, CollectionsPresenterEntity>()
+    selectedItemsCopy.putAll(selectedItemsMap)
+    val captor = argumentCaptor<List<CollectionsPresenterEntity>>()
+    `when`(collectionImagesPresenterEntityMapper
+        .mapFromPresenterEntity(anyList())).thenReturn(collectionImagesModelList,
+        restoreCollectionImagesModelList)
+    `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(collectionImagesModelList))
+        .thenReturn(resultCollectionPresenterEntityList)
+    `when`(collectionView.isCabActive()).thenReturn(true)
+    `when`(collectionImagesUseCase.deleteImages(collectionImagesModelList))
+        .thenReturn(Single.just(collectionImagesModelList))
+    `when`(collectionImagesUseCase.reorderImage(restoreCollectionImagesModelList))
+        .thenReturn(Single.just(restoreCollectionImagesModelList))
+
+    collectionPresenterImpl.handleDeleteWallpaperMenuItemClicked(collectionPresenterEntityList,
+        selectedItemsMap)
+
+    verify(collectionImagesUseCase).deleteImages(collectionImagesModelList)
+    verify(collectionImagesUseCase).reorderImage(restoreCollectionImagesModelList)
+    verify(collectionImagesPresenterEntityMapper, times(2)).mapFromPresenterEntity(captor.capture())
+    verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionImagesModelList)
+    assertEquals(listOf(item0), captor.firstValue)
+    assertEquals(listOf(item0, item1, item2), captor.secondValue)
+    verify(collectionView).removeItemView(0)
+    verify(collectionView).getScope()
+    verify(collectionView).setImagesList(resultCollectionPresenterEntityList)
+    verify(collectionView).showSingleImageDeleteSuccessMessage()
+    verify(collectionView).isCabActive()
+    verify(collectionView).hideCab()
+    verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test
+  fun `should restore single wallpaper on handleDeleteWallpaperMenuItemClicked call failure`() {
+    val item0 = getCollectionImagesPresenterEntity()
+    val item1 = getCollectionImagesPresenterEntity()
+    val collectionImagesModelList = listOf(getCollectionsImageModel())
+    val restoreCollectionImagesModelList = listOf(getCollectionsImageModel())
+    val collectionPresenterEntityList = mutableListOf(item0, item1)
+    val selectedItemsMap = hashMapOf(Pair(0, item0))
+    val selectedItemsCopy = HashMap<Int, CollectionsPresenterEntity>()
+    selectedItemsCopy.putAll(selectedItemsMap)
+    val captor = argumentCaptor<List<CollectionsPresenterEntity>>()
+    `when`(collectionImagesPresenterEntityMapper
+        .mapFromPresenterEntity(anyList())).thenReturn(collectionImagesModelList,
+        restoreCollectionImagesModelList)
+    `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
+        restoreCollectionImagesModelList))
+        .thenReturn(listOf(item0, item1))
+    `when`(collectionView.isCabActive()).thenReturn(true)
+    `when`(collectionImagesUseCase.deleteImages(collectionImagesModelList))
+        .thenReturn(Single.error(Exception()))
+    `when`(collectionImagesUseCase.reorderImage(restoreCollectionImagesModelList))
+        .thenReturn(Single.just(restoreCollectionImagesModelList))
+
+    collectionPresenterImpl.handleDeleteWallpaperMenuItemClicked(collectionPresenterEntityList,
+        selectedItemsMap)
+
+    verify(collectionImagesUseCase).deleteImages(collectionImagesModelList)
+    verify(collectionImagesUseCase).reorderImage(restoreCollectionImagesModelList)
+    verify(collectionImagesPresenterEntityMapper, times(2)).mapFromPresenterEntity(captor.capture())
+    verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(
+        restoreCollectionImagesModelList)
+    assertEquals(listOf(item0), captor.firstValue)
+    assertEquals(listOf(item0, item1), captor.secondValue)
+    verify(collectionView).removeItemView(0)
+    verify(collectionView).getScope()
+    verify(collectionView).setImagesList(listOf(item0, item1))
+    verify(collectionView).updateChangesInEveryItemView()
+    verify(collectionView).isCabActive()
+    verify(collectionView).hideCab()
+    verify(collectionView).showUnableToDeleteErrorMessage()
     verifyPostExecutionThreadSchedulerCall()
   }
 
