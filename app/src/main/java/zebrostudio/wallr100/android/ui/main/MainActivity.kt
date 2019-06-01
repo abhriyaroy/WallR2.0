@@ -57,7 +57,7 @@ import zebrostudio.wallr100.presentation.main.MainContract
 import zebrostudio.wallr100.presentation.main.MainContract.MainView
 import javax.inject.Inject
 
-private const val RIPPLE_DURATION = 250
+private const val RIPPLE_DURATION: Long = 250
 private const val MAIL_URI = "mailto:"
 
 class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
@@ -250,7 +250,7 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
         guillotineMenu,
         guillotineMenu.hamburgerGuillotineMenu,
         contentHamburger)
-        .setStartDelay(RIPPLE_DURATION.toLong())
+        .setStartDelay(RIPPLE_DURATION)
         .setActionBarViewForAnimation(toolbar)
         .setGuillotineListener(guillotineListener)
         .setClosedOnStart(true)

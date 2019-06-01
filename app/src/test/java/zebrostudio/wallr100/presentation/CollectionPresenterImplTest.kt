@@ -39,6 +39,7 @@ import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEn
 import zebrostudio.wallr100.presentation.collection.mapper.CollectionImagesPresenterEntityMapper
 import zebrostudio.wallr100.presentation.datafactory.CollectionImagesPresenterEntityFactory.getCollectionImagesPresenterEntity
 import java.util.UUID.randomUUID
+import java.util.concurrent.TimeUnit
 
 @RunWith(MockitoJUnitRunner::class)
 class CollectionPresenterImplTest {
@@ -874,7 +875,8 @@ class CollectionPresenterImplTest {
 
   @Test
   fun `should show wallpaper changer interval dialog with 30 minutes highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call success`() {
-    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(1800000)
+    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(
+        TimeUnit.MINUTES.toMillis(30))
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
 
@@ -884,7 +886,8 @@ class CollectionPresenterImplTest {
 
   @Test
   fun `should show wallpaper changer interval dialog with 1 hour highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call success`() {
-    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(3600000)
+    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(
+        TimeUnit.HOURS.toMillis(1))
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
 
@@ -894,7 +897,8 @@ class CollectionPresenterImplTest {
 
   @Test
   fun `should show wallpaper changer interval dialog with 6 hours highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call success`() {
-    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(21600000)
+    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(
+        TimeUnit.HOURS.toMillis(6))
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
 
@@ -904,7 +908,8 @@ class CollectionPresenterImplTest {
 
   @Test
   fun `should show wallpaper changer interval dialog with 1 day highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call success`() {
-    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(86400000)
+    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(
+        TimeUnit.DAYS.toMillis(1))
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
 
@@ -914,7 +919,8 @@ class CollectionPresenterImplTest {
 
   @Test
   fun `should show wallpaper changer interval dialog with 3 days highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call success`() {
-    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(259200000)
+    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(
+        TimeUnit.DAYS.toMillis(3))
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
 
@@ -924,122 +930,128 @@ class CollectionPresenterImplTest {
 
   @Test
   fun `should show wallpaper changer interval dialog with 30 minutes highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call failure`() {
-    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(999999999999)
+    `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(
+        Int.MAX_VALUE.toLong())
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
 
     verify(collectionImagesUseCase).getAutomaticWallpaperChangerInterval()
-    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(1800000)
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(
+        TimeUnit.MINUTES.toMillis(30))
     verify(collectionView).showWallpaperChangerIntervalDialog(0)
   }
 
   @Test
   fun `should show interval updated message on updateWallpaperChangerInterval call success with 30 minutes interval`() {
-    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(1800000))
+    `when`(
+        collectionImagesUseCase.setAutomaticWallpaperChangerInterval(TimeUnit.MINUTES.toMillis(30)))
         .thenReturn(INTERVAL_UPDATED)
 
     collectionPresenterImpl.updateWallpaperChangerInterval(0)
 
-    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(1800000)
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(
+        TimeUnit.MINUTES.toMillis(30))
     verify(collectionView).showWallpaperChangerIntervalUpdatedSuccessMessage()
   }
 
   @Test
   fun `should show service restarted message on updateWallpaperChangerInterval call success with 30 minutes interval`() {
-    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(1800000))
+    `when`(
+        collectionImagesUseCase.setAutomaticWallpaperChangerInterval(TimeUnit.MINUTES.toMillis(30)))
         .thenReturn(SERVICE_RESTARTED)
 
     collectionPresenterImpl.updateWallpaperChangerInterval(0)
 
-    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(1800000)
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(
+        TimeUnit.MINUTES.toMillis(30))
     verify(collectionView).showWallpaperChangerRestartedSuccessMessage()
   }
 
   @Test
   fun `should show interval updated message on updateWallpaperChangerInterval call success with 1 hour interval`() {
-    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(3600000))
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(TimeUnit.HOURS.toMillis(1)))
         .thenReturn(INTERVAL_UPDATED)
 
     collectionPresenterImpl.updateWallpaperChangerInterval(1)
 
-    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(3600000)
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(TimeUnit.HOURS.toMillis(1))
     verify(collectionView).showWallpaperChangerIntervalUpdatedSuccessMessage()
   }
 
   @Test
   fun `should show service restarted message on updateWallpaperChangerInterval call success with 1 hour interval`() {
-    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(3600000))
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(TimeUnit.HOURS.toMillis(1)))
         .thenReturn(SERVICE_RESTARTED)
 
     collectionPresenterImpl.updateWallpaperChangerInterval(1)
 
-    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(3600000)
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(TimeUnit.HOURS.toMillis(1))
     verify(collectionView).showWallpaperChangerRestartedSuccessMessage()
   }
 
   @Test
   fun `should show interval updated message on updateWallpaperChangerInterval call success with 6 hours interval`() {
-    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(21600000))
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(TimeUnit.HOURS.toMillis(6)))
         .thenReturn(INTERVAL_UPDATED)
 
     collectionPresenterImpl.updateWallpaperChangerInterval(2)
 
-    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(21600000)
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(TimeUnit.HOURS.toMillis(6))
     verify(collectionView).showWallpaperChangerIntervalUpdatedSuccessMessage()
   }
 
   @Test
   fun `should show service restarted message on updateWallpaperChangerInterval call success with 6 hours interval`() {
-    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(21600000))
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(TimeUnit.HOURS.toMillis(6)))
         .thenReturn(SERVICE_RESTARTED)
 
     collectionPresenterImpl.updateWallpaperChangerInterval(2)
 
-    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(21600000)
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(TimeUnit.HOURS.toMillis(6))
     verify(collectionView).showWallpaperChangerRestartedSuccessMessage()
   }
 
   @Test
   fun `should show interval updated message on updateWallpaperChangerInterval call success with 1 day interval`() {
-    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(86400000))
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(TimeUnit.DAYS.toMillis(1)))
         .thenReturn(INTERVAL_UPDATED)
 
     collectionPresenterImpl.updateWallpaperChangerInterval(3)
 
-    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(86400000)
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(TimeUnit.DAYS.toMillis(1))
     verify(collectionView).showWallpaperChangerIntervalUpdatedSuccessMessage()
   }
 
   @Test
   fun `should show service restarted message on updateWallpaperChangerInterval call success with 1 day interval`() {
-    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(86400000))
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(TimeUnit.DAYS.toMillis(1)))
         .thenReturn(SERVICE_RESTARTED)
 
     collectionPresenterImpl.updateWallpaperChangerInterval(3)
 
-    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(86400000)
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(TimeUnit.DAYS.toMillis(1))
     verify(collectionView).showWallpaperChangerRestartedSuccessMessage()
   }
 
   @Test
   fun `should show interval updated message on updateWallpaperChangerInterval call success with 3 days interval`() {
-    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(259200000))
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(TimeUnit.DAYS.toMillis(3)))
         .thenReturn(INTERVAL_UPDATED)
 
     collectionPresenterImpl.updateWallpaperChangerInterval(4)
 
-    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(259200000)
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(TimeUnit.DAYS.toMillis(3))
     verify(collectionView).showWallpaperChangerIntervalUpdatedSuccessMessage()
   }
 
   @Test
   fun `should show service restarted message on updateWallpaperChangerInterval call success with 3 days interval`() {
-    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(259200000))
+    `when`(collectionImagesUseCase.setAutomaticWallpaperChangerInterval(TimeUnit.DAYS.toMillis(3)))
         .thenReturn(SERVICE_RESTARTED)
 
     collectionPresenterImpl.updateWallpaperChangerInterval(4)
 
-    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(259200000)
+    verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(TimeUnit.DAYS.toMillis(3))
     verify(collectionView).showWallpaperChangerRestartedSuccessMessage()
   }
 

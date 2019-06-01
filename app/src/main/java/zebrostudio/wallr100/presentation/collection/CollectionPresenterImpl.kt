@@ -88,15 +88,7 @@ class CollectionPresenterImpl(
   ) {
     val copyOfImageListPriorToReordering = mutableListOf<CollectionsPresenterEntity>()
     copyOfImageListPriorToReordering.addAll(imagePathList)
-    if (fromPosition < toPosition) {
-      for (i in fromPosition until toPosition) {
-        Collections.swap(imagePathList, i, i + 1)
-      }
-    } else {
-      for (i in fromPosition downTo toPosition + 1) {
-        Collections.swap(imagePathList, i, i - 1)
-      }
-    }
+    reorderImageList(imagePathList, fromPosition, toPosition)
     collectionView?.updateItemViewMovement(fromPosition, toPosition)
     collectionImagesUseCase.reorderImage(
         collectionImagesPresenterEntityMapper.mapFromPresenterEntity(imagePathList))
@@ -362,6 +354,22 @@ class CollectionPresenterImpl(
     }
   }
 
+  private fun reorderImageList(
+    imagePathList: MutableList<CollectionsPresenterEntity>,
+    fromPosition: Int,
+    toPosition: Int
+  ) {
+    if (fromPosition < toPosition) {
+      for (i in fromPosition until toPosition) {
+        Collections.swap(imagePathList, i, i + 1)
+      }
+    } else {
+      for (i in fromPosition downTo toPosition + 1) {
+        Collections.swap(imagePathList, i, i - 1)
+      }
+    }
+  }
+
   private fun showEmptyCollectionView() {
     collectionView?.clearImages()
     collectionView?.clearAllSelectedItems()
@@ -392,7 +400,7 @@ class CollectionPresenterImpl(
     collectionView?.enableBackPress()
   }
 
-  private fun handleCrystallizationDoOnSubscribe(){
+  private fun handleCrystallizationDoOnSubscribe() {
     collectionView?.blurScreen()
     collectionView?.showIndefiniteLoaderWithMessage(
         resourceUtils.getStringResource(R.string.crystallizing_wallpaper_wait_message)
@@ -400,7 +408,7 @@ class CollectionPresenterImpl(
     collectionView?.disableBackPress()
   }
 
-  private fun handleCrystallizationOnError(throwable: Throwable){
+  private fun handleCrystallizationOnError(throwable: Throwable) {
     hideCabIfActive()
     collectionView?.removeBlurFromScreen()
     if (throwable is AlreadyPresentInCollectionException) {
