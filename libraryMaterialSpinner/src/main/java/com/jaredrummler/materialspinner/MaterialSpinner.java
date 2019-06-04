@@ -14,9 +14,6 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -29,6 +26,9 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
@@ -381,37 +381,14 @@ public class MaterialSpinner extends TextView {
   }
 
   /**
-   * Register a callback to be invoked when the {@link PopupWindow} is shown but the user didn't select an item.
+   * Register a callback to be invoked when the {@link PopupWindow} is shown but the user didn't
+   * select an item.
    *
    * @param onNothingSelectedListener the callback that will run
    */
   public void setOnNothingSelectedListener(
       @Nullable OnNothingSelectedListener onNothingSelectedListener) {
     this.onNothingSelectedListener = onNothingSelectedListener;
-  }
-
-  /**
-   * Set the dropdown items
-   *
-   * @param items A list of items
-   * @param <T> The item type
-   */
-  public <T> void setItems(@NonNull T... items) {
-    setItems(Arrays.asList(items));
-  }
-
-  /**
-   * Set the dropdown items
-   *
-   * @param items A list of items
-   * @param <T> The item type
-   */
-  public <T> void setItems(@NonNull List<T> items) {
-    adapter = new MaterialSpinnerAdapter<>(getContext(), items)
-        .setPopupPadding(popupPaddingLeft, popupPaddingTop, popupPaddingRight, popupPaddingBottom)
-        .setBackgroundSelector(backgroundSelector)
-        .setTextColor(textColor);
-    setAdapterInternal(adapter);
   }
 
   /**
@@ -477,6 +454,30 @@ public class MaterialSpinner extends TextView {
     }
     //noinspection unchecked
     return adapter.getItems();
+  }
+
+  /**
+   * Set the dropdown items
+   *
+   * @param items A list of items
+   * @param <T> The item type
+   */
+  public <T> void setItems(@NonNull T... items) {
+    setItems(Arrays.asList(items));
+  }
+
+  /**
+   * Set the dropdown items
+   *
+   * @param items A list of items
+   * @param <T> The item type
+   */
+  public <T> void setItems(@NonNull List<T> items) {
+    adapter = new MaterialSpinnerAdapter<>(getContext(), items)
+        .setPopupPadding(popupPaddingLeft, popupPaddingTop, popupPaddingRight, popupPaddingBottom)
+        .setBackgroundSelector(backgroundSelector)
+        .setTextColor(textColor);
+    setAdapterInternal(adapter);
   }
 
   /**
@@ -611,9 +612,10 @@ public class MaterialSpinner extends TextView {
   public interface OnItemSelectedListener<T> {
 
     /**
-     * <p>Callback method to be invoked when an item in this view has been selected. This callback is invoked only when
-     * the newly selected position is different from the previously selected position or if there was no selected
-     * item.</p>
+     * <p>Callback method to be invoked when an item in this view has been selected. This callback
+     * is invoked only when
+     * the newly selected position is different from the previously selected position or if there
+     * was no selected item.</p>
      *
      * @param view The {@link MaterialSpinner} view
      * @param position The position of the view in the adapter
@@ -624,12 +626,14 @@ public class MaterialSpinner extends TextView {
   }
 
   /**
-   * Interface definition for a callback to be invoked when the dropdown is dismissed and no item was selected.
+   * Interface definition for a callback to be invoked when the dropdown is dismissed and no item
+   * was selected.
    */
   public interface OnNothingSelectedListener {
 
     /**
-     * Callback method to be invoked when the {@link PopupWindow} is dismissed and no item was selected.
+     * Callback method to be invoked when the {@link PopupWindow} is dismissed and no item was
+     * selected.
      *
      * @param spinner the {@link MaterialSpinner}
      */

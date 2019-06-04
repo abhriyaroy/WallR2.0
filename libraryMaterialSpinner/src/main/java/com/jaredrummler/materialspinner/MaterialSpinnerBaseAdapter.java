@@ -3,13 +3,13 @@ package com.jaredrummler.materialspinner;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
-import androidx.annotation.ColorInt;
-import androidx.annotation.DrawableRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
 import java.util.List;
 
 public abstract class MaterialSpinnerBaseAdapter<T> extends BaseAdapter {
@@ -112,12 +112,12 @@ public abstract class MaterialSpinnerBaseAdapter<T> extends BaseAdapter {
 
   public abstract List<T> getItems();
 
-  public void setHintEnabled(boolean isHintEnabled) {
-    this.isHintEnabled = isHintEnabled;
-  }
-
   public boolean isHintEnabled() {
     return this.isHintEnabled;
+  }
+
+  public void setHintEnabled(boolean isHintEnabled) {
+    this.isHintEnabled = isHintEnabled;
   }
 
   public MaterialSpinnerBaseAdapter<T> setTextColor(@ColorInt int textColor) {

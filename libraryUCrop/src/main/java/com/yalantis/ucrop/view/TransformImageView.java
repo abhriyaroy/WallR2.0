@@ -6,12 +6,12 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import androidx.annotation.IntRange;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.yalantis.ucrop.callback.BitmapLoadCallback;
 import com.yalantis.ucrop.model.ExifInfo;
 import com.yalantis.ucrop.util.BitmapLoadUtils;
@@ -78,10 +78,11 @@ public class TransformImageView extends ImageView {
   }
 
   /**
-   * Setter for {@link #mMaxBitmapSize} value.
-   * Be sure to call it before {@link #setImageURI(Uri)} or other image setters.
+   * Setter for {@link #mMaxBitmapSize} value. Be sure to call it before {@link #setImageURI(Uri)}
+   * or other image setters.
    *
-   * @param maxBitmapSize - max size for both width and height of bitmap that will be used in the view.
+   * @param maxBitmapSize - max size for both width and height of bitmap that will be used in the
+   * view.
    */
   public void setMaxBitmapSize(int maxBitmapSize) {
     mMaxBitmapSize = maxBitmapSize;
@@ -105,7 +106,8 @@ public class TransformImageView extends ImageView {
   }
 
   /**
-   * This method takes an Uri as a parameter, then calls method to decode it into Bitmap with specified size.
+   * This method takes an Uri as a parameter, then calls method to decode it into Bitmap with
+   * specified size.
    *
    * @param imageUri - image Uri
    * @throws Exception - can throw exception if having problems with decoding Uri or OOM.
@@ -139,8 +141,8 @@ public class TransformImageView extends ImageView {
   }
 
   /**
-   * @return - current image scale value.
-   * [1.0f - for original image, 2.0f - for 200% scaled image, etc.]
+   * @return - current image scale value. [1.0f - for original image, 2.0f - for 200% scaled image,
+   * etc.]
    */
   public float getCurrentScale() {
     return getMatrixScale(mCurrentImageMatrix);
@@ -252,8 +254,8 @@ public class TransformImageView extends ImageView {
   }
 
   /**
-   * When image is laid out {@link #mInitialImageCenter} and {@link #mInitialImageCenter}
-   * must be set.
+   * When image is laid out {@link #mInitialImageCenter} and {@link #mInitialImageCenter} must be
+   * set.
    */
   protected void onImageLaidOut() {
     final Drawable drawable = getDrawable();
@@ -291,8 +293,7 @@ public class TransformImageView extends ImageView {
   }
 
   /**
-   * This method logs given matrix X, Y, scale, and angle values.
-   * Can be used for debug.
+   * This method logs given matrix X, Y, scale, and angle values. Can be used for debug.
    */
   @SuppressWarnings("unused")
   protected void printMatrix(@NonNull String logPrefix, @NonNull Matrix matrix) {
@@ -313,9 +314,9 @@ public class TransformImageView extends ImageView {
   }
 
   /**
-   * This method updates current image corners and center points that are stored in
-   * {@link #mCurrentImageCorners} and {@link #mCurrentImageCenter} arrays.
-   * Those are used for several calculations.
+   * This method updates current image corners and center points that are stored in {@link
+   * #mCurrentImageCorners} and {@link #mCurrentImageCenter} arrays. Those are used for several
+   * calculations.
    */
   private void updateCurrentImagePoints() {
     mCurrentImageMatrix.mapPoints(mCurrentImageCorners, mInitialImageCorners);

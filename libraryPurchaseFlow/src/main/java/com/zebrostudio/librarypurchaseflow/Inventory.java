@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Represents a block of information about in-app items.
- * An Inventory is returned by such methods as {@link IabHelper#queryInventory}.
+ * Represents a block of information about in-app items. An Inventory is returned by such methods as
+ * {@link IabHelper#queryInventory}.
  */
 public class Inventory {
   Map<String, SkuDetails> skuMap = new HashMap<String, SkuDetails>();
@@ -37,12 +37,11 @@ public class Inventory {
   }
 
   /**
-   * Erase a purchase (locally) from the inventory, given its product ID. This just
-   * modifies the Inventory object locally and has no effect on the server! This is
-   * useful when you have an existing Inventory object which you know to be up to date,
-   * and you have just consumed an item successfully, which means that erasing its
-   * purchase data from the Inventory you already have is quicker than querying for
-   * a new Inventory.
+   * Erase a purchase (locally) from the inventory, given its product ID. This just modifies the
+   * Inventory object locally and has no effect on the server! This is useful when you have an
+   * existing Inventory object which you know to be up to date, and you have just consumed an item
+   * successfully, which means that erasing its purchase data from the Inventory you already have is
+   * quicker than querying for a new Inventory.
    */
   public void erasePurchase(String sku) {
     if (purchaseMap.containsKey(sku)) purchaseMap.remove(sku);

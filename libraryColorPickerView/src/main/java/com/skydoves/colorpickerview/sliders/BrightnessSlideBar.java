@@ -54,14 +54,17 @@ public class BrightnessSlideBar extends AbstractSlider {
   protected void getAttrs(AttributeSet attrs) {
     TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.BrightnessSlideBar);
     try {
-      if (a.hasValue(R.styleable.BrightnessSlideBar_selector_BrightnessSlider))
+      if (a.hasValue(R.styleable.BrightnessSlideBar_selector_BrightnessSlider)) {
         selectorDrawable = a.getDrawable(R.styleable.BrightnessSlideBar_selector_BrightnessSlider);
-      if (a.hasValue(R.styleable.BrightnessSlideBar_borderColor_BrightnessSlider))
+      }
+      if (a.hasValue(R.styleable.BrightnessSlideBar_borderColor_BrightnessSlider)) {
         borderColor =
             a.getColor(R.styleable.BrightnessSlideBar_borderColor_BrightnessSlider, borderColor);
-      if (a.hasValue(R.styleable.BrightnessSlideBar_borderSize_BrightnessSlider))
+      }
+      if (a.hasValue(R.styleable.BrightnessSlideBar_borderSize_BrightnessSlider)) {
         borderSize =
             a.getInt(R.styleable.BrightnessSlideBar_borderSize_BrightnessSlider, borderSize);
+      }
     } finally {
       a.recycle();
     }

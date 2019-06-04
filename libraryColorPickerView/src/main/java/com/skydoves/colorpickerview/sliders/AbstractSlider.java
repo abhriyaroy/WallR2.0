@@ -144,7 +144,9 @@ public abstract class AbstractSlider extends FrameLayout {
           selector.setPressed(false);
           return false;
       }
-    } else return false;
+    } else {
+      return false;
+    }
   }
 
   private void onTouchReceived(MotionEvent event) {

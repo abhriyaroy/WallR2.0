@@ -6,11 +6,11 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
-import androidx.annotation.ColorInt;
-import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import androidx.annotation.ColorInt;
+import androidx.core.content.ContextCompat;
 import com.yalantis.ucrop.R;
 
 public class HorizontalProgressWheelView extends View {

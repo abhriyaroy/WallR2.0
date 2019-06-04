@@ -5,6 +5,13 @@ package com.afollestad.materialcab
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.View.VISIBLE
+import android.view.ViewGroup
+import android.view.ViewStub
 import androidx.annotation.CheckResult
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
@@ -18,13 +25,6 @@ import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.View.VISIBLE
-import android.view.ViewGroup
-import android.view.ViewStub
 
 class MaterialCab(
   private var ctxt: AppCompatActivity?,

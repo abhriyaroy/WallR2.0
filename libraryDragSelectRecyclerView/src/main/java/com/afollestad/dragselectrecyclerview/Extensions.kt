@@ -1,10 +1,10 @@
 package com.afollestad.dragselectrecyclerview
 
 import android.content.Context
+import android.view.MotionEvent
 import androidx.annotation.DimenRes
 import androidx.annotation.Px
 import androidx.recyclerview.widget.RecyclerView
-import android.view.MotionEvent
 
 @Px internal fun Context.dimen(@DimenRes res: Int): Int {
   return resources.getDimensionPixelSize(res)
@@ -17,6 +17,7 @@ internal fun ListAdapter<*>.isEmpty(): Boolean {
 }
 
 internal fun androidx.recyclerview.widget.RecyclerView.getItemPosition(e: MotionEvent): Int {
-  val v = findChildViewUnder(e.x, e.y) ?: return androidx.recyclerview.widget.RecyclerView.NO_POSITION
+  val v =
+      findChildViewUnder(e.x, e.y) ?: return androidx.recyclerview.widget.RecyclerView.NO_POSITION
   return getChildAdapterPosition(v)
 }

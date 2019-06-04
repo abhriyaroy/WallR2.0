@@ -10,13 +10,13 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.os.Build;
+import android.util.AttributeSet;
+import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import androidx.annotation.FloatRange;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.AttributeSet;
-import android.view.View;
-import android.view.animation.DecelerateInterpolator;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -56,6 +56,7 @@ public class ExpandIconView extends View {
   private int padding;
   @Nullable
   private ValueAnimator arrowAnimator;
+
   public ExpandIconView(@NonNull Context context) {
     this(context, null);
   }

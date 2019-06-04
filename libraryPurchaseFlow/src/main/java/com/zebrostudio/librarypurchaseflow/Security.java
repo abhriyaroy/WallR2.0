@@ -12,13 +12,11 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 
 /**
- * Security-related methods. For a secure implementation, all of this code
- * should be implemented on a server that communicates with the
- * application on the device. For the sake of simplicity and clarity of this
- * example, this code is included here and is executed on the device. If you
- * must verify the purchases on the phone, you should obfuscate this code to
- * make it harder for an attacker to replace the code with stubs that treat all
- * purchases as verified.
+ * Security-related methods. For a secure implementation, all of this code should be implemented on
+ * a server that communicates with the application on the device. For the sake of simplicity and
+ * clarity of this example, this code is included here and is executed on the device. If you must
+ * verify the purchases on the phone, you should obfuscate this code to make it harder for an
+ * attacker to replace the code with stubs that treat all purchases as verified.
  */
 public class Security {
   private static final String TAG = "IABUtil/Security";
@@ -27,10 +25,9 @@ public class Security {
   private static final String SIGNATURE_ALGORITHM = "SHA1withRSA";
 
   /**
-   * Verifies that the data was signed with the given signature, and returns
-   * the verified purchase. The data is in JSON format and signed
-   * with a private key. The data also contains the {@link PurchaseState}
-   * and product ID of the purchase.
+   * Verifies that the data was signed with the given signature, and returns the verified purchase.
+   * The data is in JSON format and signed with a private key. The data also contains the {@link
+   * PurchaseState} and product ID of the purchase.
    *
    * @param base64PublicKey the base64-encoded public key to use for verifying.
    * @param signedData the signed JSON string (signed, not encrypted)
@@ -63,8 +60,7 @@ public class Security {
     }*/
 
   /**
-   * Generates a PublicKey instance from a string containing the
-   * Base64-encoded public key.
+   * Generates a PublicKey instance from a string containing the Base64-encoded public key.
    *
    * @param encodedPublicKey Base64-encoded public key
    * @throws IllegalArgumentException if encodedPublicKey is invalid
@@ -86,8 +82,8 @@ public class Security {
   }
 
   /**
-   * Verifies that the signature from the server matches the computed
-   * signature on the data.  Returns true if the data is correctly signed.
+   * Verifies that the signature from the server matches the computed signature on the data.
+   * Returns true if the data is correctly signed.
    *
    * @param publicKey public key associated with the developer account
    * @param signedData signed data from server

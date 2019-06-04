@@ -5,14 +5,8 @@ import android.graphics.RectF;
 public class RectUtils {
 
   /**
-   * Gets a float array of the 2D coordinates representing a rectangles
-   * corners.
-   * The order of the corners in the float array is:
-   * 0------->1
-   * ^        |
-   * |        |
-   * |        v
-   * 3<-------2
+   * Gets a float array of the 2D coordinates representing a rectangles corners. The order of the
+   * corners in the float array is: 0------->1 ^        | |        | |        v 3<-------2
    *
    * @param r the rectangle to get the corners of
    * @return the float array of corners (8 floats)
@@ -27,13 +21,8 @@ public class RectUtils {
   }
 
   /**
-   * Gets a float array of two lengths representing a rectangles width and height
-   * The order of the corners in the input float array is:
-   * 0------->1
-   * ^        |
-   * |        |
-   * |        v
-   * 3<-------2
+   * Gets a float array of two lengths representing a rectangles width and height The order of the
+   * corners in the input float array is: 0------->1 ^        | |        | |        v 3<-------2
    *
    * @param corners the float array of corners (8 floats)
    * @return the float array of width and height (2 floats)
@@ -50,8 +39,8 @@ public class RectUtils {
   }
 
   /**
-   * Takes an array of 2D coordinates representing corners and returns the
-   * smallest rectangle containing those coordinates.
+   * Takes an array of 2D coordinates representing corners and returns the smallest rectangle
+   * containing those coordinates.
    *
    * @param array array of 2D coordinates
    * @return smallest rectangle containing coordinates

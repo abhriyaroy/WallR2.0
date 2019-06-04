@@ -2,8 +2,8 @@ package com.zebrostudio.wallrcustoms.customtextview
 
 import android.content.Context
 import android.graphics.Color
-import androidx.appcompat.widget.AppCompatTextView
 import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatTextView
 
 class WallrCustomTextView @JvmOverloads constructor(
   context: Context,

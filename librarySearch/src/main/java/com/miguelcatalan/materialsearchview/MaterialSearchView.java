@@ -363,7 +363,8 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
   //Public Methods
 
   /**
-   * Call this method to show suggestions list. This shows up when adapter is set. Call {@link #setAdapter(ListAdapter)} before calling this.
+   * Call this method to show suggestions list. This shows up when adapter is set. Call {@link
+   * #setAdapter(ListAdapter)} before calling this.
    */
   public void showSuggestions() {
     if (adapter != null
@@ -445,7 +446,8 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
   }
 
   /**
-   * if show is true, this will enable voice search. If voice is not available on the device, this method call has not effect.
+   * if show is true, this will enable voice search. If voice is not available on the device, this
+   * method call has not effect.
    */
   public void showVoice(boolean show) {
     if (show && isVoiceAvailable() && allowVoiceSearch) {
@@ -456,7 +458,8 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
   }
 
   /**
-   * Call this method and pass the menu item so this class can handle click events for the Menu Item.
+   * Call this method and pass the menu item so this class can handle click events for the Menu
+   * Item.
    */
   public void setMenuItem(MenuItem menuItem) {
     this.menuItem = menuItem;
@@ -639,15 +642,14 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
   public interface OnQueryTextListener {
 
     /**
-     * Called when the user submits the query. This could be due to a key press on the
-     * keyboard or due to pressing a submit button.
-     * The listener can override the standard behavior by returning true
-     * to indicate that it has handled the submit request. Otherwise return false to
-     * let the SearchView handle the submission by launching any associated intent.
+     * Called when the user submits the query. This could be due to a key press on the keyboard or
+     * due to pressing a submit button. The listener can override the standard behavior by returning
+     * true to indicate that it has handled the submit request. Otherwise return false to let the
+     * SearchView handle the submission by launching any associated intent.
      *
      * @param query the query text that is to be submitted
-     * @return true if the query has been handled by the listener, false to let the
-     * SearchView perform the default action.
+     * @return true if the query has been handled by the listener, false to let the SearchView
+     * perform the default action.
      */
     boolean onQueryTextSubmit(String query);
 
@@ -655,8 +657,8 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
      * Called when the query text is changed by the user.
      *
      * @param newText the new content of the query text field.
-     * @return false if the SearchView should perform the default action of showing any
-     * suggestions if available, true if the action was handled by the listener.
+     * @return false if the SearchView should perform the default action of showing any suggestions
+     * if available, true if the action was handled by the listener.
      */
     boolean onQueryTextChange(String newText);
   }

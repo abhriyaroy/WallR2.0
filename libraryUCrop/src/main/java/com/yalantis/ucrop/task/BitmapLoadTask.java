@@ -8,10 +8,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.yalantis.ucrop.callback.BitmapLoadCallback;
 import com.yalantis.ucrop.model.ExifInfo;
 import com.yalantis.ucrop.util.BitmapLoadUtils;
@@ -31,9 +31,9 @@ import okio.Okio;
 import okio.Sink;
 
 /**
- * Creates and returns a Bitmap for a given Uri(String url).
- * inSampleSize is calculated based on requiredWidth property. However can be adjusted if OOM occurs.
- * If any EXIF config is found - bitmap is transformed properly.
+ * Creates and returns a Bitmap for a given Uri(String url). inSampleSize is calculated based on
+ * requiredWidth property. However can be adjusted if OOM occurs. If any EXIF config is found -
+ * bitmap is transformed properly.
  */
 public class BitmapLoadTask extends AsyncTask<Void, Void, BitmapLoadTask.BitmapWorkerResult> {
 

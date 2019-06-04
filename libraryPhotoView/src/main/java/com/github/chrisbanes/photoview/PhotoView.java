@@ -5,9 +5,9 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import androidx.appcompat.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
+import androidx.appcompat.widget.AppCompatImageView;
 
 public class PhotoView extends AppCompatImageView {
 
@@ -40,9 +40,9 @@ public class PhotoView extends AppCompatImageView {
   }
 
   /**
-   * Get the current {@link PhotoViewAttacher} for this view. Be wary of holding on to references
-   * to this attacher, as it has a reference to this view, which, if a reference is held in the
-   * wrong place, can cause memory leaks.
+   * Get the current {@link PhotoViewAttacher} for this view. Be wary of holding on to references to
+   * this attacher, as it has a reference to this view, which, if a reference is held in the wrong
+   * place, can cause memory leaks.
    *
    * @return the attacher.
    */

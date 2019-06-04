@@ -90,8 +90,7 @@ public class UCrop {
   }
 
   /**
-   * Set an aspect ratio for crop bounds.
-   * User won't see the menu with other ratios options.
+   * Set an aspect ratio for crop bounds. User won't see the menu with other ratios options.
    *
    * @param x aspect ratio X
    * @param y aspect ratio Y
@@ -103,8 +102,8 @@ public class UCrop {
   }
 
   /**
-   * Set an aspect ratio for crop bounds that is evaluated from source image width and height.
-   * User won't see the menu with other ratios options.
+   * Set an aspect ratio for crop bounds that is evaluated from source image width and height. User
+   * won't see the menu with other ratios options.
    */
   public UCrop useSourceImageAspectRatio() {
     mCropOptionsBundle.putFloat(EXTRA_ASPECT_RATIO_X, 0);
@@ -201,8 +200,8 @@ public class UCrop {
   }
 
   /**
-   * Class that helps to setup advanced configs that are not commonly used.
-   * Use it with method {@link #withOptions(Options)}
+   * Class that helps to setup advanced configs that are not commonly used. Use it with method
+   * {@link #withOptions(Options)}
    */
   public static class Options {
 
@@ -262,7 +261,8 @@ public class UCrop {
     }
 
     /**
-     * Set one of {@link android.graphics.Bitmap.CompressFormat} that will be used to save resulting Bitmap.
+     * Set one of {@link android.graphics.Bitmap.CompressFormat} that will be used to save resulting
+     * Bitmap.
      */
     public void setCompressionFormat(@NonNull Bitmap.CompressFormat format) {
       mOptionBundle.putString(EXTRA_COMPRESSION_FORMAT_NAME, format.name());
@@ -305,7 +305,8 @@ public class UCrop {
     }
 
     /**
-     * Setter for max size for both width and height of bitmap that will be decoded from an input Uri and used in the view.
+     * Setter for max size for both width and height of bitmap that will be decoded from an input
+     * Uri and used in the view.
      *
      * @param maxBitmapSize - size in pixels
      */
@@ -398,7 +399,8 @@ public class UCrop {
     }
 
     /**
-     * @param color - desired resolved color of the active and selected widget (default is orange) and progress wheel middle line
+     * @param color - desired resolved color of the active and selected widget (default is orange)
+     * and progress wheel middle line
      */
     public void setActiveWidgetColor(@ColorInt int color) {
       mOptionBundle.putInt(EXTRA_UCROP_COLOR_WIDGET_ACTIVE, color);
@@ -442,7 +444,8 @@ public class UCrop {
     /**
      * Pass an ordered list of desired aspect ratios that should be available for a user.
      *
-     * @param selectedByDefault - index of aspect ratio option that is selected by default (starts with 0).
+     * @param selectedByDefault - index of aspect ratio option that is selected by default (starts
+     * with 0).
      * @param aspectRatio - list of aspect ratio options that are available to user
      */
     public void setAspectRatioOptions(int selectedByDefault, AspectRatio... aspectRatio) {
@@ -457,8 +460,7 @@ public class UCrop {
     }
 
     /**
-     * Set an aspect ratio for crop bounds.
-     * User won't see the menu with other ratios options.
+     * Set an aspect ratio for crop bounds. User won't see the menu with other ratios options.
      *
      * @param x aspect ratio X
      * @param y aspect ratio Y

@@ -13,9 +13,9 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
+import androidx.annotation.NonNull;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -89,8 +89,7 @@ public class FileUtils {
   /**
    * Gets the extension of a file name, like ".png" or ".jpg".
    *
-   * @return Extension including the dot("."); "" if there is no extension;
-   * null if uri was null.
+   * @return Extension including the dot("."); "" if there is no extension; null if uri was null.
    */
   public static String getExtension(String uri) {
     if (uri == null) {
@@ -218,8 +217,8 @@ public class FileUtils {
   }
 
   /**
-   * Get the value of the data column for this Uri. This is useful for
-   * MediaStore Uris, and other file-based ContentProviders.
+   * Get the value of the data column for this Uri. This is useful for MediaStore Uris, and other
+   * file-based ContentProviders.
    *
    * @param context The context.
    * @param uri The Uri to query.
@@ -259,12 +258,10 @@ public class FileUtils {
   }
 
   /**
-   * Get a file path from a Uri. This will get the the path for Storage Access
-   * Framework Documents, as well as the _data field for the MediaStore and
-   * other file-based ContentProviders.<br>
+   * Get a file path from a Uri. This will get the the path for Storage Access Framework Documents,
+   * as well as the _data field for the MediaStore and other file-based ContentProviders.<br>
    * <br>
-   * Callers should check whether the path is local before assuming it
-   * represents a local file.
+   * Callers should check whether the path is local before assuming it represents a local file.
    *
    * @param context The context.
    * @param uri The Uri to query.
@@ -355,8 +352,8 @@ public class FileUtils {
   /**
    * Convert Uri into File, if possible.
    *
-   * @return file A local file that the Uri was pointing to, or null if the
-   * Uri is unsupported or pointed to a remote resource.
+   * @return file A local file that the Uri was pointing to, or null if the Uri is unsupported or
+   * pointed to a remote resource.
    * @author paulburke
    * @see #getPath(Context, Uri)
    */
@@ -400,8 +397,8 @@ public class FileUtils {
   }
 
   /**
-   * Attempt to retrieve the thumbnail of given File from the MediaStore. This
-   * should not be called on the UI thread.
+   * Attempt to retrieve the thumbnail of given File from the MediaStore. This should not be called
+   * on the UI thread.
    *
    * @author paulburke
    */
@@ -410,8 +407,8 @@ public class FileUtils {
   }
 
   /**
-   * Attempt to retrieve the thumbnail of given Uri from the MediaStore. This
-   * should not be called on the UI thread.
+   * Attempt to retrieve the thumbnail of given Uri from the MediaStore. This should not be called
+   * on the UI thread.
    *
    * @author paulburke
    */
@@ -420,8 +417,8 @@ public class FileUtils {
   }
 
   /**
-   * Attempt to retrieve the thumbnail of given Uri from the MediaStore. This
-   * should not be called on the UI thread.
+   * Attempt to retrieve the thumbnail of given Uri from the MediaStore. This should not be called
+   * on the UI thread.
    *
    * @author paulburke
    */

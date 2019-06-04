@@ -8,9 +8,9 @@ import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.Shape;
+import android.util.AttributeSet;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
-import android.util.AttributeSet;
 
 public class AddFloatingActionButton extends FloatingActionButton {
   int mPlusColor;
@@ -29,8 +29,10 @@ public class AddFloatingActionButton extends FloatingActionButton {
 
   @Override
   void init(Context context, AttributeSet attributeSet) {
-    TypedArray attr = context.obtainStyledAttributes(attributeSet, R.styleable.AddFloatingActionButton, 0, 0);
-    mPlusColor = attr.getColor(R.styleable.AddFloatingActionButton_fab_plusIconColor, getColor(android.R.color.white));
+    TypedArray attr =
+        context.obtainStyledAttributes(attributeSet, R.styleable.AddFloatingActionButton, 0, 0);
+    mPlusColor = attr.getColor(R.styleable.AddFloatingActionButton_fab_plusIconColor,
+        getColor(android.R.color.white));
     attr.recycle();
 
     super.init(context, attributeSet);
@@ -43,10 +45,6 @@ public class AddFloatingActionButton extends FloatingActionButton {
     return mPlusColor;
   }
 
-  public void setPlusColorResId(@ColorRes int plusColor) {
-    setPlusColor(getColor(plusColor));
-  }
-
   public void setPlusColor(int color) {
     if (mPlusColor != color) {
       mPlusColor = color;
@@ -54,9 +52,14 @@ public class AddFloatingActionButton extends FloatingActionButton {
     }
   }
 
+  public void setPlusColorResId(@ColorRes int plusColor) {
+    setPlusColor(getColor(plusColor));
+  }
+
   @Override
   public void setIcon(@DrawableRes int icon) {
-    throw new UnsupportedOperationException("Use FloatingActionButton if you want to use custom icon");
+    throw new UnsupportedOperationException(
+        "Use FloatingActionButton if you want to use custom icon");
   }
 
   @Override
@@ -71,8 +74,10 @@ public class AddFloatingActionButton extends FloatingActionButton {
     final Shape shape = new Shape() {
       @Override
       public void draw(Canvas canvas, Paint paint) {
-        canvas.drawRect(plusOffset, iconHalfSize - plusHalfStroke, iconSize - plusOffset, iconHalfSize + plusHalfStroke, paint);
-        canvas.drawRect(iconHalfSize - plusHalfStroke, plusOffset, iconHalfSize + plusHalfStroke, iconSize - plusOffset, paint);
+        canvas.drawRect(plusOffset, iconHalfSize - plusHalfStroke, iconSize - plusOffset,
+            iconHalfSize + plusHalfStroke, paint);
+        canvas.drawRect(iconHalfSize - plusHalfStroke, plusOffset, iconHalfSize + plusHalfStroke,
+            iconSize - plusOffset, paint);
       }
     };
 

@@ -3,7 +3,6 @@ package com.yalantis.guillotine.animation;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import com.yalantis.guillotine.interfaces.GuillotineListener;

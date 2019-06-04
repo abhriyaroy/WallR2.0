@@ -1,7 +1,7 @@
 package com.yalantis.ucrop.util;
 
-import androidx.annotation.NonNull;
 import android.view.MotionEvent;
+import androidx.annotation.NonNull;
 
 public class RotationGestureDetector {
 

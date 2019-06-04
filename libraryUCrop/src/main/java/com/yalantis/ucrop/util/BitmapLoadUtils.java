@@ -9,11 +9,11 @@ import android.graphics.Point;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.yalantis.ucrop.callback.BitmapLoadCallback;
 import com.yalantis.ucrop.task.BitmapLoadTask;
 import java.io.Closeable;
@@ -116,9 +116,9 @@ public class BitmapLoadUtils {
   }
 
   /**
-   * This method calculates maximum size of both width and height of bitmap.
-   * It is twice the device screen diagonal for default implementation (extra quality to zoom image).
-   * Size cannot exceed max texture size.
+   * This method calculates maximum size of both width and height of bitmap. It is twice the device
+   * screen diagonal for default implementation (extra quality to zoom image). Size cannot exceed
+   * max texture size.
    *
    * @return - max bitmap size in pixels.
    */

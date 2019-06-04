@@ -11,8 +11,7 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
 
 /**
- * AlphaTileDrawable visualizes ARGB color on the {@link
- * com.skydoves.colorpickerview.AlphaTileView}.
+ * AlphaTileDrawable visualizes ARGB color on the {@link com.skydoves.colorpickerview.AlphaTileView}.
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class AlphaTileDrawable extends Drawable {

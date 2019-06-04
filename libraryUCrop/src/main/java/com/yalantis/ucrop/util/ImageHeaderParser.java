@@ -44,9 +44,9 @@ import java.nio.charset.Charset;
  */
 public class ImageHeaderParser {
   /**
-   * A constant indicating we were unable to parse the orientation from the image either because
-   * no exif segment containing orientation data existed, or because of an I/O error attempting to
-   * read the exif segment.
+   * A constant indicating we were unable to parse the orientation from the image either because no
+   * exif segment containing orientation data existed, or because of an I/O error attempting to read
+   * the exif segment.
    */
   public static final int UNKNOWN_ORIENTATION = -1;
   private static final String TAG = "ImageHeaderParser";

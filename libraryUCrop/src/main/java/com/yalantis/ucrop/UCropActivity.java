@@ -9,14 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.ColorInt;
-import androidx.annotation.IdRes;
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -29,6 +21,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.annotation.ColorInt;
+import androidx.annotation.IdRes;
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import com.yalantis.ucrop.callback.BitmapCropCallback;
 import com.yalantis.ucrop.model.AspectRatio;
 import com.yalantis.ucrop.util.SelectedStateListDrawable;
@@ -209,8 +209,8 @@ public class UCropActivity extends AppCompatActivity {
   }
 
   /**
-   * This method extracts {@link com.yalantis.ucrop.UCrop.Options #optionsBundle} from incoming intent
-   * and setups Activity, {@link OverlayView} and {@link CropImageView} properly.
+   * This method extracts {@link com.yalantis.ucrop.UCrop.Options #optionsBundle} from incoming
+   * intent and setups Activity, {@link OverlayView} and {@link CropImageView} properly.
    */
   @SuppressWarnings("deprecation")
   private void processOptions(@NonNull Intent intent) {
@@ -606,9 +606,9 @@ public class UCropActivity extends AppCompatActivity {
   }
 
   /**
-   * Adds view that covers everything below the Toolbar.
-   * When it's clickable - user won't be able to click/touch anything below the Toolbar.
-   * Need to block user input while loading and cropping an image.
+   * Adds view that covers everything below the Toolbar. When it's clickable - user won't be able to
+   * click/touch anything below the Toolbar. Need to block user input while loading and cropping an
+   * image.
    */
   private void addBlockingView() {
     if (mBlockingView == null) {

@@ -58,9 +58,9 @@ public class GestureCropImageView extends CropImageView {
 
   /**
    * If it's ACTION_DOWN event - user touches the screen and all current animation must be canceled.
-   * If it's ACTION_UP event - user removed all fingers from the screen and current image position must be corrected.
-   * If there are more than 2 fingers - update focal point coordinates.
-   * Pass the event to the gesture detectors if those are enabled.
+   * If it's ACTION_UP event - user removed all fingers from the screen and current image position
+   * must be corrected. If there are more than 2 fingers - update focal point coordinates. Pass the
+   * event to the gesture detectors if those are enabled.
    */
   @Override
   public boolean onTouchEvent(MotionEvent event) {
@@ -96,9 +96,9 @@ public class GestureCropImageView extends CropImageView {
   }
 
   /**
-   * This method calculates target scale value for double tap gesture.
-   * User is able to zoom the image from min scale value
-   * to the max scale value with {@link #mDoubleTapScaleSteps} double taps.
+   * This method calculates target scale value for double tap gesture. User is able to zoom the
+   * image from min scale value to the max scale value with {@link #mDoubleTapScaleSteps} double
+   * taps.
    */
   protected float getDoubleTapTargetScale() {
     return getCurrentScale() * (float) Math.pow(getMaxScale() / getMinScale(),

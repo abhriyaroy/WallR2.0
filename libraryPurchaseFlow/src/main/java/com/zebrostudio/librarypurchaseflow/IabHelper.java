@@ -21,33 +21,28 @@ import java.util.List;
 import org.json.JSONException;
 
 /**
- * Provides convenience methods for in-app billing. You can create one instance of this
- * class for your application and use it to process in-app billing operations.
- * It provides synchronous (blocking) and asynchronous (non-blocking) methods for
- * many common in-app billing operations, as well as automatic signature
- * verification.
+ * Provides convenience methods for in-app billing. You can create one instance of this class for
+ * your application and use it to process in-app billing operations. It provides synchronous
+ * (blocking) and asynchronous (non-blocking) methods for many common in-app billing operations, as
+ * well as automatic signature verification.
  *
- * After instantiating, you must perform setup in order to start using the object.
- * To perform setup, call the {@link #startSetup} method and provide a listener;
- * that listener will be notified when setup is complete, after which (and not before)
- * you may call other methods.
+ * After instantiating, you must perform setup in order to start using the object. To perform setup,
+ * call the {@link #startSetup} method and provide a listener; that listener will be notified when
+ * setup is complete, after which (and not before) you may call other methods.
  *
- * After setup is complete, you will typically want to request an inventory of owned
- * items and subscriptions. See {@link #queryInventory}, {@link #queryInventoryAsync}
- * and related methods.
+ * After setup is complete, you will typically want to request an inventory of owned items and
+ * subscriptions. See {@link #queryInventory}, {@link #queryInventoryAsync} and related methods.
  *
- * When you are done with this object, don't forget to call {@link #dispose}
- * to ensure proper cleanup. This object holds a binding to the in-app billing
- * service, which will leak unless you dispose of it correctly. If you created
- * the object on an Activity's onCreate method, then the recommended
- * place to dispose of it is the Activity's onDestroy method.
+ * When you are done with this object, don't forget to call {@link #dispose} to ensure proper
+ * cleanup. This object holds a binding to the in-app billing service, which will leak unless you
+ * dispose of it correctly. If you created the object on an Activity's onCreate method, then the
+ * recommended place to dispose of it is the Activity's onDestroy method.
  *
- * A note about threading: When using this object from a background thread, you may
- * call the blocking versions of methods; when using from a UI thread, call
- * only the asynchronous versions and handle the results via callbacks.
- * Also, notice that you can only call one asynchronous operation at a time;
- * attempting to start a second asynchronous operation while the first one
- * has not yet completed will result in an exception being thrown.
+ * A note about threading: When using this object from a background thread, you may call the
+ * blocking versions of methods; when using from a UI thread, call only the asynchronous versions
+ * and handle the results via callbacks. Also, notice that you can only call one asynchronous
+ * operation at a time; attempting to start a second asynchronous operation while the first one has
+ * not yet completed will result in an exception being thrown.
  */
 public class IabHelper {
   // Billing response codes
@@ -118,15 +113,15 @@ public class IabHelper {
   OnIabPurchaseFinishedListener mPurchaseListener;
 
   /**
-   * Creates an instance. After creation, it will not yet be ready to use. You must perform
-   * setup by calling {@link #startSetup} and wait for setup to complete. This constructor does not
-   * block and is safe to call from a UI thread.
+   * Creates an instance. After creation, it will not yet be ready to use. You must perform setup by
+   * calling {@link #startSetup} and wait for setup to complete. This constructor does not block and
+   * is safe to call from a UI thread.
    *
    * @param ctx Your application or Activity context. Needed to bind to the in-app billing service.
-   * @param base64PublicKey Your application's public key, encoded in base64.
-   * This is used for verification of purchase signatures. You can find your app's base64-encoded
-   * public key in your application's page on Google Play Developer Console. Note that this
-   * is NOT your "developer public key".
+   * @param base64PublicKey Your application's public key, encoded in base64. This is used for
+   * verification of purchase signatures. You can find your app's base64-encoded public key in your
+   * application's page on Google Play Developer Console. Note that this is NOT your "developer
+   * public key".
    */
   public IabHelper(Context ctx, String base64PublicKey) {
     context = ctx.getApplicationContext();
@@ -138,8 +133,8 @@ public class IabHelper {
    * Returns a human-readable description for the given response code.
    *
    * @param code The response code
-   * @return A human-readable string explaining the result code.
-   * It also includes the result code numerically.
+   * @return A human-readable string explaining the result code. It also includes the result code
+   * numerically.
    */
   public static String getResponseDesc(int code) {
     String[] iab_msgs = ("0:OK/1:User Canceled/2:Unknown/" +
@@ -186,9 +181,9 @@ public class IabHelper {
   }
 
   /**
-   * Starts the setup process. This will start up the setup process asynchronously.
-   * You will be notified through the listener when the setup process is complete.
-   * This method is safe to call from a UI thread.
+   * Starts the setup process. This will start up the setup process asynchronously. You will be
+   * notified through the listener when the setup process is complete. This method is safe to call
+   * from a UI thread.
    *
    * @param listener The listener to notify when the setup process is complete.
    */
@@ -273,10 +268,9 @@ public class IabHelper {
   }
 
   /**
-   * Dispose of object, releasing resources. It's very important to call this
-   * method when you are done with this object. It will release any resources
-   * used by it such as service connections. Naturally, once the object is
-   * disposed of, it can't be used again.
+   * Dispose of object, releasing resources. It's very important to call this method when you are
+   * done with this object. It will release any resources used by it such as service connections.
+   * Naturally, once the object is disposed of, it can't be used again.
    */
   public void dispose() {
     logDebug("Disposing.");
@@ -326,21 +320,22 @@ public class IabHelper {
 
   /**
    * Initiate the UI flow for an in-app purchase. Call this method to initiate an in-app purchase,
-   * which will involve bringing up the Google Play screen. The calling activity will be paused while
-   * the user interacts with Google Play, and the result will be delivered via the activity's
-   * {@link Activity#onActivityResult} method, at which point you must call
-   * this object's {@link #handleActivityResult} method to continue the purchase flow. This method
-   * MUST be called from the UI thread of the Activity.
+   * which will involve bringing up the Google Play screen. The calling activity will be paused
+   * while the user interacts with Google Play, and the result will be delivered via the activity's
+   * {@link Activity#onActivityResult} method, at which point you must call this object's {@link
+   * #handleActivityResult} method to continue the purchase flow. This method MUST be called from
+   * the UI thread of the Activity.
    *
    * @param act The calling activity.
    * @param sku The sku of the item to purchase.
-   * @param itemType indicates if it's a product or a subscription (ITEM_TYPE_INAPP or ITEM_TYPE_SUBS)
-   * @param requestCode A request code (to differentiate from other responses --
-   * as in {@link Activity#startActivityForResult}).
+   * @param itemType indicates if it's a product or a subscription (ITEM_TYPE_INAPP or
+   * ITEM_TYPE_SUBS)
+   * @param requestCode A request code (to differentiate from other responses -- as in {@link
+   * Activity#startActivityForResult}).
    * @param listener The listener to notify when the purchase process finishes
    * @param extraData Extra data (developer payload), which will be returned with the purchase data
-   * when the purchase completes. This extra data will be permanently bound to that purchase
-   * and will always be returned when the purchase is queried.
+   * when the purchase completes. This extra data will be permanently bound to that purchase and
+   * will always be returned when the purchase is queried.
    */
   public void launchPurchaseFlow(Activity act, String sku, String itemType, int requestCode,
       OnIabPurchaseFinishedListener listener, String extraData) {
@@ -398,17 +393,16 @@ public class IabHelper {
   }
 
   /**
-   * Handles an activity result that's part of the purchase flow in in-app billing. If you
-   * are calling {@link #launchPurchaseFlow}, then you must call this method from your
-   * Activity's {@link Activity@onActivityResult} method. This method
-   * MUST be called from the UI thread of the Activity.
+   * Handles an activity result that's part of the purchase flow in in-app billing. If you are
+   * calling {@link #launchPurchaseFlow}, then you must call this method from your Activity's {@link
+   * Activity@onActivityResult} method. This method MUST be called from the UI thread of the
+   * Activity.
    *
    * @param requestCode The requestCode as you received it.
    * @param resultCode The resultCode as you received it.
    * @param data The data (Intent) as you received it.
-   * @return Returns true if the result was related to a purchase flow and was handled;
-   * false if the result was not related to a purchase, in which case you should
-   * handle it normally.
+   * @return Returns true if the result was related to a purchase flow and was handled; false if the
+   * result was not related to a purchase, in which case you should handle it normally.
    */
   public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
     IabResult result;
@@ -500,16 +494,16 @@ public class IabHelper {
   }
 
   /**
-   * Queries the inventory. This will query all owned items from the server, as well as
-   * information on additional skus, if specified. This method may block or take long to execute.
-   * Do not call from a UI thread. For that, use the non-blocking version {@link #refreshInventoryAsync}.
+   * Queries the inventory. This will query all owned items from the server, as well as information
+   * on additional skus, if specified. This method may block or take long to execute. Do not call
+   * from a UI thread. For that, use the non-blocking version {@link #refreshInventoryAsync}.
    *
    * @param querySkuDetails if true, SKU details (price, description, etc) will be queried as well
    * as purchase information.
    * @param moreItemSkus additional PRODUCT skus to query information on, regardless of ownership.
    * Ignored if null or if querySkuDetails is false.
-   * @param moreSubsSkus additional SUBSCRIPTIONS skus to query information on, regardless of ownership.
-   * Ignored if null or if querySkuDetails is false.
+   * @param moreSubsSkus additional SUBSCRIPTIONS skus to query information on, regardless of
+   * ownership. Ignored if null or if querySkuDetails is false.
    * @throws IabException if a problem occurs while refreshing the inventory.
    */
   public Inventory queryInventory(boolean querySkuDetails, List<String> moreItemSkus,
@@ -557,10 +551,9 @@ public class IabHelper {
   }
 
   /**
-   * Asynchronous wrapper for inventory query. This will perform an inventory
-   * query as described in {@link #queryInventory}, but will do so asynchronously
-   * and call back the specified listener upon completion. This method is safe to
-   * call from a UI thread.
+   * Asynchronous wrapper for inventory query. This will perform an inventory query as described in
+   * {@link #queryInventory}, but will do so asynchronously and call back the specified listener
+   * upon completion. This method is safe to call from a UI thread.
    *
    * @param querySkuDetails as in {@link #queryInventory}
    * @param moreSkus as in {@link #queryInventory}
@@ -609,10 +602,9 @@ public class IabHelper {
   }
 
   /**
-   * Consumes a given in-app product. Consuming can only be done on an item
-   * that's owned, and as a result of consumption, the user will no longer own it.
-   * This method may block or take long to return. Do not call from the UI thread.
-   * For that, see {@link #consumeAsync}.
+   * Consumes a given in-app product. Consuming can only be done on an item that's owned, and as a
+   * result of consumption, the user will no longer own it. This method may block or take long to
+   * return. Do not call from the UI thread. For that, see {@link #consumeAsync}.
    *
    * @param itemInfo The PurchaseInfo that represents the item to consume.
    * @throws IabException if there is a problem during consumption.
@@ -650,9 +642,9 @@ public class IabHelper {
   }
 
   /**
-   * Asynchronous wrapper to item consumption. Works like {@link #consume}, but
-   * performs the consumption in the background and notifies completion through
-   * the provided listener. This method is safe to call from a UI thread.
+   * Asynchronous wrapper to item consumption. Works like {@link #consume}, but performs the
+   * consumption in the background and notifies completion through the provided listener. This
+   * method is safe to call from a UI thread.
    *
    * @param purchase The purchase to be consumed.
    * @param listener The listener to notify when the consumption operation finishes.
@@ -907,8 +899,8 @@ public class IabHelper {
   }
 
   /**
-   * Callback for setup process. This listener's {@link #onIabSetupFinished} method is called
-   * when the setup process is complete.
+   * Callback for setup process. This listener's {@link #onIabSetupFinished} method is called when
+   * the setup process is complete.
    */
   public interface OnIabSetupFinishedListener {
     /**
@@ -924,10 +916,9 @@ public class IabHelper {
    */
   public interface OnIabPurchaseFinishedListener {
     /**
-     * Called to notify that an in-app purchase finished. If the purchase was successful,
-     * then the sku parameter specifies which item was purchased. If the purchase failed,
-     * the sku and extraData parameters may or may not be null, depending on how far the purchase
-     * process went.
+     * Called to notify that an in-app purchase finished. If the purchase was successful, then the
+     * sku parameter specifies which item was purchased. If the purchase failed, the sku and
+     * extraData parameters may or may not be null, depending on how far the purchase process went.
      *
      * @param result The result of the purchase.
      * @param info The purchase information (null if purchase failed)
@@ -969,8 +960,7 @@ public class IabHelper {
      * Called to notify that a consumption of multiple items has finished.
      *
      * @param purchases The purchases that were (or were to be) consumed.
-     * @param results The results of each consumption operation, corresponding to each
-     * sku.
+     * @param results The results of each consumption operation, corresponding to each sku.
      */
     public void onConsumeMultiFinished(List<Purchase> purchases, List<IabResult> results);
   }

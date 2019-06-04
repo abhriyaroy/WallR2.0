@@ -49,8 +49,9 @@ public class ColorPickerPreferenceManager {
    * @return {@link ColorPickerPreferenceManager}.
    */
   public static ColorPickerPreferenceManager getInstance(Context context) {
-    if (colorPickerPreferenceManager == null)
+    if (colorPickerPreferenceManager == null) {
       colorPickerPreferenceManager = new ColorPickerPreferenceManager(context);
+    }
     return colorPickerPreferenceManager;
   }
 
@@ -164,8 +165,7 @@ public class ColorPickerPreferenceManager {
    * sets an brightness slider position.
    *
    * @param name preference name.
-   * @param position position of the {@link
-   *     com.skydoves.colorpickerview.sliders.BrightnessSlideBar}.
+   * @param position position of the {@link com.skydoves.colorpickerview.sliders.BrightnessSlideBar}.
    * @return {@link ColorPickerPreferenceManager}.
    */
   public ColorPickerPreferenceManager setBrightnessSliderPosition(String name, int position) {

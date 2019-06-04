@@ -8,12 +8,12 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.os.Build;
-import androidx.annotation.ColorInt;
-import androidx.annotation.IntRange;
-import androidx.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import androidx.annotation.ColorInt;
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
 import com.yalantis.ucrop.R;
 import com.yalantis.ucrop.callback.OverlayViewChangeListener;
 import com.yalantis.ucrop.util.RectUtils;
@@ -103,8 +103,8 @@ public class OverlayView extends View {
   }
 
   /**
-   * Setter for crop grid rows count.
-   * Resets {@link #mGridPoints} variable because it is not valid anymore.
+   * Setter for crop grid rows count. Resets {@link #mGridPoints} variable because it is not valid
+   * anymore.
    */
   public void setCropGridRowCount(@IntRange(from = 0) int cropGridRowCount) {
     mCropGridRowCount = cropGridRowCount;
@@ -112,8 +112,8 @@ public class OverlayView extends View {
   }
 
   /**
-   * Setter for crop grid columns count.
-   * Resets {@link #mGridPoints} variable because it is not valid anymore.
+   * Setter for crop grid columns count. Resets {@link #mGridPoints} variable because it is not
+   * valid anymore.
    */
   public void setCropGridColumnCount(@IntRange(from = 0) int cropGridColumnCount) {
     mCropGridColumnCount = cropGridColumnCount;
@@ -123,7 +123,8 @@ public class OverlayView extends View {
   /**
    * Setter for {@link #mShowCropFrame} variable.
    *
-   * @param showCropFrame - set to true if you want to see a crop frame rectangle on top of an image
+   * @param showCropFrame - set to true if you want to see a crop frame rectangle on top of an
+   * image
    */
   public void setShowCropFrame(boolean showCropFrame) {
     mShowCropFrame = showCropFrame;
@@ -187,8 +188,8 @@ public class OverlayView extends View {
   }
 
   /**
-   * This method setups crop bounds rectangles for given aspect ratio and view size.
-   * {@link #mCropViewRect} is used to draw crop bounds - uses padding.
+   * This method setups crop bounds rectangles for given aspect ratio and view size. {@link
+   * #mCropViewRect} is used to draw crop bounds - uses padding.
    */
   public void setupCropBounds() {
     int height = (int) (mThisWidth / mTargetAspectRatio);
@@ -283,12 +284,7 @@ public class OverlayView extends View {
   }
 
   /**
-   * * The order of the corners is:
-   * 0------->1
-   * ^        |
-   * |        |
-   * |        v
-   * 3<-------2
+   * * The order of the corners is: 0------->1 ^        | |        | |        v 3<-------2
    */
   private void resizeCropViewRect(float touchX, float touchY) {
     mTempRect.set(mCropViewRect);
@@ -323,11 +319,7 @@ public class OverlayView extends View {
   }
 
   /**
-   * * The order of the corners in the float array is:
-   * 0------->1
-   * ^        |
-   * |        |
-   * |        v
+   * * The order of the corners in the float array is: 0------->1 ^        | |        | |        v
    * 3<-------2
    *
    * @return - index of corner that is being dragged
@@ -367,8 +359,8 @@ public class OverlayView extends View {
   }
 
   /**
-   * This method draws crop bounds (empty rectangle)
-   * and crop guidelines (vertical and horizontal lines inside the crop bounds) if needed.
+   * This method draws crop bounds (empty rectangle) and crop guidelines (vertical and horizontal
+   * lines inside the crop bounds) if needed.
    *
    * @param canvas - valid canvas object
    */
@@ -429,8 +421,8 @@ public class OverlayView extends View {
   }
 
   /**
-   * This method extracts all needed values from the styled attributes.
-   * Those are used to configure the view.
+   * This method extracts all needed values from the styled attributes. Those are used to configure
+   * the view.
    */
   @SuppressWarnings("deprecation")
   protected void processStyledAttributes(@NonNull TypedArray a) {

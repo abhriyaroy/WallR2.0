@@ -31,5 +31,5 @@
     android:paddingStart="@dimen/ms__popup_padding_left"
     android:paddingTop="@dimen/ms__popup_padding_top"
     android:singleLine="true"
-    />
+/>
 

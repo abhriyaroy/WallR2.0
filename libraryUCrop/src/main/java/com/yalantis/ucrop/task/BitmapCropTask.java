@@ -6,9 +6,9 @@ import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.Log;
 import com.yalantis.ucrop.callback.BitmapCropCallback;
 import com.yalantis.ucrop.model.CropParameters;
 import com.yalantis.ucrop.model.ExifInfo;
@@ -22,8 +22,7 @@ import java.io.IOException;
  * Crops part of image that fills the crop bounds.
  * <p/>
  * First image is downscaled if max size was set and if resulting image is larger that max size.
- * Then image is rotated accordingly.
- * Finally new Bitmap object is created and saved to file.
+ * Then image is rotated accordingly. Finally new Bitmap object is created and saved to file.
  */
 public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
 
@@ -149,8 +148,8 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
   }
 
   /**
-   * Check whether an image should be cropped at all or just file can be copied to the destination path.
-   * For each 1000 pixels there is one pixel of error due to matrix calculations etc.
+   * Check whether an image should be cropped at all or just file can be copied to the destination
+   * path. For each 1000 pixels there is one pixel of error due to matrix calculations etc.
    *
    * @param width - crop area width
    * @param height - crop area height

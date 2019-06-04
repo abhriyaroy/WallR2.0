@@ -1,11 +1,10 @@
 package com.getbase.floatingactionbutton;
 
 import android.graphics.Rect;
-import androidx.annotation.NonNull;
 import android.view.MotionEvent;
 import android.view.TouchDelegate;
 import android.view.View;
-
+import androidx.annotation.NonNull;
 import java.util.ArrayList;
 
 public class TouchDelegateGroup extends TouchDelegate {
@@ -41,25 +40,25 @@ public class TouchDelegateGroup extends TouchDelegate {
     TouchDelegate delegate = null;
 
     switch (event.getAction()) {
-    case MotionEvent.ACTION_DOWN:
-      for (int i = 0; i < mTouchDelegates.size(); i++) {
-        TouchDelegate touchDelegate = mTouchDelegates.get(i);
-        if (touchDelegate.onTouchEvent(event)) {
-          mCurrentTouchDelegate = touchDelegate;
-          return true;
+      case MotionEvent.ACTION_DOWN:
+        for (int i = 0; i < mTouchDelegates.size(); i++) {
+          TouchDelegate touchDelegate = mTouchDelegates.get(i);
+          if (touchDelegate.onTouchEvent(event)) {
+            mCurrentTouchDelegate = touchDelegate;
+            return true;
+          }
         }
-      }
-      break;
+        break;
 
-    case MotionEvent.ACTION_MOVE:
-      delegate = mCurrentTouchDelegate;
-      break;
+      case MotionEvent.ACTION_MOVE:
+        delegate = mCurrentTouchDelegate;
+        break;
 
-    case MotionEvent.ACTION_CANCEL:
-    case MotionEvent.ACTION_UP:
-      delegate = mCurrentTouchDelegate;
-      mCurrentTouchDelegate = null;
-      break;
+      case MotionEvent.ACTION_CANCEL:
+      case MotionEvent.ACTION_UP:
+        delegate = mCurrentTouchDelegate;
+        mCurrentTouchDelegate = null;
+        break;
     }
 
     return delegate != null && delegate.onTouchEvent(event);

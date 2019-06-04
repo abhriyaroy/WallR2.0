@@ -42,15 +42,17 @@ public abstract class FlagView extends RelativeLayout {
   public void receiveOnTouchEvent(MotionEvent event) {
     switch (event.getActionMasked()) {
       case MotionEvent.ACTION_DOWN:
-        if (getFlagMode() == FlagMode.LAST) gone();
-        else if (getFlagMode() == FlagMode.FADE) FadeUtils.fadeIn(this);
+        if (getFlagMode() == FlagMode.LAST) {
+          gone();
+        } else if (getFlagMode() == FlagMode.FADE) FadeUtils.fadeIn(this);
         break;
       case MotionEvent.ACTION_MOVE:
         if (getFlagMode() == FlagMode.LAST) gone();
         break;
       case MotionEvent.ACTION_UP:
-        if (getFlagMode() == FlagMode.LAST) visible();
-        else if (getFlagMode() == FlagMode.FADE) FadeUtils.fadeOut(this);
+        if (getFlagMode() == FlagMode.LAST) {
+          visible();
+        } else if (getFlagMode() == FlagMode.FADE) FadeUtils.fadeOut(this);
     }
   }
 

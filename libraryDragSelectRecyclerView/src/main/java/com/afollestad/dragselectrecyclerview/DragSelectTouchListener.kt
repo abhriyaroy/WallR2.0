@@ -4,14 +4,13 @@ package com.afollestad.dragselectrecyclerview
 
 import android.content.Context
 import android.os.Handler
-import androidx.annotation.RestrictTo
-import androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP
-import androidx.recyclerview.widget.DiffUtil.DiffResult.NO_POSITION
-import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_MOVE
 import android.view.MotionEvent.ACTION_UP
+import androidx.annotation.RestrictTo
+import androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP
+import androidx.recyclerview.widget.DiffUtil.DiffResult.NO_POSITION
 import com.afollestad.dragselectrecyclerview.Mode.PATH
 import com.afollestad.dragselectrecyclerview.Mode.RANGE
 

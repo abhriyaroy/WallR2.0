@@ -1,8 +1,8 @@
 package com.zebrostudio.librarypurchaseflow;
 
 /**
- * Base64 converter class. This code is not a complete MIME encoder;
- * it simply converts binary data to base64 data and back.
+ * Base64 converter class. This code is not a complete MIME encoder; it simply converts binary data
+ * to base64 data and back.
  *
  * <p>Note {@link CharBase64} is a GWT-compatible implementation of this
  * class.
@@ -57,8 +57,8 @@ public class Base64 {
           (byte) '9', (byte) '-', (byte) '_'};
 
   /**
-   * Translates a Base64 value to either its 6-bit reconstruction value
-   * or a negative number indicating some other meaning.
+   * Translates a Base64 value to either its 6-bit reconstruction value or a negative number
+   * indicating some other meaning.
    **/
   private final static byte[] DECODABET = {-9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal  0 -  8
       -5, -5, // Whitespace: Tab and Linefeed
@@ -141,17 +141,14 @@ public class Base64 {
   /* ********  E N C O D I N G   M E T H O D S  ******** */
 
   /**
-   * Encodes up to three bytes of the array <var>source</var>
-   * and writes the resulting four Base64 bytes to <var>destination</var>.
-   * The source and destination arrays can be manipulated
-   * anywhere along their length by specifying
+   * Encodes up to three bytes of the array <var>source</var> and writes the resulting four Base64
+   * bytes to <var>destination</var>. The source and destination arrays can be manipulated anywhere
+   * along their length by specifying
    * <var>srcOffset</var> and <var>destOffset</var>.
-   * This method does not check to make sure your arrays
-   * are large enough to accommodate <var>srcOffset</var> + 3 for
-   * the <var>source</var> array or <var>destOffset</var> + 4 for
-   * the <var>destination</var> array.
-   * The actual number of significant bytes in your array is
-   * given by <var>numSigBytes</var>.
+   * This method does not check to make sure your arrays are large enough to accommodate
+   * <var>srcOffset</var> + 3 for the <var>source</var> array or <var>destOffset</var> + 4 for the
+   * <var>destination</var> array. The actual number of significant bytes in your array is given by
+   * <var>numSigBytes</var>.
    *
    * @param source the array to convert
    * @param srcOffset the index where conversion begins
@@ -205,9 +202,8 @@ public class Base64 {
   } // end encode3to4
 
   /**
-   * Encodes a byte array into Base64 notation.
-   * Equivalent to calling
-   * {@code encodeBytes(source, 0, source.length)}
+   * Encodes a byte array into Base64 notation. Equivalent to calling {@code encodeBytes(source, 0,
+   * source.length)}
    *
    * @param source The data to convert
    * @since 1.4
@@ -220,8 +216,8 @@ public class Base64 {
    * Encodes a byte array into web safe Base64 notation.
    *
    * @param source The data to convert
-   * @param doPadding is {@code true} to pad result with '=' chars
-   * if it does not fall on 3 byte boundaries
+   * @param doPadding is {@code true} to pad result with '=' chars if it does not fall on 3 byte
+   * boundaries
    */
   public static String encodeWebSafe(byte[] source, boolean doPadding) {
     return encode(source, 0, source.length, WEBSAFE_ALPHABET, doPadding);
@@ -234,8 +230,8 @@ public class Base64 {
    * @param off offset in array where conversion should begin
    * @param len length of data to convert
    * @param alphabet the encoding alphabet
-   * @param doPadding is {@code true} to pad result with '=' chars
-   * if it does not fall on 3 byte boundaries
+   * @param doPadding is {@code true} to pad result with '=' chars if it does not fall on 3 byte
+   * boundaries
    * @since 1.4
    */
   public static String encode(byte[] source, int off, int len, byte[] alphabet,
@@ -318,18 +314,14 @@ public class Base64 {
   /* ********  D E C O D I N G   M E T H O D S  ******** */
 
   /**
-   * Decodes four bytes from array <var>source</var>
-   * and writes the resulting bytes (up to three of them)
-   * to <var>destination</var>.
-   * The source and destination arrays can be manipulated
-   * anywhere along their length by specifying
+   * Decodes four bytes from array <var>source</var> and writes the resulting bytes (up to three of
+   * them) to <var>destination</var>. The source and destination arrays can be manipulated anywhere
+   * along their length by specifying
    * <var>srcOffset</var> and <var>destOffset</var>.
-   * This method does not check to make sure your arrays
-   * are large enough to accommodate <var>srcOffset</var> + 4 for
-   * the <var>source</var> array or <var>destOffset</var> + 3 for
-   * the <var>destination</var> array.
-   * This method returns the actual number of bytes that
-   * were converted from the Base64 encoding.
+   * This method does not check to make sure your arrays are large enough to accommodate
+   * <var>srcOffset</var> + 4 for the <var>source</var> array or <var>destOffset</var> + 3 for the
+   * <var>destination</var> array. This method returns the actual number of bytes that were
+   * converted from the Base64 encoding.
    *
    * @param source the array to convert
    * @param srcOffset the index where conversion begins
@@ -387,8 +379,8 @@ public class Base64 {
   }
 
   /**
-   * Decodes data from web safe Base64 notation.
-   * Web safe encoding uses '-' instead of '+', '_' instead of '/'
+   * Decodes data from web safe Base64 notation. Web safe encoding uses '-' instead of '+', '_'
+   * instead of '/'
    *
    * @param s the string to decode (decoded in default encoding)
    * @return the decoded data
@@ -399,8 +391,7 @@ public class Base64 {
   }
 
   /**
-   * Decodes Base64 content in byte array format and returns
-   * the decoded byte array.
+   * Decodes Base64 content in byte array format and returns the decoded byte array.
    *
    * @param source The Base64 encoded data
    * @return decoded data
@@ -412,9 +403,8 @@ public class Base64 {
   }
 
   /**
-   * Decodes web safe Base64 content in byte array format and returns
-   * the decoded data.
-   * Web safe encoding uses '-' instead of '+', '_' instead of '/'
+   * Decodes web safe Base64 content in byte array format and returns the decoded data. Web safe
+   * encoding uses '-' instead of '+', '_' instead of '/'
    *
    * @param source the string to decode (decoded in default encoding)
    * @return the decoded data
@@ -425,8 +415,7 @@ public class Base64 {
   }
 
   /**
-   * Decodes Base64 content in byte array format and returns
-   * the decoded byte array.
+   * Decodes Base64 content in byte array format and returns the decoded byte array.
    *
    * @param source the Base64 encoded data
    * @param off the offset of where to begin decoding
@@ -441,9 +430,8 @@ public class Base64 {
   }
 
   /**
-   * Decodes web safe Base64 content in byte array format and returns
-   * the decoded byte array.
-   * Web safe encoding uses '-' instead of '+', '_' instead of '/'
+   * Decodes web safe Base64 content in byte array format and returns the decoded byte array. Web
+   * safe encoding uses '-' instead of '+', '_' instead of '/'
    *
    * @param source the Base64 encoded data
    * @param off the offset of where to begin decoding
@@ -456,8 +444,7 @@ public class Base64 {
   }
 
   /**
-   * Decodes Base64 content using the supplied decodabet and returns
-   * the decoded byte array.
+   * Decodes Base64 content using the supplied decodabet and returns the decoded byte array.
    *
    * @param source the Base64 encoded data
    * @param off the offset of where to begin decoding

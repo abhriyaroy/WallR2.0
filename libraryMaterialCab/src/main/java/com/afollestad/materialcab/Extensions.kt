@@ -3,6 +3,9 @@ package com.afollestad.materialcab
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.view.View
+import android.view.ViewPropertyAnimator
+import android.view.ViewTreeObserver
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
@@ -12,9 +15,6 @@ import androidx.annotation.Px
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import android.view.View
-import android.view.ViewPropertyAnimator
-import android.view.ViewTreeObserver
 
 @Px internal fun Context.dimen(@DimenRes res: Int): Int {
   return resources.getDimensionPixelSize(res)

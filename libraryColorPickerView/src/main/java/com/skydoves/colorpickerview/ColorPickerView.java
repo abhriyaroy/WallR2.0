@@ -2,10 +2,6 @@ package com.skydoves.colorpickerview;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -15,8 +11,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -24,6 +18,12 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.OnLifecycleEvent;
 import com.skydoves.colorpickerview.flag.FlagMode;
 import com.skydoves.colorpickerview.flag.FlagView;
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
@@ -45,6 +45,7 @@ import com.skydoves.colorpickerview.sliders.BrightnessSlideBar;
 @SuppressWarnings({"WeakerAccess", "unchecked", "unused", "IntegerDivisionInFloatingPointContext"})
 public class ColorPickerView extends FrameLayout implements LifecycleObserver {
 
+  public ColorPickerViewListener colorListener;
   private int selectedPureColor;
   private int selectedColor;
   private Point selectedPoint;
@@ -55,8 +56,6 @@ public class ColorPickerView extends FrameLayout implements LifecycleObserver {
   private Drawable selectorDrawable;
   private AlphaSlideBar alphaSlideBar;
   private BrightnessSlideBar brightnessSlider;
-  public ColorPickerViewListener colorListener;
-
   private ActionMode actionMode = ActionMode.ALWAYS;
 
   private float alpha_selector = 1.0f;
