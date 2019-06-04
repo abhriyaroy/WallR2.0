@@ -1,13 +1,13 @@
 package zebrostudio.wallr100.android.ui.search
 
-import android.arch.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.speech.RecognizerIntent
-import android.support.design.widget.AppBarLayout
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
+import com.google.android.material.appbar.AppBarLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.uber.autodispose.ScopeProvider
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
@@ -235,7 +235,8 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
 
   private fun initRecyclerView() {
     val layoutManager =
-        GridLayoutManager(this.baseContext, integerRes(R.integer.recycler_view_span_count))
+        androidx.recyclerview.widget.GridLayoutManager(this.baseContext,
+            integerRes(R.integer.recycler_view_span_count))
     recyclerView.layoutManager = layoutManager
     recyclerviewAdapter = ImageAdapter(imageRecyclerViewPresenter)
     val scaleInAdapter = ScaleInAnimationAdapter(recyclerviewAdapter)

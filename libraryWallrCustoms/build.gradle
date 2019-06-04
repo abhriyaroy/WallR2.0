@@ -24,7 +24,7 @@ android {
 
 dependencies {
   // Android support library
-  implementation "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
+  implementation 'com.google.android.material:material:1.0.0'
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
 }
 repositories {

@@ -1,7 +1,7 @@
 package zebrostudio.wallr100.data.database
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.RoomDatabase
+import androidx.room.Database
+import androidx.room.RoomDatabase
 import zebrostudio.wallr100.data.database.dao.CollectionsDao
 import zebrostudio.wallr100.data.database.entity.CollectionDatabaseImageEntity
 

@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Rect
 import android.os.Handler
 import android.os.Looper
-import android.support.annotation.LayoutRes
+import androidx.annotation.LayoutRes
 import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.LayoutInflater

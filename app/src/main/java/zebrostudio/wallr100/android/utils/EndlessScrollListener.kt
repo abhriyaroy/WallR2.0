@@ -1,18 +1,18 @@
 package zebrostudio.wallr100.android.utils
 
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.StaggeredGridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
-abstract class EndlessScrollListener(layoutManager: GridLayoutManager) : RecyclerView.OnScrollListener() {
+abstract class EndlessScrollListener(layoutManager: androidx.recyclerview.widget.GridLayoutManager) : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
 
   private var visibleThreshold = 5
   private var currentPage = 0
   private var previousTotalItemCount = 0
   private val startingPageIndex = 0
 
-  private var mLayoutManager: RecyclerView.LayoutManager = layoutManager
+  private var mLayoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager = layoutManager
 
   init {
     visibleThreshold *= layoutManager.spanCount
@@ -30,20 +30,20 @@ abstract class EndlessScrollListener(layoutManager: GridLayoutManager) : Recycle
     return maxSize
   }
 
-  override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
+  override fun onScrolled(view: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
     var lastVisibleItemPosition = 0
     val totalItemCount = mLayoutManager.itemCount
 
-    if (mLayoutManager is StaggeredGridLayoutManager) {
+    if (mLayoutManager is androidx.recyclerview.widget.StaggeredGridLayoutManager) {
       val lastVisibleItemPositions =
-          (mLayoutManager as StaggeredGridLayoutManager).findLastVisibleItemPositions(null)
+          (mLayoutManager as androidx.recyclerview.widget.StaggeredGridLayoutManager).findLastVisibleItemPositions(null)
       // get maximum element within the list
       lastVisibleItemPosition = getLastVisibleItem(lastVisibleItemPositions)
-    } else if (mLayoutManager is LinearLayoutManager) {
+    } else if (mLayoutManager is androidx.recyclerview.widget.LinearLayoutManager) {
       lastVisibleItemPosition =
-          (mLayoutManager as LinearLayoutManager).findLastVisibleItemPosition()
-    } else if (mLayoutManager is GridLayoutManager) {
-      lastVisibleItemPosition = (mLayoutManager as GridLayoutManager).findLastVisibleItemPosition()
+          (mLayoutManager as androidx.recyclerview.widget.LinearLayoutManager).findLastVisibleItemPosition()
+    } else if (mLayoutManager is androidx.recyclerview.widget.GridLayoutManager) {
+      lastVisibleItemPosition = (mLayoutManager as androidx.recyclerview.widget.GridLayoutManager).findLastVisibleItemPosition()
     }
 
     if (totalItemCount < previousTotalItemCount) {

@@ -4,10 +4,10 @@ package com.afollestad.dragselectrecyclerview
 
 import android.content.Context
 import android.os.Handler
-import android.support.annotation.RestrictTo
-import android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP
-import android.support.v7.util.DiffUtil.DiffResult.NO_POSITION
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.RestrictTo
+import androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP
+import androidx.recyclerview.widget.DiffUtil.DiffResult.NO_POSITION
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_MOVE
@@ -25,7 +25,7 @@ typealias AutoScrollListener = (scrolling: Boolean) -> Unit
 class DragSelectTouchListener private constructor(
   context: Context,
   private val receiver: DragSelectReceiver
-) : RecyclerView.OnItemTouchListener {
+) : androidx.recyclerview.widget.RecyclerView.OnItemTouchListener {
 
   private val autoScrollHandler = Handler()
   private val autoScrollRunnable = object : Runnable {
@@ -58,7 +58,7 @@ class DragSelectTouchListener private constructor(
     hotspotOffsetBottom = -1
   }
 
-  private var recyclerView: RecyclerView? = null
+  private var recyclerView: androidx.recyclerview.widget.RecyclerView? = null
 
   private var lastDraggedIndex = -1
   private var initialSelection: Int = 0
@@ -160,7 +160,7 @@ class DragSelectTouchListener private constructor(
 
   @RestrictTo(LIBRARY_GROUP)
   override fun onInterceptTouchEvent(
-    view: RecyclerView,
+    view: androidx.recyclerview.widget.RecyclerView,
     event: MotionEvent
   ): Boolean {
     val adapterIsEmpty = view.adapter?.isEmpty() ?: true
@@ -188,7 +188,7 @@ class DragSelectTouchListener private constructor(
 
   @RestrictTo(LIBRARY_GROUP)
   override fun onTouchEvent(
-    view: RecyclerView,
+    view: androidx.recyclerview.widget.RecyclerView,
     event: MotionEvent
   ) {
     val action = event.action

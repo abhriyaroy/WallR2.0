@@ -1,8 +1,8 @@
 package zebrostudio.wallr100.data.database.entity
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 const val TABLE_NAME = "collection_table"
 const val NAME_COLUMN = "NAME"

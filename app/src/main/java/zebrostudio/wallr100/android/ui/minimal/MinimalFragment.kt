@@ -1,11 +1,11 @@
 package zebrostudio.wallr100.android.ui.minimal
 
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -284,7 +284,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun getTopAndBottomVisiblePositions(): Pair<Int, Int> {
-    return (minimalFragmentRecyclerView.layoutManager as GridLayoutManager).let {
+    return (minimalFragmentRecyclerView.layoutManager as androidx.recyclerview.widget.GridLayoutManager).let {
       Pair(it.findFirstCompletelyVisibleItemPosition(),
           it.findLastCompletelyVisibleItemPosition() - BOTTOM_OFFSET)
     }
@@ -358,7 +358,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
   private fun initRecyclerView() {
     minimalFragmentRecyclerView?.apply {
-      GridLayoutManager(context,
+      androidx.recyclerview.widget.GridLayoutManager(context,
           integerRes(R.integer.minimal_image_recycler_view_span_count)).let {
         layoutManager = it
       }
@@ -372,8 +372,8 @@ class MinimalFragment : BaseFragment(), MinimalView {
         this.mode = RANGE
       }
       addOnItemTouchListener(touchListener!!)
-      addOnScrollListener(object : RecyclerView.OnScrollListener() {
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+      addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
           super.onScrolled(recyclerView, dx, dy)
           presenter.handleOnScrolled(dy)
         }

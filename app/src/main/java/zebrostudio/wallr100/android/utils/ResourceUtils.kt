@@ -1,7 +1,7 @@
 package zebrostudio.wallr100.android.utils
 
 import android.content.Context
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 
 interface ResourceUtils {
   fun getStringResource(@StringRes id: Int): String

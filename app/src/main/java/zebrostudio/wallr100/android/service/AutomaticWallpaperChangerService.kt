@@ -3,7 +3,7 @@ package zebrostudio.wallr100.android.service
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import android.support.annotation.Nullable
+import androidx.annotation.Nullable
 import dagger.android.AndroidInjection
 import zebrostudio.wallr100.android.notification.NotificationFactory
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerUseCase

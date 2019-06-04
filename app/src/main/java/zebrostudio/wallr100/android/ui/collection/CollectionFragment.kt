@@ -5,16 +5,16 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.v4.app.ActivityCompat.requestPermissions
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.view.menu.MenuBuilder
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView.ViewHolder
-import android.support.v7.widget.SwitchCompat
-import android.support.v7.widget.Toolbar
-import android.support.v7.widget.Toolbar.OnMenuItemClickListener
-import android.support.v7.widget.helper.ItemTouchHelper
+import com.google.android.material.appbar.AppBarLayout
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import androidx.appcompat.widget.SwitchCompat
+import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -499,7 +499,8 @@ class CollectionFragment : BaseFragment(),
         CollectionRecyclerTouchHelperCallback(collectionsImageAdapter)
     itemTouchHelper = ItemTouchHelper(collectionRecyclerTouchHelperCallback)
     collectionsRecyclerView?.apply {
-      GridLayoutManager(context, integerRes(R.integer.recycler_view_span_count)).let {
+      androidx.recyclerview.widget.GridLayoutManager(context,
+          integerRes(R.integer.recycler_view_span_count)).let {
         layoutManager = it
       }
       addItemDecoration(

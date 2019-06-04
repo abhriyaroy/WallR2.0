@@ -4,10 +4,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.IdRes
-import android.support.v4.app.ActivityOptionsCompat
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import androidx.annotation.IdRes
+import androidx.core.app.ActivityOptionsCompat
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
@@ -63,7 +63,7 @@ private const val MAIL_URI = "mailto:"
 class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
 
   @Inject
-  internal lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+  internal lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<androidx.fragment.app.Fragment>
   @Inject
   internal lateinit var presenter: MainContract.MainPresenter
   @Inject

@@ -1,11 +1,11 @@
 package zebrostudio.wallr100.android.ui.wallpaper
 
-import android.arch.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,7 +37,7 @@ import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
 
-class ImageListFragment : Fragment(), ImageListView {
+class ImageListFragment : androidx.fragment.app.Fragment(), ImageListView {
 
   @Inject
   internal lateinit var imageRecyclerViewPresenter: ImageRecyclerItemContract.ImageRecyclerViewPresenter
@@ -45,7 +45,7 @@ class ImageListFragment : Fragment(), ImageListView {
 
   private var recyclerviewAdapter: ImageAdapter? = null
   private var spinkitView: SpinKitView? = null
-  private var recyclerView: RecyclerView? = null
+  private var recyclerView: androidx.recyclerview.widget.RecyclerView? = null
   private var errorInfoRelativeLayout: LinearLayout? = null
   private var swipeRefreshLayout: WaveSwipeRefreshLayout? = null
 
@@ -121,7 +121,8 @@ class ImageListFragment : Fragment(), ImageListView {
 
   private fun initRecyclerView() {
     val layoutManager =
-        GridLayoutManager(context, integerRes(R.integer.recycler_view_span_count))
+        androidx.recyclerview.widget.GridLayoutManager(context,
+            integerRes(R.integer.recycler_view_span_count))
     recyclerView?.layoutManager = layoutManager
     recyclerviewAdapter = ImageAdapter(imageRecyclerViewPresenter)
     val scaleInAdapter = ScaleInAnimationAdapter(recyclerviewAdapter)

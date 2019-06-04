@@ -1,14 +1,14 @@
 package zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper
 
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper.Callback
-import android.support.v7.widget.helper.ItemTouchHelper.DOWN
-import android.support.v7.widget.helper.ItemTouchHelper.END
-import android.support.v7.widget.helper.ItemTouchHelper.LEFT
-import android.support.v7.widget.helper.ItemTouchHelper.RIGHT
-import android.support.v7.widget.helper.ItemTouchHelper.START
-import android.support.v7.widget.helper.ItemTouchHelper.UP
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper.Callback
+import androidx.recyclerview.widget.ItemTouchHelper.DOWN
+import androidx.recyclerview.widget.ItemTouchHelper.END
+import androidx.recyclerview.widget.ItemTouchHelper.LEFT
+import androidx.recyclerview.widget.ItemTouchHelper.RIGHT
+import androidx.recyclerview.widget.ItemTouchHelper.START
+import androidx.recyclerview.widget.ItemTouchHelper.UP
 
 class CollectionRecyclerTouchHelperCallback(
   private val adapter: ItemTouchHelperAdapter
@@ -23,10 +23,10 @@ class CollectionRecyclerTouchHelperCallback(
   }
 
   override fun getMovementFlags(
-    recyclerView: RecyclerView,
-    viewHolder: RecyclerView.ViewHolder
+    recyclerView: androidx.recyclerview.widget.RecyclerView,
+    viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder
   ): Int {
-    return if (recyclerView.layoutManager is GridLayoutManager) {
+    return if (recyclerView.layoutManager is androidx.recyclerview.widget.GridLayoutManager) {
       val swipeFlags = 0
       val dragFlags = UP or DOWN or LEFT or RIGHT
       makeMovementFlags(dragFlags, swipeFlags)
@@ -38,9 +38,9 @@ class CollectionRecyclerTouchHelperCallback(
   }
 
   override fun onMove(
-    recyclerView: RecyclerView,
-    source: RecyclerView.ViewHolder,
-    target: RecyclerView.ViewHolder
+    recyclerView: androidx.recyclerview.widget.RecyclerView,
+    source: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+    target: androidx.recyclerview.widget.RecyclerView.ViewHolder
   ): Boolean {
     if (source.itemViewType != target.itemViewType) {
       return false
@@ -49,7 +49,7 @@ class CollectionRecyclerTouchHelperCallback(
     return true
   }
 
-  override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
+  override fun onSwiped(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, i: Int) {
     // Do Nothing
   }
 

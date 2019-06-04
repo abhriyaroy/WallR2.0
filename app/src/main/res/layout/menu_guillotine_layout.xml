@@ -13,7 +13,7 @@
       android:layout_height="wrap_content"
       android:layout_marginBottom="@dimen/guillotine_medium_margin">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarGuillotineMenu"
         style="@style/ToolbarTheme"
         app:contentInsetStart="@dimen/toolbar_contentinset_start">
@@ -47,7 +47,7 @@
 
       </RelativeLayout>
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
   </RelativeLayout>
 

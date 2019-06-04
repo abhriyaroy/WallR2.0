@@ -2,7 +2,7 @@ package zebrostudio.wallr100.android.ui.adapters
 
 import android.content.Context
 import android.graphics.Color
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +20,7 @@ import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEnt
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 
 class ImageAdapter(private val presenter: ImageRecyclerItemContract.ImageRecyclerViewPresenter) :
-    RecyclerView.Adapter<ViewHolder>() {
+    androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder>() {
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
     return ViewHolder(parent.inflate(LayoutInflater.from(parent.context),
@@ -41,7 +41,7 @@ class ViewHolder(
   itemView: View,
   private val context: Context,
   private val presenter: ImageRecyclerItemContract.ImageRecyclerViewPresenter
-) : RecyclerView.ViewHolder(itemView),
+) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView),
     ImageRecyclerItemContract.ImageRecyclerItemView {
 
   override fun setImageViewBackgroundAndAttachClickListener(colorHexCode: String) {

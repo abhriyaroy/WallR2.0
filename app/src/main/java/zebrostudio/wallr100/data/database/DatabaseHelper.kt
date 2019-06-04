@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.data.database
 
-import android.arch.persistence.room.Room
+import androidx.room.Room
 import android.content.Context
 
 interface DatabaseHelper {
