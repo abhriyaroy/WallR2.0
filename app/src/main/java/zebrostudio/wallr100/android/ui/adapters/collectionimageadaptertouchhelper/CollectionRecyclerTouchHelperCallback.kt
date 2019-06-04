@@ -1,7 +1,5 @@
 package zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper
 
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.ItemTouchHelper.Callback
 import androidx.recyclerview.widget.ItemTouchHelper.DOWN
 import androidx.recyclerview.widget.ItemTouchHelper.END

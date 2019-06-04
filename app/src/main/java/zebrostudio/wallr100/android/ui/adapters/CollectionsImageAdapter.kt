@@ -1,7 +1,6 @@
 package zebrostudio.wallr100.android.ui.adapters
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +27,8 @@ class CollectionsImageAdapter(
   private val collectionsImageAdapterCallback: CollectionsImageAdapterCallbacks,
   private val startDragListener: OnStartDragListener,
   private val presenter: CollectionRecyclerPresenter
-) : androidx.recyclerview.widget.RecyclerView.Adapter<CollectionsImageViewHolder>(), ItemTouchHelperAdapter {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<CollectionsImageViewHolder>(),
+    ItemTouchHelperAdapter {
 
   private var imagePathList = mutableListOf<CollectionsPresenterEntity>()
   private var selectedHashMap = HashMap<Int, CollectionsPresenterEntity>()

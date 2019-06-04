@@ -3,11 +3,11 @@ package zebrostudio.wallr100.android.utils
 import android.app.ActivityManager
 import android.content.Context
 import android.net.ConnectivityManager
+import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.IntegerRes
 import androidx.annotation.StringRes
-import android.widget.Toast
 import es.dmoral.toasty.Toasty
 
 fun Context.stringRes(@StringRes id: Int) = getString(id)!!

@@ -1,7 +1,7 @@
 package zebrostudio.wallr100.data.database
 
-import androidx.room.Room
 import android.content.Context
+import androidx.room.Room
 
 interface DatabaseHelper {
   fun getDatabase(): WallrDatabase

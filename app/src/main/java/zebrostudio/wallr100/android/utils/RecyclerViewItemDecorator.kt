@@ -1,7 +1,6 @@
 package zebrostudio.wallr100.android.utils
 
 import android.graphics.Rect
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
 class RecyclerViewItemDecorator(private val sizeGridSpacingPx: Int, private val gridSize: Int) :
@@ -18,7 +17,8 @@ class RecyclerViewItemDecorator(private val sizeGridSpacingPx: Int, private val 
     val frameWidth =
         ((parent.width - sizeGridSpacingPx.toFloat() * (gridSize - 1)) / gridSize).toInt()
     val padding = parent.width / gridSize - frameWidth
-    val itemPosition = (view.layoutParams as androidx.recyclerview.widget.RecyclerView.LayoutParams).viewAdapterPosition
+    val itemPosition =
+        (view.layoutParams as androidx.recyclerview.widget.RecyclerView.LayoutParams).viewAdapterPosition
     if (itemPosition < gridSize) {
       outRect.top = 0
     } else {

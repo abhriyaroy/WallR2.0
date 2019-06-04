@@ -1,18 +1,15 @@
 package zebrostudio.wallr100.android.utils
 
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-
-abstract class EndlessScrollListener(layoutManager: androidx.recyclerview.widget.GridLayoutManager) : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+abstract class EndlessScrollListener(layoutManager: androidx.recyclerview.widget.GridLayoutManager) :
+    androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
 
   private var visibleThreshold = 5
   private var currentPage = 0
   private var previousTotalItemCount = 0
   private val startingPageIndex = 0
 
-  private var mLayoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager = layoutManager
+  private var mLayoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager =
+      layoutManager
 
   init {
     visibleThreshold *= layoutManager.spanCount
@@ -36,14 +33,16 @@ abstract class EndlessScrollListener(layoutManager: androidx.recyclerview.widget
 
     if (mLayoutManager is androidx.recyclerview.widget.StaggeredGridLayoutManager) {
       val lastVisibleItemPositions =
-          (mLayoutManager as androidx.recyclerview.widget.StaggeredGridLayoutManager).findLastVisibleItemPositions(null)
+          (mLayoutManager as androidx.recyclerview.widget.StaggeredGridLayoutManager).findLastVisibleItemPositions(
+              null)
       // get maximum element within the list
       lastVisibleItemPosition = getLastVisibleItem(lastVisibleItemPositions)
     } else if (mLayoutManager is androidx.recyclerview.widget.LinearLayoutManager) {
       lastVisibleItemPosition =
           (mLayoutManager as androidx.recyclerview.widget.LinearLayoutManager).findLastVisibleItemPosition()
     } else if (mLayoutManager is androidx.recyclerview.widget.GridLayoutManager) {
-      lastVisibleItemPosition = (mLayoutManager as androidx.recyclerview.widget.GridLayoutManager).findLastVisibleItemPosition()
+      lastVisibleItemPosition =
+          (mLayoutManager as androidx.recyclerview.widget.GridLayoutManager).findLastVisibleItemPosition()
     }
 
     if (totalItemCount < previousTotalItemCount) {

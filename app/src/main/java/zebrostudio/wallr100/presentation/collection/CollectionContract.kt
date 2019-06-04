@@ -54,6 +54,7 @@ interface CollectionContract {
     fun showWallpaperChangerPermissionsRequiredDialog()
     fun disableBackPress()
     fun enableBackPress()
+    fun showPreviousFragment()
   }
 
   interface CollectionPresenter : BasePresenter<CollectionView> {
@@ -61,6 +62,7 @@ interface CollectionContract {
     fun handleActivityResult()
     fun handleImportFromLocalStorageClicked()
     fun handlePurchaseClicked()
+    fun handleGoBackFromPurchaseDialogClicked()
     fun handleReorderImagesHintHintDismissed()
     fun handleItemMoved(
       fromPosition: Int,

@@ -1,7 +1,6 @@
 package zebrostudio.wallr100.android.ui.wallpaper
 
 import android.os.Bundle
-import androidx.viewpager.widget.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

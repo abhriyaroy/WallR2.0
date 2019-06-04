@@ -1,13 +1,12 @@
 package zebrostudio.wallr100.android.ui.search
 
-import androidx.lifecycle.Lifecycle
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.speech.RecognizerIntent
-import com.google.android.material.appbar.AppBarLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.lifecycle.Lifecycle
+import com.google.android.material.appbar.AppBarLayout
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.uber.autodispose.ScopeProvider
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider

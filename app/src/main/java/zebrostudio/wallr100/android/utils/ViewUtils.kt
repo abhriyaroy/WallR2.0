@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Rect
 import android.os.Handler
 import android.os.Looper
-import androidx.annotation.LayoutRes
 import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -17,6 +16,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
+import androidx.annotation.LayoutRes
 import zebrostudio.wallr100.R
 
 fun View.setOnDebouncedClickListener(onClick: (v: View) -> Unit) {

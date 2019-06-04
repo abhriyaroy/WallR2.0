@@ -1,13 +1,12 @@
 package zebrostudio.wallr100.android.ui
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.Lifecycle
 import android.graphics.PorterDuff.Mode.MULTIPLY
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import androidx.lifecycle.Lifecycle
 import com.getbase.floatingactionbutton.FloatingActionButton
 import com.ogaclejapan.smarttablayout.SmartTabLayout
 import com.uber.autodispose.ScopeProvider

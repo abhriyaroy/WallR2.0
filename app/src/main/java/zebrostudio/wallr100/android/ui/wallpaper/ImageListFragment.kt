@@ -1,15 +1,12 @@
 package zebrostudio.wallr100.android.ui.wallpaper
 
-import androidx.lifecycle.Lifecycle
 import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.lifecycle.Lifecycle
 import com.github.ybq.android.spinkit.SpinKitView
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem
 import com.uber.autodispose.ScopeProvider

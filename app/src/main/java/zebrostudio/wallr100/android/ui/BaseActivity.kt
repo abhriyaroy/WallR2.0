@@ -1,8 +1,8 @@
 package zebrostudio.wallr100.android.ui
 
-import androidx.lifecycle.Lifecycle
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import com.uber.autodispose.ScopeProvider
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import dagger.android.AndroidInjection

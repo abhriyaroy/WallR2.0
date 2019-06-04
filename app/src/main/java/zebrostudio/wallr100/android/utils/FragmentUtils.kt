@@ -1,10 +1,9 @@
 package zebrostudio.wallr100.android.utils
 
+import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.IntegerRes
 import androidx.annotation.StringRes
-import androidx.fragment.app.Fragment
-import android.widget.Toast
 import es.dmoral.toasty.Toasty
 
 fun androidx.fragment.app.Fragment.stringRes(@StringRes id: Int) = getString(id)

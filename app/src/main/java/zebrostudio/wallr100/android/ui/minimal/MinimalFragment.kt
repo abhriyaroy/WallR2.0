@@ -1,21 +1,19 @@
 package zebrostudio.wallr100.android.ui.minimal
 
 import android.os.Bundle
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.dragselectrecyclerview.DragSelectTouchListener
 import com.afollestad.dragselectrecyclerview.Mode.RANGE
 import com.afollestad.materialcab.MaterialCab
 import com.afollestad.materialdialogs.MaterialDialog
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetView
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.snackbar.Snackbar
 import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerView
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
@@ -373,7 +371,11 @@ class MinimalFragment : BaseFragment(), MinimalView {
       }
       addOnItemTouchListener(touchListener!!)
       addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
-        override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
+        override fun onScrolled(
+          recyclerView: androidx.recyclerview.widget.RecyclerView,
+          dx: Int,
+          dy: Int
+        ) {
           super.onScrolled(recyclerView, dx, dy)
           presenter.handleOnScrolled(dy)
         }

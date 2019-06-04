@@ -1,9 +1,9 @@
 package zebrostudio.wallr100.android.utils
 
-import androidx.annotation.AnimRes
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.annotation.AnimRes
 
 private class AnimationListener(
   private val onAnimationRepeat: () -> Unit,

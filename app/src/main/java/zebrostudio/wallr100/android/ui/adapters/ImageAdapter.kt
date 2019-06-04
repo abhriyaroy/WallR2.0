@@ -2,7 +2,6 @@ package zebrostudio.wallr100.android.ui.adapters
 
 import android.content.Context
 import android.graphics.Color
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

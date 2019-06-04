@@ -77,6 +77,10 @@ class CollectionPresenterImpl(
     collectionView?.redirectToBuyPro()
   }
 
+  override fun handleGoBackFromPurchaseDialogClicked() {
+    collectionView?.showPreviousFragment()
+  }
+
   override fun handleReorderImagesHintHintDismissed() {
     widgetHintsUseCase.saveCollectionsImageReorderHintShown()
   }

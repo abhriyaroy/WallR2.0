@@ -12,12 +12,12 @@ import android.content.Intent.createChooser
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import androidx.core.app.ActivityCompat.requestPermissions
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat.requestPermissions
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions

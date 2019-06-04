@@ -5,16 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import com.google.android.material.appbar.AppBarLayout
-import androidx.core.app.ActivityCompat.requestPermissions
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.menu.MenuBuilder
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import androidx.appcompat.widget.SwitchCompat
-import androidx.appcompat.widget.Toolbar
-import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener
-import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -22,10 +12,19 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.widget.SwitchCompat
+import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.afollestad.materialcab.MaterialCab
 import com.afollestad.materialdialogs.MaterialDialog
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetView
+import com.google.android.material.appbar.AppBarLayout
 import com.qingmei2.rximagepicker.core.RxImagePicker
 import com.qingmei2.rximagepicker_extension.MimeType
 import com.qingmei2.rximagepicker_extension_zhihu.ZhihuConfigurationBuilder
@@ -45,6 +44,7 @@ import zebrostudio.wallr100.android.ui.adapters.CollectionsImageAdapterCallbacks
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.CollectionRecyclerTouchHelperCallback
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.OnStartDragListener
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
+import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.android.ui.detail.images.BLUR_RADIUS
 import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
@@ -193,15 +193,19 @@ class CollectionFragment : BaseFragment(),
     MaterialDialog.Builder(activity!!)
         .title(stringRes(R.string.collections_fragment_purchase_pro_diloag_title))
         .content(stringRes(R.string.collections_fragment_purchase_pro_diloag_description))
-        .onPositive { _, _ -> redirectToBuyProActivity() }
+        .onPositive { _, _ -> presenter.handlePurchaseClicked() }
+        .onNegative { _, _ -> presenter.handleGoBackFromPurchaseDialogClicked() }
         .cancelable(false)
         .positiveText(stringRes(R.string.collections_fragment_purchase_pro_diloag_positive_text))
+        .negativeText(stringRes(R.string.collections_fragment_purchase_pro_diloag_negative_text))
+        .positiveColor(colorRes(R.color.accent))
+        .negativeColor(colorRes(R.color.accent))
         .show()
   }
 
   override fun redirectToBuyPro() {
     startActivityForResult(Intent(context, BuyProActivity::class.java),
-        COLLECTION_FRAGMENT_REQUEST_CODE)
+        PurchaseTransactionConfig.PURCHASE_REQUEST_CODE)
   }
 
   override fun requestStoragePermission() {
@@ -492,6 +496,10 @@ class CollectionFragment : BaseFragment(),
     MainActivity.releaseBackPressBlock()
   }
 
+  override fun showPreviousFragment() {
+    fragmentManager?.popBackStack()
+  }
+
   private fun initRecyclerViewWithListeners() {
     collectionsImageAdapter = CollectionsImageAdapter(
         this, this, recyclerPresenter)
@@ -526,11 +534,6 @@ class CollectionFragment : BaseFragment(),
     activity?.blurView?.setupWith(activity!!.rootFrameLayout)
         ?.setBlurAlgorithm(RenderScriptBlur(context!!))
         ?.setBlurRadius(BLUR_RADIUS)
-  }
-
-  private fun redirectToBuyProActivity() {
-    startActivityForResult(Intent(context!!, BuyProActivity::class.java),
-        COLLECTION_FRAGMENT_REQUEST_CODE)
   }
 
   companion object {
