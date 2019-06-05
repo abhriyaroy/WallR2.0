@@ -49,7 +49,7 @@ private const val SHARE_INTENT_TYPE = "text/plain"
 class DetailPresenterImpl(
   private val resourceUtils: ResourceUtils,
   private val imageOptionsUseCase: ImageOptionsUseCase,
-  private var userPremiumStatusUseCase: UserPremiumStatusUseCase,
+  private val userPremiumStatusUseCase: UserPremiumStatusUseCase,
   private val wallpaperSetter: WallpaperSetter,
   private val postExecutionThread: PostExecutionThread,
   private val imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper,
