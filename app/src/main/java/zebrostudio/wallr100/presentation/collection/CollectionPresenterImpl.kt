@@ -73,11 +73,11 @@ class CollectionPresenterImpl(
     }
   }
 
-  override fun handlePurchaseClicked() {
+  override fun handlePurchaseDialogPositiveClick() {
     collectionView?.redirectToBuyPro()
   }
 
-  override fun handleGoBackFromPurchaseDialogClicked() {
+  override fun handlePurchaseDialogNegativeClick() {
     collectionView?.showPreviousFragment()
   }
 

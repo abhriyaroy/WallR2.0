@@ -61,8 +61,8 @@ interface CollectionContract {
     fun handleViewCreated()
     fun handleActivityResult()
     fun handleImportFromLocalStorageClicked()
-    fun handlePurchaseClicked()
-    fun handleGoBackFromPurchaseDialogClicked()
+    fun handlePurchaseDialogPositiveClick()
+    fun handlePurchaseDialogNegativeClick()
     fun handleReorderImagesHintHintDismissed()
     fun handleItemMoved(
       fromPosition: Int,

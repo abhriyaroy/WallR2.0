@@ -193,8 +193,8 @@ class CollectionFragment : BaseFragment(),
     MaterialDialog.Builder(activity!!)
         .title(stringRes(R.string.collections_fragment_purchase_pro_diloag_title))
         .content(stringRes(R.string.collections_fragment_purchase_pro_diloag_description))
-        .onPositive { _, _ -> presenter.handlePurchaseClicked() }
-        .onNegative { _, _ -> presenter.handleGoBackFromPurchaseDialogClicked() }
+        .onPositive { _, _ -> presenter.handlePurchaseDialogPositiveClick() }
+        .onNegative { _, _ -> presenter.handlePurchaseDialogNegativeClick() }
         .cancelable(false)
         .positiveText(stringRes(R.string.collections_fragment_purchase_pro_diloag_positive_text))
         .negativeText(stringRes(R.string.collections_fragment_purchase_pro_diloag_negative_text))

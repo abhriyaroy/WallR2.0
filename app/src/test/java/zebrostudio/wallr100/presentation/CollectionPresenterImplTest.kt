@@ -571,10 +571,17 @@ class CollectionPresenterImplTest {
     verify(collectionView).showImagePicker()
   }
 
-  @Test fun `should redirect to buy pro on handlePurchaseClick call success`() {
-    collectionPresenterImpl.handlePurchaseClicked()
+  @Test fun `should redirect to buy pro on handlePurchaseDialogPositiveClick call success`() {
+    collectionPresenterImpl.handlePurchaseDialogPositiveClick()
 
     verify(collectionView).redirectToBuyPro()
+  }
+
+  @Test
+  fun `should show previous fragment on handlePurchaseDialogNegativeClick call success`() {
+    collectionPresenterImpl.handlePurchaseDialogNegativeClick()
+
+    verify(collectionView).showPreviousFragment()
   }
 
   @Test
