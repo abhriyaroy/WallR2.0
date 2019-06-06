@@ -34,6 +34,8 @@ android {
             onesignal_app_id               : "ff94f0fe-e700-4b66-9f26-5408fca95297",
             onesignal_google_project_number: 'REMOTE'
     ]
+
+    testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
   }
   buildTypes {
     release {
@@ -115,7 +117,7 @@ android {
     implementation "com.github.qingmei2:rximagepicker_support:$RX_IMAGE_PICKER_VERSION"
     implementation "com.github.qingmei2:rximagepicker_support_zhihu:$RX_IMAGE_PICKER_VERSION"
     // Onesignal
-    implementation 'com.onesignal:OneSignal:[3.9.1, 3.99.99]'
+    implementation "com.onesignal:OneSignal:$ONE_SIGNAL_VERSION"
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
     implementation project(':librarySearch')
@@ -129,10 +131,14 @@ android {
     implementation project(':libraryMaterialCab')
     implementation project(':libraryFloatingActionButton')
     implementation project(':libraryColorPickerView')
-    // Test runners
+    // Unit test runners
     testImplementation "junit:junit:$JUNIT_VERSION"
     testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_VERSION"
+    // Instrumentation test runners
+    androidTestImplementation "androidx.test.espresso:espresso-core:$ESPRESSO_VERSION"
+    androidTestImplementation "androidx.test:runner:$TEST_RUNNER_VERSION"
+    androidTestImplementation "androidx.test:rules:$TEST_RUNNER_VERSION"
   }
 }
 apply plugin: 'com.google.gms.google-services'
