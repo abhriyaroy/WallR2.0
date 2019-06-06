@@ -11,7 +11,6 @@ import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -26,13 +25,10 @@ import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.presentation.search.SearchContract
 import zebrostudio.wallr100.presentation.search.SearchPresenterImpl
 import zebrostudio.wallr100.presentation.search.mapper.SearchPicturesPresenterEntityMapper
-import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class SearchPresenterImplTest {
-
-  @get:Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
 
   @Mock lateinit var postExecutionThread: PostExecutionThread
   @Mock lateinit var searchView: SearchContract.SearchView

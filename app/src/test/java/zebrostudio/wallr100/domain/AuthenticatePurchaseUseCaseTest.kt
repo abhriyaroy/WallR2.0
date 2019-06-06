@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -15,12 +14,9 @@ import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseInteractor
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
-import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 
 @RunWith(MockitoJUnitRunner::class)
 class AuthenticatePurchaseUseCaseTest {
-
-  @get:Rule var trampolineSchedulerRule = TrampolineSchedulerRule()
 
   @Mock private lateinit var wallrRepository: WallrRepository
   private lateinit var authenticatePurchaseUseCase: AuthenticatePurchaseUseCase

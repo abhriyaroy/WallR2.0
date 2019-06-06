@@ -7,7 +7,6 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -15,12 +14,9 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.domain.datafactory.ImageModelFactory
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesInteractor
-import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 
 @RunWith(MockitoJUnitRunner::class)
 class WallpaperImagesUseCaseTest {
-
-  @get:Rule val trampolineScheduler = TrampolineSchedulerRule()
 
   @Mock private lateinit var wallrRepository: WallrRepository
 

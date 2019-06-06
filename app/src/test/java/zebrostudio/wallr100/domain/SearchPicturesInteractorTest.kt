@@ -6,7 +6,6 @@ import io.reactivex.Single
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -17,13 +16,10 @@ import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.domain.datafactory.SearchPicturesModelFactory
 import zebrostudio.wallr100.domain.interactor.SearchPicturesInteractor
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
-import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class SearchPicturesInteractorTest {
-
-  @get:Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
 
   @Mock lateinit var wallrRepository: WallrRepository
   private lateinit var searchPicturesUseCase: SearchPicturesUseCase

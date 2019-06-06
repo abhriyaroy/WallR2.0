@@ -11,7 +11,6 @@ import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -24,13 +23,10 @@ import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.presentation.expandimage.FullScreenImageContract.FullScreenImageView
 import zebrostudio.wallr100.presentation.expandimage.FullScreenImagePresenterImpl
-import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class FullScreenImagePresenterImplTest {
-
-  @get:Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
 
   @Mock private lateinit var imageOptionsUseCase: ImageOptionsUseCase
   @Mock private lateinit var postExecutionThread: PostExecutionThread

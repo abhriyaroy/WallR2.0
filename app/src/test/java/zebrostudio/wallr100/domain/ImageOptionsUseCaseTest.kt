@@ -12,7 +12,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -22,13 +21,10 @@ import zebrostudio.wallr100.domain.interactor.ImageOptionsInteractor
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.WALLPAPER
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
-import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class ImageOptionsUseCaseTest {
-
-  @get:Rule var trampolineSchedulerRule = TrampolineSchedulerRule()
 
   @Mock private lateinit var wallrRepository: WallrRepository
   @Mock private lateinit var mockBitmap: Bitmap

@@ -35,7 +35,7 @@ android {
             onesignal_google_project_number: 'REMOTE'
     ]
 
-    testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
   }
   buildTypes {
     release {
@@ -138,7 +138,6 @@ android {
     // Instrumentation test runners
     androidTestImplementation "androidx.test.espresso:espresso-core:$ESPRESSO_VERSION"
     androidTestImplementation "androidx.test:runner:$TEST_RUNNER_VERSION"
-    androidTestImplementation "androidx.test:rules:$TEST_RUNNER_VERSION"
   }
 }
 apply plugin: 'com.google.gms.google-services'
