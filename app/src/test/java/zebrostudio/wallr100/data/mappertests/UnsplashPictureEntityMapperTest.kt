@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.data.mappertests
 
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,7 +26,7 @@ class UnsplashPictureEntityMapperTest {
   }
 
   @Test
-  fun `should return list of ImageModel on mapFromEntity call success with input of FirebaseImageEntity list`() {
+  fun `should return list of ImageModel on mapFromEntity call success`() {
     val id = UUID.randomUUID().toString()
     val createdAt = UUID.randomUUID().toString()
     val imageWidth = 1
@@ -63,7 +63,7 @@ class UnsplashPictureEntityMapperTest {
         likedByUser,
         UrlModel(imageRawLink, imageLargeLink, imageMediumLink, imageSmallLink, imageThumbLink))
 
-    Assert.assertEquals(listOf(searchPicturesModel),
+    assertEquals(listOf(searchPicturesModel),
         unsplashPictureEntityMapper.mapFromEntity(listOf(unspalshPicturesEntity)))
   }
 
