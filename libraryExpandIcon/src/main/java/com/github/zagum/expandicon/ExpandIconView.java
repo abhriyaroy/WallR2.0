@@ -186,6 +186,7 @@ public class ExpandIconView extends View {
     canvas.drawPath(path, paint);
   }
 
+
   @Override
   protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
     super.onSizeChanged(width, height, oldWidth, oldHeight);

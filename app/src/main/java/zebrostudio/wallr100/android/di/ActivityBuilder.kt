@@ -14,7 +14,6 @@ import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.android.ui.main.MainActivityModule
 import zebrostudio.wallr100.android.ui.search.SearchActivity
 import zebrostudio.wallr100.android.ui.search.SearchActivityModule
-import javax.inject.Singleton
 
 @Module
 abstract class ActivityBuilder {
