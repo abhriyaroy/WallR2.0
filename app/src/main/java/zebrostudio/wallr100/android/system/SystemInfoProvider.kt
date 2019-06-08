@@ -21,7 +21,7 @@ class SystemInfoProviderImpl : SystemInfoProvider {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       Build.VERSION.BASE_OS
     } else {
-      System.getProperty("os.version") ?: ""
+      System.getProperty("os.version")
     }
   }
 
