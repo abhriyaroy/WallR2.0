@@ -86,27 +86,25 @@ class CollectionPresenterImpl(
     toPosition: Int,
     imagePathList: MutableList<CollectionsPresenterEntity>
   ) {
-    val copyOfImageListPriorToReordering = mutableListOf<CollectionsPresenterEntity>()
-    copyOfImageListPriorToReordering.addAll(imagePathList)
-    reorderImageList(imagePathList, fromPosition, toPosition)
-    collectionView?.updateItemViewMovement(fromPosition, toPosition)
-    collectionImagesUseCase.reorderImage(
-        collectionImagesPresenterEntityMapper.mapFromPresenterEntity(imagePathList))
-        .observeOn(postExecutionThread.scheduler)
-        .map {
-          collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
-        }
-        .autoDisposable(collectionView!!.getScope())
-        .subscribe({
-          collectionView?.setImagesList(it)
-          collectionView?.updateChangesInEveryItemViewWithDelay()
-          collectionView?.showReorderSuccessMessage()
-          copyOfImageListPriorToReordering.clear()
-        }, {
-          collectionView?.setImagesList(copyOfImageListPriorToReordering)
-          collectionView?.updateChangesInEveryItemView()
-          collectionView?.showUnableToReorderErrorMessage()
-        })
+    mutableListOf<CollectionsPresenterEntity>().apply {
+      addAll(imagePathList)
+    }.let { copyOfImageListPriorToReordering ->
+      reorderImageList(imagePathList, fromPosition, toPosition)
+      collectionView?.updateItemViewMovement(fromPosition, toPosition)
+      collectionImagesUseCase.reorderImage(
+          collectionImagesPresenterEntityMapper.mapFromPresenterEntity(imagePathList))
+          .observeOn(postExecutionThread.scheduler)
+          .map {
+            collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
+          }
+          .autoDisposable(collectionView!!.getScope())
+          .subscribe({
+            handleItemMovedSuccess(it)
+            copyOfImageListPriorToReordering.clear()
+          }, {
+            handleItemMovedError(copyOfImageListPriorToReordering)
+          })
+    }
   }
 
   override fun handleItemClicked(
@@ -213,22 +211,13 @@ class CollectionPresenterImpl(
         }
         .observeOn(postExecutionThread.scheduler)
         .doOnSubscribe {
-          collectionView?.blurScreen()
-          collectionView?.showIndefiniteLoaderWithMessage(
-              resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
-          collectionView?.disableBackPress()
+          doOnSetWallpaperSubscription()
         }
         .autoDisposable(collectionView!!.getScope())
         .subscribe({
-          hideCabIfActive()
-          collectionView?.removeBlurFromScreen()
-          collectionView?.showSetWallpaperSuccessMessage()
-          collectionView?.enableBackPress()
+          handleSetWallpaperSuccess()
         }, {
-          hideCabIfActive()
-          collectionView?.removeBlurFromScreen()
-          collectionView?.showGenericErrorMessage()
-          collectionView?.enableBackPress()
+          handleSetWallpaperError()
         })
   }
 
@@ -391,6 +380,19 @@ class CollectionPresenterImpl(
     }
   }
 
+  private fun handleItemMovedSuccess(list: List<CollectionsPresenterEntity>) {
+    collectionView?.setImagesList(list)
+    collectionView?.updateChangesInEveryItemViewWithDelay()
+    collectionView?.showReorderSuccessMessage()
+  }
+
+  private fun handleItemMovedError(originalList: MutableList<CollectionsPresenterEntity>) {
+    collectionView?.setImagesList(originalList)
+    collectionView?.updateChangesInEveryItemView()
+    collectionView?.showUnableToReorderErrorMessage()
+    originalList.clear()
+  }
+
   private fun redecorateViewAfterCrystallization(list: List<CollectionsPresenterEntity>) {
     hideCabIfActive()
     collectionView?.setImagesList(list)
@@ -487,6 +489,27 @@ class CollectionPresenterImpl(
   private fun stopWallpaperChangerAndRemoveLayout() {
     collectionView?.hideWallpaperChangerLayout()
     collectionImagesUseCase.stopAutomaticWallpaperChanger()
+  }
+
+  private fun doOnSetWallpaperSubscription() {
+    collectionView?.blurScreen()
+    collectionView?.showIndefiniteLoaderWithMessage(
+        resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
+    collectionView?.disableBackPress()
+  }
+
+  private fun handleSetWallpaperSuccess() {
+    hideCabIfActive()
+    collectionView?.removeBlurFromScreen()
+    collectionView?.showSetWallpaperSuccessMessage()
+    collectionView?.enableBackPress()
+  }
+
+  private fun handleSetWallpaperError() {
+    hideCabIfActive()
+    collectionView?.removeBlurFromScreen()
+    collectionView?.showGenericErrorMessage()
+    collectionView?.enableBackPress()
   }
 
 }
