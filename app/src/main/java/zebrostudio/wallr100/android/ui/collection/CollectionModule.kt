@@ -2,7 +2,7 @@ package zebrostudio.wallr100.android.ui.collection
 
 import dagger.Module
 import dagger.Provides
-import zebrostudio.wallr100.android.permissions.PermissionsCheckerHelper
+import zebrostudio.wallr100.android.permissions.PermissionsChecker
 import zebrostudio.wallr100.android.system.SystemInfoProvider
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
@@ -27,11 +27,11 @@ class CollectionModule {
     wallpaperSetter: WallpaperSetter,
     resourceUtils: ResourceUtils,
     postExecutionThread: PostExecutionThread,
-    permissionsCheckerHelper: PermissionsCheckerHelper,
+    permissionsChecker: PermissionsChecker,
     systemInfoProvider: SystemInfoProvider
   ): CollectionPresenter = CollectionPresenterImpl(widgetHintsUseCase,
       userPremiumStatusUseCase, collectionImagesUseCase, collectionImagesPresenterEntityMapper,
-      wallpaperSetter, resourceUtils, postExecutionThread, permissionsCheckerHelper,
+      wallpaperSetter, resourceUtils, postExecutionThread, permissionsChecker,
       systemInfoProvider)
 
   @Provides

@@ -26,7 +26,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.permissions.PermissionsCheckerHelper
+import zebrostudio.wallr100.android.permissions.PermissionsChecker
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.android.ui.detail.colors.WALLR_DOWNLOAD_LINK
 import zebrostudio.wallr100.android.utils.ResourceUtils
@@ -65,7 +65,7 @@ class DetailPresenterImplTest {
   @Mock private lateinit var mockBitmap: Bitmap
   @Mock private lateinit var resourceUtils: ResourceUtils
   @Mock private lateinit var postExecutionThread: PostExecutionThread
-  @Mock private lateinit var permissionsCheckerHelper: PermissionsCheckerHelper
+  @Mock private lateinit var permissionsChecker: PermissionsChecker
   @Mock private lateinit var mockUri: Uri
   @Mock private lateinit var mockDestinationUri: Uri
   private lateinit var detailPresenterImpl: DetailPresenterImpl
@@ -85,7 +85,7 @@ class DetailPresenterImplTest {
         DetailPresenterImpl(resourceUtils,
             imageOptionsUseCase, userPremiumStatusUseCase,
             wallpaperSetter, postExecutionThread, imageDownloadPresenterEntityMapper,
-            permissionsCheckerHelper)
+            permissionsChecker)
     detailPresenterImpl.attachView(detailView)
 
     testScopeProvider = TestLifecycleScopeProvider.createInitial(
@@ -383,23 +383,23 @@ class DetailPresenterImplTest {
 
   @Test
   fun `should request storage permission on handleQuickSetClicked call failure due to missing read storage permission`() {
-    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handleQuickSetClick()
 
-    verify(permissionsCheckerHelper).isReadPermissionAvailable()
+    verify(permissionsChecker).isReadPermissionAvailable()
     verify(detailView).requestStoragePermission(QUICK_SET)
   }
 
   @Test
   fun `should request storage permission on handleQuickSetClicked call failure due to missing write storage permission`() {
-    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handleQuickSetClick()
 
-    verify(permissionsCheckerHelper).isReadPermissionAvailable()
-    verify(permissionsCheckerHelper).isWritePermissionAvailable()
+    verify(permissionsChecker).isReadPermissionAvailable()
+    verify(permissionsChecker).isWritePermissionAvailable()
     verify(detailView).requestStoragePermission(QUICK_SET)
   }
 
@@ -902,11 +902,11 @@ class DetailPresenterImplTest {
   @Test
   fun `should request storage permission on handleEditSetClick call failure due to missing read storage permission`() {
     `when`(detailView.internetAvailability()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handleEditSetClick()
 
-    verify(permissionsCheckerHelper).isReadPermissionAvailable()
+    verify(permissionsChecker).isReadPermissionAvailable()
     verify(detailView).internetAvailability()
     verify(detailView).requestStoragePermission(EDIT_SET)
   }
@@ -914,8 +914,8 @@ class DetailPresenterImplTest {
   @Test
   fun `should request storage permission on handleEditSetClick call failure due to missing write storage permission`() {
     `when`(detailView.internetAvailability()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handleEditSetClick()
 
@@ -1160,20 +1160,20 @@ class DetailPresenterImplTest {
   @Test
   fun `should request storage permission on handleDownloadClick call failure due to read storage permission not available`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handleDownloadClick()
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(permissionsCheckerHelper).isReadPermissionAvailable()
+    verify(permissionsChecker).isReadPermissionAvailable()
     verify(detailView).requestStoragePermission(DOWNLOAD)
   }
 
   @Test
   fun `should request storage permission on handleDownloadClick call failure due to write storage permission not available`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handleDownloadClick()
 
@@ -1271,21 +1271,21 @@ class DetailPresenterImplTest {
   @Test
   fun `should request storage permission on handlePermissionRequestResult call failure of type download due to missing read storage permission`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
         intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(permissionsCheckerHelper).isReadPermissionAvailable()
+    verify(permissionsChecker).isReadPermissionAvailable()
     verify(detailView).requestStoragePermission(DOWNLOAD)
   }
 
   @Test
   fun `should request storage permission on handlePermissionRequestResult call failure of type download due to missing write storage permission`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
         intArrayOf(PackageManager.PERMISSION_GRANTED))
@@ -1388,21 +1388,21 @@ class DetailPresenterImplTest {
   @Test
   fun `should request storage permission on handleViewResult call failure of type download due to missing read storage permission`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(permissionsCheckerHelper).isReadPermissionAvailable()
+    verify(permissionsChecker).isReadPermissionAvailable()
     verify(detailView).requestStoragePermission(DOWNLOAD)
   }
 
   @Test
   fun `should request storage permission on handleViewResult call failure of type download due to missing write storage permission`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
         PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
@@ -1720,20 +1720,20 @@ class DetailPresenterImplTest {
   @Test
   fun `should request storage permission on handleCrystallizeClick call failure on missing read storage permission`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handleCrystallizeClick()
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(permissionsCheckerHelper).isReadPermissionAvailable()
+    verify(permissionsChecker).isReadPermissionAvailable()
     verify(detailView).requestStoragePermission(CRYSTALLIZE)
   }
 
   @Test
   fun `should request storage permission on handleCrystallizeClick call failure on missing write storage permission`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handleCrystallizeClick()
 
@@ -2161,20 +2161,20 @@ class DetailPresenterImplTest {
   @Test
   fun `should request storage permission on handleAddToCollectionClick call failure due to missing read storage permission`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(false)
+    `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handleAddToCollectionClick()
 
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(permissionsCheckerHelper).isReadPermissionAvailable()
+    verify(permissionsChecker).isReadPermissionAvailable()
     verify(detailView).requestStoragePermission(ADD_TO_COLLECTION)
   }
 
   @Test
   fun `should request storage permission on handleAddToCollectionClick call failure due to missing write storage permission`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(false)
+    `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handleAddToCollectionClick()
 
@@ -2934,12 +2934,12 @@ class DetailPresenterImplTest {
     detailPresenterImpl.detachView()
     verifyNoMoreInteractions(postExecutionThread, wallpaperSetter, userPremiumStatusUseCase,
         imageOptionsUseCase, detailView, resourceUtils, mockUri, mockBitmap,
-        permissionsCheckerHelper)
+        permissionsChecker)
   }
 
   private fun stubGrantStoragePermissions() {
-    `when`(permissionsCheckerHelper.isReadPermissionAvailable()).thenReturn(true)
-    `when`(permissionsCheckerHelper.isWritePermissionAvailable()).thenReturn(true)
+    `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(true)
+    `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(true)
   }
 
   private fun stubPostExecutionThreadReturnsIoScheduler() {
@@ -2947,8 +2947,8 @@ class DetailPresenterImplTest {
   }
 
   private fun verifyStoragePermissionsCheckerCall() {
-    verify(permissionsCheckerHelper).isReadPermissionAvailable()
-    verify(permissionsCheckerHelper).isWritePermissionAvailable()
+    verify(permissionsChecker).isReadPermissionAvailable()
+    verify(permissionsChecker).isWritePermissionAvailable()
   }
 
   private fun verifyPostExecutionThreadSchedulerCall(times: Int = 1) {

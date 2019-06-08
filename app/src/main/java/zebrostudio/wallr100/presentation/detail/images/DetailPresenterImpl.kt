@@ -11,7 +11,7 @@ import io.reactivex.Observer
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.permissions.PermissionsCheckerHelper
+import zebrostudio.wallr100.android.permissions.PermissionsChecker
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.android.ui.detail.colors.WALLR_DOWNLOAD_LINK
 import zebrostudio.wallr100.android.utils.ResourceUtils
@@ -53,7 +53,7 @@ class DetailPresenterImpl(
   private val wallpaperSetter: WallpaperSetter,
   private val postExecutionThread: PostExecutionThread,
   private val imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper,
-  private val permissionsCheckerHelper: PermissionsCheckerHelper
+  private val permissionsChecker: PermissionsChecker
 ) : DetailPresenter {
 
   internal lateinit var imageType: ImageListType
@@ -333,7 +333,7 @@ class DetailPresenterImpl(
   }
 
   private fun hasStoragePermissions(actionType: ActionType): Boolean {
-    if (permissionsCheckerHelper.isReadPermissionAvailable() && permissionsCheckerHelper.isWritePermissionAvailable()) {
+    if (permissionsChecker.isReadPermissionAvailable() && permissionsChecker.isWritePermissionAvailable()) {
       return true
     } else {
       detailView?.requestStoragePermission(actionType)
