@@ -378,7 +378,6 @@ class CollectionPresenterImpl(
     collectionView?.setImagesList(originalList)
     collectionView?.updateChangesInEveryItemView()
     collectionView?.showUnableToReorderErrorMessage()
-    originalList.clear()
   }
 
   private fun redecorateViewAfterCrystallization(list: List<CollectionsPresenterEntity>) {
