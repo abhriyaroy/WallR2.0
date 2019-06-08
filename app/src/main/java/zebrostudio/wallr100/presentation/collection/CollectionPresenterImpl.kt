@@ -245,26 +245,14 @@ class CollectionPresenterImpl(
     imageList: MutableList<CollectionsPresenterEntity>,
     selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
   ) {
-    mutableListOf<CollectionsPresenterEntity>().also { backupOfOriginalImageList ->
-      backupOfOriginalImageList.addAll(imageList)
+    mutableListOf<CollectionsPresenterEntity>().apply {
+      addAll(imageList)
+    }.let { backupOfOriginalImageList ->
       reverseSortSelections(selectedItemsMap).let { reverseSortedSelections ->
         mutableListOf<CollectionsPresenterEntity>().let { listOfDeletableImages ->
           removeItemsFromList(reverseSortedSelections, imageList, listOfDeletableImages,
               selectedItemsMap)
-          collectionImagesUseCase.deleteImages(
-              collectionImagesPresenterEntityMapper.mapFromPresenterEntity(listOfDeletableImages))
-              .onErrorResumeNext(
-                  collectionImagesUseCase.reorderImage(collectionImagesPresenterEntityMapper
-                      .mapFromPresenterEntity(backupOfOriginalImageList)))
-              .map {
-                collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
-              }
-              .observeOn(postExecutionThread.scheduler)
-              .autoDisposable(collectionView!!.getScope())
-              .subscribe({
-                handleDeleteWallpaperSuccess(it, backupOfOriginalImageList, listOfDeletableImages)
-                hideCabIfActive()
-              }, {})
+          deleteWallpapers(backupOfOriginalImageList, listOfDeletableImages)
         }
       }
     }
@@ -442,6 +430,26 @@ class CollectionPresenterImpl(
       selectedItemsMap.remove(it)
       collectionView?.removeItemView(it)
     }
+  }
+
+  private fun deleteWallpapers(
+    backupOfOriginalImageList: List<CollectionsPresenterEntity>,
+    listOfDeletableImages: List<CollectionsPresenterEntity>
+  ) {
+    collectionImagesUseCase.deleteImages(
+        collectionImagesPresenterEntityMapper.mapFromPresenterEntity(listOfDeletableImages))
+        .onErrorResumeNext(
+            collectionImagesUseCase.reorderImage(collectionImagesPresenterEntityMapper
+                .mapFromPresenterEntity(backupOfOriginalImageList)))
+        .map {
+          collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
+        }
+        .observeOn(postExecutionThread.scheduler)
+        .autoDisposable(collectionView!!.getScope())
+        .subscribe({
+          handleDeleteWallpaperSuccess(it, backupOfOriginalImageList, listOfDeletableImages)
+          hideCabIfActive()
+        }, {})
   }
 
   private fun handleDeleteWallpaperSuccess(
