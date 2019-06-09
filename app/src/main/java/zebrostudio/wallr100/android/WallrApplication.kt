@@ -6,6 +6,7 @@ import android.app.Service
 import android.content.Context
 import android.support.multidex.MultiDex
 import com.bumptech.glide.request.target.ViewTarget
+import com.onesignal.OneSignal
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.HasServiceInjector
@@ -37,5 +38,12 @@ class WallrApplication : Application(), HasActivityInjector, HasServiceInjector 
   override fun activityInjector() = activityDispatchingAndroidInjector
 
   override fun serviceInjector() = serviceDispatchingAndroidInjector
+
+  private fun initPushNotifications() {
+    OneSignal.startInit(this)
+        .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+        .unsubscribeWhenNotificationsAreDisabled(true)
+        .init();
+  }
 
 }

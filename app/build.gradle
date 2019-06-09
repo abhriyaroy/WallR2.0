@@ -1,3 +1,17 @@
+buildscript {
+  repositories {
+    maven { url 'https://plugins.gradle.org/m2/' }
+  }
+  dependencies {
+    classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.11.0, 0.99.99]'
+  }
+}
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+
+repositories {
+  maven { url 'https://maven.google.com' }
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -15,6 +29,9 @@ android {
     renderscriptSupportModeEnabled true
     versionCode APP_VERSION
     versionName APP_VERSION_NAME
+
+    manifestPlaceholders = [onesignal_app_id               : "ff94f0fe-e700-4b66-9f26-5408fca95297",
+                            onesignal_google_project_number: "REMOTE"]
   }
   buildTypes {
     release {
@@ -95,6 +112,8 @@ android {
     implementation "com.github.qingmei2:rximagepicker:$RX_IMAGE_PICKER_VERSION"
     implementation "com.github.qingmei2:rximagepicker_support:$RX_IMAGE_PICKER_VERSION"
     implementation "com.github.qingmei2:rximagepicker_support_zhihu:$RX_IMAGE_PICKER_VERSION"
+    // Onesignal
+    implementation "com.onesignal:OneSignal:$ONE_SIGNAL_VERSION"
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
     implementation project(':librarySearch')
