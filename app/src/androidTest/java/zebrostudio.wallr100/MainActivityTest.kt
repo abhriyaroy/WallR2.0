@@ -15,11 +15,21 @@ import zebrostudio.wallr100.android.ui.main.MainActivity
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
 
-  @Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
+  @get:Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
 
   @Test fun shouldShowGuillotineMenuOnHamburgerClick() {
     onView(withId(R.id.contentHamburger))
         .perform(click())
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+  }
+
+  @Test fun shouldCloseGuillotineMenuOnHamburgerClickTwice() {
+    onView(withId(R.id.contentHamburger))
+        .perform(click())
+        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+
+    onView(withId(R.id.hamburgerGuillotineMenu))
+        .perform(click())
+        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
   }
 }
