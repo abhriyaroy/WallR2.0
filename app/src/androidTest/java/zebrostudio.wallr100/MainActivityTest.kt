@@ -55,7 +55,7 @@ class MainActivityTest {
         .perform(click())
 
     onView(withId(R.string.buy_pro_title))
-    .check(matches(isCompletelyDisplayed()))
+        .check(matches(isCompletelyDisplayed()))
   }
 
   @Test fun shouldHideBuyProOptionInGuillotineMenu() {
@@ -69,7 +69,7 @@ class MainActivityTest {
         .perform(click())
 
     onView(withId(R.string.buy_pro_title))
-    .check(matches(not(isCompletelyDisplayed())))
+        .check(matches(not(isCompletelyDisplayed())))
   }
 
   @Test fun shouldShowExitConfirmationMessageOnSingleBackPress() {
