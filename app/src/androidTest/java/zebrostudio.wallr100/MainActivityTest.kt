@@ -7,30 +7,29 @@ import android.support.test.espresso.action.ViewActions
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.RootMatchers.withDecorView
-import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
-import org.hamcrest.CoreMatchers.not
-import org.hamcrest.Matchers
+import android.support.test.runner.AndroidJUnit4
+import org.hamcrest.Matchers.not
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.data.PREMIUM_USER_TAG
 import zebrostudio.wallr100.data.PURCHASE_PREFERENCE_NAME
 import zebrostudio.wallr100.data.SharedPrefsHelperImpl
 import java.util.concurrent.TimeUnit
 
-@RunWith(JUnit4::class)
+@RunWith(AndroidJUnit4::class)
 class MainActivityTest {
 
-  @get:Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
+  @Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
 
   @Test fun shouldShowGuillotineMenuOnHamburgerClick() {
     onView(withId(R.id.contentHamburger))
         .perform(click())
+        .check(matches(isCompletelyDisplayed()))
         .check(matches(isCompletelyDisplayed()))
   }
 
@@ -40,7 +39,7 @@ class MainActivityTest {
 
     onView(withId(R.id.hamburgerGuillotineMenu))
         .perform(click())
-        .check(matches(Matchers.not(ViewMatchers.isCompletelyDisplayed())))
+        .check(matches(not(isCompletelyDisplayed())))
   }
 
   @Test fun shouldShowBuyProOptionInGuillotineMenu() {
@@ -55,7 +54,7 @@ class MainActivityTest {
         .perform(click())
 
     onView(withId(R.string.buy_pro_title))
-        .check(matches(ViewMatchers.isCompletelyDisplayed()))
+        .check(matches(isCompletelyDisplayed()))
   }
 
   @Test fun shouldHideBuyProOptionInGuillotineMenu() {
@@ -69,7 +68,7 @@ class MainActivityTest {
         .perform(click())
 
     onView(withId(R.string.buy_pro_title))
-        .check(matches(Matchers.not(ViewMatchers.isCompletelyDisplayed())))
+        .check(matches(not(isCompletelyDisplayed())))
   }
 
   @Test fun shouldShowExitConfirmationMessageOnSingleBackPress() {
@@ -106,5 +105,5 @@ class MainActivityTest {
     assertTrue(!activityTestRule.activity.isFinishing)
     assertTrue(!activityTestRule.activity.isDestroyed)
   }
-  
+
 }
