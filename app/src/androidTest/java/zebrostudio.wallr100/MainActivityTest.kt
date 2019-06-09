@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
 
-  @Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
+  @get:Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
 
   @Test fun shouldShowGuillotineMenuOnHamburgerClick() {
     onView(withId(R.id.contentHamburger))
@@ -108,5 +108,15 @@ class MainActivityTest {
 
     assertTrue(!activityTestRule.activity.isFinishing)
     assertTrue(!activityTestRule.activity.isDestroyed)
+  }
+
+  @Test fun shouldCloseGuillotineMenuOnHamburgerClickTwice() {
+    onView(withId(R.id.contentHamburger))
+        .perform(click())
+        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+
+    onView(withId(R.id.hamburgerGuillotineMenu))
+        .perform(click())
+        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
   }
 }
