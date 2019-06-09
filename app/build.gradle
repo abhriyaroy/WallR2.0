@@ -127,6 +127,7 @@ android {
     implementation project(':libraryMaterialCab')
     implementation project(':libraryFloatingActionButton')
     implementation project(':libraryColorPickerView')
+    implementation project(':libraryLowpolyRx')
     // Test runners
     testImplementation "junit:junit:$JUNIT_VERSION"
     testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"

@@ -12,7 +12,7 @@ import android.graphics.Paint.Style.FILL
 import android.graphics.Shader.TileMode.CLAMP
 import android.graphics.Shader.TileMode.MIRROR
 import android.net.Uri
-import com.zebrostudio.wallrcustoms.lowpoly.LowPoly
+import com.zebrostudio.lowpolyrxjava.LowPolyRx
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -206,12 +206,12 @@ class ImageHandlerImpl(
 
   override fun convertImageInCacheToLowpoly(): Single<Bitmap> {
     return getImageBitmap()
-        .map {
-          LowPoly.generate(it).let { bitmap ->
-            fileHandler.getCacheFile().outputStream()
-                .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
-            bitmap
-          }
+        .flatMap {
+          LowPolyRx().getLowPolyImage(it)
+        }.map {
+          fileHandler.getCacheFile().outputStream()
+              .compressBitmap(it, JPEG, BITMAP_COMPRESS_QUALITY)
+          it
         }
   }
 
@@ -440,7 +440,7 @@ class ImageHandlerImpl(
   private fun generateLowpolyImage(path: String): Completable {
     return Completable.create { emitter ->
       getImageBitmap(path).let {
-        LowPoly.generate(it).let { bitmap ->
+        LowPolyRx().getLowPolyImage(it).blockingGet().let { bitmap ->
           try {
             fileHandler.getCacheFile().outputStream()
                 .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
