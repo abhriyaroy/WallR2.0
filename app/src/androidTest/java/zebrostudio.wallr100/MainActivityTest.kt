@@ -43,9 +43,13 @@ import java.util.concurrent.TimeUnit
 class MainActivityTest {
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   @get:Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
 =======
   @Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
+>>>>>>> Test guillotine menu
+=======
+  @get:Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
 >>>>>>> Test guillotine menu
 
   @Test fun shouldShowGuillotineMenuOnHamburgerClick() {
@@ -139,5 +143,15 @@ class MainActivityTest {
 =======
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 >>>>>>> Test guillotine menu
+  }
+
+  @Test fun shouldCloseGuillotineMenuOnHamburgerClickTwice() {
+    onView(withId(R.id.contentHamburger))
+        .perform(click())
+        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+
+    onView(withId(R.id.hamburgerGuillotineMenu))
+        .perform(click())
+        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
   }
 }
