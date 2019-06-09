@@ -106,5 +106,4 @@ class MainActivityTest {
     assertTrue(!activityTestRule.activity.isFinishing)
     assertTrue(!activityTestRule.activity.isDestroyed)
   }
-
 }
