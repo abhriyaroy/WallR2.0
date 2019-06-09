@@ -33,6 +33,7 @@ android {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     signingConfig signingConfigs.release
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -41,6 +42,9 @@ android {
 >>>>>>> Test guillotine menu
 =======
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+>>>>>>> Test guillotine menu
+=======
+    testInstrumentationRunner "com.android.support.test.runner.AndroidJUnitRunner"
 >>>>>>> Test guillotine menu
   }
   lintOptions {
