@@ -131,9 +131,6 @@ android {
     testImplementation "junit:junit:$JUNIT_VERSION"
     testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_VERSION"
-    // Instrumentation test runners
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION"
-    androidTestImplementation "com.android.support.test:rules:$TEST_RULES_VERSION"
   }
 }
 apply plugin: 'com.google.gms.google-services'
