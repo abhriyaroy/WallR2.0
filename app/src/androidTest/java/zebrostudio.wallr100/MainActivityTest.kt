@@ -1,5 +1,6 @@
 package zebrostudio.wallr100
 
+<<<<<<< HEAD
 import android.content.Intent
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
@@ -27,10 +28,29 @@ import java.util.concurrent.TimeUnit
 class MainActivityTest {
 
   @get:Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
+=======
+import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.action.ViewActions.click
+import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.espresso.matcher.ViewMatchers
+import android.support.test.espresso.matcher.ViewMatchers.withId
+import android.support.test.rule.ActivityTestRule
+import android.support.test.runner.AndroidJUnit4
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import zebrostudio.wallr100.android.ui.main.MainActivity
+
+@RunWith(AndroidJUnit4::class)
+class MainActivityTest {
+
+  @Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
+>>>>>>> Test guillotine menu
 
   @Test fun shouldShowGuillotineMenuOnHamburgerClick() {
     onView(withId(R.id.contentHamburger))
         .perform(click())
+<<<<<<< HEAD
         .check(matches(ViewMatchers.isCompletelyDisplayed()))
   }
 
@@ -103,5 +123,8 @@ class MainActivityTest {
 
     assertTrue(!activityTestRule.activity.isFinishing)
     assertTrue(!activityTestRule.activity.isDestroyed)
+=======
+        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+>>>>>>> Test guillotine menu
   }
 }
