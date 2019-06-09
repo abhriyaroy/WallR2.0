@@ -14,7 +14,7 @@ fun Context.stringRes(@StringRes id: Int) = getString(id)!!
 
 fun Context.stringRes(@StringRes id: Int, value: Int) = getString(id, value)!!
 
-fun Context.stringRes(@StringRes id: Int, value: String) = getString(id, value)!!
+fun Context.stringRes(@StringRes id: Int, vararg values: String) = getString(id, values)!!
 
 fun Context.integerRes(@IntegerRes id: Int) = resources.getInteger(id)
 

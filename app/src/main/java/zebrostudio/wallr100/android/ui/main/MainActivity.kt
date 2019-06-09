@@ -60,7 +60,16 @@ import javax.inject.Inject
 private const val RIPPLE_DURATION: Long = 250
 private const val MAIL_URI = "mailto:"
 
-class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
+interface BlockBackPressListener {
+  fun blockBackPress()
+
+  fun releaseBackPressBlock()
+}
+
+class MainActivity : AppCompatActivity(),
+    MainView,
+    BlockBackPressListener,
+    HasSupportFragmentInjector {
 
   @Inject
   internal lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
@@ -72,6 +81,7 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
   private lateinit var guillotineMenuAnimation: GuillotineAnimation
 
   private var buyProMenuItem: View? = null
+  private var isOperationInProcess = false
 
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)
@@ -201,6 +211,14 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
             stringRes(R.string.main_activity_feedback_contact_using_message)), 0)
       }
     }
+  }
+
+  override fun blockBackPress() {
+    isOperationInProcess = true
+  }
+
+  override fun releaseBackPressBlock() {
+    isOperationInProcess = false
   }
 
   private inline fun <reified T : BaseFragment> addFragment(
@@ -370,18 +388,6 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
             window)
         true
       }
-    }
-  }
-
-  companion object {
-    private var isOperationInProcess = false
-
-    fun blockBackPress() {
-      isOperationInProcess = true
-    }
-
-    fun releaseBackPressBlock() {
-      isOperationInProcess = false
     }
   }
 

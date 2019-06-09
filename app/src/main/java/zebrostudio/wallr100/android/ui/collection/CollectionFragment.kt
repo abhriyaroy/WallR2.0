@@ -2,6 +2,7 @@ package zebrostudio.wallr100.android.ui.collection
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -46,7 +47,7 @@ import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelpe
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.OnStartDragListener
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.ui.detail.images.BLUR_RADIUS
-import zebrostudio.wallr100.android.ui.main.MainActivity
+import zebrostudio.wallr100.android.ui.main.BlockBackPressListener
 import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
@@ -89,6 +90,7 @@ class CollectionFragment : BaseFragment(),
   private lateinit var collectionRecyclerTouchHelperCallback: CollectionRecyclerTouchHelperCallback
   private lateinit var itemTouchHelper: ItemTouchHelper
   private lateinit var collectionsImageAdapter: CollectionsImageAdapter
+  private lateinit var backPressListener: BlockBackPressListener
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -101,11 +103,13 @@ class CollectionFragment : BaseFragment(),
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     presenter.attachView(this)
-    activity?.findViewById<Toolbar>(R.id.toolbar)?.setOnMenuItemClickListener(this)
-    initRecyclerViewWithListeners()
-    attachAutomaticWallpaperChangerListener()
-    setUpBlurView()
+    initView()
     presenter.handleViewCreated()
+  }
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    backPressListener = activity as BlockBackPressListener
   }
 
   override fun onResume() {
@@ -485,11 +489,18 @@ class CollectionFragment : BaseFragment(),
   }
 
   override fun disableBackPress() {
-    MainActivity.blockBackPress()
+    backPressListener.blockBackPress()
   }
 
   override fun enableBackPress() {
-    MainActivity.releaseBackPressBlock()
+    backPressListener.releaseBackPressBlock()
+  }
+
+  private fun initView() {
+    activity?.findViewById<Toolbar>(R.id.toolbar)?.setOnMenuItemClickListener(this)
+    initRecyclerViewWithListeners()
+    attachAutomaticWallpaperChangerListener()
+    setUpBlurView()
   }
 
   private fun initRecyclerViewWithListeners() {
