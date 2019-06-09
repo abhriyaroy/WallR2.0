@@ -13,21 +13,23 @@ import android.support.test.espresso.matcher.ViewMatchers.isRoot
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.rule.ActivityTestRule
-
+import android.support.test.runner.AndroidJUnit4
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Matchers
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.data.PREMIUM_USER_TAG
 import zebrostudio.wallr100.data.PURCHASE_PREFERENCE_NAME
 import zebrostudio.wallr100.data.SharedPrefsHelperImpl
 import java.util.concurrent.TimeUnit
 
+@RunWith(AndroidJUnit4::class)
 class MainActivityTest {
 
-  @get:Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
+  @Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
 
   @Test fun shouldShowGuillotineMenuOnHamburgerClick() {
     onView(withId(R.id.contentHamburger))
@@ -45,7 +47,8 @@ class MainActivityTest {
   }
 
   @Test fun shouldShowBuyProOptionInGuillotineMenu() {
-    InstrumentationRegistry.getInstrumentation().targetContext.let {
+    InstrumentationRegistry.getInstrumentation()
+        .targetContext.let {
       SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, false)
     }
     activityTestRule.launchActivity(Intent())
@@ -59,7 +62,8 @@ class MainActivityTest {
   }
 
   @Test fun shouldHideBuyProOptionInGuillotineMenu() {
-    InstrumentationRegistry.getInstrumentation().targetContext.let {
+    InstrumentationRegistry.getInstrumentation()
+        .targetContext.let {
       SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, true)
     }
     activityTestRule.launchActivity(Intent())
