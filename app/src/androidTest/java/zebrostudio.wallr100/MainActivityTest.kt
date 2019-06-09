@@ -107,4 +107,14 @@ class MainActivityTest {
     assertTrue(!activityTestRule.activity.isFinishing)
     assertTrue(!activityTestRule.activity.isDestroyed)
   }
+
+  @Test fun shouldCloseGuillotineMenuOnHamburgerClickTwice() {
+    onView(withId(R.id.contentHamburger))
+        .perform(click())
+        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+
+    onView(withId(R.id.hamburgerGuillotineMenu))
+        .perform(click())
+        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
+  }
 }
