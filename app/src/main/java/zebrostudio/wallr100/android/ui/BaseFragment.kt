@@ -49,7 +49,6 @@ abstract class BaseFragment : Fragment(), BaseView {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     AndroidSupportInjection.inject(this)
-    hideBottomLayout()
   }
 
   @SuppressLint("ResourceType")
@@ -63,6 +62,7 @@ abstract class BaseFragment : Fragment(), BaseView {
     configureTabs()
     adjustTitlePadding()
     configureWallpaperChangerLayoutVisibility()
+    hideBottomLayout()
   }
 
   private fun highlightCurrentMenuItem() {
