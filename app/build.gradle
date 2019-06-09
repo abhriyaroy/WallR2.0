@@ -32,11 +32,15 @@ android {
                             onesignal_google_project_number: "REMOTE"]
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     signingConfig signingConfigs.release
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 =======
     testInstrumentationRunner "com.android.support.test.runner.AndroidJUnitRunner"
+>>>>>>> Test guillotine menu
+=======
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 >>>>>>> Test guillotine menu
   }
   lintOptions {

@@ -24,11 +24,12 @@ import java.util.concurrent.TimeUnit
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
 
-  @Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
+  @get:Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
 
   @Test fun shouldShowGuillotineMenuOnHamburgerClick() {
     onView(withId(R.id.contentHamburger))
         .perform(click())
+        .check(matches(isCompletelyDisplayed()))
         .check(matches(isCompletelyDisplayed()))
         .check(matches(isCompletelyDisplayed()))
   }
@@ -54,7 +55,7 @@ class MainActivityTest {
         .perform(click())
 
     onView(withId(R.string.buy_pro_title))
-        .check(matches(isCompletelyDisplayed()))
+    .check(matches(isCompletelyDisplayed()))
   }
 
   @Test fun shouldHideBuyProOptionInGuillotineMenu() {
@@ -68,7 +69,7 @@ class MainActivityTest {
         .perform(click())
 
     onView(withId(R.string.buy_pro_title))
-        .check(matches(not(isCompletelyDisplayed())))
+    .check(matches(not(isCompletelyDisplayed())))
   }
 
   @Test fun shouldShowExitConfirmationMessageOnSingleBackPress() {
