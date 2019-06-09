@@ -30,7 +30,10 @@ android {
 
     manifestPlaceholders = [onesignal_app_id               : "ff94f0fe-e700-4b66-9f26-5408fca95297",
                             onesignal_google_project_number: "REMOTE"]
+
     signingConfig signingConfigs.release
+
+    testInstrumentationRunner "com.android.support.test.runner.AndroidJUnitRunner"
   }
   buildTypes {
     release {
