@@ -33,7 +33,7 @@ android {
 
     signingConfig signingConfigs.release
 
-    testInstrumentationRunner "com.android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
   lintOptions {
     abortOnError false
