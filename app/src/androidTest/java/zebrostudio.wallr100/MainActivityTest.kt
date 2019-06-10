@@ -1,6 +1,5 @@
 package zebrostudio.wallr100
 
-<<<<<<< HEAD
 import android.content.Intent
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
@@ -9,54 +8,30 @@ import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.RootMatchers.withDecorView
 import android.support.test.espresso.matcher.ViewMatchers
-import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
-import android.support.test.espresso.matcher.ViewMatchers.isRoot
-import android.support.test.espresso.matcher.ViewMatchers.withId
-import android.support.test.espresso.matcher.ViewMatchers.withText
+import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Matchers
 import org.junit.Assert.assertTrue
-=======
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.matcher.ViewMatchers
-import android.support.test.espresso.matcher.ViewMatchers.withId
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
->>>>>>> Test guillotine menu
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 import zebrostudio.wallr100.android.ui.main.MainActivity
-<<<<<<< HEAD
 import zebrostudio.wallr100.data.PREMIUM_USER_TAG
 import zebrostudio.wallr100.data.PURCHASE_PREFERENCE_NAME
 import zebrostudio.wallr100.data.SharedPrefsHelperImpl
 import java.util.concurrent.TimeUnit
-=======
->>>>>>> Test guillotine menu
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(JUnit4::class)
 class MainActivityTest {
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   @get:Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
-=======
-  @Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
->>>>>>> Test guillotine menu
-=======
-  @get:Rule val activityTestRule = ActivityTestRule(MainActivity::class.java)
->>>>>>> Test guillotine menu
 
   @Test fun shouldShowGuillotineMenuOnHamburgerClick() {
     onView(withId(R.id.contentHamburger))
         .perform(click())
-<<<<<<< HEAD
-        .check(matches(ViewMatchers.isCompletelyDisplayed()))
+        .check(matches(isCompletelyDisplayed()))
   }
 
   @Test fun shouldCloseGuillotineMenuOnHamburgerClickTwice() {
@@ -131,27 +106,5 @@ class MainActivityTest {
     assertTrue(!activityTestRule.activity.isFinishing)
     assertTrue(!activityTestRule.activity.isDestroyed)
   }
-
-  @Test fun shouldCloseGuillotineMenuOnHamburgerClickTwice() {
-    onView(withId(R.id.contentHamburger))
-        .perform(click())
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-
-    onView(withId(R.id.hamburgerGuillotineMenu))
-        .perform(click())
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
-=======
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
->>>>>>> Test guillotine menu
-  }
-
-  @Test fun shouldCloseGuillotineMenuOnHamburgerClickTwice() {
-    onView(withId(R.id.contentHamburger))
-        .perform(click())
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-
-    onView(withId(R.id.hamburgerGuillotineMenu))
-        .perform(click())
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
-  }
+  
 }
