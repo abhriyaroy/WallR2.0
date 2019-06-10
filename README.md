@@ -43,18 +43,36 @@ It comes with a plethora of customization options like editing a wallpaper, crys
 </p>
  
 ### Insights
-  - [Clean Architecture with MVP](#clean-architecture-with-mvp)<br>
-  - [Dependency injection using Dagger](#dependency-injection-using-dagger2)<br>
-  - [Multi-threading using RxJava2](#multi-threading-using-rxjava2)<br>
+  - [Clean Architecture With MVP](#clean-architecture-with-mvp)<br>
+  - [Dependency Injection Using Dagger](#dependency-injection-using-dagger)<br>
+  - [Multi-threading Using RxJava2](#multi-threading-using-rxjava2)<br>
   - [Unsplash Api](#unsplash-api)<br>
   - [Firebase Realtime Database](#firebase-realtime-database)<br>
-  - [Room database](#room-database)<br>
+  - [Room Database](#room-database)<br>
   - [Shared Preferences](#shared-preferences)<br>
-  - [Retrofit for networking](#retrofit-for-networking)<br>
-  - [JUnit and Mockito for unit testing](#junit-and-mockito-for-unit-testing)<br>
-  - [Espresso for UI tests](#espresso-for-ui-tests)<br>
+  - [Retrofit For Networking](#retrofit-for-networking)<br>
+  - [JUnit and Mockito For Unit Testing](#junit-and-mockito-for-unit-testing)<br>
+  - [Espresso for UI Tests](#espresso-for-ui-tests)<br>
   
- #### Clean Architecture with MVP
+ #### Clean Architecture With MVP
+ 
+ #### Dependency Injection Using Dagger
+ 
+ #### Multi-threading Using RxJava2
+ 
+ #### Unsplash API
+ 
+ #### Firebase Realtime Database
+ 
+ #### Room Database
+ 
+ #### Shared Preferences
+ 
+ #### Retrofit For Networking
+ 
+ #### JUnit and Mockito For Unit Testing
+ 
+ #### Espresso for UI Tests
  
  ### Features
   - Daily new wallpapers 
