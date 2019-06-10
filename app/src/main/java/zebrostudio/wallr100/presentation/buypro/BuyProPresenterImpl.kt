@@ -2,16 +2,20 @@ package zebrostudio.wallr100.presentation.buypro
 
 import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType
-import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.*
+import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.PURCHASE
+import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.RESTORE
 import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
+import zebrostudio.wallr100.presentation.buypro.BuyProContract.BuyProPresenter
 
 class BuyProPresenterImpl(
-  private var authenticatePurchaseUseCase: AuthenticatePurchaseUseCase,
-  private var userPremiumStatusUseCase: UserPremiumStatusUseCase
-) : BuyProContract.BuyProPresenter {
+  private val authenticatePurchaseUseCase: AuthenticatePurchaseUseCase,
+  private val userPremiumStatusUseCase: UserPremiumStatusUseCase,
+  private val postExecutionThread: PostExecutionThread
+) : BuyProPresenter {
 
   private var buyProView: BuyProContract.BuyProView? = null
 
@@ -23,9 +27,9 @@ class BuyProPresenterImpl(
     buyProView = null
   }
 
-  override fun notifyPurchaseClicked() {
+  override fun handlePurchaseClicked() {
     if (buyProView?.isIabReady() == true) {
-      if (buyProView?.isInternetAvailable() == true) {
+      if (buyProView?.internetAvailability() == true) {
         buyProView?.showWaitLoader(PURCHASE)
         buyProView?.launchPurchase()
       } else {
@@ -36,9 +40,9 @@ class BuyProPresenterImpl(
     }
   }
 
-  override fun notifyRestoreClicked() {
+  override fun handleRestoreClicked() {
     if (buyProView?.isIabReady() == true) {
-      if (buyProView?.isInternetAvailable() == true) {
+      if (buyProView?.internetAvailability() == true) {
         buyProView?.showWaitLoader(RESTORE)
         buyProView?.launchRestore()
       } else {
@@ -49,16 +53,18 @@ class BuyProPresenterImpl(
     }
   }
 
-  override fun verifyPurchase(
+  override fun verifyTransaction(
     packageName: String,
     skuId: String,
     purchaseToken: String,
-    proTransactionType: PremiumTransactionType
+    premiumTransactionType: PremiumTransactionType
   ) {
-    authenticatePurchaseUseCase.buildUseCaseCompletable(packageName, skuId, purchaseToken)
+    authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
+        purchaseToken)
+        .observeOn(postExecutionThread.scheduler)
         .autoDisposable(buyProView?.getScope()!!)
         .subscribe({
-          handleSuccessfulVerification(proTransactionType)
+          handleSuccessfulVerification(premiumTransactionType)
           buyProView?.dismissWaitLoader()
         }, {
           when (it) {
@@ -70,9 +76,7 @@ class BuyProPresenterImpl(
         })
   }
 
-  fun handleSuccessfulVerification(
-    premiumTransactionType: PremiumTransactionType
-  ) {
+  private fun handleSuccessfulVerification(premiumTransactionType: PremiumTransactionType) {
     if (userPremiumStatusUseCase.updateUserPurchaseStatus()) {
       buyProView?.showSuccessfulTransactionMessage(premiumTransactionType)
       buyProView?.finishWithResult()

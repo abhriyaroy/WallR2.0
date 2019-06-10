@@ -5,9 +5,13 @@ import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
 import zebrostudio.wallr100.domain.model.searchpictures.UrlModel
 import zebrostudio.wallr100.domain.model.searchpictures.UserModel
 
-class UnsplashPictureEntityMapper {
+interface UnsplashPictureEntityMapper {
+  fun mapFromEntity(unsplashPicturesEntity: List<UnsplashPicturesEntity>): List<SearchPicturesModel>
+}
 
-  fun mapFromEntity(unsplashPicturesEntity: List<UnsplashPicturesEntity>) =
+class UnsplashPictureEntityMapperImpl : UnsplashPictureEntityMapper {
+
+  override fun mapFromEntity(unsplashPicturesEntity: List<UnsplashPicturesEntity>) =
       unsplashPicturesEntity.map {
         SearchPicturesModel(
             it.id,

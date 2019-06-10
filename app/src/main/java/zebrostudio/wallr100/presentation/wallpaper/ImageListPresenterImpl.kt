@@ -2,18 +2,22 @@ package zebrostudio.wallr100.presentation.wallpaper
 
 import com.uber.autodispose.autoDisposable
 import io.reactivex.Single
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.CATEGORIES_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.EXPLORE_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.TOP_PICKS_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag
+import zebrostudio.wallr100.android.utils.FragmentTag.CATEGORIES_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.TOP_PICKS_TAG
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.domain.model.images.ImageModel
+import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListPresenter
 import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListView
 import zebrostudio.wallr100.presentation.wallpaper.mapper.ImagePresenterEntityMapper
 
 class ImageListPresenterImpl(
   private val wallpaperImagesUseCase: WallpaperImagesUseCase,
-  private val imagePresenterEntityMapper: ImagePresenterEntityMapper
-) : ImageListContract.ImageListPresenter {
+  private val imagePresenterEntityMapper: ImagePresenterEntityMapper,
+  private var postExecutionThread: PostExecutionThread
+) : ImageListPresenter {
 
   private var imageListView: ImageListView? = null
   internal var imageListType = 0
@@ -26,7 +30,7 @@ class ImageListPresenterImpl(
     imageListView = null
   }
 
-  override fun setImageListType(fragmentTag: String, position: Int) {
+  override fun setImageListType(fragmentTag: FragmentTag, position: Int) {
     when (fragmentTag) {
       EXPLORE_TAG -> {
         imageListType = position
@@ -49,6 +53,7 @@ class ImageListPresenterImpl(
         .map {
           imagePresenterEntityMapper.mapToPresenterEntity(it)
         }
+        .observeOn(postExecutionThread.scheduler)
         .autoDisposable(imageListView?.getScope()!!)
         .subscribe({
           if (refresh) {

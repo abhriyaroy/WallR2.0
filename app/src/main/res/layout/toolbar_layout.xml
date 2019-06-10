@@ -47,9 +47,4 @@
 
   </RelativeLayout>
 
-  <ViewStub
-      android:id="@+id/cabStub"
-      android:layout_width="match_parent"
-      android:layout_height="?actionBarSize"/>
-
 </FrameLayout>

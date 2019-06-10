@@ -1,18 +1,15 @@
 package zebrostudio.wallr100.android.ui.buypro
 
-import android.arch.lifecycle.Lifecycle
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
-import com.uber.autodispose.ScopeProvider
-import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.zebrostudio.librarypurchaseflow.IabHelper
 import com.zebrostudio.librarypurchaseflow.IabHelper.OnIabPurchaseFinishedListener
 import com.zebrostudio.librarypurchaseflow.IabHelper.QueryInventoryFinishedListener
 import dagger.android.AndroidInjection
+import kotlinx.android.synthetic.main.activity_buy_pro.backButtonPro
 import kotlinx.android.synthetic.main.activity_buy_pro.buyProFeatures
 import kotlinx.android.synthetic.main.activity_buy_pro.proLogo
 import kotlinx.android.synthetic.main.activity_buy_pro.purchaseButton
@@ -21,17 +18,18 @@ import kotlinx.android.synthetic.main.item_buy_pro_features.view.descriptionText
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.headerTextView
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.imageView
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.*
+import zebrostudio.wallr100.android.ui.BaseActivity
+import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.PURCHASE
+import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.RESTORE
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.infoToast
-import zebrostudio.wallr100.android.utils.internetAvailability
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.presentation.buypro.BuyProContract
 import javax.inject.Inject
 
-class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
+class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
   @Inject
   internal lateinit var buyProPresenter: BuyProContract.BuyProPresenter
 
@@ -43,21 +41,21 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
       showTryRestoringInfo()
       dismissWaitLoader()
     } else {
-      buyProPresenter.verifyPurchase(purchase.packageName,
+      buyProPresenter.verifyTransaction(purchase.packageName,
           purchase.sku,
           purchase.token,
           PURCHASE)
     }
   }
-  private val queryInventoryFinishedListener = QueryInventoryFinishedListener { result, inv ->
+  private val queryInventoryFinishedListener = QueryInventoryFinishedListener { result, inventory ->
     if (result.isFailure) {
       showGenericVerificationError()
       dismissWaitLoader()
     } else {
-      buyProPresenter.verifyPurchase(
-          inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).packageName,
-          inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).sku,
-          inv.getPurchase(PurchaseTransactionConfig.ITEM_SKU).token,
+      buyProPresenter.verifyTransaction(
+          inventory.getPurchase(PurchaseTransactionConfig.ITEM_SKU).packageName,
+          inventory.getPurchase(PurchaseTransactionConfig.ITEM_SKU).sku,
+          inventory.getPurchase(PurchaseTransactionConfig.ITEM_SKU).token,
           RESTORE)
     }
   }
@@ -90,7 +88,7 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
   override fun onActivityResult(
     requestCode: Int,
     resultCode: Int,
-    data: Intent
+    data: Intent?
   ) {
     if (iabHelper?.handleActivityResult(requestCode,
             resultCode, data) == false) {
@@ -121,7 +119,7 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
   }
 
   override fun showGenericVerificationError() {
-    errorToast(stringRes(R.string.buy_pro_generic_error_message))
+    errorToast(stringRes(R.string.generic_error_message))
   }
 
   override fun showSuccessfulTransactionMessage(proTransactionType: PremiumTransactionType) {
@@ -139,8 +137,8 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
       RESTORE -> stringRes(R.string.buy_pro_verifying_restore_message)
     }
     materialDialog = MaterialDialog.Builder(this)
-        .widgetColor(colorRes(R.color.color_accent))
-        .contentColor(colorRes(R.color.color_white))
+        .widgetColor(colorRes(R.color.accent))
+        .contentColor(colorRes(R.color.white))
         .content(contentStringId)
         .backgroundColor(colorRes(R.color.primary_dark_material_dark))
         .progress(true, 0)
@@ -152,10 +150,6 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
 
   override fun dismissWaitLoader() {
     materialDialog.dismiss()
-  }
-
-  override fun getScope(): ScopeProvider {
-    return AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)
   }
 
   override fun finishWithResult() {
@@ -172,10 +166,6 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
       return true
     }
     return false
-  }
-
-  override fun isInternetAvailable(): Boolean {
-    return this.internetAvailability()
   }
 
   override fun launchPurchase() {
@@ -226,11 +216,15 @@ class BuyProActivity : AppCompatActivity(), BuyProContract.BuyProView {
 
   private fun attachClickListeners() {
     purchaseButton.setOnClickListener {
-      buyProPresenter.notifyPurchaseClicked()
+      buyProPresenter.handlePurchaseClicked()
     }
 
     restoreButton.setOnClickListener {
-      buyProPresenter.notifyRestoreClicked()
+      buyProPresenter.handleRestoreClicked()
+    }
+
+    backButtonPro.setOnClickListener {
+      onBackPressed()
     }
   }
 

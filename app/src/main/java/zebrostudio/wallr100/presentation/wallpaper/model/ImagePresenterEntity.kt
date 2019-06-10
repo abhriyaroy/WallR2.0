@@ -1,5 +1,7 @@
 package zebrostudio.wallr100.presentation.wallpaper.model
 
+import java.io.Serializable
+
 data class ImagePresenterEntity(
   val imageLink: ImageLinkPresenterEntity,
   val author: ImageAuthorPresenterEntity,
@@ -8,4 +10,4 @@ data class ImagePresenterEntity(
   val color: String,
   val timeStamp: Long,
   val referral: String
-)
+) : Serializable

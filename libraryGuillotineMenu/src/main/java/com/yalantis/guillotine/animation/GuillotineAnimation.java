@@ -3,11 +3,9 @@ package com.yalantis.guillotine.animation;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
-import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
-
 import com.yalantis.guillotine.interfaces.GuillotineListener;
 import com.yalantis.guillotine.util.ActionBarInterpolator;
 import com.yalantis.guillotine.util.GuillotineInterpolator;
@@ -69,11 +67,7 @@ public class GuillotineAnimation {
           .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                actionBarView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-              } else {
-                actionBarView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-              }
+              actionBarView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
               actionBarView.setPivotX(calculatePivotX(openingView));
               actionBarView.setPivotY(calculatePivotY(openingView));
             }
@@ -92,16 +86,11 @@ public class GuillotineAnimation {
         .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
           @Override
           public void onGlobalLayout() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-              guillotineView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            } else {
-              guillotineView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-            }
+            guillotineView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             guillotineView.setPivotX(calculatePivotX(closingView));
             guillotineView.setPivotY(calculatePivotY(closingView));
           }
         });
-
     closingView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -126,9 +115,7 @@ public class GuillotineAnimation {
       @Override
       public void onAnimationEnd(Animator animation) {
         isOpening = false;
-        Log.d("animation.java prev", "open");
         if (listener != null) {
-          Log.d("animation.java", "open");
           listener.onGuillotineOpened();
         }
       }
@@ -163,10 +150,7 @@ public class GuillotineAnimation {
         isClosing = false;
         guillotineView.setVisibility(View.GONE);
         startActionBarAnimation();
-        Log.d("animation.java prev", "close");
-
         if (listener != null) {
-          Log.d("animation.java", "close");
           listener.onGuillotineClosed();
         }
       }

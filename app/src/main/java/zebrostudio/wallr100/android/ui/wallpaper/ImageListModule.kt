@@ -2,8 +2,9 @@ package zebrostudio.wallr100.android.ui.wallpaper
 
 import dagger.Module
 import dagger.Provides
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
-import zebrostudio.wallr100.presentation.wallpaper.ImageListContract
+import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListPresenter
 import zebrostudio.wallr100.presentation.wallpaper.ImageListPresenterImpl
 import zebrostudio.wallr100.presentation.wallpaper.mapper.ImagePresenterEntityMapper
 
@@ -15,8 +16,10 @@ class ImageListModule {
 
   @Provides fun provideImageListPresenter(
     wallpaperImagesUseCase: WallpaperImagesUseCase,
-    imagePresenterEntityMapper: ImagePresenterEntityMapper
-  ): ImageListContract.ImageListPresenter = ImageListPresenterImpl(
+    imagePresenterEntityMapper: ImagePresenterEntityMapper,
+    postExecutionThread: PostExecutionThread
+  ): ImageListPresenter = ImageListPresenterImpl(
       wallpaperImagesUseCase,
-      imagePresenterEntityMapper)
+      imagePresenterEntityMapper,
+      postExecutionThread)
 }

@@ -1,6 +1,5 @@
 package zebrostudio.wallr100.presentation.search
 
-import android.content.Intent
 import zebrostudio.wallr100.presentation.BasePresenter
 import zebrostudio.wallr100.presentation.BaseView
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
@@ -24,13 +23,14 @@ interface SearchContract {
     fun appendSearchResults(startPosition: Int, list: List<SearchPicturesPresenterEntity>)
     fun setEndlessLoadingToFalse()
     fun setSearchQueryWithoutSubmitting(searchWord: String)
+    fun recognizeWordsFromSpeech(): ArrayList<String>?
   }
 
   interface SearchPresenter : BasePresenter<SearchView> {
     fun notifyQuerySubmitted(query: String)
     fun fetchMoreImages()
     fun notifyRetryButtonClicked()
-    fun notifyActivityResult(requestCode: Int, resultCode: Int, data: Intent)
+    fun notifyActivityResult(requestCode: Int, resultCode: Int)
   }
 
 }

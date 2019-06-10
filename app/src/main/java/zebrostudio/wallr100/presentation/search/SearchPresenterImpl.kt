@@ -1,21 +1,21 @@
 package zebrostudio.wallr100.presentation.search
 
 import android.app.Activity
-import android.content.Intent
-import android.speech.RecognizerIntent
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.data.api.UrlMap.getQueryString
 import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
+import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
+import zebrostudio.wallr100.presentation.search.SearchContract.SearchPresenter
 import zebrostudio.wallr100.presentation.search.mapper.SearchPicturesPresenterEntityMapper
 
 class SearchPresenterImpl(
   private var searchPicturesUseCase: SearchPicturesUseCase,
-  private var searchPicturesPresenterEntityMapper: SearchPicturesPresenterEntityMapper
-) :
-    SearchContract.SearchPresenter {
+  private var searchPicturesPresenterEntityMapper: SearchPicturesPresenterEntityMapper,
+  private var postExecutionThread: PostExecutionThread
+) : SearchPresenter {
 
   private var searchView: SearchContract.SearchView? = null
   private var queryPage = 1
@@ -38,6 +38,7 @@ class SearchPresenterImpl(
         .map {
           searchPicturesPresenterEntityMapper.mapToPresenterEntity(it)
         }
+        .observeOn(postExecutionThread.scheduler)
         .autoDisposable(searchView?.getScope()!!)
         .subscribe({
           searchView?.hideLoader()
@@ -61,6 +62,7 @@ class SearchPresenterImpl(
           .map {
             searchPicturesPresenterEntityMapper.mapToPresenterEntity(it)
           }
+          .observeOn(postExecutionThread.scheduler)
           .autoDisposable(searchView?.getScope()!!)
           .subscribe({
             searchView?.hideBottomLoader()
@@ -91,12 +93,12 @@ class SearchPresenterImpl(
     }
   }
 
-  override fun notifyActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+  override fun notifyActivityResult(requestCode: Int, resultCode: Int) {
     if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == Activity.RESULT_OK) {
-      val matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+      val matches = searchView?.recognizeWordsFromSpeech()
       if (matches != null && matches.size > 0) {
         val searchWord = matches[0]
-        if (!searchWord.isEmpty()) {
+        if (searchWord.isNotEmpty()) {
           searchView?.setSearchQueryWithoutSubmitting(searchWord)
         }
       }

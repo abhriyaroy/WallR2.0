@@ -3,9 +3,10 @@ package zebrostudio.wallr100.android.ui.search
 import android.arch.lifecycle.Lifecycle
 import android.content.Intent
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.support.design.widget.AppBarLayout
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.uber.autodispose.ScopeProvider
@@ -24,18 +25,19 @@ import kotlinx.android.synthetic.main.activity_search.searchView
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter
 import zebrostudio.wallr100.android.utils.EndlessScrollListener
-import zebrostudio.wallr100.android.utils.GridItemDecorator
-import zebrostudio.wallr100.android.utils.integerRes
+import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
+import zebrostudio.wallr100.android.utils.checkDataConnection
 import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
+import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.android.utils.withDelayOnMain
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.search.SearchContract
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
-import java.util.concurrent.TimeUnit.*
+import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
 
 class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
@@ -50,13 +52,14 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   private val disableScrollFlag = 0
   private var appBarIsCollapsed = false
   private var recyclerviewAdapter: ImageAdapter? = null
+  private var activityResultIntent: Intent? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_search)
     presenter.attachView(this)
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       overridePendingTransition(R.anim.slide_in_up, emptyPendingTransitionAnimation)
     }
     initAppbar()
@@ -70,8 +73,9 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     super.onDestroy()
   }
 
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-    presenter.notifyActivityResult(requestCode, resultCode, data)
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    activityResultIntent = data
+    presenter.notifyActivityResult(requestCode, resultCode)
   }
 
   override fun onBackPressed() {
@@ -93,6 +97,8 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
       finish()
     } else super.onBackPressed()
   }
+
+  override fun internetAvailability() = this.checkDataConnection()
 
   override fun showLoader() {
     hideAllLoadersAndMessageViews()
@@ -133,7 +139,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     infoTextSecondLine.gone()
     infoImageView.gone()
     retryButton.gone()
-    imageRecyclerViewPresenter.clearAll()
+    imageRecyclerViewPresenter.clearAllSearchResults()
     recyclerviewAdapter?.notifyDataSetChanged()
     hideLoader()
     hideBottomLoader()
@@ -145,13 +151,13 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     infoImageView.visible()
     infoTextFirstLine.text = getText(R.string.search_unable_to_search_message)
     infoTextFirstLine.visible()
-    infoTextSecondLine.text = getText(R.string.search_no_internet_message)
+    infoTextSecondLine.text = getText(R.string.no_internet_message)
     infoTextSecondLine.visible()
     retryButton.visible()
   }
 
   override fun showNoInternetToast() {
-    errorToast(getString(R.string.search_no_internet_message))
+    errorToast(stringRes(R.string.no_internet_message))
   }
 
   override fun showGenericErrorView() {
@@ -198,14 +204,19 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     searchView.setQuery(searchWord, false)
   }
 
+  override fun recognizeWordsFromSpeech(): ArrayList<String>? {
+    return activityResultIntent?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+  }
+
   private fun initAppbar() {
-    searchAppBar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-      if (Math.abs(verticalOffset) == appBarLayout.totalScrollRange) {
-        appBarIsCollapsed = true
-      } else if (verticalOffset == 0) {
-        appBarIsCollapsed = false
-      }
-    }
+    searchAppBar.addOnOffsetChangedListener(
+        AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+          if (Math.abs(verticalOffset) == appBarLayout.totalScrollRange) {
+            appBarIsCollapsed = true
+          } else if (verticalOffset == 0) {
+            appBarIsCollapsed = false
+          }
+        })
     searchView.backButton.setOnClickListener { onBackPressed() }
     searchView.setVoiceSearch(true)
     searchView.showSearch()
@@ -230,7 +241,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     val scaleInAdapter = ScaleInAnimationAdapter(recyclerviewAdapter)
     scaleInAdapter.setDuration(MILLISECONDS.toMillis(500).toInt())
     recyclerView.addItemDecoration(
-        GridItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
+        RecyclerViewItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
             integerRes(R.integer.recycler_view_grid_size)))
     recyclerView.adapter = scaleInAdapter
     imageRecyclerViewPresenter.setListType(SEARCH)

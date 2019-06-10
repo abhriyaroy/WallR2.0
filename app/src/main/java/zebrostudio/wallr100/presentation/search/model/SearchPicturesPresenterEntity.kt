@@ -1,5 +1,7 @@
 package zebrostudio.wallr100.presentation.search.model
 
+import java.io.Serializable
+
 data class SearchPicturesPresenterEntity(
   val id: String,
   val createdAt: String,
@@ -10,4 +12,4 @@ data class SearchPicturesPresenterEntity(
   val likes: Int,
   val likedByUser: Boolean,
   val imageQualityUrlPresenterEntity: UrlPresenterEntity
-)
+) : Serializable

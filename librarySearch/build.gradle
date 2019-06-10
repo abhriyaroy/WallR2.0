@@ -16,7 +16,7 @@ android {
     minSdkVersion MINIMUM_SDK_VERSION
     targetSdkVersion TARGET_SDK_VERSION
     versionCode LIBRARY_SEARCH_VERSION
-    versionName "$LIBRARY_SEARCH_VERSION_NAME"
+    versionName LIBRARY_SEARCH_VERSION_NAME
   }
   buildTypes {
     release {

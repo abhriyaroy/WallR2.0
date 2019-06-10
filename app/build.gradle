@@ -1,3 +1,17 @@
+buildscript {
+  repositories {
+    maven { url 'https://plugins.gradle.org/m2/' }
+  }
+  dependencies {
+    classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.11.0, 0.99.99]'
+  }
+}
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+
+repositories {
+  maven { url 'https://maven.google.com' }
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -8,10 +22,16 @@ android {
   compileSdkVersion COMPILE_SDK_VERSION
   defaultConfig {
     applicationId "zebrostudio.wallr100"
+    multiDexEnabled true
     minSdkVersion MINIMUM_SDK_VERSION
     targetSdkVersion TARGET_SDK_VERSION
+    renderscriptTargetApi RENDER_SCRIPT_VERSION
+    renderscriptSupportModeEnabled true
     versionCode APP_VERSION
-    versionName "$APP_VERSION_NAME"
+    versionName APP_VERSION_NAME
+
+    manifestPlaceholders = [onesignal_app_id               : "ff94f0fe-e700-4b66-9f26-5408fca95297",
+                            onesignal_google_project_number: "REMOTE"]
   }
   buildTypes {
     release {
@@ -33,11 +53,14 @@ android {
     implementation "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
     implementation "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
     implementation "com.android.support:percent:$SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION"
     // Dagger
     implementation "com.google.dagger:dagger:$DAGGER_VERSION"
     implementation "com.google.dagger:dagger-android-support:$DAGGER_VERSION"
     kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
     kapt "com.google.dagger:dagger-android-processor:$DAGGER_VERSION"
+    // Multidex
+    implementation "com.android.support:multidex:$MULTIDEX_VERSION"
     // Rx java
     implementation "io.reactivex.rxjava2:rxjava:$RX_JAVA_VERSION"
     // Rx android
@@ -70,17 +93,48 @@ android {
     // Recyclerview Animator
     implementation "jp.wasabeef:recyclerview-animators:$RECYCLER_VIEW_ANIMATOR_VERSION"
     // Firebase
+    implementation "com.google.firebase:firebase-core:$FIREBASE_CORE_VERSION"
     implementation "com.google.firebase:firebase-database:$FIREBASE_DATABASE_VERSION"
+    implementation "com.google.firebase:firebase-dynamic-links:$FIREBASE_DYNAMIC_LINKS_VERSION"
+    // Sliding up panel
+    implementation "com.sothree.slidinguppanel:library:$SLIDING_UP_PANEL_VERSION"
+    // Circle ImageView
+    implementation "de.hdodenhof:circleimageview:$CIRCLE_IMAGEVIEW_VERSION"
+    // BlurView
+    implementation "com.eightbitlab:blurview:$BLURVIEW_VERSION"
+    // Room
+    implementation "android.arch.persistence.room:runtime:$ROOM_VERSION"
+    implementation "android.arch.persistence.room:rxjava2:$ROOM_VERSION"
+    kapt "android.arch.persistence.room:compiler:$ROOM_VERSION"
+    // Taptarget view
+    implementation "com.getkeepsafe.taptargetview:taptargetview:$TAP_TARGER_VIEW_VERSION"
+    // Rx Image Picker
+    implementation "com.github.qingmei2:rximagepicker:$RX_IMAGE_PICKER_VERSION"
+    implementation "com.github.qingmei2:rximagepicker_support:$RX_IMAGE_PICKER_VERSION"
+    implementation "com.github.qingmei2:rximagepicker_support_zhihu:$RX_IMAGE_PICKER_VERSION"
+    // Onesignal
+    implementation "com.onesignal:OneSignal:$ONE_SIGNAL_VERSION"
     // Module dependencies
     implementation project(':libraryGuillotineMenu')
     implementation project(':librarySearch')
     implementation project(':libraryWallrCustoms')
     implementation project(':libraryPurchaseFlow')
-
+    implementation project(':libraryExpandIcon')
+    implementation project(':libraryUCrop')
+    implementation project(':libraryPhotoView')
+    implementation project(':libraryDragSelectRecyclerView')
+    implementation project(':libraryMaterialSpinner')
+    implementation project(':libraryMaterialCab')
+    implementation project(':libraryFloatingActionButton')
+    implementation project(':libraryColorPickerView')
+    implementation project(':libraryLowpolyRx')
     // Test runners
     testImplementation "junit:junit:$JUNIT_VERSION"
     testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_VERSION"
+    // Instrumentation test runners
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION"
+    androidTestImplementation "com.android.support.test:rules:$TEST_RULES_VERSION"
   }
 }
 apply plugin: 'com.google.gms.google-services'

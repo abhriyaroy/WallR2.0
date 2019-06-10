@@ -1,11 +1,11 @@
 package zebrostudio.wallr100.data.datafactory
 
-import zebrostudio.wallr100.data.model.unsplashmodel.UnsplashPicturesEntity
 import zebrostudio.wallr100.data.model.unsplashmodel.ProfileImage
+import zebrostudio.wallr100.data.model.unsplashmodel.UnsplashPicturesEntity
 import zebrostudio.wallr100.data.model.unsplashmodel.UrlEntity
 import zebrostudio.wallr100.data.model.unsplashmodel.UserEntity
 import java.util.Random
-import java.util.UUID.*
+import java.util.UUID.randomUUID
 
 object UnsplashPictureEntityModelFactory {
 

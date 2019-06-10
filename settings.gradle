@@ -1,2 +1,5 @@
 include ':app', ':libraryGuillotineMenu', ':libraryPurchaseFlow', ':libraryWallrCustoms',
-        ':librarySearch'
+        ':librarySearch', ':libraryExpandIcon', ':libraryUCrop',
+        ':libraryPhotoView', ':libraryDragSelectRecyclerView', ':libraryMaterialSpinner',
+        ':libraryMaterialCab', ':libraryFloatingActionButton', ':libraryColorPickerView',
+        ':libraryLowpolyRx'

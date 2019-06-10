@@ -6,8 +6,8 @@ android {
   defaultConfig {
     minSdkVersion MINIMUM_SDK_VERSION
     targetSdkVersion TARGET_SDK_VERSION
-    versionCode 1
-    versionName "1.0"
+    versionCode LIBRARY_PURCHASE_FLOW_VERSION
+    versionName LIBRARY_PURCHASE_FLOW_VERSION_NAME
   }
 
   buildTypes {

@@ -18,14 +18,43 @@
   <string name="top_picks_fragment_tag">Top Picks</string>
   <string name="categories_fragment_tag">Categories</string>
   <string name="minimal_fragment_tag">Minimal</string>
-  <string name="collection_fragment_tag">Collection</string>
+  <string name="collection_fragment_tag">Collections</string>
   <string name="feedback_fragment_tag">Feedback</string>
   <string name="guillotine_buy_pro_title">Buy Pro</string>
   <string name="guillotine_pro_badge">PRO</string>
 
+  <!-- Generic strings -->
+  <string name="generic_error_message">Something went wrong. Please try again</string>
+  <string name="no_internet_message">Please ensure you have a working internet connection</string>
+  <string name="cancel_text">Cancel</string>
+  <string name="unable_to_load_hd_image_error">
+    Unable to load high-definition preview. Please ensure you have a working internet connection</string>
+  <string name="storage_permission_denied_error">
+    Storage permission is required to continue using this app. Please GRANT the permission when asked for</string>
+  <string name="unsuccessful_purchase_error">Purchase not successful. Please try again</string>
+  <string name="already_present_in_collection_error_message">Wallpaper is already present in the collection</string>
+  <string name="finalizing_stuff_wait_message">Finalizing stuff. Please wait…</string>
+  <string name="finalizing_wallpaper_messsage">Finalizing wallpaper...</string>
+  <string name="adding_image_to_collections_message">Adding wallpaper to collection...</string>
+  <string name="add_to_collection_success_message">Wallpaper has been added to collection!</string>
+  <string name="download_finished_success_message">Your wallpaper has finished downloading</string>
+  <string name="share_intent_message">Get high-quality wallpapers for your Android device with WallR at %1$s</string>
+  <string name="share_link_using">Share link using</string>
+  <string name="preparing_shareable_wallpaper_message">Preparing shareable wallpaper...</string>
+  <string name="not_enough_free_space_error_message">Low on memory. Please free some memory for app to work</string>
+  <string name="set_wallpaper_success_message">Your wallpaper has been set!</string>
+  <string name="set_wallpaper_error_message">Couldn\'t set wallpaper</string>
+  <string name="crystallizing_wallpaper_wait_message">Crystallizing wallpaper. Please wait…</string>
+  <string name="crystallizing_wallpaper_successful_message">Wallpaper has been crystallized!</string>
+
   <!-- Main activity strings -->
   <string name="main_activity_no_email_client_error">There is no email client installed</string>
   <string name="main_activity_exit_confirmation_message">Press back again to exit</string>
+  <string name="main_activity_feedback_contact_using_message">Contact using</string>
+  <string name="search_menu_title">search</string>
+  <string name="main_activity_hamburger_hint_title">100K+ High-Quality Wallpapers</string>
+  <string name="main_activity_hamburger_hint_description">Choose from more than 100K wallpapers from various categories to meet all your needs.</string>
+  <string name="main_activity_switch_layout_automatic_wallpaper_changer">Automatic Wallpaper Changer</string>
 
   <!-- Fragment strings -->
   <string name="fragment_unable_to_load_wallpapers_message">Oops. Unable to load wallpapers</string>
@@ -67,7 +96,6 @@
   <string name="buy_pro_unable_to_verify_purchase_message">Unable to verify purchase</string>
   <string name="buy_pro_try_restoring_message">
     Unable to continue purchase. If you have already purchased the app, click on Restore.</string>
-  <string name="buy_pro_generic_error_message">Something went wrong. Please try again</string>
   <string name="buy_pro_verifying_purchase_message">Verifying your purchase, please wait...</string>
   <string name="buy_pro_verifying_restore_message">Restoring your purchase, please wait...</string>
   <string name="buy_pro_purchase_ensure_working_internet_connection_message">
@@ -83,12 +111,126 @@
   <string name="search_type_in_a_query_message">Type in a search query</string>
   <string name="search_no_result_message">Woah there! We found nothing for </string>
   <string name="search_retry_message">Retry</string>
-  <string name="search_no_internet_message">Please ensure you have a working internet connection</string>
   <string name="search_unable_to_search_message">Unable to search right now</string>
   <string name="search_something_went_wrong_message">Snap! Something went wrong</string>
   <string name="search_please_try_again">Please try again</string>
   <string name="search_input_a_query_and_please_try_again">Please input a search query and try again</string>
   <string name="search_view_transition_name">searchTransition</string>
   <string name="search_generic_error_message">Something went wrong. Please try again</string>
+
+  <!-- Detail activity strings -->
+  <string name="detail_activity_enable_automatic_wallpaper_changer_from_her_messagee">
+    Then you can enable the Automatic Wallpaper Changer from here</string>
+  <string name="detail_activity_download_options_super_high">Super High</string>
+  <string name="detail_activity_download_options_high">High</string>
+  <string name="detail_activity_download_options_medium">Medium</string>
+  <string name="detail_activity_download_options_low">Low</string>
+  <string name="detail_activity_download_options_super_low">Super Low</string>
+  <string name="detail_activity_or">Or</string>
+  <string name="detail_activity_choose">CHOOSE</string>
+  <string name="detail_activity_options_quick_set">QUICK SET</string>
+  <string name="detail_activity_options_add_to_collection">ADD TO COLLECTION</string>
+  <string name="detail_activity_options_edit_and_set">EDIT AND SET</string>
+  <string name="detail_activity_choose_download_quality_message">Choose Download Quality</string>
+  <string name="detail_activity_grabbing_best_quality_wallpaper_message">Grabbing the best quality wallpaper...</string>
+  <string name="detail_activity_setting_up_resources_message">Setting up the necessary resources...</string>
+  <string name="detail_activity_editing_tool_message">Firing up the editing tool...</string>
+  <string name="detail_activity_crystallizing_wallpaper_message">Crystallizing wallpaper...</string>
+  <string name="detail_activity_fetching_sharable_link_message">Fetching sharable link...</string>
+  <string name="detail_activity_options_download">DOWNLOAD</string>
+  <string name="detail_activity_options_save">SAVE</string>
+  <string name="detail_activity_unsplash_site_referral">www.unsplash.com</string>
+  <string name="detail_activity_options_share">SHARE WITH</string>
+  <string name="detail_activity_download_options_full_hd">Ultra HD</string>
+  <string name="detail_activity_download_options_raw">Raw</string>
+  <string name="detail_activity_options_crystallize">CRYSTALLIZE</string>
+  <string name="detail_activity_website_referral_unsplash">www.unsplash.com</string>
+  <string name="detail_activity_wallpaper_action_progress_percentage">0%</string>
+  <string name="detail_activity_share_error">
+    Unable to fetch shareable link. Please ensure you have a working internet connection</string>
+  <string name="detail_activity_fetch_wallpaper_error_message">
+    Unable to fetch wallpaper. Please try again</string>
+  <string name="detail_activity_wallpaper_download_cancelled_message">Wallpaper download cancelled</string>
+  <string name="detail_activity_download_notification_title_text">Downloading wallpaper</string>
+  <string name="detail_activity_download_started_message">Your wallpaper download has been started</string>
+  <string name="detail_activity_download_already_in_progress_message">Your wallpaper download is already in progress</string>
+  <string name="detail_activity_crystallize_dialog_description">Generates a beautiful and unique artwork of the current wallpaper using WallR\'s innovative Crystallize algorithm. It can give your device the fresh look it deserves.</string>
+  <string name="detail_activity_crystallize_wallpaper_dialog_title">Crystallize Wallpaper</string>
+  <string name="detail_activity_crystallize_dialog_before_text">BEFORE</string>
+  <string name="detail_activity_crystallize_dialog_after_text">AFTER</string>
+  <string name="detail_activity_crystallize_dialog_positive_text">TRY NOW</string>
+  <string name="detail_activity_crystallize_dialog_negative_text">CANCEL</string>
+  <string name="detail_activity_image_already_crystallized_message">This image has already been crystallized</string>
+  <string name="detail_activity_crystallized_download_finished_message">Your crystallized wallpaper has finished downloading</string>
+
+  <!-- Minimal fragment strings -->
+  <string name="minimal_fragment_unable_to_get_colors_error_message">Unable to fetch minimal wallpapers</string>
+  <string name="menu_minimal_title_delete">Delete Wallpaper</string>
+  <string name="minimal_fragment_cab_title">%1$d Selected</string>
+  <string name="minimal_fragment_spinner_item_material">Material</string>
+  <string name="minimal_fragment_spinner_item_gradient">Gradient</string>
+  <string name="minimal_fragment_spinner_item_plasma">Plasma</string>
+  <string name="minimal_fragment_deselect_1_color_message">There should be at least 20 colors remaining after deletion. Please deselect 1 color.</string>
+  <string name="minimal_fragment_deselect_x_colors_message">There should be at least 20 colors remaining after deletion. Please deselect %1$d colors.</string>
+  <string name="minimal_fragment_delete_colors_error_message">Unable to delete colors. Please try again...</string>
+  <string name="minimal_fragment_color_picker_positive_text">SELECT</string>
+  <string name="minimal_fragment_color_picker_negative_text">CANCEL</string>
+  <string name="minimal_fragment_color_alreaady_present_error_message">This color is already present</string>
+  <string name="minimal_fragment_add_color_success_message">Your color has been successfully added</string>
+  <string name="minimal_fragment_exit_selection_before_adding_message">Please exit selection mode before adding new colors</string>
+  <string name="minimal_fragment_single_item_deletion_successful_message">1 color deleted</string>
+  <string name="minimal_fragment_multiple_item_deletion_successful_message">%1$d colors deleted</string>
+  <string name="minimal_fragment_deletion_undo_action_text">UNDO</string>
+  <string name="minimal_fragment_unable_to_restore_colors_error_message">Unable to restore deleted colors</string>
+  <string name="minimal_fragment_restore_colors_success_message">Successfully restored deleted colors</string>
+  <string name="minimal_fragment_toolbar_menu_multiselect_title">Multi-select</string>
+  <string name="minimal_fragment_multi_color_hint_title">Wallpaper Modes</string>
+  <string name="minimal_fragment_multi_color_hint_description">You can choose from different modes to generate variety of wallpapers</string>
+
+  <!-- Colors detail activity strings -->
+  <string name="colors_detail_activity_colors_style_name_solid">Style : Solid</string>
+  <string name="colors_detail_activity_colors_style_name_material">Style : Material</string>
+  <string name="colors_detail_activity_colors_style_name_gradient">Style : Gradient</string>
+  <string name="colors_detail_activity_colors_style_name_plasma">Style : Plasma</string>
+  <string name="colors_detail_activity_image_load_error_message">Unable to load minimal image</string>
+  <string name="colors_detail_activity_color_operations_disabled_message">Please wait for the image to finish loading</string>
+
+  <!-- Collections fragment strings -->
+  <string name="collections_fragment_add_wallpaper_instruction">Open any wallpaper and tap on \"Add to Collection\" to add here</string>
+  <string name="collections_fragment_empty_collection_textview_text">Empty Collection</string>
+  <string name="collections_fragment_import_from_local_menu_title">Import from local storage</string>
+  <string name="collections_fragment_change_wallpaper_interval_menu_title">Change wallpaper interval</string>
+  <string name="collections_fragment_drag_to_reorder_hint_title">Drag-Drop To Reorder</string>
+  <string name="collections_fragment_drag_to_reorder_hint_description">You can drag and drop wallpapers to change their order of appearance</string>
+  <string name="collections_fragment_wallpaper_changer_diloag_title">Change Wallpaper Interval</string>
+  <string name="collections_fragment_wallpaper_changer_dilog_positive_text">CHOOSE</string>
+  <string name="collections_fragment_add_single_image_success_message">1 image has been added successfully</string>
+  <string name="collections_fragment_add_multiple_image_success_message">%1$d images have been added successfully</string>
+  <string name="collections_fragment_single_selected_menu_quick_set_title">Quick Set Wallpaper</string>
+  <string name="collections_fragment_single_selected_menu_crystallize_title">Crystallize Wallpaper</string>
+  <string name="collections_fragment_menu_delete_title">Delete Wallpaper</string>
+  <string name="collections_fragment_unable_to_reorder_images_error_message">Unable to reorder images. Please try again</string>
+  <string name="collections_fragment_unable_to_delete_images_error_message">Unable to delete images. Please try again</string>
+  <string name="collections_fragment_multiple_images_deleted_success_message">Images have been successfully deleted</string>
+  <string name="collections_fragment_single_images_deleted_success_message">Image has been successfully deleted</string>
+  <string name="collections_fragment_image_reordering_success_message">Successfully reordered images</string>
+  <string name="collections_fragment_lock_in_recents_instruction_description">Please open recent apps screen and ensure WallR is locked so that it does not get cleared on clearing recent apps</string>
+  <string name="collections_fragment_lock_in_recents_instruction_title">Lock App In Recent Apps Screen</string>
+  <string name="collections_fragment_lock_in_recents_positive_text">GOT IT</string>
+  <string name="collections_fragment_wallpaper_changer_interval_updated_success_message">Automatic wallpaper changer interval updated</string>
+  <string name="collections_fragment_wallpaper_changer_service_restarted_success_message">Automatic wallpaper changer restarted</string>
+  <string name="collections_fragment_purchase_pro_diloag_description">This is a pro user only section. Please purchase pro to continue adding images to collection and using them offline and also to enable Automatic wallpaper changer</string>
+  <string name="collections_fragment_purchase_pro_diloag_title">WallR Pro Required</string>
+  <string name="collections_fragment_purchase_pro_diloag_positive_text">Purchase Pro</string>
+  <string name="collections_fragment_crystallized_image_already_present_error_message">This image has already been crystallized and added to your collection</string>
+
+  <!-- Wallpaper changer service strings -->
+  <string name="wallpaper_changer_service_notification_title">Automatic wallpaper changer</string>
+  <string name="wallpaper_changer_service_notification_description">Changing wallpaper every</string>
+  <string name="wallpaper_changer_service_interval_30_minutes">30 minutes</string>
+  <string name="wallpaper_changer_service_interval_1_hour">1 hour</string>
+  <string name="wallpaper_changer_service_interval_6_hours">6 hours</string>
+  <string name="wallpaper_changer_service_interval_1_day">1 day</string>
+  <string name="wallpaper_changer_service_interval_3_days">3 days</string>
 
 </resources>

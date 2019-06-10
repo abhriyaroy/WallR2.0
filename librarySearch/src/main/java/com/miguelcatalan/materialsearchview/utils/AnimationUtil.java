@@ -16,17 +16,6 @@ public class AnimationUtil {
   public static int ANIMATION_DURATION_MEDIUM = 400;
   public static int ANIMATION_DURATION_LONG = 800;
 
-  public interface AnimationListener {
-    /**
-     * @return true to override parent. Else execute Parent method
-     */
-    boolean onAnimationStart(View view);
-
-    boolean onAnimationEnd(View view);
-
-    boolean onAnimationCancel(View view);
-  }
-
   public static void crossFadeViews(View showView, View hideView) {
     crossFadeViews(showView, hideView, ANIMATION_DURATION_SHORT);
   }
@@ -138,5 +127,16 @@ public class AnimationUtil {
           public void onAnimationCancel(View view) {
           }
         });
+  }
+
+  public interface AnimationListener {
+    /**
+     * @return true to override parent. Else execute Parent method
+     */
+    boolean onAnimationStart(View view);
+
+    boolean onAnimationEnd(View view);
+
+    boolean onAnimationCancel(View view);
   }
 }

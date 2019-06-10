@@ -1,17 +1,22 @@
 package zebrostudio.wallr100.android.utils
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
+import android.graphics.Rect
 import android.os.Handler
 import android.os.Looper
 import android.support.annotation.LayoutRes
+import android.util.DisplayMetrics
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.*
+import android.view.View.GONE
+import android.view.View.INVISIBLE
+import android.view.View.MeasureSpec.UNSPECIFIED
+import android.view.View.MeasureSpec.makeMeasureSpec
+import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+import android.view.Window
+import android.widget.Toast
 import zebrostudio.wallr100.R
 
 fun View.setOnDebouncedClickListener(onClick: (v: View) -> Unit) {
@@ -24,8 +29,42 @@ fun View.gone() {
   this.visibility = GONE
 }
 
+fun View.invisible() {
+  this.visibility = INVISIBLE
+}
+
 fun View.visible() {
   this.visibility = VISIBLE
+}
+
+fun View.menuTitleToast(
+  context: Context,
+  message: String,
+  window: Window,
+  duration: Int = Toast.LENGTH_SHORT,
+  offsetX: Int = context.getDimensionInPixelSize(R.dimen.toolbar_menu_toast_x_axis_offset),
+  offsetY: Int = context.getDimensionInPixelSize(R.dimen.toolbar_menu_toast_y_axis_offset)
+) {
+  Toast.makeText(context, message, duration).let { toast ->
+    Rect().let { rect ->
+      window.decorView.getWindowVisibleDisplayFrame(rect)
+      val viewLocation = IntArray(2)
+      getLocationInWindow(viewLocation)
+      val viewTop = viewLocation[1] - rect.top
+      val metrics = DisplayMetrics()
+      window.windowManager.defaultDisplay.getMetrics(metrics)
+      val widthMeasureSpec =
+          makeMeasureSpec(metrics.widthPixels, UNSPECIFIED)
+      val heightMeasureSpec =
+          makeMeasureSpec(metrics.heightPixels, UNSPECIFIED)
+      toast.view.measure(widthMeasureSpec, heightMeasureSpec)
+      val toastWidth = toast.view.measuredWidth
+      val toastX = rect.right - toastWidth - offsetX
+      val toastY = viewTop + height + offsetY
+      toast.setGravity(Gravity.START or Gravity.TOP, toastX, toastY)
+    }
+    toast.show()
+  }
 }
 
 fun ViewGroup.inflate(
@@ -33,18 +72,6 @@ fun ViewGroup.inflate(
   root: ViewGroup = this,
   attachToRoot: Boolean = false
 ) = inflater.inflate(layoutRes, root, attachToRoot)!!
-
-@SuppressLint("ResourceType")
-fun LinearLayout.setMenuItemColorRed(context: Context) {
-  this.findViewById<WallrCustomTextView>(R.id.textviewGuillotineMenuItem)
-      .setTextColor(Color.parseColor(context.getString(R.color.color_accent)))
-}
-
-@SuppressLint("ResourceType")
-fun LinearLayout.setMenuItemColorWhite(context: Context) {
-  this.findViewById<WallrCustomTextView>(R.id.textviewGuillotineMenuItem)
-      .setTextColor(Color.parseColor(context.getString(R.color.color_white)))
-}
 
 fun withDelayOnMain(delay: Long, block: () -> Unit) {
   Handler(Looper.getMainLooper()).postDelayed(Runnable(block), delay)

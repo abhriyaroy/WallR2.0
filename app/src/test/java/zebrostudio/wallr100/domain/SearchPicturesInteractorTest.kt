@@ -3,8 +3,8 @@ package zebrostudio.wallr100.domain
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
-import org.junit.Assert.*
+import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -15,11 +15,10 @@ import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.data.exception.NoResultFoundException
 import zebrostudio.wallr100.data.exception.UnableToResolveHostException
 import zebrostudio.wallr100.domain.datafactory.SearchPicturesModelFactory
-import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.SearchPicturesInteractor
 import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.rules.TrampolineSchedulerRule
-import java.util.UUID.*
+import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class SearchPicturesInteractorTest {
@@ -27,14 +26,11 @@ class SearchPicturesInteractorTest {
   @get:Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
 
   @Mock lateinit var wallrRepository: WallrRepository
-  @Mock lateinit var postExecutionThread: PostExecutionThread
   private lateinit var searchPicturesUseCase: SearchPicturesUseCase
   private val dummyString = randomUUID().toString()
 
   @Before fun setup() {
-    searchPicturesUseCase = SearchPicturesInteractor(wallrRepository, postExecutionThread)
-
-    `when`(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
+    searchPicturesUseCase = SearchPicturesInteractor(wallrRepository)
   }
 
   @Test
@@ -50,7 +46,6 @@ class SearchPicturesInteractorTest {
     assertEquals(picture, searchPicturesModelList[0])
 
     verify(wallrRepository).getSearchPictures(dummyString)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test
@@ -63,7 +58,6 @@ class SearchPicturesInteractorTest {
         .assertError(NoResultFoundException::class.java)
 
     verify(wallrRepository).getSearchPictures(dummyString)
-    verifyNoMoreInteractions(wallrRepository)
   }
 
   @Test
@@ -76,6 +70,10 @@ class SearchPicturesInteractorTest {
         .assertError(UnableToResolveHostException::class.java)
 
     verify(wallrRepository).getSearchPictures(dummyString)
+  }
+
+  @After fun tearDown() {
     verifyNoMoreInteractions(wallrRepository)
   }
+
 }

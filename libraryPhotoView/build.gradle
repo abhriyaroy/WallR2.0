@@ -1,0 +1,17 @@
+apply plugin: 'com.android.library'
+apply from: "../versions.gradle"
+
+android {
+  compileSdkVersion COMPILE_SDK_VERSION
+
+  defaultConfig {
+    minSdkVersion MINIMUM_SDK_VERSION
+    targetSdkVersion TARGET_SDK_VERSION
+    versionCode LIBRARY_PHOTOVIEW_VERSION
+    versionName LIBRARY_PHOTOVIEW_VERSION_NAME
+  }
+}
+
+dependencies {
+  implementation "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+}

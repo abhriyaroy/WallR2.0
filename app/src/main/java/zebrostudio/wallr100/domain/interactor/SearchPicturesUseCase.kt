@@ -1,9 +1,7 @@
 package zebrostudio.wallr100.domain.interactor
 
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import zebrostudio.wallr100.domain.WallrRepository
-import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
 
 interface SearchPicturesUseCase {
@@ -11,13 +9,10 @@ interface SearchPicturesUseCase {
 }
 
 class SearchPicturesInteractor(
-  private val wallrRepository: WallrRepository,
-  private val postExecutionThread: PostExecutionThread
+  private val wallrRepository: WallrRepository
 ) : SearchPicturesUseCase {
 
   override fun buildUseCaseSingle(query: String): Single<List<SearchPicturesModel>> {
     return wallrRepository.getSearchPictures(query)
-        .subscribeOn(Schedulers.io())
-        .observeOn(postExecutionThread.scheduler)
   }
 }

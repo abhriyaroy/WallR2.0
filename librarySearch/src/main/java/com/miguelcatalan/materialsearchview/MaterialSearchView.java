@@ -34,22 +34,18 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.miguelcatalan.materialsearchview.utils.AnimationUtil;
-
 import java.lang.reflect.Field;
 import java.util.List;
 
 public class MaterialSearchView extends FrameLayout implements Filter.FilterListener {
   public static final int REQUEST_VOICE = 9999;
-
+  //Views
+  public ImageButton backButton;
   private MenuItem menuItem;
   private boolean isSearchOpen = false;
   private int animationDuration;
   private boolean clearingFocus;
-
-  //Views
-  public ImageButton backButton;
   private View searchLayout;
   private View tintView;
   private ListView suggestionsListView;
@@ -75,6 +71,20 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
   private Drawable suggestionIcon;
 
   private Context context;
+  private final OnClickListener mOnClickListener = new OnClickListener() {
+
+    public void onClick(View v) {
+      if (v == voiceButton) {
+        onVoiceClicked();
+      } else if (v == emptyButton) {
+        searchSrcTextView.setText(null);
+      } else if (v == searchSrcTextView) {
+        showSuggestions();
+      } else if (v == tintView) {
+        closeSearch();
+      }
+    }
+  };
 
   public MaterialSearchView(Context context) {
     this(context, null);
@@ -211,21 +221,6 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
       ((Filterable) adapter).getFilter().filter(s, MaterialSearchView.this);
     }
   }
-
-  private final OnClickListener mOnClickListener = new OnClickListener() {
-
-    public void onClick(View v) {
-      if (v == voiceButton) {
-        onVoiceClicked();
-      } else if (v == emptyButton) {
-        searchSrcTextView.setText(null);
-      } else if (v == searchSrcTextView) {
-        showSuggestions();
-      } else if (v == tintView) {
-        closeSearch();
-      }
-    }
-  };
 
   private void onVoiceClicked() {
     try {
@@ -641,40 +636,6 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     super.onRestoreInstanceState(savedState.getSuperState());
   }
 
-  static class SavedState extends BaseSavedState {
-    String query;
-    boolean isSearchOpen;
-
-    SavedState(Parcelable superState) {
-      super(superState);
-    }
-
-    private SavedState(Parcel in) {
-      super(in);
-      this.query = in.readString();
-      this.isSearchOpen = in.readInt() == 1;
-    }
-
-    @Override
-    public void writeToParcel(Parcel out, int flags) {
-      super.writeToParcel(out, flags);
-      out.writeString(query);
-      out.writeInt(isSearchOpen ? 1 : 0);
-    }
-
-    //required field that makes Parcelables from a Parcel
-    public static final Creator<SavedState> CREATOR =
-        new Creator<SavedState>() {
-          public SavedState createFromParcel(Parcel in) {
-            return new SavedState(in);
-          }
-
-          public SavedState[] newArray(int size) {
-            return new SavedState[size];
-          }
-        };
-  }
-
   public interface OnQueryTextListener {
 
     /**
@@ -704,5 +665,38 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     void onSearchViewShown();
 
     void onSearchViewClosed();
+  }
+
+  static class SavedState extends BaseSavedState {
+    //required field that makes Parcelables from a Parcel
+    public static final Creator<SavedState> CREATOR =
+        new Creator<SavedState>() {
+          public SavedState createFromParcel(Parcel in) {
+            return new SavedState(in);
+          }
+
+          public SavedState[] newArray(int size) {
+            return new SavedState[size];
+          }
+        };
+    String query;
+    boolean isSearchOpen;
+
+    SavedState(Parcelable superState) {
+      super(superState);
+    }
+
+    private SavedState(Parcel in) {
+      super(in);
+      this.query = in.readString();
+      this.isSearchOpen = in.readInt() == 1;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+      super.writeToParcel(out, flags);
+      out.writeString(query);
+      out.writeInt(isSearchOpen ? 1 : 0);
+    }
   }
 }

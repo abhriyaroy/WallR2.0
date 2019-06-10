@@ -1,14 +1,17 @@
 package zebrostudio.wallr100.presentation.adapters
 
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.*
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract.ImageRecyclerItemView
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract.ImageRecyclerViewPresenter
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 
-class ImageRecyclerViewPresenterImpl : ImageRecyclerItemContract.ImageRecyclerViewPresenter {
+class ImageRecyclerViewPresenterImpl : ImageRecyclerViewPresenter {
 
-  private lateinit var imageType: ImageListType
-  private val searchResultList = mutableListOf<SearchPicturesPresenterEntity>()
-  private val wallpaperImageList = mutableListOf<ImagePresenterEntity>()
+  internal lateinit var imageType: ImageListType
+  internal val searchResultList = mutableListOf<SearchPicturesPresenterEntity>()
+  internal val wallpaperImageList = mutableListOf<ImagePresenterEntity>()
 
   override fun setListType(imageListType: ImageListType) {
     imageType = imageListType
@@ -30,16 +33,17 @@ class ImageRecyclerViewPresenterImpl : ImageRecyclerItemContract.ImageRecyclerVi
 
   override fun onBindRepositoryRowViewAtPosition(
     position: Int,
-    rowView: ImageRecyclerItemContract.ImageRecyclerItemView
+    rowView: ImageRecyclerItemView
   ) {
     when (imageType) {
       SEARCH -> {
-        rowView.setImageViewBackground(searchResultList[position].paletteColor)
+        rowView.setImageViewBackgroundAndAttachClickListener(
+            searchResultList[position].paletteColor)
         rowView.setSearchImage(
             searchResultList[position].imageQualityUrlPresenterEntity.smallImageLink)
       }
       WALLPAPERS -> {
-        rowView.setImageViewBackground(wallpaperImageList[position].color)
+        rowView.setImageViewBackgroundAndAttachClickListener(wallpaperImageList[position].color)
         rowView.setWallpaperImage(wallpaperImageList[position].imageLink.thumb)
       }
     }
@@ -52,13 +56,23 @@ class ImageRecyclerViewPresenterImpl : ImageRecyclerItemContract.ImageRecyclerVi
     }
   }
 
-  override fun clearAll() {
+  override fun clearAllSearchResults() {
     searchResultList.clear()
   }
 
+  override fun handleImageClicked(
+    position: Int,
+    rowView: ImageRecyclerItemView
+  ) {
+    when (imageType) {
+      SEARCH -> rowView.showSearchImageDetails(searchResultList[position])
+      WALLPAPERS -> rowView.showWallpaperImageDetails(wallpaperImageList[position])
+    }
+  }
+
   enum class ImageListType {
-    SEARCH,
-    WALLPAPERS
+    WALLPAPERS,
+    SEARCH
   }
 
 }

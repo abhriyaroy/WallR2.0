@@ -1,7 +1,7 @@
 package zebrostudio.wallr100.android.ui.main
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.IdRes
@@ -11,18 +11,23 @@ import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import com.afollestad.materialcab.MaterialCab
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetView
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import com.yalantis.guillotine.interfaces.GuillotineListener
 import dagger.android.AndroidInjection
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import kotlinx.android.synthetic.main.activity_main.appbar
 import kotlinx.android.synthetic.main.activity_main.fragmentContainer
 import kotlinx.android.synthetic.main.activity_main.rootFrameLayout
 import kotlinx.android.synthetic.main.activity_main.toolbar
-import kotlinx.android.synthetic.main.guillotine_menu_layout.rootLinearLayoutGuillotineMenu
-import kotlinx.android.synthetic.main.guillotine_menu_layout.view.hamburgerGuillotineMenu
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.imageviewGuillotineMenuItem
 import kotlinx.android.synthetic.main.item_guillotine_menu.view.textviewGuillotineMenuItem
+import kotlinx.android.synthetic.main.menu_guillotine_layout.rootLinearLayoutGuillotineMenu
+import kotlinx.android.synthetic.main.menu_guillotine_layout.view.hamburgerGuillotineMenu
+import kotlinx.android.synthetic.main.menu_guillotine_layout.view.proBadgeGuillotineMenu
 import kotlinx.android.synthetic.main.toolbar_layout.contentHamburger
 import kotlinx.android.synthetic.main.toolbar_layout.toolbarSearchIcon
 import zebrostudio.wallr100.R
@@ -30,27 +35,41 @@ import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.android.ui.collection.CollectionFragment
-import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment
 import zebrostudio.wallr100.android.ui.minimal.MinimalFragment
 import zebrostudio.wallr100.android.ui.search.SearchActivity
+import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.CATEGORIES_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.COLLECTIONS_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.EXPLORE_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.MINIMAL_TAG
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher.Companion.TOP_PICKS_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag
+import zebrostudio.wallr100.android.utils.FragmentTag.CATEGORIES_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.COLLECTIONS_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.MINIMAL_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.TOP_PICKS_TAG
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.drawableRes
-import zebrostudio.wallr100.android.utils.errorToast
 import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.android.utils.infoToast
+import zebrostudio.wallr100.android.utils.menuTitleToast
 import zebrostudio.wallr100.android.utils.setOnDebouncedClickListener
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.withDelayOnMain
 import zebrostudio.wallr100.presentation.main.MainContract
+import zebrostudio.wallr100.presentation.main.MainContract.MainView
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragmentInjector {
+private const val RIPPLE_DURATION: Long = 250
+private const val MAIL_URI = "mailto:"
+
+interface BlockBackPressListener {
+  fun blockBackPress()
+
+  fun releaseBackPressBlock()
+}
+
+class MainActivity : AppCompatActivity(),
+    MainView,
+    BlockBackPressListener,
+    HasSupportFragmentInjector {
 
   @Inject
   internal lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
@@ -62,6 +81,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   private lateinit var guillotineMenuAnimation: GuillotineAnimation
 
   private var buyProMenuItem: View? = null
+  private var isOperationInProcess = false
 
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)
@@ -69,10 +89,10 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     presenter.attachView(this)
     setContentView(R.layout.activity_main)
     initializeViews()
-    addFragment(fragmentContainer.id, WallpaperFragment.newInstance(),
-        fragmentNameTagFetcher.getFragmentName(EXPLORE_TAG))
+    addFragment(fragmentContainer.id, WallpaperFragment.newInstance(), EXPLORE_TAG)
 
     attachToolbarItemClickListeners()
+    presenter.handleViewCreated()
   }
 
   override fun onBackPressed() {
@@ -85,6 +105,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
     if (requestCode == PurchaseTransactionConfig.PURCHASE_REQUEST_CODE &&
         resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
       buyProMenuItem?.gone()
@@ -92,6 +113,35 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
   }
 
   override fun supportFragmentInjector() = fragmentDispatchingAndroidInjector
+
+  override fun showHamburgerHint() {
+    TapTargetView.showFor(this,
+        TapTarget.forView(findViewById(R.id.contentHamburger),
+            stringRes(R.string.main_activity_hamburger_hint_title),
+            stringRes(R.string.main_activity_hamburger_hint_description))
+            .dimColor(android.R.color.transparent)
+            .outerCircleColor(R.color.accent)
+            .targetCircleColor(R.color.tap_target_hint_inner_circle)
+            .textColor(android.R.color.white)
+            .cancelable(true),
+        object : TapTargetView.Listener() {
+          override fun onTargetClick(view: TapTargetView) {
+            super.onTargetClick(view)
+            guillotineMenuAnimation.open()
+            presenter.handleHamburgerHintDismissed()
+          }
+
+          override fun onTargetDismissed(view: TapTargetView?, userInitiated: Boolean) {
+            super.onTargetDismissed(view, userInitiated)
+            presenter.handleHamburgerHintDismissed()
+          }
+
+          override fun onOuterCircleClick(view: TapTargetView?) {
+            super.onTargetClick(view!!)
+            view.dismiss(true)
+          }
+        })
+  }
 
   override fun exitApp() {
     this.finish()
@@ -113,19 +163,68 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     supportFragmentManager.popBackStack()
   }
 
-  override fun getFragmentTagAtStackTop(): String {
-    return supportFragmentManager
-        .getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name
+  override fun getFragmentTagAtStackTop(): FragmentTag {
+    return when (supportFragmentManager
+        .getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name!!) {
+      EXPLORE_TAG.toString() -> EXPLORE_TAG
+      TOP_PICKS_TAG.toString() -> TOP_PICKS_TAG
+      CATEGORIES_TAG.toString() -> CATEGORIES_TAG
+      MINIMAL_TAG.toString() -> MINIMAL_TAG
+      else -> COLLECTIONS_TAG
+    }
   }
 
-  override fun getExploreFragmentTag(): String {
-    return fragmentNameTagFetcher.getFragmentName(EXPLORE_TAG)
+  override fun isCabActive(): Boolean {
+    return MaterialCab.isActive
+  }
+
+  override fun dismissCab() {
+    MaterialCab.destroy()
+  }
+
+  override fun showAppBar() {
+    appbar.setExpanded(true, true)
+  }
+
+  override fun showOperationInProgressMessage() {
+    infoToast(stringRes(R.string.finalizing_stuff_wait_message), Toast.LENGTH_SHORT)
+  }
+
+  override fun isOperationActive(): Boolean {
+    return isOperationInProcess
+  }
+
+  override fun showFeedbackClient(
+    emailSubject: String,
+    emailAddress: Array<String>,
+    emailIntentType: String
+  ) {
+    closeNavigationMenu()
+    withDelayOnMain(100) {
+      Intent(Intent.ACTION_SENDTO).apply {
+        type = emailIntentType
+        data = Uri.parse(MAIL_URI)
+        putExtra(Intent.EXTRA_EMAIL, emailAddress)
+        putExtra(Intent.EXTRA_SUBJECT, emailSubject)
+      }.let {
+        startActivityForResult(Intent.createChooser(it,
+            stringRes(R.string.main_activity_feedback_contact_using_message)), 0)
+      }
+    }
+  }
+
+  override fun blockBackPress() {
+    isOperationInProcess = true
+  }
+
+  override fun releaseBackPressBlock() {
+    isOperationInProcess = false
   }
 
   private inline fun <reified T : BaseFragment> addFragment(
     @IdRes id: Int,
     fragment: T,
-    fragmentTag: String
+    fragmentTag: FragmentTag
   ) {
     if (!fragmentExistsOnStackTop(fragmentTag)) {
       if (fragmentTag == EXPLORE_TAG) {
@@ -134,15 +233,15 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
 
       supportFragmentManager
           .beginTransaction()
-          .replace(id, fragment, fragmentTag)
-          .addToBackStack(fragmentTag)
+          .replace(id, fragment, fragmentTag.toString())
+          .addToBackStack(fragmentTag.toString())
           .commitAllowingStateLoss()
 
       fragment.fragmentTag = fragmentTag
     }
   }
 
-  private fun fragmentExistsOnStackTop(fragmentTag: String): Boolean {
+  private fun fragmentExistsOnStackTop(fragmentTag: FragmentTag): Boolean {
     if (supportFragmentManager.backStackEntryCount == 0)
       return false
     return getFragmentTagAtStackTop() == fragmentTag
@@ -150,27 +249,26 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
 
   private fun initializeViews() {
     val guillotineMenu = LayoutInflater.from(this)
-        .inflate(R.layout.guillotine_menu_layout, null)
+        .inflate(R.layout.menu_guillotine_layout, null)
     rootFrameLayout.addView(guillotineMenu)
 
     setSupportActionBar(toolbar)
 
     val guillotineListener = object : GuillotineListener {
       override fun onGuillotineOpened() {
-        presenter.notifyNavigationMenuOpened()
+        presenter.handleNavigationMenuOpened()
       }
 
       override fun onGuillotineClosed() {
-        presenter.notifyNavigationMenuClosed()
+        presenter.handleNavigationMenuClosed()
       }
     }
 
-    val rippleDuration = 250
     guillotineMenuAnimation = GuillotineAnimation.GuillotineBuilder(
         guillotineMenu,
         guillotineMenu.hamburgerGuillotineMenu,
         contentHamburger)
-        .setStartDelay(rippleDuration.toLong())
+        .setStartDelay(RIPPLE_DURATION)
         .setActionBarViewForAnimation(toolbar)
         .setGuillotineListener(guillotineListener)
         .setClosedOnStart(true)
@@ -207,6 +305,9 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
       val guillotineMenuItemView = layoutInflater
           .inflate(R.layout.item_guillotine_menu, null)
       rootLinearLayoutGuillotineMenu?.addView(guillotineMenuItemView)
+      if (presenter.shouldShowPurchaseOption()) {
+        rootLinearLayoutGuillotineMenu.proBadgeGuillotineMenu.gone()
+      }
       with(guillotineMenuItemView) {
         id = it.first
         textviewGuillotineMenuItem.text = stringRes(it.first)
@@ -214,11 +315,13 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
       }
       // Make the background white and text color black for the buy pro guillotine menu item
       if (!itemIterator.hasNext()) {
-        guillotineMenuItemView.setBackgroundColor(colorRes(R.color.color_white))
-        guillotineMenuItemView.textviewGuillotineMenuItem
-            .setTextColor(colorRes(R.color.color_black))
-        if (!presenter.shouldShowPurchaseOption()) {
-          guillotineMenuItemView.gone()
+        guillotineMenuItemView.apply {
+          setBackgroundColor(colorRes(R.color.white))
+          textviewGuillotineMenuItem
+              .setTextColor(colorRes(R.color.black))
+          if (!presenter.shouldShowPurchaseOption()) {
+            gone()
+          }
         }
         buyProMenuItem = guillotineMenuItemView
       }
@@ -244,9 +347,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
       MenuItems.COLLECTION -> addFragment(fragmentContainer.id,
           CollectionFragment.newInstance(),
           COLLECTIONS_TAG)
-      MenuItems.FEEDBACK -> {
-        handleFeedbackClick()
-      }
+      MenuItems.FEEDBACK -> presenter.handleFeedbackMenuItemClick()
       MenuItems.BUY_PRO -> {
         withDelayOnMain(550, block = {
           startActivityForResult(Intent(this, BuyProActivity::class.java),
@@ -268,39 +369,24 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, HasSupportFragm
     }
   }
 
-  private fun handleFeedbackClick() {
-    closeNavigationMenu()
-    withDelayOnMain(100) {
-      var emailSubject = "Debug-infos:"
-      emailSubject += "\n OS Version: " + System.getProperty(
-          "os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")"
-      emailSubject += "\n OS API Level: " + android.os.Build.VERSION.SDK_INT
-      emailSubject += "\n Device: " + android.os.Build.DEVICE
-      emailSubject += "\n Model (and Product): " + android.os.Build.MODEL +
-          " (" + android.os.Build.PRODUCT + ")"
-      val emailIntent = Intent(Intent.ACTION_SEND)
-      emailIntent.type = "plain/text"
-      val emailAddress = arrayOf("studio.zebro@gmail.com")
-      emailIntent.putExtra(Intent.EXTRA_EMAIL, emailAddress)
-      emailIntent.putExtra(Intent.EXTRA_SUBJECT,
-          "Feedback/Report about WallR  $emailSubject")
-      try {
-        startActivityForResult(Intent.createChooser(emailIntent, "Contact using"), 0)
-      } catch (e: ActivityNotFoundException) {
-        errorToast(stringRes(R.string.main_activity_no_email_client_error))
-      }
-    }
-  }
-
   private fun attachToolbarItemClickListeners() {
-    toolbarSearchIcon.setOnClickListener {
-      val searchActivityIntent = Intent(this, SearchActivity::class.java)
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, it,
-            stringRes(R.string.search_view_transition_name))
-        startActivity(searchActivityIntent, options.toBundle())
-      } else {
-        startActivity(searchActivityIntent)
+    toolbarSearchIcon.let { searchIcon ->
+      searchIcon.setOnClickListener {
+        val searchActivityIntent = Intent(this, SearchActivity::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+          val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, it,
+              stringRes(R.string.search_view_transition_name))
+          startActivity(searchActivityIntent, options.toBundle())
+        } else {
+          startActivity(searchActivityIntent)
+        }
+      }
+
+      searchIcon.setOnLongClickListener { view ->
+        view.menuTitleToast(this,
+            stringRes(R.string.minimal_fragment_toolbar_menu_multiselect_title),
+            window)
+        true
       }
     }
   }

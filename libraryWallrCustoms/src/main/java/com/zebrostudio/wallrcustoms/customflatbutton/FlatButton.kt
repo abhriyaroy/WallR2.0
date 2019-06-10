@@ -63,7 +63,8 @@ class FlatButton : Button, View.OnTouchListener {
     when (motionEvent.action) {
       MotionEvent.ACTION_DOWN -> {
         updateBackground(pressedDrawable)
-        this.setPadding(paddingLeftValue, paddingTopValue + shadowHeight, paddingRightValue, paddingBottomValue)
+        this.setPadding(paddingLeftValue, paddingTopValue + shadowHeight, paddingRightValue,
+            paddingBottomValue)
       }
       MotionEvent.ACTION_MOVE -> {
         val r = Rect()
@@ -173,7 +174,7 @@ class FlatButton : Button, View.OnTouchListener {
   private fun updateBackground(background: Drawable?) {
     if (background == null) return
     //Set button background
-    if (Build.VERSION.SDK_INT >= 18) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
       this.background = background
     } else {
       this.setBackgroundDrawable(background)

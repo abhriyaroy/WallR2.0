@@ -1,7 +1,61 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</LinearLayout>
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/collectionsRecyclerView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scrollbars="vertical"/>
+
+  <RelativeLayout
+      android:id="@+id/imagesAbsentLayout"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:paddingBottom="@dimen/collections_fragment_image_absent_layout_padding_bottom"
+      android:background="@color/primary">
+
+    <ImageView
+        android:id="@+id/emptyCollectionImageView"
+        android:layout_width="@dimen/collections_fragment_empty_collection_imageview_width"
+        android:layout_height="@dimen/collections_fragment_empty_collection_imageview_height"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_empty_collection"/>
+
+    <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+        android:id="@+id/emptyCollectionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/emptyCollectionImageView"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="@dimen/collections_fragment_empty_collection_textview_padding_top"
+        android:text="@string/collections_fragment_empty_collection_textview_text"
+        android:textSize="@dimen/collections_fragment_empty_collection_textview_text_size"
+        android:textColor="@color/white"
+        android:textAlignment="center"/>
+
+    <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
+        android:id="@+id/emptyCollectionSubtext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/emptyCollectionTextView"
+        android:paddingStart="@dimen/collections_fragment_empty_collection_sub_textview_padding_left"
+        android:paddingEnd="@dimen/collections_fragment_empty_collection_sub_textview_padding_right"
+        android:paddingTop="@dimen/collections_fragment_empty_collection_sub_textview_padding_top"
+        android:text="@string/collections_fragment_add_wallpaper_instruction"
+        android:textSize="@dimen/collections_fragment_empty_collection_sub_textview_text_size"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:lineSpacingExtra="@dimen/collections_fragment_empty_collection_sub_textview_line_spacing"/>
+
+  </RelativeLayout>
+
+  <View
+      android:background="@drawable/shadow_bottom"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/wallpaper_fragment_shadow_tab_height"
+      android:layout_gravity="top"/>
+
+</FrameLayout>

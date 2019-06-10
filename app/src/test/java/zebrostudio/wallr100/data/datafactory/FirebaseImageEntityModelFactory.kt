@@ -6,7 +6,7 @@ import zebrostudio.wallr100.data.model.firebasedatabase.ImageLinkEntity
 import zebrostudio.wallr100.data.model.firebasedatabase.ImageResolutionEntity
 import zebrostudio.wallr100.data.model.firebasedatabase.ImageSizeEntity
 import java.util.Random
-import java.util.UUID.*
+import java.util.UUID.randomUUID
 
 object FirebaseImageEntityModelFactory {
 
