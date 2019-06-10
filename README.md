@@ -87,7 +87,7 @@ It comes with a plethora of customization options like editing a wallpaper, crys
 WallR was selected as one of the best customization apps by <a href="https://www.androidauthority.com/5-android-apps-you-shouldnt-miss-this-week-android-apps-weekly-review-90-796074">Android Authority</a>, <a href="https://www.androidpolice.com/2017/08/21/11-new-notable-1-wtf-android-apps-last-week-81517-82117/">Android Police</a>. It also recieved huge number of warm and positive feedbacks and reviews at <a href="https://forum.xda-developers.com/android/apps-games/app-wallr-wallpapers-beta-testers-t3568221">XDA Developers Community</a>.
 
 <a href="https://play.google.com/store/apps/details?id=zebrostudio.wallr100">
- <img src="http://i.imgur.com/EPQlu1s.png?2" alt="Get it on Goolgel Play">
+ <img src="https://i.imgur.com/mi6fexT.png" alt="Get it on Goolge Play">
 </a>
 
 ### Bibliography
