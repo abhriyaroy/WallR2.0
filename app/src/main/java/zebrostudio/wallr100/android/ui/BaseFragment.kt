@@ -39,11 +39,11 @@ abstract class BaseFragment : Fragment(), BaseView {
   internal var fragmentTag: FragmentTag = EXPLORE_TAG
 
   private val menuItemIdList: List<Int> = listOf(
-      R.string.explore_fragment_tag,
-      R.string.top_picks_fragment_tag,
-      R.string.categories_fragment_tag,
-      R.string.minimal_fragment_tag,
-      R.string.collection_fragment_tag
+      R.string.explore_title,
+      R.string.top_picks_title,
+      R.string.categories_title,
+      R.string.minimal_title,
+      R.string.collection_title
   )
 
   override fun onCreate(savedInstanceState: Bundle?) {
