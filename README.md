@@ -18,7 +18,7 @@ Did you know that an average user checks their device more than 80 times a day? 
 - [Acclaimations](#acclamations) <br>
 - [Bibliography](#bibliography) <br>
 
-### Introduction
+## Introduction
 <p>
 WallR is an open-source Android wallpaper app written in <b>Kotlin</b>, keeping in mind proper coding guidelines and app architecture so that it is easy to maintain and scale.<br>
 It comes with a plethora of customization options like editing a wallpaper, crystallizing or even making a new minimal wallpaper. WallR also comes with an automatic wallpaper changer which keeps changing wallpapers automatically once enabled.
@@ -42,7 +42,7 @@ It comes with a plethora of customization options like editing a wallpaper, crys
   <img src="https://i.imgur.com/r0loike.jpg" alt="Edit Wallpaper" width=425 height=650 hspace="2">
 </p>
  
-### Insights
+## Insights
   - [Clean Architecture With MVP](#clean-architecture-with-mvp)<br>
   - [Dependency Injection Using Dagger](#dependency-injection-using-dagger)<br>
   - [Multi-threading Using RxJava2](#multi-threading-using-rxjava2)<br>
@@ -54,27 +54,52 @@ It comes with a plethora of customization options like editing a wallpaper, crys
   - [JUnit and Mockito For Unit Testing](#junit-and-mockito-for-unit-testing)<br>
   - [Espresso for UI Tests](#espresso-for-ui-tests)<br>
   
- #### Clean Architecture With MVP
+ ### Clean Architecture With MVP
+  In Clean Architecture, the code is separated into layers in an onion shape with one dependency rule: The inner layers should not know   anything about the outer layers. Inner layers contain business logic, whereas the outer layers contain implementation and the middle     layer contain Interface Adapters. Each ring represent one layer of abstraction.
+  <p align="center">
+  <img src="https://i.imgur.com/ZTLG6Ax.png" width=400 height=300>
+  </p>
+  
+  <br>
  
- #### Dependency Injection Using Dagger
+  #### A diagram representing different layers, components and how they communicate with each other in the app :-
+  
+  <p align="center">
+  <img src="https://i.imgur.com/W6vKYw7.png" width=800 height=350>
+  </p>
+  
+  #### Presentation Layer
+  - MVP (Model View Presenter) is suitable for the presentation layer.
+  - Views are dumb and implement Passive View pattern. It is a set of interfaces that could be implemented by any Android view, such as     Activities, Fragments, Adapters or Custom Views.
+  - Presenter serve as a middleman between views (abstractions over Android specific components) and the business logic (interactors/Use     Cases). They handle user interactions, invoke appropriate business logic and send the data to the UI for rendering.
+  - Presenter does not depend on Android classes hence improves testability.
+  
+  #### Domain Layer
+  - A simple example of Use Case would be “Fetch new wallpapers”. Each Use Case is a reusable component that executes a specific             business logic. It fetches the data from a repository, executes the business logic and returns the result to the presenter.
+  
+  #### Data Layer (Database & API)
+  - Repository Pattern is responsible to create an abstraction of the data sources from which the Use Cases get the data to act upon.
+  - Business logic shouldn’t know where the data comes from.
  
- #### Multi-threading Using RxJava2
+ ### Dependency Injection Using Dagger
  
- #### Unsplash API
+ ### Multi-threading Using RxJava2
  
- #### Firebase Realtime Database
+ ### Unsplash API
  
- #### Room Database
+ ### Firebase Realtime Database
  
- #### Shared Preferences
+ ### Room Database
  
- #### Retrofit For Networking
+ ### Shared Preferences
  
- #### JUnit and Mockito For Unit Testing
+ ### Retrofit For Networking
  
- #### Espresso for UI Tests
+ ### JUnit and Mockito For Unit Testing
  
- ### Features
+ ### Espresso for UI Tests
+ 
+ ## Features
   - Daily new wallpapers 
   - More than 10 Categories of wallpapers 
   - Search for wallpaper of your choice from a collection of over 100k+ images 
@@ -90,7 +115,7 @@ It comes with a plethora of customization options like editing a wallpaper, crys
   - Enable automatic wallpaper changer to automatically change wallpapers periodically 
   - Add any external image to collection to use it as a wallpaper or to crystallize it 
   
-### Usage Tips
+## Usage Tips
  - Automatic wallpaper changer is only available to pro users and can be found inside collections.
  - The option to enable automatic wallpaper changer is only available upon adding atleast 2 images to collection.
  - Create your own assorted collection of wallpapers so that automatic wallpaper changer can cycle through them periodically after the      time interval (default - 30 mins) set by you.
@@ -98,15 +123,15 @@ It comes with a plethora of customization options like editing a wallpaper, crys
  - Clearing the app by swiping from recent apps screen might lead to the automatic wallpaper changer malfunctioning.
  - If WallR does not show a notification stating that automatic wallpaper changer then please restart the app so that automatic            wallpaper changer can be restarted by the app itself.
  
-### Project Setup Notes
+## Project Setup Notes
 - The google-services.json file has been purposely ignored by git due to security purposes. Please login to <a href="https://console.firebase.google.com/u/0/?gclid=CjwKCAjw__fnBRANEiwAuFxET6VRIbt1VaeN3D_DAYAU3rAwAC1uJGY1FaKZvmWSTe8bkiGe8lRAPBoCd0QQAvD_BwE">Firebase console</a> and create a new project and obtain your own google-services.json file and paste it at app/src/debug to set it up and running.<br> For more information, please refer the <a href="https://firebase.google.com/docs/android/setup">docs</a>.
 
-### Acclamations
+## Acclamations
 WallR was selected as one of the best customization apps by <a href="https://www.androidauthority.com/5-android-apps-you-shouldnt-miss-this-week-android-apps-weekly-review-90-796074">Android Authority</a>, <a href="https://www.androidpolice.com/2017/08/21/11-new-notable-1-wtf-android-apps-last-week-81517-82117/">Android Police</a>. It also recieved huge number of warm and positive feedbacks and reviews at <a href="https://forum.xda-developers.com/android/apps-games/app-wallr-wallpapers-beta-testers-t3568221">XDA Developers Community</a>.
 
 <a href='https://play.google.com/store/apps/details?id=zebrostudio.wallr100&hl=en_IN&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height=60 width = 145/></a>
 
-### Bibliography
+## Bibliography
 
 <br>
 
