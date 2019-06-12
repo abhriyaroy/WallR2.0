@@ -21,26 +21,26 @@ abstract class ActivityBuilder {
 
   @PerActivity
   @ContributesAndroidInjector(modules = [(MainActivityModule::class), (FragmentProvider::class)])
-  abstract fun mainActivity(): MainActivity
+  abstract fun mainActivityInjector(): MainActivity
 
   @PerActivity
   @ContributesAndroidInjector(modules = [(BuyProModule::class)])
-  abstract fun buyProActivity(): BuyProActivity
+  abstract fun buyProActivityInjector(): BuyProActivity
 
   @PerActivity
   @ContributesAndroidInjector(modules = [(SearchActivityModule::class)])
-  abstract fun searchActivity(): SearchActivity
+  abstract fun searchActivityInjector(): SearchActivity
 
   @PerActivity
   @ContributesAndroidInjector(modules = [(DetailActivityModule::class)])
-  abstract fun detailActivity(): DetailActivity
+  abstract fun detailActivityInjector(): DetailActivity
 
   @PerActivity
   @ContributesAndroidInjector(modules = [ColorsDetailModule::class])
-  abstract fun colorsDetailActivity(): ColorsDetailActivity
+  abstract fun colorsDetailActivityInjector(): ColorsDetailActivity
 
   @PerActivity
   @ContributesAndroidInjector(modules = [(FullScreenImageModule::class)])
-  abstract fun fullScreenImageActivity(): FullScreenImageActivity
+  abstract fun fullScreenImageActivityInjector(): FullScreenImageActivity
 
 }

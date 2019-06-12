@@ -13,7 +13,7 @@ import zebrostudio.wallr100.android.ui.wallpaper.WallpaperFragment
 @Module
 abstract class FragmentProvider {
 
-  @ContributesAndroidInjector()
+  @ContributesAndroidInjector
   abstract fun wallpaperFragment(): WallpaperFragment
 
   @ContributesAndroidInjector(modules = [(MinimalModule::class)])
