@@ -16,7 +16,7 @@ Did you know that an average user checks their device more than 80 times a day? 
 - [Usage Tips](#usage-tips) <br>
 - [Project Setup Notes](#project-setup-notes) <br>
 - [Acclaimations](#acclamations) <br>
-- [Bibliography](#bibliography) <br>
+- [References](#references) <br>
 
 ## Introduction
 <p>
@@ -47,8 +47,8 @@ It comes with a plethora of customization options like editing a wallpaper, crys
   - [Room Database](#room-database)<br>
   - [Shared Preferences](#shared-preferences)<br>
   - [Retrofit For Networking](#retrofit-for-networking)<br>
-  - [JUnit and Mockito For Unit Testing](#junit-and-mockito-for-unit-testing)<br>
-  - [Espresso for UI Tests](#espresso-for-ui-tests)<br>
+  - [JUnit And Mockito For Unit Testing](#junit-and-mockito-for-unit-testing)<br>
+  - [Espresso For UI Tests](#espresso-for-ui-tests)<br>
   
  ### Clean Architecture With MVP
   In Clean Architecture, the code is separated into layers in an onion shape with one dependency rule: The inner layers should not know   anything about the outer layers. Inner layers contain business logic, whereas the outer layers contain implementation and the middle     layer contain Interface Adapters. Each ring represent one layer of abstraction.
@@ -111,11 +111,13 @@ It comes with a plethora of customization options like editing a wallpaper, crys
  ### Retrofit For Networking
    Retrofit is a REST Client for Java and Android. It is used to retrieve JSON data via a REST based webservice. It also helps in data      serialization using the gson converter. Retrofit uses the OkHttp library for HTTP requests.
  
- ### JUnit and Mockito For Unit Testing
+ ### JUnit And Mockito For Unit Testing
    TDD (Test Driven Development) is an effective way of developing the applicaion by incrementally adding the code and writing tests.      Unit tests in this project are written using the Mockito framework and run using the JUnit runner.
    <p align="center"><img src="https://i.imgur.com/IxDnxIt.png" height = 200></a>
  
- ### Espresso for UI Tests
+ ### Espresso For UI Tests
+   User interface (UI) testing lets you ensure that your app meets its functional requirements and achieves a high standard of quality      such that it is more likely to be successfully adopted by users. <br>
+   One approach to UI testing is to simply have a human tester perform a set of user operations on the target app and verify that it is   behaving correctly. However, this manual approach can be time-consuming, tedious, and error-prone. A more efficient approach is to       write UI tests such that user actions are performed in an automated way. The automated approach allows us to run tests                   quickly and reliably in a repeatable manner.
  
  ## Features
   - Daily new wallpapers 
@@ -145,11 +147,25 @@ It comes with a plethora of customization options like editing a wallpaper, crys
 - The google-services.json file has been purposely ignored by git due to security purposes. Please login to <a href="https://console.firebase.google.com/u/0/?gclid=CjwKCAjw__fnBRANEiwAuFxET6VRIbt1VaeN3D_DAYAU3rAwAC1uJGY1FaKZvmWSTe8bkiGe8lRAPBoCd0QQAvD_BwE">Firebase console</a> and create a new project and obtain your own google-services.json file and paste it at app/src/debug to set it up and running.<br> For more information, please refer the <a href="https://firebase.google.com/docs/android/setup">docs</a>.
 
 ## Acclamations
+
 WallR was selected as one of the best customization apps by <a href="https://www.androidauthority.com/5-android-apps-you-shouldnt-miss-this-week-android-apps-weekly-review-90-796074">Android Authority</a>, <a href="https://www.androidpolice.com/2017/08/21/11-new-notable-1-wtf-android-apps-last-week-81517-82117/">Android Police</a>. It also recieved huge number of warm and positive feedbacks and reviews at <a href="https://forum.xda-developers.com/android/apps-games/app-wallr-wallpapers-beta-testers-t3568221">XDA Developers Community</a>.
 
 <a href='https://play.google.com/store/apps/details?id=zebrostudio.wallr100&hl=en_IN&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height=60 width = 145/></a>
 
-## Bibliography
+## References
+
+<a href="https://unsplash.com/">Unsplash</a>
+<a href="https://github.com/square/retrofit">Retrofit</a>
+<a href=""></a>
+<a href=""></a>
+<a href=""></a>
+<a href=""></a>
+<a href=""></a>
+<a href=""></a>
+<a href=""></a>
+<a href=""></a>
+<a href=""></a>
+<a href=""></a>
 
 <br>
 
