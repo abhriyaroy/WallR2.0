@@ -60,8 +60,10 @@ It comes with a plethora of customization options like editing a wallpaper, crys
  
   #### A diagram representing different layers, components and how they communicate with each other in the app :-
   
+  <br>
+  
   <p align="center">
-  <img src="https://i.imgur.com/W6vKYw7.png" width=800 height=350>
+  <img src="https://i.imgur.com/dHLjdiu.png" width=800 height=350>
   </p>
   
   #### Presentation Layer
