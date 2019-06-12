@@ -83,9 +83,13 @@ It comes with a plethora of customization options like editing a wallpaper, crys
   - The original Dagger was partly reflection-based, and didn’t play well with Proguard. Dagger2 however is based entirely on annotation     processing, so it does the magic at compile time. It works without any additional Proguard configuration, and is generally faster.
   - Implementing proper dependency injection in our apps allows us to have :
     - Testable classes.
-    - Re-usable and interchangeable components.   
+    - Re-usable and interchangeable components.
+  #### Dependency graph for this project :-
+  
+  <br>
+  <p align = "center"><img src="https://i.imgur.com/5l5vIhq.png" height=450></p>
+  <br>
     
- 
  ### Multi-threading Using RxJava2
    RxJava is a Java VM implementation of Reactive Extensions. The official doc describes Reactive Extension(ReactiveX) as a library for    composing asynchronous and event-based programs by using observable sequences.
    - Asynchronous: It implies that the different parts of a program run simultaneously.
@@ -94,7 +98,7 @@ It comes with a plethora of customization options like editing a wallpaper, crys
   <p align="center"> <img src="https://i.imgur.com/iGYOeYB.png" widht=450 height=300></a>
   <p align="center">Credits: <a href="https://dzone.com/articles/marble-diagrams-rxjava-operators">DZone</a></p>
   
-   In this project <a href="https://github.com/uber/AutoDispose">Autodispose<a> is used to dispose observables.
+   In this project, <a href="https://github.com/uber/AutoDispose">Autodispose<a> is used to dispose observables.
  
  ### Unsplash API
    The Unsplash API is a modern JSON API that surfaces all of the info required for displaying various wallpapers to the users. For more    information, please click <a href="https://unsplash.com/developers">here</a>
@@ -177,7 +181,7 @@ WallR was selected as one of the best customization apps by <a href="https://www
 <a href="https://github.com/KeepSafe/TapTargetView">TapTarget View</a>,
 <a href="https://github.com/jaredrummler/MaterialSpinner">Material Spinner</a>,
 <a href="https://github.com/MLSDev/RxImagePicker">Rx ImagePicker</a>,
-<a href="https://github.com/chrisbanes/PhotoView">{hotoview</a>,
+<a href="https://github.com/chrisbanes/PhotoView">Photoview</a>,
 <a href="https://github.com/Yalantis/uCrop">Ucrop</a>,
 <a href="https://github.com/Yalantis/GuillotineMenu-Android">Guillotine-Menu</a>,
 <a href="https://github.com/skydoves/ColorPickerView">Colorpicker view</a>
