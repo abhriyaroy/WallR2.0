@@ -93,6 +93,8 @@ It comes with a plethora of customization options like editing a wallpaper, crys
    - Observable sequences: Publishers like Observable and Flowable take some items (Observable sequences) and pass onto its subscribers       so that they can inturn react to the incoming items.
   <p align="center"> <img src="https://i.imgur.com/iGYOeYB.png" widht=450 height=300></a>
   <p align="center">Credits: <a href="https://dzone.com/articles/marble-diagrams-rxjava-operators">DZone</a></p>
+  
+   In this project <a href="https://github.com/uber/AutoDispose">Autodispose<a> is used to dispose observables.
  
  ### Unsplash API
    The Unsplash API is a modern JSON API that surfaces all of the info required for displaying various wallpapers to the users. For more    information, please click <a href="https://unsplash.com/developers">here</a>
@@ -154,18 +156,31 @@ WallR was selected as one of the best customization apps by <a href="https://www
 
 ## References
 
-<a href="https://unsplash.com/">Unsplash</a>
-<a href="https://github.com/square/retrofit">Retrofit</a>
-<a href=""></a>
-<a href=""></a>
-<a href=""></a>
-<a href=""></a>
-<a href=""></a>
-<a href=""></a>
-<a href=""></a>
-<a href=""></a>
-<a href=""></a>
-<a href=""></a>
+<a href="https://kotlinlang.org/docs/reference/">Kotlin</a>,
+<a href="https://github.com/ReactiveX/RxJava">RxJava 2</a>,
+<a href="https://unsplash.com/">Unsplash</a>,
+<a href="https://github.com/square/retrofit">Retrofit</a>,
+<a href="https://github.com/uber/AutoDispose">Autodispose</a>,
+<a href="https://github.com/google/dagger">Dagger 2</a>,
+<a href="https://github.com/mockito/mockito">Mockito</a>,
+<a href="https://github.com/junit-team/junit4">JUnit 4</a>,
+<a href="https://github.com/GrenderG/Toasty">Toasty</a>,
+<a href="https://github.com/recruit-lifestyle/WaveSwipeRefreshLayout">WaveSwipeRefreshLayout</a>,
+<a href="https://github.com/ybq/Android-SpinKit">Android-SpinKit</a>,
+<a href="https://github.com/ogaclejapan/SmartTabLayout">SmartTabLayout</a>,
+<a href="https://github.com/afollestad/material-dialogs">Material Dialogs</a>,
+<a href="https://github.com/bumptech/glide">Glide</a>,
+<a href="https://github.com/wasabeef/recyclerview-animators">Recyclerview Animator</a>,
+<a href="https://firebase.google.com/docs/android/setup">Firebase</a>,
+<a href="https://github.com/umano/AndroidSlidingUpPanel">Sliding up panel</a>,
+<a href="https://github.com/hdodenhof/CircleImageView">Circle ImageView</a>,
+<a href="https://github.com/KeepSafe/TapTargetView">TapTarget View</a>,
+<a href="https://github.com/jaredrummler/MaterialSpinner">Material Spinner</a>,
+<a href="https://github.com/MLSDev/RxImagePicker">Rx ImagePicker</a>,
+<a href="https://github.com/chrisbanes/PhotoView">{hotoview</a>,
+<a href="https://github.com/Yalantis/uCrop">Ucrop</a>,
+<a href="https://github.com/Yalantis/GuillotineMenu-Android">Guillotine-Menu</a>,
+<a href="https://github.com/skydoves/ColorPickerView">Colorpicker view</a>
 
 <br>
 
