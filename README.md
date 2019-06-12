@@ -91,10 +91,19 @@ It comes with a plethora of customization options like editing a wallpaper, crys
     
  
  ### Multi-threading Using RxJava2
+   RxJava is a Java VM implementation of Reactive Extensions. The official doc describes Reactive Extension(ReactiveX) as a library for    composing asynchronous and event-based programs by using observable sequences.
+   - Asynchronous: It implies that the different parts of a program run simultaneously.
+   - Event-Based: The program executes the codes based on the events generated while the program is running.
+   - Observable sequences: Publishers like Observable and Flowable take some items (Observable sequences) and pass onto its subscribers       so that they can inturn react to the incoming items.
+  <p align="center"> <img src="https://i.imgur.com/iGYOeYB.png" widht=450 height=300></a>
+  <p align="center">Credits: <a href="https://dzone.com/articles/marble-diagrams-rxjava-operators">DZone</a></p>
  
  ### Unsplash API
+   The Unsplash API is a modern JSON API that surfaces all of the info required for displaying various wallpapers to the users. For more    information, please click <a href="https://unsplash.com/developers">here</a>
  
  ### Firebase Realtime Database
+   The Firebase Realtime Database is a cloud-hosted NoSQL database that lets you store and sync data between your users in realtime. The    basic structure of the database for this project is :- 
+   <p align="center"> <img src="https://i.imgur.com/WThrSrw.png" widht=450 height=350></a>
  
  ### Room Database
  
