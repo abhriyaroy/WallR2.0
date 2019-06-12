@@ -44,7 +44,7 @@ It comes with a plethora of customization options like editing a wallpaper, crys
  
 ## Insights
   - [Clean Architecture With MVP](#clean-architecture-with-mvp)<br>
-  - [Dependency Injection Using Dagger](#dependency-injection-using-dagger)<br>
+  - [Dependency Injection Using Dagger2](#dependency-injection-using-dagger2)<br>
   - [Multi-threading Using RxJava2](#multi-threading-using-rxjava2)<br>
   - [Unsplash Api](#unsplash-api)<br>
   - [Firebase Realtime Database](#firebase-realtime-database)<br>
@@ -81,7 +81,14 @@ It comes with a plethora of customization options like editing a wallpaper, crys
   - Repository Pattern is responsible to create an abstraction of the data sources from which the Use Cases get the data to act upon.
   - Business logic shouldn’t know where the data comes from.
  
- ### Dependency Injection Using Dagger
+ ### Dependency Injection Using Dagger 2
+  - Dagger is a dependency injection framework, which makes it easier to manage the dependencies between the classes in our app.
+  - It is a software design pattern that implements inversion of control for resolving dependencies.
+  - The original Dagger was partly reflection-based, and didn’t play well with Proguard. Dagger2 however is based entirely on annotation     processing, so it does the magic at compile time. It works without any additional Proguard configuration, and is generally faster.
+  - Implementing proper dependency injection in our apps allows us to have :
+    - Testable classes.
+    - Re-usable and interchangeable components.   
+    
  
  ### Multi-threading Using RxJava2
  
