@@ -27,19 +27,15 @@ It comes with a plethora of customization options like editing a wallpaper, crys
 ## Screenshots
 <p align="center">
   <img src="https://i.imgur.com/xlTXmLD.jpg" alt="Explore Wallpapers" width=425 height=650 hspace="2">
-  <img src="https://i.imgur.com/Z1RekKn.jpg" alt="Top Picks Wallpapers" width=425 height=650 hspace="2">
+  <img src="https://i.imgur.com/tCYtXOg.jpg" alt="Wallpaper Categories" width=425 height=650 hspace="2">
 </p>
 <p align="center">
-  <img src="https://i.imgur.com/tCYtXOg.jpg" alt="Wallpaper Categories" width=425 height=650 hspace="2">
+  <img src="https://i.imgur.com/xDNyaOn.png" alt="Collections" width=425 height=650 hspace="2">
   <img src="https://i.imgur.com/bODjKaX.jpg" alt="Search Wallpapers" width=425 height=650 hspace="2">
 </p>
 <p align="center">
   <img src="https://i.imgur.com/BfUPBLr.jpg" alt="Minimal Wallpapers" width=425 height=650 hspace="2">
-  <img src="https://i.imgur.com/xDNyaOn.png" alt="Collections" width=425 height=650 hspace="2">
-</p>
-<p align="center">
   <img src="https://i.imgur.com/2fJsYzR.jpg" alt="Wallpaper Details" width=425 height=650 hspace="2">
-  <img src="https://i.imgur.com/r0loike.jpg" alt="Edit Wallpaper" width=425 height=650 hspace="2">
 </p>
  
 ## Insights
@@ -102,14 +98,18 @@ It comes with a plethora of customization options like editing a wallpaper, crys
    The Unsplash API is a modern JSON API that surfaces all of the info required for displaying various wallpapers to the users. For more    information, please click <a href="https://unsplash.com/developers">here</a>
  
  ### Firebase Realtime Database
-   The Firebase Realtime Database is a cloud-hosted NoSQL database that lets you store and sync data between your users in realtime. The    basic structure of the database for this project is :- 
+   The Firebase Realtime Database is a cloud-hosted NoSQL database that lets us store and sync data between our users in realtime. The      basic structure of the firebase database for this project looks like :- 
    <p align="center"> <img src="https://i.imgur.com/WThrSrw.png" widht=450 height=350></a>
  
  ### Room Database
+   Room is a database layer on top of an SQLite database which is used to store data locally on the device. Room takes care of mundane      tasks that is generally handled with an SQLiteOpenHelper. Room uses the DAO to issue queries to its database.
+   <p align="center"> <img src="https://i.imgur.com/dxvdjSf.png" widht=250 height=200></a>
  
  ### Shared Preferences
+   Shared Preferences is a way of storing data in Android. It allow us to save and retrieve data in the form of key,value pairs.
  
  ### Retrofit For Networking
+   Retrofit is a REST Client for Java and Android. It is used to retrieve JSON data via a REST based webservice. It also helps in data      serialization using the gson converter. Retrofit uses the OkHttp library for HTTP requests.
  
  ### JUnit and Mockito For Unit Testing
  
