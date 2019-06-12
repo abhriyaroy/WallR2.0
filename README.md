@@ -1,4 +1,3 @@
-
 <p align="center">
  <a href="https://play.google.com/store/apps/details?id=zebrostudio.wallr100">
  <img src="https://i.imgur.com/PWzM7sn.png" alt="Explore Wallpapers" width=800 height=400 hspace="2">
@@ -15,7 +14,7 @@ Did you know that an average user checks their device more than 80 times a day? 
 - [Features](#features) <br>
 - [Usage Tips](#usage-tips) <br>
 - [Project Setup Notes](#project-setup-notes) <br>
-- [Acclaimations](#acclamations) <br>
+- [Acclamations](#acclamations) <br>
 - [References](#references) <br>
 
 ## Introduction
