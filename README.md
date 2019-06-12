@@ -112,6 +112,8 @@ It comes with a plethora of customization options like editing a wallpaper, crys
    Retrofit is a REST Client for Java and Android. It is used to retrieve JSON data via a REST based webservice. It also helps in data      serialization using the gson converter. Retrofit uses the OkHttp library for HTTP requests.
  
  ### JUnit and Mockito For Unit Testing
+   TDD (Test Driven Development) is an effective way of developing the applicaion by incrementally adding the code and writing tests.      Unit tests in this project are written using the Mockito framework and run using the JUnit runner.
+   <p align="center"><img src="https://i.imgur.com/IxDnxIt.png" height = 200></a>
  
  ### Espresso for UI Tests
  
