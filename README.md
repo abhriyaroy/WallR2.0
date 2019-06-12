@@ -93,7 +93,7 @@ It comes with a plethora of customization options like editing a wallpaper, crys
   <br>
     
  ### Multi-threading Using RxJava2
-   RxJava is a Java VM implementation of Reactive Extensions. The official doc describes Reactive Extension(ReactiveX) as a library for    composing asynchronous and event-based programs by using observable sequences.
+   RxJava is a Java VM implementation of Reactive Extensions. The official doc describes Reactive Extension(ReactiveX) as a library for    composing <b>asynchronous</b> and <b>event-based</b> programs by using <b>observable sequences</b>.
    - Asynchronous: It implies that the different parts of a program run simultaneously.
    - Event-Based: The program executes the codes based on the events generated while the program is running.
    - Observable sequences: Publishers like Observable and Flowable take some items (Observable sequences) and pass onto its subscribers       so that they can inturn react to the incoming items.
