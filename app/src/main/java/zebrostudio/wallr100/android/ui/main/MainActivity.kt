@@ -280,19 +280,19 @@ class MainActivity : AppCompatActivity(),
   private fun buildGuillotineMenuItems(): List<Triple<Int, Int, MenuItems>> {
     // Declare mutable list containing names and icon resources of guillotine menu items
     return mutableListOf<Triple<Int, Int, MenuItems>>().apply {
-      add(Triple(R.string.explore_fragment_tag, R.drawable.ic_explore_white,
+      add(Triple(R.string.explore_title, R.drawable.ic_explore_white,
           MenuItems.EXPLORE))
-      add(Triple(R.string.top_picks_fragment_tag, R.drawable.ic_toppicks_white,
+      add(Triple(R.string.top_picks_title, R.drawable.ic_toppicks_white,
           MenuItems.TOP_PICKS))
-      add(Triple(R.string.categories_fragment_tag, R.drawable.ic_categories_white,
+      add(Triple(R.string.categories_title, R.drawable.ic_categories_white,
           MenuItems.CATEGORIES))
-      add(Triple(R.string.minimal_fragment_tag, R.drawable.ic_minimal_white,
+      add(Triple(R.string.minimal_title, R.drawable.ic_minimal_white,
           MenuItems.MINIMAL))
-      add(Triple(R.string.collection_fragment_tag, R.drawable.ic_collections_white,
+      add(Triple(R.string.collection_title, R.drawable.ic_collections_white,
           MenuItems.COLLECTION))
-      add(Triple(R.string.feedback_fragment_tag, R.drawable.ic_feedback_white,
+      add(Triple(R.string.feedback_title, R.drawable.ic_feedback_white,
           MenuItems.FEEDBACK))
-      add(Triple(R.string.guillotine_buy_pro_title, R.drawable.ic_buypro_black,
+      add(Triple(R.string.buy_pro_title, R.drawable.ic_buypro_black,
           MenuItems.BUY_PRO))
     }
   }

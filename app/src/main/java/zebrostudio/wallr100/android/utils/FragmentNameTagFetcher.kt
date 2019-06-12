@@ -14,11 +14,11 @@ class FragmentNameTagFetcherImpl(private val resourceUtils: ResourceUtils) : Fra
 
   override fun getFragmentName(fragmentTag: FragmentTag): String {
     return when (fragmentTag) {
-      EXPLORE_TAG -> resourceUtils.getStringResource(R.string.explore_fragment_tag)
-      TOP_PICKS_TAG -> resourceUtils.getStringResource(R.string.top_picks_fragment_tag)
-      CATEGORIES_TAG -> resourceUtils.getStringResource(R.string.categories_fragment_tag)
-      MINIMAL_TAG -> resourceUtils.getStringResource(R.string.minimal_fragment_tag)
-      else -> resourceUtils.getStringResource(R.string.collection_fragment_tag)
+      EXPLORE_TAG -> resourceUtils.getStringResource(R.string.explore_title)
+      TOP_PICKS_TAG -> resourceUtils.getStringResource(R.string.top_picks_title)
+      CATEGORIES_TAG -> resourceUtils.getStringResource(R.string.categories_title)
+      MINIMAL_TAG -> resourceUtils.getStringResource(R.string.minimal_title)
+      else -> resourceUtils.getStringResource(R.string.collection_title)
     }
   }
 }
