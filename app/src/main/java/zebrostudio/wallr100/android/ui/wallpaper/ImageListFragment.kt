@@ -67,6 +67,7 @@ class ImageListFragment : Fragment(), ImageListView {
     configureSwipeRefreshLayout()
     presenter.attachView(this)
     val parentFragment = this.parentFragment as WallpaperFragment
+    println("fragment tag ${parentFragment.fragmentTag}")
     presenter.setImageListType(parentFragment.fragmentTag,
         FragmentPagerItem.getPosition(arguments))
     presenter.fetchImages(false)
@@ -92,6 +93,7 @@ class ImageListFragment : Fragment(), ImageListView {
   }
 
   override fun showImageList(list: List<ImagePresenterEntity>) {
+    println("Image list is ${list[0].imageLink.medium}")
     recyclerView?.visible()
     imageRecyclerViewPresenter.setWallpaperImageList(list)
     recyclerviewAdapter?.notifyDataSetChanged()
