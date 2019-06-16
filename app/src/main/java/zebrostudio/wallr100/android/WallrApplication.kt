@@ -33,6 +33,7 @@ class WallrApplication : Application(), HasActivityInjector, HasServiceInjector 
         .build()
         .inject(this)
     ViewTarget.setTagId(R.id.glide_tag)
+    initPushNotifications()
   }
 
   override fun activityInjector() = activityDispatchingAndroidInjector
@@ -43,7 +44,7 @@ class WallrApplication : Application(), HasActivityInjector, HasServiceInjector 
     OneSignal.startInit(this)
         .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
         .unsubscribeWhenNotificationsAreDisabled(true)
-        .init();
+        .init()
   }
 
 }

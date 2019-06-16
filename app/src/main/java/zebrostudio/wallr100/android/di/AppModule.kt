@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import zebrostudio.wallr100.android.AndroidBackgroundThreads
 import zebrostudio.wallr100.android.AndroidMainThread
+import zebrostudio.wallr100.android.di.scopes.PerApplication
 import zebrostudio.wallr100.android.notification.NotificationFactory
 import zebrostudio.wallr100.android.notification.NotificationFactoryImpl
 import zebrostudio.wallr100.android.permissions.PermissionsChecker
@@ -82,102 +83,113 @@ import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.Dra
 import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerPresenterImpl
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract.ImageRecyclerViewPresenter
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
-import javax.inject.Singleton
 
 @Module
 class AppModule {
 
   @Provides
-  @Singleton
+  @PerApplication
   fun provideContext(application: Application): Context {
     return application
   }
 
   @Provides
-  @Singleton
+  @PerApplication
   fun provideSystemInfo(): SystemInfoProvider = SystemInfoProviderImpl()
 
   @Provides
-  @Singleton
+  @PerApplication
   fun provideResourceUtils(context: Context): ResourceUtils = ResourceUtilsImpl(context)
 
   @Provides
-  @Singleton
-  fun provideFragmentTag(resourceUtils: ResourceUtils): FragmentNameTagFetcher = FragmentNameTagFetcherImpl(
-      resourceUtils)
+  @PerApplication
+  fun provideFragmentTag(resourceUtils: ResourceUtils): FragmentNameTagFetcher =
+    FragmentNameTagFetcherImpl(
+        resourceUtils
+    )
 
   @Provides
-  @Singleton
+  @PerApplication
   fun provideSharedPrefsHelper(context: Context): SharedPrefsHelper = SharedPrefsHelperImpl(context)
 
   @Provides
-  @Singleton
+  @PerApplication
   fun providesDatabaseHelper(context: Context): DatabaseHelper =
-      DatabaseHelperImpl(context)
+    DatabaseHelperImpl(context)
 
   @Provides
-  @Singleton
+  @PerApplication
   fun provideFirebaseDatabaseHelper(context: Context): FirebaseDatabaseHelper =
-      FirebaseDatabaseHelperImpl(context)
+    FirebaseDatabaseHelperImpl(context)
 
   @Provides
-  @Singleton
+  @PerApplication
   fun provideMinimalColorHelper(
     context: Context,
     sharedPrefsHelper: SharedPrefsHelper
   ): MinimalColorHelper = MinimalColorsHelperImpl(context, sharedPrefsHelper)
 
   @Provides
-  @Singleton
+  @PerApplication
   fun provideGson(): GsonProvider = GsonProviderImpl()
 
   @Provides
-  @Singleton
+  @PerApplication
   fun provideAndroidMainThread(): PostExecutionThread = AndroidMainThread()
 
   @Provides
-  @Singleton
+  @PerApplication
   fun provideAndroidBackgroundThread(): ExecutionThread = AndroidBackgroundThreads()
 
   @Provides
-  @Singleton
+  @PerApplication
   fun provideRemoteAuthServiceFactory(): RemoteAuthServiceFactory =
-      RemoteAuthServiceFactoryImpl()
+    RemoteAuthServiceFactoryImpl()
 
   @Provides
-  @Singleton
+  @PerApplication
   fun provideUnsplashClientFactory(): UnsplashClientFactory = UnsplashClientFactoryImpl()
 
   @Provides
+  @PerApplication
   fun provideCollectionsDatabaseImageEntityMapper():
       CollectionsDatabaseImageEntityMapper = CollectionsDatabaseImageEntityMapperImpl()
 
   @Provides
+  @PerApplication
   fun provideDataBaseImageTypeMapper(): DatabaseImageTypeMapper = DatabaseImageTypeMapperImpl()
 
   @Provides
-  fun provideUnsplashPictureEntityMapper(): UnsplashPictureEntityMapper = UnsplashPictureEntityMapperImpl()
+  @PerApplication
+  fun provideUnsplashPictureEntityMapper(): UnsplashPictureEntityMapper =
+    UnsplashPictureEntityMapperImpl()
 
   @Provides
-  fun provideFirebasePictureEntityMapper(): FirebasePictureEntityMapper = FirebasePictureEntityMapperImpl()
+  @PerApplication
+  fun provideFirebasePictureEntityMapper(): FirebasePictureEntityMapper =
+    FirebasePictureEntityMapperImpl()
 
   @Provides
-  @Singleton
+  @PerApplication
   fun provideUrlShortener(): UrlShortener = UrlShortenerImpl()
 
   @Provides
+  @PerApplication
   fun provideFileHandler(context: Context): FileHandler = FileHandlerImpl(context)
 
   @Provides
+  @PerApplication
   fun provideWallpaperSetter(context: Context): WallpaperSetter = WallpaperSetterImpl(context)
 
   @Provides
+  @PerApplication
   fun provideDownloadHelper(
     context: Context,
     fileHandler: FileHandler
   ): DownloadHelper = DownloadHelperImpl(context, fileHandler)
 
   @Provides
+  @PerApplication
   fun provideImageHandler(
     context: Context,
     fileHandler: FileHandler,
@@ -186,7 +198,7 @@ class AppModule {
   ): ImageHandler = ImageHandlerImpl(context, fileHandler, databaseHelper, wallpaperSetter)
 
   @Provides
-  @Singleton
+  @PerApplication
   fun provideWallrRepository(
     retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
     unsplashClientFactory: UnsplashClientFactory,
@@ -203,7 +215,8 @@ class AppModule {
     downloadHelper: DownloadHelper,
     minimalColorHelper: MinimalColorHelper,
     executionThread: ExecutionThread
-  ): WallrRepository = WallrDataRepository(retrofitFirebaseAuthFactory,
+  ): WallrRepository = WallrDataRepository(
+      retrofitFirebaseAuthFactory,
       unsplashClientFactory,
       sharedPrefsHelper,
       gsonProvider,
@@ -217,61 +230,70 @@ class AppModule {
       fileHandler,
       downloadHelper,
       minimalColorHelper,
-      executionThread)
+      executionThread
+  )
 
   @Provides
+  @PerApplication
   fun providesTimeManager(): TimeManager = TimeManagerImpl()
 
   @Provides
-  @Singleton
+  @PerApplication
   fun provideAuthenticatePurchaseUseCase(
     wallrRepository: WallrRepository
   ): AuthenticatePurchaseUseCase = AuthenticatePurchaseInteractor(wallrRepository)
 
   @Provides
-  @Singleton
+  @PerApplication
   fun provideUserPremiumStatusUseCase(
     wallrRepository: WallrRepository
   ): UserPremiumStatusUseCase = UserPremiumStatusInteractor(wallrRepository)
 
   @Provides
-  @Singleton
+  @PerApplication
   fun provideSearchPicturesUseCase(
     wallrRepository: WallrRepository
   ): SearchPicturesUseCase = SearchPicturesInteractor(wallrRepository)
 
   @Provides
+  @PerApplication
   fun provideWallpaperUseCase(
     wallrRepository: WallrRepository
   ): WallpaperImagesUseCase = WallpaperImagesInteractor(wallrRepository)
 
   @Provides
+  @PerApplication
   fun provideShareImagesUseCase(
     wallrRepository: WallrRepository
   ): ImageOptionsUseCase = ImageOptionsInteractor(wallrRepository)
 
   @Provides
+  @PerApplication
   fun provideMinimalImagesUseCase(
     wallrRepository: WallrRepository
   ): MinimalImagesUseCase = MinimalImagesInteractor(wallrRepository)
 
   @Provides
+  @PerApplication
   fun provideColorsDetailsUseCase(
     wallrRepository: WallrRepository
   ): ColorImagesUseCase = ColorImagesInteractor(wallrRepository)
 
   @Provides
+  @PerApplication
   fun provideWidgetHintsUseCase(
     wallrRepository: WallrRepository
   ): WidgetHintsUseCase = WidgetHintsInteractor(wallrRepository)
 
   @Provides
+  @PerApplication
   fun provideCollectionImagesUseCase(
     serviceManager: ServiceManager,
     wallrRepository: WallrRepository
   ): CollectionImagesUseCase = CollectionsImagesInteractor(serviceManager, wallrRepository)
 
   @Provides
+  @PerApplication
   fun provideAutomaticWallpaperChangerUseCase(
     wallpaperSetter: WallpaperSetter,
     wallrRepository: WallrRepository,
@@ -279,27 +301,37 @@ class AppModule {
     executionThread: ExecutionThread,
     postExecutionThread: PostExecutionThread,
     timeManager: TimeManager
-  ): AutomaticWallpaperChangerUseCase = AutomaticWallpaperChangerInteractor(wallpaperSetter,
-      wallrRepository, resourceUtils, executionThread, postExecutionThread, timeManager)
+  ): AutomaticWallpaperChangerUseCase = AutomaticWallpaperChangerInteractor(
+      wallpaperSetter,
+      wallrRepository, resourceUtils, executionThread, postExecutionThread, timeManager
+  )
 
   @Provides
+  @PerApplication
   fun provideImageRecyclerViewPresenter()
       : ImageRecyclerViewPresenter = ImageRecyclerViewPresenterImpl()
 
   @Provides
-  fun provideDragSelectRecyclerItemPresenter(): DragSelectItemPresenter = DragSelectRecyclerPresenterImpl()
+  @PerApplication
+  fun provideDragSelectRecyclerItemPresenter(): DragSelectItemPresenter =
+    DragSelectRecyclerPresenterImpl()
 
   @Provides
-  fun provideCollectionRecyclerPresenter(): CollectionRecyclerPresenter = CollectionRecyclerPresenterImpl()
+  @PerApplication
+  fun provideCollectionRecyclerPresenter(): CollectionRecyclerPresenter =
+    CollectionRecyclerPresenterImpl()
 
   @Provides
+  @PerApplication
   fun provideServiceManager(context: Context): ServiceManager = ServiceManagerImpl(context)
 
   @Provides
+  @PerApplication
   fun provideNotificationFactory(context: Context)
       : NotificationFactory = NotificationFactoryImpl(context)
 
   @Provides
+  @PerApplication
   fun providePermissionsCheckerHelper(context: Context)
       : PermissionsChecker = PermissionsCheckerImpl(context)
 }

@@ -2,6 +2,7 @@ package zebrostudio.wallr100.android.ui.detail.images
 
 import dagger.Module
 import dagger.Provides
+import zebrostudio.wallr100.android.di.scopes.PerActivity
 import zebrostudio.wallr100.android.permissions.PermissionsChecker
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
@@ -16,10 +17,12 @@ import zebrostudio.wallr100.presentation.detail.images.mapper.ImageDownloadPrese
 class DetailActivityModule {
 
   @Provides
+  @PerActivity
   fun providesImageDownloadPresenterEntityMapper(): ImageDownloadPresenterEntityMapper =
       ImageDownloadPresenterEntityMapper()
 
   @Provides
+  @PerActivity
   fun providesDetailPresenter(
     resourceUtils: ResourceUtils,
     imageOptionsUseCase: ImageOptionsUseCase,

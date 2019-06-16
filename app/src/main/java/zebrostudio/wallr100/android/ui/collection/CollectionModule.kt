@@ -2,6 +2,7 @@ package zebrostudio.wallr100.android.ui.collection
 
 import dagger.Module
 import dagger.Provides
+import zebrostudio.wallr100.android.di.scopes.PerFragment
 import zebrostudio.wallr100.android.permissions.PermissionsChecker
 import zebrostudio.wallr100.android.system.SystemInfoProvider
 import zebrostudio.wallr100.android.utils.ResourceUtils
@@ -19,6 +20,7 @@ import zebrostudio.wallr100.presentation.collection.mapper.CollectionsImagesPres
 class CollectionModule {
 
   @Provides
+  @PerFragment
   fun provideCollectionPresenter(
     widgetHintsUseCase: WidgetHintsUseCase,
     userPremiumStatusUseCase: UserPremiumStatusUseCase,
@@ -35,6 +37,7 @@ class CollectionModule {
       systemInfoProvider)
 
   @Provides
+  @PerFragment
   fun provideCollectionPresenterEntityMapper()
       : CollectionImagesPresenterEntityMapper = CollectionsImagesPresenterEntityMapperImpl()
 
