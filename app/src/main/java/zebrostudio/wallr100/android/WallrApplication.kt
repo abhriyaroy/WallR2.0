@@ -32,7 +32,6 @@ class WallrApplication : Application(), HasActivityInjector, HasServiceInjector 
         .application(this)
         .build()
         .inject(this)
-    ViewTarget.setTagId(R.id.glide_tag)
     initPushNotifications()
   }
 

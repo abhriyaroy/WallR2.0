@@ -10,7 +10,7 @@ import zebrostudio.wallr100.android.di.scopes.PerApplication
 import javax.inject.Singleton
 
 @PerApplication
-@Component(modules = [(AndroidInjectionModule::class), (AppModule::class),
+@Component(modules = [(AndroidSupportInjectionModule::class), (AppModule::class),
   (ActivityBuilder::class), (ServiceBuilder::class)])
 interface AppComponent {
 
