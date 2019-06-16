@@ -30,6 +30,7 @@ import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
 import zebrostudio.wallr100.android.utils.visible
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract.ImageRecyclerViewPresenter
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
 import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListPresenter
 import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListView
@@ -40,7 +41,7 @@ import javax.inject.Inject
 class ImageListFragment : Fragment(), ImageListView {
 
   @Inject
-  internal lateinit var imageRecyclerViewPresenter: ImageRecyclerItemContract.ImageRecyclerViewPresenter
+  internal lateinit var imageRecyclerViewPresenter: ImageRecyclerViewPresenter
   @Inject internal lateinit var presenter: ImageListPresenter
 
   private var recyclerviewAdapter: ImageAdapter? = null
@@ -55,21 +56,26 @@ class ImageListFragment : Fragment(), ImageListView {
   }
 
   override fun onCreateView(
-    inflater: LayoutInflater, container: ViewGroup?,
+    inflater: LayoutInflater,
+    container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
     return container?.inflate(inflater, R.layout.fragment_image_list)
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
     super.onViewCreated(view, savedInstanceState)
     initViews(view)
     configureSwipeRefreshLayout()
     presenter.attachView(this)
     val parentFragment = this.parentFragment as WallpaperFragment
-    println("fragment tag ${parentFragment.fragmentTag}")
-    presenter.setImageListType(parentFragment.fragmentTag,
-        FragmentPagerItem.getPosition(arguments))
+    presenter.setImageListType(
+        parentFragment.fragmentTag,
+        FragmentPagerItem.getPosition(arguments)
+    )
     presenter.fetchImages(false)
   }
 
@@ -93,7 +99,6 @@ class ImageListFragment : Fragment(), ImageListView {
   }
 
   override fun showImageList(list: List<ImagePresenterEntity>) {
-    println("Image list is ${list[0].imageLink.medium}")
     recyclerView?.visible()
     imageRecyclerViewPresenter.setWallpaperImageList(list)
     recyclerviewAdapter?.notifyDataSetChanged()
@@ -123,23 +128,28 @@ class ImageListFragment : Fragment(), ImageListView {
 
   private fun initRecyclerView() {
     val layoutManager =
-        GridLayoutManager(context, integerRes(R.integer.recycler_view_span_count))
+      GridLayoutManager(context, integerRes(R.integer.recycler_view_span_count))
     recyclerView?.layoutManager = layoutManager
     recyclerviewAdapter = ImageAdapter(imageRecyclerViewPresenter)
     val scaleInAdapter = ScaleInAnimationAdapter(recyclerviewAdapter)
     scaleInAdapter.setDuration(MILLISECONDS.toMillis(500).toInt())
     recyclerView?.addItemDecoration(
-        RecyclerViewItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
-            integerRes(R.integer.recycler_view_grid_size)))
+        RecyclerViewItemDecorator(
+            integerRes(R.integer.recycler_view_grid_spacing_px),
+            integerRes(R.integer.recycler_view_grid_size)
+        )
+    )
     recyclerView?.adapter = scaleInAdapter
     imageRecyclerViewPresenter.setListType(WALLPAPERS)
   }
 
   private fun configureSwipeRefreshLayout() {
     swipeRefreshLayout?.setColorSchemeColors(Color.WHITE, Color.WHITE)
-    swipeRefreshLayout?.setWaveRGBColor(integerRes(R.integer.swipe_refresh_rgb_wave),
+    swipeRefreshLayout?.setWaveRGBColor(
         integerRes(R.integer.swipe_refresh_rgb_wave),
-        integerRes(R.integer.swipe_refresh_rgb_wave))
+        integerRes(R.integer.swipe_refresh_rgb_wave),
+        integerRes(R.integer.swipe_refresh_rgb_wave)
+    )
     if (swipeRefreshLayout?.isRefreshing == false) {
       swipeRefreshLayout?.setOnRefreshListener {
         presenter.fetchImages(true)

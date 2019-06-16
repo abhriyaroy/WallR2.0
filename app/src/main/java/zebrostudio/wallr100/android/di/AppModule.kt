@@ -307,7 +307,6 @@ class AppModule {
   )
 
   @Provides
-  @PerApplication
   fun provideImageRecyclerViewPresenter()
       : ImageRecyclerViewPresenter = ImageRecyclerViewPresenterImpl()
 
