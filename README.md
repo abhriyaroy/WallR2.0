@@ -1,6 +1,6 @@
 <p align="center">
  <a href="https://play.google.com/store/apps/details?id=zebrostudio.wallr100">
- <img src="https://i.imgur.com/PWzM7sn.png" alt="Explore Wallpapers" width=800 height=400 hspace="2">
+ <img src="https://i.imgur.com/PWzM7sn.png" alt="Explore Wallpapers" width=800 height=400>
  </a>
 </p>
 
@@ -39,8 +39,8 @@ It comes with a plethora of customization options like editing a wallpaper, crys
  
 ## Insights
   - [Clean Architecture With MVP](#clean-architecture-with-mvp)<br>
-  - [Dependency Injection Using Dagger2](#dependency-injection-using-dagger2)<br>
-  - [Multi-threading Using RxJava2](#multi-threading-using-rxjava2)<br>
+  - [Dependency Injection Using Dagger 2](#dependency-injection-using-dagger-2)<br>
+  - [Multi-threading Using RxJava 2](#multi-threading-using-rxjava-2)<br>
   - [Unsplash Api](#unsplash-api)<br>
   - [Firebase Realtime Database](#firebase-realtime-database)<br>
   - [Room Database](#room-database)<br>
@@ -85,13 +85,14 @@ It comes with a plethora of customization options like editing a wallpaper, crys
   - Implementing proper dependency injection in our apps allows us to have :
     - Testable classes.
     - Re-usable and interchangeable components.
+    
   #### Dependency graph for this project :-
   
   <br>
   <p align = "center"><img src="https://i.imgur.com/5l5vIhq.png" height=450></p>
   <br>
     
- ### Multi-threading Using RxJava2
+ ### Multi-threading Using RxJava 2
    RxJava is a Java VM implementation of Reactive Extensions. The official doc describes Reactive Extension(ReactiveX) as a library for    composing <b>asynchronous</b> and <b>event-based</b> programs by using <b>observable sequences</b>.
    - Asynchronous: It implies that the different parts of a program run simultaneously.
    - Event-Based: The program executes the codes based on the events generated while the program is running.
@@ -155,37 +156,37 @@ It comes with a plethora of customization options like editing a wallpaper, crys
 
 ## Acclamations
 
-WallR was selected as one of the best customization apps by <a href="https://www.androidauthority.com/5-android-apps-you-shouldnt-miss-this-week-android-apps-weekly-review-90-796074">Android Authority</a>, <a href="https://www.androidpolice.com/2017/08/21/11-new-notable-1-wtf-android-apps-last-week-81517-82117/">Android Police</a>. It also recieved huge number of warm and positive feedbacks and reviews at <a href="https://forum.xda-developers.com/android/apps-games/app-wallr-wallpapers-beta-testers-t3568221">XDA Developers Community</a>.
+  WallR was selected as one of the best customization apps by <a href="https://www.androidauthority.com/5-android-apps-you-shouldnt-       miss-this-week-android-apps-weekly-review-90-796074">Android Authority</a>, <a href="https://www.androidpolice.com/2017/08/21/11-new-   notable-1-wtf-android-apps-last-week-81517-82117/">Android Police</a>. It also recieved huge number of warm and positive feedbacks and   reviews at <a href="https://forum.xda-developers.com/android/apps-games/app-wallr-wallpapers-beta-testers-t3568221">XDA Developers       Community</a>.
 
-<a href='https://play.google.com/store/apps/details?id=zebrostudio.wallr100&hl=en_IN&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height=60 width = 145/></a>
+  <a href='https://play.google.com/store/apps/details?id=zebrostudio.wallr100&hl=en_IN&pcampaignid=MKT-Other-global-all-co-prtnr-py-       PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height=60 width = 145/></a>
 
 ## References
 
-<a href="https://kotlinlang.org/docs/reference/">Kotlin</a>,
-<a href="https://github.com/ReactiveX/RxJava">RxJava 2</a>,
-<a href="https://unsplash.com/">Unsplash</a>,
-<a href="https://github.com/square/retrofit">Retrofit</a>,
-<a href="https://github.com/uber/AutoDispose">Autodispose</a>,
-<a href="https://github.com/google/dagger">Dagger 2</a>,
-<a href="https://github.com/mockito/mockito">Mockito</a>,
-<a href="https://github.com/junit-team/junit4">JUnit 4</a>,
-<a href="https://github.com/GrenderG/Toasty">Toasty</a>,
-<a href="https://github.com/recruit-lifestyle/WaveSwipeRefreshLayout">WaveSwipeRefreshLayout</a>,
-<a href="https://github.com/ybq/Android-SpinKit">Android-SpinKit</a>,
-<a href="https://github.com/ogaclejapan/SmartTabLayout">SmartTabLayout</a>,
-<a href="https://github.com/afollestad/material-dialogs">Material Dialogs</a>,
-<a href="https://github.com/bumptech/glide">Glide</a>,
-<a href="https://github.com/wasabeef/recyclerview-animators">Recyclerview Animator</a>,
-<a href="https://firebase.google.com/docs/android/setup">Firebase</a>,
-<a href="https://github.com/umano/AndroidSlidingUpPanel">Sliding up panel</a>,
-<a href="https://github.com/hdodenhof/CircleImageView">Circle ImageView</a>,
-<a href="https://github.com/KeepSafe/TapTargetView">TapTarget View</a>,
-<a href="https://github.com/jaredrummler/MaterialSpinner">Material Spinner</a>,
-<a href="https://github.com/MLSDev/RxImagePicker">Rx ImagePicker</a>,
-<a href="https://github.com/chrisbanes/PhotoView">Photoview</a>,
-<a href="https://github.com/Yalantis/uCrop">Ucrop</a>,
-<a href="https://github.com/Yalantis/GuillotineMenu-Android">Guillotine-Menu</a>,
-<a href="https://github.com/skydoves/ColorPickerView">Colorpicker view</a>
+ <a href="https://kotlinlang.org/docs/reference/">Kotlin</a>,
+ <a href="https://github.com/ReactiveX/RxJava">RxJava 2</a>,
+ <a href="https://unsplash.com/">Unsplash</a>,
+ <a href="https://github.com/square/retrofit">Retrofit</a>,
+ <a href="https://github.com/uber/AutoDispose">Autodispose</a>,
+ <a href="https://github.com/google/dagger">Dagger 2</a>,
+ <a href="https://github.com/mockito/mockito">Mockito</a>,
+ <a href="https://github.com/junit-team/junit4">JUnit 4</a>,
+ <a href="https://github.com/GrenderG/Toasty">Toasty</a>,
+ <a href="https://github.com/recruit-lifestyle/WaveSwipeRefreshLayout">WaveSwipeRefreshLayout</a>,
+ <a href="https://github.com/ybq/Android-SpinKit">Android-SpinKit</a>,
+ <a href="https://github.com/ogaclejapan/SmartTabLayout">SmartTabLayout</a>,
+ <a href="https://github.com/afollestad/material-dialogs">Material Dialogs</a>,
+ <a href="https://github.com/bumptech/glide">Glide</a>,
+ <a href="https://github.com/wasabeef/recyclerview-animators">Recyclerview Animator</a>,
+ <a href="https://firebase.google.com/docs/android/setup">Firebase</a>,
+ <a href="https://github.com/umano/AndroidSlidingUpPanel">Sliding up panel</a>,
+ <a href="https://github.com/hdodenhof/CircleImageView">Circle ImageView</a>,
+ <a href="https://github.com/KeepSafe/TapTargetView">TapTarget View</a>,
+ <a href="https://github.com/jaredrummler/MaterialSpinner">Material Spinner</a>,
+ <a href="https://github.com/MLSDev/RxImagePicker">Rx ImagePicker</a>,
+ <a href="https://github.com/chrisbanes/PhotoView">Photoview</a>,
+ <a href="https://github.com/Yalantis/uCrop">Ucrop</a>,
+ <a href="https://github.com/Yalantis/GuillotineMenu-Android">Guillotine-Menu</a>,
+ <a href="https://github.com/skydoves/ColorPickerView">Colorpicker view</a> 
 
 <br>
 
