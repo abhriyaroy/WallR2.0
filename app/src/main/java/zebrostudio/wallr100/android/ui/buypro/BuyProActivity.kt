@@ -27,9 +27,10 @@ import zebrostudio.wallr100.android.utils.infoToast
 import zebrostudio.wallr100.android.utils.stringRes
 import zebrostudio.wallr100.android.utils.successToast
 import zebrostudio.wallr100.presentation.buypro.BuyProContract
+import zebrostudio.wallr100.presentation.buypro.BuyProContract.BuyProView
 import javax.inject.Inject
 
-class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
+class BuyProActivity : BaseActivity(), BuyProView {
   @Inject
   internal lateinit var buyProPresenter: BuyProContract.BuyProPresenter
 
@@ -37,26 +38,29 @@ class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
   private var iabHelper: IabHelper? = null
 
   private val purchaseFinishedListener = OnIabPurchaseFinishedListener { result, purchase ->
-    if (result.isFailure) {
-      showTryRestoringInfo()
-      dismissWaitLoader()
-    } else {
-      buyProPresenter.verifyTransaction(purchase.packageName,
+    if (result.isSuccess) {
+      buyProPresenter.verifyTransaction(
+          purchase.packageName,
           purchase.sku,
           purchase.token,
-          PURCHASE)
+          PURCHASE
+      )
+    } else {
+      showTryRestoringInfo()
+      dismissWaitLoader()
     }
   }
   private val queryInventoryFinishedListener = QueryInventoryFinishedListener { result, inventory ->
-    if (result.isFailure) {
-      showGenericVerificationError()
-      dismissWaitLoader()
-    } else {
+    if (result.isSuccess) {
       buyProPresenter.verifyTransaction(
           inventory.getPurchase(PurchaseTransactionConfig.ITEM_SKU).packageName,
           inventory.getPurchase(PurchaseTransactionConfig.ITEM_SKU).sku,
           inventory.getPurchase(PurchaseTransactionConfig.ITEM_SKU).token,
-          RESTORE)
+          RESTORE
+      )
+    } else {
+      showGenericVerificationError()
+      dismissWaitLoader()
     }
   }
 
@@ -90,8 +94,11 @@ class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
     resultCode: Int,
     data: Intent?
   ) {
-    if (iabHelper?.handleActivityResult(requestCode,
-            resultCode, data) == false) {
+    if (iabHelper?.handleActivityResult(
+            requestCode,
+            resultCode, data
+        ) == false
+    ) {
       super.onActivityResult(requestCode, resultCode, data)
     }
   }
@@ -112,9 +119,11 @@ class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
   override fun showNoInternetErrorMessage(premiumOperationType: PremiumTransactionType) {
     when (premiumOperationType) {
       PURCHASE -> errorToast(
-          stringRes(R.string.buy_pro_purchase_ensure_working_internet_connection_message))
+          stringRes(R.string.buy_pro_purchase_ensure_working_internet_connection_message)
+      )
       RESTORE -> errorToast(
-          stringRes(R.string.buy_pro_restore_ensure_working_internet_connection_message))
+          stringRes(R.string.buy_pro_restore_ensure_working_internet_connection_message)
+      )
     }
   }
 
@@ -125,9 +134,11 @@ class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
   override fun showSuccessfulTransactionMessage(proTransactionType: PremiumTransactionType) {
     when (proTransactionType) {
       PURCHASE -> successToast(
-          stringRes(R.string.buy_pro_purchase_successful_message))
+          stringRes(R.string.buy_pro_purchase_successful_message)
+      )
       RESTORE -> successToast(
-          stringRes(R.string.buy_pro_restore_successful_message))
+          stringRes(R.string.buy_pro_restore_successful_message)
+      )
     }
   }
 
@@ -154,8 +165,10 @@ class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
 
   override fun finishWithResult() {
     val intent = Intent()
-    intent.putExtra(PurchaseTransactionConfig.PURCHASE_TAG,
-        PurchaseTransactionConfig.PURCHASE_REQUEST_CODE)
+    intent.putExtra(
+        PurchaseTransactionConfig.PURCHASE_TAG,
+        PurchaseTransactionConfig.PURCHASE_REQUEST_CODE
+    )
     setResult(PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE, intent)
     overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right)
     finish()
@@ -169,9 +182,11 @@ class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
   }
 
   override fun launchPurchase() {
-    iabHelper?.launchPurchaseFlow(this, PurchaseTransactionConfig.ITEM_SKU,
+    iabHelper?.launchPurchaseFlow(
+        this, PurchaseTransactionConfig.ITEM_SKU,
         PurchaseTransactionConfig.VERIFICATION_REQUEST_CODE,
-        purchaseFinishedListener)
+        purchaseFinishedListener
+    )
   }
 
   override fun launchRestore() {
@@ -200,17 +215,37 @@ class BuyProActivity : BaseActivity(), BuyProContract.BuyProView {
 
   private fun buildProFeaturesList(): List<Triple<Int, Int, Int>> {
     return mutableListOf<Triple<Int, Int, Int>>().apply {
-      add(Triple(R.drawable.ic_remove_ads_white, R.string.buy_pro_features_ads_header,
-          R.string.buy_pro_features_ads_sub_header))
-      add(Triple(R.drawable.ic_high_definition, R.string.buy_pro_features_downloads_header,
-          R.string.buy_pro_features_downloads_sub_header))
-      add(Triple(R.drawable.ic_automatic_wallpaper_changer,
-          R.string.buy_pro_features_automatic_wallpaper_changer_header,
-          R.string.buy_pro_features_automatic_wallpaper_changer_sub_header))
-      add(Triple(R.drawable.ic_crystallize_white, R.string.buy_pro_features_crystallize_header,
-          R.string.buy_pro_features_crystallize_sub_header))
-      add(Triple(R.drawable.ic_share_white, R.string.buy_pro_features_share_header,
-          R.string.buy_pro_features_share_sub_header))
+      add(
+          Triple(
+              R.drawable.ic_remove_ads_white, R.string.buy_pro_features_ads_header,
+              R.string.buy_pro_features_ads_sub_header
+          )
+      )
+      add(
+          Triple(
+              R.drawable.ic_high_definition, R.string.buy_pro_features_downloads_header,
+              R.string.buy_pro_features_downloads_sub_header
+          )
+      )
+      add(
+          Triple(
+              R.drawable.ic_automatic_wallpaper_changer,
+              R.string.buy_pro_features_automatic_wallpaper_changer_header,
+              R.string.buy_pro_features_automatic_wallpaper_changer_sub_header
+          )
+      )
+      add(
+          Triple(
+              R.drawable.ic_crystallize_white, R.string.buy_pro_features_crystallize_header,
+              R.string.buy_pro_features_crystallize_sub_header
+          )
+      )
+      add(
+          Triple(
+              R.drawable.ic_share_white, R.string.buy_pro_features_share_header,
+              R.string.buy_pro_features_share_sub_header
+          )
+      )
     }
   }
 

@@ -73,7 +73,11 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     super.onDestroy()
   }
 
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+  override fun onActivityResult(
+    requestCode: Int,
+    resultCode: Int,
+    data: Intent?
+  ) {
     activityResultIntent = data
     presenter.notifyActivityResult(requestCode, resultCode)
   }
@@ -81,7 +85,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   override fun onBackPressed() {
     if (appBarIsCollapsed) {
       searchAppBar.setExpanded(true, true)
-      withDelayOnMain(activityFinishDelay.toLong(), block = {
+      withDelayOnMain(activityFinishDelay.toLong()) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
           finish()
           overridePendingTransition(emptyPendingTransitionAnimation, R.anim.slide_out_down)
@@ -91,7 +95,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
           params.scrollFlags = disableScrollFlag
           onBackPressed()
         }
-      })
+      }
     } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       overridePendingTransition(emptyPendingTransitionAnimation, R.anim.slide_out_down)
       finish()
@@ -187,7 +191,10 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     recyclerviewAdapter?.notifyDataSetChanged()
   }
 
-  override fun appendSearchResults(startPosition: Int, list: List<SearchPicturesPresenterEntity>) {
+  override fun appendSearchResults(
+    startPosition: Int,
+    list: List<SearchPicturesPresenterEntity>
+  ) {
     imageRecyclerViewPresenter.addToSearchResultList(list)
     recyclerviewAdapter?.notifyItemRangeInserted(startPosition, (list.size - 1))
   }
@@ -235,14 +242,17 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
 
   private fun initRecyclerView() {
     val layoutManager =
-        GridLayoutManager(this.baseContext, integerRes(R.integer.recycler_view_span_count))
+      GridLayoutManager(this.baseContext, integerRes(R.integer.recycler_view_span_count))
     recyclerView.layoutManager = layoutManager
     recyclerviewAdapter = ImageAdapter(imageRecyclerViewPresenter)
     val scaleInAdapter = ScaleInAnimationAdapter(recyclerviewAdapter)
     scaleInAdapter.setDuration(MILLISECONDS.toMillis(500).toInt())
     recyclerView.addItemDecoration(
-        RecyclerViewItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
-            integerRes(R.integer.recycler_view_grid_size)))
+        RecyclerViewItemDecorator(
+            integerRes(R.integer.recycler_view_grid_spacing_px),
+            integerRes(R.integer.recycler_view_grid_size)
+        )
+    )
     recyclerView.adapter = scaleInAdapter
     imageRecyclerViewPresenter.setListType(SEARCH)
     recyclerView.addOnScrollListener(object : EndlessScrollListener(layoutManager) {

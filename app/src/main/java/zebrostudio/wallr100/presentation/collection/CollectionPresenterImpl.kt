@@ -299,6 +299,7 @@ class CollectionPresenterImpl(
             collectionView?.updateChangesInEveryItemView()
           } else {
             showEmptyCollectionView()
+            stopWallpaperChangerAndRemoveLayout()
           }
         }, {
           stopWallpaperChangerAndRemoveLayout()

@@ -35,10 +35,9 @@ fun Context.errorToast(message: String, length: Int = Toast.LENGTH_LONG) {
 }
 
 fun Context.checkDataConnection(): Boolean {
-  val connectivityManager =
-      getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
-  val activeNetworkInfo = connectivityManager?.activeNetworkInfo
-  return activeNetworkInfo != null && activeNetworkInfo.isConnected
+  (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).let {manager->
+    return manager.activeNetworkInfo.isConnected
+  }
 }
 
 fun Context.getDimensionInPixelSize(id: Int) = resources.getDimensionPixelSize(id)

@@ -278,7 +278,6 @@ class MainActivity : AppCompatActivity(),
   }
 
   private fun buildGuillotineMenuItems(): List<Triple<Int, Int, MenuItems>> {
-    // Declare mutable list containing names and icon resources of guillotine menu items
     return mutableListOf<Triple<Int, Int, MenuItems>>().apply {
       add(Triple(R.string.explore_title, R.drawable.ic_explore_white,
           MenuItems.EXPLORE))
@@ -298,7 +297,6 @@ class MainActivity : AppCompatActivity(),
   }
 
   private fun setUpGuillotineMenuItems(guillotineMenuItems: List<Triple<Int, Int, MenuItems>>) {
-    // Programmatically add guillotine menu items
     val layoutInflater = LayoutInflater.from(this)
     val itemIterator = guillotineMenuItems.iterator()
     itemIterator.forEach {

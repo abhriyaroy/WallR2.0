@@ -23,11 +23,6 @@ class WallpaperFragment : BaseFragment() {
 
   private var wallpaperFragmentViewPager: ViewPager? = null
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    AndroidSupportInjection.inject(this)
-  }
-
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,

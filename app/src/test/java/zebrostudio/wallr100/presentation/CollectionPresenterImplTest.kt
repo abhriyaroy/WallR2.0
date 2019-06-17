@@ -276,7 +276,7 @@ class CollectionPresenterImplTest {
 
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(listOf())
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
+    verify(collectionImagesUseCase, times(2)).stopAutomaticWallpaperChanger()
     verify(collectionImagesUseCase).getAllImages()
     verify(permissionsChecker).isReadPermissionAvailable()
     verify(permissionsChecker).isWritePermissionAvailable()
@@ -284,7 +284,7 @@ class CollectionPresenterImplTest {
     verify(collectionView).clearImages()
     verify(collectionView).clearAllSelectedItems()
     verify(collectionView).showImagesAbsentLayout()
-    verify(collectionView).hideWallpaperChangerLayout()
+    verify(collectionView, times(2)).hideWallpaperChangerLayout()
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -489,14 +489,14 @@ class CollectionPresenterImplTest {
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(listOf())
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(collectionImagesUseCase).getAllImages()
-    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
+    verify(collectionImagesUseCase, times(2)).stopAutomaticWallpaperChanger()
     verify(permissionsChecker).isReadPermissionAvailable()
     verify(permissionsChecker).isWritePermissionAvailable()
     verify(collectionView).getScope()
     verify(collectionView).clearImages()
     verify(collectionView).clearAllSelectedItems()
     verify(collectionView).showImagesAbsentLayout()
-    verify(collectionView).hideWallpaperChangerLayout()
+    verify(collectionView, times(2)).hideWallpaperChangerLayout()
     verifyPostExecutionThreadSchedulerCall()
   }
 
