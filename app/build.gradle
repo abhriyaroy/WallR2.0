@@ -31,7 +31,6 @@ android {
     manifestPlaceholders = [onesignal_app_id               : "ff94f0fe-e700-4b66-9f26-5408fca95297",
                             onesignal_google_project_number: "REMOTE"]
 
-    
     signingConfig signingConfigs.release
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -141,6 +140,7 @@ android {
     // Instrumentation test runners
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION"
     androidTestImplementation "com.android.support.test:rules:$TEST_RULES_VERSION"
+    androidTestImplementation "com.android.support.test:runner:$TEST_RUNNER_VERSION"
   }
 }
 
