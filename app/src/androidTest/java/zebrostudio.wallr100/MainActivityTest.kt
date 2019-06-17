@@ -96,9 +96,17 @@ class MainActivityTest {
 
     Thread.sleep(TimeUnit.SECONDS.toMillis(2))
 
-    onView(isRoot()).perform(ViewActions.pressBackUnconditionally())
+    onView(isRoot()).perform(ViewActions.pressBack())
+
+    onView(withText(R.string.main_activity_exit_confirmation_message))
+        .inRoot(withDecorView(not(activityTestRule.activity.window.decorView)))
+        .check(matches(isDisplayed()))
 
     assertTrue(!activityTestRule.activity.isFinishing)
     assertTrue(!activityTestRule.activity.isDestroyed)
+  }
+
+  @Test fun shouldShowExploreFragmentByDefaultWhenAppOpens() {
+    onView(withId(R.id.toolbarTitle)).check(matches(withText("Explore")))
   }
 }
