@@ -11,7 +11,6 @@ Did you know that an average user checks their device more than 80 times a day? 
 - [Screenshots](#screenshots) <br>
 - [App Details](#app-details) <br>
 - [Features](#features) <br>
-- [Usage Tips](#usage-tips) <br>
 - [Project Setup Notes](#project-setup-notes) <br>
 - [Acclamations](#acclamations) <br>
 - [Libraries](#libraries) <br>
@@ -64,7 +63,7 @@ Salient features of the app :-
      - [Room Database](#room-database)<br>
      - [Shared Preferences](#shared-preferences)<br>
   - [Networking](#networking)
-     - [Retrofit For Networking](#retrofit-for-networking)<br>
+     - [Retrofit](#retrofit)<br>
   - [Testing](#testing)
      - [Unite Tests](#unit-tests)<br>
      - [Instrumentation Tests](#instrumentation-tests)<br>
@@ -125,8 +124,6 @@ Salient features of the app :-
    - Asynchronous: It implies that the different parts of a program run simultaneously.
    - Event-Based: The program executes the codes based on the events generated while the program is running.
    - Observable sequences: Publishers like Observable and Flowable take some items (Observable sequences) and pass onto its subscribers       so that they can inturn react to the incoming items.
-  <p align="center"> <img src="https://i.imgur.com/iGYOeYB.png" widht=450 height=300></a>
-  <p align="center">Credits: <a href="https://dzone.com/articles/marble-diagrams-rxjava-operators">DZone</a></p>
   
    In this project, <a href="https://github.com/uber/AutoDispose">Autodispose<a> is used to dispose observables.
  
@@ -151,6 +148,8 @@ Salient features of the app :-
  ### Shared Preferences
  
    Shared Preferences is a way of storing data in Android. It allow us to save and retrieve data in the form of key,value pairs.
+   
+ ## Networking
  
  ### Retrofit
  
@@ -160,11 +159,18 @@ Salient features of the app :-
  
  ### Unit Tests
    TDD (Test Driven Development) is an effective way of developing the applicaion by incrementally adding the code and writing tests.      Unit tests in this project are written using the Mockito framework and run using the JUnit runner.
+   
+   #### JUnit
+   
+   #### Mockito
+   
    <p align="center"><img src="https://i.imgur.com/IxDnxIt.png" height = 200></a>
  
  ### Instrumentation Tests
    User interface (UI) testing lets you ensure that your app meets its functional requirements and achieves a high standard of quality      such that it is more likely to be successfully adopted by users. <br>
    One approach to UI testing is to simply have a human tester perform a set of user operations on the target app and verify that it is   behaving correctly. However, this manual approach can be time-consuming, tedious, and error-prone. A more efficient approach is to       write UI tests such that user actions are performed in an automated way. The automated approach allows us to run tests                   quickly and reliably in a repeatable manner.
+   
+   #### Espresso
  
  ## Features
   - Daily new wallpapers 
@@ -182,13 +188,6 @@ Salient features of the app :-
   - Enable automatic wallpaper changer to automatically change wallpapers periodically 
   - Add any external image to collection to use it as a wallpaper or to crystallize it 
   
-## Usage Tips
- - Automatic wallpaper changer is only available to pro users and can be found inside collections.
- - The option to enable automatic wallpaper changer is only available upon adding atleast 2 images to collection.
- - Create your own assorted collection of wallpapers so that automatic wallpaper changer can cycle through them periodically after the      time interval (default - 30 mins) set by you.
- - You can reorder images in collection by holding down an image and then dragging and dropping it to the desired location.
- - Clearing the app by swiping from recent apps screen might lead to the automatic wallpaper changer malfunctioning.
- - If WallR does not show a notification stating that automatic wallpaper changer then please restart the app so that automatic            wallpaper changer can be restarted by the app itself.
  
 ## Project Setup Notes
 - The google-services.json file has been purposely ignored by git due to security purposes. Please login to <a href="https://console.firebase.google.com/u/0/?gclid=CjwKCAjw__fnBRANEiwAuFxET6VRIbt1VaeN3D_DAYAU3rAwAC1uJGY1FaKZvmWSTe8bkiGe8lRAPBoCd0QQAvD_BwE">Firebase console</a> and create a new project and obtain your own google-services.json file and paste it at app/src/debug to set it up and running.<br> For more information, please refer the <a href="https://firebase.google.com/docs/android/setup">docs</a>.
