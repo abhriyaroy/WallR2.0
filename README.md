@@ -6,17 +6,17 @@
 
 Did you know that an average user checks their device more than 80 times a day? Make each time a real pleasure with beautiful HD wallpapers from WallR. Let your device be a treat to your eyes every-time you check it.
 
-## Table of Contents
+# Table of Contents
 - [Introduction](#introduction) <br>
 - [Screenshots](#screenshots) <br>
-- [Insights](#insights) <br>
+- [App Details](#app-details) <br>
 - [Features](#features) <br>
 - [Usage Tips](#usage-tips) <br>
 - [Project Setup Notes](#project-setup-notes) <br>
 - [Acclamations](#acclamations) <br>
-- [References](#references) <br>
+- [Libraries](#libraries) <br>
 
-## Introduction
+# Introduction
 <p>
 WallR is an open-source Android wallpaper app written in <b>Kotlin</b>, keeping in mind proper coding guidelines and app architecture so that it is easy to maintain and scale.<br>
 
@@ -33,7 +33,7 @@ Salient features of the app :-
   - [Espresso For UI Tests](#espresso-for-ui-tests)<br>
 </p>
 
-## Screenshots
+# Screenshots
 <p align="center">
   <img src="https://i.imgur.com/xlTXmLD.jpg" alt="Explore Wallpapers" width=425 height=650 hspace="2">
   <img src="https://i.imgur.com/tCYtXOg.jpg" alt="Wallpaper Categories" width=425 height=650 hspace="2">
@@ -47,19 +47,28 @@ Salient features of the app :-
   <img src="https://i.imgur.com/2fJsYzR.jpg" alt="Wallpaper Details" width=425 height=650 hspace="2">
 </p>
  
-## Insights
-  - [Clean Architecture With MVP](#clean-architecture-with-mvp)<br>
-  - [Dependency Injection Using Dagger 2](#dependency-injection-using-dagger-2)<br>
-  - [Multi-threading Using RxJava 2](#multi-threading-using-rxjava-2)<br>
-  - [Unsplash Api](#unsplash-api)<br>
-  - [Firebase Realtime Database](#firebase-realtime-database)<br>
-  - [Room Database](#room-database)<br>
-  - [Shared Preferences](#shared-preferences)<br>
-  - [Retrofit For Networking](#retrofit-for-networking)<br>
-  - [JUnit And Mockito For Unit Testing](#junit-and-mockito-for-unit-testing)<br>
-  - [Espresso For UI Tests](#espresso-for-ui-tests)<br>
+# App Details
+  - [Architecture](#architecture)
+     - [Clean Architecture With MVP](#clean-architecture-with-mvp)<br>
+  - [Dependency Injection](#dependency-injection)<br>
+     - [Dagger 2](#dagger-2)
+  - [Multi-threading](#multi-threading)<br>
+     - [RxJava 2](#rxjava-2)
+  - [Remote Data Source](#remote-data-source)
+     - [Unsplash Api](#unsplash-api)<br>
+     - [Firebase Realtime Database](#firebase-realtime-database)<br>
+  - [Data Persistence](#data-persistence)
+     - [Room Database](#room-database)<br>
+     - [Shared Preferences](#shared-preferences)<br>
+  - [Networking](#networking)
+     - [Retrofit For Networking](#retrofit-for-networking)<br>
+  - [Testing](#testing)
+     - [Unite Tests](#unit-tests)<br>
+     - [Instrumentation Tests](#instrumentation-tests)<br>
   
- ### Clean Architecture With MVP
+ ## Architecture
+  
+ #### Clean Architecture With MVP
   In Clean Architecture, the code is separated into layers in an onion shape with one dependency rule: The inner layers should not know   anything about the outer layers. Inner layers contain business logic, whereas the outer layers contain implementation and the middle     layer contain Interface Adapters. Each ring represent one layer of abstraction.
   <p align="center">
   <img src="https://i.imgur.com/ZTLG6Ax.png" width=400 height=300>
@@ -67,7 +76,7 @@ Salient features of the app :-
   
   <br>
  
-  #### A diagram representing different layers, components and how they communicate with each other in the app :-
+  A diagram representing different layers, components and how they communicate with each other in the app :-
   
   <br>
   
@@ -88,7 +97,9 @@ Salient features of the app :-
   - Repository Pattern is responsible to create an abstraction of the data sources from which the Use Cases get the data to act upon.
   - Business logic shouldn’t know where the data comes from.
  
- ### Dependency Injection Using Dagger 2
+ ## Dependency Injection
+ 
+ ### Dagger 2
   - Dagger is a dependency injection framework, which makes it easier to manage the dependencies between the classes in our app.
   - It is a software design pattern that implements inversion of control for resolving dependencies.
   - The original Dagger was partly reflection-based, and didn’t play well with Proguard. Dagger2 however is based entirely on annotation     processing, so it does the magic at compile time. It works without any additional Proguard configuration, and is generally faster.
@@ -102,7 +113,9 @@ Salient features of the app :-
   <p align = "center"><img src="https://i.imgur.com/5l5vIhq.png" height=450></p>
   <br>
     
- ### Multi-threading Using RxJava 2
+ ## Multi-threading 
+ 
+ ### RxJava 2
    RxJava is a Java VM implementation of Reactive Extensions. The official doc describes Reactive Extension(ReactiveX) as a library for    composing <b>asynchronous</b> and <b>event-based</b> programs by using <b>observable sequences</b>.
    - Asynchronous: It implies that the different parts of a program run simultaneously.
    - Event-Based: The program executes the codes based on the events generated while the program is running.
@@ -112,12 +125,16 @@ Salient features of the app :-
   
    In this project, <a href="https://github.com/uber/AutoDispose">Autodispose<a> is used to dispose observables.
  
+ ## Remote Data Source
+ 
  ### Unsplash API
    The Unsplash API is a modern JSON API that surfaces all of the info required for displaying various wallpapers to the users. For more    information, please click <a href="https://unsplash.com/developers">here</a>
  
  ### Firebase Realtime Database
    The Firebase Realtime Database is a cloud-hosted NoSQL database that lets us store and sync data between our users in realtime. The      basic structure of the firebase database for this project looks like :- 
    <p align="center"> <img src="https://i.imgur.com/WThrSrw.png" widht=450 height=350></a>
+   
+ ## Data Persistence
  
  ### Room Database
    Room is a database layer on top of an SQLite database which is used to store data locally on the device. Room takes care of mundane      tasks that is generally handled with an SQLiteOpenHelper. Room uses the DAO to issue queries to its database.
@@ -129,11 +146,13 @@ Salient features of the app :-
  ### Retrofit For Networking
    Retrofit is a REST Client for Java and Android. It is used to retrieve JSON data via a REST based webservice. It also helps in data      serialization using the gson converter. Retrofit uses the OkHttp library for HTTP requests.
  
- ### JUnit And Mockito For Unit Testing
+ ## Testing
+ 
+ ### Unit Tests
    TDD (Test Driven Development) is an effective way of developing the applicaion by incrementally adding the code and writing tests.      Unit tests in this project are written using the Mockito framework and run using the JUnit runner.
    <p align="center"><img src="https://i.imgur.com/IxDnxIt.png" height = 200></a>
  
- ### Espresso For UI Tests
+ ### Instrumentation Tests
    User interface (UI) testing lets you ensure that your app meets its functional requirements and achieves a high standard of quality      such that it is more likely to be successfully adopted by users. <br>
    One approach to UI testing is to simply have a human tester perform a set of user operations on the target app and verify that it is   behaving correctly. However, this manual approach can be time-consuming, tedious, and error-prone. A more efficient approach is to       write UI tests such that user actions are performed in an automated way. The automated approach allows us to run tests                   quickly and reliably in a repeatable manner.
  
@@ -170,7 +189,7 @@ Salient features of the app :-
 
   <a href='https://play.google.com/store/apps/details?id=zebrostudio.wallr100&hl=en_IN&pcampaignid=MKT-Other-global-all-co-prtnr-py-       PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height=60 width = 145/></a>
 
-## References
+## Libraries
 
  <a href="https://kotlinlang.org/docs/reference/">Kotlin</a>,
  <a href="https://github.com/ReactiveX/RxJava">RxJava 2</a>,
