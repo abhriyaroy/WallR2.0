@@ -31,7 +31,10 @@ class ImageAdapter(private val presenter: ImageRecyclerItemContract.ImageRecycle
     return presenter.getItemCount()
   }
 
-  override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+  override fun onBindViewHolder(
+    holder: ViewHolder,
+    position: Int
+  ) {
     presenter.onBindRepositoryRowViewAtPosition(position, holder)
   }
 
