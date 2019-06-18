@@ -15,6 +15,8 @@ Did you know that an average user checks their device more than 80 times a day? 
 - [Project Setup Notes](#project-setup-notes) <br>
 - [Acclamations](#acclamations) <br>
 - [Libraries](#libraries) <br>
+- [About the Author](#about-the-author)<br>
+- [License](#license)<br>
 
 # Introduction
 <p>
@@ -22,15 +24,16 @@ WallR is an open-source Android wallpaper app written in <b>Kotlin</b>, keeping 
 
 Salient features of the app :-
   - [Clean Architecture With MVP](#clean-architecture-with-mvp)<br>
-  - [Dependency Injection Using Dagger 2](#dependency-injection-using-dagger-2)<br>
-  - [Multi-threading Using RxJava 2](#multi-threading-using-rxjava-2)<br>
+  - [Dagger 2](#dagger-2)<br>
+  - [RxJava 2](#rxjava-2)<br>
   - [Unsplash Api](#unsplash-api)<br>
   - [Firebase Realtime Database](#firebase-realtime-database)<br>
   - [Room Database](#room-database)<br>
   - [Shared Preferences](#shared-preferences)<br>
-  - [Retrofit For Networking](#retrofit-for-networking)<br>
-  - [JUnit And Mockito For Unit Testing](#junit-and-mockito-for-unit-testing)<br>
-  - [Espresso For UI Tests](#espresso-for-ui-tests)<br>
+  - [Retrofit](#retrofit)<br>
+  - [JUnit](#junit)<br>
+  - [Mockito](#mockito)<br>
+  - [Espresso](#espresso)<br>
 </p>
 
 # Screenshots
@@ -65,10 +68,11 @@ Salient features of the app :-
   - [Testing](#testing)
      - [Unite Tests](#unit-tests)<br>
      - [Instrumentation Tests](#instrumentation-tests)<br>
+     
   
  ## Architecture
   
- #### Clean Architecture With MVP
+ ### Clean Architecture With MVP
   In Clean Architecture, the code is separated into layers in an onion shape with one dependency rule: The inner layers should not know   anything about the outer layers. Inner layers contain business logic, whereas the outer layers contain implementation and the middle     layer contain Interface Adapters. Each ring represent one layer of abstraction.
   <p align="center">
   <img src="https://i.imgur.com/ZTLG6Ax.png" width=400 height=300>
@@ -84,16 +88,16 @@ Salient features of the app :-
   <img src="https://i.imgur.com/dHLjdiu.png" width=800 height=350>
   </p>
   
-  #### Presentation Layer
+  ### Presentation Layer
   - MVP (Model View Presenter) is suitable for the presentation layer.
   - Views are dumb and implement Passive View pattern. It is a set of interfaces that could be implemented by any Android view, such as     Activities, Fragments, Adapters or Custom Views.
   - Presenter serve as a middleman between views (abstractions over Android specific components) and the business logic (interactors/Use     Cases). They handle user interactions, invoke appropriate business logic and send the data to the UI for rendering.
   - Presenter does not depend on Android classes hence improves testability.
   
-  #### Domain Layer
+  ### Domain Layer
   - A simple example of Use Case would be “Fetch new wallpapers”. Each Use Case is a reusable component that executes a specific             business logic. It fetches the data from a repository, executes the business logic and returns the result to the presenter.
   
-  #### Data Layer (Database & API)
+  ### Data Layer (Database & API)
   - Repository Pattern is responsible to create an abstraction of the data sources from which the Use Cases get the data to act upon.
   - Business logic shouldn’t know where the data comes from.
  
@@ -107,7 +111,7 @@ Salient features of the app :-
     - Testable classes.
     - Re-usable and interchangeable components.
     
-  #### Dependency graph for this project :-
+  Dependency graph for this project :-
   
   <br>
   <p align = "center"><img src="https://i.imgur.com/5l5vIhq.png" height=450></p>
@@ -116,6 +120,7 @@ Salient features of the app :-
  ## Multi-threading 
  
  ### RxJava 2
+ 
    RxJava is a Java VM implementation of Reactive Extensions. The official doc describes Reactive Extension(ReactiveX) as a library for    composing <b>asynchronous</b> and <b>event-based</b> programs by using <b>observable sequences</b>.
    - Asynchronous: It implies that the different parts of a program run simultaneously.
    - Event-Based: The program executes the codes based on the events generated while the program is running.
@@ -128,22 +133,27 @@ Salient features of the app :-
  ## Remote Data Source
  
  ### Unsplash API
+ 
    The Unsplash API is a modern JSON API that surfaces all of the info required for displaying various wallpapers to the users. For more    information, please click <a href="https://unsplash.com/developers">here</a>
  
  ### Firebase Realtime Database
+ 
    The Firebase Realtime Database is a cloud-hosted NoSQL database that lets us store and sync data between our users in realtime. The      basic structure of the firebase database for this project looks like :- 
    <p align="center"> <img src="https://i.imgur.com/WThrSrw.png" widht=450 height=350></a>
    
  ## Data Persistence
  
  ### Room Database
+ 
    Room is a database layer on top of an SQLite database which is used to store data locally on the device. Room takes care of mundane      tasks that is generally handled with an SQLiteOpenHelper. Room uses the DAO to issue queries to its database.
    <p align="center"> <img src="https://i.imgur.com/dxvdjSf.png" widht=250 height=200></a>
  
  ### Shared Preferences
+ 
    Shared Preferences is a way of storing data in Android. It allow us to save and retrieve data in the form of key,value pairs.
  
- ### Retrofit For Networking
+ ### Retrofit
+ 
    Retrofit is a REST Client for Java and Android. It is used to retrieve JSON data via a REST based webservice. It also helps in data      serialization using the gson converter. Retrofit uses the OkHttp library for HTTP requests.
  
  ## Testing
