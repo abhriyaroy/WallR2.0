@@ -4,7 +4,6 @@
  </a>
 </p>
 
-# HD Wallpapers from WallR
 Did you know that an average user checks their device more than 80 times a day? Make each time a real pleasure with beautiful HD wallpapers from WallR. Let your device be a treat to your eyes every-time you check it.
 
 ## Table of Contents
@@ -20,7 +19,18 @@ Did you know that an average user checks their device more than 80 times a day? 
 ## Introduction
 <p>
 WallR is an open-source Android wallpaper app written in <b>Kotlin</b>, keeping in mind proper coding guidelines and app architecture so that it is easy to maintain and scale.<br>
-It comes with a plethora of customization options like editing a wallpaper, crystallizing or even making a new minimal wallpaper. WallR also comes with an automatic wallpaper changer which keeps changing wallpapers automatically once enabled.
+
+Salient features of the app :-
+  - [Clean Architecture With MVP](#clean-architecture-with-mvp)<br>
+  - [Dependency Injection Using Dagger 2](#dependency-injection-using-dagger-2)<br>
+  - [Multi-threading Using RxJava 2](#multi-threading-using-rxjava-2)<br>
+  - [Unsplash Api](#unsplash-api)<br>
+  - [Firebase Realtime Database](#firebase-realtime-database)<br>
+  - [Room Database](#room-database)<br>
+  - [Shared Preferences](#shared-preferences)<br>
+  - [Retrofit For Networking](#retrofit-for-networking)<br>
+  - [JUnit And Mockito For Unit Testing](#junit-and-mockito-for-unit-testing)<br>
+  - [Espresso For UI Tests](#espresso-for-ui-tests)<br>
 </p>
 
 ## Screenshots
