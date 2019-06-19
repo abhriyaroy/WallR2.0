@@ -116,14 +116,14 @@ Salient features of the app :-
  
   It is a software design pattern that implements inversion of control for resolving dependencies. Implementing proper dependency         injection in our apps allows us to have : <br>
   <ul>
-    <li> Testable classes. </li>
+    <li> Testable classes as dependencies which are injected from outside the class can be easily mocked</li>
     <li> Re-usable and interchangeable components. </li>
     <li> Scoped dependencies so that classes can share the same dependency state as and when required without having to create a new             instance every time. </li>
  </ul>
  
  ### Dagger 2
   - <a href="https://github.com/google/dagger">Dagger 2</a> is a dependency injection framework, which makes it easier to manage the         dependencies between the classes in our app.
-  - The original Dagger was partly reflection-based, and didn’t play well with Proguard. Dagger2 however is based entirely on annotation     processing, so it does the magic at compile time. It works without any additional Proguard configuration, and is generally faster.
+  - The original <a href="https://github.com/square/dagger">Dagger</a> was partly reflection-based, and didn’t play well with Proguard.     Dagger 2 however is based entirely on annotation processing, so it does the magic at compile time. It works without any additional       Proguard configuration, and is generally faster.
     
   Dependency graph for this project :-
   
