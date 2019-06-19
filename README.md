@@ -7,6 +7,7 @@
 Did you know that an average user checks their device more than 80 times a day? Make each time a real pleasure with beautiful HD wallpapers from WallR. Let your device be a treat to your eyes every-time you check it.
 
 # Table of Contents
+
 - [Introduction](#introduction) <br>
 - [Screenshots](#screenshots) <br>
 - [App Details](#app-details) <br>
@@ -18,6 +19,7 @@ Did you know that an average user checks their device more than 80 times a day? 
 - [License](#license)<br>
 
 # Introduction
+
 <p>
 WallR is an open-source Android wallpaper app written in <b>Kotlin</b>, keeping in mind proper coding guidelines and app architecture so that it is easy to maintain and scale.<br>
 
@@ -36,6 +38,7 @@ Salient features of the app :-
 </p>
 
 # Screenshots
+
 <p align="center">
   <img src="https://i.imgur.com/xlTXmLD.jpg" alt="Explore Wallpapers" width=425 height=650 hspace="2">
   <img src="https://i.imgur.com/tCYtXOg.jpg" alt="Wallpaper Categories" width=425 height=650 hspace="2">
@@ -50,6 +53,7 @@ Salient features of the app :-
 </p>
  
 # App Details
+
   - [Architecture](#architecture)
      - [Clean Architecture With MVP](#clean-architecture-with-mvp)<br>
   - [Dependency Injection](#dependency-injection)<br>
@@ -65,13 +69,21 @@ Salient features of the app :-
   - [Networking](#networking)
      - [Retrofit](#retrofit)<br>
   - [Testing](#testing)
-     - [Unite Tests](#unit-tests)<br>
+     - [Unit Tests](#unit-tests)<br>
      - [Instrumentation Tests](#instrumentation-tests)<br>
      
   
  ## Architecture
+ 
+ A proper app architecture implements the `SOLID` principles and ensures :-
+ - Easy `scalability` as features are independent of each other.
+ - Easy `maintainance` since the classes are decoupled in nature thus we need to make changes only to the desired class and it would be reflected everywhere.
+ - `Testability`, since the abstraction layers are easy to mock and test.
+ <br>
+ Thus, for WallR, Clean Architecture with MVP was chosen as the architecture.<br>
   
- ### Clean Architecture With MVP
+ ### Clean Architecture with MVP
+ 
   In Clean Architecture, the code is separated into layers in an onion shape with one dependency rule: The inner layers should not know   anything about the outer layers. Inner layers contain business logic, whereas the outer layers contain implementation and the middle     layer contain Interface Adapters. Each ring represent one layer of abstraction.
   <p align="center">
   <img src="https://i.imgur.com/ZTLG6Ax.png" width=400 height=300>
@@ -88,16 +100,16 @@ Salient features of the app :-
   </p>
   
   ### Presentation Layer
-  - MVP (Model View Presenter) is suitable for the presentation layer.
-  - Views are dumb and implement Passive View pattern. It is a set of interfaces that could be implemented by any Android view, such as     Activities, Fragments, Adapters or Custom Views.
-  - Presenter serve as a middleman between views (abstractions over Android specific components) and the business logic (interactors/Use     Cases). They handle user interactions, invoke appropriate business logic and send the data to the UI for rendering.
-  - Presenter does not depend on Android classes hence improves testability.
+  - `MVP (Model View Presenter)` is suitable for the presentation layer.
+  - `Views` are dumb and implement `Passive View pattern`. It is a set of interfaces that could be implemented by any Android view, such      as Activities, Fragments, Adapters or Custom Views.
+  - `Presenter` serve as a middleman between views (abstractions over Android specific components) and the business logic (interactors/Use     Cases). They handle user interactions, invoke appropriate business logic and send the data to the UI for rendering.
+  - `Presenter` does not depend on Android classes hence improves testability.
   
   ### Domain Layer
-  - A simple example of Use Case would be “Fetch new wallpapers”. Each Use Case is a reusable component that executes a specific             business logic. It fetches the data from a repository, executes the business logic and returns the result to the presenter.
+  - A simple example of `Use Case` would be "Fetch new wallpapers". Each Use Case is a reusable component that executes a specific           business logic. It fetches the data from a repository, executes the business logic and returns the result to the presenter.
   
   ### Data Layer (Database & API)
-  - Repository Pattern is responsible to create an abstraction of the data sources from which the Use Cases get the data to act upon.
+  - `Repository Pattern` is responsible to create an abstraction of the data sources from which the Use Cases get the data to act upon.
   - Business logic shouldn’t know where the data comes from.
  
  ## Dependency Injection
