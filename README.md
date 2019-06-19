@@ -32,6 +32,7 @@ Salient features of the app :-
   - [Room Database](#room-database)<br>
   - [Shared Preferences](#shared-preferences)<br>
   - [Retrofit](#retrofit)<br>
+  - [Glide](#glide)<br>
   - [JUnit](#junit)<br>
   - [Mockito](#mockito)<br>
   - [Espresso](#espresso)<br>
@@ -145,7 +146,7 @@ Salient features of the app :-
    <li> <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/scopes/PerService.kt">Per Service</a> - Where the dependency is attached to the lifecycle of the service. </li>
   </ul>
     
-  A diagramtic representation od the Dependency graph for this project :-
+  A diagramatic representation od the Dependency graph for this project :-
   
   <br>
   <p align = "center"><img src="https://i.imgur.com/5l5vIhq.png" height=450></p>
@@ -157,8 +158,23 @@ Salient features of the app :-
  
  ### RxJava 2
  
-   <a href="https://github.com/ReactiveX/RxJava">RxJava</a> is used to do all the heavy lifting in seperate `background threads` and to    return the result of those operations to the `UI Thread` so that they can be displayed to the user,
-   In this project, <a href="https://github.com/uber/AutoDispose">Autodispose<a> is used to dispose observables.
+   <a href="https://github.com/ReactiveX/RxJava">RxJava</a> is used to do all the heavy lifting in seperate `background threads` and to    return the result of those operations to the `UI Thread` so that they can be used or displayed to the user without any stutters or lags in the app.
+   <br>
+   In this project the various reactive streams used are : <br>
+   <ul>
+   <li> <a href="http://reactivex.io/documentation/observable.html">Observables</a> are used in cases such as <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/data/ImageHandler.kt">fetching an image</a> from a remote source while updating the the progress on the screen and at last setting the image as the wallpaper of the device. </li>
+   <li> <a href="http://reactivex.io/documentation/single.html">Single</a> is used in places where there is a one time operation like retrieving a <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/data/ImageHandler.kt">bitmap from a prevoiusly saved image file</a> and returning the bitmap so that some operation can be done using it. </li>
+ <li> <a href="http://reactivex.io/RxJava/javadoc/io/reactivex/Completable.html">Completable</a> where only the result success or the error state is required such as <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/data/ImageHandler.kt">clearing the local image cache</a>. </li>
+   </ul>
+   
+   In order to encash on the multi-threading capability of RxJava, the various schedulers that are used are :
+   <ul>
+   <li><a href="http://reactivex.io/RxJava/javadoc/io/reactivex/schedulers/Schedulers.html#io--">IO Scheduler</a> - is used for tasks such as <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/data/WallrDataRepository.kt">network requests, file write operations</a>, etc.</li>
+   <li><a href="http://reactivex.io/RxJava/javadoc/io/reactivex/schedulers/Schedulers.html#computation--">Computation Scheduler</a> - is used to perform CPU intensive tasks like <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/data/WallrDataRepository.kt">generating or processing an image bitmap</a>. </li>
+   <li><a href="https://static.javadoc.io/io.reactivex/rxandroid/1.2.1/rx/android/schedulers/AndroidSchedulers.html#mainThread()">Mainthread Scheduler</a> - represents the `UI Thread` and is used to observe the data coming from the various reactive streams. </li>
+   </ul>
+    
+   <a href="https://github.com/uber/AutoDispose">Autodispose<a> is used to dispose off the various streams.
  
  ## Remote Data Source
  
