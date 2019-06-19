@@ -151,7 +151,7 @@ class DetailPresenterImpl(
               detailView?.hideWaitLoader()
               val message = "${resourceUtils.getStringResource(
                   R.string.share_intent_message
-              )} $WALLR_DOWNLOAD_LINK + \n\n Image link - $it"
+              )} $WALLR_DOWNLOAD_LINK \n\n Image link - $it"
               detailView?.shareLink(message, SHARE_INTENT_TYPE)
             }, {
               detailView?.hideWaitLoader()
