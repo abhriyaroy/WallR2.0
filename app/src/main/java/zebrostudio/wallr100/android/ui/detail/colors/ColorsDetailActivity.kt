@@ -282,7 +282,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     sendIntent.putExtra(EXTRA_STREAM, uri)
     sendIntent.type = INTENT_IMAGE_TYPE
     sendIntent.putExtra(EXTRA_TEXT,
-        stringRes(R.string.share_intent_message, WALLR_DOWNLOAD_LINK) + "\n\n")
+        "${stringRes(R.string.share_intent_message)} $WALLR_DOWNLOAD_LINK \n\n")
     sendIntent.addFlags(FLAG_GRANT_READ_URI_PERMISSION)
     startActivity(createChooser(sendIntent, stringRes(R.string.share_link_using)))
   }
