@@ -13,12 +13,10 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy.ALL
 import com.bumptech.glide.load.engine.DiskCacheStrategy.NONE
 import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.github.zagum.expandicon.ExpandIconView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -142,23 +140,24 @@ class DetailActivity : BaseActivity(), DetailView {
   }
 
   override fun showImage(lowQualityLink: String, highQualityLink: String) {
-    imageLoader.loadWithListener(this, highQualityLink, imageView, object : LoaderListener {
-      override fun onResourceReady(resource: Drawable?,
-        model: Any?,
-        target: Target<Drawable>?,
-        dataSource: DataSource?,
-        isFirstResource: Boolean): Boolean {
-        return false
-      }
+    imageLoader.loadWithThumbnail(this, highQualityLink, lowQualityLink, imageView, ALL,
+      object : LoaderListener {
+        override fun onResourceReady(resource: Drawable?,
+          model: Any?,
+          target: Target<Drawable>?,
+          dataSource: DataSource?,
+          isFirstResource: Boolean): Boolean {
+          return false
+        }
 
-      override fun onLoadFailed(e: GlideException?,
-        model: Any?,
-        target: Target<Drawable>?,
-        isFirstResource: Boolean): Boolean {
-        presenter.handleHighQualityImageLoadFailed()
-        return false
-      }
-    })
+        override fun onLoadFailed(e: GlideException?,
+          model: Any?,
+          target: Target<Drawable>?,
+          isFirstResource: Boolean): Boolean {
+          presenter.handleHighQualityImageLoadFailed()
+          return false
+        }
+      })
   }
 
   override fun showImage(bitmap: Bitmap) {

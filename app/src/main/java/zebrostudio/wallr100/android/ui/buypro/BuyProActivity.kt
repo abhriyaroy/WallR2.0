@@ -196,7 +196,7 @@ class BuyProActivity : BaseActivity(), BuyProView {
   }
 
   private fun loadWallrLogo() {
-    imageLoader.load(this, R.drawable.ic_wallr, proLogo)
+    imageLoader.load(this, R.drawable.wallr_logo, proLogo)
   }
 
   private fun showProFeatures(buildBuyProFeaturesList: List<Triple<Int, Int, Int>>) {
