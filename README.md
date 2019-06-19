@@ -75,7 +75,7 @@ Salient features of the app :-
   
  ## Architecture
  
- A proper app architecture implements the `SOLID` principles and ensures :-
+ A proper app architecture implements the <a href="https://howtodoinjava.com/best-practices/5-class-design-principles-solid-in-java/">SOLID</a> principles and ensures :-
  - Easy `scalability` as features are independent of each other.
  - Easy `maintainance` since the classes are decoupled in nature thus we need to make changes only to the desired class and it would be reflected everywhere.
  - `Testability`, since the abstraction layers are easy to mock and test.
@@ -124,7 +124,7 @@ Salient features of the app :-
  ### Dagger 2
   - <a href="https://github.com/google/dagger">Dagger 2</a> is a dependency injection framework, which makes it easier to manage the         dependencies between the classes in our app.
   
-  It consists of :
+  It this project the dependency graph is constructed via :
   <ul>
     <li> An <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/AppComponent.kt">App Component</a> which is used to bind the dependency graph to the application. </li>
     <li> An <a href="https://dagger.dev/api/latest/dagger/android/AndroidInjectionModule.html">Android Injection Module</a> which helps us inject into the android framework classes.</li>
@@ -139,7 +139,10 @@ Salient features of the app :-
   
   The various dependency scopes used in this app are :
   <ul>
- <li> <a href="">Per Activity Scope</a>
+   <li> <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/scopes/PerApplication.kt">Per Application</a> - This is similar to the Singleton scope where the dependency lasts for the entire lifetime of the application. </li>
+   <li> <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/scopes/PerActivity.kt">Per Activity</a> - This is the scope where the dependency lasts as long as the activity lasts. </li>
+   <li> <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/scopes/PerFragment.kt">Per Fragment</a> - Where the dependency is attached to the lifecycle of the fragment. </li>
+   <li> <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/scopes/PerService.kt">Per Service</a> - Where the dependency is attached to the lifecycle of the service. </li>
   </ul>
     
   A diagramtic representation od the Dependency graph for this project :-
