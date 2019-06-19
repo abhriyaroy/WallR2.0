@@ -129,7 +129,9 @@ class DetailPresenterImpl(
 
   override fun handleAddToCollectionClick() {
     if (isUserPremium(ADD_TO_COLLECTION) && hasStoragePermissions(
-            ADD_TO_COLLECTION) && isInternetAvailable()) {
+            ADD_TO_COLLECTION
+        ) && isInternetAvailable()
+    ) {
       addWallpaperToCollection()
     }
   }
@@ -147,8 +149,9 @@ class DetailPresenterImpl(
             .autoDisposable(detailView?.getScope()!!)
             .subscribe({
               detailView?.hideWaitLoader()
-              val message = resourceUtils.getStringResource(R.string.share_intent_message,
-                  WALLR_DOWNLOAD_LINK) + "\n\n" + "Image link - $it"
+              val message = "${resourceUtils.getStringResource(
+                  R.string.share_intent_message
+              )} $WALLR_DOWNLOAD_LINK + \n\n Image link - $it"
               detailView?.shareLink(message, SHARE_INTENT_TYPE)
             }, {
               detailView?.hideWaitLoader()
@@ -203,7 +206,10 @@ class DetailPresenterImpl(
     }
   }
 
-  override fun handleViewResult(requestCode: Int, resultCode: Int) {
+  override fun handleViewResult(
+    requestCode: Int,
+    resultCode: Int
+  ) {
     if (requestCode == DOWNLOAD.ordinal) {
       if (resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
         handleDownloadClick()
@@ -263,8 +269,11 @@ class DetailPresenterImpl(
           .observeOn(postExecutionThread.scheduler)
           .doOnSubscribe {
             detailView?.blurScreen()
-            detailView?.showIndefiniteLoader(resourceUtils.getStringResource(
-                R.string.crystallizing_wallpaper_wait_message))
+            detailView?.showIndefiniteLoader(
+                resourceUtils.getStringResource(
+                    R.string.crystallizing_wallpaper_wait_message
+                )
+            )
           }
           .autoDisposable(detailView?.getScope()!!)
           .subscribe({
@@ -292,11 +301,15 @@ class DetailPresenterImpl(
         detailView?.showEditedExpandedImage()
       } else {
         if (imageType == SEARCH) {
-          detailView?.showExpandedImage(searchImage.imageQualityUrlPresenterEntity.smallImageLink,
-              searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+          detailView?.showExpandedImage(
+              searchImage.imageQualityUrlPresenterEntity.smallImageLink,
+              searchImage.imageQualityUrlPresenterEntity.largeImageLink
+          )
         } else {
-          detailView?.showExpandedImage(wallpaperImage.imageLink.thumb,
-              wallpaperImage.imageLink.large)
+          detailView?.showExpandedImage(
+              wallpaperImage.imageLink.thumb,
+              wallpaperImage.imageLink.large
+          )
         }
       }
     }
@@ -312,13 +325,19 @@ class DetailPresenterImpl(
 
   private fun decorateView() {
     if (imageType == SEARCH) {
-      detailView?.showAuthorDetails(searchImage.userPresenterEntity.name,
-          searchImage.userPresenterEntity.profileImageLink)
-      detailView?.showImage(searchImage.imageQualityUrlPresenterEntity.smallImageLink,
-          searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailView?.showAuthorDetails(
+          searchImage.userPresenterEntity.name,
+          searchImage.userPresenterEntity.profileImageLink
+      )
+      detailView?.showImage(
+          searchImage.imageQualityUrlPresenterEntity.smallImageLink,
+          searchImage.imageQualityUrlPresenterEntity.largeImageLink
+      )
     } else {
-      detailView?.showAuthorDetails(wallpaperImage.author.name,
-          wallpaperImage.author.profileImageLink)
+      detailView?.showAuthorDetails(
+          wallpaperImage.author.name,
+          wallpaperImage.author.profileImageLink
+      )
       detailView?.showImage(wallpaperImage.imageLink.thumb, wallpaperImage.imageLink.large)
     }
   }
@@ -401,9 +420,10 @@ class DetailPresenterImpl(
             detailView?.showIndefiniteLoaderWithAnimation(it)
           }
     } else if (progress == DOWNLOAD_COMPLETED_VALUE) {
-      resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage).let {
-        detailView?.showIndefiniteLoader(it)
-      }
+      resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)
+          .let {
+            detailView?.showIndefiniteLoader(it)
+          }
       if (wallpaperHasBeenSet) {
         detailView?.showWallpaperSetSuccessMessage()
       } else {
@@ -477,8 +497,9 @@ class DetailPresenterImpl(
       isImageOperationInProgress = true
       detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
       val message =
-          resourceUtils.getStringResource(
-              R.string.detail_activity_crystallizing_wallpaper_message)
+        resourceUtils.getStringResource(
+            R.string.detail_activity_crystallizing_wallpaper_message
+        )
       detailView?.showIndefiniteLoaderWithAnimation(message)
     } else if (progress != DOWNLOAD_COMPLETED_VALUE) {
       detailView?.updateProgressPercentage("$progress%")
@@ -545,7 +566,7 @@ class DetailPresenterImpl(
       isImageOperationInProgress = true
       detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
       val message =
-          resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message)
+        resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message)
       detailView?.showIndefiniteLoaderWithAnimation(message)
     } else {
       isDownloadInProgress = true
@@ -572,7 +593,8 @@ class DetailPresenterImpl(
         }
         .doOnSubscribe {
           isDownloadInProgress = true
-        }.flatMapSingle {
+        }
+        .flatMapSingle {
           if (it.progress == DOWNLOAD_COMPLETED_VALUE) {
             imageOptionsUseCase.addImageToCollection(getImageFetchingLink(), lastImageOperationType)
                 .andThen(
@@ -598,7 +620,7 @@ class DetailPresenterImpl(
       isImageOperationInProgress = true
       detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
       val message =
-          resourceUtils.getStringResource(R.string.adding_image_to_collections_message)
+        resourceUtils.getStringResource(R.string.adding_image_to_collections_message)
       detailView?.showIndefiniteLoaderWithAnimation(message)
     } else if (progress != DOWNLOAD_COMPLETED_VALUE) {
       detailView?.updateProgressPercentage("$progress%")
@@ -629,7 +651,8 @@ class DetailPresenterImpl(
     var hasWallpaperBeenSet = false
     detailView?.blurScreen()
     detailView?.showIndefiniteLoader(
-        resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
+        resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)
+    )
     imageOptionsUseCase.getBitmapFromUriSingle(cropResultUri)
         .doOnSuccess {
           hasWallpaperBeenSet = wallpaperSetter.setWallpaper(it)

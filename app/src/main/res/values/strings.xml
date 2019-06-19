@@ -38,7 +38,7 @@
   <string name="adding_image_to_collections_message">Adding wallpaper to collection...</string>
   <string name="add_to_collection_success_message">Wallpaper has been added to collection!</string>
   <string name="download_finished_success_message">Your wallpaper has finished downloading</string>
-  <string name="share_intent_message">Get high-quality wallpapers for your Android device with WallR at %1$s</string>
+  <string name="share_intent_message">Get high-quality wallpapers for your Android device with WallR</string>
   <string name="share_link_using">Share link using</string>
   <string name="preparing_shareable_wallpaper_message">Preparing shareable wallpaper...</string>
   <string name="not_enough_free_space_error_message">Low on memory. Please free some memory for app to work</string>
