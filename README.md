@@ -101,26 +101,27 @@ Salient features of the app :-
   
   ### Presentation Layer
   - `MVP (Model View Presenter)` is suitable for the presentation layer.
-  - `Views` are dumb and implement `Passive View pattern`. It is a set of interfaces that could be implemented by any Android view, such      as Activities, Fragments, Adapters or Custom Views.
-  - `Presenter` serve as a middleman between views (abstractions over Android specific components) and the business logic (interactors/Use     Cases). They handle user interactions, invoke appropriate business logic and send the data to the UI for rendering.
+  - <a href="https://github.com/abhriyaroy/WallR2.0/tree/develop/app/src/main/java/zebrostudio/wallr100/android/ui">Views</a> are dumb        and implement `Passive View pattern`. It is a set of interfaces that could be implemented by any Android view, such as Activities,      Fragments, Adapters or Custom Views.
+  - <a href="https://github.com/abhriyaroy/WallR2.0/tree/develop/app/src/main/java/zebrostudio/wallr100/presentation">Presenter</a>         serve as a middleman between views (abstractions over Android specific components) and the business logic (Interactors/Use               Cases). They handle user interactions, invoke appropriate business logic and send the data to the UI for rendering.
   - `Presenter` does not depend on Android classes hence improves testability.
   
   ### Domain Layer
-  - A simple example of `Use Case` would be "Fetch new wallpapers". Each Use Case is a reusable component that executes a specific           business logic. It fetches the data from a repository, executes the business logic and returns the result to the presenter.
+  - A simple example of <a href="https://github.com/abhriyaroy/WallR2.0/tree/develop/app/src/main/java/zebrostudio/wallr100/domain/interactor">Use Case</a> would be "Fetch new wallpapers". Each Use Case is a reusable component that executes a specific business logic. It fetches the data from a repository, executes the business logic and returns the result to the presenter.
   
   ### Data Layer (Database & API)
-  - `Repository Pattern` is responsible to create an abstraction of the data sources from which the Use Cases get the data to act upon.
+  - <a href="https://github.com/abhriyaroy/WallR2.0/tree/develop/app/src/main/java/zebrostudio/wallr100/data">Repository</a> Pattern is     responsible to create an abstraction of the data sources from which the Use Cases get the data to act upon.
   - Business logic shouldn’t know where the data comes from.
  
  ## Dependency Injection
  
- ### Dagger 2
-  - Dagger is a dependency injection framework, which makes it easier to manage the dependencies between the classes in our app.
-  - It is a software design pattern that implements inversion of control for resolving dependencies.
-  - The original Dagger was partly reflection-based, and didn’t play well with Proguard. Dagger2 however is based entirely on annotation     processing, so it does the magic at compile time. It works without any additional Proguard configuration, and is generally faster.
-  - Implementing proper dependency injection in our apps allows us to have :
+  It is a software design pattern that implements inversion of control for resolving dependencies. Implementing proper dependency         injection in our apps allows us to have :
     - Testable classes.
     - Re-usable and interchangeable components.
+    - Scoped dependencies so that classes can share the same dependency state as and when required without having to create a new             instance every time.
+ 
+ ### Dagger 2
+  - [Dagger 2](#https://github.com/google/dagger) is a dependency injection framework, which makes it easier to manage the dependencies     between the classes in our app.
+  - The original Dagger was partly reflection-based, and didn’t play well with Proguard. Dagger2 however is based entirely on annotation     processing, so it does the magic at compile time. It works without any additional Proguard configuration, and is generally faster.
     
   Dependency graph for this project :-
   
