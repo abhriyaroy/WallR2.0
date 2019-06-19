@@ -123,7 +123,19 @@ Salient features of the app :-
  
  ### Dagger 2
   - <a href="https://github.com/google/dagger">Dagger 2</a> is a dependency injection framework, which makes it easier to manage the         dependencies between the classes in our app.
-  - The original <a href="https://github.com/square/dagger">Dagger</a> was partly reflection-based, and didn’t play well with Proguard.     Dagger 2 however is based entirely on annotation processing, so it does the magic at compile time. It works without any additional       Proguard configuration, and is generally faster.
+  
+  It consists of :
+  <ul>
+    <li> An <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/AppComponent.kt">App Component</a> which is used to bind the dependency graph to the application. </li>
+    <li> An <a href="https://dagger.dev/api/latest/dagger/android/support/AndroidSupportInjectionModule.html">Android Support Injection Module</a> which helps us inject into our classes which extend the support libraries</li>
+    <li> An <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/AppModule.kt">App Module</a> which contains all the dependencies required at the app level. </li>
+    <li> An <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/ActivityBuilder.kt">Activity Builder Module</a> which creates the various activity subcomponents. </li>
+    <li> The <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/ServiceBuilder.kt">Service Builder Module</a> which creates the service subcomponent. </li>
+  </ul>
+  
+  <br>
+  
+  The `Main Activity Subcomponent` has the <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/FragmentProvider.kt">Fragment Provider Module</a> which inturn creates the fragment subcomponents.<br>
     
   Dependency graph for this project :-
   
@@ -132,6 +144,8 @@ Salient features of the app :-
   <br>
     
  ## Multi-threading 
+ 
+  To provide the users with a fast and responsive app, heavy work such as network calls, database operations, file operations or other     background tasks need to be done on threads other than the `UI Thread`. This is where multi-threading comes into play. Thus to do all   the heavy lifting in seperate `background threads` and to return the result of those operations to the `UI Thread` so that they can be   displayed to the user, we use `RX Java`.
  
  ### RxJava 2
  
