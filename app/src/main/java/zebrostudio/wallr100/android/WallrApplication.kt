@@ -5,7 +5,6 @@ import android.app.Application
 import android.app.Service
 import android.content.Context
 import android.support.multidex.MultiDex
-import com.bumptech.glide.request.target.ViewTarget
 import com.onesignal.OneSignal
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
