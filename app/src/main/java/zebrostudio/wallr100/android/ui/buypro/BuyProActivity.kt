@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.item_buy_pro_features.view.headerTextView
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.imageView
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
+import zebrostudio.wallr100.android.ui.ImageLoader
 import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.PURCHASE
 import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.RESTORE
 import zebrostudio.wallr100.android.utils.colorRes
@@ -33,6 +34,7 @@ import javax.inject.Inject
 class BuyProActivity : BaseActivity(), BuyProView {
   @Inject
   internal lateinit var buyProPresenter: BuyProContract.BuyProPresenter
+  @Inject internal lateinit var imageLoader: ImageLoader
 
   private lateinit var materialDialog: MaterialDialog
   private var iabHelper: IabHelper? = null
@@ -194,9 +196,7 @@ class BuyProActivity : BaseActivity(), BuyProView {
   }
 
   private fun loadWallrLogo() {
-    Glide.with(this)
-        .load(R.drawable.ic_wallr)
-        .into(proLogo)
+    imageLoader.load(this, R.drawable.ic_wallr, proLogo)
   }
 
   private fun showProFeatures(buildBuyProFeaturesList: List<Triple<Int, Int, Int>>) {

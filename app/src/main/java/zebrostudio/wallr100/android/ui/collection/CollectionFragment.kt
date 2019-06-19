@@ -41,6 +41,7 @@ import kotlinx.android.synthetic.main.fragment_collection.collectionsRecyclerVie
 import kotlinx.android.synthetic.main.fragment_collection.imagesAbsentLayout
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
+import zebrostudio.wallr100.android.ui.ImageLoader
 import zebrostudio.wallr100.android.ui.adapters.CollectionsImageAdapter
 import zebrostudio.wallr100.android.ui.adapters.CollectionsImageAdapterCallbacks
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.CollectionRecyclerTouchHelperCallback
@@ -86,6 +87,7 @@ class CollectionFragment : BaseFragment(),
 
   @Inject internal lateinit var presenter: CollectionPresenter
   @Inject internal lateinit var recyclerPresenter: CollectionRecyclerPresenter
+  @Inject internal lateinit var imageLoader: ImageLoader
 
   private lateinit var collectionRecyclerTouchHelperCallback: CollectionRecyclerTouchHelperCallback
   private lateinit var itemTouchHelper: ItemTouchHelper
@@ -505,7 +507,7 @@ class CollectionFragment : BaseFragment(),
 
   private fun initRecyclerViewWithListeners() {
     collectionsImageAdapter = CollectionsImageAdapter(
-        this, this, recyclerPresenter)
+        this, this, recyclerPresenter, imageLoader)
     collectionRecyclerTouchHelperCallback =
         CollectionRecyclerTouchHelperCallback(collectionsImageAdapter)
     itemTouchHelper = ItemTouchHelper(collectionRecyclerTouchHelperCallback)

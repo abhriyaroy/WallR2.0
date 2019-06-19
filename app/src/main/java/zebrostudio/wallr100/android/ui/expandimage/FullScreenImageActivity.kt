@@ -16,6 +16,8 @@ import kotlinx.android.synthetic.main.activity_full_screen_image.lowQualityImage
 import kotlinx.android.synthetic.main.fragment_image_list.spinkitView
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
+import zebrostudio.wallr100.android.ui.ImageLoader
+import zebrostudio.wallr100.android.ui.LoaderListener
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.REMOTE
 import zebrostudio.wallr100.android.utils.disableScreenshots
 import zebrostudio.wallr100.android.utils.errorToast
@@ -32,6 +34,7 @@ import javax.inject.Inject
 class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
 
   @Inject internal lateinit var presenter: FullScreenImagePresenter
+  @Inject internal lateinit var imageLoader: ImageLoader
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -69,67 +72,49 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
   }
 
   override fun showLowQualityImage(link: String) {
-    Glide.with(this)
-        .load(link)
-        .into(lowQualityImageView)
+    imageLoader.load(this, link, lowQualityImageView)
   }
 
   override fun startLoadingHighQualityImage(link: String) {
-    Glide.with(this)
-        .load(link)
-        .listener(object : RequestListener<Drawable> {
-          override fun onLoadFailed(
-            e: GlideException?,
-            model: Any?,
-            target: Target<Drawable>?,
-            isFirstResource: Boolean
-          ): Boolean {
-            presenter.handleHighQualityImageLoadingFailed()
-            return false
-          }
+    imageLoader.loadWithListener(this, link, highQualityImagePhotoView, object  : LoaderListener{
+      override fun onResourceReady(resource: Drawable?,
+        model: Any?,
+        target: Target<Drawable>?,
+        dataSource: DataSource?,
+        isFirstResource: Boolean): Boolean {
+        presenter.handleHighQualityImageLoadingFinished()
+        return false
+      }
 
-          override fun onResourceReady(
-            resource: Drawable?,
-            model: Any?,
-            target: Target<Drawable>?,
-            dataSource: DataSource?,
-            isFirstResource: Boolean
-          ): Boolean {
-            presenter.handleHighQualityImageLoadingFinished()
-            return false
-          }
-
-        })
-        .into(highQualityImagePhotoView)
+      override fun onLoadFailed(e: GlideException?,
+        model: Any?,
+        target: Target<Drawable>?,
+        isFirstResource: Boolean): Boolean {
+        presenter.handleHighQualityImageLoadingFailed()
+        return false
+      }
+    })
   }
 
   override fun showImage(bitmap: Bitmap) {
-    Glide.with(this)
-        .load(bitmap)
-        .listener(object : RequestListener<Drawable> {
-          override fun onLoadFailed(
-            e: GlideException?,
-            model: Any?,
-            target: Target<Drawable>?,
-            isFirstResource: Boolean
-          ): Boolean {
-            presenter.handleHighQualityImageLoadingFailed()
-            return false
-          }
+    imageLoader.loadWithListener(this, bitmap, highQualityImagePhotoView, object  : LoaderListener{
+      override fun onResourceReady(resource: Drawable?,
+        model: Any?,
+        target: Target<Drawable>?,
+        dataSource: DataSource?,
+        isFirstResource: Boolean): Boolean {
+        presenter.handleHighQualityImageLoadingFinished()
+        return false
+      }
 
-          override fun onResourceReady(
-            resource: Drawable?,
-            model: Any?,
-            target: Target<Drawable>?,
-            dataSource: DataSource?,
-            isFirstResource: Boolean
-          ): Boolean {
-            presenter.handleHighQualityImageLoadingFinished()
-            return false
-          }
-
-        })
-        .into(highQualityImagePhotoView)
+      override fun onLoadFailed(e: GlideException?,
+        model: Any?,
+        target: Target<Drawable>?,
+        isFirstResource: Boolean): Boolean {
+        presenter.handleHighQualityImageLoadingFailed()
+        return false
+      }
+    })
   }
 
   override fun showLoader() {

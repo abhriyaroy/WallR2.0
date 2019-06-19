@@ -15,6 +15,8 @@ import zebrostudio.wallr100.android.service.ServiceManager
 import zebrostudio.wallr100.android.service.ServiceManagerImpl
 import zebrostudio.wallr100.android.system.SystemInfoProvider
 import zebrostudio.wallr100.android.system.SystemInfoProviderImpl
+import zebrostudio.wallr100.android.ui.ImageLoader
+import zebrostudio.wallr100.android.ui.ImageLoaderImpl
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
 import zebrostudio.wallr100.android.utils.FragmentNameTagFetcherImpl
 import zebrostudio.wallr100.android.utils.GsonProvider
@@ -104,9 +106,9 @@ class AppModule {
   @Provides
   @PerApplication
   fun provideFragmentTag(resourceUtils: ResourceUtils): FragmentNameTagFetcher =
-    FragmentNameTagFetcherImpl(
+      FragmentNameTagFetcherImpl(
         resourceUtils
-    )
+      )
 
   @Provides
   @PerApplication
@@ -115,12 +117,12 @@ class AppModule {
   @Provides
   @PerApplication
   fun providesDatabaseHelper(context: Context): DatabaseHelper =
-    DatabaseHelperImpl(context)
+      DatabaseHelperImpl(context)
 
   @Provides
   @PerApplication
   fun provideFirebaseDatabaseHelper(context: Context): FirebaseDatabaseHelper =
-    FirebaseDatabaseHelperImpl(context)
+      FirebaseDatabaseHelperImpl(context)
 
   @Provides
   @PerApplication
@@ -144,7 +146,7 @@ class AppModule {
   @Provides
   @PerApplication
   fun provideRemoteAuthServiceFactory(): RemoteAuthServiceFactory =
-    RemoteAuthServiceFactoryImpl()
+      RemoteAuthServiceFactoryImpl()
 
   @Provides
   @PerApplication
@@ -162,12 +164,12 @@ class AppModule {
   @Provides
   @PerApplication
   fun provideUnsplashPictureEntityMapper(): UnsplashPictureEntityMapper =
-    UnsplashPictureEntityMapperImpl()
+      UnsplashPictureEntityMapperImpl()
 
   @Provides
   @PerApplication
   fun provideFirebasePictureEntityMapper(): FirebasePictureEntityMapper =
-    FirebasePictureEntityMapperImpl()
+      FirebasePictureEntityMapperImpl()
 
   @Provides
   @PerApplication
@@ -216,21 +218,21 @@ class AppModule {
     minimalColorHelper: MinimalColorHelper,
     executionThread: ExecutionThread
   ): WallrRepository = WallrDataRepository(
-      retrofitFirebaseAuthFactory,
-      unsplashClientFactory,
-      sharedPrefsHelper,
-      gsonProvider,
-      collectionsDatabaseImageEntityMapper,
-      databaseImageTypeMapper,
-      unsplashPictureEntityMapper,
-      firebaseDatabaseHelper,
-      firebasePictureEntityMapper,
-      urlShortener,
-      imageHandler,
-      fileHandler,
-      downloadHelper,
-      minimalColorHelper,
-      executionThread
+    retrofitFirebaseAuthFactory,
+    unsplashClientFactory,
+    sharedPrefsHelper,
+    gsonProvider,
+    collectionsDatabaseImageEntityMapper,
+    databaseImageTypeMapper,
+    unsplashPictureEntityMapper,
+    firebaseDatabaseHelper,
+    firebasePictureEntityMapper,
+    urlShortener,
+    imageHandler,
+    fileHandler,
+    downloadHelper,
+    minimalColorHelper,
+    executionThread
   )
 
   @Provides
@@ -302,8 +304,8 @@ class AppModule {
     postExecutionThread: PostExecutionThread,
     timeManager: TimeManager
   ): AutomaticWallpaperChangerUseCase = AutomaticWallpaperChangerInteractor(
-      wallpaperSetter,
-      wallrRepository, resourceUtils, executionThread, postExecutionThread, timeManager
+    wallpaperSetter,
+    wallrRepository, resourceUtils, executionThread, postExecutionThread, timeManager
   )
 
   @Provides
@@ -313,12 +315,12 @@ class AppModule {
   @Provides
   @PerApplication
   fun provideDragSelectRecyclerItemPresenter(): DragSelectItemPresenter =
-    DragSelectRecyclerPresenterImpl()
+      DragSelectRecyclerPresenterImpl()
 
   @Provides
   @PerApplication
   fun provideCollectionRecyclerPresenter(): CollectionRecyclerPresenter =
-    CollectionRecyclerPresenterImpl()
+      CollectionRecyclerPresenterImpl()
 
   @Provides
   @PerApplication
@@ -333,4 +335,8 @@ class AppModule {
   @PerApplication
   fun providePermissionsCheckerHelper(context: Context)
       : PermissionsChecker = PermissionsCheckerImpl(context)
+
+  @Provides
+  @PerApplication
+  fun providesImageLoader(): ImageLoader = ImageLoaderImpl()
 }

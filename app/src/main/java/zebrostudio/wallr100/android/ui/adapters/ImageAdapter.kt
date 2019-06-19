@@ -6,12 +6,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.item_recyclerview_image.view.imageView
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.ui.ImageLoader
 import zebrostudio.wallr100.android.ui.detail.images.DetailActivity
 import zebrostudio.wallr100.android.utils.inflate
 import zebrostudio.wallr100.android.utils.integerRes
@@ -19,12 +19,13 @@ import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 
-class ImageAdapter(private val presenter: ImageRecyclerItemContract.ImageRecyclerViewPresenter) :
+class ImageAdapter(private val presenter: ImageRecyclerItemContract.ImageRecyclerViewPresenter,
+  private val imageLoader: ImageLoader) :
     RecyclerView.Adapter<ViewHolder>() {
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
     return ViewHolder(parent.inflate(LayoutInflater.from(parent.context),
-        R.layout.item_recyclerview_image), parent.context, presenter)
+      R.layout.item_recyclerview_image), parent.context, presenter, imageLoader)
   }
 
   override fun getItemCount(): Int {
@@ -40,7 +41,8 @@ class ImageAdapter(private val presenter: ImageRecyclerItemContract.ImageRecycle
 class ViewHolder(
   itemView: View,
   private val context: Context,
-  private val presenter: ImageRecyclerItemContract.ImageRecyclerViewPresenter
+  private val presenter: ImageRecyclerItemContract.ImageRecyclerViewPresenter,
+  private val imageLoader: ImageLoader
 ) : RecyclerView.ViewHolder(itemView),
     ImageRecyclerItemContract.ImageRecyclerItemView {
 
@@ -51,19 +53,19 @@ class ViewHolder(
 
   override fun setSearchImage(link: String) {
     val options = RequestOptions()
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .override(context.integerRes(R.integer.recycler_view_adapter_search_image_width),
-            context.integerRes(R.integer.recycler_view_adapter_search_image_height))
-        .centerCrop()
+      .diskCacheStrategy(DiskCacheStrategy.ALL)
+      .override(context.integerRes(R.integer.recycler_view_adapter_search_image_width),
+        context.integerRes(R.integer.recycler_view_adapter_search_image_height))
+      .centerCrop()
     loadAndShowImage(link, options)
   }
 
   override fun setWallpaperImage(link: String) {
     val options = RequestOptions()
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .override(context.integerRes(R.integer.recycler_view_adapter_wallpaper_image_width),
-            context.integerRes(R.integer.recycler_view_adapter_wallpaper_image_height))
-        .centerCrop()
+      .diskCacheStrategy(DiskCacheStrategy.ALL)
+      .override(context.integerRes(R.integer.recycler_view_adapter_wallpaper_image_width),
+        context.integerRes(R.integer.recycler_view_adapter_wallpaper_image_height))
+      .centerCrop()
     loadAndShowImage(link, options)
   }
 
@@ -76,11 +78,7 @@ class ViewHolder(
   }
 
   private fun loadAndShowImage(link: String, options: RequestOptions) {
-    Glide.with(context)
-        .load(link)
-        .transition(withCrossFade())
-        .apply(options)
-        .into(itemView.imageView)
+    imageLoader.loadWithOptions(context, link, itemView.imageView, options, withCrossFade())
   }
 
 }

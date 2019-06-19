@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.item_recyclerview_collections.view.imageVi
 import kotlinx.android.synthetic.main.item_recyclerview_minimal_fragment.view.selectedIndicatorIcon
 import kotlinx.android.synthetic.main.item_recyclerview_minimal_fragment.view.selectedOverlay
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.ui.ImageLoader
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.ItemTouchHelperAdapter
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.OnStartDragListener
 import zebrostudio.wallr100.android.utils.gone
@@ -27,7 +28,8 @@ interface CollectionsImageAdapterCallbacks {
 class CollectionsImageAdapter(
   private val collectionsImageAdapterCallback: CollectionsImageAdapterCallbacks,
   private val startDragListener: OnStartDragListener,
-  private val presenter: CollectionRecyclerPresenter
+  private val presenter: CollectionRecyclerPresenter,
+  private val imageLoader: ImageLoader
 ) : RecyclerView.Adapter<CollectionsImageViewHolder>(), ItemTouchHelperAdapter {
 
   private var imagePathList = mutableListOf<CollectionsPresenterEntity>()
@@ -40,7 +42,7 @@ class CollectionsImageAdapter(
     return CollectionsImageViewHolder(
         viewGroupParent.inflate(LayoutInflater.from(viewGroupParent.context),
             R.layout.item_recyclerview_collections), viewGroupParent.context,
-        collectionsImageAdapterCallback, startDragListener)
+        collectionsImageAdapterCallback, startDragListener, imageLoader)
   }
 
   override fun getItemCount(): Int {
@@ -78,14 +80,13 @@ class CollectionsImageViewHolder(
   itemView: View,
   private val context: Context,
   private val callback: CollectionsImageAdapterCallbacks,
-  private val startDragListener: OnStartDragListener
+  private val startDragListener: OnStartDragListener,
+  private val imageLoader: ImageLoader
 ) : RecyclerView.ViewHolder(itemView),
     CollectionsRecyclerItemViewHolder {
 
   override fun setImage(imagePath: String) {
-    Glide.with(context)
-        .load(imagePath)
-        .into(itemView.imageView)
+    imageLoader.load(context, imagePath, itemView.imageView)
   }
 
   override fun showSelectedIndicator() {

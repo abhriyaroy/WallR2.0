@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.activity_search.retryButton
 import kotlinx.android.synthetic.main.activity_search.searchAppBar
 import kotlinx.android.synthetic.main.activity_search.searchView
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.ui.ImageLoader
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter
 import zebrostudio.wallr100.android.utils.EndlessScrollListener
 import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
@@ -46,6 +47,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   internal lateinit var presenter: SearchContract.SearchPresenter
   @Inject
   internal lateinit var imageRecyclerViewPresenter: ImageRecyclerItemContract.ImageRecyclerViewPresenter
+  @Inject internal lateinit var imageLoader: ImageLoader
 
   private val activityFinishDelay = 300
   private val emptyPendingTransitionAnimation = 0
@@ -244,7 +246,7 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     val layoutManager =
       GridLayoutManager(this.baseContext, integerRes(R.integer.recycler_view_span_count))
     recyclerView.layoutManager = layoutManager
-    recyclerviewAdapter = ImageAdapter(imageRecyclerViewPresenter)
+    recyclerviewAdapter = ImageAdapter(imageRecyclerViewPresenter, imageLoader)
     val scaleInAdapter = ScaleInAnimationAdapter(recyclerviewAdapter)
     scaleInAdapter.setDuration(MILLISECONDS.toMillis(500).toInt())
     recyclerView.addItemDecoration(

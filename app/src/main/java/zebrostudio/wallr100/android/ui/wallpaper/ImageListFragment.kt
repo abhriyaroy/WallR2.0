@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.fragment_image_list.view.recyclerView
 import kotlinx.android.synthetic.main.fragment_image_list.view.spinkitView
 import kotlinx.android.synthetic.main.fragment_image_list.view.swipeRefreshLayout
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.ui.ImageLoader
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter
 import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
 import zebrostudio.wallr100.android.utils.checkDataConnection
@@ -40,9 +41,9 @@ import javax.inject.Inject
 
 class ImageListFragment : Fragment(), ImageListView {
 
-  @Inject
-  internal lateinit var imageRecyclerViewPresenter: ImageRecyclerViewPresenter
+  @Inject internal lateinit var imageRecyclerViewPresenter: ImageRecyclerViewPresenter
   @Inject internal lateinit var presenter: ImageListPresenter
+  @Inject internal lateinit var imageLoader: ImageLoader
 
   private var recyclerviewAdapter: ImageAdapter? = null
   private var spinkitView: SpinKitView? = null
@@ -130,7 +131,7 @@ class ImageListFragment : Fragment(), ImageListView {
     val layoutManager =
       GridLayoutManager(context, integerRes(R.integer.recycler_view_span_count))
     recyclerView?.layoutManager = layoutManager
-    recyclerviewAdapter = ImageAdapter(imageRecyclerViewPresenter)
+    recyclerviewAdapter = ImageAdapter(imageRecyclerViewPresenter, imageLoader)
     val scaleInAdapter = ScaleInAnimationAdapter(recyclerviewAdapter)
     scaleInAdapter.setDuration(MILLISECONDS.toMillis(500).toInt())
     recyclerView?.addItemDecoration(

@@ -21,6 +21,7 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.*
 import com.bumptech.glide.request.RequestOptions
 import com.github.zagum.expandicon.ExpandIconView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -46,6 +47,7 @@ import kotlinx.android.synthetic.main.activity_colors_detail.spinkitView
 import kotlinx.android.synthetic.main.activity_detail.parentFrameLayout
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
+import zebrostudio.wallr100.android.ui.ImageLoader
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.MULTIPLE
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.SINGLE
@@ -81,7 +83,8 @@ private const val ALPHA_COMPLETELY_VISIBLE = 1.0f
 
 class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
-  @Inject lateinit var presenter: ColorsDetailPresenter
+  @Inject internal lateinit var presenter: ColorsDetailPresenter
+  @Inject internal lateinit var imageLoader: ImageLoader
 
   private var activityResultIntent: Intent? = null
 
@@ -158,14 +161,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
   }
 
   override fun showImage(bitmap: Bitmap) {
-    val imageOptions = RequestOptions()
-        .diskCacheStrategy(DiskCacheStrategy.NONE)
-        .centerCrop()
-    Glide.with(this)
-        .load(bitmap)
-        .apply(imageOptions)
-        .transition(DrawableTransitionOptions.withCrossFade())
-        .into(imageView)
+    imageLoader.loadWithCenterCropping(this, bitmap, imageView)
   }
 
   override fun showMainImageWaitLoader() {
