@@ -109,7 +109,7 @@ Salient features of the app :-
   - A simple example of <a href="https://github.com/abhriyaroy/WallR2.0/tree/develop/app/src/main/java/zebrostudio/wallr100/domain/interactor">Use Case</a> would be "Fetch new wallpapers". Each Use Case is a reusable component that executes a specific business logic. It fetches the data from a repository, executes the business logic and returns the result to the presenter.
   
   ### Data Layer (Database & API)
-  - <a href="https://github.com/abhriyaroy/WallR2.0/tree/develop/app/src/main/java/zebrostudio/wallr100/data">Repository</a> Pattern is     responsible to create an abstraction of the data sources from which the Use Cases get the data to act upon.
+  - <a href="https://github.com/abhriyaroy/WallR2.0/tree/develop/app/src/main/java/zebrostudio/wallr100/data">Repository</a> is     responsible to create an abstraction of the data sources from which the Use Cases get the data to act upon.
   - Business logic shouldn’t know where the data comes from.
  
  ## Dependency Injection
@@ -127,7 +127,7 @@ Salient features of the app :-
   It consists of :
   <ul>
     <li> An <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/AppComponent.kt">App Component</a> which is used to bind the dependency graph to the application. </li>
-    <li> An <a href="https://dagger.dev/api/latest/dagger/android/support/AndroidSupportInjectionModule.html">Android Support Injection Module</a> which helps us inject into our classes which extend the support libraries</li>
+    <li> An <a href="https://dagger.dev/api/latest/dagger/android/AndroidInjectionModule.html">Android Injection Module</a> which helps us inject into the android framework classes.</li>
     <li> An <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/AppModule.kt">App Module</a> which contains all the dependencies required at the app level. </li>
     <li> An <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/ActivityBuilder.kt">Activity Builder Module</a> which creates the various activity subcomponents. </li>
     <li> The <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/ServiceBuilder.kt">Service Builder Module</a> which creates the service subcomponent. </li>
@@ -135,9 +135,14 @@ Salient features of the app :-
   
   <br>
   
-  The `Main Activity Subcomponent` has the <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/FragmentProvider.kt">Fragment Provider Module</a> which inturn creates the fragment subcomponents.<br>
+  The `Main Activity Subcomponent` has the <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/FragmentProvider.kt">Fragment Provider Module</a> which in-turn creates the fragment subcomponents.<br>
+  
+  The various dependency scopes used in this app are :
+  <ul>
+ <li> <a href="">Per Activity Scope</a>
+  </ul>
     
-  Dependency graph for this project :-
+  A diagramtic representation od the Dependency graph for this project :-
   
   <br>
   <p align = "center"><img src="https://i.imgur.com/5l5vIhq.png" height=450></p>
@@ -145,15 +150,11 @@ Salient features of the app :-
     
  ## Multi-threading 
  
-  To provide the users with a fast and responsive app, heavy work such as network calls, database operations, file operations or other     background tasks need to be done on threads other than the `UI Thread`. This is where multi-threading comes into play. Thus to do all   the heavy lifting in seperate `background threads` and to return the result of those operations to the `UI Thread` so that they can be   displayed to the user, we use `RX Java`.
+  To provide the users with a fast and responsive app, heavy work such as network calls, database operations, file operations or other     background tasks need to be done on threads other than the `UI Thread`. This is where multi-threading comes into play.
  
  ### RxJava 2
  
-   RxJava is a Java VM implementation of Reactive Extensions. The official doc describes Reactive Extension(ReactiveX) as a library for    composing <b>asynchronous</b> and <b>event-based</b> programs by using <b>observable sequences</b>.
-   - Asynchronous: It implies that the different parts of a program run simultaneously.
-   - Event-Based: The program executes the codes based on the events generated while the program is running.
-   - Observable sequences: Publishers like Observable and Flowable take some items (Observable sequences) and pass onto its subscribers       so that they can inturn react to the incoming items.
-  
+   <a href="https://github.com/ReactiveX/RxJava">RxJava</a> is used to do all the heavy lifting in seperate `background threads` and to    return the result of those operations to the `UI Thread` so that they can be displayed to the user,
    In this project, <a href="https://github.com/uber/AutoDispose">Autodispose<a> is used to dispose observables.
  
  ## Remote Data Source
