@@ -181,14 +181,24 @@ Salient features of the app :-
  
  ## Remote Data Source
  
+ In this project, two sources of wallpaper have been used :-
+ 
+ - `Unsplash API` which is used when an user searches for any specific wallpaper tag
+ - `Firebase Realtime Database` which is used to provides a cached copy of the various categories of wallpapers from Unsplash due to the limited number of api requests available from unsplash derectly.
+ 
  ### Unsplash API
  
-   The Unsplash API is a modern JSON API that surfaces all of the info required for displaying various wallpapers to the users. For more    information, please click <a href="https://unsplash.com/developers">here</a>
+   The <a href="https://unsplash.com/developers">Unsplash API</a> is a modern JSON API that surfaces all of the info required for displaying various wallpapers to the users.
+   The `JSON` response obtained from the `Unsplash API` using [Retrofit](#retrofit), is trimmed down to the following model :<br>
+   
+   <p align="center"><img src="https://i.imgur.com/nawS5wz.png"></p>
+   
+  To convert the data into the above model, the <a href="http://square.github.io/retrofit/2.x/converter-gson/retrofit2/converter/gson/GsonConverterFactory.html">GSON Converter</a> is used which maps the data into the model using the `SerializedName` provided with each field.
  
  ### Firebase Realtime Database
  
    The Firebase Realtime Database is a cloud-hosted NoSQL database that lets us store and sync data between our users in realtime. The      basic structure of the firebase database for this project looks like :- 
-   <p align="center"> <img src="https://i.imgur.com/WThrSrw.png" widht=450 height=350></a>
+   <p align="center"> <img src="https://i.imgur.com/WThrSrw.png" widht=700 height=550></a>
    
  ## Data Persistence
  
