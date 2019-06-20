@@ -191,14 +191,20 @@ Salient features of the app :-
    The <a href="https://unsplash.com/developers">Unsplash API</a> is a modern JSON API that surfaces all of the info required for displaying various wallpapers to the users.
    The `JSON` response obtained from the `Unsplash API` using [Retrofit](#retrofit), is trimmed down to the following model :<br>
    
-   <p align="center"><img src="https://i.imgur.com/nawS5wz.png"></p>
+   <p align="center"><img src="https://i.imgur.com/zNQgcMn.png"></p>
    
-  To convert the data into the above model, the <a href="http://square.github.io/retrofit/2.x/converter-gson/retrofit2/converter/gson/GsonConverterFactory.html">GSON Converter</a> is used which maps the data into the model using the `SerializedName` provided with each field.
+  To convert the data into the above model, the <a href="http://square.github.io/retrofit/2.x/converter-gson/retrofit2/converter/gson/GsonConverterFactory.html">GSON Converter Factory</a> is used which maps the data into the model using the `SerializedName` provided with each field. <br>
  
  ### Firebase Realtime Database
  
-   The Firebase Realtime Database is a cloud-hosted NoSQL database that lets us store and sync data between our users in realtime. The      basic structure of the firebase database for this project looks like :- 
+   The Firebase Realtime Database is used to cache images from `Unsplash` as the number of `API requests` available in the `Unsplash        API` is limited. Thus the app fetches all the wallpaper data required for shocasing the default wallpapers from `Firebase` itself.      The basic structure of the firebase database for this project looks like :- 
    <p align="center"> <img src="https://i.imgur.com/WThrSrw.png" widht=700 height=550></a>
+   
+   The response model to which the `JSON` response from the `Firebase Realtime Database` looks like :-
+   
+   <p align="center"><img src="https://i.imgur.com/7yldJuy.png"></p>
+   
+   To convert the data into the above model, <a href="https://github.com/google/gson">gson</a> is used which maps the data into the model using the `variable names`.<br>
    
  ## Data Persistence
  
