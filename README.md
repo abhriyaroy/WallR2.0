@@ -205,18 +205,26 @@ Salient features of the app :-
    
    <p align="center"><img src="https://i.imgur.com/7yldJuy.png"></p>
    
-   To convert the data into the above model, <a href="https://github.com/google/gson">gson</a> is used which maps the data into the model using the `variable names`.<br>
+   To convert the data into the above model, <a href="https://github.com/google/gson">gson</a> is used which maps the data into the        model using the `variable names`.<br>
    
  ## Data Persistence
  
+  Data Persistence is used to remember the `user preferences` and wether the user is pro or not using the <a href="https://developer.android.com/reference/android/content/SharedPreferences">shared preferences</a>. <br>
+  The <a href="https://developer.android.com/topic/libraries/architecture/room">Room database</a> is used to run the <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/service/AutomaticWallpaperChangerService.kt">automatic wallpaper changer</a> which uses a locally saved collection of images and changes the device's wallpaper from    time to time.
+ 
  ### Room Database
  
-   Room is a database layer on top of an SQLite database which is used to store data locally on the device. Room takes care of mundane      tasks that is generally handled with an SQLiteOpenHelper. Room uses the DAO to issue queries to its database.
    <p align="center"> <img src="https://i.imgur.com/dxvdjSf.png" widht=250 height=200></a>
+   
+   In `WallR`, the database is used behind an <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/data/SharedPrefsHelper.kt">abstraction</a> so that it can be tested and also future changes can be easily incorporated.<br>
+   The `database` looks like :-
+   
+   <p align="center"><img src="https://i.imgur.com/kA3LBJB.png"></p>
  
  ### Shared Preferences
  
-   Shared Preferences is a way of storing data in Android. It allow us to save and retrieve data in the form of key,value pairs.
+   The shared preferences are used under a <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/data/SharedPrefsHelper.kt">layer of abstraction</a> which helps us to test the logic and also makes provision for easy integration of api changes in the future. <br>
+   The layer of abstraction also allows us to easily migrate from Shared Preferences to any other storing framework as changes under the layer will be reflested all througout the app.
    
  ## Networking
  
