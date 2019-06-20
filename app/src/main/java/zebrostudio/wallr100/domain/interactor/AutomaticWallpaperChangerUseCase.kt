@@ -52,7 +52,7 @@ class AutomaticWallpaperChangerInteractor(
   override fun startAutomaticWallpaperChangerProcess() {
     timerDisposable =
         Observable.timer(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS,
-            executionThread.computationScheduler)
+          executionThread.computationScheduler)
             .repeat()
             .flatMap {
               if (timeManager.getCurrentTimeInMilliSeconds()
@@ -73,15 +73,15 @@ class AutomaticWallpaperChangerInteractor(
   override fun getIntervalAsString(): String {
     return when (getInterval()) {
       WALLPAPER_CHANGER_INTERVALS_LIST[1] -> resourceUtils.getStringResource(
-          R.string.wallpaper_changer_service_interval_1_hour)
+        R.string.wallpaper_changer_service_interval_1_hour)
       WALLPAPER_CHANGER_INTERVALS_LIST[2] -> resourceUtils.getStringResource(
-          R.string.wallpaper_changer_service_interval_6_hours)
+        R.string.wallpaper_changer_service_interval_6_hours)
       WALLPAPER_CHANGER_INTERVALS_LIST[3] -> resourceUtils.getStringResource(
-          R.string.wallpaper_changer_service_interval_1_day)
+        R.string.wallpaper_changer_service_interval_1_day)
       WALLPAPER_CHANGER_INTERVALS_LIST[4] -> resourceUtils.getStringResource(
-          R.string.wallpaper_changer_service_interval_3_days)
+        R.string.wallpaper_changer_service_interval_3_days)
       else -> resourceUtils.getStringResource(
-          R.string.wallpaper_changer_service_interval_30_minutes)
+        R.string.wallpaper_changer_service_interval_30_minutes)
     }
   }
 
@@ -103,7 +103,7 @@ class AutomaticWallpaperChangerInteractor(
             it.recycle()
           }
           wallrRepository.updateLastWallpaperChangeTimeStamp(
-              timeManager.getCurrentTimeInMilliSeconds())
+            timeManager.getCurrentTimeInMilliSeconds())
         }
   }
 

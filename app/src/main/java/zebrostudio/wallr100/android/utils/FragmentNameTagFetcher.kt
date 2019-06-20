@@ -1,10 +1,7 @@
 package zebrostudio.wallr100.android.utils
 
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.utils.FragmentTag.CATEGORIES_TAG
-import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
-import zebrostudio.wallr100.android.utils.FragmentTag.MINIMAL_TAG
-import zebrostudio.wallr100.android.utils.FragmentTag.TOP_PICKS_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.*
 
 interface FragmentNameTagFetcher {
   fun getFragmentName(fragmentTag: FragmentTag): String

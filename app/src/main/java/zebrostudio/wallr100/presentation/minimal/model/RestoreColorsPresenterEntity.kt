@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.presentation.minimal.model
 
-import java.util.TreeMap
+import java.util.*
 
 data class RestoreColorsPresenterEntity(
   val colorsList: List<String>,

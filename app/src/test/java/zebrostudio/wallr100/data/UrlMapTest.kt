@@ -17,7 +17,7 @@ class UrlMapTest {
   private val queryPage = 1
   private val firebasePurchaseAuthUrl = "https://us-central1-wallrproduction.cloudfunctions.net/"
   private val firebasePurchaseAuthEndpoint =
-    "purchaseVerification?packageName=$packageName&skuId=$skuId&purchaseToken=$purchaseToken"
+      "purchaseVerification?packageName=$packageName&skuId=$skuId&purchaseToken=$purchaseToken"
   private val queryString = "photos/search?query=$keyword&per_page=30&page=$queryPage"
 
   @Test
@@ -28,12 +28,13 @@ class UrlMapTest {
   @Test
   fun `should return valid firebase purchase auth endpoint on getFirebasePurchaseAuthEndpoint call`() {
     assertEquals(
-        firebasePurchaseAuthEndpoint,
-        UrlMap.getFirebasePurchaseAuthEndpoint(packageName, skuId, purchaseToken)
+      firebasePurchaseAuthEndpoint,
+      UrlMap.getFirebasePurchaseAuthEndpoint(packageName, skuId, purchaseToken)
     )
   }
 
-  @Test fun `should return valid search query string on getQueryString call`() {
+  @Test
+  fun `should return valid search query string on getQueryString call`() {
     assertEquals(queryString, UrlMap.getQueryString(keyword, queryPage))
   }
 

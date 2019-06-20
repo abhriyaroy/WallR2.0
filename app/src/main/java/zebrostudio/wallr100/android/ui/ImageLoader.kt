@@ -171,23 +171,27 @@ class ImageLoaderImpl : ImageLoader {
     RequestOptions().diskCacheStrategy(cacheStrategy).centerCrop().let { thumbNailOptions ->
       RequestOptions().diskCacheStrategy(cacheStrategy).centerCrop().let { imageOptions ->
         Glide.with(context).load(highQualityImageLink)
-          .thumbnail(Glide.with(context).load(lowQualityImageLink).apply(thumbNailOptions))
-          .apply(imageOptions).listener(object : RequestListener<Drawable> {
-            override fun onLoadFailed(e: GlideException?,
-              model: Any?,
-              target: Target<Drawable>?,
-              isFirstResource: Boolean): Boolean {
-              return listener.onLoadFailed(e, model, target, isFirstResource)
-            }
+            .thumbnail(Glide.with(context).load(lowQualityImageLink).apply(thumbNailOptions))
+            .apply(imageOptions).listener(object : RequestListener<Drawable> {
+              override fun onLoadFailed(e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean): Boolean {
+                return listener.onLoadFailed(e, model, target, isFirstResource)
+              }
 
-            override fun onResourceReady(resource: Drawable?,
-              model: Any?,
-              target: Target<Drawable>?,
-              dataSource: DataSource?,
-              isFirstResource: Boolean): Boolean {
-              return listener.onResourceReady(resource, model, target, dataSource, isFirstResource)
-            }
-          }).into(target)
+              override fun onResourceReady(resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean): Boolean {
+                return listener.onResourceReady(resource,
+                  model,
+                  target,
+                  dataSource,
+                  isFirstResource)
+              }
+            }).into(target)
       }
     }
   }

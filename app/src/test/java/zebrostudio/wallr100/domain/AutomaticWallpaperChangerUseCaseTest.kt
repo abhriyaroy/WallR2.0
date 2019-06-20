@@ -35,14 +35,22 @@ import java.util.concurrent.TimeUnit
 @RunWith(MockitoJUnitRunner::class)
 class AutomaticWallpaperChangerUseCaseTest {
 
-  @Mock lateinit var automaticWallpaperChangerService: AutomaticWallpaperChangerService
-  @Mock lateinit var wallpaperSetter: WallpaperSetter
-  @Mock lateinit var resourceUtils: ResourceUtils
-  @Mock lateinit var executionThread: ExecutionThread
-  @Mock lateinit var postExecutionThread: PostExecutionThread
-  @Mock lateinit var timeManager: TimeManager
-  @Mock lateinit var wallrRepository: WallrRepository
-  @Mock lateinit var mockBitmap: Bitmap
+  @Mock
+  lateinit var automaticWallpaperChangerService: AutomaticWallpaperChangerService
+  @Mock
+  lateinit var wallpaperSetter: WallpaperSetter
+  @Mock
+  lateinit var resourceUtils: ResourceUtils
+  @Mock
+  lateinit var executionThread: ExecutionThread
+  @Mock
+  lateinit var postExecutionThread: PostExecutionThread
+  @Mock
+  lateinit var timeManager: TimeManager
+  @Mock
+  lateinit var wallrRepository: WallrRepository
+  @Mock
+  lateinit var mockBitmap: Bitmap
   private lateinit var automaticWallpaperChangerUseCase: AutomaticWallpaperChangerInteractor
   private var randomString: String = randomUUID().toString()
 
@@ -50,7 +58,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   fun setup() {
     automaticWallpaperChangerUseCase =
         AutomaticWallpaperChangerInteractor(wallpaperSetter, wallrRepository, resourceUtils,
-            executionThread, postExecutionThread, timeManager)
+          executionThread, postExecutionThread, timeManager)
 
     automaticWallpaperChangerUseCase.attachService(automaticWallpaperChangerService)
     stubPostExecutionThreadReturnsIoScheduler()
@@ -61,11 +69,11 @@ class AutomaticWallpaperChangerUseCaseTest {
     val timeStamp = System.currentTimeMillis()
     val testScheduler = TestScheduler()
     `when`(timeManager.getCurrentTimeInMilliSeconds()).thenReturn(
-        timeStamp - TimeUnit.MINUTES.toMillis(29))
+      timeStamp - TimeUnit.MINUTES.toMillis(29))
     `when`(executionThread.computationScheduler).thenReturn(testScheduler)
     `when`(wallrRepository.getLastWallpaperChangeTimeStamp()).thenReturn(timeStamp)
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
-        WALLPAPER_CHANGER_INTERVALS_LIST.first())
+      WALLPAPER_CHANGER_INTERVALS_LIST.first())
 
     automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
@@ -82,11 +90,11 @@ class AutomaticWallpaperChangerUseCaseTest {
     val timeStamp = System.currentTimeMillis()
     val testScheduler = TestScheduler()
     `when`(timeManager.getCurrentTimeInMilliSeconds()).thenReturn(
-        timeStamp - TimeUnit.MINUTES.toMillis(59))
+      timeStamp - TimeUnit.MINUTES.toMillis(59))
     `when`(executionThread.computationScheduler).thenReturn(testScheduler)
     `when`(wallrRepository.getLastWallpaperChangeTimeStamp()).thenReturn(timeStamp)
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
-        WALLPAPER_CHANGER_INTERVALS_LIST.component2())
+      WALLPAPER_CHANGER_INTERVALS_LIST.component2())
 
     automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
@@ -103,11 +111,11 @@ class AutomaticWallpaperChangerUseCaseTest {
     val timeStamp = System.currentTimeMillis()
     val testScheduler = TestScheduler()
     `when`(timeManager.getCurrentTimeInMilliSeconds()).thenReturn(
-        timeStamp - TimeUnit.HOURS.toMillis(5))
+      timeStamp - TimeUnit.HOURS.toMillis(5))
     `when`(executionThread.computationScheduler).thenReturn(testScheduler)
     `when`(wallrRepository.getLastWallpaperChangeTimeStamp()).thenReturn(timeStamp)
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
-        WALLPAPER_CHANGER_INTERVALS_LIST.component3())
+      WALLPAPER_CHANGER_INTERVALS_LIST.component3())
 
     automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
@@ -124,11 +132,11 @@ class AutomaticWallpaperChangerUseCaseTest {
     val timeStamp = System.currentTimeMillis()
     val testScheduler = TestScheduler()
     `when`(timeManager.getCurrentTimeInMilliSeconds()).thenReturn(
-        timeStamp - TimeUnit.HOURS.toMillis(23))
+      timeStamp - TimeUnit.HOURS.toMillis(23))
     `when`(executionThread.computationScheduler).thenReturn(testScheduler)
     `when`(wallrRepository.getLastWallpaperChangeTimeStamp()).thenReturn(timeStamp)
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
-        WALLPAPER_CHANGER_INTERVALS_LIST.component4())
+      WALLPAPER_CHANGER_INTERVALS_LIST.component4())
 
     automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
@@ -145,11 +153,11 @@ class AutomaticWallpaperChangerUseCaseTest {
     val timeStamp = System.currentTimeMillis()
     val testScheduler = TestScheduler()
     `when`(timeManager.getCurrentTimeInMilliSeconds()).thenReturn(
-        timeStamp - TimeUnit.DAYS.toMillis(2))
+      timeStamp - TimeUnit.DAYS.toMillis(2))
     `when`(executionThread.computationScheduler).thenReturn(testScheduler)
     `when`(wallrRepository.getLastWallpaperChangeTimeStamp()).thenReturn(timeStamp)
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
-        WALLPAPER_CHANGER_INTERVALS_LIST.component5())
+      WALLPAPER_CHANGER_INTERVALS_LIST.component5())
 
     automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
@@ -175,12 +183,12 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(executionThread.computationScheduler).thenReturn(testScheduler)
     `when`(wallrRepository.getLastWallpaperChangeTimeStamp()).thenReturn(timeStamp)
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
-        WALLPAPER_CHANGER_INTERVALS_LIST.first())
+      WALLPAPER_CHANGER_INTERVALS_LIST.first())
     `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(Long.MIN_VALUE)
     `when`(wallrRepository.getBitmapFromDatabaseImage(firstCollectionsImageModel)).thenReturn(
-        Single.just(mockBitmap))
+      Single.just(mockBitmap))
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
 
     automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
@@ -213,12 +221,12 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(executionThread.computationScheduler).thenReturn(testScheduler)
     `when`(wallrRepository.getLastWallpaperChangeTimeStamp()).thenReturn(timeStamp)
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
-        WALLPAPER_CHANGER_INTERVALS_LIST.first())
+      WALLPAPER_CHANGER_INTERVALS_LIST.first())
     `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(Long.MIN_VALUE)
     `when`(wallrRepository.getBitmapFromDatabaseImage(firstCollectionsImageModel)).thenReturn(
-        Single.just(mockBitmap))
+      Single.just(mockBitmap))
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
 
     automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
@@ -251,12 +259,12 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(executionThread.computationScheduler).thenReturn(testScheduler)
     `when`(wallrRepository.getLastWallpaperChangeTimeStamp()).thenReturn(timeStamp)
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
-        WALLPAPER_CHANGER_INTERVALS_LIST.component2())
+      WALLPAPER_CHANGER_INTERVALS_LIST.component2())
     `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(Long.MIN_VALUE)
     `when`(wallrRepository.getBitmapFromDatabaseImage(firstCollectionsImageModel)).thenReturn(
-        Single.just(mockBitmap))
+      Single.just(mockBitmap))
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
 
     automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
@@ -289,12 +297,12 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(executionThread.computationScheduler).thenReturn(testScheduler)
     `when`(wallrRepository.getLastWallpaperChangeTimeStamp()).thenReturn(timeStamp)
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
-        WALLPAPER_CHANGER_INTERVALS_LIST.component2())
+      WALLPAPER_CHANGER_INTERVALS_LIST.component2())
     `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(Long.MIN_VALUE)
     `when`(wallrRepository.getBitmapFromDatabaseImage(firstCollectionsImageModel)).thenReturn(
-        Single.just(mockBitmap))
+      Single.just(mockBitmap))
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
 
     automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
@@ -327,12 +335,12 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(executionThread.computationScheduler).thenReturn(testScheduler)
     `when`(wallrRepository.getLastWallpaperChangeTimeStamp()).thenReturn(timeStamp)
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
-        WALLPAPER_CHANGER_INTERVALS_LIST.component3())
+      WALLPAPER_CHANGER_INTERVALS_LIST.component3())
     `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(Long.MIN_VALUE)
     `when`(wallrRepository.getBitmapFromDatabaseImage(firstCollectionsImageModel)).thenReturn(
-        Single.just(mockBitmap))
+      Single.just(mockBitmap))
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
 
     automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
@@ -365,12 +373,12 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(executionThread.computationScheduler).thenReturn(testScheduler)
     `when`(wallrRepository.getLastWallpaperChangeTimeStamp()).thenReturn(timeStamp)
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
-        WALLPAPER_CHANGER_INTERVALS_LIST.component3())
+      WALLPAPER_CHANGER_INTERVALS_LIST.component3())
     `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(Long.MIN_VALUE)
     `when`(wallrRepository.getBitmapFromDatabaseImage(firstCollectionsImageModel)).thenReturn(
-        Single.just(mockBitmap))
+      Single.just(mockBitmap))
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
 
     automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
@@ -403,12 +411,12 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(executionThread.computationScheduler).thenReturn(testScheduler)
     `when`(wallrRepository.getLastWallpaperChangeTimeStamp()).thenReturn(timeStamp)
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
-        WALLPAPER_CHANGER_INTERVALS_LIST.component4())
+      WALLPAPER_CHANGER_INTERVALS_LIST.component4())
     `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(Long.MIN_VALUE)
     `when`(wallrRepository.getBitmapFromDatabaseImage(firstCollectionsImageModel)).thenReturn(
-        Single.just(mockBitmap))
+      Single.just(mockBitmap))
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
 
     automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
@@ -441,12 +449,12 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(executionThread.computationScheduler).thenReturn(testScheduler)
     `when`(wallrRepository.getLastWallpaperChangeTimeStamp()).thenReturn(timeStamp)
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
-        WALLPAPER_CHANGER_INTERVALS_LIST.component4())
+      WALLPAPER_CHANGER_INTERVALS_LIST.component4())
     `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(Long.MIN_VALUE)
     `when`(wallrRepository.getBitmapFromDatabaseImage(firstCollectionsImageModel)).thenReturn(
-        Single.just(mockBitmap))
+      Single.just(mockBitmap))
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
 
     automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
@@ -479,12 +487,12 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(executionThread.computationScheduler).thenReturn(testScheduler)
     `when`(wallrRepository.getLastWallpaperChangeTimeStamp()).thenReturn(timeStamp)
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
-        WALLPAPER_CHANGER_INTERVALS_LIST.component5())
+      WALLPAPER_CHANGER_INTERVALS_LIST.component5())
     `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(Long.MIN_VALUE)
     `when`(wallrRepository.getBitmapFromDatabaseImage(firstCollectionsImageModel)).thenReturn(
-        Single.just(mockBitmap))
+      Single.just(mockBitmap))
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
 
     automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
@@ -517,12 +525,12 @@ class AutomaticWallpaperChangerUseCaseTest {
     `when`(executionThread.computationScheduler).thenReturn(testScheduler)
     `when`(wallrRepository.getLastWallpaperChangeTimeStamp()).thenReturn(timeStamp)
     `when`(wallrRepository.getWallpaperChangerInterval()).thenReturn(
-        WALLPAPER_CHANGER_INTERVALS_LIST.component5())
+      WALLPAPER_CHANGER_INTERVALS_LIST.component5())
     `when`(wallrRepository.getLastUsedWallpaperUid()).thenReturn(Long.MIN_VALUE)
     `when`(wallrRepository.getBitmapFromDatabaseImage(firstCollectionsImageModel)).thenReturn(
-        Single.just(mockBitmap))
+      Single.just(mockBitmap))
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
 
     automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     testScheduler.advanceTimeBy(TIME_CHECKER_INTERVAL, TimeUnit.MILLISECONDS)
@@ -622,7 +630,7 @@ class AutomaticWallpaperChangerUseCaseTest {
   @After
   fun tearDown() {
     verifyNoMoreInteractions(wallpaperSetter, wallrRepository, executionThread, postExecutionThread,
-        automaticWallpaperChangerService, timeManager)
+      automaticWallpaperChangerService, timeManager)
     automaticWallpaperChangerUseCase.detachService()
   }
 

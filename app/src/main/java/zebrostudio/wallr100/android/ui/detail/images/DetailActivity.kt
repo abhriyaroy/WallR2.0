@@ -23,24 +23,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.yalantis.ucrop.UCrop
 import dagger.android.AndroidInjection
 import eightbitlab.com.blurview.RenderScriptBlur
-import kotlinx.android.synthetic.main.activity_detail.addToCollectionImageLayout
-import kotlinx.android.synthetic.main.activity_detail.authorImage
-import kotlinx.android.synthetic.main.activity_detail.authorName
-import kotlinx.android.synthetic.main.activity_detail.backIcon
-import kotlinx.android.synthetic.main.activity_detail.blurView
-import kotlinx.android.synthetic.main.activity_detail.crystallizeImageLayout
-import kotlinx.android.synthetic.main.activity_detail.downloadImageLayout
-import kotlinx.android.synthetic.main.activity_detail.editAndSetImageLayout
-import kotlinx.android.synthetic.main.activity_detail.expandIconView
-import kotlinx.android.synthetic.main.activity_detail.imageView
-import kotlinx.android.synthetic.main.activity_detail.loadingHintBelowProgressPercentage
-import kotlinx.android.synthetic.main.activity_detail.loadingHintBelowProgressSpinkit
-import kotlinx.android.synthetic.main.activity_detail.parentFrameLayout
-import kotlinx.android.synthetic.main.activity_detail.setWallpaperImageLayout
-import kotlinx.android.synthetic.main.activity_detail.shareImageLayout
-import kotlinx.android.synthetic.main.activity_detail.slidingPanel
-import kotlinx.android.synthetic.main.activity_detail.wallpaperActionProgressSpinkit
-import kotlinx.android.synthetic.main.activity_detail.wallpaperDownloadProgressPercentage
+import kotlinx.android.synthetic.main.activity_detail.*
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.ImageLoader
@@ -49,13 +32,7 @@ import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.BITMAP_CACHE
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE
-import zebrostudio.wallr100.android.utils.colorRes
-import zebrostudio.wallr100.android.utils.errorToast
-import zebrostudio.wallr100.android.utils.gone
-import zebrostudio.wallr100.android.utils.infoToast
-import zebrostudio.wallr100.android.utils.stringRes
-import zebrostudio.wallr100.android.utils.successToast
-import zebrostudio.wallr100.android.utils.visible
+import zebrostudio.wallr100.android.utils.*
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
 import zebrostudio.wallr100.presentation.detail.images.ActionType
@@ -74,8 +51,10 @@ const val INITIAL_SELECTED_DOWNLOAD_OPTION = 0
 
 class DetailActivity : BaseActivity(), DetailView {
 
-  @Inject internal lateinit var presenter: DetailPresenter
-  @Inject internal lateinit var imageLoader: ImageLoader
+  @Inject
+  internal lateinit var presenter: DetailPresenter
+  @Inject
+  internal lateinit var imageLoader: ImageLoader
   private var activityResultIntent: Intent? = null
   private var materialProgressLoader: MaterialDialog? = null
 
@@ -201,9 +180,9 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun showWaitLoader(message: String) {
     materialProgressLoader = MaterialDialog.Builder(this).widgetColor(colorRes(R.color.accent))
-      .contentColor(colorRes(R.color.white)).content(message)
-      .backgroundColor(colorRes(R.color.primary)).progress(true, INITIAL_LOADER_PROGRESS_VALUE)
-      .progressIndeterminateStyle(false).build()
+        .contentColor(colorRes(R.color.white)).content(message)
+        .backgroundColor(colorRes(R.color.primary)).progress(true, INITIAL_LOADER_PROGRESS_VALUE)
+        .progressIndeterminateStyle(false).build()
     materialProgressLoader?.show()
   }
 
@@ -315,7 +294,7 @@ class DetailActivity : BaseActivity(), DetailView {
     minimumWidth: Int,
     minimumHeight: Int) {
     UCrop.of(source, destination).withMaxResultSize(minimumWidth, minimumHeight)
-      .useSourceImageAspectRatio().start(this)
+        .useSourceImageAspectRatio().start(this)
   }
 
   override fun showSearchTypeDownloadDialog(showCrystallizedOption: Boolean) {
@@ -325,14 +304,14 @@ class DetailActivity : BaseActivity(), DetailView {
       R.array.imageDownloadQualities
     }
     MaterialDialog.Builder(this).backgroundColor(colorRes(R.color.primary))
-      .title(R.string.detail_activity_choose_download_quality_message).items(optionsArray)
-      .contentColor(colorRes(R.color.white)).widgetColor(colorRes(R.color.accent))
-      .positiveColor(colorRes(R.color.accent)).negativeColor(colorRes(R.color.accent))
-      .itemsCallbackSingleChoice(INITIAL_SELECTED_DOWNLOAD_OPTION) { _, _, which, _ ->
-        presenter.handleDownloadQualitySelectionEvent(SEARCH, which)
-        true
-      }.positiveText(R.string.detail_activity_options_download).negativeText(R.string.cancel_text)
-      .show()
+        .title(R.string.detail_activity_choose_download_quality_message).items(optionsArray)
+        .contentColor(colorRes(R.color.white)).widgetColor(colorRes(R.color.accent))
+        .positiveColor(colorRes(R.color.accent)).negativeColor(colorRes(R.color.accent))
+        .itemsCallbackSingleChoice(INITIAL_SELECTED_DOWNLOAD_OPTION) { _, _, which, _ ->
+          presenter.handleDownloadQualitySelectionEvent(SEARCH, which)
+          true
+        }.positiveText(R.string.detail_activity_options_download).negativeText(R.string.cancel_text)
+        .show()
   }
 
   override fun showWallpaperTypeDownloadDialog(showCrystallizedOption: Boolean) {
@@ -342,14 +321,14 @@ class DetailActivity : BaseActivity(), DetailView {
       R.array.imageDownloadQualities
     }
     MaterialDialog.Builder(this).backgroundColor(colorRes(R.color.primary))
-      .title(R.string.detail_activity_choose_download_quality_message).items(optionsArray)
-      .contentColor(colorRes(R.color.white)).widgetColor(colorRes(R.color.accent))
-      .positiveColor(colorRes(R.color.accent)).negativeColor(colorRes(R.color.accent))
-      .itemsCallbackSingleChoice(INITIAL_SELECTED_DOWNLOAD_OPTION) { _, _, which, _ ->
-        presenter.handleDownloadQualitySelectionEvent(WALLPAPERS, which)
-        true
-      }.positiveText(R.string.detail_activity_options_download).negativeText(R.string.cancel_text)
-      .show()
+        .title(R.string.detail_activity_choose_download_quality_message).items(optionsArray)
+        .contentColor(colorRes(R.color.white)).widgetColor(colorRes(R.color.accent))
+        .positiveColor(colorRes(R.color.accent)).negativeColor(colorRes(R.color.accent))
+        .itemsCallbackSingleChoice(INITIAL_SELECTED_DOWNLOAD_OPTION) { _, _, which, _ ->
+          presenter.handleDownloadQualitySelectionEvent(WALLPAPERS, which)
+          true
+        }.positiveText(R.string.detail_activity_options_download).negativeText(R.string.cancel_text)
+        .show()
   }
 
   override fun showDownloadStartedMessage() {
@@ -370,14 +349,15 @@ class DetailActivity : BaseActivity(), DetailView {
 
   override fun showCrystallizeDescriptionDialog() {
     MaterialDialog.Builder(this).backgroundColor(colorRes(R.color.primary))
-      .customView(R.layout.dialog_crystallize_example, false).contentColor(colorRes(R.color.white))
-      .widgetColor(colorRes(R.color.accent)).positiveColor(colorRes(R.color.accent))
-      .negativeColor(colorRes(R.color.accent))
-      .positiveText(stringRes(R.string.detail_activity_crystallize_dialog_positive_text))
-      .negativeText(stringRes(R.string.detail_activity_crystallize_dialog_negative_text))
-      .onPositive { _, _ ->
-        presenter.handleCrystallizeDialogPositiveClick()
-      }.show()
+        .customView(R.layout.dialog_crystallize_example, false)
+        .contentColor(colorRes(R.color.white))
+        .widgetColor(colorRes(R.color.accent)).positiveColor(colorRes(R.color.accent))
+        .negativeColor(colorRes(R.color.accent))
+        .positiveText(stringRes(R.string.detail_activity_crystallize_dialog_positive_text))
+        .negativeText(stringRes(R.string.detail_activity_crystallize_dialog_negative_text))
+        .onPositive { _, _ ->
+          presenter.handleCrystallizeDialogPositiveClick()
+        }.show()
   }
 
   override fun showCrystallizeSuccessMessage() {
@@ -452,7 +432,7 @@ class DetailActivity : BaseActivity(), DetailView {
 
   private fun setUpBlurView() {
     blurView.setupWith(parentFrameLayout).setBlurAlgorithm(RenderScriptBlur(this))
-      .setBlurRadius(BLUR_RADIUS)
+        .setBlurRadius(BLUR_RADIUS)
   }
 
   companion object {

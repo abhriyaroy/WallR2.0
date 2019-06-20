@@ -40,13 +40,14 @@ class SharedPrefsHelperImpl(private val context: Context) : SharedPrefsHelper {
   ) = getPreferenceEditor(preferenceName).putString(key, value).commit()
 
   override fun getLong(preferenceName: String, key: String, value: Long) = getPreference(
-      preferenceName).getLong(key, value)
+    preferenceName).getLong(key, value)
 
   override fun setLong(preferenceName: String, key: String, value: Long) = getPreferenceEditor(
-      preferenceName).putLong(key, value).commit()
+    preferenceName).putLong(key, value).commit()
 
-  private fun getPreference(preferenceName: String) = context.applicationContext.getSharedPreferences(
-      preferenceName, Activity.MODE_PRIVATE)
+  private fun getPreference(preferenceName: String) =
+      context.applicationContext.getSharedPreferences(
+        preferenceName, Activity.MODE_PRIVATE)
 
   private fun getPreferenceEditor(preferenceName: String) = getPreference(preferenceName).edit()
 

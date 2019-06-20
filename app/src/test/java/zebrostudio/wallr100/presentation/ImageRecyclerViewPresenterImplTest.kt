@@ -21,7 +21,8 @@ import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 @RunWith(MockitoJUnitRunner::class)
 class ImageRecyclerViewPresenterImplTest {
 
-  @Mock lateinit var imageRecyclerItemView: ImageRecyclerItemView
+  @Mock
+  lateinit var imageRecyclerItemView: ImageRecyclerItemView
   private lateinit var imageRecyclerViewPresenterImpl: ImageRecyclerViewPresenterImpl
 
   @Before
@@ -29,19 +30,22 @@ class ImageRecyclerViewPresenterImplTest {
     imageRecyclerViewPresenterImpl = ImageRecyclerViewPresenterImpl()
   }
 
-  @Test fun `should set list type to search on setListType call success`() {
+  @Test
+  fun `should set list type to search on setListType call success`() {
     imageRecyclerViewPresenterImpl.setListType(SEARCH)
 
     assertEquals(SEARCH, imageRecyclerViewPresenterImpl.imageType)
   }
 
-  @Test fun `should set list type to wallpapers on setListType call success`() {
+  @Test
+  fun `should set list type to wallpapers on setListType call success`() {
     imageRecyclerViewPresenterImpl.setListType(WALLPAPERS)
 
     assertEquals(WALLPAPERS, imageRecyclerViewPresenterImpl.imageType)
   }
 
-  @Test fun `should set list to search result list on setSearchResultList call success`() {
+  @Test
+  fun `should set list to search result list on setSearchResultList call success`() {
     val list = mutableListOf<SearchPicturesPresenterEntity>()
     list.add(SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity())
     imageRecyclerViewPresenterImpl.setSearchResultList(list)
@@ -49,7 +53,8 @@ class ImageRecyclerViewPresenterImplTest {
     assertEquals(list, imageRecyclerViewPresenterImpl.searchResultList)
   }
 
-  @Test fun `should set list to wallpapers image list on setWallpaperImageList call success`() {
+  @Test
+  fun `should set list to wallpapers image list on setWallpaperImageList call success`() {
     val list = mutableListOf<ImagePresenterEntity>()
     list.add(ImagePresenterEntityFactory.getImagePresenterEntity())
     imageRecyclerViewPresenterImpl.setWallpaperImageList(list)
@@ -57,7 +62,8 @@ class ImageRecyclerViewPresenterImplTest {
     assertEquals(list, imageRecyclerViewPresenterImpl.wallpaperImageList)
   }
 
-  @Test fun `should add item to search result list on setSearchResultList call success`() {
+  @Test
+  fun `should add item to search result list on setSearchResultList call success`() {
     val list =
         mutableListOf(SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity())
     val resultList = mutableListOf<SearchPicturesPresenterEntity>()
@@ -78,12 +84,12 @@ class ImageRecyclerViewPresenterImplTest {
     imageRecyclerViewPresenterImpl.setSearchResultList(searchPicturesList)
 
     imageRecyclerViewPresenterImpl.onBindRepositoryRowViewAtPosition(position,
-        imageRecyclerItemView)
+      imageRecyclerItemView)
 
     verify(imageRecyclerItemView).setImageViewBackgroundAndAttachClickListener(
-        searchPicturesList[position].paletteColor)
+      searchPicturesList[position].paletteColor)
     verify(imageRecyclerItemView).setSearchImage(
-        searchPicturesList[position].imageQualityUrlPresenterEntity.smallImageLink)
+      searchPicturesList[position].imageQualityUrlPresenterEntity.smallImageLink)
   }
 
   @Test
@@ -95,10 +101,10 @@ class ImageRecyclerViewPresenterImplTest {
     imageRecyclerViewPresenterImpl.setWallpaperImageList(wallpaperImagesList)
 
     imageRecyclerViewPresenterImpl.onBindRepositoryRowViewAtPosition(position,
-        imageRecyclerItemView)
+      imageRecyclerItemView)
 
     verify(imageRecyclerItemView).setImageViewBackgroundAndAttachClickListener(
-        wallpaperImagesList[position].color)
+      wallpaperImagesList[position].color)
     verify(imageRecyclerItemView).setWallpaperImage(wallpaperImagesList[position].imageLink.thumb)
   }
 
@@ -122,7 +128,8 @@ class ImageRecyclerViewPresenterImplTest {
     assertEquals(wallpaperImagesList.size, imageRecyclerViewPresenterImpl.getItemCount())
   }
 
-  @Test fun `should clear all search results on clearAllSearchResults call success`() {
+  @Test
+  fun `should clear all search results on clearAllSearchResults call success`() {
     val searchPicturesList =
         mutableListOf(SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity())
     imageRecyclerViewPresenterImpl.setSearchResultList(searchPicturesList)
@@ -158,7 +165,8 @@ class ImageRecyclerViewPresenterImplTest {
     verify(imageRecyclerItemView).showWallpaperImageDetails(wallpaperImagesList[position])
   }
 
-  @After fun tearDown() {
+  @After
+  fun tearDown() {
     verifyNoMoreInteractions(imageRecyclerItemView)
   }
 }

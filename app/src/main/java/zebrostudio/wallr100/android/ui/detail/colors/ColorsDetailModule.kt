@@ -25,10 +25,10 @@ class ColorsDetailModule {
     wallpaperSetter: WallpaperSetter,
     permissionsChecker: PermissionsChecker
   ): ColorsDetailPresenter = ColorsDetailPresenterImpl(
-      resourceUtils,
-      postExecutionThread,
-      isUserPremiumStatusUseCase,
-      colorImagesUseCase,
-      wallpaperSetter,
-      permissionsChecker)
+    resourceUtils,
+    postExecutionThread,
+    isUserPremiumStatusUseCase,
+    colorImagesUseCase,
+    wallpaperSetter,
+    permissionsChecker)
 }

@@ -19,8 +19,8 @@ class MinimalModule {
     minimalImagesUseCase: MinimalImagesUseCase,
     postExecutionThread: PostExecutionThread
   ): MinimalPresenter = MinimalPresenterImpl(
-      widgetHintsUseCase,
-      minimalImagesUseCase,
-      postExecutionThread)
+    widgetHintsUseCase,
+    minimalImagesUseCase,
+    postExecutionThread)
 
 }

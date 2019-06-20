@@ -16,9 +16,7 @@ import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
 import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,21 +27,11 @@ import zebrostudio.wallr100.android.utils.GsonProvider
 import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
-import zebrostudio.wallr100.data.database.DatabaseImageType.CRYSTALLIZED
-import zebrostudio.wallr100.data.database.DatabaseImageType.EDITED
-import zebrostudio.wallr100.data.database.DatabaseImageType.MINIMAL_COLOR
-import zebrostudio.wallr100.data.database.DatabaseImageType.SEARCH
-import zebrostudio.wallr100.data.database.DatabaseImageType.WALLPAPER
+import zebrostudio.wallr100.data.database.DatabaseImageType.*
 import zebrostudio.wallr100.data.datafactory.CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity
 import zebrostudio.wallr100.data.datafactory.FirebaseImageEntityModelFactory.getFirebaseImageEntity
 import zebrostudio.wallr100.data.datafactory.UnsplashPictureEntityModelFactory.getUnsplashPictureEntityModel
-import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
-import zebrostudio.wallr100.data.exception.EmptyRecentlyDeletedMapException
-import zebrostudio.wallr100.data.exception.InvalidPurchaseException
-import zebrostudio.wallr100.data.exception.NoResultFoundException
-import zebrostudio.wallr100.data.exception.NotEnoughFreeSpaceException
-import zebrostudio.wallr100.data.exception.UnableToResolveHostException
-import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
+import zebrostudio.wallr100.data.exception.*
 import zebrostudio.wallr100.data.mapper.CollectionsDatabaseImageEntityMapper
 import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapper
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
@@ -56,36 +44,52 @@ import zebrostudio.wallr100.domain.datafactory.SearchPicturesModelFactory.getSea
 import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.model.RestoreColorsModel
 import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
-import java.util.Random
-import java.util.TreeMap
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.*
+import java.util.*
 import java.util.UUID.randomUUID
 import java.util.concurrent.TimeUnit
 
 @RunWith(MockitoJUnitRunner::class)
 class WallrDataRepositoryTest {
 
-  @Mock lateinit var executionThread: ExecutionThread
-  @Mock lateinit var sharedPrefs: SharedPrefsHelper
-  @Mock lateinit var remoteAuthServiceFactory: RemoteAuthServiceFactory
-  @Mock lateinit var unsplashClientFactory: UnsplashClientFactory
-  @Mock lateinit var firebaseDatabaseHelper: FirebaseDatabaseHelper
-  @Mock lateinit var databaseReference: DatabaseReference
-  @Mock lateinit var firebaseDatabase: FirebaseDatabase
-  @Mock lateinit var urlShortener: UrlShortener
-  @Mock lateinit var imageHandler: ImageHandler
-  @Mock lateinit var fileHandler: FileHandler
-  @Mock lateinit var downloadHelper: DownloadHelper
-  @Mock lateinit var minimalColorHelper: MinimalColorHelper
-  @Mock lateinit var mockBitmap: Bitmap
-  @Mock lateinit var mockUri: Uri
-  @Mock lateinit var gsonProvider: GsonProvider
-  @Mock lateinit var collectionsDatabaseImageEntityMapper: CollectionsDatabaseImageEntityMapper
-  @Mock lateinit var databaseImageTypeMapper: DatabaseImageTypeMapper
-  @Mock lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
-  @Mock lateinit var firebasePictureEntityMapper: FirebasePictureEntityMapper
+  @Mock
+  lateinit var executionThread: ExecutionThread
+  @Mock
+  lateinit var sharedPrefs: SharedPrefsHelper
+  @Mock
+  lateinit var remoteAuthServiceFactory: RemoteAuthServiceFactory
+  @Mock
+  lateinit var unsplashClientFactory: UnsplashClientFactory
+  @Mock
+  lateinit var firebaseDatabaseHelper: FirebaseDatabaseHelper
+  @Mock
+  lateinit var databaseReference: DatabaseReference
+  @Mock
+  lateinit var firebaseDatabase: FirebaseDatabase
+  @Mock
+  lateinit var urlShortener: UrlShortener
+  @Mock
+  lateinit var imageHandler: ImageHandler
+  @Mock
+  lateinit var fileHandler: FileHandler
+  @Mock
+  lateinit var downloadHelper: DownloadHelper
+  @Mock
+  lateinit var minimalColorHelper: MinimalColorHelper
+  @Mock
+  lateinit var mockBitmap: Bitmap
+  @Mock
+  lateinit var mockUri: Uri
+  @Mock
+  lateinit var gsonProvider: GsonProvider
+  @Mock
+  lateinit var collectionsDatabaseImageEntityMapper: CollectionsDatabaseImageEntityMapper
+  @Mock
+  lateinit var databaseImageTypeMapper: DatabaseImageTypeMapper
+  @Mock
+  lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
+  @Mock
+  lateinit var firebasePictureEntityMapper: FirebasePictureEntityMapper
 
   private lateinit var wallrDataRepository: WallrDataRepository
   private val randomString = randomUUID().toString()
@@ -96,18 +100,19 @@ class WallrDataRepositoryTest {
   fun setup() {
     wallrDataRepository =
         WallrDataRepository(remoteAuthServiceFactory, unsplashClientFactory, sharedPrefs,
-            gsonProvider, collectionsDatabaseImageEntityMapper, databaseImageTypeMapper,
-            unsplashPictureEntityMapper, firebaseDatabaseHelper, firebasePictureEntityMapper,
-            urlShortener, imageHandler, fileHandler, downloadHelper,
-            minimalColorHelper, executionThread)
+          gsonProvider, collectionsDatabaseImageEntityMapper, databaseImageTypeMapper,
+          unsplashPictureEntityMapper, firebaseDatabaseHelper, firebasePictureEntityMapper,
+          urlShortener, imageHandler, fileHandler, downloadHelper,
+          minimalColorHelper, executionThread)
 
     `when`(executionThread.ioScheduler).thenReturn(Schedulers.trampoline())
     `when`(executionThread.computationScheduler).thenReturn(Schedulers.trampoline())
   }
 
-  @Test fun `should return Single on server success response`() {
+  @Test
+  fun `should return Single on server success response`() {
     `when`(remoteAuthServiceFactory.verifyPurchaseService(
-        UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString)))
+      UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString)))
         .thenReturn(Single.just(PurchaseAuthResponseEntity("success", dummyInt, randomString)))
 
     wallrDataRepository.authenticatePurchase(randomString, randomString, randomString)
@@ -115,14 +120,14 @@ class WallrDataRepositoryTest {
         .assertComplete()
 
     verify(remoteAuthServiceFactory).verifyPurchaseService(
-        UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
+      UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
     verifyIoSchedulerSubscription()
   }
 
   @Test
   fun `should return invalid purchase exception on authenticatePurchase 403 error response`() {
     `when`(remoteAuthServiceFactory.verifyPurchaseService(
-        UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString)))
+      UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString)))
         .thenReturn(Single.just(PurchaseAuthResponseEntity("error", 403, randomString)))
 
     wallrDataRepository.authenticatePurchase(randomString, randomString, randomString)
@@ -130,14 +135,14 @@ class WallrDataRepositoryTest {
         .assertError(InvalidPurchaseException::class.java)
 
     verify(remoteAuthServiceFactory).verifyPurchaseService(
-        UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
+      UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
     verifyIoSchedulerSubscription()
   }
 
   @Test
   fun `should return invalid purchase exception on authenticatePurchase 404 error response`() {
     `when`(remoteAuthServiceFactory.verifyPurchaseService(
-        UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString)))
+      UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString)))
         .thenReturn(Single.just(PurchaseAuthResponseEntity("error", 404, randomString)))
 
     wallrDataRepository.authenticatePurchase(randomString, randomString, randomString)
@@ -145,14 +150,14 @@ class WallrDataRepositoryTest {
         .assertError(InvalidPurchaseException::class.java)
 
     verify(remoteAuthServiceFactory).verifyPurchaseService(
-        UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
+      UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
     verifyIoSchedulerSubscription()
   }
 
   @Test
   fun `should return unable to verify purchase exception on some error during authenticatePurchase call`() {
     `when`(remoteAuthServiceFactory.verifyPurchaseService(
-        UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString)))
+      UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString)))
         .thenReturn(Single.just(PurchaseAuthResponseEntity(randomString, dummyInt, randomString)))
 
     wallrDataRepository.authenticatePurchase(randomString, randomString, randomString)
@@ -160,49 +165,54 @@ class WallrDataRepositoryTest {
         .assertError(UnableToVerifyPurchaseException::class.java)
 
     verify(remoteAuthServiceFactory).verifyPurchaseService(
-        UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
+      UrlMap.getFirebasePurchaseAuthEndpoint(randomString, randomString, randomString))
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return true after successfully updating purchase status`() {
+  @Test
+  fun `should return true after successfully updating purchase status`() {
     `when`(sharedPrefs.setBoolean(PURCHASE_PREFERENCE_NAME,
-        PREMIUM_USER_TAG, true)).thenReturn(true)
+      PREMIUM_USER_TAG, true)).thenReturn(true)
 
     assertEquals(true, wallrDataRepository.updateUserPurchaseStatus())
     verify(sharedPrefs).setBoolean(PURCHASE_PREFERENCE_NAME,
-        PREMIUM_USER_TAG, true)
+      PREMIUM_USER_TAG, true)
   }
 
-  @Test fun `should return false after unsuccessful update of purchase status`() {
+  @Test
+  fun `should return false after unsuccessful update of purchase status`() {
     `when`(sharedPrefs.setBoolean(PURCHASE_PREFERENCE_NAME,
-        PREMIUM_USER_TAG, true)).thenReturn(false)
+      PREMIUM_USER_TAG, true)).thenReturn(false)
 
     assertEquals(false, wallrDataRepository.updateUserPurchaseStatus())
 
     verify(sharedPrefs).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, true)
   }
 
-  @Test fun `should return true after checking if user is a premium user`() {
+  @Test
+  fun `should return true after checking if user is a premium user`() {
     `when`(sharedPrefs.getBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG,
-        false)).thenReturn(true)
+      false)).thenReturn(true)
 
     assertEquals(true, wallrDataRepository.isUserPremium())
 
     verify(sharedPrefs).getBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, false)
   }
 
-  @Test fun `should return false after checking if user is a premium user`() {
+  @Test
+  fun `should return false after checking if user is a premium user`() {
     `when`(sharedPrefs.getBoolean(PURCHASE_PREFERENCE_NAME,
-        PREMIUM_USER_TAG, false)).thenReturn(false)
+      PREMIUM_USER_TAG, false)).thenReturn(false)
 
     assertEquals(false, wallrDataRepository.isUserPremium())
 
     verify(sharedPrefs).getBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, false)
   }
 
-  @Test fun `should return no result found exception on getPictures call success`() {
+  @Test
+  fun `should return no result found exception on getPictures call success`() {
     `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
-        Single.just(emptyList()))
+      Single.just(emptyList()))
 
     wallrDataRepository.getSearchPictures(randomString)
         .test()
@@ -212,9 +222,10 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return unable to resolve host exception on getPictures call failure`() {
+  @Test
+  fun `should return unable to resolve host exception on getPictures call failure`() {
     `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
-        Single.error(Exception(UNABLE_TO_RESOLVE_HOST_EXCEPTION_MESSAGE)))
+      Single.error(Exception(UNABLE_TO_RESOLVE_HOST_EXCEPTION_MESSAGE)))
 
     wallrDataRepository.getSearchPictures(randomString)
         .test()
@@ -224,14 +235,15 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return mapped search pictures model list on getPictures call failure`() {
+  @Test
+  fun `should return mapped search pictures model list on getPictures call failure`() {
     val unsplashPicturesEntityList = mutableListOf(
-        getUnsplashPictureEntityModel())
+      getUnsplashPictureEntityModel())
     val searchPicturesModelList = listOf(getSearchPicturesModel())
     `when`(unsplashPictureEntityMapper.mapFromEntity(unsplashPicturesEntityList)).thenReturn(
-        searchPicturesModelList)
+      searchPicturesModelList)
     `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
-        Single.just(unsplashPicturesEntityList))
+      Single.just(unsplashPicturesEntityList))
 
     val searchPicturesResult = wallrDataRepository.getSearchPictures(randomString)
         .test()
@@ -243,7 +255,8 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return explore node reference on getNodeReference call`() {
+  @Test
+  fun `should return explore node reference on getNodeReference call`() {
     stubFirebaseDatabaseNode(CHILD_PATH_EXPLORE)
 
     val nodeReference = wallrDataRepository.getExploreNodeReference()
@@ -254,7 +267,8 @@ class WallrDataRepositoryTest {
     verify(databaseReference).child(CHILD_PATH_EXPLORE)
   }
 
-  @Test fun `should return shortened image link on getShortImageLink call success`() {
+  @Test
+  fun `should return shortened image link on getShortImageLink call success`() {
     val shortUrl = "Short Url"
     `when`(urlShortener.getShortUrl(randomString)).thenReturn(Single.just(shortUrl))
 
@@ -264,7 +278,8 @@ class WallrDataRepositoryTest {
     verify(executionThread).ioScheduler
   }
 
-  @Test fun `should return error on getShortImageLink call failure`() {
+  @Test
+  fun `should return error on getShortImageLink call failure`() {
     `when`(urlShortener.getShortUrl(randomString)).thenReturn(Single.error(Exception()))
 
     wallrDataRepository.getShortImageLink(randomString).test().assertError(Exception::class.java)
@@ -273,7 +288,8 @@ class WallrDataRepositoryTest {
     verify(executionThread).ioScheduler
   }
 
-  @Test fun `should return NotEnoughFreeSpace exception on getImageBitmap call error`() {
+  @Test
+  fun `should return NotEnoughFreeSpace exception on getImageBitmap call error`() {
     `when`(fileHandler.freeSpaceAvailable()).thenReturn(false)
 
     wallrDataRepository.getImageBitmap(randomString).test()
@@ -282,7 +298,8 @@ class WallrDataRepositoryTest {
     verify(fileHandler).freeSpaceAvailable()
   }
 
-  @Test fun `should return cached bitmap on getImageBitmap call success and cache is present`() {
+  @Test
+  fun `should return cached bitmap on getImageBitmap call success and cache is present`() {
     `when`(fileHandler.freeSpaceAvailable()).thenReturn(true)
     `when`(imageHandler.isImageCached(randomString)).thenReturn(true)
     `when`(imageHandler.getImageBitmap()).thenReturn(Single.just(mockBitmap))
@@ -306,7 +323,7 @@ class WallrDataRepositoryTest {
     `when`(fileHandler.freeSpaceAvailable()).thenReturn(true)
     `when`(imageHandler.isImageCached(randomString)).thenReturn(false)
     `when`(imageHandler.fetchImage(randomString)).thenReturn(
-        Observable.just(IMAGE_DOWNLOAD_PROGRESS_VALUE_99))
+      Observable.just(IMAGE_DOWNLOAD_PROGRESS_VALUE_99))
 
     val resultImageDownloadModel =
         wallrDataRepository.getImageBitmap(randomString).test().values()[0]
@@ -324,7 +341,7 @@ class WallrDataRepositoryTest {
     `when`(fileHandler.freeSpaceAvailable()).thenReturn(true)
     `when`(imageHandler.isImageCached(randomString)).thenReturn(false)
     `when`(imageHandler.fetchImage(randomString)).thenReturn(
-        Observable.just(DOWNLOAD_PROGRESS_COMPLETED_VALUE))
+      Observable.just(DOWNLOAD_PROGRESS_COMPLETED_VALUE))
     `when`(imageHandler.getImageBitmap()).thenReturn(Single.just(mockBitmap))
 
     val resultImageDownloadModel =
@@ -339,7 +356,8 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return Single of bitmap on getCacheImageBitmap call success`() {
+  @Test
+  fun `should return Single of bitmap on getCacheImageBitmap call success`() {
     `when`(imageHandler.getImageBitmap()).thenReturn(Single.just(mockBitmap))
 
     wallrDataRepository.getCacheImageBitmap().test().assertValue(mockBitmap)
@@ -348,7 +366,8 @@ class WallrDataRepositoryTest {
     verifyComputationSchedulerCall()
   }
 
-  @Test fun `should complete on clearImageCaches call success`() {
+  @Test
+  fun `should complete on clearImageCaches call success`() {
     `when`(imageHandler.clearImageCache()).thenReturn(Completable.complete())
 
     wallrDataRepository.clearImageCaches().test().assertComplete()
@@ -357,13 +376,15 @@ class WallrDataRepositoryTest {
     verifyComputationSchedulerCall()
   }
 
-  @Test fun `should invoke cancelImageFetching on cancelImageBitmapFetchOperation call success`() {
+  @Test
+  fun `should invoke cancelImageFetching on cancelImageBitmapFetchOperation call success`() {
     wallrDataRepository.cancelImageBitmapFetchOperation()
 
     verify(imageHandler).cancelFetchingImage()
   }
 
-  @Test fun `should return image uri on getCacheSourceUri call success`() {
+  @Test
+  fun `should return image uri on getCacheSourceUri call success`() {
     `when`(imageHandler.getImageUri()).thenReturn(Single.just(mockUri))
 
     val uri = wallrDataRepository.getCacheSourceUri().test().values()[0]
@@ -373,7 +394,8 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return result destination file uri on getCacheResultUri call success`() {
+  @Test
+  fun `should return result destination file uri on getCacheResultUri call success`() {
     `when`(fileHandler.getCacheFileUriForCropping()).thenReturn(Single.just(mockUri))
 
     val uri = wallrDataRepository.getCacheResultUri().test().values()[0]
@@ -386,7 +408,7 @@ class WallrDataRepositoryTest {
   @Test
   fun `should return Single of Nullpointer exception on getBitmapFromUri call failure due to null uri`() {
     `when`(imageHandler.convertUriToBitmap(mockUri)).thenReturn(
-        Single.error(NullPointerException()))
+      Single.error(NullPointerException()))
 
     wallrDataRepository.getBitmapFromUri(mockUri).test()
         .assertError(NullPointerException::class.java)
@@ -395,7 +417,8 @@ class WallrDataRepositoryTest {
     verifyComputationSchedulerCall()
   }
 
-  @Test fun `should return Single of bitmap on getBitmapFromUri call success`() {
+  @Test
+  fun `should return Single of bitmap on getBitmapFromUri call success`() {
     `when`(imageHandler.convertUriToBitmap(mockUri)).thenReturn(Single.just(mockBitmap))
 
     wallrDataRepository.getBitmapFromUri(mockUri).test()
@@ -405,7 +428,8 @@ class WallrDataRepositoryTest {
     verifyComputationSchedulerCall()
   }
 
-  @Test fun `should complete successfully on downloadImage call success`() {
+  @Test
+  fun `should complete successfully on downloadImage call success`() {
     `when`(downloadHelper.downloadImage(randomString)).thenReturn(Completable.complete())
 
     wallrDataRepository.downloadImage(randomString).test().assertComplete()
@@ -414,7 +438,8 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return true on checkIfDownloadIsInProgress call success`() {
+  @Test
+  fun `should return true on checkIfDownloadIsInProgress call success`() {
     `when`(downloadHelper.isDownloadEnqueued(randomString)).thenReturn(true)
 
     assertTrue(wallrDataRepository.checkIfDownloadIsInProgress(randomString))
@@ -422,7 +447,8 @@ class WallrDataRepositoryTest {
     verify(downloadHelper).isDownloadEnqueued(randomString)
   }
 
-  @Test fun `should return pair on crystallize image call success`() {
+  @Test
+  fun `should return pair on crystallize image call success`() {
     `when`(imageHandler.convertImageInCacheToLowpoly()).thenReturn(Single.just(mockBitmap))
 
     val result = wallrDataRepository.crystallizeImage().test().values()[0]
@@ -433,7 +459,8 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should complete on saveCrystallizedImageToDownloads call success`() {
+  @Test
+  fun `should complete on saveCrystallizedImageToDownloads call success`() {
     `when`(imageHandler.addCachedImageToDownloads()).thenReturn(Completable.complete())
 
     wallrDataRepository.saveCachedImageToDownloads().test().assertComplete()
@@ -442,45 +469,49 @@ class WallrDataRepositoryTest {
     verifyComputationSchedulerCall()
   }
 
-  @Test fun `should return false on isCrystallizeDescriptionShown call success`() {
+  @Test
+  fun `should return false on isCrystallizeDescriptionShown call success`() {
     `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME,
-        CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_PREFERENCE_TAG))
+      CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_PREFERENCE_TAG))
         .thenReturn(false)
 
     assertFalse(wallrDataRepository.isCrystallizeDescriptionShown())
 
     verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME,
-        CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_PREFERENCE_TAG)
+      CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_PREFERENCE_TAG)
   }
 
-  @Test fun `should call shared preference on saveCrystallizeDescriptionShown call success`() {
+  @Test
+  fun `should call shared preference on saveCrystallizeDescriptionShown call success`() {
     wallrDataRepository.saveCrystallizeDescriptionShown()
 
     verify(sharedPrefs).setBoolean(IMAGE_PREFERENCE_NAME,
-        CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_PREFERENCE_TAG,
-        true)
+      CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_PREFERENCE_TAG,
+      true)
   }
 
-  @Test fun `should complete on saveImageToCollections call success of type wallpaper`() {
+  @Test
+  fun `should complete on saveImageToCollections call success of type wallpaper`() {
     `when`(databaseImageTypeMapper.mapToDatabaseImageType(
-        CollectionsImageType.WALLPAPER))
+      CollectionsImageType.WALLPAPER))
         .thenReturn(WALLPAPER)
     `when`(imageHandler.addImageToCollections(randomString, WALLPAPER)).thenReturn(
-        Completable.complete())
+      Completable.complete())
 
     wallrDataRepository.saveImageToCollections(randomString, CollectionsImageType.WALLPAPER)
         .test()
         .assertComplete()
 
     verify(databaseImageTypeMapper).mapToDatabaseImageType(
-        CollectionsImageType.WALLPAPER)
+      CollectionsImageType.WALLPAPER)
     verify(imageHandler).addImageToCollections(randomString, WALLPAPER)
     verifyComputationSchedulerCall()
   }
 
-  @Test fun `should complete on saveImageToCollections call success of type search`() {
+  @Test
+  fun `should complete on saveImageToCollections call success of type search`() {
     `when`(databaseImageTypeMapper.mapToDatabaseImageType(
-        CollectionsImageType.SEARCH))
+      CollectionsImageType.SEARCH))
         .thenReturn(SEARCH)
     `when`(imageHandler.addImageToCollections(randomString, SEARCH))
         .thenReturn(Completable.complete())
@@ -494,12 +525,13 @@ class WallrDataRepositoryTest {
     verifyComputationSchedulerCall()
   }
 
-  @Test fun `should complete on saveImageToCollections call success of type edited`() {
+  @Test
+  fun `should complete on saveImageToCollections call success of type edited`() {
     `when`(databaseImageTypeMapper.mapToDatabaseImageType(
-        CollectionsImageType.EDITED))
+      CollectionsImageType.EDITED))
         .thenReturn(EDITED)
     `when`(imageHandler.addImageToCollections(randomString, EDITED)).thenReturn(
-        Completable.complete())
+      Completable.complete())
 
     wallrDataRepository.saveImageToCollections(randomString, CollectionsImageType.EDITED)
         .test()
@@ -510,40 +542,43 @@ class WallrDataRepositoryTest {
     verifyComputationSchedulerCall()
   }
 
-  @Test fun `should complete on saveImageToCollections call success of type crystallized`() {
+  @Test
+  fun `should complete on saveImageToCollections call success of type crystallized`() {
     `when`(databaseImageTypeMapper.mapToDatabaseImageType(
-        CollectionsImageType.CRYSTALLIZED)).thenReturn(CRYSTALLIZED)
+      CollectionsImageType.CRYSTALLIZED)).thenReturn(CRYSTALLIZED)
     `when`(imageHandler.addImageToCollections(randomString, CRYSTALLIZED)).thenReturn(
-        Completable.complete())
+      Completable.complete())
 
     wallrDataRepository.saveImageToCollections(randomString, CollectionsImageType.CRYSTALLIZED)
         .test()
         .assertComplete()
 
     verify(databaseImageTypeMapper).mapToDatabaseImageType(
-        CollectionsImageType.CRYSTALLIZED)
+      CollectionsImageType.CRYSTALLIZED)
     verify(imageHandler).addImageToCollections(randomString, CRYSTALLIZED)
     verifyComputationSchedulerCall()
   }
 
-  @Test fun `should complete on saveImageToCollections call success of type minimal color`() {
+  @Test
+  fun `should complete on saveImageToCollections call success of type minimal color`() {
     `when`(databaseImageTypeMapper.mapToDatabaseImageType(
-        CollectionsImageType.MINIMAL_COLOR)).thenReturn(MINIMAL_COLOR)
+      CollectionsImageType.MINIMAL_COLOR)).thenReturn(MINIMAL_COLOR)
     `when`(imageHandler.addImageToCollections(randomString, MINIMAL_COLOR)).thenReturn(
-        Completable.complete())
+      Completable.complete())
 
     wallrDataRepository.saveImageToCollections(randomString,
-        CollectionsImageType.MINIMAL_COLOR)
+      CollectionsImageType.MINIMAL_COLOR)
         .test()
         .assertComplete()
 
     verify(databaseImageTypeMapper).mapToDatabaseImageType(
-        CollectionsImageType.MINIMAL_COLOR)
+      CollectionsImageType.MINIMAL_COLOR)
     verify(imageHandler).addImageToCollections(randomString, MINIMAL_COLOR)
     verifyComputationSchedulerCall()
   }
 
-  @Test fun `should return Single of ImageModel list on getExplorePictures call success`() {
+  @Test
+  fun `should return Single of ImageModel list on getExplorePictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
@@ -554,12 +589,12 @@ class WallrDataRepositoryTest {
     val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
     `when`(firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)).thenReturn(
-        imageModelList)
+      imageModelList)
     `when`(gsonProvider.getGson()).thenReturn(gson)
     `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
     `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(databaseReference)
     `when`(databaseReference.child(
-        CHILD_PATH_EXPLORE)).thenReturn(databaseReference)
+      CHILD_PATH_EXPLORE)).thenReturn(databaseReference)
     `when`(firebaseDatabaseHelper.fetch(databaseReference)).thenReturn(Single.just(map))
 
     wallrDataRepository.getExplorePictures().subscribeOn(testScheduler)
@@ -575,7 +610,8 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return Single of ImageModel list on getRecentPictures call success`() {
+  @Test
+  fun `should return Single of ImageModel list on getRecentPictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
@@ -586,7 +622,7 @@ class WallrDataRepositoryTest {
     val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
     `when`(firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)).thenReturn(
-        imageModelList)
+      imageModelList)
     `when`(gsonProvider.getGson()).thenReturn(gson)
     `when`(databaseReference.child(CHILD_PATH_RECENT)).thenReturn(databaseReference)
     `when`(firebaseDatabaseHelper.fetch(databaseReference)).thenReturn(Single.just(map))
@@ -606,7 +642,8 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return Single of ImageModel list on getPopularPictures call success`() {
+  @Test
+  fun `should return Single of ImageModel list on getPopularPictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
@@ -617,7 +654,7 @@ class WallrDataRepositoryTest {
     val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
     `when`(firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)).thenReturn(
-        imageModelList)
+      imageModelList)
     `when`(gsonProvider.getGson()).thenReturn(gson)
     `when`(databaseReference.child(CHILD_PATH_POPULAR)).thenReturn(databaseReference)
     `when`(firebaseDatabaseHelper.fetch(databaseReference)).thenReturn(Single.just(map))
@@ -637,7 +674,8 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return Single of ImageModel list on getStandoutPictures call success`() {
+  @Test
+  fun `should return Single of ImageModel list on getStandoutPictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
@@ -648,7 +686,7 @@ class WallrDataRepositoryTest {
     val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
     `when`(firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)).thenReturn(
-        imageModelList)
+      imageModelList)
     `when`(gsonProvider.getGson()).thenReturn(gson)
     `when`(databaseReference.child(CHILD_PATH_STANDOUT)).thenReturn(databaseReference)
     `when`(firebaseDatabaseHelper.fetch(databaseReference)).thenReturn(Single.just(map))
@@ -668,7 +706,8 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return Single of ImageModel list on getBuildingsPictures call success`() {
+  @Test
+  fun `should return Single of ImageModel list on getBuildingsPictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
@@ -679,7 +718,7 @@ class WallrDataRepositoryTest {
     val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
     `when`(firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)).thenReturn(
-        imageModelList)
+      imageModelList)
     `when`(gsonProvider.getGson()).thenReturn(gson)
     `when`(databaseReference.child(CHILD_PATH_BUILDING)).thenReturn(databaseReference)
     `when`(firebaseDatabaseHelper.fetch(databaseReference)).thenReturn(Single.just(map))
@@ -699,7 +738,8 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return Single of ImageModel list on getFoodPictures call success`() {
+  @Test
+  fun `should return Single of ImageModel list on getFoodPictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
@@ -730,7 +770,8 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return Single of ImageModel list on getNaturePictures call success`() {
+  @Test
+  fun `should return Single of ImageModel list on getNaturePictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
@@ -761,7 +802,8 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return Single of ImageModel list on getObjectsPictures call success`() {
+  @Test
+  fun `should return Single of ImageModel list on getObjectsPictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
@@ -792,7 +834,8 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return Single of ImageModel list on getPeoplePictures call success`() {
+  @Test
+  fun `should return Single of ImageModel list on getPeoplePictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
@@ -823,7 +866,8 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return Single of ImageModel list on getTechnologyPictures call success`() {
+  @Test
+  fun `should return Single of ImageModel list on getTechnologyPictures call success`() {
     val map = hashMapOf<String, String>()
     val firebaseImageEntity = getFirebaseImageEntity()
     val firebaseImageEntityList = listOf(firebaseImageEntity)
@@ -834,7 +878,7 @@ class WallrDataRepositoryTest {
     val gsonString = gson.toJson(firebaseImageEntity)
     map[randomString] = gsonString
     `when`(firebasePictureEntityMapper.mapFromEntity(firebaseImageEntityList)).thenReturn(
-        imageModelList)
+      imageModelList)
     `when`(gsonProvider.getGson()).thenReturn(gson)
     `when`(databaseReference.child(CHILD_PATH_TECHNOLOGY)).thenReturn(databaseReference)
     `when`(firebaseDatabaseHelper.fetch(databaseReference)).thenReturn(Single.just(map))
@@ -854,17 +898,19 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return true on isCustomColorListPresent call success`() {
+  @Test
+  fun `should return true on isCustomColorListPresent call success`() {
     `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME,
-        CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_PREFERENCE_TAG)).thenReturn(true)
+      CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_PREFERENCE_TAG)).thenReturn(true)
 
     assertTrue(wallrDataRepository.isCustomMinimalColorListPresent())
 
     verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME,
-        CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_PREFERENCE_TAG)
+      CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_PREFERENCE_TAG)
   }
 
-  @Test fun `should return Single of list of string on getCustomColorList call success`() {
+  @Test
+  fun `should return Single of list of string on getCustomColorList call success`() {
     val list = listOf(randomString)
     `when`(minimalColorHelper.getCustomColors()).thenReturn(Single.just(list))
 
@@ -874,7 +920,8 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return Single of list of string on getDefaultColorList call success`() {
+  @Test
+  fun `should return Single of list of string on getDefaultColorList call success`() {
     val list = listOf(randomString)
     `when`(minimalColorHelper.getDefaultColors()).thenReturn(Single.just(list))
 
@@ -884,23 +931,25 @@ class WallrDataRepositoryTest {
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should complete saveCustomMinimalColorList call success`() {
+  @Test
+  fun `should complete saveCustomMinimalColorList call success`() {
     val list = listOf(randomString)
     val gsonString = Gson().toJson(list)
     `when`(gsonProvider.getGson()).thenReturn(Gson())
     `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
-        gsonString))
+      gsonString))
         .thenReturn(true)
 
     wallrDataRepository.saveCustomMinimalColorList(list).test().assertComplete()
 
     verify(gsonProvider).getGson()
     verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
-        gsonString)
+      gsonString)
     verifyIoSchedulerSubscription()
   }
 
-  @Test fun `should return Single of list of strings on modifyColorList call success`() {
+  @Test
+  fun `should return Single of list of strings on modifyColorList call success`() {
     val list = listOf(randomString, randomString)
     val modifiedList = listOf(randomString)
     val gsonString = Gson().toJson(modifiedList)
@@ -908,20 +957,21 @@ class WallrDataRepositoryTest {
     `when`(gsonProvider.getGson()).thenReturn(Gson())
     `when`(minimalColorHelper.cacheDeletedItems(selectedIndices)).thenReturn(Completable.complete())
     `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
-        gsonString)).thenReturn(true)
+      gsonString)).thenReturn(true)
 
     wallrDataRepository.modifyColorList(list, selectedIndices).test().assertValue(modifiedList)
 
     verify(gsonProvider).getGson()
     verify(minimalColorHelper).cacheDeletedItems(selectedIndices)
     verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
-        gsonString)
+      gsonString)
     verify(sharedPrefs).setBoolean(IMAGE_PREFERENCE_NAME,
-        CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_PREFERENCE_TAG, true)
+      CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_PREFERENCE_TAG, true)
     verifyComputationSchedulerCall()
   }
 
-  @Test fun `should return error on modifyColorList call failure`() {
+  @Test
+  fun `should return error on modifyColorList call failure`() {
     val list = listOf(randomString, randomString)
     val modifiedList = listOf(randomString)
     val gsonString = Gson().toJson(modifiedList)
@@ -929,7 +979,7 @@ class WallrDataRepositoryTest {
     `when`(gsonProvider.getGson()).thenReturn(Gson())
     `when`(minimalColorHelper.cacheDeletedItems(selectedIndices)).thenReturn(Completable.complete())
     `when`(sharedPrefs.setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
-        gsonString)).thenReturn(false)
+      gsonString)).thenReturn(false)
 
     wallrDataRepository.modifyColorList(list, selectedIndices).test()
         .assertError(Exception::class.java)
@@ -937,7 +987,7 @@ class WallrDataRepositoryTest {
     verify(gsonProvider).getGson()
     verify(minimalColorHelper).cacheDeletedItems(selectedIndices)
     verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME, CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
-        gsonString)
+      gsonString)
     verifyComputationSchedulerCall()
   }
 
@@ -957,7 +1007,7 @@ class WallrDataRepositoryTest {
     verify(minimalColorHelper).getCustomColors()
     verify(minimalColorHelper).getDeletedItemsFromCache()
     verify(sharedPrefs).setString(IMAGE_PREFERENCE_NAME,
-        CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG, Gson().toJson(modifiedList))
+      CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG, Gson().toJson(modifiedList))
     verifyComputationSchedulerCall()
   }
 
@@ -976,7 +1026,8 @@ class WallrDataRepositoryTest {
     verifyComputationSchedulerCall()
   }
 
-  @Test fun `should return Single of uri on geShareableImageUri call success`() {
+  @Test
+  fun `should return Single of uri on geShareableImageUri call success`() {
     `when`(imageHandler.getShareableUri()).thenReturn(Single.just(mockUri))
 
     val result = wallrDataRepository.getShareableImageUri().test().values()[0]
@@ -1093,7 +1144,7 @@ class WallrDataRepositoryTest {
     val collectionsDatabaseImageEntityList =
         listOf(getCollectionsDatabaseImageEntity())
     `when`(imageHandler.getAllImagesInCollection()).thenReturn(
-        Single.just(collectionsDatabaseImageEntityList))
+      Single.just(collectionsDatabaseImageEntityList))
 
     val result = wallrDataRepository.getImagesInCollection().test().values()[0]
 
@@ -1108,7 +1159,7 @@ class WallrDataRepositoryTest {
   @Test
   fun `should return error image model on getImagesInCollection call failure`() {
     `when`(imageHandler.getAllImagesInCollection()).thenReturn(
-        Single.error(Exception()))
+      Single.error(Exception()))
 
     wallrDataRepository.getImagesInCollection().test().assertError(Exception::class.java)
 
@@ -1125,9 +1176,9 @@ class WallrDataRepositoryTest {
     `when`(collectionsDatabaseImageEntityMapper.mapFromEntity(collectionsDatabaseImageEntityList))
         .thenReturn(collectionsImageModelList)
     `when`(imageHandler.addExternalImageToCollection(mockUriList)).thenReturn(
-        Completable.complete())
+      Completable.complete())
     `when`(imageHandler.getAllImagesInCollection()).thenReturn(
-        Single.just(collectionsDatabaseImageEntityList))
+      Single.just(collectionsDatabaseImageEntityList))
 
     val result = wallrDataRepository.addImagesToCollection(mockUriList).test().values()[0]
 
@@ -1144,9 +1195,9 @@ class WallrDataRepositoryTest {
     val collectionsDatabaseImageEntityList =
         listOf(getCollectionsDatabaseImageEntity())
     `when`(imageHandler.addExternalImageToCollection(mockUriList)).thenReturn(
-        Completable.error(Exception()))
+      Completable.error(Exception()))
     `when`(imageHandler.getAllImagesInCollection()).thenReturn(
-        Single.just(collectionsDatabaseImageEntityList))
+      Single.just(collectionsDatabaseImageEntityList))
 
     wallrDataRepository.addImagesToCollection(mockUriList).test().assertError(Exception::class.java)
 
@@ -1165,7 +1216,7 @@ class WallrDataRepositoryTest {
     `when`(collectionsDatabaseImageEntityMapper.mapFromEntity(collectionDatabaseImageEntityList))
         .thenReturn(collectionImageModelList)
     `when`(imageHandler.reorderImagesInCollection(collectionDatabaseImageEntityList)).thenReturn(
-        Single.just(collectionDatabaseImageEntityList))
+      Single.just(collectionDatabaseImageEntityList))
 
     val result = wallrDataRepository.reorderImagesInCollectionDatabase(collectionImageModelList)
         .test().values()[0]
@@ -1185,7 +1236,7 @@ class WallrDataRepositoryTest {
     `when`(collectionsDatabaseImageEntityMapper.mapToEntity(collectionImagesModelList))
         .thenReturn(collectionDatabaseImageEntityList)
     `when`(imageHandler.reorderImagesInCollection(collectionDatabaseImageEntityList)).thenReturn(
-        Single.error(Exception()))
+      Single.error(Exception()))
 
     wallrDataRepository.reorderImagesInCollectionDatabase(collectionImagesModelList).test()
         .assertError(Exception::class.java)
@@ -1205,7 +1256,7 @@ class WallrDataRepositoryTest {
     `when`(collectionsDatabaseImageEntityMapper.mapFromEntity(collectionDatabaseImageEntityList))
         .thenReturn(collectionImageModelList)
     `when`(imageHandler.deleteImagesInCollection(collectionDatabaseImageEntityList)).thenReturn(
-        Single.just(collectionDatabaseImageEntityList))
+      Single.just(collectionDatabaseImageEntityList))
 
     val result = wallrDataRepository.deleteImageFromCollection(collectionImageModelList)
         .test().values()[0]
@@ -1225,7 +1276,7 @@ class WallrDataRepositoryTest {
     `when`(collectionsDatabaseImageEntityMapper.mapToEntity(collectionImagesModelList))
         .thenReturn(collectionDatabaseImageEntityList)
     `when`(imageHandler.deleteImagesInCollection(collectionDatabaseImageEntityList)).thenReturn(
-        Single.error(Exception()))
+      Single.error(Exception()))
 
     wallrDataRepository.deleteImageFromCollection(collectionImagesModelList).test()
         .assertError(Exception::class.java)
@@ -1238,45 +1289,45 @@ class WallrDataRepositoryTest {
   @Test
   fun `should return true on getAutomaticWallpaperChangerState call success as wallpaper changer is enabled`() {
     `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_STATE_PREFERENCE_TAG)).thenReturn(true)
+      AUTOMATIC_WALLPAPER_CHANGER_STATE_PREFERENCE_TAG)).thenReturn(true)
 
     assertTrue(wallrDataRepository.getAutomaticWallpaperChangerState())
 
     verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_STATE_PREFERENCE_TAG)
+      AUTOMATIC_WALLPAPER_CHANGER_STATE_PREFERENCE_TAG)
   }
 
   @Test
   fun `should return false on getAutomaticWallpaperChangerState call success as wallpaper changer is disabled`() {
     `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_STATE_PREFERENCE_TAG)).thenReturn(false)
+      AUTOMATIC_WALLPAPER_CHANGER_STATE_PREFERENCE_TAG)).thenReturn(false)
 
     assertFalse(wallrDataRepository.getAutomaticWallpaperChangerState())
 
     verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_STATE_PREFERENCE_TAG)
+      AUTOMATIC_WALLPAPER_CHANGER_STATE_PREFERENCE_TAG)
   }
 
   @Test
   fun `should return true on isCollectionReorderHintDisplayedBefore call success as hint was displayed earlier once`() {
     `when`(sharedPrefs.getBoolean(HINT_PREFERENCE_NAME,
-        COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG)).thenReturn(true)
+      COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG)).thenReturn(true)
 
     assertTrue(wallrDataRepository.isCollectionReorderHintDisplayedBefore())
 
     verify(sharedPrefs).getBoolean(HINT_PREFERENCE_NAME,
-        COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG)
+      COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG)
   }
 
   @Test
   fun `should return false on isCollectionReorderHintDisplayedBefore call success as hint was never displayed`() {
     `when`(sharedPrefs.getBoolean(HINT_PREFERENCE_NAME,
-        COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG)).thenReturn(false)
+      COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG)).thenReturn(false)
 
     assertFalse(wallrDataRepository.isCollectionReorderHintDisplayedBefore())
 
     verify(sharedPrefs).getBoolean(HINT_PREFERENCE_NAME,
-        COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG)
+      COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG)
   }
 
   @Test
@@ -1284,11 +1335,12 @@ class WallrDataRepositoryTest {
     wallrDataRepository.saveCollectionReorderHintShownState()
 
     verify(sharedPrefs).setBoolean(HINT_PREFERENCE_NAME,
-        COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG,
-        true)
+      COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG,
+      true)
   }
 
-  @Test fun `should return bitmap on getBitmapFromDatabaseImage call success`() {
+  @Test
+  fun `should return bitmap on getBitmapFromDatabaseImage call success`() {
     val collectionsImageModelList = listOf(getCollectionsImageModel())
     val collectionDatabaseImageEntityList =
         listOf(getCollectionsDatabaseImageEntity())
@@ -1314,10 +1366,10 @@ class WallrDataRepositoryTest {
     `when`(collectionsDatabaseImageEntityMapper.mapFromEntity(collectionDatabaseImageEntityList))
         .thenReturn(collectionImageModelList)
     `when`(imageHandler.convertAndCacheLowpolyImage(collectionDatabaseImageEntityList.first().path,
-        CRYSTALLIZED))
+      CRYSTALLIZED))
         .thenReturn(Completable.complete())
     `when`(imageHandler.addImageToCollections(collectionDatabaseImageEntityList.first().path,
-        CRYSTALLIZED)).thenReturn(Completable.complete())
+      CRYSTALLIZED)).thenReturn(Completable.complete())
     `when`(imageHandler.getAllImagesInCollection())
         .thenReturn(Single.just(collectionDatabaseImageEntityList))
 
@@ -1333,7 +1385,7 @@ class WallrDataRepositoryTest {
         .convertAndCacheLowpolyImage(collectionDatabaseImageEntityList.first().path, CRYSTALLIZED)
     inOrder.verify(imageHandler)
         .addImageToCollections(collectionDatabaseImageEntityList.first().path,
-            CRYSTALLIZED)
+          CRYSTALLIZED)
     inOrder.verify(imageHandler).getAllImagesInCollection()
     verifyIoSchedulerSubscription()
   }
@@ -1346,9 +1398,9 @@ class WallrDataRepositoryTest {
     `when`(collectionsDatabaseImageEntityMapper.mapToEntity(collectionImageModelList))
         .thenReturn(collectionDatabaseImageEntityList)
     `when`(imageHandler.convertAndCacheLowpolyImage(collectionDatabaseImageEntityList.first().path,
-        CRYSTALLIZED)).thenReturn(Completable.error(AlreadyPresentInCollectionException()))
+      CRYSTALLIZED)).thenReturn(Completable.error(AlreadyPresentInCollectionException()))
     `when`(imageHandler.addImageToCollections(collectionDatabaseImageEntityList.first().path,
-        CRYSTALLIZED)).thenReturn(Completable.complete())
+      CRYSTALLIZED)).thenReturn(Completable.complete())
     `when`(imageHandler.getAllImagesInCollection())
         .thenReturn(Single.just(collectionDatabaseImageEntityList))
 
@@ -1361,7 +1413,7 @@ class WallrDataRepositoryTest {
         .convertAndCacheLowpolyImage(collectionDatabaseImageEntityList.first().path, CRYSTALLIZED)
     inOrder.verify(imageHandler)
         .addImageToCollections(collectionDatabaseImageEntityList.first().path,
-            CRYSTALLIZED)
+          CRYSTALLIZED)
     inOrder.verify(imageHandler).getAllImagesInCollection()
     verifyIoSchedulerSubscription()
   }
@@ -1370,42 +1422,44 @@ class WallrDataRepositoryTest {
   fun `should return interval at which wallpaper changer runs on getWallpaperChangerInterval call success`() {
     val interval = Random().nextLong()
     `when`(sharedPrefs.getLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_PREFERENCE_TAG)).thenReturn(interval)
+      AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_PREFERENCE_TAG)).thenReturn(interval)
 
     assertEquals(interval, wallrDataRepository.getWallpaperChangerInterval())
 
     verify(sharedPrefs).getLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_PREFERENCE_TAG)
+      AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_PREFERENCE_TAG)
   }
 
-  @Test fun `should set wallpaper changer interval on setWallpaperChangerInterval call success`() {
+  @Test
+  fun `should set wallpaper changer interval on setWallpaperChangerInterval call success`() {
     val interval = Random().nextLong()
 
     wallrDataRepository.setWallpaperChangerInterval(interval)
 
     verify(sharedPrefs).setLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_PREFERENCE_TAG, interval)
+      AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_PREFERENCE_TAG, interval)
   }
 
   @Test
   fun `should return uid on getLastUsedWallpaperUid call success`() {
     val uid = Random().nextLong()
     `when`(sharedPrefs.getLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_PREFERENCE_TAG)).thenReturn(uid)
+      AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_PREFERENCE_TAG)).thenReturn(uid)
 
     assertEquals(uid, wallrDataRepository.getLastUsedWallpaperUid())
 
     verify(sharedPrefs).getLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_PREFERENCE_TAG)
+      AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_PREFERENCE_TAG)
   }
 
-  @Test fun `should save uid on setLastUsedWallpaperUid call success`() {
+  @Test
+  fun `should save uid on setLastUsedWallpaperUid call success`() {
     val uid = Random().nextLong()
 
     wallrDataRepository.setLastUsedWallpaperUid(uid)
 
     verify(sharedPrefs).setLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_PREFERENCE_TAG, uid)
+      AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_PREFERENCE_TAG, uid)
   }
 
   @Test
@@ -1413,7 +1467,7 @@ class WallrDataRepositoryTest {
     wallrDataRepository.saveAutomaticWallpaperChangerEnabledState()
 
     verify(sharedPrefs).setBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG, true)
+      AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG, true)
   }
 
   @Test
@@ -1421,79 +1475,84 @@ class WallrDataRepositoryTest {
     wallrDataRepository.saveAutomaticWallpaperChangerDisabledState()
 
     verify(sharedPrefs).setBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG,
-        false)
+      AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG,
+      false)
   }
 
-  @Test fun `should return true on wasAutomaticWallpaperChangerEnabled call success`() {
+  @Test
+  fun `should return true on wasAutomaticWallpaperChangerEnabled call success`() {
     `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG))
+      AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG))
         .thenReturn(true)
 
     assertTrue(wallrDataRepository.wasAutomaticWallpaperChangerEnabled())
 
     verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG)
+      AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG)
   }
 
-  @Test fun `should return false on wasAutomaticWallpaperChangerEnabled call success`() {
+  @Test
+  fun `should return false on wasAutomaticWallpaperChangerEnabled call success`() {
     `when`(sharedPrefs.getBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG))
+      AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG))
         .thenReturn(false)
 
     assertFalse(wallrDataRepository.wasAutomaticWallpaperChangerEnabled())
 
     verify(sharedPrefs).getBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG)
+      AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG)
   }
 
-  @Test fun `should return timestamp on getLastWallpaperChangeTimeStamp call success`() {
+  @Test
+  fun `should return timestamp on getLastWallpaperChangeTimeStamp call success`() {
     val timeStamp = System.currentTimeMillis()
     `when`(sharedPrefs.getLong(IMAGE_PREFERENCE_NAME,
-        LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG)).thenReturn(timeStamp)
+      LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG)).thenReturn(timeStamp)
 
     assertEquals(timeStamp, wallrDataRepository.getLastWallpaperChangeTimeStamp())
 
     verify(sharedPrefs).getLong(IMAGE_PREFERENCE_NAME,
-        LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG)
+      LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG)
   }
 
-  @Test fun `should save timestamp on setLastWallpaperChangeTimeStamp call success`() {
+  @Test
+  fun `should save timestamp on setLastWallpaperChangeTimeStamp call success`() {
     val timeStamp = System.currentTimeMillis()
 
     wallrDataRepository.updateLastWallpaperChangeTimeStamp(timeStamp)
 
     verify(sharedPrefs).setLong(IMAGE_PREFERENCE_NAME,
-        LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG, timeStamp)
+      LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG, timeStamp)
   }
 
-  @After fun tearDown() {
+  @After
+  fun tearDown() {
     verifyNoMoreInteractions(
-        executionThread,
-        sharedPrefs,
-        remoteAuthServiceFactory,
-        unsplashClientFactory,
-        firebaseDatabaseHelper,
-        databaseReference,
-        firebaseDatabase,
-        urlShortener,
-        imageHandler,
-        fileHandler,
-        downloadHelper,
-        minimalColorHelper,
-        mockBitmap,
-        mockUri,
-        gsonProvider,
-        collectionsDatabaseImageEntityMapper,
-        databaseImageTypeMapper,
-        unsplashPictureEntityMapper,
-        firebasePictureEntityMapper)
+      executionThread,
+      sharedPrefs,
+      remoteAuthServiceFactory,
+      unsplashClientFactory,
+      firebaseDatabaseHelper,
+      databaseReference,
+      firebaseDatabase,
+      urlShortener,
+      imageHandler,
+      fileHandler,
+      downloadHelper,
+      minimalColorHelper,
+      mockBitmap,
+      mockUri,
+      gsonProvider,
+      collectionsDatabaseImageEntityMapper,
+      databaseImageTypeMapper,
+      unsplashPictureEntityMapper,
+      firebasePictureEntityMapper)
   }
 
   private fun stubFirebaseDatabaseNode(childPath: String) {
     `when`(firebaseDatabaseHelper.getDatabase()).thenReturn(firebaseDatabase)
     `when`(firebaseDatabase.getReference(FIREBASE_DATABASE_PATH)).thenReturn(
-        databaseReference)
+      databaseReference)
     `when`(databaseReference.child(childPath)).thenReturn(databaseReference)
   }
 

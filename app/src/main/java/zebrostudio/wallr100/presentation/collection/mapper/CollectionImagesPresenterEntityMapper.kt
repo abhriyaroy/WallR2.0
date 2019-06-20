@@ -13,11 +13,11 @@ class CollectionsImagesPresenterEntityMapperImpl : CollectionImagesPresenterEnti
   override fun mapToPresenterEntity(modelList: List<CollectionsImageModel>): List<CollectionsPresenterEntity> {
     return modelList.map {
       CollectionsPresenterEntity(
-          it.uid,
-          it.name,
-          it.path,
-          it.data,
-          it.type
+        it.uid,
+        it.name,
+        it.path,
+        it.data,
+        it.type
       )
     }.toList()
   }
@@ -25,22 +25,22 @@ class CollectionsImagesPresenterEntityMapperImpl : CollectionImagesPresenterEnti
   override fun mapFromPresenterEntity(presenterEntityList: List<CollectionsPresenterEntity>): List<CollectionsImageModel> {
     return presenterEntityList.map {
       CollectionsImageModel(
-          it.uid,
-          it.name,
-          it.path,
-          it.data,
-          it.type
+        it.uid,
+        it.name,
+        it.path,
+        it.data,
+        it.type
       )
     }.toList()
   }
 
   override fun mapFromPresenterEntity(presenterEntity: CollectionsPresenterEntity): List<CollectionsImageModel> {
     return listOf(CollectionsImageModel(
-        presenterEntity.uid,
-        presenterEntity.name,
-        presenterEntity.path,
-        presenterEntity.data,
-        presenterEntity.type
+      presenterEntity.uid,
+      presenterEntity.name,
+      presenterEntity.path,
+      presenterEntity.data,
+      presenterEntity.type
     ))
   }
 }

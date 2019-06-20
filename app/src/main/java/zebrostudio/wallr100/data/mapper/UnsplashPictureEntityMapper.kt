@@ -14,20 +14,20 @@ class UnsplashPictureEntityMapperImpl : UnsplashPictureEntityMapper {
   override fun mapFromEntity(unsplashPicturesEntity: List<UnsplashPicturesEntity>) =
       unsplashPicturesEntity.map {
         SearchPicturesModel(
-            it.id,
-            it.createdAt,
-            it.imageWidth,
-            it.imageHeight,
-            it.paletteColor,
-            UserModel(it.userEntity.name,
-                it.userEntity.profileImage.mediumImageUrl),
-            it.likes,
-            it.likedByUser,
-            UrlModel(
-                it.imageQualityUrlEntity.rawImageLink,
-                it.imageQualityUrlEntity.largeImageLink,
-                it.imageQualityUrlEntity.regularImageLink,
-                it.imageQualityUrlEntity.smallImageLink,
-                it.imageQualityUrlEntity.thumbImageLink))
+          it.id,
+          it.createdAt,
+          it.imageWidth,
+          it.imageHeight,
+          it.paletteColor,
+          UserModel(it.userEntity.name,
+            it.userEntity.profileImage.mediumImageUrl),
+          it.likes,
+          it.likedByUser,
+          UrlModel(
+            it.imageQualityUrlEntity.rawImageLink,
+            it.imageQualityUrlEntity.largeImageLink,
+            it.imageQualityUrlEntity.regularImageLink,
+            it.imageQualityUrlEntity.smallImageLink,
+            it.imageQualityUrlEntity.thumbImageLink))
       }.toList()
 }

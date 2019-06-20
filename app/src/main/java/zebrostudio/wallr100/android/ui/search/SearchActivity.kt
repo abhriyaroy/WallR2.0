@@ -13,27 +13,11 @@ import com.uber.autodispose.ScopeProvider
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import dagger.android.AndroidInjection
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
-import kotlinx.android.synthetic.main.activity_search.SearchActivitySpinkitView
-import kotlinx.android.synthetic.main.activity_search.bottomSpinkitView
-import kotlinx.android.synthetic.main.activity_search.infoImageView
-import kotlinx.android.synthetic.main.activity_search.infoTextFirstLine
-import kotlinx.android.synthetic.main.activity_search.infoTextSecondLine
-import kotlinx.android.synthetic.main.activity_search.recyclerView
-import kotlinx.android.synthetic.main.activity_search.retryButton
-import kotlinx.android.synthetic.main.activity_search.searchAppBar
-import kotlinx.android.synthetic.main.activity_search.searchView
+import kotlinx.android.synthetic.main.activity_search.*
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.ImageLoader
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter
-import zebrostudio.wallr100.android.utils.EndlessScrollListener
-import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
-import zebrostudio.wallr100.android.utils.checkDataConnection
-import zebrostudio.wallr100.android.utils.errorToast
-import zebrostudio.wallr100.android.utils.gone
-import zebrostudio.wallr100.android.utils.integerRes
-import zebrostudio.wallr100.android.utils.stringRes
-import zebrostudio.wallr100.android.utils.visible
-import zebrostudio.wallr100.android.utils.withDelayOnMain
+import zebrostudio.wallr100.android.utils.*
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.search.SearchContract
@@ -47,7 +31,8 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
   internal lateinit var presenter: SearchContract.SearchPresenter
   @Inject
   internal lateinit var imageRecyclerViewPresenter: ImageRecyclerItemContract.ImageRecyclerViewPresenter
-  @Inject internal lateinit var imageLoader: ImageLoader
+  @Inject
+  internal lateinit var imageLoader: ImageLoader
 
   private val activityFinishDelay = 300
   private val emptyPendingTransitionAnimation = 0
@@ -219,13 +204,13 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
 
   private fun initAppbar() {
     searchAppBar.addOnOffsetChangedListener(
-        AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-          if (Math.abs(verticalOffset) == appBarLayout.totalScrollRange) {
-            appBarIsCollapsed = true
-          } else if (verticalOffset == 0) {
-            appBarIsCollapsed = false
-          }
-        })
+      AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+        if (Math.abs(verticalOffset) == appBarLayout.totalScrollRange) {
+          appBarIsCollapsed = true
+        } else if (verticalOffset == 0) {
+          appBarIsCollapsed = false
+        }
+      })
     searchView.backButton.setOnClickListener { onBackPressed() }
     searchView.setVoiceSearch(true)
     searchView.showSearch()
@@ -244,16 +229,16 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
 
   private fun initRecyclerView() {
     val layoutManager =
-      GridLayoutManager(this.baseContext, integerRes(R.integer.recycler_view_span_count))
+        GridLayoutManager(this.baseContext, integerRes(R.integer.recycler_view_span_count))
     recyclerView.layoutManager = layoutManager
     recyclerviewAdapter = ImageAdapter(imageRecyclerViewPresenter, imageLoader)
     val scaleInAdapter = ScaleInAnimationAdapter(recyclerviewAdapter)
     scaleInAdapter.setDuration(MILLISECONDS.toMillis(500).toInt())
     recyclerView.addItemDecoration(
-        RecyclerViewItemDecorator(
-            integerRes(R.integer.recycler_view_grid_spacing_px),
-            integerRes(R.integer.recycler_view_grid_size)
-        )
+      RecyclerViewItemDecorator(
+        integerRes(R.integer.recycler_view_grid_spacing_px),
+        integerRes(R.integer.recycler_view_grid_size)
+      )
     )
     recyclerView.adapter = scaleInAdapter
     imageRecyclerViewPresenter.setListType(SEARCH)

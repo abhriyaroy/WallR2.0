@@ -17,9 +17,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
-import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.BITMAP_CACHE
-import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.CRYSTALLIZED_BITMAP_CACHE
-import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.REMOTE
+import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.*
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.presentation.expandimage.FullScreenImageContract.FullScreenImageView
@@ -30,12 +28,17 @@ import java.util.UUID.randomUUID
 @RunWith(MockitoJUnitRunner::class)
 class FullScreenImagePresenterImplTest {
 
-  @get:Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
+  @get:Rule
+  val trampolineSchedulerRule = TrampolineSchedulerRule()
 
-  @Mock private lateinit var imageOptionsUseCase: ImageOptionsUseCase
-  @Mock private lateinit var postExecutionThread: PostExecutionThread
-  @Mock private lateinit var fullScreenImageView: FullScreenImageView
-  @Mock private lateinit var mockBitmap: Bitmap
+  @Mock
+  private lateinit var imageOptionsUseCase: ImageOptionsUseCase
+  @Mock
+  private lateinit var postExecutionThread: PostExecutionThread
+  @Mock
+  private lateinit var fullScreenImageView: FullScreenImageView
+  @Mock
+  private lateinit var mockBitmap: Bitmap
   private lateinit var presenter: FullScreenImagePresenterImpl
   private lateinit var testScopeProvider: TestLifecycleScopeProvider
   private var randomString = randomUUID().toString()
@@ -46,7 +49,7 @@ class FullScreenImagePresenterImplTest {
         FullScreenImagePresenterImpl(imageOptionsUseCase, postExecutionThread)
     presenter.attachView(fullScreenImageView)
     testScopeProvider = TestLifecycleScopeProvider.createInitial(
-        TestLifecycleScopeProvider.TestLifecycle.STARTED)
+      TestLifecycleScopeProvider.TestLifecycle.STARTED)
     `when`(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 
@@ -87,7 +90,8 @@ class FullScreenImagePresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should show low quality image and loader on setLowQualityImageLink call success`() {
+  @Test
+  fun `should show low quality image and loader on setLowQualityImageLink call success`() {
     presenter.setImageLoadingType(REMOTE.ordinal)
 
     presenter.setLowQualityImageLink(randomString)
@@ -97,7 +101,8 @@ class FullScreenImagePresenterImplTest {
     verify(fullScreenImageView).showLoader()
   }
 
-  @Test fun `should start loading high quality image on setHighQualityImageLink call success`() {
+  @Test
+  fun `should start loading high quality image on setHighQualityImageLink call success`() {
     presenter.setImageLoadingType(REMOTE.ordinal)
 
     presenter.setHighQualityImageLink(randomString)
@@ -150,13 +155,15 @@ class FullScreenImagePresenterImplTest {
     verify(fullScreenImageView).hideStatusAndNavBar()
   }
 
-  @Test fun `should set isInFullScreen to false on notifyStatusBarAndNavBarShown call success`() {
+  @Test
+  fun `should set isInFullScreen to false on notifyStatusBarAndNavBarShown call success`() {
     presenter.notifyStatusBarAndNavBarShown()
 
     assertFalse(presenter.isInFullScreenMode)
   }
 
-  @Test fun `should set isInFullScreen to true on notifyStatusBarAndNavBarHidden call success`() {
+  @Test
+  fun `should set isInFullScreen to true on notifyStatusBarAndNavBarHidden call success`() {
     presenter.notifyStatusBarAndNavBarHidden()
 
     assertTrue(presenter.isInFullScreenMode)
@@ -165,7 +172,7 @@ class FullScreenImagePresenterImplTest {
   @After
   fun tearDown() {
     verifyNoMoreInteractions(fullScreenImageView, imageOptionsUseCase, mockBitmap,
-        postExecutionThread)
+      postExecutionThread)
     presenter.detachView()
   }
 

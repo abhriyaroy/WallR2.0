@@ -16,15 +16,18 @@ import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 @RunWith(MockitoJUnitRunner::class)
 class UserPremiumStatusUseCaseTest {
 
-  @Mock private lateinit var wallrRepository: WallrRepository
+  @Mock
+  private lateinit var wallrRepository: WallrRepository
 
   private lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
 
-  @Before fun setup() {
+  @Before
+  fun setup() {
     userPremiumStatusUseCase = UserPremiumStatusInteractor(wallrRepository)
   }
 
-  @Test fun `should return true on updateUserPurchaseStatus call success`() {
+  @Test
+  fun `should return true on updateUserPurchaseStatus call success`() {
     `when`(wallrRepository.updateUserPurchaseStatus()).thenReturn(true)
 
     assertEquals(true, userPremiumStatusUseCase.updateUserPurchaseStatus())
@@ -32,7 +35,8 @@ class UserPremiumStatusUseCaseTest {
     verify(wallrRepository).updateUserPurchaseStatus()
   }
 
-  @Test fun `should return false on updateUserPurchaseStatus call failure`() {
+  @Test
+  fun `should return false on updateUserPurchaseStatus call failure`() {
     `when`(wallrRepository.updateUserPurchaseStatus()).thenReturn(false)
 
     assertEquals(false, userPremiumStatusUseCase.updateUserPurchaseStatus())
@@ -40,14 +44,16 @@ class UserPremiumStatusUseCaseTest {
     verify(wallrRepository).updateUserPurchaseStatus()
   }
 
-  @Test fun `should call isUserPremium to check user status`() {
+  @Test
+  fun `should call isUserPremium to check user status`() {
     userPremiumStatusUseCase.isUserPremium()
 
     verify(wallrRepository).isUserPremium()
     verifyNoMoreInteractions(wallrRepository)
   }
 
-  @Test fun `should return true if user is premium`() {
+  @Test
+  fun `should return true if user is premium`() {
     `when`(wallrRepository.isUserPremium()).thenReturn(true)
 
     assertEquals(true, userPremiumStatusUseCase.isUserPremium())
@@ -55,7 +61,8 @@ class UserPremiumStatusUseCaseTest {
     verify(wallrRepository).isUserPremium()
   }
 
-  @Test fun `should return false if user not premium`() {
+  @Test
+  fun `should return false if user not premium`() {
     `when`(wallrRepository.isUserPremium()).thenReturn(false)
 
     assertEquals(false, userPremiumStatusUseCase.isUserPremium())
@@ -63,7 +70,8 @@ class UserPremiumStatusUseCaseTest {
     verify(wallrRepository).isUserPremium()
   }
 
-  @After fun tearDown() {
+  @After
+  fun tearDown() {
     verifyNoMoreInteractions(wallrRepository)
   }
 }

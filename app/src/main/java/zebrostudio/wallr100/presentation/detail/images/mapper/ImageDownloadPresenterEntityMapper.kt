@@ -7,7 +7,7 @@ class ImageDownloadPresenterEntityMapper {
 
   fun mapToPresenterEntity(imageDownloadModel: ImageDownloadModel): ImageDownloadPresenterEntity {
     return ImageDownloadPresenterEntity(
-        imageDownloadModel.progress,
-        imageDownloadModel.imageBitmap)
+      imageDownloadModel.progress,
+      imageDownloadModel.imageBitmap)
   }
 }

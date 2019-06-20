@@ -14,9 +14,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
-import zebrostudio.wallr100.android.utils.FragmentTag.CATEGORIES_TAG
-import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
-import zebrostudio.wallr100.android.utils.FragmentTag.TOP_PICKS_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.*
 import zebrostudio.wallr100.domain.datafactory.ImageModelFactory.getImageModel
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
@@ -30,23 +28,28 @@ import java.util.concurrent.TimeoutException
 @RunWith(MockitoJUnitRunner::class)
 class ImageListPresenterImplTest {
 
-  @get:Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
+  @get:Rule
+  val trampolineSchedulerRule = TrampolineSchedulerRule()
 
-  @Mock lateinit var postExecutionThread: PostExecutionThread
-  @Mock lateinit var wallpaperImagesUseCase: WallpaperImagesUseCase
-  @Mock lateinit var imageListView: ImageListContract.ImageListView
+  @Mock
+  lateinit var postExecutionThread: PostExecutionThread
+  @Mock
+  lateinit var wallpaperImagesUseCase: WallpaperImagesUseCase
+  @Mock
+  lateinit var imageListView: ImageListContract.ImageListView
   private lateinit var imagePresenterEntityMapper: ImagePresenterEntityMapper
   private lateinit var imageListPresenter: ImageListPresenterImpl
   private lateinit var testScopeProvider: TestLifecycleScopeProvider
 
-  @Before fun setup() {
+  @Before
+  fun setup() {
     imagePresenterEntityMapper = ImagePresenterEntityMapper()
     imageListPresenter =
         ImageListPresenterImpl(wallpaperImagesUseCase, imagePresenterEntityMapper,
-            postExecutionThread)
+          postExecutionThread)
     imageListPresenter.attachView(imageListView)
     testScopeProvider = TestLifecycleScopeProvider.createInitial(
-        TestLifecycleScopeProvider.TestLifecycle.STARTED)
+      TestLifecycleScopeProvider.TestLifecycle.STARTED)
 
     `when`(imageListView.getScope()).thenReturn(testScopeProvider)
     `when`(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
@@ -335,7 +338,7 @@ class ImageListPresenterImplTest {
   @Test
   fun `should show no internet message view on fetchImages call without refresh failure due to timeout`() {
     `when`(wallpaperImagesUseCase.technologyImagesSingle()).thenReturn(
-        Single.error(TimeoutException()))
+      Single.error(TimeoutException()))
     imageListPresenter.setImageListType(CATEGORIES_TAG, 5)
 
     imageListPresenter.fetchImages(false)
@@ -353,7 +356,7 @@ class ImageListPresenterImplTest {
   @Test
   fun `should show no internet message view on fetchImages call with refresh failure due to timeout`() {
     `when`(wallpaperImagesUseCase.technologyImagesSingle()).thenReturn(
-        Single.error(TimeoutException()))
+      Single.error(TimeoutException()))
     imageListPresenter.setImageListType(CATEGORIES_TAG, 5)
 
     imageListPresenter.fetchImages(true)
@@ -388,7 +391,8 @@ class ImageListPresenterImplTest {
     verify(imageListView).getScope()
   }
 
-  @After fun tearDown() {
+  @After
+  fun tearDown() {
     verifyNoMoreInteractions(wallpaperImagesUseCase, imageListView, postExecutionThread)
     imageListPresenter.detachView()
   }

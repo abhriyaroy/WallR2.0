@@ -19,8 +19,8 @@ class BuyProModule {
     userPremiumStatusUseCase: UserPremiumStatusUseCase,
     postExecutionThread: PostExecutionThread
   ): BuyProPresenter = BuyProPresenterImpl(
-      authenticatePurchaseUseCase,
-      userPremiumStatusUseCase,
-      postExecutionThread)
+    authenticatePurchaseUseCase,
+    userPremiumStatusUseCase,
+    postExecutionThread)
 
 }

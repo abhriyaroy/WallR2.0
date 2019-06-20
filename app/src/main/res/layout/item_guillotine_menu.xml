@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/minimal_group_guillotine_menu"
-    style="@style/GuillotineItemLayoutTheme"
-    android:layout_centerHorizontal="true">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/minimal_group_guillotine_menu"
+  style="@style/GuillotineItemLayoutTheme"
+  android:layout_centerHorizontal="true">
 
   <ImageView
-      android:id="@+id/imageviewGuillotineMenuItem"
-      style="@style/GuillotineItemImageViewTheme"
-      android:padding="@dimen/guillotine_menu_imageview_padding"
-      android:layout_gravity="center"/>
+    android:id="@+id/imageviewGuillotineMenuItem"
+    style="@style/GuillotineItemImageViewTheme"
+    android:layout_gravity="center"
+    android:padding="@dimen/guillotine_menu_imageview_padding" />
 
   <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-      android:id="@+id/textviewGuillotineMenuItem"
-      style="@style/GuillotineItemTextViewTheme"
-      android:layout_gravity="center"/>
+    android:id="@+id/textviewGuillotineMenuItem"
+    style="@style/GuillotineItemTextViewTheme"
+    android:layout_gravity="center" />
 
 </LinearLayout>

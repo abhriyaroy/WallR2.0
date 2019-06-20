@@ -11,10 +11,10 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
   signingConfigs {
     release {
-        keyAlias keystoreProperties['keyAlias']
-        keyPassword keystoreProperties['keyPassword']
-        storeFile file(keystoreProperties['storeFile'])
-        storePassword keystoreProperties['storePassword']
+      keyAlias keystoreProperties['keyAlias']
+      keyPassword keystoreProperties['keyPassword']
+      storeFile file(keystoreProperties['storeFile'])
+      storePassword keystoreProperties['storePassword']
     }
   }
   compileSdkVersion COMPILE_SDK_VERSION
@@ -28,8 +28,8 @@ android {
     versionCode APP_VERSION
     versionName APP_VERSION_NAME
 
-    manifestPlaceholders = [onesignal_app_id: "ff94f0fe-e700-4b66-9f26-5408fca95297",
-        onesignal_google_project_number: "REMOTE"]
+    manifestPlaceholders = [onesignal_app_id               : "ff94f0fe-e700-4b66-9f26-5408fca95297",
+                            onesignal_google_project_number: "REMOTE"]
     signingConfig signingConfigs.release
   }
   buildTypes {

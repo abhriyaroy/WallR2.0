@@ -15,22 +15,25 @@ import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.domain.interactor.MinimalImagesInteractor
 import zebrostudio.wallr100.domain.interactor.MinimalImagesUseCase
 import zebrostudio.wallr100.domain.model.RestoreColorsModel
-import java.util.TreeMap
+import java.util.*
 import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class MinimalImagesUseCaseTest {
 
-  @Mock private lateinit var wallrRepository: WallrRepository
+  @Mock
+  private lateinit var wallrRepository: WallrRepository
   private lateinit var minimalImagesUseCase: MinimalImagesUseCase
   private val randomString = randomUUID().toString()
   private val randomInt = Math.random().toInt()
 
-  @Before fun setup() {
+  @Before
+  fun setup() {
     minimalImagesUseCase = MinimalImagesInteractor(wallrRepository)
   }
 
-  @Test fun `should return true on isCustomColorListPresent call success`() {
+  @Test
+  fun `should return true on isCustomColorListPresent call success`() {
     `when`(wallrRepository.isCustomMinimalColorListPresent()).thenReturn(true)
 
     assertTrue(minimalImagesUseCase.isCustomColorListPresent())
@@ -38,7 +41,8 @@ class MinimalImagesUseCaseTest {
     verify(wallrRepository).isCustomMinimalColorListPresent()
   }
 
-  @Test fun `should return single of list of string on getDefaultColors call success`() {
+  @Test
+  fun `should return single of list of string on getDefaultColors call success`() {
     val list = listOf(randomString)
     `when`(wallrRepository.getDefaultMinimalColorList()).thenReturn(Single.just(list))
 
@@ -47,7 +51,8 @@ class MinimalImagesUseCaseTest {
     verify(wallrRepository).getDefaultMinimalColorList()
   }
 
-  @Test fun `should return error on getDefaultColors call failure`() {
+  @Test
+  fun `should return error on getDefaultColors call failure`() {
     `when`(wallrRepository.getDefaultMinimalColorList()).thenReturn(Single.error(Exception()))
 
     minimalImagesUseCase.getDefaultColors().test().assertError(Exception::class.java)
@@ -55,7 +60,8 @@ class MinimalImagesUseCaseTest {
     verify(wallrRepository).getDefaultMinimalColorList()
   }
 
-  @Test fun `should return single of list of string on getCustomColors call success`() {
+  @Test
+  fun `should return single of list of string on getCustomColors call success`() {
     val list = listOf(randomString)
     `when`(wallrRepository.getCustomMinimalColorList()).thenReturn(Single.just(list))
 
@@ -64,7 +70,8 @@ class MinimalImagesUseCaseTest {
     verify(wallrRepository).getCustomMinimalColorList()
   }
 
-  @Test fun `should return error on getCustomColors call failure`() {
+  @Test
+  fun `should return error on getCustomColors call failure`() {
     `when`(wallrRepository.getCustomMinimalColorList()).thenReturn(Single.error(Exception()))
 
     minimalImagesUseCase.getCustomColors().test().assertError(Exception::class.java)
@@ -72,7 +79,8 @@ class MinimalImagesUseCaseTest {
     verify(wallrRepository).getCustomMinimalColorList()
   }
 
-  @Test fun `should return single of list of string on modifyColors call success`() {
+  @Test
+  fun `should return single of list of string on modifyColors call success`() {
     val list = listOf(randomString)
     val map = hashMapOf(Pair(randomInt, randomString))
     `when`(wallrRepository.modifyColorList(list, map)).thenReturn(Single.just(list))
@@ -82,7 +90,8 @@ class MinimalImagesUseCaseTest {
     verify(wallrRepository).modifyColorList(list, map)
   }
 
-  @Test fun `should return error on modifyColors call failure`() {
+  @Test
+  fun `should return error on modifyColors call failure`() {
     val list = listOf(randomString)
     val map = hashMapOf(Pair(randomInt, randomString))
     `when`(wallrRepository.modifyColorList(list, map)).thenReturn(Single.error(Exception()))
@@ -92,7 +101,8 @@ class MinimalImagesUseCaseTest {
     verify(wallrRepository).modifyColorList(list, map)
   }
 
-  @Test fun `should complete on addCustomColor call success`() {
+  @Test
+  fun `should complete on addCustomColor call success`() {
     val list = listOf(randomString)
     `when`(wallrRepository.saveCustomMinimalColorList(list)).thenReturn(Completable.complete())
 
@@ -101,17 +111,19 @@ class MinimalImagesUseCaseTest {
     verify(wallrRepository).saveCustomMinimalColorList(list)
   }
 
-  @Test fun `should return error on addCustomColor call failure`() {
+  @Test
+  fun `should return error on addCustomColor call failure`() {
     val list = listOf(randomString)
     `when`(wallrRepository.saveCustomMinimalColorList(list)).thenReturn(
-        Completable.error(Exception()))
+      Completable.error(Exception()))
 
     minimalImagesUseCase.addCustomColor(list).test().assertError(Exception::class.java)
 
     verify(wallrRepository).saveCustomMinimalColorList(list)
   }
 
-  @Test fun `should return single of RestoreColorModel on restoreColors call success`() {
+  @Test
+  fun `should return single of RestoreColorModel on restoreColors call success`() {
     val list = listOf(randomString)
     val map = hashMapOf(Pair(randomInt, randomString))
     val restoreColorModel = RestoreColorsModel(list, TreeMap(map))
@@ -122,7 +134,8 @@ class MinimalImagesUseCaseTest {
     verify(wallrRepository).restoreDeletedColors()
   }
 
-  @Test fun `should return error on restoreColors call failure`() {
+  @Test
+  fun `should return error on restoreColors call failure`() {
     `when`(wallrRepository.restoreDeletedColors()).thenReturn(Single.error(Exception()))
 
     minimalImagesUseCase.restoreColors().test().assertError(Exception::class.java)
@@ -130,7 +143,8 @@ class MinimalImagesUseCaseTest {
     verify(wallrRepository).restoreDeletedColors()
   }
 
-  @After fun tearDown() {
+  @After
+  fun tearDown() {
     verifyNoMoreInteractions(wallrRepository)
   }
 

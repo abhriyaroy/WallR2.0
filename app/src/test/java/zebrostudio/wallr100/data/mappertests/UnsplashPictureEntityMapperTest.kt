@@ -14,14 +14,15 @@ import zebrostudio.wallr100.data.model.unsplashmodel.UserEntity
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
 import zebrostudio.wallr100.domain.model.searchpictures.UrlModel
 import zebrostudio.wallr100.domain.model.searchpictures.UserModel
-import java.util.UUID
+import java.util.*
 
 @RunWith(MockitoJUnitRunner::class)
 class UnsplashPictureEntityMapperTest {
 
   private lateinit var unsplashPictureEntityMapper: UnsplashPictureEntityMapper
 
-  @Before fun setup() {
+  @Before
+  fun setup() {
     unsplashPictureEntityMapper = UnsplashPictureEntityMapperImpl()
   }
 
@@ -43,28 +44,28 @@ class UnsplashPictureEntityMapperTest {
     val color = UUID.randomUUID().toString()
 
     val unspalshPicturesEntity = UnsplashPicturesEntity(
-        id,
-        createdAt,
-        imageWidth,
-        imageHeight,
-        color,
-        UserEntity(authorName, ProfileImage(authorProfileImageUrl)),
-        likes,
-        likedByUser,
-        UrlEntity(imageRawLink, imageLargeLink, imageMediumLink, imageSmallLink, imageThumbLink))
+      id,
+      createdAt,
+      imageWidth,
+      imageHeight,
+      color,
+      UserEntity(authorName, ProfileImage(authorProfileImageUrl)),
+      likes,
+      likedByUser,
+      UrlEntity(imageRawLink, imageLargeLink, imageMediumLink, imageSmallLink, imageThumbLink))
 
     val searchPicturesModel = SearchPicturesModel(id,
-        createdAt,
-        imageWidth,
-        imageHeight,
-        color,
-        UserModel(authorName, authorProfileImageUrl),
-        likes,
-        likedByUser,
-        UrlModel(imageRawLink, imageLargeLink, imageMediumLink, imageSmallLink, imageThumbLink))
+      createdAt,
+      imageWidth,
+      imageHeight,
+      color,
+      UserModel(authorName, authorProfileImageUrl),
+      likes,
+      likedByUser,
+      UrlModel(imageRawLink, imageLargeLink, imageMediumLink, imageSmallLink, imageThumbLink))
 
     Assert.assertEquals(listOf(searchPicturesModel),
-        unsplashPictureEntityMapper.mapFromEntity(listOf(unspalshPicturesEntity)))
+      unsplashPictureEntityMapper.mapFromEntity(listOf(unspalshPicturesEntity)))
   }
 
 }

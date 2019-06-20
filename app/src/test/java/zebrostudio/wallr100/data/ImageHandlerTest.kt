@@ -16,10 +16,14 @@ import zebrostudio.wallr100.data.database.DatabaseHelper
 @RunWith(MockitoJUnitRunner::class)
 class ImageHandlerTest {
 
-  @Mock lateinit var fileHandler: FileHandler
-  @Mock lateinit var context: Context
-  @Mock lateinit var databaseHelper: DatabaseHelper
-  @Mock lateinit var wallpaperSetter: WallpaperSetter
+  @Mock
+  lateinit var fileHandler: FileHandler
+  @Mock
+  lateinit var context: Context
+  @Mock
+  lateinit var databaseHelper: DatabaseHelper
+  @Mock
+  lateinit var wallpaperSetter: WallpaperSetter
 
   private lateinit var imageHandlerImpl: ImageHandlerImpl
 
@@ -28,19 +32,22 @@ class ImageHandlerTest {
     imageHandlerImpl = ImageHandlerImpl(context, fileHandler, databaseHelper, wallpaperSetter)
   }
 
-  @Test fun `should set continueFetchingImage to false on cancelFetchingImage call success`() {
+  @Test
+  fun `should set continueFetchingImage to false on cancelFetchingImage call success`() {
     imageHandlerImpl.cancelFetchingImage()
 
     assertEquals(imageHandlerImpl.shouldContinueFetchingImage, false)
   }
 
-  @Test fun `should complete on clearImageCache call success`() {
+  @Test
+  fun `should complete on clearImageCache call success`() {
     imageHandlerImpl.clearImageCache().test().assertComplete()
 
     verify(fileHandler).deleteCacheFiles()
   }
 
-  @After fun tearDown() {
+  @After
+  fun tearDown() {
     verifyNoMoreInteractions(fileHandler, context, databaseHelper, wallpaperSetter)
   }
 }

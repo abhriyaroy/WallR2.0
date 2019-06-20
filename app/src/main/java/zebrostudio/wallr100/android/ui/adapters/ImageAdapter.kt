@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
-import kotlinx.android.synthetic.main.item_recyclerview_image.view.imageView
+import kotlinx.android.synthetic.main.item_recyclerview_image.view.*
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.ImageLoader
 import zebrostudio.wallr100.android.ui.detail.images.DetailActivity
@@ -53,19 +53,19 @@ class ViewHolder(
 
   override fun setSearchImage(link: String) {
     val options = RequestOptions()
-      .diskCacheStrategy(DiskCacheStrategy.ALL)
-      .override(context.integerRes(R.integer.recycler_view_adapter_search_image_width),
-        context.integerRes(R.integer.recycler_view_adapter_search_image_height))
-      .centerCrop()
+        .diskCacheStrategy(DiskCacheStrategy.ALL)
+        .override(context.integerRes(R.integer.recycler_view_adapter_search_image_width),
+          context.integerRes(R.integer.recycler_view_adapter_search_image_height))
+        .centerCrop()
     loadAndShowImage(link, options)
   }
 
   override fun setWallpaperImage(link: String) {
     val options = RequestOptions()
-      .diskCacheStrategy(DiskCacheStrategy.ALL)
-      .override(context.integerRes(R.integer.recycler_view_adapter_wallpaper_image_width),
-        context.integerRes(R.integer.recycler_view_adapter_wallpaper_image_height))
-      .centerCrop()
+        .diskCacheStrategy(DiskCacheStrategy.ALL)
+        .override(context.integerRes(R.integer.recycler_view_adapter_wallpaper_image_width),
+          context.integerRes(R.integer.recycler_view_adapter_wallpaper_image_height))
+        .centerCrop()
     loadAndShowImage(link, options)
   }
 

@@ -39,12 +39,7 @@ interface ColorsDetailContract {
     fun showAlreadyPresentInCollectionErrorMessage()
     fun showShareIntent(uri: Uri)
     fun exitView()
-    fun startCroppingActivity(
-      source: Uri,
-      destination: Uri,
-      minimumWidth: Int,
-      minimumHeight: Int
-    )
+    fun startCroppingActivity(source: Uri, destination: Uri, minimumWidth: Int, minimumHeight: Int)
   }
 
   interface ColorsDetailPresenter : BasePresenter<ColorsDetailView> {
@@ -61,8 +56,9 @@ interface ColorsDetailContract {
     fun handleAddToCollectionClick()
     fun handleShareClick()
     fun handleBackButtonClick()
-    fun handlePermissionRequestResult(
-      requestCode: Int, permissions: Array<String>, grantResults: IntArray
+    fun handlePermissionRequestResult(requestCode: Int,
+      permissions: Array<String>,
+      grantResults: IntArray
     )
   }
 }

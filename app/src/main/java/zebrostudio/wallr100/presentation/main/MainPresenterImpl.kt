@@ -1,9 +1,7 @@
 package zebrostudio.wallr100.presentation.main
 
 import zebrostudio.wallr100.android.system.SystemInfoProvider
-import zebrostudio.wallr100.android.utils.FragmentTag.COLLECTIONS_TAG
-import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
-import zebrostudio.wallr100.android.utils.FragmentTag.MINIMAL_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.*
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
@@ -94,7 +92,7 @@ class MainPresenterImpl(
         "\n Model(and Product): ${systemInfoProvider.getModelName()} (${systemInfoProvider.getProductName()})")
         .let {
           mainView?.showFeedbackClient(it, arrayOf(ZEBRO_STUDIO_EMAIL_ADDRESS),
-              FEEDBACK_CONTENT_TYPE)
+            FEEDBACK_CONTENT_TYPE)
         }
   }
 

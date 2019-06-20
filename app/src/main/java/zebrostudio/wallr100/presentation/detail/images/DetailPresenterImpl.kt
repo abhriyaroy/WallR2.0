@@ -22,18 +22,11 @@ import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.CRYSTALLIZED
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.EDITED
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.WALLPAPER
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.*
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.SEARCH
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
-import zebrostudio.wallr100.presentation.detail.images.ActionType.ADD_TO_COLLECTION
-import zebrostudio.wallr100.presentation.detail.images.ActionType.CRYSTALLIZE
-import zebrostudio.wallr100.presentation.detail.images.ActionType.DOWNLOAD
-import zebrostudio.wallr100.presentation.detail.images.ActionType.EDIT_SET
-import zebrostudio.wallr100.presentation.detail.images.ActionType.QUICK_SET
-import zebrostudio.wallr100.presentation.detail.images.ActionType.SHARE
+import zebrostudio.wallr100.presentation.detail.images.ActionType.*
 import zebrostudio.wallr100.presentation.detail.images.DetailContract.DetailPresenter
 import zebrostudio.wallr100.presentation.detail.images.mapper.ImageDownloadPresenterEntityMapper
 import zebrostudio.wallr100.presentation.detail.images.model.ImageDownloadPresenterEntity
@@ -129,7 +122,7 @@ class DetailPresenterImpl(
 
   override fun handleAddToCollectionClick() {
     if (isUserPremium(ADD_TO_COLLECTION) && hasStoragePermissions(
-            ADD_TO_COLLECTION
+          ADD_TO_COLLECTION
         ) && isInternetAvailable()
     ) {
       addWallpaperToCollection()
@@ -150,7 +143,7 @@ class DetailPresenterImpl(
             .subscribe({
               detailView?.hideWaitLoader()
               val message = "${resourceUtils.getStringResource(
-                  R.string.share_intent_message
+                R.string.share_intent_message
               )} $WALLR_DOWNLOAD_LINK \n\n Image link - $it"
               detailView?.shareLink(message, SHARE_INTENT_TYPE)
             }, {
@@ -270,9 +263,9 @@ class DetailPresenterImpl(
           .doOnSubscribe {
             detailView?.blurScreen()
             detailView?.showIndefiniteLoader(
-                resourceUtils.getStringResource(
-                    R.string.crystallizing_wallpaper_wait_message
-                )
+              resourceUtils.getStringResource(
+                R.string.crystallizing_wallpaper_wait_message
+              )
             )
           }
           .autoDisposable(detailView?.getScope()!!)
@@ -302,13 +295,13 @@ class DetailPresenterImpl(
       } else {
         if (imageType == SEARCH) {
           detailView?.showExpandedImage(
-              searchImage.imageQualityUrlPresenterEntity.smallImageLink,
-              searchImage.imageQualityUrlPresenterEntity.largeImageLink
+            searchImage.imageQualityUrlPresenterEntity.smallImageLink,
+            searchImage.imageQualityUrlPresenterEntity.largeImageLink
           )
         } else {
           detailView?.showExpandedImage(
-              wallpaperImage.imageLink.thumb,
-              wallpaperImage.imageLink.large
+            wallpaperImage.imageLink.thumb,
+            wallpaperImage.imageLink.large
           )
         }
       }
@@ -326,17 +319,17 @@ class DetailPresenterImpl(
   private fun decorateView() {
     if (imageType == SEARCH) {
       detailView?.showAuthorDetails(
-          searchImage.userPresenterEntity.name,
-          searchImage.userPresenterEntity.profileImageLink
+        searchImage.userPresenterEntity.name,
+        searchImage.userPresenterEntity.profileImageLink
       )
       detailView?.showImage(
-          searchImage.imageQualityUrlPresenterEntity.smallImageLink,
-          searchImage.imageQualityUrlPresenterEntity.largeImageLink
+        searchImage.imageQualityUrlPresenterEntity.smallImageLink,
+        searchImage.imageQualityUrlPresenterEntity.largeImageLink
       )
     } else {
       detailView?.showAuthorDetails(
-          wallpaperImage.author.name,
-          wallpaperImage.author.profileImageLink
+        wallpaperImage.author.name,
+        wallpaperImage.author.profileImageLink
       )
       detailView?.showImage(wallpaperImage.imageLink.thumb, wallpaperImage.imageLink.large)
     }
@@ -497,9 +490,9 @@ class DetailPresenterImpl(
       isImageOperationInProgress = true
       detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
       val message =
-        resourceUtils.getStringResource(
+          resourceUtils.getStringResource(
             R.string.detail_activity_crystallizing_wallpaper_message
-        )
+          )
       detailView?.showIndefiniteLoaderWithAnimation(message)
     } else if (progress != DOWNLOAD_COMPLETED_VALUE) {
       detailView?.updateProgressPercentage("$progress%")
@@ -556,17 +549,17 @@ class DetailPresenterImpl(
     val progress = it.progress
     if (progress == DOWNLOAD_COMPLETED_VALUE) {
       detailView?.startCroppingActivity(
-          imageOptionsUseCase.getCroppingSourceUri().blockingGet(),
-          imageOptionsUseCase.getCroppingDestinationUri().blockingGet(),
-          wallpaperSetter.getDesiredMinimumWidth(),
-          wallpaperSetter.getDesiredMinimumHeight()
+        imageOptionsUseCase.getCroppingSourceUri().blockingGet(),
+        imageOptionsUseCase.getCroppingDestinationUri().blockingGet(),
+        wallpaperSetter.getDesiredMinimumWidth(),
+        wallpaperSetter.getDesiredMinimumHeight()
       )
     } else if (progress == PROGRESS_VALUE_99) {
       isDownloadInProgress = false
       isImageOperationInProgress = true
       detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
       val message =
-        resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message)
+          resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message)
       detailView?.showIndefiniteLoaderWithAnimation(message)
     } else {
       isDownloadInProgress = true
@@ -598,7 +591,7 @@ class DetailPresenterImpl(
           if (it.progress == DOWNLOAD_COMPLETED_VALUE) {
             imageOptionsUseCase.addImageToCollection(getImageFetchingLink(), lastImageOperationType)
                 .andThen(
-                    Single.just(true)
+                  Single.just(true)
                 )
                 .observeOn(postExecutionThread.scheduler)
           } else {
@@ -620,7 +613,7 @@ class DetailPresenterImpl(
       isImageOperationInProgress = true
       detailView?.updateProgressPercentage("$DOWNLOAD_COMPLETED_VALUE%")
       val message =
-        resourceUtils.getStringResource(R.string.adding_image_to_collections_message)
+          resourceUtils.getStringResource(R.string.adding_image_to_collections_message)
       detailView?.showIndefiniteLoaderWithAnimation(message)
     } else if (progress != DOWNLOAD_COMPLETED_VALUE) {
       detailView?.updateProgressPercentage("$progress%")
@@ -651,7 +644,7 @@ class DetailPresenterImpl(
     var hasWallpaperBeenSet = false
     detailView?.blurScreen()
     detailView?.showIndefiniteLoader(
-        resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)
+      resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)
     )
     imageOptionsUseCase.getBitmapFromUriSingle(cropResultUri)
         .doOnSuccess {

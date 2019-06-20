@@ -60,7 +60,7 @@ class BuyProPresenterImpl(
     premiumTransactionType: PremiumTransactionType
   ) {
     authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
-        purchaseToken)
+      purchaseToken)
         .observeOn(postExecutionThread.scheduler)
         .autoDisposable(buyProView?.getScope()!!)
         .subscribe({

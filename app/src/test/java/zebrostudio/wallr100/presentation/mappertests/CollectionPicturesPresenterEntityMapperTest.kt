@@ -12,13 +12,14 @@ import zebrostudio.wallr100.presentation.search.mapper.SearchPicturesPresenterEn
 import zebrostudio.wallr100.presentation.search.model.SearchPicturesPresenterEntity
 import zebrostudio.wallr100.presentation.search.model.UrlPresenterEntity
 import zebrostudio.wallr100.presentation.search.model.UserPresenterEntity
-import java.util.UUID
+import java.util.*
 
 @RunWith(MockitoJUnitRunner::class)
 class CollectionPicturesPresenterEntityMapperTest {
 
   private lateinit var searchPicturesPresenterEntityMapper: SearchPicturesPresenterEntityMapper
-  @Before fun setup() {
+  @Before
+  fun setup() {
     searchPicturesPresenterEntityMapper = SearchPicturesPresenterEntityMapper()
   }
 
@@ -40,28 +41,28 @@ class CollectionPicturesPresenterEntityMapperTest {
     val color = UUID.randomUUID().toString()
 
     val searchPicturesModel = SearchPicturesModel(id,
-        createdAt,
-        imageWidth,
-        imageHeight,
-        color,
-        UserModel(authorName, authorProfileImageUrl),
-        likes,
-        likedByUser,
-        UrlModel(imageRawLink, imageLargeLink, imageMediumLink, imageSmallLink, imageThumbLink))
+      createdAt,
+      imageWidth,
+      imageHeight,
+      color,
+      UserModel(authorName, authorProfileImageUrl),
+      likes,
+      likedByUser,
+      UrlModel(imageRawLink, imageLargeLink, imageMediumLink, imageSmallLink, imageThumbLink))
 
     val searchPicturesPresenterEntity = SearchPicturesPresenterEntity(
-        id,
-        createdAt,
-        imageWidth,
-        imageHeight,
-        color,
-        UserPresenterEntity(authorName, authorProfileImageUrl),
-        likes,
-        likedByUser,
-        UrlPresenterEntity(imageRawLink, imageLargeLink, imageMediumLink, imageSmallLink,
-            imageThumbLink))
+      id,
+      createdAt,
+      imageWidth,
+      imageHeight,
+      color,
+      UserPresenterEntity(authorName, authorProfileImageUrl),
+      likes,
+      likedByUser,
+      UrlPresenterEntity(imageRawLink, imageLargeLink, imageMediumLink, imageSmallLink,
+        imageThumbLink))
 
     assertEquals(listOf(searchPicturesPresenterEntity),
-        searchPicturesPresenterEntityMapper.mapToPresenterEntity(listOf(searchPicturesModel)))
+      searchPicturesPresenterEntityMapper.mapToPresenterEntity(listOf(searchPicturesModel)))
   }
 }

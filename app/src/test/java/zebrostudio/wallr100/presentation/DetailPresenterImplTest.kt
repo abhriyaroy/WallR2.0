@@ -16,9 +16,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -42,12 +40,7 @@ import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
 import zebrostudio.wallr100.presentation.datafactory.ImagePresenterEntityFactory
 import zebrostudio.wallr100.presentation.datafactory.SearchPicturesPresenterEntityFactory
-import zebrostudio.wallr100.presentation.detail.images.ActionType.ADD_TO_COLLECTION
-import zebrostudio.wallr100.presentation.detail.images.ActionType.CRYSTALLIZE
-import zebrostudio.wallr100.presentation.detail.images.ActionType.DOWNLOAD
-import zebrostudio.wallr100.presentation.detail.images.ActionType.EDIT_SET
-import zebrostudio.wallr100.presentation.detail.images.ActionType.QUICK_SET
-import zebrostudio.wallr100.presentation.detail.images.ActionType.SHARE
+import zebrostudio.wallr100.presentation.detail.images.ActionType.*
 import zebrostudio.wallr100.presentation.detail.images.DetailContract
 import zebrostudio.wallr100.presentation.detail.images.DetailPresenterImpl
 import zebrostudio.wallr100.presentation.detail.images.mapper.ImageDownloadPresenterEntityMapper
@@ -58,16 +51,26 @@ const val UNSUCCESSFUL_PURCHASE_CODE = 0
 @RunWith(MockitoJUnitRunner::class)
 class DetailPresenterImplTest {
 
-  @Mock private lateinit var imageOptionsUseCase: ImageOptionsUseCase
-  @Mock private lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
-  @Mock private lateinit var detailView: DetailContract.DetailView
-  @Mock private lateinit var wallpaperSetter: WallpaperSetter
-  @Mock private lateinit var mockBitmap: Bitmap
-  @Mock private lateinit var resourceUtils: ResourceUtils
-  @Mock private lateinit var postExecutionThread: PostExecutionThread
-  @Mock private lateinit var permissionsChecker: PermissionsChecker
-  @Mock private lateinit var mockUri: Uri
-  @Mock private lateinit var mockDestinationUri: Uri
+  @Mock
+  private lateinit var imageOptionsUseCase: ImageOptionsUseCase
+  @Mock
+  private lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
+  @Mock
+  private lateinit var detailView: DetailContract.DetailView
+  @Mock
+  private lateinit var wallpaperSetter: WallpaperSetter
+  @Mock
+  private lateinit var mockBitmap: Bitmap
+  @Mock
+  private lateinit var resourceUtils: ResourceUtils
+  @Mock
+  private lateinit var postExecutionThread: PostExecutionThread
+  @Mock
+  private lateinit var permissionsChecker: PermissionsChecker
+  @Mock
+  private lateinit var mockUri: Uri
+  @Mock
+  private lateinit var mockDestinationUri: Uri
   private lateinit var detailPresenterImpl: DetailPresenterImpl
   private lateinit var testScopeProvider: TestLifecycleScopeProvider
   private val downloadProgressCompletedValue: Long = 100
@@ -83,13 +86,13 @@ class DetailPresenterImplTest {
         ImageDownloadPresenterEntityMapper()
     detailPresenterImpl =
         DetailPresenterImpl(resourceUtils,
-            imageOptionsUseCase, userPremiumStatusUseCase,
-            wallpaperSetter, postExecutionThread, imageDownloadPresenterEntityMapper,
-            permissionsChecker)
+          imageOptionsUseCase, userPremiumStatusUseCase,
+          wallpaperSetter, postExecutionThread, imageDownloadPresenterEntityMapper,
+          permissionsChecker)
     detailPresenterImpl.attachView(detailView)
 
     testScopeProvider = TestLifecycleScopeProvider.createInitial(
-        TestLifecycleScopeProvider.TestLifecycle.STARTED)
+      TestLifecycleScopeProvider.TestLifecycle.STARTED)
     `when`(detailView.getScope()).thenReturn(testScopeProvider)
     stubPostExecutionThreadReturnsIoScheduler()
   }
@@ -105,10 +108,10 @@ class DetailPresenterImplTest {
     assertEquals(SEARCH, detailPresenterImpl.imageType)
     verify(detailView).getSearchImageDetails()
     verify(detailView).showAuthorDetails(searchImagePresenterEntity.userPresenterEntity.name,
-        searchImagePresenterEntity.userPresenterEntity.profileImageLink)
+      searchImagePresenterEntity.userPresenterEntity.profileImageLink)
     verify(detailView).showImage(
-        searchImagePresenterEntity.imageQualityUrlPresenterEntity.smallImageLink,
-        searchImagePresenterEntity.imageQualityUrlPresenterEntity.largeImageLink)
+      searchImagePresenterEntity.imageQualityUrlPresenterEntity.smallImageLink,
+      searchImagePresenterEntity.imageQualityUrlPresenterEntity.largeImageLink)
   }
 
   @Test
@@ -121,9 +124,9 @@ class DetailPresenterImplTest {
     assertEquals(WALLPAPERS, detailPresenterImpl.imageType)
     verify(detailView).getWallpaperImageDetails()
     verify(detailView).showAuthorDetails(imagePresenterEntity.author.name,
-        imagePresenterEntity.author.profileImageLink)
+      imagePresenterEntity.author.profileImageLink)
     verify(detailView).showImage(imagePresenterEntity.imageLink.thumb,
-        imagePresenterEntity.imageLink.large)
+      imagePresenterEntity.imageLink.large)
   }
 
   @Test
@@ -143,7 +146,8 @@ class DetailPresenterImplTest {
     verify(detailView).showNoInternetToShareError()
   }
 
-  @Test fun `should redirect to pro when handleShareClicked call failure due to non pro user`() {
+  @Test
+  fun `should redirect to pro when handleShareClicked call failure due to non pro user`() {
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(false)
 
@@ -154,21 +158,22 @@ class DetailPresenterImplTest {
     verify(detailView).redirectToBuyPro(SHARE.ordinal)
   }
 
-  @Test fun `should show generic error on handleShareClicked call failure of type search`() {
+  @Test
+  fun `should show generic error on handleShareClicked call failure of type search`() {
     detailPresenterImpl.imageType = SEARCH
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(imageOptionsUseCase.getImageShareableLinkSingle(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Single.error(Exception()))
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Single.error(Exception()))
 
     detailPresenterImpl.handleShareClick()
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).getImageShareableLinkSingle(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verify(detailView).internetAvailability()
     verify(detailView).getScope()
     verify(detailView).hideWaitLoader()
@@ -176,7 +181,8 @@ class DetailPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should share link on handleShareClicked call success of type search`() {
+  @Test
+  fun `should share link on handleShareClicked call success of type search`() {
     val shareIntentType = "text/plain"
     val shareIntentMessage = "share intent message"
     val message = "$shareIntentMessage\n\nImage link - $randomString"
@@ -184,19 +190,19 @@ class DetailPresenterImplTest {
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
     `when`(resourceUtils.getStringResource(R.string.share_intent_message,
-        WALLR_DOWNLOAD_LINK)).thenReturn(shareIntentMessage)
+      WALLR_DOWNLOAD_LINK)).thenReturn(shareIntentMessage)
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(imageOptionsUseCase.getImageShareableLinkSingle(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Single.just(randomString))
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Single.just(randomString))
 
     detailPresenterImpl.handleShareClick()
 
     verify(resourceUtils).getStringResource(R.string.share_intent_message, WALLR_DOWNLOAD_LINK)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).getImageShareableLinkSingle(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verify(detailView).internetAvailability()
     verify(detailView).getScope()
     verify(detailView).hideWaitLoader()
@@ -204,21 +210,22 @@ class DetailPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should show generic error on handleShareClicked call failure of type wallpaper`() {
+  @Test
+  fun `should show generic error on handleShareClicked call failure of type wallpaper`() {
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage =
         ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(imageOptionsUseCase.getImageShareableLinkSingle(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Single.error(Exception()))
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Single.error(Exception()))
 
     detailPresenterImpl.handleShareClick()
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).getImageShareableLinkSingle(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(detailView).internetAvailability()
     verify(detailView).getScope()
     verify(detailView).hideWaitLoader()
@@ -226,7 +233,8 @@ class DetailPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should share link on handleShareClicked call success of type wallpaper`() {
+  @Test
+  fun `should share link on handleShareClicked call success of type wallpaper`() {
     val shareIntentType = "text/plain"
     val shareIntentMessage = "share intent message"
     val message = "$shareIntentMessage\n\nImage link - $randomString"
@@ -234,20 +242,20 @@ class DetailPresenterImplTest {
     detailPresenterImpl.wallpaperImage =
         ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(resourceUtils.getStringResource(R.string.share_intent_message,
-        WALLR_DOWNLOAD_LINK)).thenReturn(shareIntentMessage)
+      WALLR_DOWNLOAD_LINK)).thenReturn(shareIntentMessage)
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(imageOptionsUseCase.getImageShareableLinkSingle(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Single.just(randomString))
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Single.just(randomString))
 
     detailPresenterImpl.handleShareClick()
 
     verify(resourceUtils).getStringResource(R.string.share_intent_message,
-        WALLR_DOWNLOAD_LINK)
+      WALLR_DOWNLOAD_LINK)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).getImageShareableLinkSingle(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(detailView).internetAvailability()
     verify(detailView).getScope()
     verify(detailView).hideWaitLoader()
@@ -260,7 +268,7 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(false)
 
     detailPresenterImpl.handleViewResult(SHARE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(detailView).internetAvailability()
     verify(detailView).showNoInternetToShareError()
@@ -281,15 +289,15 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(imageOptionsUseCase.getImageShareableLinkSingle(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Single.error(Exception()))
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Single.error(Exception()))
 
     detailPresenterImpl.handleViewResult(SHARE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).getImageShareableLinkSingle(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verify(detailView).internetAvailability()
     verify(detailView).getScope()
     verify(detailView).hideWaitLoader()
@@ -306,20 +314,20 @@ class DetailPresenterImplTest {
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
     `when`(resourceUtils.getStringResource(R.string.share_intent_message,
-        WALLR_DOWNLOAD_LINK)).thenReturn(shareIntentMessage)
+      WALLR_DOWNLOAD_LINK)).thenReturn(shareIntentMessage)
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(imageOptionsUseCase.getImageShareableLinkSingle(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Single.just(randomString))
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Single.just(randomString))
 
     detailPresenterImpl.handleViewResult(SHARE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(resourceUtils).getStringResource(R.string.share_intent_message, WALLR_DOWNLOAD_LINK)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).getImageShareableLinkSingle(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verify(detailView).internetAvailability()
     verify(detailView).getScope()
     verify(detailView).hideWaitLoader()
@@ -335,15 +343,15 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(imageOptionsUseCase.getImageShareableLinkSingle(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Single.error(Exception()))
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Single.error(Exception()))
 
     detailPresenterImpl.handleViewResult(SHARE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).getImageShareableLinkSingle(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(detailView).internetAvailability()
     verify(detailView).getScope()
     verify(detailView).hideWaitLoader()
@@ -360,20 +368,20 @@ class DetailPresenterImplTest {
     detailPresenterImpl.wallpaperImage =
         ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(resourceUtils.getStringResource(R.string.share_intent_message,
-        WALLR_DOWNLOAD_LINK)).thenReturn(shareIntentMessage)
+      WALLR_DOWNLOAD_LINK)).thenReturn(shareIntentMessage)
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(imageOptionsUseCase.getImageShareableLinkSingle(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Single.just(randomString))
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Single.just(randomString))
 
     detailPresenterImpl.handleViewResult(SHARE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(resourceUtils).getStringResource(R.string.share_intent_message, WALLR_DOWNLOAD_LINK)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).getImageShareableLinkSingle(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(detailView).internetAvailability()
     verify(detailView).getScope()
     verify(detailView).hideWaitLoader()
@@ -424,16 +432,16 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
 
     detailPresenterImpl.handleQuickSetClick()
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, true)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
@@ -452,10 +460,10 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(indefiniteLoaderMessage)
 
@@ -465,7 +473,7 @@ class DetailPresenterImplTest {
     assertEquals(detailPresenterImpl.isImageOperationInProgress, true)
     verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
@@ -485,11 +493,11 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-          it.onComplete()
-        })
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+        it.onComplete()
+      })
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(true)
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(indefiniteLoaderMessage)
@@ -500,7 +508,7 @@ class DetailPresenterImplTest {
     assertEquals(detailPresenterImpl.isImageOperationInProgress, false)
     verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verify(wallpaperSetter).setWallpaper(mockBitmap)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
@@ -521,16 +529,16 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
 
     detailPresenterImpl.handleQuickSetClick()
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, true)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
@@ -548,10 +556,10 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(indefiniteLoaderMessage)
 
@@ -561,7 +569,7 @@ class DetailPresenterImplTest {
     assertEquals(detailPresenterImpl.isImageOperationInProgress, true)
     verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
@@ -580,11 +588,11 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-          it.onComplete()
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+        it.onComplete()
+      })
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(true)
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(indefiniteLoaderMessage)
@@ -595,7 +603,7 @@ class DetailPresenterImplTest {
     assertEquals(detailPresenterImpl.isImageOperationInProgress, false)
     verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(wallpaperSetter).setWallpaper(mockBitmap)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
@@ -611,8 +619,8 @@ class DetailPresenterImplTest {
   @Test
   fun `should show permission required message on handlePermissionRequestResult call failure of type quick set due to permission not granted`() {
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
-        arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_DENIED))
+      arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(detailView).showPermissionRequiredMessage()
   }
@@ -623,8 +631,8 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(false)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
-        arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
@@ -639,18 +647,18 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
-        arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, true)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
@@ -668,22 +676,22 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(indefiniteLoaderMessage)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
-        arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, false)
     assertEquals(detailPresenterImpl.isImageOperationInProgress, true)
     verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
@@ -701,8 +709,8 @@ class DetailPresenterImplTest {
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.just(imageDownloadModel))
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Observable.just(imageDownloadModel))
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(true)
@@ -710,14 +718,14 @@ class DetailPresenterImplTest {
         .thenReturn(indefiniteLoaderMessage)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
-        arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, false)
     assertEquals(detailPresenterImpl.isImageOperationInProgress, false)
     verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verify(wallpaperSetter).setWallpaper(mockBitmap)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
@@ -739,20 +747,20 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.just(imageDownloadModel))
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Observable.just(imageDownloadModel))
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(false)
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
 
     detailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
-        arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(detailPresenterImpl.isImageOperationInProgress, false)
     verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verify(wallpaperSetter).setWallpaper(mockBitmap)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
@@ -808,16 +816,16 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
 
     detailPresenterImpl.handleEditSetClick()
 
     assertEquals(true, detailPresenterImpl.isDownloadInProgress)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
@@ -835,10 +843,10 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(true)
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message))
         .thenReturn(randomString)
 
@@ -848,7 +856,7 @@ class DetailPresenterImplTest {
     assertEquals(detailPresenterImpl.isImageOperationInProgress, true)
     verify(resourceUtils).getStringResource(R.string.detail_activity_editing_tool_message)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
@@ -869,13 +877,13 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(imageOptionsUseCase.getCroppingSourceUri()).thenReturn(Single.just(mockUri))
     `when`(imageOptionsUseCase.getCroppingDestinationUri()).thenReturn(
-        Single.just(mockDestinationUri))
+      Single.just(mockDestinationUri))
     `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(width)
     `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(height)
 
@@ -884,7 +892,7 @@ class DetailPresenterImplTest {
     verify(imageOptionsUseCase).getCroppingSourceUri()
     verify(imageOptionsUseCase).getCroppingDestinationUri()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(wallpaperSetter).getDesiredMinimumWidth()
     verify(wallpaperSetter).getDesiredMinimumHeight()
     verifyStoragePermissionsCheckerCall()
@@ -893,9 +901,9 @@ class DetailPresenterImplTest {
     verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
     verify(detailView).startCroppingActivity(mockUri,
-        mockDestinationUri,
-        width,
-        height)
+      mockDestinationUri,
+      width,
+      height)
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -927,8 +935,8 @@ class DetailPresenterImplTest {
   @Test
   fun `should show permission required message on handlePermissionRequestResult call failure of type edit set due to permission not granted`() {
     detailPresenterImpl.handlePermissionRequestResult(EDIT_SET.ordinal,
-        arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_DENIED))
+      arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(detailView).showPermissionRequiredMessage()
   }
@@ -941,18 +949,18 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
 
     detailPresenterImpl.handlePermissionRequestResult(EDIT_SET.ordinal,
-        arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, true)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
@@ -970,22 +978,22 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(true)
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message))
         .thenReturn(randomString)
 
     detailPresenterImpl.handlePermissionRequestResult(EDIT_SET.ordinal,
-        arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(detailPresenterImpl.isDownloadInProgress, false)
     assertEquals(detailPresenterImpl.isImageOperationInProgress, true)
     verify(resourceUtils).getStringResource(R.string.detail_activity_editing_tool_message)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
@@ -1006,24 +1014,24 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(imageOptionsUseCase.getCroppingSourceUri()).thenReturn(Single.just(mockUri))
     `when`(imageOptionsUseCase.getCroppingDestinationUri()).thenReturn(
-        Single.just(mockDestinationUri))
+      Single.just(mockDestinationUri))
     `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(width)
     `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(height)
 
     detailPresenterImpl.handlePermissionRequestResult(EDIT_SET.ordinal,
-        arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     verify(imageOptionsUseCase).getCroppingSourceUri()
     verify(imageOptionsUseCase).getCroppingDestinationUri()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(wallpaperSetter).getDesiredMinimumWidth()
     verify(wallpaperSetter).getDesiredMinimumHeight()
     verifyStoragePermissionsCheckerCall()
@@ -1032,16 +1040,17 @@ class DetailPresenterImplTest {
     verify(detailView).hideIndefiniteLoader()
     verify(detailView).getScope()
     verify(detailView).startCroppingActivity(mockUri,
-        mockDestinationUri,
-        width,
-        height)
+      mockDestinationUri,
+      width,
+      height)
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should show error on handleViewResult call failure due to null crop uri`() {
+  @Test
+  fun `should show error on handleViewResult call failure due to null crop uri`() {
     `when`(detailView.getUriFromResultIntent()).thenReturn(null)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(null)).thenReturn(
-        Single.error(NullPointerException()))
+      Single.error(NullPointerException()))
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
 
@@ -1127,7 +1136,8 @@ class DetailPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should show generic error message when crop activity results to failure`() {
+  @Test
+  fun `should show generic error message when crop activity results to failure`() {
     `when`(detailView.getUriFromResultIntent()).thenReturn(mockUri)
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
@@ -1148,7 +1158,8 @@ class DetailPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should redirect to buy pro on handleDownloadClick call failure due to non pro user`() {
+  @Test
+  fun `should redirect to buy pro on handleDownloadClick call failure due to non pro user`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(false)
 
     detailPresenterImpl.handleDownloadClick()
@@ -1263,7 +1274,7 @@ class DetailPresenterImplTest {
   @Test
   fun `should show permission required message on handlePermissionRequestResult call failure of type download due to permission not granted`() {
     detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_DENIED))
+      intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(detailView).showPermissionRequiredMessage()
   }
@@ -1274,7 +1285,7 @@ class DetailPresenterImplTest {
     `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(permissionsChecker).isReadPermissionAvailable()
@@ -1288,7 +1299,7 @@ class DetailPresenterImplTest {
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyStoragePermissionsCheckerCall()
@@ -1302,7 +1313,7 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(false)
 
     detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyStoragePermissionsCheckerCall()
@@ -1319,7 +1330,7 @@ class DetailPresenterImplTest {
     detailPresenterImpl.imageHasBeenCrystallized = true
 
     detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyStoragePermissionsCheckerCall()
@@ -1336,7 +1347,7 @@ class DetailPresenterImplTest {
     detailPresenterImpl.imageHasBeenCrystallized = false
 
     detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyStoragePermissionsCheckerCall()
@@ -1353,7 +1364,7 @@ class DetailPresenterImplTest {
     detailPresenterImpl.imageHasBeenCrystallized = true
 
     detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyStoragePermissionsCheckerCall()
@@ -1370,7 +1381,7 @@ class DetailPresenterImplTest {
     detailPresenterImpl.imageHasBeenCrystallized = false
 
     detailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyStoragePermissionsCheckerCall()
@@ -1391,7 +1402,7 @@ class DetailPresenterImplTest {
     `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(permissionsChecker).isReadPermissionAvailable()
@@ -1405,7 +1416,7 @@ class DetailPresenterImplTest {
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(false)
 
     detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyStoragePermissionsCheckerCall()
@@ -1419,7 +1430,7 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(false)
 
     detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyStoragePermissionsCheckerCall()
@@ -1436,7 +1447,7 @@ class DetailPresenterImplTest {
     detailPresenterImpl.imageHasBeenCrystallized = true
 
     detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyStoragePermissionsCheckerCall()
@@ -1453,7 +1464,7 @@ class DetailPresenterImplTest {
     detailPresenterImpl.imageHasBeenCrystallized = false
 
     detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyStoragePermissionsCheckerCall()
@@ -1470,7 +1481,7 @@ class DetailPresenterImplTest {
     detailPresenterImpl.imageHasBeenCrystallized = true
 
     detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyStoragePermissionsCheckerCall()
@@ -1487,7 +1498,7 @@ class DetailPresenterImplTest {
     detailPresenterImpl.imageHasBeenCrystallized = false
 
     detailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyStoragePermissionsCheckerCall()
@@ -1520,7 +1531,7 @@ class DetailPresenterImplTest {
     val link = detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.rawImageLink
     `when`(imageOptionsUseCase.isDownloadInProgress(link)).thenReturn(false)
     `when`(imageOptionsUseCase.downloadImageCompletable(link)).thenReturn(
-        Completable.error(Exception()))
+      Completable.error(Exception()))
 
     detailPresenterImpl.handleDownloadQualitySelectionEvent(SEARCH, 0)
 
@@ -1627,7 +1638,7 @@ class DetailPresenterImplTest {
     val link = detailPresenterImpl.wallpaperImage.imageLink.raw
     `when`(imageOptionsUseCase.isDownloadInProgress(link)).thenReturn(false)
     `when`(imageOptionsUseCase.downloadImageCompletable(link)).thenReturn(
-        Completable.error(Exception()))
+      Completable.error(Exception()))
 
     detailPresenterImpl.handleDownloadQualitySelectionEvent(WALLPAPERS, 0)
 
@@ -1784,9 +1795,9 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
-        Observable.just(imageDownloadModel))
+      Observable.just(imageDownloadModel))
     `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
-        Single.just(Pair(true, mockBitmap)))
+      Single.just(Pair(true, mockBitmap)))
 
     detailPresenterImpl.handleCrystallizeClick()
 
@@ -1808,7 +1819,7 @@ class DetailPresenterImplTest {
   @Test
   fun `should show permission required message on handlePermissionRequestResult with crystallize request code type call failure`() {
     detailPresenterImpl.handlePermissionRequestResult(CRYSTALLIZE.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_DENIED))
+      intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(detailView).showPermissionRequiredMessage()
   }
@@ -1820,7 +1831,7 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(false)
 
     detailPresenterImpl.handlePermissionRequestResult(CRYSTALLIZE.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyStoragePermissionsCheckerCall()
@@ -1836,7 +1847,7 @@ class DetailPresenterImplTest {
     `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(false)
 
     detailPresenterImpl.handlePermissionRequestResult(CRYSTALLIZE.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
@@ -1857,12 +1868,12 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
-        Observable.just(imageDownloadModel))
+      Observable.just(imageDownloadModel))
     `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
-        Single.just(Pair(true, mockBitmap)))
+      Single.just(Pair(true, mockBitmap)))
 
     detailPresenterImpl.handlePermissionRequestResult(CRYSTALLIZE.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
@@ -1891,12 +1902,12 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
-        Observable.just(imageDownloadModel))
+      Observable.just(imageDownloadModel))
     `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
-        Single.error(Exception()))
+      Single.error(Exception()))
 
     detailPresenterImpl.handlePermissionRequestResult(CRYSTALLIZE.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
@@ -1923,12 +1934,12 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
-        Observable.just(imageDownloadModel))
+      Observable.just(imageDownloadModel))
     `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
-        Single.just(Pair(true, mockBitmap)))
+      Single.just(Pair(true, mockBitmap)))
 
     detailPresenterImpl.handlePermissionRequestResult(CRYSTALLIZE.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
@@ -1956,12 +1967,12 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
-        Observable.just(imageDownloadModel))
+      Observable.just(imageDownloadModel))
     `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
-        Single.error(Exception()))
+      Single.error(Exception()))
 
     detailPresenterImpl.handlePermissionRequestResult(CRYSTALLIZE.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
@@ -1991,7 +2002,7 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(false)
 
     detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyStoragePermissionsCheckerCall()
@@ -2007,7 +2018,7 @@ class DetailPresenterImplTest {
     `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(false)
 
     detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
@@ -2028,12 +2039,12 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
-        Observable.just(imageDownloadModel))
+      Observable.just(imageDownloadModel))
     `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
-        Single.just(Pair(true, mockBitmap)))
+      Single.just(Pair(true, mockBitmap)))
 
     detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
@@ -2062,12 +2073,12 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
-        Observable.just(imageDownloadModel))
+      Observable.just(imageDownloadModel))
     `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
-        Single.error(Exception()))
+      Single.error(Exception()))
 
     detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
@@ -2094,12 +2105,12 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
-        Observable.just(imageDownloadModel))
+      Observable.just(imageDownloadModel))
     `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
-        Single.just(Pair(true, mockBitmap)))
+      Single.just(Pair(true, mockBitmap)))
 
     detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
@@ -2127,12 +2138,12 @@ class DetailPresenterImplTest {
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.isCrystallizeDescriptionDialogShown()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(link)).thenReturn(
-        Observable.just(imageDownloadModel))
+      Observable.just(imageDownloadModel))
     `when`(imageOptionsUseCase.crystallizeImageSingle()).thenReturn(
-        Single.error(Exception()))
+      Single.error(Exception()))
 
     detailPresenterImpl.handleViewResult(CRYSTALLIZE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(imageOptionsUseCase).isCrystallizeDescriptionDialogShown()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(link)
@@ -2207,10 +2218,10 @@ class DetailPresenterImplTest {
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
 
     detailPresenterImpl.handleAddToCollectionClick()
 
@@ -2223,7 +2234,7 @@ class DetailPresenterImplTest {
     verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
     verify(detailView).getScope()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -2236,17 +2247,17 @@ class DetailPresenterImplTest {
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
 
     detailPresenterImpl.handleAddToCollectionClick()
 
     assertTrue(detailPresenterImpl.isDownloadInProgress)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -2266,10 +2277,10 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
         .thenReturn(randomString)
 
@@ -2279,9 +2290,9 @@ class DetailPresenterImplTest {
     assertTrue(detailPresenterImpl.isImageOperationInProgress)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
@@ -2302,10 +2313,10 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
         .thenReturn(randomString)
 
@@ -2315,9 +2326,9 @@ class DetailPresenterImplTest {
     assertTrue(detailPresenterImpl.isImageOperationInProgress)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
@@ -2340,25 +2351,25 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(imageOptionsUseCase.addImageToCollection(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
-        detailPresenterImpl.lastImageOperationType
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
+      detailPresenterImpl.lastImageOperationType
     )).thenReturn(
-        Completable.complete())
+      Completable.complete())
 
     detailPresenterImpl.handleAddToCollectionClick()
 
     assertFalse(detailPresenterImpl.isImageOperationInProgress)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verify(imageOptionsUseCase).addImageToCollection(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
-        detailPresenterImpl.lastImageOperationType)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
+      detailPresenterImpl.lastImageOperationType)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -2380,13 +2391,13 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(imageOptionsUseCase.addImageToCollection(
-        detailPresenterImpl.wallpaperImage.imageLink.large,
-        detailPresenterImpl.lastImageOperationType
+      detailPresenterImpl.wallpaperImage.imageLink.large,
+      detailPresenterImpl.lastImageOperationType
     )).thenReturn(Completable.complete())
 
     detailPresenterImpl.handleAddToCollectionClick()
@@ -2394,10 +2405,10 @@ class DetailPresenterImplTest {
     assertFalse(detailPresenterImpl.isImageOperationInProgress)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(imageOptionsUseCase).addImageToCollection(
-        detailPresenterImpl.wallpaperImage.imageLink.large,
-        detailPresenterImpl.lastImageOperationType)
+      detailPresenterImpl.wallpaperImage.imageLink.large,
+      detailPresenterImpl.lastImageOperationType)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -2411,7 +2422,7 @@ class DetailPresenterImplTest {
   @Test
   fun `should show permission required message on handlePermissionRequestResult of add to collection type call failure`() {
     detailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_DENIED))
+      intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(detailView).showPermissionRequiredMessage()
   }
@@ -2426,13 +2437,13 @@ class DetailPresenterImplTest {
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
 
     detailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertTrue(detailPresenterImpl.isDownloadInProgress)
     verify(userPremiumStatusUseCase).isUserPremium()
@@ -2443,7 +2454,7 @@ class DetailPresenterImplTest {
     verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
     verify(detailView).getScope()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -2456,18 +2467,18 @@ class DetailPresenterImplTest {
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
 
     detailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertTrue(detailPresenterImpl.isDownloadInProgress)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -2487,23 +2498,23 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
         .thenReturn(randomString)
 
     detailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertFalse(detailPresenterImpl.isDownloadInProgress)
     assertTrue(detailPresenterImpl.isImageOperationInProgress)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
@@ -2524,23 +2535,23 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
         .thenReturn(randomString)
 
     detailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertFalse(detailPresenterImpl.isDownloadInProgress)
     assertTrue(detailPresenterImpl.isImageOperationInProgress)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
@@ -2563,26 +2574,26 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(imageOptionsUseCase.addImageToCollection(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
-        detailPresenterImpl.lastImageOperationType
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
+      detailPresenterImpl.lastImageOperationType
     )).thenReturn(
-        Completable.complete())
+      Completable.complete())
 
     detailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertFalse(detailPresenterImpl.isImageOperationInProgress)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verify(imageOptionsUseCase).addImageToCollection(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
-        detailPresenterImpl.lastImageOperationType)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
+      detailPresenterImpl.lastImageOperationType)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -2604,25 +2615,25 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(imageOptionsUseCase.addImageToCollection(
-        detailPresenterImpl.wallpaperImage.imageLink.large,
-        detailPresenterImpl.lastImageOperationType
+      detailPresenterImpl.wallpaperImage.imageLink.large,
+      detailPresenterImpl.lastImageOperationType
     )).thenReturn(Completable.complete())
 
     detailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal, arrayOf(""),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertFalse(detailPresenterImpl.isImageOperationInProgress)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(imageOptionsUseCase).addImageToCollection(
-        detailPresenterImpl.wallpaperImage.imageLink.large,
-        detailPresenterImpl.lastImageOperationType)
+      detailPresenterImpl.wallpaperImage.imageLink.large,
+      detailPresenterImpl.lastImageOperationType)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -2650,13 +2661,13 @@ class DetailPresenterImplTest {
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertTrue(detailPresenterImpl.isDownloadInProgress)
     verify(userPremiumStatusUseCase).isUserPremium()
@@ -2667,7 +2678,7 @@ class DetailPresenterImplTest {
     verify(detailView).updateProgressPercentage("$downloadProgressCompleteUpTo98%")
     verify(detailView).getScope()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -2680,18 +2691,18 @@ class DetailPresenterImplTest {
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage = ImagePresenterEntityFactory.getImagePresenterEntity()
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertTrue(detailPresenterImpl.isDownloadInProgress)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -2711,23 +2722,23 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
         .thenReturn(randomString)
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertFalse(detailPresenterImpl.isDownloadInProgress)
     assertTrue(detailPresenterImpl.isImageOperationInProgress)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
@@ -2748,23 +2759,23 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
         .thenReturn(randomString)
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertFalse(detailPresenterImpl.isDownloadInProgress)
     assertTrue(detailPresenterImpl.isImageOperationInProgress)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
@@ -2787,26 +2798,26 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(imageOptionsUseCase.addImageToCollection(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
-        detailPresenterImpl.lastImageOperationType
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
+      detailPresenterImpl.lastImageOperationType
     )).thenReturn(
-        Completable.complete())
+      Completable.complete())
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertFalse(detailPresenterImpl.isImageOperationInProgress)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
     verify(imageOptionsUseCase).addImageToCollection(
-        detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
-        detailPresenterImpl.lastImageOperationType)
+      detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink,
+      detailPresenterImpl.lastImageOperationType)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -2828,25 +2839,25 @@ class DetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(imageOptionsUseCase.fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
-        Observable.create {
-          it.onNext(imageDownloadModel)
-        })
+      detailPresenterImpl.wallpaperImage.imageLink.large)).thenReturn(
+      Observable.create {
+        it.onNext(imageDownloadModel)
+      })
     `when`(imageOptionsUseCase.addImageToCollection(
-        detailPresenterImpl.wallpaperImage.imageLink.large,
-        detailPresenterImpl.lastImageOperationType
+      detailPresenterImpl.wallpaperImage.imageLink.large,
+      detailPresenterImpl.lastImageOperationType
     )).thenReturn(Completable.complete())
 
     detailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertFalse(detailPresenterImpl.isImageOperationInProgress)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).fetchImageBitmapObservable(
-        detailPresenterImpl.wallpaperImage.imageLink.large)
+      detailPresenterImpl.wallpaperImage.imageLink.large)
     verify(imageOptionsUseCase).addImageToCollection(
-        detailPresenterImpl.wallpaperImage.imageLink.large,
-        detailPresenterImpl.lastImageOperationType)
+      detailPresenterImpl.wallpaperImage.imageLink.large,
+      detailPresenterImpl.lastImageOperationType)
     verifyStoragePermissionsCheckerCall()
     verify(detailView).internetAvailability()
     verify(detailView).hideIndefiniteLoader()
@@ -2891,7 +2902,7 @@ class DetailPresenterImplTest {
     detailPresenterImpl.handleImageViewClicked()
 
     verify(detailView).showExpandedImage(searchImage.imageQualityUrlPresenterEntity.smallImageLink,
-        searchImage.imageQualityUrlPresenterEntity.largeImageLink)
+      searchImage.imageQualityUrlPresenterEntity.largeImageLink)
   }
 
   @Test
@@ -2906,7 +2917,7 @@ class DetailPresenterImplTest {
     detailPresenterImpl.handleImageViewClicked()
 
     verify(detailView).showExpandedImage(wallpaperImage.imageLink.thumb,
-        wallpaperImage.imageLink.large)
+      wallpaperImage.imageLink.large)
   }
 
   @Test
@@ -2933,8 +2944,8 @@ class DetailPresenterImplTest {
   fun tearDown() {
     detailPresenterImpl.detachView()
     verifyNoMoreInteractions(postExecutionThread, wallpaperSetter, userPremiumStatusUseCase,
-        imageOptionsUseCase, detailView, resourceUtils, mockUri, mockBitmap,
-        permissionsChecker)
+      imageOptionsUseCase, detailView, resourceUtils, mockUri, mockBitmap,
+      permissionsChecker)
   }
 
   private fun stubGrantStoragePermissions() {

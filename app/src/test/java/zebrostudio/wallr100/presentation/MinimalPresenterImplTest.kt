@@ -9,9 +9,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,25 +25,34 @@ import zebrostudio.wallr100.presentation.minimal.INITIAL_OFFSET
 import zebrostudio.wallr100.presentation.minimal.INITIAL_SIZE
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
 import zebrostudio.wallr100.presentation.minimal.MinimalPresenterImpl
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.*
 import zebrostudio.wallr100.presentation.minimal.mapper.RestoreColorsPresenterEntityMapper
 import java.util.Collections
 import java.util.TreeMap
 import java.util.UUID.randomUUID
+import kotlin.collections.HashMap
+import kotlin.collections.forEach
+import kotlin.collections.hashMapOf
+import kotlin.collections.listOf
+import kotlin.collections.mutableListOf
+import kotlin.collections.set
 
 @RunWith(MockitoJUnitRunner::class)
 class MinimalPresenterImplTest {
 
-  @Mock private lateinit var minimalImagesUseCase: MinimalImagesUseCase
-  @Mock lateinit var widgetHintsUseCase: WidgetHintsUseCase
-  @Mock private lateinit var postExecutionThread: PostExecutionThread
-  @Mock private lateinit var minimalView: MinimalView
+  @Mock
+  private lateinit var minimalImagesUseCase: MinimalImagesUseCase
+  @Mock
+  lateinit var widgetHintsUseCase: WidgetHintsUseCase
+  @Mock
+  private lateinit var postExecutionThread: PostExecutionThread
+  @Mock
+  private lateinit var minimalView: MinimalView
   private lateinit var minimalPresenter: MinimalPresenterImpl
   private var randomString = randomUUID().toString()
 
-  @Before fun setup() {
+  @Before
+  fun setup() {
     minimalPresenter =
         MinimalPresenterImpl(widgetHintsUseCase, minimalImagesUseCase, postExecutionThread)
     minimalPresenter.attachView(minimalView)
@@ -74,7 +81,7 @@ class MinimalPresenterImplTest {
   fun `should call showUnableToGetColorsErrorMessage on handleViewCreated call failure as custom color list is not present`() {
     `when`(minimalImagesUseCase.isCustomColorListPresent()).thenReturn(false)
     `when`(minimalImagesUseCase.getDefaultColors()).thenReturn(
-        Single.error(UnableToGetMinimalColorsException()))
+      Single.error(UnableToGetMinimalColorsException()))
 
     minimalPresenter.handleViewCreated()
 
@@ -121,7 +128,7 @@ class MinimalPresenterImplTest {
   fun `should call showUnableToGetColorsErrorMessage on handleViewCreated call failure even though custom color list is present`() {
     `when`(minimalImagesUseCase.isCustomColorListPresent()).thenReturn(true)
     `when`(minimalImagesUseCase.getCustomColors()).thenReturn(
-        Single.error(UnableToGetMinimalColorsException()))
+      Single.error(UnableToGetMinimalColorsException()))
 
     minimalPresenter.handleViewCreated()
 
@@ -136,7 +143,7 @@ class MinimalPresenterImplTest {
   fun `should call showGenericErrorMessage on handleViewCreated call failure and custom color list present`() {
     `when`(minimalImagesUseCase.isCustomColorListPresent()).thenReturn(true)
     `when`(minimalImagesUseCase.getCustomColors()).thenReturn(
-        Single.error(Exception()))
+      Single.error(Exception()))
 
     minimalPresenter.handleViewCreated()
 
@@ -209,7 +216,8 @@ class MinimalPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should call showDeleteColorsErrorMessage on handleDeleteMenuItemClick call failure`() {
+  @Test
+  fun `should call showDeleteColorsErrorMessage on handleDeleteMenuItemClick call failure`() {
     val list = mutableListOf<String>()
     for (i in 1..25) {
       list.add(randomString)
@@ -303,7 +311,8 @@ class MinimalPresenterImplTest {
     assertEquals(PLASMA, minimalPresenter.multiColorImageType)
   }
 
-  @Test fun `should add color on handleColorPickerPositiveClick call success`() {
+  @Test
+  fun `should add color on handleColorPickerPositiveClick call success`() {
     val list = listOf(randomString)
     val newColourHex = "#ffffff"
     val modifiedList = listOf(randomString, newColourHex)
@@ -319,12 +328,13 @@ class MinimalPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should show error on handleColorPickerPositiveClick call failure`() {
+  @Test
+  fun `should show error on handleColorPickerPositiveClick call failure`() {
     val list = listOf(randomString)
     val newColourHex = "#ffffff"
     val modifiedList = listOf(randomString, newColourHex)
     `when`(minimalImagesUseCase.addCustomColor(modifiedList)).thenReturn(
-        Completable.error(Exception()))
+      Completable.error(Exception()))
 
     minimalPresenter.handleColorPickerPositiveClick(newColourHex, list)
 
@@ -341,10 +351,11 @@ class MinimalPresenterImplTest {
     minimalPresenter.handleColorPickerPositiveClick(randomString, list)
 
     verify(minimalView).showColorAlreadyPresentErrorMessageAndScrollToPosition(
-        list.indexOf(randomString) + INITIAL_OFFSET)
+      list.indexOf(randomString) + INITIAL_OFFSET)
   }
 
-  @Test fun `should restore colors on handleUndoDeletionOptionClick call success`() {
+  @Test
+  fun `should restore colors on handleUndoDeletionOptionClick call success`() {
     val restoreColorsModel = RestoreColorsModelFactory.getRestoreColorsModel()
     val restoreColorsPresenterEntity =
         RestoreColorsPresenterEntityMapper().mapToPresenterEntity(restoreColorsModel)
@@ -363,7 +374,8 @@ class MinimalPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should show error on handleUndoDeletionOptionClick call failure`() {
+  @Test
+  fun `should show error on handleUndoDeletionOptionClick call failure`() {
     `when`(minimalImagesUseCase.restoreColors()).thenReturn(Single.error(Exception()))
 
     minimalPresenter.handleUndoDeletionOptionClick()
@@ -374,7 +386,8 @@ class MinimalPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should show color picker dialog on handleClick call success`() {
+  @Test
+  fun `should show color picker dialog on handleClick call success`() {
     val position = 0
     val list = listOf<String>()
     val map = hashMapOf<Int, String>()
@@ -384,7 +397,8 @@ class MinimalPresenterImplTest {
     verify(minimalView).showColorPickerDialogAndAttachColorPickerListener()
   }
 
-  @Test fun `should show exit selection mode message on handleClick call success`() {
+  @Test
+  fun `should show exit selection mode message on handleClick call success`() {
     val position = 0
     val list = listOf<String>()
     val map = hashMapOf<Int, String>()
@@ -395,7 +409,8 @@ class MinimalPresenterImplTest {
     verify(minimalView).showExitSelectionModeToAddColorMessage()
   }
 
-  @Test fun `should add to selected items map and show bottom panel on handleClick call success`() {
+  @Test
+  fun `should add to selected items map and show bottom panel on handleClick call success`() {
     val position = 1
     val list = mutableListOf<String>()
     list.add(randomString)
@@ -479,7 +494,8 @@ class MinimalPresenterImplTest {
     verify(minimalView).showCab(map.size)
   }
 
-  @Test fun `should show exit selection mode message on handleImageLongClick call success`() {
+  @Test
+  fun `should show exit selection mode message on handleImageLongClick call success`() {
     val position = 0
     val list = listOf<String>()
     val map = hashMapOf<Int, String>()
@@ -579,22 +595,26 @@ class MinimalPresenterImplTest {
     verify(minimalView).showCab(map.size)
   }
 
-  @Test fun `should return false on isItemSelectable call success when index is zero`() {
+  @Test
+  fun `should return false on isItemSelectable call success when index is zero`() {
     assertFalse(minimalPresenter.isItemSelectable(0))
   }
 
-  @Test fun `should return true on isItemSelectable call success when index is not zero`() {
+  @Test
+  fun `should return true on isItemSelectable call success when index is not zero`() {
     assertTrue(minimalPresenter.isItemSelectable(1))
   }
 
-  @Test fun `should return false on isItemSelected call when index is not present in map`() {
+  @Test
+  fun `should return false on isItemSelected call when index is not present in map`() {
     val position = 1
     val map = hashMapOf<Int, String>()
 
     assertFalse(minimalPresenter.isItemSelected(position, map))
   }
 
-  @Test fun `should return true on isItemSelected call when index is present in map`() {
+  @Test
+  fun `should return true on isItemSelected call when index is present in map`() {
     val position = 1
     val map = hashMapOf<Int, String>()
     map[position - INITIAL_OFFSET] = randomString
@@ -792,15 +812,17 @@ class MinimalPresenterImplTest {
     verify(minimalView).showBottomPanelWithAnimation()
   }
 
-  @Test fun `should save hint dismissed sate on handleHintDismissed call success`() {
+  @Test
+  fun `should save hint dismissed sate on handleHintDismissed call success`() {
     minimalPresenter.handleHintDismissed()
 
     verify(widgetHintsUseCase).saveMultiColorImageHintShownState()
   }
 
-  @After fun tearDown() {
+  @After
+  fun tearDown() {
     verifyNoMoreInteractions(postExecutionThread, widgetHintsUseCase, minimalImagesUseCase,
-        minimalView)
+      minimalView)
     minimalPresenter.detachView()
   }
 

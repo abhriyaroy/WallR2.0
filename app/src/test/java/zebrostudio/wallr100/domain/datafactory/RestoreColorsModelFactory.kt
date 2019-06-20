@@ -1,7 +1,7 @@
 package zebrostudio.wallr100.domain.datafactory
 
 import zebrostudio.wallr100.domain.model.RestoreColorsModel
-import java.util.TreeMap
+import java.util.*
 import java.util.UUID.randomUUID
 
 object RestoreColorsModelFactory {

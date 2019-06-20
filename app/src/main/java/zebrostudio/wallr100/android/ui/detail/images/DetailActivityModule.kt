@@ -32,11 +32,11 @@ class DetailActivityModule {
     imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper,
     permissionsChecker: PermissionsChecker
   ): DetailPresenter = DetailPresenterImpl(
-      resourceUtils,
-      imageOptionsUseCase,
-      userPremiumStatusUseCase,
-      wallpaperSetter,
-      postExecutionThread,
-      imageDownloadPresenterEntityMapper,
-      permissionsChecker)
+    resourceUtils,
+    imageOptionsUseCase,
+    userPremiumStatusUseCase,
+    wallpaperSetter,
+    postExecutionThread,
+    imageDownloadPresenterEntityMapper,
+    permissionsChecker)
 }

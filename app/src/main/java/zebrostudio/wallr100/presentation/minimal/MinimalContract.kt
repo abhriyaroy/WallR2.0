@@ -30,7 +30,6 @@ interface MinimalContract {
     fun showUnableToRestoreColorsMessage()
     fun showRestoreColorsSuccessMessage()
     fun getTopAndBottomVisiblePositions(): Pair<Int, Int>
-
     fun addToSelectedItemsMap(position: Int, hexValue: String)
     fun removeFromSelectedItemsMap(item: Int)
     fun clearSelectedItemsMap()
@@ -53,8 +52,7 @@ interface MinimalContract {
     fun handleMultiSelectMenuClick()
     fun handleMultiSelectFabClick(selectedItemsMap: HashMap<Int, String>)
     fun handleClick(position: Int, colorList: List<String>, selectedItemsMap: HashMap<Int, String>)
-    fun handleImageLongClick(
-      position: Int,
+    fun handleImageLongClick(position: Int,
       colorList: List<String>,
       selectedItemsMap: HashMap<Int, String>
     ): Boolean

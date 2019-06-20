@@ -16,8 +16,8 @@ class DatabaseHelperImpl(private val context: Context) : DatabaseHelper {
   override fun getDatabase(): WallrDatabase {
     if (databaseInstance == null) {
       databaseInstance = Room.databaseBuilder(context.applicationContext,
-          WallrDatabase::class.java,
-          DATABASE_NAME).build()
+        WallrDatabase::class.java,
+        DATABASE_NAME).build()
     }
     return databaseInstance!!
   }

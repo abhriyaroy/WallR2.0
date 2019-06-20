@@ -6,16 +6,10 @@ import android.os.Handler
 import android.os.Looper
 import android.support.annotation.LayoutRes
 import android.util.DisplayMetrics
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.View.GONE
-import android.view.View.INVISIBLE
+import android.view.*
+import android.view.View.*
 import android.view.View.MeasureSpec.UNSPECIFIED
 import android.view.View.MeasureSpec.makeMeasureSpec
-import android.view.View.VISIBLE
-import android.view.ViewGroup
-import android.view.Window
 import android.widget.Toast
 import zebrostudio.wallr100.R
 

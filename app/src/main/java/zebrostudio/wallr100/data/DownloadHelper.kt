@@ -29,9 +29,9 @@ class DownloadHelperImpl(
       val request =
           DownloadManager.Request(Uri.parse(link))
               .setTitle(
-                  context.stringRes(R.string.detail_activity_download_notification_title_text))
+                context.stringRes(R.string.detail_activity_download_notification_title_text))
               .setNotificationVisibility(
-                  DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
               .setDestinationUri(Uri.fromFile(fileHandler.getDownloadFile()))
               .setAllowedOverMetered(true)
               .setAllowedOverRoaming(true)
@@ -55,7 +55,7 @@ class DownloadHelperImpl(
       }
 
       context.registerReceiver(onDownloadComplete,
-          IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+        IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
     }
   }
 

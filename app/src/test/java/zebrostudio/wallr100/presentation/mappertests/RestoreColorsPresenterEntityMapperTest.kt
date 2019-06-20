@@ -8,7 +8,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.domain.model.RestoreColorsModel
 import zebrostudio.wallr100.presentation.minimal.mapper.RestoreColorsPresenterEntityMapper
 import zebrostudio.wallr100.presentation.minimal.model.RestoreColorsPresenterEntity
-import java.util.TreeMap
+import java.util.*
 import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
@@ -16,11 +16,13 @@ class RestoreColorsPresenterEntityMapperTest {
 
   private lateinit var restoreColorsPresenterEntityMapper: RestoreColorsPresenterEntityMapper
 
-  @Before fun setup() {
+  @Before
+  fun setup() {
     restoreColorsPresenterEntityMapper = RestoreColorsPresenterEntityMapper()
   }
 
-  @Test fun `should return restoreColorsPresenterEntity on mapToPresenterEntity call success`() {
+  @Test
+  fun `should return restoreColorsPresenterEntity on mapToPresenterEntity call success`() {
     val colorsList = listOf(randomUUID().toString(), randomUUID().toString())
     val selectedItemsMap = TreeMap<Int, String>()
     selectedItemsMap[0] = randomUUID().toString()

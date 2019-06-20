@@ -6,12 +6,7 @@ import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.permissions.PermissionsChecker
 import zebrostudio.wallr100.android.service.WALLPAPER_CHANGER_INTERVALS_LIST
 import zebrostudio.wallr100.android.system.SystemInfoProvider
-import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_ASUS
-import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_ONEPLUS
-import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_OPPO
-import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_SAMSUNG
-import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_VIVO
-import zebrostudio.wallr100.android.ui.collection.MANUFACTURER_NAME_XIAOMI
+import zebrostudio.wallr100.android.ui.collection.*
 import zebrostudio.wallr100.android.ui.minimal.SINGLE_ITEM_SIZE
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
@@ -27,8 +22,7 @@ import zebrostudio.wallr100.presentation.collection.CollectionContract.Collectio
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionView
 import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEntity
 import zebrostudio.wallr100.presentation.collection.mapper.CollectionImagesPresenterEntityMapper
-import java.util.Collections
-import java.util.TreeMap
+import java.util.*
 
 private const val MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_HINT = 2
 private const val MINIMUM_LIST_SIZE_REQUIRED_TO_SHOW_WALLPAPER_CHANGER_LAYOUT = 2
@@ -92,7 +86,7 @@ class CollectionPresenterImpl(
       reorderImageList(imagePathList, fromPosition, toPosition)
       collectionView?.updateItemViewMovement(fromPosition, toPosition)
       collectionImagesUseCase.reorderImage(
-          collectionImagesPresenterEntityMapper.mapFromPresenterEntity(imagePathList))
+        collectionImagesPresenterEntityMapper.mapFromPresenterEntity(imagePathList))
           .observeOn(postExecutionThread.scheduler)
           .map {
             collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
@@ -160,16 +154,16 @@ class CollectionPresenterImpl(
       }
       if (!isDialogShown) {
         collectionImagesUseCase.setAutomaticWallpaperChangerInterval(
-            WALLPAPER_CHANGER_INTERVALS_LIST.first())
+          WALLPAPER_CHANGER_INTERVALS_LIST.first())
         collectionView?.showWallpaperChangerIntervalDialog(
-            INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL)
+          INDEX_OF_THIRTY_MINUTES_WALLPAPER_CHANGER_INTERVAL)
       }
     }
   }
 
   override fun updateWallpaperChangerInterval(choice: Int) {
     when (collectionImagesUseCase.setAutomaticWallpaperChangerInterval(
-        WALLPAPER_CHANGER_INTERVALS_LIST[choice])) {
+      WALLPAPER_CHANGER_INTERVALS_LIST[choice])) {
       INTERVAL_UPDATED -> collectionView?.showWallpaperChangerIntervalUpdatedSuccessMessage()
       SERVICE_RESTARTED -> collectionView?.showWallpaperChangerRestartedSuccessMessage()
     }
@@ -203,9 +197,9 @@ class CollectionPresenterImpl(
 
   override fun handleSetWallpaperMenuItemClicked(selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>) {
     collectionImagesUseCase.getImageBitmap(
-        collectionImagesPresenterEntityMapper.mapFromPresenterEntity(
-            selectedItemsMap.values.first())
-            .first())
+      collectionImagesPresenterEntityMapper.mapFromPresenterEntity(
+        selectedItemsMap.values.first())
+          .first())
         .doOnSuccess {
           wallpaperSetter.setWallpaper(it)
         }
@@ -225,8 +219,8 @@ class CollectionPresenterImpl(
     selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>
   ) {
     collectionImagesUseCase.saveCrystallizedImage(
-        collectionImagesPresenterEntityMapper.mapFromPresenterEntity(
-            selectedItemsMap.values.first()).first())
+      collectionImagesPresenterEntityMapper.mapFromPresenterEntity(
+        selectedItemsMap.values.first()).first())
         .map {
           collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
         }
@@ -251,7 +245,7 @@ class CollectionPresenterImpl(
       reverseSortSelections(selectedItemsMap).let { reverseSortedSelections ->
         mutableListOf<CollectionsPresenterEntity>().let { listOfDeletableImages ->
           removeItemsFromList(reverseSortedSelections, imageList, listOfDeletableImages,
-              selectedItemsMap)
+            selectedItemsMap)
           deleteWallpapers(backupOfOriginalImageList, listOfDeletableImages)
         }
       }
@@ -393,7 +387,7 @@ class CollectionPresenterImpl(
   private fun handleCrystallizationDoOnSubscribe() {
     collectionView?.blurScreen()
     collectionView?.showIndefiniteLoaderWithMessage(
-        resourceUtils.getStringResource(R.string.crystallizing_wallpaper_wait_message)
+      resourceUtils.getStringResource(R.string.crystallizing_wallpaper_wait_message)
     )
     collectionView?.disableBackPress()
   }
@@ -437,10 +431,10 @@ class CollectionPresenterImpl(
     listOfDeletableImages: List<CollectionsPresenterEntity>
   ) {
     collectionImagesUseCase.deleteImages(
-        collectionImagesPresenterEntityMapper.mapFromPresenterEntity(listOfDeletableImages))
+      collectionImagesPresenterEntityMapper.mapFromPresenterEntity(listOfDeletableImages))
         .onErrorResumeNext(
-            collectionImagesUseCase.reorderImage(collectionImagesPresenterEntityMapper
-                .mapFromPresenterEntity(backupOfOriginalImageList)))
+          collectionImagesUseCase.reorderImage(collectionImagesPresenterEntityMapper
+              .mapFromPresenterEntity(backupOfOriginalImageList)))
         .map {
           collectionImagesPresenterEntityMapper.mapToPresenterEntity(it)
         }
@@ -502,7 +496,7 @@ class CollectionPresenterImpl(
   private fun doOnSetWallpaperSubscription() {
     collectionView?.blurScreen()
     collectionView?.showIndefiniteLoaderWithMessage(
-        resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
+      resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
     collectionView?.disableBackPress()
   }
 

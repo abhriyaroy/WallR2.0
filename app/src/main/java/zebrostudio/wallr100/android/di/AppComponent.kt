@@ -6,12 +6,11 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import zebrostudio.wallr100.android.WallrApplication
 import zebrostudio.wallr100.android.di.scopes.PerApplication
-import javax.inject.Singleton
 
 @PerApplication
 @Component(
-    modules = [(AndroidInjectionModule::class), (AppModule::class),
-      (ActivityBuilder::class), (ServiceBuilder::class)]
+  modules = [(AndroidInjectionModule::class), (AppModule::class),
+    (ActivityBuilder::class), (ServiceBuilder::class)]
 )
 interface AppComponent {
 

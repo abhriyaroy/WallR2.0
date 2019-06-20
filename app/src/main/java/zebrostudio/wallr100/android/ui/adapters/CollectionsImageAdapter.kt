@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_recyclerview_collections.view.imageView
 import kotlinx.android.synthetic.main.item_recyclerview_minimal_fragment.view.selectedIndicatorIcon
 import kotlinx.android.synthetic.main.item_recyclerview_minimal_fragment.view.selectedOverlay
@@ -40,9 +39,9 @@ class CollectionsImageAdapter(
     viewType: Int
   ): CollectionsImageViewHolder {
     return CollectionsImageViewHolder(
-        viewGroupParent.inflate(LayoutInflater.from(viewGroupParent.context),
-            R.layout.item_recyclerview_collections), viewGroupParent.context,
-        collectionsImageAdapterCallback, startDragListener, imageLoader)
+      viewGroupParent.inflate(LayoutInflater.from(viewGroupParent.context),
+        R.layout.item_recyclerview_collections), viewGroupParent.context,
+      collectionsImageAdapterCallback, startDragListener, imageLoader)
   }
 
   override fun getItemCount(): Int {
@@ -51,7 +50,7 @@ class CollectionsImageAdapter(
 
   override fun onBindViewHolder(viewHolder: CollectionsImageViewHolder, position: Int) {
     presenter.onBindRepositoryRowViewAtPosition(viewHolder, imagePathList, selectedHashMap,
-        position)
+      position)
   }
 
   override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {

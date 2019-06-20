@@ -20,27 +20,32 @@ import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 @RunWith(MockitoJUnitRunner::class)
 class AuthenticatePurchaseUseCaseTest {
 
-  @get:Rule var trampolineSchedulerRule = TrampolineSchedulerRule()
+  @get:Rule
+  var trampolineSchedulerRule = TrampolineSchedulerRule()
 
-  @Mock private lateinit var wallrRepository: WallrRepository
+  @Mock
+  private lateinit var wallrRepository: WallrRepository
   private lateinit var authenticatePurchaseUseCase: AuthenticatePurchaseUseCase
   private val packageName = java.util.UUID.randomUUID().toString()
   private val purchaseToken = java.util.UUID.randomUUID().toString()
   private val skuId = java.util.UUID.randomUUID().toString()
 
-  @Before fun setup() {
+  @Before
+  fun setup() {
     authenticatePurchaseUseCase =
         AuthenticatePurchaseInteractor(wallrRepository)
   }
 
-  @Test fun `should call authenticatePurchase to verify purchase`() {
+  @Test
+  fun `should call authenticatePurchase to verify purchase`() {
     stubAuthenticatePurchaseReturnsCompletableSuccess()
     authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId, purchaseToken)
 
     verify(wallrRepository).authenticatePurchase(packageName, skuId, purchaseToken)
   }
 
-  @Test fun `should complete when successful purchase verification`() {
+  @Test
+  fun `should complete when successful purchase verification`() {
     stubAuthenticatePurchaseReturnsCompletableSuccess()
 
     authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId, purchaseToken)
@@ -50,7 +55,8 @@ class AuthenticatePurchaseUseCaseTest {
     verify(wallrRepository).authenticatePurchase(packageName, skuId, purchaseToken)
   }
 
-  @Test fun `should return invalidPurchaseException when unsuccessful purchase verification`() {
+  @Test
+  fun `should return invalidPurchaseException when unsuccessful purchase verification`() {
     stubAuthenticatePurchaseReturnsInvalidPurchaseException()
 
     authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId, purchaseToken)
@@ -59,7 +65,8 @@ class AuthenticatePurchaseUseCaseTest {
     verify(wallrRepository).authenticatePurchase(packageName, skuId, purchaseToken)
   }
 
-  @Test fun `should return unableToVerifyPurchaseException when unable to verify purchase`() {
+  @Test
+  fun `should return unableToVerifyPurchaseException when unable to verify purchase`() {
     stubAuthenticatePurchaseReturnsUnableToVerifyPurchaseException()
 
     authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId, purchaseToken)
@@ -69,23 +76,24 @@ class AuthenticatePurchaseUseCaseTest {
     verify(wallrRepository).authenticatePurchase(packageName, skuId, purchaseToken)
   }
 
-  @After fun tearDown() {
+  @After
+  fun tearDown() {
     verifyNoMoreInteractions(wallrRepository)
   }
 
   private fun stubAuthenticatePurchaseReturnsCompletableSuccess() {
     whenever(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
-        Completable.complete())
+      Completable.complete())
   }
 
   private fun stubAuthenticatePurchaseReturnsInvalidPurchaseException() {
     whenever(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
-        Completable.error(InvalidPurchaseException()))
+      Completable.error(InvalidPurchaseException()))
   }
 
   private fun stubAuthenticatePurchaseReturnsUnableToVerifyPurchaseException() {
     whenever(wallrRepository.authenticatePurchase(packageName, skuId, purchaseToken)).thenReturn(
-        Completable.error(UnableToVerifyPurchaseException()))
+      Completable.error(UnableToVerifyPurchaseException()))
   }
 
 }

@@ -4,11 +4,7 @@ import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.ACTION_SEND
-import android.content.Intent.EXTRA_STREAM
-import android.content.Intent.EXTRA_TEXT
-import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
-import android.content.Intent.createChooser
+import android.content.Intent.*
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -18,11 +14,6 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.*
-import com.bumptech.glide.request.RequestOptions
 import com.github.zagum.expandicon.ExpandIconView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED
@@ -55,22 +46,14 @@ import zebrostudio.wallr100.android.ui.detail.images.BLUR_RADIUS
 import zebrostudio.wallr100.android.ui.detail.images.SLIDING_PANEL_PARALLEL_OFFSET
 import zebrostudio.wallr100.android.ui.expandimage.FullScreenImageActivity
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.BITMAP_CACHE
-import zebrostudio.wallr100.android.utils.colorRes
-import zebrostudio.wallr100.android.utils.errorToast
-import zebrostudio.wallr100.android.utils.gone
-import zebrostudio.wallr100.android.utils.infoToast
-import zebrostudio.wallr100.android.utils.stringRes
-import zebrostudio.wallr100.android.utils.successToast
-import zebrostudio.wallr100.android.utils.visible
+import zebrostudio.wallr100.android.utils.*
 import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.ColorsDetailPresenter
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.ColorsDetailView
 import zebrostudio.wallr100.presentation.detail.images.ILLEGAL_STATE_EXCEPTION_MESSAGE
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
-import java.util.ArrayList
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.*
+import java.util.*
 import javax.inject.Inject
 
 const val COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG = "colors_hex_list"
@@ -83,8 +66,10 @@ private const val ALPHA_COMPLETELY_VISIBLE = 1.0f
 
 class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
-  @Inject internal lateinit var presenter: ColorsDetailPresenter
-  @Inject internal lateinit var imageLoader: ImageLoader
+  @Inject
+  internal lateinit var presenter: ColorsDetailPresenter
+  @Inject
+  internal lateinit var imageLoader: ImageLoader
 
   private var activityResultIntent: Intent? = null
 
@@ -128,7 +113,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     return intent.let {
       if (it.hasExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG)) {
         when (it.getIntExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG,
-            MATERIAL.ordinal)) {
+          MATERIAL.ordinal)) {
           MATERIAL.ordinal -> MATERIAL
           GRADIENT.ordinal -> GRADIENT
           else -> PLASMA
@@ -145,7 +130,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
   override fun requestStoragePermission(colorsActionType: ColorsActionType) {
     requestPermissions(this,
-        arrayOf(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE), colorsActionType.ordinal)
+      arrayOf(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE), colorsActionType.ordinal)
   }
 
   override fun showPermissionRequiredMessage() {
@@ -215,18 +200,18 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
 
   override fun disableColorOperations() {
     disableOperations(setColorWallpaperLayout,
-        downloadColorLayout,
-        editAndSetColorLayout,
-        addColorToCollectionLayout,
-        shareColorLayout)
+      downloadColorLayout,
+      editAndSetColorLayout,
+      addColorToCollectionLayout,
+      shareColorLayout)
   }
 
   override fun enableColorOperations() {
     enableOperations(setColorWallpaperLayout,
-        downloadColorLayout,
-        editAndSetColorLayout,
-        addColorToCollectionLayout,
-        shareColorLayout)
+      downloadColorLayout,
+      editAndSetColorLayout,
+      addColorToCollectionLayout,
+      shareColorLayout)
   }
 
   override fun showColorOperationsDisabledMessage() {
@@ -278,7 +263,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     sendIntent.putExtra(EXTRA_STREAM, uri)
     sendIntent.type = INTENT_IMAGE_TYPE
     sendIntent.putExtra(EXTRA_TEXT,
-        "${stringRes(R.string.share_intent_message)} $WALLR_DOWNLOAD_LINK \n\n")
+      "${stringRes(R.string.share_intent_message)} $WALLR_DOWNLOAD_LINK \n\n")
     sendIntent.addFlags(FLAG_GRANT_READ_URI_PERMISSION)
     startActivity(createChooser(sendIntent, stringRes(R.string.share_link_using)))
   }
@@ -352,12 +337,12 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
       if (it.hasExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG)
           && it.hasExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)) {
         presenter.setColorsDetailMode(
-            if (it.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG, SINGLE.ordinal)
-                == SINGLE.ordinal) {
-              SINGLE
-            } else {
-              MULTIPLE
-            })
+          if (it.getIntExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG, SINGLE.ordinal)
+              == SINGLE.ordinal) {
+            SINGLE
+          } else {
+            MULTIPLE
+          })
         presenter.setColorList(it.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG))
       } else {
         throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
@@ -397,7 +382,7 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
     ): Intent {
       return Intent(context, ColorsDetailActivity::class.java).apply {
         putStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG,
-            ArrayList(hexValueList))
+          ArrayList(hexValueList))
         putExtra(COLORS_DETAIL_MODE_INTENT_EXTRA_TAG, colorsDetailMode.ordinal)
         multiColorImageType?.let {
           putExtra(COLORS_DETAIL_MULTIPLE_TYPE_INTENT_EXTRA_TAG, it.ordinal)

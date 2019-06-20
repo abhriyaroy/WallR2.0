@@ -7,7 +7,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.data.exception.UnableToGetMinimalColorsException
-import java.util.TreeMap
+import java.util.*
 
 interface MinimalColorHelper {
   fun getDefaultColors(): Single<List<String>>

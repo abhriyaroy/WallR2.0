@@ -23,13 +23,16 @@ import java.util.UUID.randomUUID
 @RunWith(MockitoJUnitRunner::class)
 class SearchPicturesInteractorTest {
 
-  @get:Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
+  @get:Rule
+  val trampolineSchedulerRule = TrampolineSchedulerRule()
 
-  @Mock lateinit var wallrRepository: WallrRepository
+  @Mock
+  lateinit var wallrRepository: WallrRepository
   private lateinit var searchPicturesUseCase: SearchPicturesUseCase
   private val dummyString = randomUUID().toString()
 
-  @Before fun setup() {
+  @Before
+  fun setup() {
     searchPicturesUseCase = SearchPicturesInteractor(wallrRepository)
   }
 
@@ -37,7 +40,7 @@ class SearchPicturesInteractorTest {
   fun `should return list of search pictures model on buildRetrievePicturesObservable call success`() {
     val searchPicturesModelList = listOf(SearchPicturesModelFactory.getSearchPicturesModel())
     `when`(wallrRepository.getSearchPictures(dummyString)).thenReturn(
-        Single.just(searchPicturesModelList))
+      Single.just(searchPicturesModelList))
 
     val picture = searchPicturesUseCase.buildUseCaseSingle(dummyString)
         .test()
@@ -51,7 +54,7 @@ class SearchPicturesInteractorTest {
   @Test
   fun `should return no result found exception of search pictures model on buildRetrievePicturesObservable call success but with no result`() {
     `when`(wallrRepository.getSearchPictures(dummyString)).thenReturn(
-        Single.error(NoResultFoundException()))
+      Single.error(NoResultFoundException()))
 
     searchPicturesUseCase.buildUseCaseSingle(dummyString)
         .test()
@@ -63,7 +66,7 @@ class SearchPicturesInteractorTest {
   @Test
   fun `should return unable to resolve host exception of search pictures model on buildRetrievePicturesObservable call failure`() {
     `when`(wallrRepository.getSearchPictures(dummyString)).thenReturn(
-        Single.error(UnableToResolveHostException()))
+      Single.error(UnableToResolveHostException()))
 
     searchPicturesUseCase.buildUseCaseSingle(dummyString)
         .test()
@@ -72,7 +75,8 @@ class SearchPicturesInteractorTest {
     verify(wallrRepository).getSearchPictures(dummyString)
   }
 
-  @After fun tearDown() {
+  @After
+  fun tearDown() {
     verifyNoMoreInteractions(wallrRepository)
   }
 

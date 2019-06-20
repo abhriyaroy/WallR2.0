@@ -9,7 +9,6 @@ import com.onesignal.OneSignal
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.HasServiceInjector
-import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.di.DaggerAppComponent
 import javax.inject.Inject
 

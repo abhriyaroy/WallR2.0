@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/minimalFragmentRootLayout"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+  android:id="@+id/minimalFragmentRootLayout"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
 
   <android.support.v7.widget.RecyclerView
-      android:id="@+id/minimalFragmentRecyclerView"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:scrollbars="vertical"/>
+    android:id="@+id/minimalFragmentRecyclerView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="vertical" />
 
   <View
-      android:background="@drawable/shadow_bottom"
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/wallpaper_fragment_shadow_tab_height"
-      android:layout_gravity="top"/>
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/wallpaper_fragment_shadow_tab_height"
+    android:layout_gravity="top"
+    android:background="@drawable/shadow_bottom" />
 
 </LinearLayout>

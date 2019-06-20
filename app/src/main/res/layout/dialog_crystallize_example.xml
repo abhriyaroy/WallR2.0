@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
 
   <FrameLayout
-      android:id="@+id/crystallize_compare_layout"
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/detail_activity_crystallize_dialog_height">
+    android:id="@+id/crystallize_compare_layout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/detail_activity_crystallize_dialog_height">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:src="@drawable/crystallize_compare"
-        android:scaleType="fitXY"/>
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="top"
+      android:scaleType="fitXY"
+      android:src="@drawable/crystallize_compare" />
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|center"
-        android:layout_marginLeft="@dimen/detail_activity_crystallize_dialog_margin_left">
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="top|center"
+      android:layout_marginLeft="@dimen/detail_activity_crystallize_dialog_margin_left">
 
       <RelativeLayout
-          android:id="@+id/before_text_layout"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:padding="@dimen/detail_activity_crystallize_dialog_before_layout_padding"
-          android:layout_marginTop="@dimen/detail_activity_crystallize_dialog_before_layout_margin"
-          android:layout_marginRight="@dimen/detail_activity_crystallize_dialog_before_layout_margin"
-          android:alpha="0.5"
-          android:background="@color/primary">
+        android:id="@+id/before_text_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/detail_activity_crystallize_dialog_before_layout_margin"
+        android:layout_marginTop="@dimen/detail_activity_crystallize_dialog_before_layout_margin"
+        android:alpha="0.5"
+        android:background="@color/primary"
+        android:padding="@dimen/detail_activity_crystallize_dialog_before_layout_padding">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/detail_activity_crystallize_dialog_before_text"
-            android:textSize="@dimen/detail_activity_crystallize_dialog_before_text_size"
-            android:textColor="@color/white"
-            android:textAlignment="center"/>
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/detail_activity_crystallize_dialog_before_text"
+          android:textAlignment="center"
+          android:textColor="@color/white"
+          android:textSize="@dimen/detail_activity_crystallize_dialog_before_text_size" />
 
       </RelativeLayout>
 
       <RelativeLayout
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:padding="@dimen/detail_activity_crystallize_dialog_after_layout_padding"
-          android:layout_marginRight="@dimen/detail_activity_crystallize_dialog_after_layout_margin"
-          android:layout_marginTop="@dimen/detail_activity_crystallize_dialog_after_layout_margin"
-          android:layout_toRightOf="@id/before_text_layout"
-          android:layout_gravity="top"
-          android:alpha="0.5"
-          android:background="@color/primary">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginRight="@dimen/detail_activity_crystallize_dialog_after_layout_margin"
+        android:layout_marginTop="@dimen/detail_activity_crystallize_dialog_after_layout_margin"
+        android:layout_toRightOf="@id/before_text_layout"
+        android:alpha="0.5"
+        android:background="@color/primary"
+        android:padding="@dimen/detail_activity_crystallize_dialog_after_layout_padding">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/detail_activity_crystallize_dialog_after_text"
-            android:textColor="@color/white"
-            android:textSize="@dimen/detail_activity_crystallize_dialog_after_text_size"
-            android:textAlignment="center"/>
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/detail_activity_crystallize_dialog_after_text"
+          android:textAlignment="center"
+          android:textColor="@color/white"
+          android:textSize="@dimen/detail_activity_crystallize_dialog_after_text_size" />
 
       </RelativeLayout>
 
@@ -68,43 +68,43 @@
   </FrameLayout>
 
   <RelativeLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:padding="24dp"
-      android:paddingBottom="8dp"
-      android:layout_below="@id/crystallize_compare_layout"
-      android:id="@+id/titleCrystallize">
+    android:id="@+id/titleCrystallize"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/crystallize_compare_layout"
+    android:padding="24dp"
+    android:paddingBottom="8dp">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/detail_activity_crystallize_wallpaper_dialog_title"
-        android:textColor="@color/white"
-        android:textSize="@dimen/detail_activity_crystallize_dialog_title_size"/>
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/detail_activity_crystallize_wallpaper_dialog_title"
+      android:textColor="@color/white"
+      android:textSize="@dimen/detail_activity_crystallize_dialog_title_size" />
 
   </RelativeLayout>
 
 
   <ScrollView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@id/titleCrystallize"
-      android:paddingBottom="@dimen/detail_activity_crystallize_dialog_scrollview_padding_bottom"
-      android:paddingTop="@dimen/detail_activity_crystallize_dialog_scrollview_padding_top"
-      android:paddingLeft="@dimen/detail_activity_crystallize_dialog_scrollview_padding_left"
-      android:paddingRight="@dimen/detail_activity_crystallize_dialog_scrollview_padding_right">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/titleCrystallize"
+    android:paddingBottom="@dimen/detail_activity_crystallize_dialog_scrollview_padding_bottom"
+    android:paddingLeft="@dimen/detail_activity_crystallize_dialog_scrollview_padding_left"
+    android:paddingRight="@dimen/detail_activity_crystallize_dialog_scrollview_padding_right"
+    android:paddingTop="@dimen/detail_activity_crystallize_dialog_scrollview_padding_top">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
 
       <TextView
-          android:id="@+id/crystallize_top_text"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/detail_activity_crystallize_dialog_description"
-          android:textColor="@color/buy_pro_item_description_text"
-          android:textSize="@dimen/detail_activity_crystallize_dialog_description_size"/>
+        android:id="@+id/crystallize_top_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/detail_activity_crystallize_dialog_description"
+        android:textColor="@color/buy_pro_item_description_text"
+        android:textSize="@dimen/detail_activity_crystallize_dialog_description_size" />
 
 
     </RelativeLayout>

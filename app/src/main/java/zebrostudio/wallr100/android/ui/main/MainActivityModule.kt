@@ -21,6 +21,6 @@ class MainActivityModule {
     collectionImagesUseCase: CollectionImagesUseCase,
     systemInfoProvider: SystemInfoProvider
   ): MainPresenter = MainPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase,
-      collectionImagesUseCase, systemInfoProvider)
+    collectionImagesUseCase, systemInfoProvider)
 
 }

@@ -24,6 +24,6 @@ class SearchActivityModule {
     searchPicturesPresenterEntityMapper: SearchPicturesPresenterEntityMapper,
     postExecutionThread: PostExecutionThread
   ): SearchPresenter = SearchPresenterImpl(searchPicturesUseCase,
-      searchPicturesPresenterEntityMapper, postExecutionThread)
+    searchPicturesPresenterEntityMapper, postExecutionThread)
 
 }

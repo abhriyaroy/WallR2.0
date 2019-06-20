@@ -17,6 +17,6 @@ class FullScreenImageModule {
     imageOptionsUseCase: ImageOptionsUseCase,
     postExecutionThread: PostExecutionThread
   ): FullScreenImagePresenter = FullScreenImagePresenterImpl(imageOptionsUseCase,
-      postExecutionThread)
+    postExecutionThread)
 
 }

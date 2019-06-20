@@ -32,9 +32,9 @@ class CollectionModule {
     permissionsChecker: PermissionsChecker,
     systemInfoProvider: SystemInfoProvider
   ): CollectionPresenter = CollectionPresenterImpl(widgetHintsUseCase,
-      userPremiumStatusUseCase, collectionImagesUseCase, collectionImagesPresenterEntityMapper,
-      wallpaperSetter, resourceUtils, postExecutionThread, permissionsChecker,
-      systemInfoProvider)
+    userPremiumStatusUseCase, collectionImagesUseCase, collectionImagesPresenterEntityMapper,
+    wallpaperSetter, resourceUtils, postExecutionThread, permissionsChecker,
+    systemInfoProvider)
 
   @Provides
   @PerFragment

@@ -23,7 +23,7 @@ class ImageListModule {
     imagePresenterEntityMapper: ImagePresenterEntityMapper,
     postExecutionThread: PostExecutionThread
   ): ImageListPresenter = ImageListPresenterImpl(
-      wallpaperImagesUseCase,
-      imagePresenterEntityMapper,
-      postExecutionThread)
+    wallpaperImagesUseCase,
+    imagePresenterEntityMapper,
+    postExecutionThread)
 }

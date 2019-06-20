@@ -19,7 +19,7 @@ class RecyclerViewItemDecorator(
     state: State
   ) {
     val frameWidth =
-      ((parent.width - sizeGridSpacingPx.toFloat() * (gridSize - 1)) / gridSize).toInt()
+        ((parent.width - sizeGridSpacingPx.toFloat() * (gridSize - 1)) / gridSize).toInt()
     val padding = parent.width / gridSize - frameWidth
     val itemPosition = (view.layoutParams as RecyclerView.LayoutParams).viewAdapterPosition
     if (itemPosition < gridSize) {

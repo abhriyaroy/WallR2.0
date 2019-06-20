@@ -7,9 +7,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.Single
 import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,15 +20,19 @@ import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerIntervalU
 import zebrostudio.wallr100.domain.interactor.AutomaticWallpaperChangerIntervalUpdateResultState.SERVICE_RESTARTED
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.CollectionsImagesInteractor
-import java.util.Random
+import java.util.*
 
 @RunWith(MockitoJUnitRunner::class)
 class CollectionImagesUseCaseTest {
 
-  @Mock lateinit var serviceManager: ServiceManager
-  @Mock lateinit var wallrRepository: WallrRepository
-  @Mock lateinit var uri: Uri
-  @Mock lateinit var bitmap: Bitmap
+  @Mock
+  lateinit var serviceManager: ServiceManager
+  @Mock
+  lateinit var wallrRepository: WallrRepository
+  @Mock
+  lateinit var uri: Uri
+  @Mock
+  lateinit var bitmap: Bitmap
   private lateinit var collectionsImagesUseCase: CollectionImagesUseCase
 
   @Before
@@ -38,10 +40,11 @@ class CollectionImagesUseCaseTest {
     collectionsImagesUseCase = CollectionsImagesInteractor(serviceManager, wallrRepository)
   }
 
-  @Test fun `should return Single of list of CollectionsImageModel on getAllImages call success`() {
+  @Test
+  fun `should return Single of list of CollectionsImageModel on getAllImages call success`() {
     val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
     `when`(wallrRepository.getImagesInCollection()).thenReturn(
-        Single.just(collectionImagesModelList))
+      Single.just(collectionImagesModelList))
 
     val result = collectionsImagesUseCase.getAllImages().test().values()[0]
 
@@ -49,7 +52,8 @@ class CollectionImagesUseCaseTest {
     verify(wallrRepository).getImagesInCollection()
   }
 
-  @Test fun `should return error on getAllImages call failure`() {
+  @Test
+  fun `should return error on getAllImages call failure`() {
     `when`(wallrRepository.getImagesInCollection()).thenReturn(Single.error(Exception()))
 
     collectionsImagesUseCase.getAllImages().test().assertError(Exception::class.java)
@@ -57,11 +61,12 @@ class CollectionImagesUseCaseTest {
     verify(wallrRepository).getImagesInCollection()
   }
 
-  @Test fun `should return Single of list of CollectionsImageModel on addImages call success`() {
+  @Test
+  fun `should return Single of list of CollectionsImageModel on addImages call success`() {
     val uriList = listOf(uri)
     val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
     `when`(wallrRepository.addImagesToCollection(uriList)).thenReturn(
-        Single.just(collectionImagesModelList))
+      Single.just(collectionImagesModelList))
 
     val result = collectionsImagesUseCase.addImage(uriList).test().values()[0]
 
@@ -69,20 +74,22 @@ class CollectionImagesUseCaseTest {
     verify(wallrRepository).addImagesToCollection(uriList)
   }
 
-  @Test fun `should return error on addImage call failure`() {
+  @Test
+  fun `should return error on addImage call failure`() {
     val uriList = listOf(uri)
     `when`(wallrRepository.addImagesToCollection(uriList)).thenReturn(
-        Single.error(Exception()))
+      Single.error(Exception()))
 
     collectionsImagesUseCase.addImage(uriList).test().assertError(Exception::class.java)
 
     verify(wallrRepository).addImagesToCollection(uriList)
   }
 
-  @Test fun `should return Single of list of CollectionsImageModel on reorderImage call success`() {
+  @Test
+  fun `should return Single of list of CollectionsImageModel on reorderImage call success`() {
     val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
     `when`(wallrRepository.reorderImagesInCollectionDatabase(collectionImagesModelList)).thenReturn(
-        Single.just(collectionImagesModelList))
+      Single.just(collectionImagesModelList))
 
     val result = collectionsImagesUseCase.reorderImage(collectionImagesModelList).test().values()[0]
 
@@ -90,7 +97,8 @@ class CollectionImagesUseCaseTest {
     verify(wallrRepository).reorderImagesInCollectionDatabase(collectionImagesModelList)
   }
 
-  @Test fun `should return error on reorderImage call failure`() {
+  @Test
+  fun `should return error on reorderImage call failure`() {
     val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
     `when`(wallrRepository.reorderImagesInCollectionDatabase(collectionImagesModelList))
         .thenReturn(Single.error(Exception()))
@@ -101,10 +109,11 @@ class CollectionImagesUseCaseTest {
     verify(wallrRepository).reorderImagesInCollectionDatabase(collectionImagesModelList)
   }
 
-  @Test fun `should return Single of list of CollectionsImageModel on deleteImages call success`() {
+  @Test
+  fun `should return Single of list of CollectionsImageModel on deleteImages call success`() {
     val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
     `when`(wallrRepository.deleteImageFromCollection(collectionImagesModelList)).thenReturn(
-        Single.just(collectionImagesModelList))
+      Single.just(collectionImagesModelList))
 
     val result = collectionsImagesUseCase.deleteImages(collectionImagesModelList).test().values()[0]
 
@@ -112,7 +121,8 @@ class CollectionImagesUseCaseTest {
     verify(wallrRepository).deleteImageFromCollection(collectionImagesModelList)
   }
 
-  @Test fun `should return error on deleteImages call failure`() {
+  @Test
+  fun `should return error on deleteImages call failure`() {
     val collectionImagesModelList = listOf(CollectionsImageModelFactory.getCollectionsImageModel())
     `when`(wallrRepository.deleteImageFromCollection(collectionImagesModelList))
         .thenReturn(Single.error(Exception()))
@@ -127,7 +137,7 @@ class CollectionImagesUseCaseTest {
   fun `should return Single of list of CollectionsImageModel on getImageBitmap call success`() {
     val collectionImagesModel = CollectionsImageModelFactory.getCollectionsImageModel()
     `when`(wallrRepository.getBitmapFromDatabaseImage(collectionImagesModel)).thenReturn(
-        Single.just(bitmap))
+      Single.just(bitmap))
 
     val result = collectionsImagesUseCase.getImageBitmap(collectionImagesModel).test().values()[0]
 
@@ -135,7 +145,8 @@ class CollectionImagesUseCaseTest {
     verify(wallrRepository).getBitmapFromDatabaseImage(collectionImagesModel)
   }
 
-  @Test fun `should return error on getImageBitmap call failure`() {
+  @Test
+  fun `should return error on getImageBitmap call failure`() {
     val collectionImagesModel = CollectionsImageModelFactory.getCollectionsImageModel()
     `when`(wallrRepository.getBitmapFromDatabaseImage(collectionImagesModel))
         .thenReturn(Single.error(Exception()))
@@ -151,7 +162,7 @@ class CollectionImagesUseCaseTest {
     val collectionImagesModel = CollectionsImageModelFactory.getCollectionsImageModel()
     val collectionImagesModelList = listOf(collectionImagesModel)
     `when`(wallrRepository.saveCrystallizedImageInDatabase(collectionImagesModel)).thenReturn(
-        Single.just(collectionImagesModelList))
+      Single.just(collectionImagesModelList))
 
     val result =
         collectionsImagesUseCase.saveCrystallizedImage(collectionImagesModel).test().values()[0]
@@ -160,7 +171,8 @@ class CollectionImagesUseCaseTest {
     verify(wallrRepository).saveCrystallizedImageInDatabase(collectionImagesModel)
   }
 
-  @Test fun `should return error on saveCrystallizedImage call failure`() {
+  @Test
+  fun `should return error on saveCrystallizedImage call failure`() {
     val collectionImagesModel = CollectionsImageModelFactory.getCollectionsImageModel()
     `when`(wallrRepository.saveCrystallizedImageInDatabase(collectionImagesModel))
         .thenReturn(Single.error(Exception()))

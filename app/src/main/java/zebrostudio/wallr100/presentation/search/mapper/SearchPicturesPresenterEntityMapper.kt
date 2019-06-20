@@ -10,20 +10,20 @@ class SearchPicturesPresenterEntityMapper {
   fun mapToPresenterEntity(searchPicturesModel: List<SearchPicturesModel>) =
       searchPicturesModel.map {
         SearchPicturesPresenterEntity(
-            it.id,
-            it.createdAt,
-            it.imageWidth,
-            it.imageHeight,
-            it.paletteColor,
-            UserPresenterEntity(it.userModel.name,
-                it.userModel.profileImageLink),
-            it.likes,
-            it.likedByUser,
-            UrlPresenterEntity(it.imageQualityUrlModel.rawImageLink,
-                it.imageQualityUrlModel.largeImageLink,
-                it.imageQualityUrlModel.regularImageLink,
-                it.imageQualityUrlModel.smallImageLink,
-                it.imageQualityUrlModel.thumbImageLink)
+          it.id,
+          it.createdAt,
+          it.imageWidth,
+          it.imageHeight,
+          it.paletteColor,
+          UserPresenterEntity(it.userModel.name,
+            it.userModel.profileImageLink),
+          it.likes,
+          it.likedByUser,
+          UrlPresenterEntity(it.imageQualityUrlModel.rawImageLink,
+            it.imageQualityUrlModel.largeImageLink,
+            it.imageQualityUrlModel.regularImageLink,
+            it.imageQualityUrlModel.smallImageLink,
+            it.imageQualityUrlModel.thumbImageLink)
         )
       }.toList()
 

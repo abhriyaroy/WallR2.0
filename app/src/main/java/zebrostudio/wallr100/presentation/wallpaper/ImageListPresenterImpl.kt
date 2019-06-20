@@ -3,9 +3,7 @@ package zebrostudio.wallr100.presentation.wallpaper
 import com.uber.autodispose.autoDisposable
 import io.reactivex.Single
 import zebrostudio.wallr100.android.utils.FragmentTag
-import zebrostudio.wallr100.android.utils.FragmentTag.CATEGORIES_TAG
-import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
-import zebrostudio.wallr100.android.utils.FragmentTag.TOP_PICKS_TAG
+import zebrostudio.wallr100.android.utils.FragmentTag.*
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.WallpaperImagesUseCase
 import zebrostudio.wallr100.domain.model.images.ImageModel
