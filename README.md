@@ -33,9 +33,9 @@ Salient features of the app :-
   - [Shared Preferences](#shared-preferences)<br>
   - [Retrofit](#retrofit)<br>
   - [Glide](#glide)<br>
-  - [JUnit](#junit)<br>
-  - [Mockito](#mockito)<br>
-  - [Espresso](#espresso)<br>
+  - [Unit Tests](#unit-tests)<br>
+  - [Instrumentation Tests](#instrumentation-tests)<br>
+
 </p>
 
 # Screenshots
@@ -252,13 +252,19 @@ Salient features of the app :-
  
    Unit tests in this project are written using the <a href="https://site.mockito.org/">Mockito</a> framework and run using the <a href="https://junit.org/junit4/">JUnit</a> runner. These tests are very fast in nature and help us quickly test our codebase for any breaking change.
    
-   <p align="center"><img src="https://i.imgur.com/IxDnxIt.png" height = 200></a>
+   The following unit test code coverage values reflect lower than actual coverage values due to certain <a href="https://discuss.kotlinlang.org/t/inline-functions-coverage/5366">issues</a> in calculation of code coverage in kotlin. More reports of such issues can be found <a href="https://stackoverflow.com/questions/54498333/inline-functions-are-causing-errors-in-unit-test-code-coverage-report">here</a>. 
+   <br>
+   <p align="center"><img src="https://i.imgur.com/Y4LhSkm.png"><br>Overall Coverage</a>
+   <p align="center"><img src="https://i.imgur.com/pjpZ7BT.png"><br>Presentation Layer Coverage</a>
+   <p align="center"><img src="https://i.imgur.com/qPeXf3n.png"><br>Domain Layer Coverage</a>
+   <p align="center"><img src="https://i.imgur.com/oQQ7M3Q.png"><br>Data Layer Coverage</a>
+   
+   <p align="center"><img src="https://i.imgur.com/9esAJDh.png"></a>
  
  ### Instrumentation Tests
    User interface (UI) testing lets you ensure that your app meets its functional requirements and achieves a high standard of quality      such that it is more likely to be successfully adopted by users. <br>
    One approach to UI testing is to simply have a human tester perform a set of user operations on the target app and verify that it is   behaving correctly. However, this manual approach can be time-consuming, tedious, and error-prone. A more efficient approach is to       write UI tests such that user actions are performed in an automated way. The automated approach allows us to run tests                   quickly and reliably in a repeatable manner.
    
-   #### Espresso
  
  ## Features
   - Daily new wallpapers 
