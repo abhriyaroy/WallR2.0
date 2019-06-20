@@ -228,9 +228,14 @@ Salient features of the app :-
    
  ## Networking
  
+ Network operations are heavy tasks which should be performed in background threads so that the user does not face any `app not responding` errors due to the `UI Thread` getting clogged up. Thus I have used `Retrofit` with RxJava.
+ 
  ### Retrofit
  
-   Retrofit is a REST Client for Java and Android. It is used to retrieve JSON data via a REST based webservice. It also helps in data      serialization using the gson converter. Retrofit uses the OkHttp library for HTTP requests.
+   <a href="https://square.github.io/retrofit/">Retrofit</a> is also used behind an <a href="https://github.com/abhriyaroy/WallR2.0/tree/develop/app/src/main/java/zebrostudio/wallr100/data/api">abstraction</a> so that it can be tested and easily replaced with any other framework if needed. <br>
+   <a href="https://github.com/JakeWharton/retrofit2-rxjava2-adapter">RxJava Call Adapter</a> is used to return the `responses` wrapped in `reactive streams`.<br>
+   The <a href="http://square.github.io/retrofit/2.x/converter-gson/retrofit2/converter/gson/GsonConverterFactory.html">GSON Converter Factory</a> is used which map the `response data` into various `entity models` to be consumed. <br>
+   `Retrofit` deep down uses the <a href="https://square.github.io/okhttp/">OkHttp</a> library for HTTP requests.<br>
    
  ## Image Loading
  
