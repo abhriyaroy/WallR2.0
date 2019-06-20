@@ -8,7 +8,6 @@ import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -22,14 +21,10 @@ import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.presentation.wallpaper.ImageListContract
 import zebrostudio.wallr100.presentation.wallpaper.ImageListPresenterImpl
 import zebrostudio.wallr100.presentation.wallpaper.mapper.ImagePresenterEntityMapper
-import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.util.concurrent.TimeoutException
 
 @RunWith(MockitoJUnitRunner::class)
 class ImageListPresenterImplTest {
-
-  @get:Rule
-  val trampolineSchedulerRule = TrampolineSchedulerRule()
 
   @Mock
   lateinit var postExecutionThread: PostExecutionThread

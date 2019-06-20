@@ -26,14 +26,10 @@ import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.presentation.search.SearchContract
 import zebrostudio.wallr100.presentation.search.SearchPresenterImpl
 import zebrostudio.wallr100.presentation.search.mapper.SearchPicturesPresenterEntityMapper
-import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class SearchPresenterImplTest {
-
-  @get:Rule
-  val trampolineSchedulerRule = TrampolineSchedulerRule()
 
   @Mock
   lateinit var postExecutionThread: PostExecutionThread

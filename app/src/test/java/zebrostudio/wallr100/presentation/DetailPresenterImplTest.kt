@@ -78,6 +78,7 @@ class DetailPresenterImplTest {
   private val downloadProgressCompleteUpTo98: Long = 98
   private val indefiniteLoaderMessage = "Finalizing wallpaper..."
   private var randomString = randomUUID().toString()
+  private val wallrDownloadLink = "http://bit.ly/download_wallr"
   private lateinit var imageDownloadPresenterEntityMapper: ImageDownloadPresenterEntityMapper
 
   @Before
@@ -185,12 +186,12 @@ class DetailPresenterImplTest {
   fun `should share link on handleShareClicked call success of type search`() {
     val shareIntentType = "text/plain"
     val shareIntentMessage = "share intent message"
-    val message = "$shareIntentMessage\n\nImage link - $randomString"
+    val message = "$shareIntentMessage $wallrDownloadLink \n\n Image link - $randomString"
     detailPresenterImpl.imageType = SEARCH
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
-    `when`(resourceUtils.getStringResource(R.string.share_intent_message,
-      WALLR_DOWNLOAD_LINK)).thenReturn(shareIntentMessage)
+    `when`(resourceUtils.getStringResource(R.string.share_intent_message))
+        .thenReturn(shareIntentMessage)
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(imageOptionsUseCase.getImageShareableLinkSingle(
@@ -199,7 +200,7 @@ class DetailPresenterImplTest {
 
     detailPresenterImpl.handleShareClick()
 
-    verify(resourceUtils).getStringResource(R.string.share_intent_message, WALLR_DOWNLOAD_LINK)
+    verify(resourceUtils).getStringResource(R.string.share_intent_message)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).getImageShareableLinkSingle(
       detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
@@ -237,12 +238,12 @@ class DetailPresenterImplTest {
   fun `should share link on handleShareClicked call success of type wallpaper`() {
     val shareIntentType = "text/plain"
     val shareIntentMessage = "share intent message"
-    val message = "$shareIntentMessage\n\nImage link - $randomString"
+    val message = "$shareIntentMessage $wallrDownloadLink \n\n Image link - $randomString"
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage =
         ImagePresenterEntityFactory.getImagePresenterEntity()
-    `when`(resourceUtils.getStringResource(R.string.share_intent_message,
-      WALLR_DOWNLOAD_LINK)).thenReturn(shareIntentMessage)
+    `when`(resourceUtils.getStringResource(R.string.share_intent_message))
+        .thenReturn(shareIntentMessage)
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(imageOptionsUseCase.getImageShareableLinkSingle(
@@ -251,8 +252,7 @@ class DetailPresenterImplTest {
 
     detailPresenterImpl.handleShareClick()
 
-    verify(resourceUtils).getStringResource(R.string.share_intent_message,
-      WALLR_DOWNLOAD_LINK)
+    verify(resourceUtils).getStringResource(R.string.share_intent_message)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).getImageShareableLinkSingle(
       detailPresenterImpl.wallpaperImage.imageLink.large)
@@ -309,12 +309,12 @@ class DetailPresenterImplTest {
   fun `should share link on handleViewResult call success of type share with image type search`() {
     val shareIntentType = "text/plain"
     val shareIntentMessage = "share intent message"
-    val message = "$shareIntentMessage\n\nImage link - $randomString"
+    val message = "$shareIntentMessage $wallrDownloadLink \n\n Image link - $randomString"
     detailPresenterImpl.imageType = SEARCH
     detailPresenterImpl.searchImage =
         SearchPicturesPresenterEntityFactory.getSearchPicturesPresenterEntity()
-    `when`(resourceUtils.getStringResource(R.string.share_intent_message,
-      WALLR_DOWNLOAD_LINK)).thenReturn(shareIntentMessage)
+    `when`(resourceUtils.getStringResource(R.string.share_intent_message))
+        .thenReturn(shareIntentMessage)
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(imageOptionsUseCase.getImageShareableLinkSingle(
@@ -324,7 +324,7 @@ class DetailPresenterImplTest {
     detailPresenterImpl.handleViewResult(SHARE.ordinal,
       PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
-    verify(resourceUtils).getStringResource(R.string.share_intent_message, WALLR_DOWNLOAD_LINK)
+    verify(resourceUtils).getStringResource(R.string.share_intent_message)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).getImageShareableLinkSingle(
       detailPresenterImpl.searchImage.imageQualityUrlPresenterEntity.largeImageLink)
@@ -363,12 +363,12 @@ class DetailPresenterImplTest {
   fun `should share link on handleViewResult call success of type share with image type as wallpaper`() {
     val shareIntentType = "text/plain"
     val shareIntentMessage = "share intent message"
-    val message = "$shareIntentMessage\n\nImage link - $randomString"
+    val message = "$shareIntentMessage $wallrDownloadLink \n\n Image link - $randomString"
     detailPresenterImpl.imageType = WALLPAPERS
     detailPresenterImpl.wallpaperImage =
         ImagePresenterEntityFactory.getImagePresenterEntity()
-    `when`(resourceUtils.getStringResource(R.string.share_intent_message,
-      WALLR_DOWNLOAD_LINK)).thenReturn(shareIntentMessage)
+    `when`(resourceUtils.getStringResource(R.string.share_intent_message))
+        .thenReturn(shareIntentMessage)
     `when`(detailView.internetAvailability()).thenReturn(true)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(imageOptionsUseCase.getImageShareableLinkSingle(
@@ -378,7 +378,7 @@ class DetailPresenterImplTest {
     detailPresenterImpl.handleViewResult(SHARE.ordinal,
       PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
-    verify(resourceUtils).getStringResource(R.string.share_intent_message, WALLR_DOWNLOAD_LINK)
+    verify(resourceUtils).getStringResource(R.string.share_intent_message)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(imageOptionsUseCase).getImageShareableLinkSingle(
       detailPresenterImpl.wallpaperImage.imageLink.large)
