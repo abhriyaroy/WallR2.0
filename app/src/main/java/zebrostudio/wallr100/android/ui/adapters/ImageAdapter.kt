@@ -52,21 +52,11 @@ class ViewHolder(
   }
 
   override fun setSearchImage(link: String) {
-    val options = RequestOptions()
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .override(context.integerRes(R.integer.recycler_view_adapter_search_image_width),
-          context.integerRes(R.integer.recycler_view_adapter_search_image_height))
-        .centerCrop()
-    loadAndShowImage(link, options)
+    loadAndShowImage(link)
   }
 
   override fun setWallpaperImage(link: String) {
-    val options = RequestOptions()
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .override(context.integerRes(R.integer.recycler_view_adapter_wallpaper_image_width),
-          context.integerRes(R.integer.recycler_view_adapter_wallpaper_image_height))
-        .centerCrop()
-    loadAndShowImage(link, options)
+    loadAndShowImage(link)
   }
 
   override fun showSearchImageDetails(searchImage: SearchPicturesPresenterEntity) {
@@ -77,8 +67,14 @@ class ViewHolder(
     context.startActivity(DetailActivity.getCallingIntent(context, wallpaperImage))
   }
 
-  private fun loadAndShowImage(link: String, options: RequestOptions) {
-    imageLoader.loadWithOptions(context, link, itemView.imageView, options, withCrossFade())
+  private fun loadAndShowImage(link: String) {
+    imageLoader.loadWithFixedSize(context,
+      link,
+      itemView.imageView,
+      DiskCacheStrategy.ALL,
+      withCrossFade(),
+      context.integerRes(R.integer.recycler_view_adapter_wallpaper_image_width),
+      context.integerRes(R.integer.recycler_view_adapter_wallpaper_image_height))
   }
 
 }

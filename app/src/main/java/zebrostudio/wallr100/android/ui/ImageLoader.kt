@@ -28,17 +28,13 @@ interface ImageLoader {
     target: ImageView,
     listener: LoaderListener)
 
-  fun loadWithOptions(context: Context,
+  fun loadWithFixedSize(context: Context,
     imageLink: String,
     target: ImageView,
-    options: RequestOptions,
-    transitionOptions: DrawableTransitionOptions = withCrossFade())
-
-  fun loadWithOptions(context: Context,
-    imageBitmap: Bitmap,
-    target: ImageView,
-    options: RequestOptions,
-    transitionOptions: DrawableTransitionOptions = withCrossFade())
+    cacheStrategy: DiskCacheStrategy = DiskCacheStrategy.ALL,
+    transitionOptions: DrawableTransitionOptions = withCrossFade(),
+    width: Int,
+    height: Int)
 
   fun loadWithCenterCropping(context: Context,
     bitmap: Bitmap,
@@ -119,20 +115,19 @@ class ImageLoaderImpl : ImageLoader {
     }).into(target)
   }
 
-  override fun loadWithOptions(context: Context,
+  override fun loadWithFixedSize(context: Context,
     imageLink: String,
     target: ImageView,
-    options: RequestOptions,
-    transitionOptions: DrawableTransitionOptions) {
-    Glide.with(context).load(imageLink).transition(transitionOptions).apply(options).into(target)
-  }
-
-  override fun loadWithOptions(context: Context,
-    imageBitmap: Bitmap,
-    target: ImageView,
-    options: RequestOptions,
-    transitionOptions: DrawableTransitionOptions) {
-    Glide.with(context).load(imageBitmap).transition(transitionOptions).apply(options).into(target)
+    cacheStrategy: DiskCacheStrategy,
+    transitionOptions: DrawableTransitionOptions,
+    width: Int,
+    height: Int) {
+    with(RequestOptions()
+        .diskCacheStrategy(cacheStrategy)
+        .override(width, height)
+        .centerCrop()) {
+      Glide.with(context).load(imageLink).transition(transitionOptions).apply(this).into(target)
+    }
   }
 
   override fun loadWithCenterCropping(context: Context,
