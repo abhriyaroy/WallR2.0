@@ -239,16 +239,18 @@ Salient features of the app :-
    
  ## Image Loading
  
+ Image loading can be from various sources of data like a `file path` or a `bitmap` or a `drawable resource` or it may also happen that the image needs to be processed befoer being used and glide caters to all that with very minimal `boiler-plate` code with proper `caching mechanisms` and hence was suitable for this project.
+ 
  ### Glide
+ <a href="https://github.com/bumptech/glide">Glide</a> is used behind an <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/ui/ImageLoader.kt">image loader</a> abstraction so that any other image loading library can be easily used instead of glide if required.<br>
  
  ## Testing
+   TDD (Test Driven Development) is an effective way of developing the applicaion by incrementally adding the code and writing tests. It ensures us that the addition of new features have not mistakenly broken anything else and gives us more confidence to push out code. <br>
+    While writing tests we often come across certain edge cases which were not thought of while writing the normal code thus helps us build a more robust and stable application.
  
  ### Unit Tests
-   TDD (Test Driven Development) is an effective way of developing the applicaion by incrementally adding the code and writing tests.      Unit tests in this project are written using the Mockito framework and run using the JUnit runner.
-   
-   #### JUnit
-   
-   #### Mockito
+ 
+   Unit tests in this project are written using the <a href="https://site.mockito.org/">Mockito</a> framework and run using the <a href="https://junit.org/junit4/">JUnit</a> runner. These tests are very fast in nature and help us quickly test our codebase for any breaking change.
    
    <p align="center"><img src="https://i.imgur.com/IxDnxIt.png" height = 200></a>
  
