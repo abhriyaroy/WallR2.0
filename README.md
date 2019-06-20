@@ -69,6 +69,8 @@ Salient features of the app :-
      - [Shared Preferences](#shared-preferences)<br>
   - [Networking](#networking)
      - [Retrofit](#retrofit)<br>
+  - [Image Loading](#image-loading)
+     - [Glide](#glide)
   - [Testing](#testing)
      - [Unit Tests](#unit-tests)<br>
      - [Instrumentation Tests](#instrumentation-tests)<br>
@@ -125,7 +127,7 @@ Salient features of the app :-
  ### Dagger 2
   - <a href="https://github.com/google/dagger">Dagger 2</a> is a dependency injection framework, which makes it easier to manage the         dependencies between the classes in our app.
   
-  It this project the dependency graph is constructed via :
+  In this project the dependency graph is constructed via :
   <ul>
     <li> An <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/di/AppComponent.kt">App Component</a> which is used to bind the dependency graph to the application. </li>
     <li> An <a href="https://dagger.dev/api/latest/dagger/android/AndroidInjectionModule.html">Android Injection Module</a> which helps us inject into the android framework classes.</li>
@@ -154,7 +156,8 @@ Salient features of the app :-
     
  ## Multi-threading 
  
-  To provide the users with a fast and responsive app, heavy work such as network calls, database operations, file operations or other     background tasks need to be done on threads other than the `UI Thread`. This is where multi-threading comes into play.
+  To provide the users with a fast and responsive app, heavy work such as network calls, database operations, file operations or other     background tasks need to be done on threads other than the `UI Thread`. This is where multi-threading comes into play.<br>
+  Schedulers like `Computation`, `IO`, `Android Main Thread` have been used to effectively juggle between background and foreground         activities. However, all of this is done using a layer of abstraction for the <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/AndroidBackgroundThreads.kt">background</a> and <a href="https://github.com/abhriyaroy/WallR2.0/blob/develop/app/src/main/java/zebrostudio/wallr100/android/AndroidMainThread.kt">foreground</a> schedulers so that they can be easilty tested.
  
  ### RxJava 2
  
@@ -203,6 +206,10 @@ Salient features of the app :-
  ### Retrofit
  
    Retrofit is a REST Client for Java and Android. It is used to retrieve JSON data via a REST based webservice. It also helps in data      serialization using the gson converter. Retrofit uses the OkHttp library for HTTP requests.
+   
+ ## Image Loading
+ 
+ ### Glide
  
  ## Testing
  
