@@ -188,8 +188,9 @@ Salient features of the app :-
  
  ### Unsplash API
  
-   The <a href="https://unsplash.com/developers">Unsplash API</a> is a modern JSON API that surfaces all of the info required for displaying various wallpapers to the users.
-   The `JSON` response obtained from the `Unsplash API` using [Retrofit](#retrofit), is trimmed down to the following model :<br>
+   The <a href="https://unsplash.com/developers">Unsplash API</a> is a modern JSON API that surfaces all of the info required for displaying various wallpapers to the users.<br>
+   
+   The `JSON` response obtained from the `Unsplash API` using [Retrofit](#retrofit), is trimmed down to the following data model :<br>
    
    <p align="center"><img src="https://i.imgur.com/zNQgcMn.png"></p>
    
@@ -200,7 +201,7 @@ Salient features of the app :-
    The Firebase Realtime Database is used to cache images from `Unsplash` as the number of `API requests` available in the `Unsplash        API` is limited. Thus the app fetches all the wallpaper data required for shocasing the default wallpapers from `Firebase` itself.      The basic structure of the firebase database for this project looks like :- 
    <p align="center"> <img src="https://i.imgur.com/WThrSrw.png" widht=700 height=550></a>
    
-   The response model to which the `JSON` response from the `Firebase Realtime Database` looks like :-
+   The data model to which the `JSON` response from the `Firebase Realtime Database` is mapped, looks like :-
    
    <p align="center"><img src="https://i.imgur.com/7yldJuy.png"></p>
    
