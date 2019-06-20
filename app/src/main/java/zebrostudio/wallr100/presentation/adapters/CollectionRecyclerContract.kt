@@ -15,7 +15,7 @@ interface CollectionRecyclerContract {
   interface CollectionRecyclerPresenter {
     fun getItemCount(list: List<CollectionsPresenterEntity>): Int
     fun onBindRepositoryRowViewAtPosition(
-      dragSelectItemViewHolder: CollectionsRecyclerItemViewHolder,
+      collectionsRecyclerItemViewHolder: CollectionsRecyclerItemViewHolder,
       imagePathList: List<CollectionsPresenterEntity>,
       selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>,
       position: Int

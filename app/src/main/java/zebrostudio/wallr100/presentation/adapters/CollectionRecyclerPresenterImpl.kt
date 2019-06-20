@@ -11,18 +11,18 @@ class CollectionRecyclerPresenterImpl : CollectionRecyclerPresenter {
   }
 
   override fun onBindRepositoryRowViewAtPosition(
-    dragSelectItemViewHolder: CollectionsRecyclerItemViewHolder,
+    collectionsRecyclerItemViewHolder: CollectionsRecyclerItemViewHolder,
     imagePathList: List<CollectionsPresenterEntity>,
     selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>,
     position: Int
   ) {
-    dragSelectItemViewHolder.setImage(imagePathList[position].path)
-    dragSelectItemViewHolder.attachClickListener()
-    dragSelectItemViewHolder.attachLongClickToDragListener()
+    collectionsRecyclerItemViewHolder.setImage(imagePathList[position].path)
+    collectionsRecyclerItemViewHolder.attachClickListener()
+    collectionsRecyclerItemViewHolder.attachLongClickToDragListener()
     if (selectedItemsMap.containsKey(position)) {
-      dragSelectItemViewHolder.showSelectedIndicator()
+      collectionsRecyclerItemViewHolder.showSelectedIndicator()
     } else {
-      dragSelectItemViewHolder.hideSelectedIndicator()
+      collectionsRecyclerItemViewHolder.hideSelectedIndicator()
     }
   }
 
