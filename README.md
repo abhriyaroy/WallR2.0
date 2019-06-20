@@ -11,7 +11,7 @@ Did you know that an average user checks their device more than 80 times a day? 
 - [Introduction](#introduction) <br>
 - [Screenshots](#screenshots) <br>
 - [App Details](#app-details) <br>
-- [Features](#features) <br>
+- [App Features from an User's Perspective](#app-features-from-an-users-perspective) <br>
 - [Project Setup Notes](#project-setup-notes) <br>
 - [Acclamations](#acclamations) <br>
 - [Libraries](#libraries) <br>
@@ -266,7 +266,7 @@ Salient features of the app :-
    One approach to UI testing is to simply have a human tester perform a set of user operations on the target app and verify that it is   behaving correctly. However, this manual approach can be time-consuming, tedious, and error-prone. A more efficient approach is to       write UI tests such that user actions are performed in an automated way. The automated approach allows us to run tests                   quickly and reliably in a repeatable manner.
    
  
- ## Features
+ ## App Features from an User's Perspective
   - Daily new wallpapers 
   - More than 10 Categories of wallpapers 
   - Search for wallpaper of your choice from a collection of over 100k+ images 
@@ -284,7 +284,7 @@ Salient features of the app :-
   
  
 ## Project Setup Notes
-- The google-services.json file has been purposely ignored by git due to security purposes. Please login to <a href="https://console.firebase.google.com/u/0/?gclid=CjwKCAjw__fnBRANEiwAuFxET6VRIbt1VaeN3D_DAYAU3rAwAC1uJGY1FaKZvmWSTe8bkiGe8lRAPBoCd0QQAvD_BwE">Firebase console</a> and create a new project and obtain your own google-services.json file and paste it at app/src/debug to set it up and running.<br> For more information, please refer the <a href="https://firebase.google.com/docs/android/setup">docs</a>.
+- The google-services.json file has been purposely ignored by git due to security purposes. Please login to <a href="https://console.firebase.google.com/u/0/?gclid=CjwKCAjw__fnBRANEiwAuFxET6VRIbt1VaeN3D_DAYAU3rAwAC1uJGY1FaKZvmWSTe8bkiGe8lRAPBoCd0QQAvD_BwE">Firebase console</a> and create a new project and obtain your own google-services.json file and paste it at `app/src/debug` or `app/src/release` directory as per your build flavour to set it up and running.<br> For more information, please refer the <a href="https://firebase.google.com/docs/android/setup">docs</a>.
 
 ## Acclamations
 
