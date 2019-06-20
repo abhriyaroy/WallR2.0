@@ -184,8 +184,10 @@ class CollectionFragment : BaseFragment(),
         .title(stringRes(R.string.collections_fragment_purchase_pro_diloag_title))
         .content(stringRes(R.string.collections_fragment_purchase_pro_diloag_description))
         .onPositive { _, _ -> redirectToBuyProActivity() }
+        .onNegative { _, _ -> fragmentManager?.popBackStack() }
         .cancelable(false)
         .positiveText(stringRes(R.string.collections_fragment_purchase_pro_diloag_positive_text))
+        .negativeText(stringRes(R.string.collections_fragment_purchase_pro_diloag_negative_text))
         .show()
   }
 
