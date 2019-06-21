@@ -12,6 +12,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.android.system.SystemInfoProvider
+import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.android.utils.FragmentTag.*
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
@@ -22,16 +23,11 @@ import zebrostudio.wallr100.presentation.main.MainPresenterImpl
 @RunWith(MockitoJUnitRunner::class)
 class MainPresenterImplTest {
 
-  @Mock
-  lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
-  @Mock
-  lateinit var widgetHintsUseCase: WidgetHintsUseCase
-  @Mock
-  lateinit var collectionImagesUseCase: CollectionImagesUseCase
-  @Mock
-  lateinit var systemInfoProvider: SystemInfoProvider
-  @Mock
-  lateinit var mainView: MainView
+  @Mock lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
+  @Mock lateinit var widgetHintsUseCase: WidgetHintsUseCase
+  @Mock lateinit var collectionImagesUseCase: CollectionImagesUseCase
+  @Mock lateinit var systemInfoProvider: SystemInfoProvider
+  @Mock lateinit var mainView: MainView
   private lateinit var mainPresenter: MainPresenterImpl
 
   @Before
@@ -269,6 +265,22 @@ class MainPresenterImplTest {
     verify(systemInfoProvider).getModelName()
     verify(systemInfoProvider).getProductName()
     verify(mainView).showFeedbackClient(messageSubject, arrayOf(emailAddress), contentType)
+  }
+
+  @Test fun `should hide buy pro layout on resume after successful purchase`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+
+    mainPresenter.handleViewResumed()
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(mainView).hideBuyProLayout()
+  }
+
+  @Test fun `should hide buy pro layout on successful purchase`() {
+    mainPresenter.handleViewResult(PurchaseTransactionConfig.PURCHASE_REQUEST_CODE,
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+
+    verify(mainView).hideBuyProLayout()
   }
 
   @After

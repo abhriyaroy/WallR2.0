@@ -23,10 +23,13 @@ interface MainContract {
       emailAddress: Array<String>,
       emailIntentType: String
     )
+    fun hideBuyProLayout()
   }
 
   interface MainPresenter : BasePresenter<MainView> {
     fun handleViewCreated()
+    fun handleViewResumed()
+    fun handleViewResult(requestCode: Int, resultCode: Int)
     fun handleBackPress()
     fun handleNavigationMenuOpened()
     fun handleNavigationMenuClosed()

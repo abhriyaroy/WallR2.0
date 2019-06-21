@@ -1,7 +1,9 @@
 package zebrostudio.wallr100.presentation.main
 
 import zebrostudio.wallr100.android.system.SystemInfoProvider
+import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
 import zebrostudio.wallr100.android.utils.FragmentTag.*
+import zebrostudio.wallr100.android.utils.gone
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
@@ -94,6 +96,19 @@ class MainPresenterImpl(
           mainView?.showFeedbackClient(it, arrayOf(ZEBRO_STUDIO_EMAIL_ADDRESS),
             FEEDBACK_CONTENT_TYPE)
         }
+  }
+
+  override fun handleViewResumed() {
+    if (userPremiumStatusUseCase.isUserPremium()){
+      mainView?.hideBuyProLayout()
+    }
+  }
+
+  override fun handleViewResult(requestCode: Int, resultCode: Int) {
+    if (requestCode == PurchaseTransactionConfig.PURCHASE_REQUEST_CODE &&
+        resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
+      mainView?.hideBuyProLayout()
+    }
   }
 
 }

@@ -71,13 +71,13 @@ class MainActivity : AppCompatActivity(),
     setContentView(R.layout.activity_main)
     initializeViews()
     addFragment(fragmentContainer.id, WallpaperFragment.newInstance(), EXPLORE_TAG)
-
     attachToolbarItemClickListeners()
     presenter.handleViewCreated()
   }
 
-  override fun onBackPressed() {
-    presenter.handleBackPress()
+  override fun onResume() {
+    super.onResume()
+    presenter.handleViewResumed()
   }
 
   override fun onDestroy() {
@@ -85,12 +85,13 @@ class MainActivity : AppCompatActivity(),
     super.onDestroy()
   }
 
+  override fun onBackPressed() {
+    presenter.handleBackPress()
+  }
+
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    if (requestCode == PurchaseTransactionConfig.PURCHASE_REQUEST_CODE &&
-        resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
-      buyProMenuItem?.gone()
-    }
+    presenter.handleViewResult(requestCode, resultCode)
   }
 
   override fun supportFragmentInjector() = fragmentDispatchingAndroidInjector
@@ -200,6 +201,10 @@ class MainActivity : AppCompatActivity(),
 
   override fun releaseBackPressBlock() {
     isOperationInProcess = false
+  }
+
+  override fun hideBuyProLayout() {
+    buyProMenuItem?.gone()
   }
 
   private inline fun <reified T : BaseFragment> addFragment(
