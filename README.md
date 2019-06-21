@@ -294,31 +294,30 @@ Salient features of the app :-
 
 ## Libraries
 
- <a href="https://kotlinlang.org/docs/reference/">Kotlin</a>,
- <a href="https://github.com/ReactiveX/RxJava">RxJava 2</a>,
- <a href="https://unsplash.com/">Unsplash</a>,
- <a href="https://github.com/square/retrofit">Retrofit</a>,
- <a href="https://github.com/uber/AutoDispose">Autodispose</a>,
- <a href="https://github.com/google/dagger">Dagger 2</a>,
- <a href="https://github.com/mockito/mockito">Mockito</a>,
- <a href="https://github.com/junit-team/junit4">JUnit 4</a>,
- <a href="https://github.com/GrenderG/Toasty">Toasty</a>,
- <a href="https://github.com/recruit-lifestyle/WaveSwipeRefreshLayout">WaveSwipeRefreshLayout</a>,
- <a href="https://github.com/ybq/Android-SpinKit">Android-SpinKit</a>,
- <a href="https://github.com/ogaclejapan/SmartTabLayout">SmartTabLayout</a>,
- <a href="https://github.com/afollestad/material-dialogs">Material Dialogs</a>,
- <a href="https://github.com/bumptech/glide">Glide</a>,
- <a href="https://github.com/wasabeef/recyclerview-animators">Recyclerview Animator</a>,
- <a href="https://firebase.google.com/docs/android/setup">Firebase</a>,
- <a href="https://github.com/umano/AndroidSlidingUpPanel">Sliding up panel</a>,
- <a href="https://github.com/hdodenhof/CircleImageView">Circle ImageView</a>,
- <a href="https://github.com/KeepSafe/TapTargetView">TapTarget View</a>,
- <a href="https://github.com/jaredrummler/MaterialSpinner">Material Spinner</a>,
- <a href="https://github.com/MLSDev/RxImagePicker">Rx ImagePicker</a>,
- <a href="https://github.com/chrisbanes/PhotoView">Photoview</a>,
- <a href="https://github.com/Yalantis/uCrop">Ucrop</a>,
- <a href="https://github.com/Yalantis/GuillotineMenu-Android">Guillotine-Menu</a>,
- <a href="https://github.com/skydoves/ColorPickerView">Colorpicker view</a> 
+ <a href="https://github.com/ReactiveX/RxJava">RxJava 2</a> - helps with multi-threading.<br>
+  <a href="https://github.com/uber/AutoDispose">Autodispose</a> - used for disposing off observeables created using RxJava.<br>
+ <a href="https://unsplash.com/">Unsplash</a> - the source of every wallpaper used in the app.<br>
+ <a href="https://github.com/square/retrofit">Retrofit</a> - used for networking.<br>
+ <a href="https://github.com/google/dagger">Dagger 2</a> - used for dependency injection.<br> 
+ <a href="https://github.com/mockito/mockito">Mockito</a>, - helps with testing by mocking classes.<br>
+ <a href="https://github.com/junit-team/junit4">JUnit 4</a> - helps in running tests.<br>
+ <a href="https://github.com/GrenderG/Toasty">Toasty</a> - a library for showing fancy toasts to the user.<br>
+ <a href="https://github.com/recruit-lifestyle/WaveSwipeRefreshLayout">WaveSwipeRefreshLayout</a> - a custom viewgroup which provides a fancy way to refreshing items on swipe.<br>
+ <a href="https://github.com/ybq/Android-SpinKit">Android-SpinKit</a> - provides fancy loading animations.<br>
+ <a href="https://github.com/ogaclejapan/SmartTabLayout">SmartTabLayout</a> - a custom material tab layout.<br>
+ <a href="https://github.com/afollestad/material-dialogs">Material Dialogs</a> - easy to use material dialogs.<br>
+ <a href="https://github.com/bumptech/glide">Glide</a> - used for image loading.<br>
+ <a href="https://github.com/wasabeef/recyclerview-animators">Recyclerview Animator</a> - used to animate recycler view items.<br>
+ <a href="https://firebase.google.com/docs/android/setup">Firebase</a> - used for caching images from unsplash.<br>
+ <a href="https://github.com/umano/AndroidSlidingUpPanel">Sliding up panel</a> - provides a sliding up bottom panel.<br>
+ <a href="https://github.com/hdodenhof/CircleImageView">Circle ImageView</a> - a custom imageview.<br>
+ <a href="https://github.com/KeepSafe/TapTargetView">TapTarget View</a> - used for showing hints to the user.<br>
+ <a href="https://github.com/jaredrummler/MaterialSpinner">Material Spinner</a> - a custom material spinner. <br>
+ <a href="https://github.com/MLSDev/RxImagePicker">Rx ImagePicker</a> - an image picker library wrapped with rxjava. <br>
+ <a href="https://github.com/chrisbanes/PhotoView">Photoview</a> - a custom imageview with pinch zoom funtionality. <br>
+ <a href="https://github.com/Yalantis/uCrop">Ucrop</a> - an image processing library which provides various editing options. <br>
+ <a href="https://github.com/Yalantis/GuillotineMenu-Android">Guillotine-Menu</a> - a custom navigation drawer.<br>
+ <a href="https://github.com/skydoves/ColorPickerView">Colorpicker view</a> - a custom view which helps the user to choose a color in-order to generate custom wallpapers.
 
 <br>
 
