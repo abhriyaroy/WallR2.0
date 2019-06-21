@@ -57,7 +57,7 @@ class CollectionPresenterImpl(
     }
   }
 
-  override fun handleActivityResult() {
+  override fun handleViewResult() {
     handleViewCreated()
   }
 
@@ -273,6 +273,7 @@ class CollectionPresenterImpl(
         && permissionsChecker.isWritePermissionAvailable()) {
       true
     } else {
+      stopWallpaperChangerAndRemoveLayout()
       collectionView?.requestStoragePermission()
       false
     }

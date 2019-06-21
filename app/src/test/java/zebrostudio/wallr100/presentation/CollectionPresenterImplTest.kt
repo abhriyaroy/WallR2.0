@@ -98,8 +98,10 @@ class CollectionPresenterImplTest {
     collectionPresenterImpl.handleViewCreated()
 
     verify(userPremiumStatusUseCase).isUserPremium()
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
     verify(permissionsChecker).isReadPermissionAvailable()
     verify(collectionView).requestStoragePermission()
+    verify(collectionView).hideWallpaperChangerLayout()
   }
 
   @Test
@@ -111,9 +113,11 @@ class CollectionPresenterImplTest {
     collectionPresenterImpl.handleViewCreated()
 
     verify(userPremiumStatusUseCase).isUserPremium()
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
     verify(permissionsChecker).isReadPermissionAvailable()
     verify(permissionsChecker).isWritePermissionAvailable()
     verify(collectionView).requestStoragePermission()
+    verify(collectionView).hideWallpaperChangerLayout()
   }
 
   @Test
@@ -311,7 +315,7 @@ class CollectionPresenterImplTest {
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
       collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
 
-    collectionPresenterImpl.handleActivityResult()
+    collectionPresenterImpl.handleViewResult()
 
     verify(widgetHintsUseCase).isCollectionsImageReorderHintShown()
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionsImageModelList)
@@ -345,7 +349,7 @@ class CollectionPresenterImplTest {
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
       collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
 
-    collectionPresenterImpl.handleActivityResult()
+    collectionPresenterImpl.handleViewResult()
 
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionsImageModelList)
     verify(widgetHintsUseCase).isCollectionsImageReorderHintShown()
@@ -372,7 +376,7 @@ class CollectionPresenterImplTest {
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(true)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(Single.error(Exception()))
 
-    collectionPresenterImpl.handleActivityResult()
+    collectionPresenterImpl.handleViewResult()
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(collectionImagesUseCase).getAllImages()
@@ -398,7 +402,7 @@ class CollectionPresenterImplTest {
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
       collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
 
-    collectionPresenterImpl.handleActivityResult()
+    collectionPresenterImpl.handleViewResult()
 
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionsImageModelList)
     verify(userPremiumStatusUseCase).isUserPremium()
@@ -429,7 +433,7 @@ class CollectionPresenterImplTest {
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
       collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
 
-    collectionPresenterImpl.handleActivityResult()
+    collectionPresenterImpl.handleViewResult()
 
     verify(widgetHintsUseCase).isCollectionsImageReorderHintShown()
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionsImageModelList)
@@ -463,7 +467,7 @@ class CollectionPresenterImplTest {
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
       collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
 
-    collectionPresenterImpl.handleActivityResult()
+    collectionPresenterImpl.handleViewResult()
 
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionsImageModelList)
     verify(widgetHintsUseCase).isCollectionsImageReorderHintShown()
@@ -492,7 +496,7 @@ class CollectionPresenterImplTest {
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(listOf()))
         .thenReturn(listOf())
 
-    collectionPresenterImpl.handleActivityResult()
+    collectionPresenterImpl.handleViewResult()
 
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(listOf())
     verify(userPremiumStatusUseCase).isUserPremium()
@@ -515,7 +519,7 @@ class CollectionPresenterImplTest {
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(true)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(Single.error(Exception()))
 
-    collectionPresenterImpl.handleActivityResult()
+    collectionPresenterImpl.handleViewResult()
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(collectionImagesUseCase).getAllImages()
@@ -547,8 +551,10 @@ class CollectionPresenterImplTest {
     collectionPresenterImpl.handleImportFromLocalStorageClicked()
 
     verify(userPremiumStatusUseCase).isUserPremium()
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
     verify(permissionsChecker).isReadPermissionAvailable()
     verify(collectionView).requestStoragePermission()
+    verify(collectionView).hideWallpaperChangerLayout()
   }
 
   @Test
@@ -560,9 +566,11 @@ class CollectionPresenterImplTest {
     collectionPresenterImpl.handleImportFromLocalStorageClicked()
 
     verify(userPremiumStatusUseCase).isUserPremium()
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
     verify(permissionsChecker).isReadPermissionAvailable()
     verify(permissionsChecker).isWritePermissionAvailable()
     verify(collectionView).requestStoragePermission()
+    verify(collectionView).hideWallpaperChangerLayout()
   }
 
   @Test

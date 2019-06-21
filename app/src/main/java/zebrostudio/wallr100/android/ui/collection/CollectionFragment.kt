@@ -123,7 +123,7 @@ class CollectionFragment : BaseFragment(),
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    presenter.handleActivityResult()
+    presenter.handleViewResult()
   }
 
   override fun onMenuItemClick(item: MenuItem): Boolean {

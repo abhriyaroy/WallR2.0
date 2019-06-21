@@ -58,7 +58,7 @@ interface CollectionContract {
 
   interface CollectionPresenter : BasePresenter<CollectionView> {
     fun handleViewCreated()
-    fun handleActivityResult()
+    fun handleViewResult()
     fun handleImportFromLocalStorageClicked()
     fun handlePurchaseClicked()
     fun handleReorderImagesHintHintDismissed()
