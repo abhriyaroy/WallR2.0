@@ -233,5 +233,9 @@
   <string name="wallpaper_changer_service_interval_6_hours">6 hours</string>
   <string name="wallpaper_changer_service_interval_1_day">1 day</string>
   <string name="wallpaper_changer_service_interval_3_days">3 days</string>
+  <string name="permissions_required_rationale_title">Permissions Required</string>
+  <string name="permissions_required_rationale_content">Storage permissions are required by WallR to function. Please grant them in settings.</string>
+  <string name="permissions_required_rationale_positive_text">GO TO SETTINGS</string>
+  <string name="permissions_required_rationale_negative_text">GO BACK</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.presentation
 
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import com.nhaarman.mockitokotlin2.*
@@ -1583,6 +1584,20 @@ class CollectionPresenterImplTest {
     verify(collectionView).hideCab()
     verify(collectionView).showUnableToDeleteErrorMessage()
     verifyPostExecutionThreadSchedulerCall()
+  }
+
+  @Test fun `should show permissions required rationale on permissions not granted`() {
+    collectionPresenterImpl.handlePermissionRequestResult(0,
+      arrayOf(android.Manifest.permission_group.STORAGE),
+      intArrayOf(PackageManager.PERMISSION_DENIED))
+
+    verify(collectionView).showPermissionRequestRationale()
+  }
+
+  @Test fun `should not show permissions required rationale on permissions granted`() {
+    collectionPresenterImpl.handlePermissionRequestResult(0,
+      arrayOf(android.Manifest.permission_group.STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
   }
 
   @Test

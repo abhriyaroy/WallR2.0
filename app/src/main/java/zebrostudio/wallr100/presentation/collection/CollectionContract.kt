@@ -54,6 +54,7 @@ interface CollectionContract {
     fun showWallpaperChangerPermissionsRequiredDialog()
     fun disableBackPress()
     fun enableBackPress()
+    fun showPermissionRequestRationale()
   }
 
   interface CollectionPresenter : BasePresenter<CollectionView> {
@@ -89,6 +90,9 @@ interface CollectionContract {
     )
 
     fun handleCabDestroyed()
+    fun handlePermissionRequestResult(
+      requestCode: Int, permissions: Array<String>, grantResults: IntArray
+    )
   }
 
 }

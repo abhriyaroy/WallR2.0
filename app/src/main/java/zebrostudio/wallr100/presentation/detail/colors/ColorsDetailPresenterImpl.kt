@@ -95,10 +95,10 @@ class ColorsDetailPresenterImpl(
               == PERMISSION_GRANTED)) {
         handlePermissionGranted(requestCode)
       } else {
+        view?.showPermissionRequiredMessage()
         if (requestCode == LOAD_COLOR_WALLPAPER.ordinal) {
           view?.exitView()
         }
-        view?.showPermissionRequiredMessage()
       }
     }
   }

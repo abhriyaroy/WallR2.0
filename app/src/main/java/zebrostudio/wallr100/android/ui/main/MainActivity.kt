@@ -94,6 +94,15 @@ class MainActivity : AppCompatActivity(),
     presenter.handleViewResult(requestCode, resultCode)
   }
 
+  override fun onRequestPermissionsResult(requestCode: Int,
+    permissions: Array<out String>,
+    grantResults: IntArray) {
+    with(supportFragmentManager.findFragmentById(supportFragmentManager.getBackStackEntryAt(
+      supportFragmentManager.backStackEntryCount - 1).id)) {
+      onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+  }
+
   override fun supportFragmentInjector() = fragmentDispatchingAndroidInjector
 
   override fun showHamburgerHint() {

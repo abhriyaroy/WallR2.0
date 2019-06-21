@@ -1,5 +1,6 @@
 package zebrostudio.wallr100.presentation.collection
 
+import android.content.pm.PackageManager
 import android.net.Uri
 import com.uber.autodispose.autoDisposable
 import zebrostudio.wallr100.R
@@ -257,6 +258,14 @@ class CollectionPresenterImpl(
     collectionView?.updateChangesInEveryItemView()
     collectionView?.enableToolbar()
     collectionView?.showAppBarWithDelay()
+  }
+
+  override fun handlePermissionRequestResult(requestCode: Int,
+    permissions: Array<String>,
+    grantResults: IntArray) {
+    if ((grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
+      collectionView?.showPermissionRequestRationale()
+    }
   }
 
   private fun isUserPremium(): Boolean {

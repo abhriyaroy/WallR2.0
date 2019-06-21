@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.support.design.widget.AppBarLayout
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v7.app.AppCompatActivity
@@ -147,6 +148,12 @@ class CollectionFragment : BaseFragment(),
   override fun handleClick(index: Int) {
     presenter.handleItemClicked(index, collectionsImageAdapter.getImagePathList(),
       collectionsImageAdapter.getSelectedItemsMap())
+  }
+
+  override fun onRequestPermissionsResult(requestCode: Int,
+    permissions: Array<String>,
+    grantResults: IntArray) {
+    presenter.handlePermissionRequestResult(requestCode, permissions, grantResults)
   }
 
   override fun showAppBarWithDelay() {
@@ -482,6 +489,29 @@ class CollectionFragment : BaseFragment(),
 
   override fun enableBackPress() {
     backPressListener.releaseBackPressBlock()
+  }
+
+  override fun showPermissionRequestRationale() {
+    MaterialDialog.Builder(context!!)
+        .backgroundColor(colorRes(R.color.primary))
+        .title(stringRes(R.string.permissions_required_rationale_title))
+        .content(stringRes(R.string.permissions_required_rationale_content))
+        .positiveText(stringRes(R.string.permissions_required_rationale_positive_text))
+        .negativeText(stringRes(R.string.permissions_required_rationale_negative_text))
+        .contentColor(colorRes(R.color.white))
+        .positiveColor(colorRes(R.color.accent))
+        .negativeColor(colorRes(R.color.accent))
+        .cancelable(false)
+        .onPositive { _, _ ->
+          Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", activity!!.packageName, null)).let {
+            startActivity(it)
+          }
+        }
+        .onNegative{_,_->
+          fragmentManager?.popBackStack()
+        }
+        .show()
   }
 
   private fun initView() {
