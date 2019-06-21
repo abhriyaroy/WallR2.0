@@ -26,7 +26,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.permissions.PermissionsChecker
 import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
-import zebrostudio.wallr100.android.ui.detail.colors.WALLR_DOWNLOAD_LINK
 import zebrostudio.wallr100.android.utils.ResourceUtils
 import zebrostudio.wallr100.android.utils.WallpaperSetter
 import zebrostudio.wallr100.domain.executor.PostExecutionThread

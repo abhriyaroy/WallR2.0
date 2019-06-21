@@ -130,8 +130,8 @@
     <android.support.percent.PercentRelativeLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_alignParentBottom="true"
       android:layout_below="@id/shadow_spinner"
+      android:layout_alignParentBottom="true"
       android:background="@color/primary_dark">
 
       <com.jaredrummler.materialspinner.MaterialSpinner
@@ -157,8 +157,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom|end"
-    android:layout_marginBottom="@dimen/main_activity_fab_margin_botom"
     android:layout_marginEnd="11dp"
+    android:layout_marginBottom="@dimen/main_activity_fab_margin_botom"
     android:elevation="@dimen/main_activity_fab_elevation"
     android:visibility="visible"
     fab:fab_colorNormal="@color/accent"

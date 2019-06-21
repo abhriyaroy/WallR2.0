@@ -71,7 +71,7 @@ class MinimalPresenterImpl(
     colorList: List<String>,
     selectedItemsMap: HashMap<Int, String>
   ) {
-    with(numberOfItemsToBeDeselectedToStartDeletion(colorList, selectedItemsMap)){
+    with(numberOfItemsToBeDeselectedToStartDeletion(colorList, selectedItemsMap)) {
       if (this == INITIAL_SIZE) {
         val reversedSelectedItems = TreeMap<Int, String>(Collections.reverseOrder())
         minimalImagesUseCase.modifyColors(colorList, selectedItemsMap)

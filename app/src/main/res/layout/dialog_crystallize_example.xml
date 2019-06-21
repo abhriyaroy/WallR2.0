@@ -26,8 +26,8 @@
         android:id="@+id/before_text_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/detail_activity_crystallize_dialog_before_layout_margin"
         android:layout_marginTop="@dimen/detail_activity_crystallize_dialog_before_layout_margin"
+        android:layout_marginRight="@dimen/detail_activity_crystallize_dialog_before_layout_margin"
         android:alpha="0.5"
         android:background="@color/primary"
         android:padding="@dimen/detail_activity_crystallize_dialog_before_layout_padding">
@@ -46,8 +46,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:layout_marginRight="@dimen/detail_activity_crystallize_dialog_after_layout_margin"
         android:layout_marginTop="@dimen/detail_activity_crystallize_dialog_after_layout_margin"
+        android:layout_marginRight="@dimen/detail_activity_crystallize_dialog_after_layout_margin"
         android:layout_toRightOf="@id/before_text_layout"
         android:alpha="0.5"
         android:background="@color/primary"
@@ -89,10 +89,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@id/titleCrystallize"
-    android:paddingBottom="@dimen/detail_activity_crystallize_dialog_scrollview_padding_bottom"
     android:paddingLeft="@dimen/detail_activity_crystallize_dialog_scrollview_padding_left"
+    android:paddingTop="@dimen/detail_activity_crystallize_dialog_scrollview_padding_top"
     android:paddingRight="@dimen/detail_activity_crystallize_dialog_scrollview_padding_right"
-    android:paddingTop="@dimen/detail_activity_crystallize_dialog_scrollview_padding_top">
+    android:paddingBottom="@dimen/detail_activity_crystallize_dialog_scrollview_padding_bottom">
 
     <RelativeLayout
       android:layout_width="match_parent"

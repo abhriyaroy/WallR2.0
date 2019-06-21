@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
-import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.item_recyclerview_image.view.*
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.ImageLoader

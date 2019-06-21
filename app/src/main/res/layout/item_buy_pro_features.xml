@@ -7,8 +7,8 @@
   android:clickable="true"
   android:focusable="true"
   android:padding="@dimen/item_buy_pro_relative_layout_padding"
-  android:paddingBottom="@dimen/item_buy_pro_relative_layout_padding_bottom"
-  android:paddingTop="@dimen/item_buy_pro_relative_layout_padding_top">
+  android:paddingTop="@dimen/item_buy_pro_relative_layout_padding_top"
+  android:paddingBottom="@dimen/item_buy_pro_relative_layout_padding_bottom">
 
   <ImageView
     android:id="@+id/imageView"
@@ -30,10 +30,10 @@
     android:id="@+id/descriptionTextView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_alignLeft="@id/headerTextView"
     android:layout_below="@id/headerTextView"
-    android:paddingBottom="@dimen/item_buy_pro_description_padding_bottom"
+    android:layout_alignLeft="@id/headerTextView"
     android:paddingTop="@dimen/item_buy_pro_description_padding_top"
+    android:paddingBottom="@dimen/item_buy_pro_description_padding_bottom"
     android:textColor="@color/buy_pro_item_description_text"
     android:textSize="@dimen/item_buy_pro_description_text_size" />
 

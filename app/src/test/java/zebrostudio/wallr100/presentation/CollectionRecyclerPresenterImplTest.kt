@@ -20,10 +20,9 @@ class CollectionRecyclerPresenterImplTest {
   @Mock
   private lateinit var collectionsRecyclerItemViewHolder: CollectionsRecyclerItemViewHolder
   private lateinit var collectionRecyclerPresenterImpl: CollectionRecyclerPresenterImpl
-  private val randomString = randomUUID().toString()
 
   @Before
-  fun setup(){
+  fun setup() {
     collectionRecyclerPresenterImpl = CollectionRecyclerPresenterImpl()
   }
 
@@ -76,7 +75,7 @@ class CollectionRecyclerPresenterImplTest {
   }
 
   @After
-  fun tearDown(){
+  fun tearDown() {
     verifyNoMoreInteractions(collectionsRecyclerItemViewHolder)
   }
 }
