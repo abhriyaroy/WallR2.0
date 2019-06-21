@@ -622,6 +622,7 @@ class DetailPresenterImplTest {
       intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(detailView).showPermissionRequiredMessage()
+    verify(detailView).showPermissionRequiredRationale()
   }
 
   @Test
@@ -938,6 +939,7 @@ class DetailPresenterImplTest {
       intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(detailView).showPermissionRequiredMessage()
+    verify(detailView).showPermissionRequiredRationale()
   }
 
   @Test
@@ -1276,6 +1278,7 @@ class DetailPresenterImplTest {
       intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(detailView).showPermissionRequiredMessage()
+    verify(detailView).showPermissionRequiredRationale()
   }
 
   @Test
@@ -1821,6 +1824,7 @@ class DetailPresenterImplTest {
       intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(detailView).showPermissionRequiredMessage()
+    verify(detailView).showPermissionRequiredRationale()
   }
 
   @Test
@@ -2424,6 +2428,7 @@ class DetailPresenterImplTest {
       intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(detailView).showPermissionRequiredMessage()
+    verify(detailView).showPermissionRequiredRationale()
   }
 
   @Test

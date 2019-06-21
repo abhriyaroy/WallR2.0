@@ -195,6 +195,7 @@ class DetailPresenterImpl(
         handlePermissionGranted(requestCode)
       } else {
         detailView?.showPermissionRequiredMessage()
+        detailView?.showPermissionRequiredRationale()
       }
     }
   }

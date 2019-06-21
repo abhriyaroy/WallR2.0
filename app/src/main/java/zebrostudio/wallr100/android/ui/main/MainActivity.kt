@@ -97,9 +97,8 @@ class MainActivity : AppCompatActivity(),
   override fun onRequestPermissionsResult(requestCode: Int,
     permissions: Array<out String>,
     grantResults: IntArray) {
-    with(supportFragmentManager.findFragmentById(supportFragmentManager.getBackStackEntryAt(
-      supportFragmentManager.backStackEntryCount - 1).id)) {
-      onRequestPermissionsResult(requestCode, permissions, grantResults)
+    supportFragmentManager.findFragmentByTag(FragmentTag.COLLECTIONS_TAG.toString()).let {
+      it?.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
   }
 

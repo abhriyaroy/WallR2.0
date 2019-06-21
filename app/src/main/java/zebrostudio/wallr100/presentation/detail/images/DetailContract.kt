@@ -57,6 +57,7 @@ interface DetailContract {
     fun showEditedExpandedImage()
     fun collapseSlidingPanel()
     fun exitView()
+    fun showPermissionRequiredRationale()
   }
 
   interface DetailPresenter : BasePresenter<DetailView> {

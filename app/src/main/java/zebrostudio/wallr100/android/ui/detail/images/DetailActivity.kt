@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.view.View
 import android.view.animation.Animation
@@ -154,6 +155,24 @@ class DetailActivity : BaseActivity(), DetailView {
   override fun requestStoragePermission(actionType: ActionType) {
     requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
       Manifest.permission.WRITE_EXTERNAL_STORAGE), actionType.ordinal)
+  }
+
+  override fun showPermissionRequiredRationale() {
+    MaterialDialog.Builder(this)
+        .backgroundColor(colorRes(R.color.primary))
+        .title(stringRes(R.string.permissions_required_rationale_title))
+        .content(stringRes(R.string.permissions_required_rationale_content))
+        .positiveText(stringRes(R.string.permissions_required_rationale_positive_text))
+        .contentColor(colorRes(R.color.white))
+        .positiveColor(colorRes(R.color.accent))
+        .negativeColor(colorRes(R.color.accent))
+        .onPositive { _, _ ->
+          Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", packageName, null)).let {
+            startActivity(it)
+          }
+        }
+        .show()
   }
 
   override fun showPermissionRequiredMessage() {
