@@ -35,9 +35,6 @@ android {
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
-  lintOptions {
-    abortOnError false
-  }
   buildTypes {
     release {
       debuggable true
