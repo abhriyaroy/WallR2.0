@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity(),
   override fun onRequestPermissionsResult(requestCode: Int,
     permissions: Array<out String>,
     grantResults: IntArray) {
-    supportFragmentManager.findFragmentByTag(FragmentTag.COLLECTIONS_TAG.toString()).let {
+    supportFragmentManager.findFragmentByTag(getFragmentTagAtStackTop().toString()).let {
       it?.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
   }
