@@ -286,6 +286,16 @@ Salient features of the app :-
 ## Project Setup Notes
 - The google-services.json file has been purposely ignored by git due to security purposes. Please login to <a href="https://console.firebase.google.com/u/0/?gclid=CjwKCAjw__fnBRANEiwAuFxET6VRIbt1VaeN3D_DAYAU3rAwAC1uJGY1FaKZvmWSTe8bkiGe8lRAPBoCd0QQAvD_BwE">Firebase console</a> and create a new project and obtain your own google-services.json file and paste it at `app/src/debug` or `app/src/release` directory as per your build flavour to set it up and running.<br> For more information, please refer the <a href="https://firebase.google.com/docs/android/setup">docs</a>.
 
+- This project can be directly built from the `command line` using the command :
+   - `gradle build` for Windows OS.
+   - `./gradlew build` for Linux/Mac OS.
+
+- The `unit tests` can be direclty run from the `command line` using the command :
+   - `gradle test` for Windows OS.
+   - `./gradlew test` for Linux/Mac OS.
+   
+ Pro Tip : If your build fails, please ensure that your `JAVA_HOME` value in environment variables is set to <a href="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">JDK V8</a>. Please refer to <a href="https://stackoverflow.com/questions/45762245/android-studio-build-works-gradle-command-line-fails">this gradle issue</a>.<br>
+
 ## Acclamations
 
   WallR was selected as one of the best customization apps by <a href="https://www.androidauthority.com/5-android-apps-you-shouldnt-       miss-this-week-android-apps-weekly-review-90-796074">Android Authority</a>, <a href="https://www.androidpolice.com/2017/08/21/11-new-   notable-1-wtf-android-apps-last-week-81517-82117/">Android Police</a>. It also recieved huge number of warm and positive feedbacks and   reviews at <a href="https://forum.xda-developers.com/android/apps-games/app-wallr-wallpapers-beta-testers-t3568221">XDA Developers       Community</a>.
