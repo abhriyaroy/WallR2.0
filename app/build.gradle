@@ -32,6 +32,9 @@ android {
                             onesignal_google_project_number: "REMOTE"]
     signingConfig signingConfigs.release
   }
+  lintOptions {
+    abortOnError false
+  }
   buildTypes {
     release {
       debuggable true
