@@ -101,6 +101,7 @@ class CollectionFragment : BaseFragment(),
 
   override fun onResume() {
     super.onResume()
+    showWallpaperChangerLayoutIfSuitable()
     presenter.attachView(this)
   }
 
@@ -559,6 +560,12 @@ class CollectionFragment : BaseFragment(),
   private fun redirectToBuyProActivity() {
     startActivityForResult(Intent(context!!, BuyProActivity::class.java),
       COLLECTION_FRAGMENT_REQUEST_CODE)
+  }
+
+  private fun showWallpaperChangerLayoutIfSuitable(){
+    if (collectionsImageAdapter.getImagePathList().size<2){
+      hideWallpaperChangerLayout()
+    }
   }
 
   companion object {
