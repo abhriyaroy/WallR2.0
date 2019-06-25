@@ -16,7 +16,8 @@
     android:icon="@drawable/ic_wallr"
     android:label="@string/app_name"
     android:largeHeap="true"
-    android:theme="@style/AppTheme">
+    android:theme="@style/AppTheme"
+    android:screenOrientation="portrait">
     <activity android:name=".android.ui.main.MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
