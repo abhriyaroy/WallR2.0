@@ -8,7 +8,9 @@ import android.support.v4.app.Fragment
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import android.widget.Spinner
 import com.getbase.floatingactionbutton.FloatingActionButton
+import com.jaredrummler.materialspinner.MaterialSpinner
 import com.ogaclejapan.smarttablayout.SmartTabLayout
 import com.uber.autodispose.ScopeProvider
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
@@ -115,10 +117,14 @@ abstract class BaseFragment : Fragment(), BaseView {
 
   private fun hideBottomLayout() {
     activity?.let {
-      it.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.invisible()
-      it.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.isClickable = false
-      it.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.invisible()
-      it.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.isClickable = false
+      it.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.apply {
+        invisible()
+        isClickable = false
+        isEnabled = false
+      }
+      it.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.apply{
+        invisible()
+      }
     }
   }
 

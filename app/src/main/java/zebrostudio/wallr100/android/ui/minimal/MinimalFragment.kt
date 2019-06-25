@@ -131,9 +131,14 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun showBottomPanelWithAnimation() {
+    println("spinner show called")
     activity?.let {
       it.minimalBottomLayout?.showAnimation(R.anim.slide_up, onAnimationEnd = {
-        it.spinner?.isEnabled = true
+        it.spinner?.apply {
+          visible()
+          isClickable = true
+          isEnabled = true
+        }
         it.minimalBottomLayout?.apply {
           visible()
           isClickable = true
@@ -155,6 +160,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
       it.minimalBottomLayout?.showAnimation(R.anim.slide_down, onAnimationStart = {
         it.minimalBottomLayout?.isClickable = false
       }, onAnimationEnd = {
+        it.spinner?.gone()
         it.spinner?.isEnabled = false
         it.minimalBottomLayout?.gone()
       })
