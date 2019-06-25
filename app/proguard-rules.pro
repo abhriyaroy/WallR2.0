@@ -61,6 +61,12 @@
 -dontwarn com.mlsdev.rximagepicker.**
 -keep class com.mlsdev.rximagepicker** { *; }
 -keep interface com.mlsdev.rximagepicker** { *; }
+-dontwarn com.qingmei2.rximagepicker_extension_zhihu.**
+-keep class com.qingmei2.rximagepicker_extension_zhihu** { *; }
+-keep interface com.qingmei2.rximagepicker_extension_zhihu** { *; }
+-dontwarn com.qingmei2.rximagepicker_extension.**
+-keep class com.qingmei2.rximagepicker_extension** { *; }
+-keep interface com.qingmei2.rximagepicker_extension** { *; }
 
 # LowpolyRx
 -dontwarn com.zebrostudio.lowpolyrxjava**
