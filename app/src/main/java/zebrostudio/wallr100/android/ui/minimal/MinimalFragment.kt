@@ -131,7 +131,6 @@ class MinimalFragment : BaseFragment(), MinimalView {
   }
 
   override fun showBottomPanelWithAnimation() {
-    println("spinner show called")
     activity?.let {
       it.minimalBottomLayout?.showAnimation(R.anim.slide_up, onAnimationEnd = {
         it.spinner?.apply {

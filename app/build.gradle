@@ -39,9 +39,10 @@ android {
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
+  testBuildType "release"
   buildTypes {
     release {
-      debuggable true
+      debuggable false
       minifyEnabled true
       proguardFiles 'proguard-rules.pro'
     }
