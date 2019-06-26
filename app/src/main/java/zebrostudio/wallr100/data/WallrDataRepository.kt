@@ -536,7 +536,7 @@ class WallrDataRepository(
     return firebaseDatabaseHelper
         .fetch(firebaseDatabaseReference)
         .flatMap {
-          it.values.forEach { jsonString ->
+          it.forEach { jsonString ->
             imageList.add(
               gsonProvider.getGson().fromJson(jsonString, FirebaseImageEntity::class.java))
           }

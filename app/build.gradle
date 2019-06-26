@@ -39,7 +39,6 @@ android {
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
-  testBuildType "release"
   buildTypes {
     release {
       debuggable false
@@ -141,6 +140,7 @@ android {
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_VERSION"
     // Instrumentation test runners
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION"
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:$ESPRESSO_VERSION"
     androidTestImplementation "com.android.support.test:rules:$TEST_RULES_VERSION"
     androidTestImplementation "com.android.support.test:runner:$TEST_RUNNER_VERSION"
   }

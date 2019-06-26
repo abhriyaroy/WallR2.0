@@ -1,6 +1,7 @@
 package zebrostudio.wallr100.android.ui.main
 
 import android.content.Intent
+import android.content.Intent.*
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -191,13 +192,13 @@ class MainActivity : AppCompatActivity(),
   ) {
     closeNavigationMenu()
     withDelayOnMain(100) {
-      Intent(Intent.ACTION_SENDTO).apply {
+      Intent(ACTION_SENDTO).apply {
         type = emailIntentType
         data = Uri.parse(MAIL_URI)
-        putExtra(Intent.EXTRA_EMAIL, emailAddress)
-        putExtra(Intent.EXTRA_SUBJECT, emailSubject)
+        putExtra(EXTRA_EMAIL, emailAddress)
+        putExtra(EXTRA_SUBJECT, emailSubject)
       }.let {
-        startActivityForResult(Intent.createChooser(it,
+        startActivityForResult(createChooser(it,
           stringRes(R.string.main_activity_feedback_contact_using_message)), 0)
       }
     }
