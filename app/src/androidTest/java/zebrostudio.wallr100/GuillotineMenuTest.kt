@@ -22,6 +22,7 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.rule.GrantPermissionRule
 import android.support.test.rule.GrantPermissionRule.grant
 import android.support.test.runner.AndroidJUnit4
+import com.bumptech.glide.Glide
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.Assert.assertEquals
@@ -160,7 +161,7 @@ class GuillotineMenuTest {
     }
   }
 
-  @Test fun should_show_catergoris_fragment_on_categories_menu_item_click() {
+  @Test fun should_show_categories_fragment_on_categories_menu_item_click() {
     onView(withId(R.id.contentHamburger)).perform(click())
 
     onView(withId(R.string.categories_title)).perform(click())
