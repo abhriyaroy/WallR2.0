@@ -1,0 +1,34 @@
+package zebrostudio.wallr100
+
+import android.content.Context
+import org.junit.rules.TestRule
+import org.junit.runner.Description
+import org.junit.runners.model.Statement
+import zebrostudio.wallr100.di.TestAppComponent
+
+class MockedRepositoryTestRule(private var appContext: Context) : TestRule {
+
+  private var testAppComponent: TestAppComponent? = null
+
+  /*private fun setupDaggerTestComponentInApplication() {
+    val application = WallrApplication.getApplication(appContext)
+    testAppComponent = DaggerTestAppComponent.builder()
+        .application(application)
+        .build()
+    application.setAppComponent(testAppComponent!!)
+  }*/
+
+  override fun apply(base: Statement, description: Description): Statement {
+    return object : Statement() {
+      override fun evaluate() {
+        try {
+          //setupDaggerTestComponentInApplication()
+          base.evaluate()
+        } finally {
+          testAppComponent = null
+        }
+      }
+
+    }
+  }
+}

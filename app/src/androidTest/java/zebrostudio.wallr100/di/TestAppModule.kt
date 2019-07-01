@@ -1,9 +1,10 @@
-package zebrostudio.wallr100.android.di
+package zebrostudio.wallr100.di
 
 import android.app.Application
 import android.content.Context
 import dagger.Module
 import dagger.Provides
+import org.mockito.Mockito
 import zebrostudio.wallr100.android.AndroidBackgroundThreads
 import zebrostudio.wallr100.android.AndroidMainThread
 import zebrostudio.wallr100.android.di.scopes.PerApplication
@@ -34,15 +35,10 @@ import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.executor.ExecutionThread
 import zebrostudio.wallr100.domain.executor.PostExecutionThread
 import zebrostudio.wallr100.domain.interactor.*
-import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.CollectionRecyclerPresenter
-import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerPresenterImpl
-import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.DragSelectItemPresenter
-import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerPresenterImpl
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract.ImageRecyclerViewPresenter
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl
+import zebrostudio.wallr100.presentation.adapters.*
 
 @Module
-class AppModule {
+class TestAppModule {
 
   @Provides
   @PerApplication
@@ -154,42 +150,6 @@ class AppModule {
 
   @Provides
   @PerApplication
-  fun provideWallrRepository(
-    retrofitFirebaseAuthFactory: RemoteAuthServiceFactory,
-    unsplashClientFactory: UnsplashClientFactory,
-    sharedPrefsHelper: SharedPrefsHelper,
-    gsonProvider: GsonProvider,
-    collectionsDatabaseImageEntityMapper: CollectionsDatabaseImageEntityMapper,
-    databaseImageTypeMapper: DatabaseImageTypeMapper,
-    unsplashPictureEntityMapper: UnsplashPictureEntityMapper,
-    firebaseDatabaseHelper: FirebaseDatabaseHelper,
-    firebasePictureEntityMapper: FirebasePictureEntityMapper,
-    urlShortener: UrlShortener,
-    imageHandler: ImageHandler,
-    fileHandler: FileHandler,
-    downloadHelper: DownloadHelper,
-    minimalColorHelper: MinimalColorHelper,
-    executionThread: ExecutionThread
-  ): WallrRepository = WallrDataRepository(
-    retrofitFirebaseAuthFactory,
-    unsplashClientFactory,
-    sharedPrefsHelper,
-    gsonProvider,
-    collectionsDatabaseImageEntityMapper,
-    databaseImageTypeMapper,
-    unsplashPictureEntityMapper,
-    firebaseDatabaseHelper,
-    firebasePictureEntityMapper,
-    urlShortener,
-    imageHandler,
-    fileHandler,
-    downloadHelper,
-    minimalColorHelper,
-    executionThread
-  )
-
-  @Provides
-  @PerApplication
   fun providesTimeManager(): TimeManager = TimeManagerImpl()
 
   @Provides
@@ -263,16 +223,16 @@ class AppModule {
 
   @Provides
   fun provideImageRecyclerViewPresenter()
-      : ImageRecyclerViewPresenter = ImageRecyclerViewPresenterImpl()
+      : ImageRecyclerItemContract.ImageRecyclerViewPresenter = ImageRecyclerViewPresenterImpl()
 
   @Provides
   @PerApplication
-  fun provideDragSelectRecyclerItemPresenter(): DragSelectItemPresenter =
+  fun provideDragSelectRecyclerItemPresenter(): DragSelectRecyclerContract.DragSelectItemPresenter =
       DragSelectRecyclerPresenterImpl()
 
   @Provides
   @PerApplication
-  fun provideCollectionRecyclerPresenter(): CollectionRecyclerPresenter =
+  fun provideCollectionRecyclerPresenter(): CollectionRecyclerContract.CollectionRecyclerPresenter =
       CollectionRecyclerPresenterImpl()
 
   @Provides
@@ -292,4 +252,9 @@ class AppModule {
   @Provides
   @PerApplication
   fun providesImageLoader(): ImageLoader = ImageLoaderImpl()
+
+  @Provides
+  @PerApplication
+  fun provideWallrRepository(): WallrRepository = Mockito.mock(WallrRepository::class.java)
+
 }
