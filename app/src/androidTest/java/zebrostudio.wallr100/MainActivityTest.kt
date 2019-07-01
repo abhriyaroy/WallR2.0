@@ -12,40 +12,29 @@ import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
 import zebrostudio.wallr100.android.ui.main.MainActivity
-import zebrostudio.wallr100.di.TestAppComponent
 import zebrostudio.wallr100.domain.WallrRepository
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
-class MainActivityTest : TestBase {
+class MainActivityTest : TestBaseClass() {
 
-  private val component = MockedRepositoryTestRule(InstrumentationRegistry.getTargetContext())
-
-  val main = ActivityTestRule(MainActivity::class.java, false, false)
+  private val testComponentRule = MockedRepositoryTestRule(InstrumentationRegistry.getTargetContext())
+  private val activityTestRule = ActivityTestRule(MainActivity::class.java, false, false)
 
   @get: Rule
-  var chain: TestRule = RuleChain.outerRule(component).around(main)
+  var ruleChain: TestRule = RuleChain.outerRule(testComponentRule).around(activityTestRule)
 
   @Inject
   internal lateinit var mockWallrRepository: WallrRepository
 
-
-  /*@Before
+  @Before
   fun setup() {
-    MockitoAnnotations.initMocks(this)
-    val app = InstrumentationRegistry.getTargetContext().applicationContext as WallrApplication
-    testAppComponent = DaggerTestAppComponent.builder()
-        .application(app)
-        .build()
-    app.setAppComponent(testAppComponent)
-    testAppComponent.inject(app)
-    System.out.println("==== TestAppComponent injected")
-  }*/
+    mockWallrRepository = testComponentRule.getTestAppComponent().wallrRepository
+  }
 
   @Test
   fun should_show_explore_images() {
     val a = 1
-    mockWallrRepository = component.getTestAppComponent().wallrRepository
     `when`(mockWallrRepository.clearImageCaches()).thenReturn(Completable.complete())
   }
 }

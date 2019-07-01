@@ -28,6 +28,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.android.utils.FragmentTag.*
@@ -39,11 +40,12 @@ import java.util.concurrent.TimeUnit
 @RunWith(AndroidJUnit4::class)
 class GuillotineMenuTest {
 
-  @get:Rule
-  val activityTestRule = ActivityTestRule(MainActivity::class.java)
-  @get:Rule
-  val grantPermissionRule: GrantPermissionRule =
+  private val activityTestRule = ActivityTestRule(MainActivity::class.java)
+  private val grantPermissionRule: GrantPermissionRule =
       grant(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+  @get:Rule
+  internal val ruleChain: RuleChain = RuleChain.outerRule(grantPermissionRule).around(activityTestRule)
 
   @Test
   fun should_show_guillotine_menu_on_hamburger_click() {

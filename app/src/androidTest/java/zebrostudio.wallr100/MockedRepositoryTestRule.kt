@@ -19,7 +19,7 @@ class MockedRepositoryTestRule(private var appContext: Context) : TestRule {
           setupDaggerTestComponentInApplication()
           base.evaluate()
         } finally {
-          //testAppComponent = null
+          testAppComponent = null
         }
       }
 

@@ -4,7 +4,6 @@ import android.app.Application
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
-import zebrostudio.wallr100.TestBase
 import zebrostudio.wallr100.android.di.ActivityBuilder
 import zebrostudio.wallr100.android.di.AppComponent
 import zebrostudio.wallr100.android.di.ServiceBuilder
