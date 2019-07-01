@@ -137,7 +137,7 @@ android {
     // Test runners
     testImplementation "junit:junit:$JUNIT_VERSION"
     testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_VERSION"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$NHAARMAN_MOCKITO_VERSION"
     // Instrumentation test runners
     androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
     androidTestImplementation "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
@@ -146,7 +146,8 @@ android {
     androidTestImplementation "com.android.support.test.espresso:espresso-intents:$ESPRESSO_VERSION"
     androidTestImplementation "com.android.support.test:rules:$TEST_RULES_VERSION"
     androidTestImplementation "com.android.support.test:runner:$TEST_RUNNER_VERSION"
-    androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_VERSION"
+    androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$NHAARMAN_MOCKITO_VERSION"
+    androidTestImplementation "org.mockito:mockito-android:$MOCKITO_ANDROID_VERSION"
     androidTestImplementation "com.google.dagger:dagger:$DAGGER_VERSION"
     androidTestImplementation "com.google.dagger:dagger-android-support:$DAGGER_VERSION"
     kaptAndroidTest "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
