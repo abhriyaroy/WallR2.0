@@ -14,6 +14,7 @@ import zebrostudio.wallr100.data.exception.InvalidPurchaseException
 import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseInteractor
 import zebrostudio.wallr100.domain.interactor.AuthenticatePurchaseUseCase
+import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class AuthenticatePurchaseUseCaseTest {
@@ -21,9 +22,9 @@ class AuthenticatePurchaseUseCaseTest {
   @Mock
   private lateinit var wallrRepository: WallrRepository
   private lateinit var authenticatePurchaseUseCase: AuthenticatePurchaseUseCase
-  private val packageName = java.util.UUID.randomUUID().toString()
-  private val purchaseToken = java.util.UUID.randomUUID().toString()
-  private val skuId = java.util.UUID.randomUUID().toString()
+  private val packageName = randomUUID().toString()
+  private val purchaseToken = randomUUID().toString()
+  private val skuId = randomUUID().toString()
 
   @Before
   fun setup() {

@@ -20,15 +20,6 @@ import zebrostudio.wallr100.android.ui.ImageLoader
 import zebrostudio.wallr100.android.ui.ImageLoaderImpl
 import zebrostudio.wallr100.android.utils.*
 import zebrostudio.wallr100.data.*
-import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
-import zebrostudio.wallr100.data.api.RemoteAuthServiceFactoryImpl
-import zebrostudio.wallr100.data.api.UnsplashClientFactory
-import zebrostudio.wallr100.data.api.UnsplashClientFactoryImpl
-import zebrostudio.wallr100.data.database.DatabaseHelper
-import zebrostudio.wallr100.data.database.DatabaseHelperImpl
-import zebrostudio.wallr100.data.mapper.*
-import zebrostudio.wallr100.data.urlshortener.UrlShortener
-import zebrostudio.wallr100.data.urlshortener.UrlShortenerImpl
 import zebrostudio.wallr100.domain.TimeManager
 import zebrostudio.wallr100.domain.TimeManagerImpl
 import zebrostudio.wallr100.domain.WallrRepository
@@ -61,15 +52,6 @@ class TestAppModule {
 
   @Provides
   @PerApplication
-  fun provideSharedPrefsHelper(context: Context): SharedPrefsHelper = SharedPrefsHelperImpl(context)
-
-  @Provides
-  @PerApplication
-  fun providesDatabaseHelper(context: Context): DatabaseHelper =
-      DatabaseHelperImpl(context)
-
-  @Provides
-  @PerApplication
   fun provideFirebaseDatabaseHelper(context: Context): FirebaseDatabaseHelper =
       FirebaseDatabaseHelperImpl(context)
 
@@ -82,10 +64,6 @@ class TestAppModule {
 
   @Provides
   @PerApplication
-  fun provideGson(): GsonProvider = GsonProviderImpl()
-
-  @Provides
-  @PerApplication
   fun provideAndroidMainThread(): PostExecutionThread = AndroidMainThread()
 
   @Provides
@@ -94,59 +72,7 @@ class TestAppModule {
 
   @Provides
   @PerApplication
-  fun provideRemoteAuthServiceFactory(): RemoteAuthServiceFactory =
-      RemoteAuthServiceFactoryImpl()
-
-  @Provides
-  @PerApplication
-  fun provideUnsplashClientFactory(): UnsplashClientFactory = UnsplashClientFactoryImpl()
-
-  @Provides
-  @PerApplication
-  fun provideCollectionsDatabaseImageEntityMapper():
-      CollectionsDatabaseImageEntityMapper = CollectionsDatabaseImageEntityMapperImpl()
-
-  @Provides
-  @PerApplication
-  fun provideDataBaseImageTypeMapper(): DatabaseImageTypeMapper = DatabaseImageTypeMapperImpl()
-
-  @Provides
-  @PerApplication
-  fun provideUnsplashPictureEntityMapper(): UnsplashPictureEntityMapper =
-      UnsplashPictureEntityMapperImpl()
-
-  @Provides
-  @PerApplication
-  fun provideFirebasePictureEntityMapper(): FirebasePictureEntityMapper =
-      FirebasePictureEntityMapperImpl()
-
-  @Provides
-  @PerApplication
-  fun provideUrlShortener(): UrlShortener = UrlShortenerImpl()
-
-  @Provides
-  @PerApplication
-  fun provideFileHandler(context: Context): FileHandler = FileHandlerImpl(context)
-
-  @Provides
-  @PerApplication
   fun provideWallpaperSetter(context: Context): WallpaperSetter = WallpaperSetterImpl(context)
-
-  @Provides
-  @PerApplication
-  fun provideDownloadHelper(
-    context: Context,
-    fileHandler: FileHandler
-  ): DownloadHelper = DownloadHelperImpl(context, fileHandler)
-
-  @Provides
-  @PerApplication
-  fun provideImageHandler(
-    context: Context,
-    fileHandler: FileHandler,
-    databaseHelper: DatabaseHelper,
-    wallpaperSetter: WallpaperSetter
-  ): ImageHandler = ImageHandlerImpl(context, fileHandler, databaseHelper, wallpaperSetter)
 
   @Provides
   @PerApplication
@@ -255,6 +181,8 @@ class TestAppModule {
 
   @Provides
   @PerApplication
-  fun provideWallrRepository(): WallrRepository = Mockito.mock(WallrRepository::class.java)
+  fun provideWallrRepository(): WallrRepository {
+    return Mockito.mock(WallrRepository::class.java)
+  }
 
 }
