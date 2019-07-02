@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.data.api
 
-import zebrostudio.wallr100.BuildConfig
+import zebrostudio.wallr100.BuildConfig.BUILD_TYPE
 
 object UrlMap {
   const val FIREBASE_PURCHASE_AUTH_URL = "https://us-central1-wallrproduction.cloudfunctions.net/"
@@ -20,7 +20,7 @@ object UrlMap {
   ) = "photos/search?query=$keyword&per_page=30&page=$queryPage"
 
   fun getDynamicLinkPrefixUri(): String {
-    return if (BuildConfig.BUILD_TYPE == "debug") {
+    return if (BUILD_TYPE == "debug") {
       DEBUG_FIREBASE_DYNAMIC_LINK_PREFIX
     } else {
       PRODUCTION_FIREBASE_DYNAMIC_LINK_PREFIX

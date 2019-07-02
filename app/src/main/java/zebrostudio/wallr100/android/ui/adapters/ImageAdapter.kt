@@ -48,8 +48,8 @@ class ViewHolder(
 ) : RecyclerView.ViewHolder(itemView),
     ImageRecyclerItemContract.ImageRecyclerItemView {
 
-  override fun setImageViewBackgroundAndAttachClickListener(colorHexCode: String) {
-    itemView.imageView.setBackgroundColor(Color.parseColor(colorHexCode))
+  override fun configureImageView(backgroundColorHex: String) {
+    itemView.imageView.setBackgroundColor(Color.parseColor(backgroundColorHex))
     itemView.setOnClickListener { presenter.handleImageClicked(adapterPosition, this) }
   }
 
@@ -70,6 +70,7 @@ class ViewHolder(
   }
 
   private fun loadAndShowImage(link: String) {
+    itemView.imageView.tag = link
     imageLoader.loadWithFixedSize(context,
       link,
       itemView.imageView,

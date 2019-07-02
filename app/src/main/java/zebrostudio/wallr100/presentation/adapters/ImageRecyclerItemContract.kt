@@ -7,7 +7,7 @@ import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 interface ImageRecyclerItemContract {
 
   interface ImageRecyclerItemView {
-    fun setImageViewBackgroundAndAttachClickListener(colorHexCode: String)
+    fun configureImageView(backgroundColorHex: String)
     fun setSearchImage(link: String)
     fun setWallpaperImage(link: String)
     fun showSearchImageDetails(searchImage: SearchPicturesPresenterEntity)

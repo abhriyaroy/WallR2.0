@@ -29,7 +29,7 @@ android {
 dependencies {
   // Android support library
   implementation "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
-  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$KOTLIN_VERSION"
 }
 repositories {
   mavenCentral()

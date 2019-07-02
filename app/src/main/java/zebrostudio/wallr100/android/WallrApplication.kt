@@ -5,10 +5,13 @@ import android.app.Application
 import android.app.Service
 import android.content.Context
 import android.support.multidex.MultiDex
+import android.util.Log
+import com.bumptech.glide.request.target.ViewTarget
 import com.onesignal.OneSignal
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.HasServiceInjector
+import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.di.AppComponent
 import zebrostudio.wallr100.android.di.DaggerAppComponent
 import javax.inject.Inject
@@ -30,6 +33,7 @@ class WallrApplication : Application(), HasActivityInjector, HasServiceInjector 
     super.onCreate()
     initAppComponent()
     initPushNotifications()
+    ViewTarget.setTagId(R.id.glide_tag)
   }
 
   override fun activityInjector() = activityDispatchingAndroidInjector
@@ -38,6 +42,7 @@ class WallrApplication : Application(), HasActivityInjector, HasServiceInjector 
 
   fun setAppComponent(appComponent: AppComponent) {
     this.appComponent = appComponent
+    this.appComponent.inject(this)
   }
 
   private fun initPushNotifications() {
@@ -52,12 +57,6 @@ class WallrApplication : Application(), HasActivityInjector, HasServiceInjector 
         .application(this)
         .build()
     appComponent.inject(this)
-  }
-
-  companion object {
-    fun getApplication(context: Context): WallrApplication {
-      return context.applicationContext as WallrApplication
-    }
   }
 
 }

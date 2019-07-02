@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import org.mockito.Mockito
+import org.mockito.Mockito.mock
 import zebrostudio.wallr100.android.AndroidBackgroundThreads
 import zebrostudio.wallr100.android.AndroidMainThread
 import zebrostudio.wallr100.android.di.scopes.PerApplication
@@ -182,7 +182,7 @@ class TestAppModule {
   @Provides
   @PerApplication
   fun provideWallrRepository(): WallrRepository {
-    return Mockito.mock(WallrRepository::class.java)
+    return mock(WallrRepository::class.java)
   }
 
 }

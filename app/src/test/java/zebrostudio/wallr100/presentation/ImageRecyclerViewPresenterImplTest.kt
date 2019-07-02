@@ -86,7 +86,7 @@ class ImageRecyclerViewPresenterImplTest {
     imageRecyclerViewPresenterImpl.onBindRepositoryRowViewAtPosition(position,
       imageRecyclerItemView)
 
-    verify(imageRecyclerItemView).setImageViewBackgroundAndAttachClickListener(
+    verify(imageRecyclerItemView).configureImageView(
       searchPicturesList[position].paletteColor)
     verify(imageRecyclerItemView).setSearchImage(
       searchPicturesList[position].imageQualityUrlPresenterEntity.smallImageLink)
@@ -103,7 +103,7 @@ class ImageRecyclerViewPresenterImplTest {
     imageRecyclerViewPresenterImpl.onBindRepositoryRowViewAtPosition(position,
       imageRecyclerItemView)
 
-    verify(imageRecyclerItemView).setImageViewBackgroundAndAttachClickListener(
+    verify(imageRecyclerItemView).configureImageView(
       wallpaperImagesList[position].color)
     verify(imageRecyclerItemView).setWallpaperImage(wallpaperImagesList[position].imageLink.thumb)
   }

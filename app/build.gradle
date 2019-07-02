@@ -10,7 +10,7 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-  lintOptions{
+  lintOptions {
     abortOnError false
   }
   signingConfigs {
@@ -55,7 +55,7 @@ android {
   }
   dependencies {
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$KOTLIN_VERSION"
     // Android support libraries
     implementation "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
     implementation "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
@@ -139,11 +139,9 @@ android {
     testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$NHAARMAN_MOCKITO_VERSION"
     // Instrumentation test runners
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
-    androidTestImplementation "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
-    androidTestImplementation "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION"
     androidTestImplementation "com.android.support.test.espresso:espresso-intents:$ESPRESSO_VERSION"
+    androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$ESPRESSO_VERSION"
     androidTestImplementation "com.android.support.test:rules:$TEST_RULES_VERSION"
     androidTestImplementation "com.android.support.test:runner:$TEST_RUNNER_VERSION"
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$NHAARMAN_MOCKITO_VERSION"

@@ -7,7 +7,7 @@ import android.content.Intent
 import android.content.Intent.*
 import android.net.Uri
 import android.os.Bundle
-import android.support.test.InstrumentationRegistry
+import android.support.test.InstrumentationRegistry.getInstrumentation
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
@@ -45,7 +45,8 @@ class GuillotineMenuTest {
       grant(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
   @get:Rule
-  internal val ruleChain: RuleChain = RuleChain.outerRule(grantPermissionRule).around(activityTestRule)
+  internal val ruleChain: RuleChain =
+      RuleChain.outerRule(grantPermissionRule).around(activityTestRule)
 
   @Test
   fun should_show_guillotine_menu_on_hamburger_click() {
@@ -66,7 +67,7 @@ class GuillotineMenuTest {
 
   @Test
   fun should_show_buy_pro_option_in_guillotine_menu_when_user_is_pro() {
-    InstrumentationRegistry.getInstrumentation()
+    getInstrumentation()
         .targetContext.let {
       SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, false)
     }
@@ -81,8 +82,7 @@ class GuillotineMenuTest {
 
   @Test
   fun should_hide_buy_pro_option_in_guillotine_menu_when_user_is_non_pro() {
-    InstrumentationRegistry.getInstrumentation()
-        .targetContext.let {
+    getInstrumentation().targetContext.let {
       SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, true)
     }
     activityTestRule.launchActivity(Intent())
@@ -141,9 +141,7 @@ class GuillotineMenuTest {
     onView(withId(R.id.toolbarTitle)).check(matches(
       withText(activityTestRule.activity.fragmentNameTagFetcher.getFragmentName(EXPLORE_TAG))))
 
-    activityTestRule.activity.getFragmentTagAtStackTop().let {
-      assertEquals(EXPLORE_TAG, it)
-    }
+    assertEquals(EXPLORE_TAG, activityTestRule.activity.getFragmentTagAtStackTop())
   }
 
   @Test
@@ -155,9 +153,7 @@ class GuillotineMenuTest {
     onView(withId(R.id.toolbarTitle)).check(matches(
       withText(activityTestRule.activity.fragmentNameTagFetcher.getFragmentName(EXPLORE_TAG))))
 
-    activityTestRule.activity.getFragmentTagAtStackTop().let {
-      assertEquals(EXPLORE_TAG, it)
-    }
+    assertEquals(EXPLORE_TAG, activityTestRule.activity.getFragmentTagAtStackTop())
   }
 
   @Test
@@ -169,9 +165,7 @@ class GuillotineMenuTest {
     onView(withId(R.id.toolbarTitle)).check(matches(
       withText(activityTestRule.activity.fragmentNameTagFetcher.getFragmentName(TOP_PICKS_TAG))))
 
-    activityTestRule.activity.getFragmentTagAtStackTop().let {
-      assertEquals(TOP_PICKS_TAG, it)
-    }
+    assertEquals(TOP_PICKS_TAG, activityTestRule.activity.getFragmentTagAtStackTop())
   }
 
   @Test
@@ -183,14 +177,12 @@ class GuillotineMenuTest {
     onView(withId(R.id.toolbarTitle)).check(matches(
       withText(activityTestRule.activity.fragmentNameTagFetcher.getFragmentName(CATEGORIES_TAG))))
 
-    activityTestRule.activity.getFragmentTagAtStackTop().let {
-      assertEquals(CATEGORIES_TAG, it)
-    }
+    assertEquals(CATEGORIES_TAG, activityTestRule.activity.getFragmentTagAtStackTop())
   }
 
   @Test
   fun should_show_collections_fragment_on_collections_menu_item_click() {
-    InstrumentationRegistry.getInstrumentation()
+    getInstrumentation()
         .targetContext.let {
       SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, true)
     }
@@ -203,9 +195,7 @@ class GuillotineMenuTest {
     onView(withId(R.id.toolbarTitle)).check(matches(
       withText(activityTestRule.activity.fragmentNameTagFetcher.getFragmentName(COLLECTIONS_TAG))))
 
-    activityTestRule.activity.getFragmentTagAtStackTop().let {
-      assertEquals(COLLECTIONS_TAG, it)
-    }
+    assertEquals(COLLECTIONS_TAG, activityTestRule.activity.getFragmentTagAtStackTop())
   }
 
   @Test
@@ -232,7 +222,7 @@ class GuillotineMenuTest {
 
   @Test
   fun should_show_pro_badge_in_guillotine_menu_when_user_is_pro() {
-    InstrumentationRegistry.getInstrumentation()
+    getInstrumentation()
         .targetContext.let {
       SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, true)
     }
@@ -247,7 +237,7 @@ class GuillotineMenuTest {
 
   @Test
   fun should_hide_pro_badge_in_guillotine_menu_when_user_is_not_pro() {
-    InstrumentationRegistry.getInstrumentation()
+    getInstrumentation()
         .targetContext.let {
       SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, false)
     }
