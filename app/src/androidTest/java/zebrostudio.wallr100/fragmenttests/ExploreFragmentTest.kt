@@ -1,20 +1,14 @@
-package zebrostudio.wallr100
+package zebrostudio.wallr100.fragmenttests
 
 import android.app.Application
-import android.os.SystemClock
 import android.support.test.InstrumentationRegistry.getTargetContext
-import android.support.test.espresso.Espresso
 import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.assertion.ViewAssertions
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.contrib.RecyclerViewActions
-import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import io.reactivex.Single
-import org.hamcrest.CoreMatchers
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -22,18 +16,18 @@ import org.junit.rules.RuleChain
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
+import zebrostudio.wallr100.MockedRepositoryTestRule
+import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.adapters.ViewHolder
 import zebrostudio.wallr100.android.ui.main.MainActivity
-import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapperImpl
 import zebrostudio.wallr100.data.model.firebasedatabase.FirebaseImageEntity
 import zebrostudio.wallr100.domain.WallrRepository
-import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.dummylists.MockFirebaseImageList
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
 @RunWith(AndroidJUnit4::class)
-class ExploreFragmentTest : AndroidTestBase() {
+class ExploreFragmentTest : ImageListTestsBase() {
 
   private val testComponentRule =
       MockedRepositoryTestRule(getTargetContext().applicationContext as Application)
@@ -85,53 +79,6 @@ class ExploreFragmentTest : AndroidTestBase() {
               R.id.imageView,
               list[position].imageLinks.thumb)))
     }
-  }
-
-  protected fun getImageModelListAfterDelay(delay: Long, timeUnit: TimeUnit,
-    imageList: List<FirebaseImageEntity>): Single<List<ImageModel>> {
-    return Single.just(FirebasePictureEntityMapperImpl().mapFromEntity(imageList))
-        .delay(delay, timeUnit)
-  }
-
-  protected fun getErrorAfterDelayOnImageModelListCall(delay: Long): Single<List<ImageModel>> {
-    return Single.create {
-      SystemClock.sleep(delay)
-      it.onError(Exception())
-    }
-  }
-
-  protected fun verifyOnlyRecyclerViewIsVisibleAfterDelay(delay: Long){
-    Thread.sleep(delay)
-    Espresso.onView(ViewMatchers.withId(R.id.recyclerView))
-        .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-    Espresso.onView(ViewMatchers.withId(R.id.spinkitView))
-        .check(ViewAssertions.matches(CoreMatchers.not(ViewMatchers.isDisplayed())))
-    Espresso.onView(ViewMatchers.withId(R.id.infoImageView))
-        .check(ViewAssertions.matches(CoreMatchers.not(ViewMatchers.isDisplayed())))
-    Espresso.onView(ViewMatchers.withId(R.id.infoTextFirstLine))
-        .check(ViewAssertions.matches(CoreMatchers.not(ViewMatchers.isDisplayed())))
-    Espresso.onView(ViewMatchers.withId(R.id.infoTextSecondLine))
-        .check(ViewAssertions.matches(CoreMatchers.not(ViewMatchers.isDisplayed())))
-    Espresso.onView(ViewMatchers.withId(R.id.infoTextThirdLine))
-        .check(ViewAssertions.matches(CoreMatchers.not(ViewMatchers.isDisplayed())))
-  }
-
-  protected fun verifyOnlyErrorLayoutIsVisibleAfterDelay(delay: Long){
-    Thread.sleep(delay)
-    Espresso.onView(ViewMatchers.withId(R.id.errorInfoRelativeLayout))
-        .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
-    Espresso.onView(ViewMatchers.withId(R.id.infoImageView))
-        .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
-    Espresso.onView(ViewMatchers.withId(R.id.infoTextFirstLine))
-        .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
-    Espresso.onView(ViewMatchers.withId(R.id.infoTextSecondLine))
-        .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
-    Espresso.onView(ViewMatchers.withId(R.id.infoTextThirdLine))
-        .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
-    Espresso.onView(ViewMatchers.withId(R.id.spinkitView))
-        .check(ViewAssertions.matches(CoreMatchers.not(ViewMatchers.isDisplayed())))
-    Espresso.onView(ViewMatchers.withId(R.id.recyclerView))
-        .check(ViewAssertions.matches(CoreMatchers.not(ViewMatchers.isDisplayed())))
   }
 
 }
