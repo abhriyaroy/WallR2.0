@@ -50,6 +50,7 @@ class MainPresenterImplTest {
 
     mainPresenter.handleViewCreated()
 
+    verify(userPremiumStatusUseCase).isUserPremium()
     verify(widgetHintsUseCase).isNavigationMenuHamburgerHintShown()
     verify(collectionImagesUseCase).wasAutomaticWallpaperChangerEnabled()
     verify(mainView).showHamburgerHint()
@@ -64,20 +65,11 @@ class MainPresenterImplTest {
 
     mainPresenter.handleViewCreated()
 
+    verify(userPremiumStatusUseCase).isUserPremium()
     verify(widgetHintsUseCase).isNavigationMenuHamburgerHintShown()
     verify(collectionImagesUseCase).wasAutomaticWallpaperChangerEnabled()
     verify(mainView).showBuyProLayout()
     verify(mainView).hideProBadge()
-  }
-
-  @Test
-  fun `should hide buy pro layout on handleViewCreated call success due to pro user`() {
-    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
-
-    mainPresenter.handleViewCreated()
-
-    verify(mainView).hideBuyProLayout()
-    verify(mainView).showProBadge()
   }
 
   @Test
@@ -90,9 +82,24 @@ class MainPresenterImplTest {
     verify(widgetHintsUseCase).isNavigationMenuHamburgerHintShown()
     verify(collectionImagesUseCase).wasAutomaticWallpaperChangerEnabled()
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
+    verify(userPremiumStatusUseCase).isUserPremium()
     verify(mainView).showHamburgerHint()
+    verify(mainView).showBuyProLayout()
+    verify(mainView).hideProBadge()
+  }
+
+  @Test
+  fun `should hide buy pro layout on handleViewCreated call success due to pro user`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+
+    mainPresenter.handleViewCreated()
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(widgetHintsUseCase).isNavigationMenuHamburgerHintShown()
+    verify(collectionImagesUseCase).wasAutomaticWallpaperChangerEnabled()
     verify(mainView).hideBuyProLayout()
     verify(mainView).showProBadge()
+    verify(mainView).showHamburgerHint()
   }
 
   @Test
