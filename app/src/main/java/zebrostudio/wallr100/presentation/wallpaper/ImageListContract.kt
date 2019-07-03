@@ -14,6 +14,7 @@ interface ImageListContract {
     fun showImageList(list: List<ImagePresenterEntity>)
     fun hideRefreshing()
     fun hideAllLoadersAndMessageViews()
+    fun setTag(tag: Int)
   }
 
   interface ImageListPresenter : BasePresenter<ImageListView> {

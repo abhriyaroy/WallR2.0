@@ -29,17 +29,14 @@ class ImageListPresenterImpl(
   }
 
   override fun setImageListType(fragmentTag: FragmentTag, position: Int) {
-    when (fragmentTag) {
-      EXPLORE_TAG -> {
-        imageListType = position
-      }
-      TOP_PICKS_TAG -> {
-        imageListType = position + 1
-      }
-      CATEGORIES_TAG -> {
-        imageListType = position + 4
-      }
+    if (fragmentTag == EXPLORE_TAG) {
+      imageListType = position
+    } else if (fragmentTag == TOP_PICKS_TAG) {
+      imageListType = position + 1
+    } else if (fragmentTag == CATEGORIES_TAG) {
+      imageListType = position + 4
     }
+    imageListView?.setTag(position)
   }
 
   override fun fetchImages(refresh: Boolean) {

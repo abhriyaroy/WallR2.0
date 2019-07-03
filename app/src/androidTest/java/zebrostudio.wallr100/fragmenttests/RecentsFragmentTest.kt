@@ -6,13 +6,10 @@ import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.contrib.RecyclerViewActions
-import android.support.test.espresso.matcher.RootMatchers
-import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import io.reactivex.Single
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.allOf
 import org.junit.Before
@@ -58,7 +55,7 @@ class RecentsFragmentTest : ImageListTestsBase() {
       getImageModelListAfterDelay(TimeUnit.SECONDS.toMillis(1), TimeUnit.MILLISECONDS, imageList))
 
     openRecentsFragment()
-    onView(allOf(withId(R.id.spinkitView), isDisplayed()))
+    onView(allOf(withId(R.id.spinkitView), withTagValue(`is`(1 as Any))))
         .check(matches(isDisplayed()))
     verifyOnlyRecyclerViewIsVisibleAfterDelay(TimeUnit.SECONDS.toMillis(1))
     verifyImagesDisplayed(imageList)
@@ -75,8 +72,7 @@ class RecentsFragmentTest : ImageListTestsBase() {
           })
 
     openRecentsFragment()
-    onView(withId(R.id.spinkitView))
-        .check(matches(ViewMatchers.isDisplayed()))
+    onView(withId(R.id.spinkitView)).check(matches(isDisplayed()))
     verifyOnlyErrorLayoutIsVisibleAfterDelay(TimeUnit.SECONDS.toMillis(1))
   }
 

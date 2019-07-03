@@ -37,6 +37,13 @@ class MainPresenterImpl(
     if (collectionImagesUseCase.wasAutomaticWallpaperChangerEnabled()) {
       collectionImagesUseCase.startAutomaticWallpaperChanger()
     }
+    if (userPremiumStatusUseCase.isUserPremium()) {
+      mainView?.hideBuyProLayout()
+      mainView?.showProBadge()
+    } else {
+      mainView?.showBuyProLayout()
+      mainView?.hideProBadge()
+    }
   }
 
   override fun handleBackPress() {
@@ -80,8 +87,6 @@ class MainPresenterImpl(
     backPressedOnce = false
   }
 
-  override fun shouldShowPurchaseOption() = !userPremiumStatusUseCase.isUserPremium()
-
   override fun handleHamburgerHintDismissed() {
     widgetHintsUseCase.saveNavigationMenuHamburgerHintShownState()
   }
@@ -98,7 +103,9 @@ class MainPresenterImpl(
   }
 
   override fun handleViewResumed() {
-    mainView?.hideBuyProLayout()
+    if (userPremiumStatusUseCase.isUserPremium()) {
+      mainView?.hideBuyProLayout()
+    }
   }
 
   override fun handleViewResult(requestCode: Int, resultCode: Int) {

@@ -83,7 +83,6 @@ class ImageListFragment : Fragment(), ImageListView {
   override fun internetAvailability() = activity?.checkDataConnection()!!
 
   override fun showLoader() {
-    Log.d("showLoader",System.currentTimeMillis().toString())
     spinkitView?.visible()
   }
 
@@ -113,6 +112,14 @@ class ImageListFragment : Fragment(), ImageListView {
 
   override fun getScope(): ScopeProvider {
     return AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)
+  }
+
+  override fun setTag(tag: Int) {
+    Log.d("settingtag", tag.toString())
+    spinkitView?.tag = tag
+    recyclerView?.tag = tag
+    errorInfoRelativeLayout?.tag = tag
+    swipeRefreshLayout?.tag = tag
   }
 
   private fun initViews(view: View) {

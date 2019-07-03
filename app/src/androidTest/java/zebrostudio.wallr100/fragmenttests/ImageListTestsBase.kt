@@ -13,7 +13,7 @@ import zebrostudio.wallr100.data.model.firebasedatabase.FirebaseImageEntity
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import java.util.concurrent.TimeUnit
 
-open class ImageListTestsBase : AndroidTestBase() {
+abstract class ImageListTestsBase : AndroidTestBase() {
 
   protected fun getImageModelListAfterDelay(delay: Long, timeUnit: TimeUnit,
     imageList: List<FirebaseImageEntity>): Single<List<ImageModel>> {

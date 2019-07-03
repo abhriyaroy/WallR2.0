@@ -24,6 +24,9 @@ interface MainContract {
       emailIntentType: String
     )
     fun hideBuyProLayout()
+    fun showBuyProLayout()
+    fun hideProBadge()
+    fun showProBadge()
   }
 
   interface MainPresenter : BasePresenter<MainView> {
@@ -34,7 +37,6 @@ interface MainContract {
     fun handleNavigationMenuOpened()
     fun handleNavigationMenuClosed()
     fun setBackPressedFlagToFalse()
-    fun shouldShowPurchaseOption(): Boolean
     fun handleHamburgerHintDismissed()
     fun handleFeedbackMenuItemClick()
   }

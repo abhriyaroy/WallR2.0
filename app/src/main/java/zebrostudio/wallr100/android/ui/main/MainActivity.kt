@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import com.afollestad.materialcab.MaterialCab
 import com.getkeepsafe.taptargetview.TapTarget
@@ -63,6 +64,7 @@ class MainActivity : AppCompatActivity(),
   private lateinit var guillotineMenuAnimation: GuillotineAnimation
 
   private var buyProMenuItem: View? = null
+  private var proBadge: TextView? = null
   private var isOperationInProcess = false
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -216,6 +218,18 @@ class MainActivity : AppCompatActivity(),
     buyProMenuItem?.gone()
   }
 
+  override fun showBuyProLayout() {
+    buyProMenuItem?.visible()
+  }
+
+  override fun hideProBadge() {
+    proBadge?.gone()
+  }
+
+  override fun showProBadge() {
+    proBadge?.visible()
+  }
+
   private inline fun <reified T : BaseFragment> addFragment(
     @IdRes id: Int,
     fragment: T,
@@ -269,6 +283,7 @@ class MainActivity : AppCompatActivity(),
         .setClosedOnStart(true)
         .build()
 
+    proBadge = guillotineMenu.findViewById(R.id.proBadgeGuillotineMenu)
     setUpGuillotineMenuItems(buildGuillotineMenuItems())
   }
 
@@ -298,9 +313,6 @@ class MainActivity : AppCompatActivity(),
       val guillotineMenuItemView = layoutInflater
           .inflate(R.layout.item_guillotine_menu, null)
       rootLinearLayoutGuillotineMenu?.addView(guillotineMenuItemView)
-      if (presenter.shouldShowPurchaseOption()) {
-        rootLinearLayoutGuillotineMenu.proBadgeGuillotineMenu.gone()
-      }
       with(guillotineMenuItemView) {
         id = it.first
         textviewGuillotineMenuItem.text = stringRes(it.first)
@@ -312,9 +324,6 @@ class MainActivity : AppCompatActivity(),
           setBackgroundColor(colorRes(R.color.white))
           textviewGuillotineMenuItem
               .setTextColor(colorRes(R.color.black))
-          if (!presenter.shouldShowPurchaseOption()) {
-            gone()
-          }
         }
         buyProMenuItem = guillotineMenuItemView
       }

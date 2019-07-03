@@ -23,11 +23,16 @@ import zebrostudio.wallr100.presentation.main.MainPresenterImpl
 @RunWith(MockitoJUnitRunner::class)
 class MainPresenterImplTest {
 
-  @Mock lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
-  @Mock lateinit var widgetHintsUseCase: WidgetHintsUseCase
-  @Mock lateinit var collectionImagesUseCase: CollectionImagesUseCase
-  @Mock lateinit var systemInfoProvider: SystemInfoProvider
-  @Mock lateinit var mainView: MainView
+  @Mock
+  lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
+  @Mock
+  lateinit var widgetHintsUseCase: WidgetHintsUseCase
+  @Mock
+  lateinit var collectionImagesUseCase: CollectionImagesUseCase
+  @Mock
+  lateinit var systemInfoProvider: SystemInfoProvider
+  @Mock
+  lateinit var mainView: MainView
   private lateinit var mainPresenter: MainPresenterImpl
 
   @Before
@@ -48,6 +53,8 @@ class MainPresenterImplTest {
     verify(widgetHintsUseCase).isNavigationMenuHamburgerHintShown()
     verify(collectionImagesUseCase).wasAutomaticWallpaperChangerEnabled()
     verify(mainView).showHamburgerHint()
+    verify(mainView).showBuyProLayout()
+    verify(mainView).hideProBadge()
   }
 
   @Test
@@ -59,6 +66,18 @@ class MainPresenterImplTest {
 
     verify(widgetHintsUseCase).isNavigationMenuHamburgerHintShown()
     verify(collectionImagesUseCase).wasAutomaticWallpaperChangerEnabled()
+    verify(mainView).showBuyProLayout()
+    verify(mainView).hideProBadge()
+  }
+
+  @Test
+  fun `should hide buy pro layout on handleViewCreated call success due to pro user`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+
+    mainPresenter.handleViewCreated()
+
+    verify(mainView).hideBuyProLayout()
+    verify(mainView).showProBadge()
   }
 
   @Test
@@ -72,6 +91,8 @@ class MainPresenterImplTest {
     verify(collectionImagesUseCase).wasAutomaticWallpaperChangerEnabled()
     verify(collectionImagesUseCase).startAutomaticWallpaperChanger()
     verify(mainView).showHamburgerHint()
+    verify(mainView).hideBuyProLayout()
+    verify(mainView).showProBadge()
   }
 
   @Test
@@ -228,14 +249,6 @@ class MainPresenterImplTest {
   }
 
   @Test
-  fun `should return true on shouldShowPurchaseOption call success`() {
-    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(false)
-
-    assertTrue(mainPresenter.shouldShowPurchaseOption())
-    verify(userPremiumStatusUseCase).isUserPremium()
-  }
-
-  @Test
   fun `should show feedback client on handleFeedbackMenuItemClick call success`() {
     val osVersion = "os_version"
     val buildNumber = "build_number"
@@ -267,7 +280,8 @@ class MainPresenterImplTest {
     verify(mainView).showFeedbackClient(messageSubject, arrayOf(emailAddress), contentType)
   }
 
-  @Test fun `should hide buy pro layout on resume after successful purchase`() {
+  @Test
+  fun `should hide buy pro layout on resume after successful purchase`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
 
     mainPresenter.handleViewResumed()
@@ -276,7 +290,8 @@ class MainPresenterImplTest {
     verify(mainView).hideBuyProLayout()
   }
 
-  @Test fun `should hide buy pro layout on successful purchase`() {
+  @Test
+  fun `should hide buy pro layout on successful purchase`() {
     mainPresenter.handleViewResult(PurchaseTransactionConfig.PURCHASE_REQUEST_CODE,
       PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 

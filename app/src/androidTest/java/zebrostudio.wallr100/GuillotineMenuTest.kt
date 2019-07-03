@@ -66,32 +66,31 @@ class GuillotineMenuTest {
   }
 
   @Test
-  fun should_show_buy_pro_option_in_guillotine_menu_when_user_is_pro() {
-    getInstrumentation()
-        .targetContext.let {
-      SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, false)
-    }
-    activityTestRule.launchActivity(Intent())
-
-    onView(withId(R.id.contentHamburger))
-        .perform(click())
-
-    onView(withId(R.string.buy_pro_title))
-        .check(matches(isCompletelyDisplayed()))
-  }
-
-  @Test
-  fun should_hide_buy_pro_option_in_guillotine_menu_when_user_is_non_pro() {
+  fun should_hide_buy_pro_option_in_guillotine_menu_when_user_is_pro() {
     getInstrumentation().targetContext.let {
       SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, true)
     }
-    activityTestRule.launchActivity(Intent())
+    relaunchActivity()
 
     onView(withId(R.id.contentHamburger))
         .perform(click())
 
     onView(withId(R.string.buy_pro_title))
         .check(matches(not(isCompletelyDisplayed())))
+  }
+
+  @Test
+  fun should_show_buy_pro_option_in_guillotine_menu_when_user_is_non_pro() {
+    getInstrumentation().targetContext.let {
+      SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, false)
+    }
+    relaunchActivity()
+
+    onView(withId(R.id.contentHamburger))
+        .perform(click())
+
+    onView(withId(R.string.buy_pro_title))
+        .check(matches(isCompletelyDisplayed()))
   }
 
   @Test
@@ -186,7 +185,7 @@ class GuillotineMenuTest {
         .targetContext.let {
       SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, true)
     }
-    activityTestRule.launchActivity(Intent())
+    relaunchActivity()
 
     onView(withId(R.id.contentHamburger)).perform(click())
 
@@ -226,7 +225,7 @@ class GuillotineMenuTest {
         .targetContext.let {
       SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, true)
     }
-    activityTestRule.launchActivity(Intent())
+    relaunchActivity()
 
     onView(withId(R.id.contentHamburger))
         .perform(click())
@@ -241,12 +240,17 @@ class GuillotineMenuTest {
         .targetContext.let {
       SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, false)
     }
-    activityTestRule.launchActivity(Intent())
+    relaunchActivity()
 
     onView(withId(R.id.contentHamburger))
         .perform(click())
 
     onView(withId(R.id.proBadgeGuillotineMenu))
         .check(matches(not(isCompletelyDisplayed())))
+  }
+
+  private fun relaunchActivity(){
+    activityTestRule.finishActivity()
+    activityTestRule.launchActivity(null)
   }
 }
