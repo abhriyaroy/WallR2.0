@@ -53,6 +53,10 @@ class ViewHolder(
     itemView.setOnClickListener { presenter.handleImageClicked(adapterPosition, this) }
   }
 
+  override fun setTag(tag: String) {
+    itemView.imageView.tag = tag
+  }
+
   override fun setSearchImage(link: String) {
     loadAndShowImage(link)
   }
@@ -70,7 +74,6 @@ class ViewHolder(
   }
 
   private fun loadAndShowImage(link: String) {
-    itemView.imageView.tag = link
     imageLoader.loadWithFixedSize(context,
       link,
       itemView.imageView,

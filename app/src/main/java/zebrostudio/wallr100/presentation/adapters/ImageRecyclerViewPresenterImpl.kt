@@ -39,11 +39,13 @@ class ImageRecyclerViewPresenterImpl : ImageRecyclerViewPresenter {
       SEARCH -> {
         rowView.configureImageView(
           searchResultList[position].paletteColor)
+        rowView.setTag(searchResultList[position].imageQualityUrlPresenterEntity.smallImageLink)
         rowView.setSearchImage(
           searchResultList[position].imageQualityUrlPresenterEntity.smallImageLink)
       }
       WALLPAPERS -> {
         rowView.configureImageView(wallpaperImageList[position].color)
+        rowView.setTag(wallpaperImageList[position].imageLink.thumb)
         rowView.setWallpaperImage(wallpaperImageList[position].imageLink.thumb)
       }
     }

@@ -86,8 +86,8 @@ class ImageRecyclerViewPresenterImplTest {
     imageRecyclerViewPresenterImpl.onBindRepositoryRowViewAtPosition(position,
       imageRecyclerItemView)
 
-    verify(imageRecyclerItemView).configureImageView(
-      searchPicturesList[position].paletteColor)
+    verify(imageRecyclerItemView).configureImageView(searchPicturesList[position].paletteColor)
+    verify(imageRecyclerItemView).setTag(searchPicturesList[position].imageQualityUrlPresenterEntity.smallImageLink)
     verify(imageRecyclerItemView).setSearchImage(
       searchPicturesList[position].imageQualityUrlPresenterEntity.smallImageLink)
   }
@@ -95,16 +95,15 @@ class ImageRecyclerViewPresenterImplTest {
   @Test
   fun `should set wallpaper image on onBindRepositoryRowViewAtPosition call success with image type as wallpaper`() {
     val position = 0
-    val wallpaperImagesList =
-        mutableListOf(ImagePresenterEntityFactory.getImagePresenterEntity())
+    val wallpaperImagesList = mutableListOf(ImagePresenterEntityFactory.getImagePresenterEntity())
     imageRecyclerViewPresenterImpl.imageType = WALLPAPERS
     imageRecyclerViewPresenterImpl.setWallpaperImageList(wallpaperImagesList)
 
     imageRecyclerViewPresenterImpl.onBindRepositoryRowViewAtPosition(position,
       imageRecyclerItemView)
 
-    verify(imageRecyclerItemView).configureImageView(
-      wallpaperImagesList[position].color)
+    verify(imageRecyclerItemView).configureImageView(wallpaperImagesList[position].color)
+    verify(imageRecyclerItemView).setTag(wallpaperImagesList[position].imageLink.thumb)
     verify(imageRecyclerItemView).setWallpaperImage(wallpaperImagesList[position].imageLink.thumb)
   }
 

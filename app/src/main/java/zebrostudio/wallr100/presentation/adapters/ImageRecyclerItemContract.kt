@@ -12,6 +12,7 @@ interface ImageRecyclerItemContract {
     fun setWallpaperImage(link: String)
     fun showSearchImageDetails(searchImage: SearchPicturesPresenterEntity)
     fun showWallpaperImageDetails(wallpaperImage: ImagePresenterEntity)
+    fun setTag(tag : String)
   }
 
   interface ImageRecyclerViewPresenter {

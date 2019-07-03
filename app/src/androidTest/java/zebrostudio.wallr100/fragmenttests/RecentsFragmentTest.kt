@@ -8,8 +8,7 @@ import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.contrib.RecyclerViewActions
 import android.support.test.espresso.matcher.RootMatchers
 import android.support.test.espresso.matcher.ViewMatchers
-import android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA
-import android.support.test.espresso.matcher.ViewMatchers.withId
+import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import io.reactivex.Single
@@ -59,10 +58,8 @@ class RecentsFragmentTest : ImageListTestsBase() {
       getImageModelListAfterDelay(TimeUnit.SECONDS.toMillis(1), TimeUnit.MILLISECONDS, imageList))
 
     openRecentsFragment()
-    onView(allOf(withId(R.id.spinkitView),
-      isDescendantOfA(getNthChildOfViewGroup(withId(R.id.wallpaperFragmentViewPager), 1))))
-        .inRoot(RootMatchers.withDecorView(`is`(activityTestRule.activity.window.decorView)))
-        .check(matches(ViewMatchers.isDisplayed()))
+    onView(allOf(withId(R.id.spinkitView), isDisplayed()))
+        .check(matches(isDisplayed()))
     verifyOnlyRecyclerViewIsVisibleAfterDelay(TimeUnit.SECONDS.toMillis(1))
     verifyImagesDisplayed(imageList)
   }
