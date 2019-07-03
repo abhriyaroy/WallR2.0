@@ -1,17 +1,22 @@
-package zebrostudio.wallr100.fragmenttests
+package zebrostudio.wallr100.imagelistfragment
 
 import android.os.SystemClock
-import android.support.test.espresso.Espresso
+import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions
 import android.support.test.espresso.matcher.ViewMatchers.*
 import io.reactivex.Single
-import org.hamcrest.CoreMatchers.not
+import org.hamcrest.CoreMatchers.*
 import zebrostudio.wallr100.AndroidTestBase
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapperImpl
 import zebrostudio.wallr100.data.model.firebasedatabase.FirebaseImageEntity
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import java.util.concurrent.TimeUnit
+
+private const val SPINNER_IDENTIFIER = "spinner"
+private const val RECYCLERVIEW_IDENTIFIER = "recyclerview"
+private const val ERROR_INFO_LAYOUT_IDENTIFIER = "error_info"
+private const val SWIPE_REFRESH_LAYOUT_IDENTIFIER = "swip_refresh"
 
 abstract class ImageListTestsBase : AndroidTestBase() {
 
@@ -28,37 +33,35 @@ abstract class ImageListTestsBase : AndroidTestBase() {
     }
   }
 
-  protected fun verifyOnlyRecyclerViewIsVisibleAfterDelay(delay: Long) {
+  protected fun verifyOnlyRecyclerViewIsVisibleAfterDelay(delay: Long, tagPrefix: String) {
     Thread.sleep(delay)
-    Espresso.onView(withId(R.id.recyclerView))
+    onView(withTagValue(`is`("$tagPrefix$RECYCLERVIEW_IDENTIFIER")))
         .check(ViewAssertions.matches(isDisplayed()))
-    Espresso.onView(withId(R.id.spinkitView))
+    onView(withTagValue(`is`("$tagPrefix$SPINNER_IDENTIFIER")))
         .check(ViewAssertions.matches(not(isDisplayed())))
-    Espresso.onView(withId(R.id.infoImageView))
-        .check(ViewAssertions.matches(not(isDisplayed())))
-    Espresso.onView(withId(R.id.infoTextFirstLine))
-        .check(ViewAssertions.matches(not(isDisplayed())))
-    Espresso.onView(withId(R.id.infoTextSecondLine))
-        .check(ViewAssertions.matches(not(isDisplayed())))
-    Espresso.onView(withId(R.id.infoTextThirdLine))
+    onView(withTagValue(`is`("$tagPrefix$ERROR_INFO_LAYOUT_IDENTIFIER")))
         .check(ViewAssertions.matches(not(isDisplayed())))
   }
 
-  protected fun verifyOnlyErrorLayoutIsVisibleAfterDelay(delay: Long) {
+  protected fun verifyOnlyErrorLayoutIsVisibleAfterDelay(delay: Long, tagPrefix: String) {
     Thread.sleep(delay)
-    Espresso.onView(withId(R.id.errorInfoRelativeLayout))
+    onView(withTagValue(`is`("$tagPrefix$ERROR_INFO_LAYOUT_IDENTIFIER")))
         .check(ViewAssertions.matches(isCompletelyDisplayed()))
-    Espresso.onView(withId(R.id.infoImageView))
+    onView(allOf(withId(R.id.infoImageView),
+      isDescendantOfA(withTagValue(`is`("$tagPrefix$ERROR_INFO_LAYOUT_IDENTIFIER")))))
         .check(ViewAssertions.matches(isCompletelyDisplayed()))
-    Espresso.onView(withId(R.id.infoTextFirstLine))
+    onView(allOf(withId(R.id.infoTextFirstLine),
+      isDescendantOfA(withTagValue(`is`("$tagPrefix$ERROR_INFO_LAYOUT_IDENTIFIER")))))
         .check(ViewAssertions.matches(isCompletelyDisplayed()))
-    Espresso.onView(withId(R.id.infoTextSecondLine))
+    onView(allOf(withId(R.id.infoTextSecondLine),
+      isDescendantOfA(withTagValue(`is`("$tagPrefix$ERROR_INFO_LAYOUT_IDENTIFIER")))))
         .check(ViewAssertions.matches(isCompletelyDisplayed()))
-    Espresso.onView(withId(R.id.infoTextThirdLine))
+    onView(allOf(withId(R.id.infoTextThirdLine),
+      isDescendantOfA(withTagValue(`is`("$tagPrefix$ERROR_INFO_LAYOUT_IDENTIFIER")))))
         .check(ViewAssertions.matches(isCompletelyDisplayed()))
-    Espresso.onView(withId(R.id.spinkitView))
+    onView(withTagValue(`is`("$tagPrefix$SPINNER_IDENTIFIER")))
         .check(ViewAssertions.matches(not(isDisplayed())))
-    Espresso.onView(withId(R.id.recyclerView))
+    onView(withTagValue(`is`("$tagPrefix$RECYCLERVIEW_IDENTIFIER")))
         .check(ViewAssertions.matches(not(isDisplayed())))
   }
 }

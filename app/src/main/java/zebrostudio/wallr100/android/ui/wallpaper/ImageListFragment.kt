@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +29,11 @@ import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListVi
 import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
+
+private const val SPINNER_IDENTIFIER = "spinner"
+private const val RECYCLERVIEW_IDENTIFIER = "recyclerview"
+private const val ERROR_INFO_LAYOUT_IDENTIFIER = "error_info"
+private const val SWIPE_REFRESH_LAYOUT_IDENTIFIER = "swip_refresh"
 
 class ImageListFragment : Fragment(), ImageListView {
 
@@ -114,12 +118,12 @@ class ImageListFragment : Fragment(), ImageListView {
     return AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)
   }
 
-  override fun setTag(tag: Int) {
-    Log.d("settingtag", tag.toString())
-    spinkitView?.tag = tag
-    recyclerView?.tag = tag
-    errorInfoRelativeLayout?.tag = tag
-    swipeRefreshLayout?.tag = tag
+  // For Ui tests
+  override fun setTag(tag: String) {
+    spinkitView?.tag = "$tag-$SPINNER_IDENTIFIER"
+    recyclerView?.tag = "$tag-$RECYCLERVIEW_IDENTIFIER"
+    errorInfoRelativeLayout?.tag = "$tag-$ERROR_INFO_LAYOUT_IDENTIFIER"
+    swipeRefreshLayout?.tag = "$tag-$SWIPE_REFRESH_LAYOUT_IDENTIFIER"
   }
 
   private fun initViews(view: View) {
