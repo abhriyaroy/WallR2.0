@@ -15,7 +15,7 @@ import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
 
 interface WallrRepository {
 
-  fun isAppOpenedForTheFirstTime(): Boolean
+  fun wasAppOpenedBefore(): Boolean
   fun saveAppPreviouslyOpenedState()
   fun authenticatePurchase(
     packageName: String,

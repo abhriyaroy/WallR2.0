@@ -87,7 +87,7 @@ class WallrDataRepository(
   private val executionThread: ExecutionThread
 ) : WallrRepository {
 
-  override fun isAppOpenedForTheFirstTime(): Boolean {
+  override fun wasAppOpenedBefore(): Boolean {
     return sharedPrefsHelper.getBoolean(HINT_PREFERENCE_NAME,
       NAVIGATION_HAMBURGER_HINT_PREFERENCE_TAG)
   }

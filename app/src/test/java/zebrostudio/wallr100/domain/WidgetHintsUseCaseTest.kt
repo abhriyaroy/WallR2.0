@@ -26,18 +26,18 @@ class WidgetHintsUseCaseTest {
 
   @Test
   fun `should return false on isNavigationMenuHamburgerHintShown call success`() {
-    `when`(wallrRepository.isAppOpenedForTheFirstTime()).thenReturn(false)
+    `when`(wallrRepository.wasAppOpenedBefore()).thenReturn(false)
 
     assertEquals(false, widgetHintsInteractor.isNavigationMenuHamburgerHintShown())
-    verify(wallrRepository).isAppOpenedForTheFirstTime()
+    verify(wallrRepository).wasAppOpenedBefore()
   }
 
   @Test
   fun `should return true on isNavigationMenuHamburgerHintShown call success`() {
-    `when`(wallrRepository.isAppOpenedForTheFirstTime()).thenReturn(true)
+    `when`(wallrRepository.wasAppOpenedBefore()).thenReturn(true)
 
     assertEquals(true, widgetHintsInteractor.isNavigationMenuHamburgerHintShown())
-    verify(wallrRepository).isAppOpenedForTheFirstTime()
+    verify(wallrRepository).wasAppOpenedBefore()
   }
 
   @Test
