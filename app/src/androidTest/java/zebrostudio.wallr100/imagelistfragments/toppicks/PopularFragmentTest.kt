@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.imagelistfragment
+package zebrostudio.wallr100.imagelistfragments.toppicks
 
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.click
@@ -12,39 +12,39 @@ import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.FragmentTag.TOP_PICKS_TAG
-import zebrostudio.wallr100.imagelistfragment.BaseImageListFragmentTest.ImageListType.STANDOUT
+import zebrostudio.wallr100.imagelistfragments.BaseImageListFragmentTest
+import zebrostudio.wallr100.imagelistfragments.BaseImageListFragmentTest.ImageListType.POPULAR
 
 @RunWith(AndroidJUnit4::class)
-class StandoutFragmentTest : BaseImageListFragmentTest() {
+class PopularFragmentTest : BaseImageListFragmentTest() {
 
   @Before
   fun setup() {
-    tagPrefix = "${TOP_PICKS_TAG}_2"
+    tagPrefix = "${TOP_PICKS_TAG}_1"
     initMocks()
     `when`(mockWallrRepository.getExplorePictures()).thenReturn(Single.error(Exception()))
     `when`(mockWallrRepository.getRecentPictures()).thenReturn(Single.error(Exception()))
-    `when`(mockWallrRepository.getPopularPictures()).thenReturn(Single.error(Exception()))
+    `when`(mockWallrRepository.getStandoutPictures()).thenReturn(Single.error(Exception()))
   }
 
   @Test
-  fun should_display_standout_images_on_getStandoutPictures_call_success() {
-    verifyImages(STANDOUT) {
-      openStandoutFragment()
+  fun should_display_poplar_images_on_getPopularPictures_call_success() {
+    verifyImages(POPULAR) {
+      openPopularFragment()
     }
   }
 
   @Test
-  fun should_display_unable_to_load_image_layout_on_getStandoutPictures_call_failure() {
-    verifyUnableToLoadImagesLayout(STANDOUT) {
-      openStandoutFragment()
+  fun should_display_unable_to_load_image_layout_on_getPopularPictures_call_failure() {
+    verifyUnableToLoadImagesLayout(POPULAR) {
+      openPopularFragment()
     }
   }
 
-  private fun openStandoutFragment() {
+  private fun openPopularFragment() {
     activityTestRule.launchActivity(null)
     onView(withId(R.id.contentHamburger)).perform(click())
     onView(withId(R.string.top_picks_title)).perform(click())
     onView(withText("POPULAR")).perform(click())
-    onView(withText("STANDOUTS")).perform(click())
   }
 }

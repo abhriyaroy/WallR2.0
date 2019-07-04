@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.imagelistfragment
+package zebrostudio.wallr100.imagelistfragments
 
 import android.app.Application
 import android.os.SystemClock
@@ -8,7 +8,6 @@ import android.support.test.espresso.assertion.ViewAssertions
 import android.support.test.espresso.contrib.RecyclerViewActions
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
-import android.util.Log
 import io.reactivex.Single
 import org.hamcrest.CoreMatchers.*
 import org.junit.Rule
@@ -48,7 +47,6 @@ abstract class BaseImageListFragmentTest : BaseAndroidTest() {
   fun initMocks() {
     mockWallrRepository = testComponentRule.getTestAppComponent().wallrRepository
     `when`(mockWallrRepository.wasAppOpenedBefore()).thenReturn(true)
-    Log.d("initmocks", "done")
   }
 
   protected fun verifyImages(imageListType: ImageListType, openImageListFragment: () -> Unit) {

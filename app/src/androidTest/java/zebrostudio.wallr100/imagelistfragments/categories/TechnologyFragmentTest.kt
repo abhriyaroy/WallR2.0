@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.imagelistfragment
+package zebrostudio.wallr100.imagelistfragments.categories
 
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.click
@@ -10,7 +10,8 @@ import org.junit.Test
 import org.mockito.Mockito.`when`
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.FragmentTag
-import zebrostudio.wallr100.imagelistfragment.BaseImageListFragmentTest.ImageListType.TECHNOLOGY
+import zebrostudio.wallr100.imagelistfragments.BaseImageListFragmentTest
+import zebrostudio.wallr100.imagelistfragments.BaseImageListFragmentTest.ImageListType.TECHNOLOGY
 
 class TechnologyFragmentTest : BaseImageListFragmentTest() {
   @Before

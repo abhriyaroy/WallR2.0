@@ -1,11 +1,12 @@
-package zebrostudio.wallr100.imagelistfragment
+package zebrostudio.wallr100.imagelistfragments.explore
 
 import android.support.test.runner.AndroidJUnit4
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
-import zebrostudio.wallr100.imagelistfragment.BaseImageListFragmentTest.ImageListType.EXPLORE
+import zebrostudio.wallr100.imagelistfragments.BaseImageListFragmentTest
+import zebrostudio.wallr100.imagelistfragments.BaseImageListFragmentTest.ImageListType.EXPLORE
 
 @RunWith(AndroidJUnit4::class)
 class ExploreFragmentTest : BaseImageListFragmentTest() {
