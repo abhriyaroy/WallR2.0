@@ -56,8 +56,9 @@ class ExploreFragmentTest : ImageListTestsBase() {
       getImageModelListAfterDelay(SECONDS.toMillis(1), MILLISECONDS, imageList))
 
     activityTestRule.launchActivity(null)
-    onView(withId(R.id.spinkitView)).check(matches(isDisplayed()))
-    verifyOnlyRecyclerViewIsVisibleAfterDelay(SECONDS.toMillis(1), "$EXPLORE_TAG-0-")
+    onView(allOf(withTagValue(`is`("${EXPLORE_TAG}_0_$SPINNER_IDENTIFIER")),
+      withId(R.id.spinkitView))).check(matches(isDisplayed()))
+    verifyOnlyRecyclerViewIsVisibleAfterDelay(SECONDS.toMillis(1), "${EXPLORE_TAG}_0")
     verifyImagesDisplayed(imageList)
   }
 
@@ -72,13 +73,14 @@ class ExploreFragmentTest : ImageListTestsBase() {
           })
 
     activityTestRule.launchActivity(null)
-    onView(withId(R.id.spinkitView)).check(matches(isDisplayed()))
-    verifyOnlyErrorLayoutIsVisibleAfterDelay(SECONDS.toMillis(1), "$EXPLORE_TAG-0-")
+    onView(allOf(withTagValue(`is`("${EXPLORE_TAG}_0_$SPINNER_IDENTIFIER")),
+      withId(R.id.spinkitView))).check(matches(isDisplayed()))
+    verifyOnlyErrorLayoutIsVisibleAfterDelay(SECONDS.toMillis(1), "${EXPLORE_TAG}_0")
   }
 
   private fun verifyImagesDisplayed(list: List<FirebaseImageEntity>) {
     for (position in 0 until list.size) {
-      onView(allOf(withTagValue(`is`("$EXPLORE_TAG-0-$RECYCLERVIEW_IDENTIFIER")),
+      onView(allOf(withTagValue(`is`("${EXPLORE_TAG}_0_$RECYCLERVIEW_IDENTIFIER")),
         withId(R.id.recyclerView)))
           .perform(RecyclerViewActions.scrollToPosition<ViewHolder>(position))
           .check(matches(hasImageViewWithTagAtPosition(position,

@@ -60,9 +60,9 @@ class RecentsFragmentTest : ImageListTestsBase() {
       getImageModelListAfterDelay(SECONDS.toMillis(1), MILLISECONDS, imageList))
 
     openRecentsFragment()
-    onView(allOf(withTagValue(`is`("$TOP_PICKS_TAG-0-$SPINNER_IDENTIFIER")),
+    onView(allOf(withTagValue(`is`("${TOP_PICKS_TAG}_0_$SPINNER_IDENTIFIER")),
       withId(R.id.spinkitView))).check(matches(isCompletelyDisplayed()))
-    verifyOnlyRecyclerViewIsVisibleAfterDelay(SECONDS.toMillis(1), "$TOP_PICKS_TAG-0-")
+    verifyOnlyRecyclerViewIsVisibleAfterDelay(SECONDS.toMillis(1), "${TOP_PICKS_TAG}_0")
     verifyImagesDisplayed(imageList)
   }
 
@@ -76,9 +76,9 @@ class RecentsFragmentTest : ImageListTestsBase() {
           })
 
     openRecentsFragment()
-    onView(allOf(withTagValue(`is`("$TOP_PICKS_TAG-0-$SPINNER_IDENTIFIER")),
+    onView(allOf(withTagValue(`is`("${TOP_PICKS_TAG}_0_$SPINNER_IDENTIFIER")),
       withId(R.id.spinkitView))).check(matches(isDisplayed()))
-    verifyOnlyErrorLayoutIsVisibleAfterDelay(SECONDS.toMillis(1), "$TOP_PICKS_TAG-0-")
+    verifyOnlyErrorLayoutIsVisibleAfterDelay(SECONDS.toMillis(1), "${TOP_PICKS_TAG}_0")
   }
 
   private fun openRecentsFragment() {
@@ -89,7 +89,7 @@ class RecentsFragmentTest : ImageListTestsBase() {
 
   private fun verifyImagesDisplayed(list: List<FirebaseImageEntity>) {
     for (position in 0 until list.size) {
-      onView(allOf(withTagValue(`is`("$TOP_PICKS_TAG-0-$RECYCLERVIEW_IDENTIFIER")),
+      onView(allOf(withTagValue(`is`("${TOP_PICKS_TAG}_0_$RECYCLERVIEW_IDENTIFIER")),
         withId(R.id.recyclerView)))
           .perform(RecyclerViewActions.scrollToPosition<ViewHolder>(position))
           .check(matches(hasImageViewWithTagAtPosition(position,

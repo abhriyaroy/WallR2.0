@@ -6,7 +6,6 @@ import android.app.Instrumentation
 import android.content.Intent
 import android.content.Intent.*
 import android.net.Uri
-import android.os.Bundle
 import android.support.test.InstrumentationRegistry.getInstrumentation
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.*
@@ -35,7 +34,8 @@ import zebrostudio.wallr100.android.utils.FragmentTag.*
 import zebrostudio.wallr100.data.PREMIUM_USER_TAG
 import zebrostudio.wallr100.data.PURCHASE_PREFERENCE_NAME
 import zebrostudio.wallr100.data.SharedPrefsHelperImpl
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.MILLISECONDS
+import java.util.concurrent.TimeUnit.SECONDS
 
 @RunWith(AndroidJUnit4::class)
 class GuillotineMenuTest {
@@ -57,9 +57,7 @@ class GuillotineMenuTest {
 
   @Test
   fun should_close_guillotine_menu_on_hamburger_click_twice() {
-    onView(withId(R.id.contentHamburger))
-        .perform(click())
-
+    onView(withId(R.id.contentHamburger)).perform(click())
     onView(withId(R.id.hamburgerGuillotineMenu))
         .perform(click())
         .check(matches(not(isCompletelyDisplayed())))
@@ -71,12 +69,8 @@ class GuillotineMenuTest {
       SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, true)
     }
     relaunchActivity()
-
-    onView(withId(R.id.contentHamburger))
-        .perform(click())
-
-    onView(withId(R.string.buy_pro_title))
-        .check(matches(not(isCompletelyDisplayed())))
+    onView(withId(R.id.contentHamburger)).perform(click())
+    onView(withId(R.string.buy_pro_title)).check(matches(not(isCompletelyDisplayed())))
   }
 
   @Test
@@ -85,18 +79,13 @@ class GuillotineMenuTest {
       SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, false)
     }
     relaunchActivity()
-
-    onView(withId(R.id.contentHamburger))
-        .perform(click())
-
-    onView(withId(R.string.buy_pro_title))
-        .check(matches(isCompletelyDisplayed()))
+    onView(withId(R.id.contentHamburger)).perform(click())
+    onView(withId(R.string.buy_pro_title)).check(matches(isCompletelyDisplayed()))
   }
 
   @Test
   fun should_show_exit_confirmation_message() {
     onView(isRoot()).perform(pressBack())
-
     onView(withText(R.string.main_activity_exit_confirmation_message))
         .inRoot(withDecorView(not(activityTestRule.activity.window.decorView)))
         .check(matches(isDisplayed()))
@@ -105,11 +94,9 @@ class GuillotineMenuTest {
   @Test
   fun should_close_app_after_exit_confirmation() {
     onView(isRoot()).perform(pressBack())
-
     onView(withText(R.string.main_activity_exit_confirmation_message))
         .inRoot(withDecorView(not(activityTestRule.activity.window.decorView)))
         .check(matches(isDisplayed()))
-
     onView(isRoot()).perform(pressBackUnconditionally())
 
     assertTrue(activityTestRule.activity.isDestroyed)
@@ -118,15 +105,11 @@ class GuillotineMenuTest {
   @Test
   fun should_show_exit_confirmation_message_on_delayed_double_back_press() {
     onView(isRoot()).perform(pressBack())
-
     onView(withText(R.string.main_activity_exit_confirmation_message))
         .inRoot(withDecorView(not(activityTestRule.activity.window.decorView)))
         .check(matches(isDisplayed()))
-
-    Thread.sleep(TimeUnit.SECONDS.toMillis(2))
-
+    Thread.sleep(SECONDS.toMillis(2))
     onView(isRoot()).perform(pressBack())
-
     onView(withText(R.string.main_activity_exit_confirmation_message))
         .inRoot(withDecorView(not(activityTestRule.activity.window.decorView)))
         .check(matches(isDisplayed()))
@@ -146,9 +129,7 @@ class GuillotineMenuTest {
   @Test
   fun should_show_explore_fragment_on_explore_menu_item_click() {
     onView(withId(R.id.contentHamburger)).perform(click())
-
     onView(withId(R.string.explore_title)).perform(click())
-
     onView(withId(R.id.toolbarTitle)).check(matches(
       withText(activityTestRule.activity.fragmentNameTagFetcher.getFragmentName(EXPLORE_TAG))))
 
@@ -158,9 +139,7 @@ class GuillotineMenuTest {
   @Test
   fun should_show_top_picks_fragment_on_top_picks_menu_item_click() {
     onView(withId(R.id.contentHamburger)).perform(click())
-
     onView(withId(R.string.top_picks_title)).perform(click())
-
     onView(withId(R.id.toolbarTitle)).check(matches(
       withText(activityTestRule.activity.fragmentNameTagFetcher.getFragmentName(TOP_PICKS_TAG))))
 
@@ -170,9 +149,7 @@ class GuillotineMenuTest {
   @Test
   fun should_show_categories_fragment_on_categories_menu_item_click() {
     onView(withId(R.id.contentHamburger)).perform(click())
-
     onView(withId(R.string.categories_title)).perform(click())
-
     onView(withId(R.id.toolbarTitle)).check(matches(
       withText(activityTestRule.activity.fragmentNameTagFetcher.getFragmentName(CATEGORIES_TAG))))
 
@@ -181,16 +158,12 @@ class GuillotineMenuTest {
 
   @Test
   fun should_show_collections_fragment_on_collections_menu_item_click() {
-    getInstrumentation()
-        .targetContext.let {
+    getInstrumentation().targetContext.let {
       SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, true)
     }
     relaunchActivity()
-
     onView(withId(R.id.contentHamburger)).perform(click())
-
     onView(withId(R.string.collection_title)).perform(click())
-
     onView(withId(R.id.toolbarTitle)).check(matches(
       withText(activityTestRule.activity.fragmentNameTagFetcher.getFragmentName(COLLECTIONS_TAG))))
 
@@ -204,18 +177,13 @@ class GuillotineMenuTest {
         .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, Intent()))
 
     onView(withId(R.id.contentHamburger)).perform(click())
-
     onView(withId(R.string.feedback_title)).perform(click())
-
-    Bundle().apply {
-
-    }
+    Thread.sleep(MILLISECONDS.toMillis(500))
 
     intended(allOf(hasAction(ACTION_CHOOSER),
       hasExtras(BundleMatchers.hasValue(allOf(hasAction(ACTION_SENDTO),
         hasData(Uri.parse("mailto:"))))),
       hasExtra(EXTRA_TITLE, "Contact using")))
-
     Intents.release()
   }
 
@@ -226,12 +194,8 @@ class GuillotineMenuTest {
       SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, true)
     }
     relaunchActivity()
-
-    onView(withId(R.id.contentHamburger))
-        .perform(click())
-
-    onView(withId(R.id.proBadgeGuillotineMenu))
-        .check(matches(isCompletelyDisplayed()))
+    onView(withId(R.id.contentHamburger)).perform(click())
+    onView(withId(R.id.proBadgeGuillotineMenu)).check(matches(isCompletelyDisplayed()))
   }
 
   @Test
@@ -241,15 +205,11 @@ class GuillotineMenuTest {
       SharedPrefsHelperImpl(it).setBoolean(PURCHASE_PREFERENCE_NAME, PREMIUM_USER_TAG, false)
     }
     relaunchActivity()
-
-    onView(withId(R.id.contentHamburger))
-        .perform(click())
-
-    onView(withId(R.id.proBadgeGuillotineMenu))
-        .check(matches(not(isCompletelyDisplayed())))
+    onView(withId(R.id.contentHamburger)).perform(click())
+    onView(withId(R.id.proBadgeGuillotineMenu)).check(matches(not(isCompletelyDisplayed())))
   }
 
-  private fun relaunchActivity(){
+  private fun relaunchActivity() {
     activityTestRule.finishActivity()
     activityTestRule.launchActivity(null)
   }

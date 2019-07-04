@@ -40,10 +40,6 @@ abstract class AndroidTestBase {
 
       override fun matchesSafely(view: View): Boolean {
         return (view.tag == expectedTag)
-       /* Log.d("viewtagis", view.findViewById<SpinKitView>(id).tag.toString())
-        if (expectedTag == view.findViewById<SpinKitView>(id).tag) {
-          return true
-        }*/
       }
     }
   }

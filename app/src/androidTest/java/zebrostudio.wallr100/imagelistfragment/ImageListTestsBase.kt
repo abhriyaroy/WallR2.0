@@ -34,33 +34,33 @@ abstract class ImageListTestsBase : AndroidTestBase() {
 
   protected fun verifyOnlyRecyclerViewIsVisibleAfterDelay(delay: Long, tagPrefix: String) {
     Thread.sleep(delay)
-    onView(withTagValue(`is`("$tagPrefix$RECYCLERVIEW_IDENTIFIER")))
+    onView(withTagValue(`is`("${tagPrefix}_$RECYCLERVIEW_IDENTIFIER")))
         .check(ViewAssertions.matches(isDisplayed()))
-    onView(withTagValue(`is`("$tagPrefix$SPINNER_IDENTIFIER")))
+    onView(withTagValue(`is`("${tagPrefix}_$SPINNER_IDENTIFIER")))
         .check(ViewAssertions.matches(not(isDisplayed())))
-    onView(withTagValue(`is`("$tagPrefix$ERROR_INFO_LAYOUT_IDENTIFIER")))
+    onView(withTagValue(`is`("${tagPrefix}_$ERROR_INFO_LAYOUT_IDENTIFIER")))
         .check(ViewAssertions.matches(not(isDisplayed())))
   }
 
   protected fun verifyOnlyErrorLayoutIsVisibleAfterDelay(delay: Long, tagPrefix: String) {
     Thread.sleep(delay)
-    onView(withTagValue(`is`("$tagPrefix$ERROR_INFO_LAYOUT_IDENTIFIER")))
+    onView(withTagValue(`is`("${tagPrefix}_$ERROR_INFO_LAYOUT_IDENTIFIER")))
         .check(ViewAssertions.matches(isCompletelyDisplayed()))
     onView(allOf(withId(R.id.infoImageView),
-      isDescendantOfA(withTagValue(`is`("$tagPrefix$ERROR_INFO_LAYOUT_IDENTIFIER")))))
+      isDescendantOfA(withTagValue(`is`("${tagPrefix}_$ERROR_INFO_LAYOUT_IDENTIFIER")))))
         .check(ViewAssertions.matches(isCompletelyDisplayed()))
     onView(allOf(withId(R.id.infoTextFirstLine),
-      isDescendantOfA(withTagValue(`is`("$tagPrefix$ERROR_INFO_LAYOUT_IDENTIFIER")))))
+      isDescendantOfA(withTagValue(`is`("${tagPrefix}_$ERROR_INFO_LAYOUT_IDENTIFIER")))))
         .check(ViewAssertions.matches(isCompletelyDisplayed()))
     onView(allOf(withId(R.id.infoTextSecondLine),
-      isDescendantOfA(withTagValue(`is`("$tagPrefix$ERROR_INFO_LAYOUT_IDENTIFIER")))))
+      isDescendantOfA(withTagValue(`is`("${tagPrefix}_$ERROR_INFO_LAYOUT_IDENTIFIER")))))
         .check(ViewAssertions.matches(isCompletelyDisplayed()))
     onView(allOf(withId(R.id.infoTextThirdLine),
-      isDescendantOfA(withTagValue(`is`("$tagPrefix$ERROR_INFO_LAYOUT_IDENTIFIER")))))
+      isDescendantOfA(withTagValue(`is`("${tagPrefix}_$ERROR_INFO_LAYOUT_IDENTIFIER")))))
         .check(ViewAssertions.matches(isCompletelyDisplayed()))
-    onView(withTagValue(`is`("$tagPrefix$SPINNER_IDENTIFIER")))
+    onView(withTagValue(`is`("${tagPrefix}_$SPINNER_IDENTIFIER")))
         .check(ViewAssertions.matches(not(isDisplayed())))
-    onView(withTagValue(`is`("$tagPrefix$RECYCLERVIEW_IDENTIFIER")))
+    onView(withTagValue(`is`("${tagPrefix}_$RECYCLERVIEW_IDENTIFIER")))
         .check(ViewAssertions.matches(not(isDisplayed())))
   }
 }
