@@ -10,7 +10,7 @@ import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
 
-abstract class AndroidTestBase {
+abstract class BaseAndroidTest {
 
   protected fun hasImageViewWithTagAtPosition(position: Int,
     imageViewId: Int,
