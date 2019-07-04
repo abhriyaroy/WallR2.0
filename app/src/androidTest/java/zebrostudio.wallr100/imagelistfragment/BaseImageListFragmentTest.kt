@@ -26,7 +26,8 @@ import zebrostudio.wallr100.domain.WallrRepository
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.dummylists.MockFirebaseImageList
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeUnit.*
+import java.util.concurrent.TimeUnit.MILLISECONDS
+import java.util.concurrent.TimeUnit.SECONDS
 
 internal const val SPINNER_IDENTIFIER = "spinner"
 internal const val RECYCLERVIEW_IDENTIFIER = "recyclerview"
