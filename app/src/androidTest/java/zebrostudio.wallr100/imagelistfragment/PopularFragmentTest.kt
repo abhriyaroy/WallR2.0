@@ -34,7 +34,7 @@ private const val SPINNER_IDENTIFIER = "spinner"
 private const val RECYCLERVIEW_IDENTIFIER = "recyclerview"
 
 @RunWith(AndroidJUnit4::class)
-class RecentsFragmentTest : ImageListTestsBase() {
+class PopularFragmentTest : ImageListTestsBase() {
 
   private val testComponentRule =
       MockedRepositoryTestRule(InstrumentationRegistry.getTargetContext().applicationContext as Application)
@@ -49,47 +49,48 @@ class RecentsFragmentTest : ImageListTestsBase() {
     mockWallrRepository = testComponentRule.getTestAppComponent().wallrRepository
     `when`(mockWallrRepository.wasAppOpenedBefore()).thenReturn(true)
     `when`(mockWallrRepository.getExplorePictures()).thenReturn(Single.error(Exception()))
-    `when`(mockWallrRepository.getPopularPictures()).thenReturn(Single.error(Exception()))
+    `when`(mockWallrRepository.getRecentPictures()).thenReturn(Single.error(Exception()))
     `when`(mockWallrRepository.getStandoutPictures()).thenReturn(Single.error(Exception()))
   }
 
   @Test
-  fun should_display_recent_images() {
+  fun should_display_popular_images() {
     val imageList = MockFirebaseImageList.getList()
-    `when`(mockWallrRepository.getRecentPictures()).thenReturn(
+    `when`(mockWallrRepository.getPopularPictures()).thenReturn(
       getImageModelListAfterDelay(SECONDS.toMillis(1), MILLISECONDS, imageList))
 
-    openRecentsFragment()
-    onView(allOf(withTagValue(`is`("${TOP_PICKS_TAG}_0_$SPINNER_IDENTIFIER")),
+    openPopularFragment()
+    onView(allOf(withTagValue(`is`("${TOP_PICKS_TAG}_1_$SPINNER_IDENTIFIER")),
       withId(R.id.spinkitView))).check(matches(isCompletelyDisplayed()))
-    verifyOnlyRecyclerViewIsVisibleAfterDelay(SECONDS.toMillis(1), "${TOP_PICKS_TAG}_0")
+    verifyOnlyRecyclerViewIsVisibleAfterDelay(SECONDS.toMillis(1), "${TOP_PICKS_TAG}_1")
     verifyImagesDisplayed(imageList)
   }
 
   @Test
   fun should_display_unable_to_load_image_layout() {
-    `when`(mockWallrRepository.getRecentPictures()).thenReturn(
+    `when`(mockWallrRepository.getPopularPictures()).thenReturn(
       getErrorAfterDelayOnImageModelListCall(SECONDS.toMillis(1))
           .delay(SECONDS.toMillis(1), MILLISECONDS)
           .doOnError {
             Thread.sleep(SECONDS.toMillis(1))
           })
 
-    openRecentsFragment()
-    onView(allOf(withTagValue(`is`("${TOP_PICKS_TAG}_0_$SPINNER_IDENTIFIER")),
+    openPopularFragment()
+    onView(allOf(withTagValue(`is`("${TOP_PICKS_TAG}_1_$SPINNER_IDENTIFIER")),
       withId(R.id.spinkitView))).check(matches(isDisplayed()))
-    verifyOnlyErrorLayoutIsVisibleAfterDelay(SECONDS.toMillis(1), "${TOP_PICKS_TAG}_0")
+    verifyOnlyErrorLayoutIsVisibleAfterDelay(SECONDS.toMillis(1), "${TOP_PICKS_TAG}_1")
   }
 
-  private fun openRecentsFragment() {
+  private fun openPopularFragment() {
     activityTestRule.launchActivity(null)
     onView(withId(R.id.contentHamburger)).perform(click())
     onView(withId(R.string.top_picks_title)).perform(click())
+    onView(withText("POPULAR")).perform(click())
   }
 
   private fun verifyImagesDisplayed(list: List<FirebaseImageEntity>) {
     for (position in 0 until list.size) {
-      onView(allOf(withTagValue(`is`("${TOP_PICKS_TAG}_0_$RECYCLERVIEW_IDENTIFIER")),
+      onView(allOf(withTagValue(`is`("${TOP_PICKS_TAG}_1_$RECYCLERVIEW_IDENTIFIER")),
         withId(R.id.recyclerView)))
           .perform(RecyclerViewActions.scrollToPosition<ViewHolder>(position))
           .check(matches(hasImageViewWithTagAtPosition(position,
