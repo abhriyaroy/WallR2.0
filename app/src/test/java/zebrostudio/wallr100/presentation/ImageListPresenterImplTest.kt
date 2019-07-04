@@ -61,6 +61,7 @@ class ImageListPresenterImplTest {
     assertTrue(0 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).exploreImagesSingle()
     verifyLoaderIsShownAndThenHiddenAndImageListIsDisplayed(imageModelList)
+    verify(imageListView).setTag("${EXPLORE_TAG}_0")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -75,6 +76,7 @@ class ImageListPresenterImplTest {
     assertTrue(0 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).exploreImagesSingle()
     verifyLoaderIsHiddenAndDisplayImageList(imageModelList)
+    verify(imageListView).setTag("${EXPLORE_TAG}_0")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -89,6 +91,7 @@ class ImageListPresenterImplTest {
     assertTrue(1 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).recentImagesSingle()
     verifyLoaderIsShownAndThenHiddenAndImageListIsDisplayed(imageModelList)
+    verify(imageListView).setTag("${TOP_PICKS_TAG}_0")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -103,6 +106,7 @@ class ImageListPresenterImplTest {
     assertTrue(1 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).recentImagesSingle()
     verifyLoaderIsHiddenAndDisplayImageList(imageModelList)
+    verify(imageListView).setTag("${TOP_PICKS_TAG}_0")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -117,6 +121,7 @@ class ImageListPresenterImplTest {
     assertTrue(2 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).popularImagesSingle()
     verifyLoaderIsShownAndThenHiddenAndImageListIsDisplayed(imageModelList)
+    verify(imageListView).setTag("${TOP_PICKS_TAG}_1")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -131,6 +136,7 @@ class ImageListPresenterImplTest {
     assertTrue(2 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).popularImagesSingle()
     verifyLoaderIsHiddenAndDisplayImageList(imageModelList)
+    verify(imageListView).setTag("${TOP_PICKS_TAG}_1")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -145,6 +151,7 @@ class ImageListPresenterImplTest {
     assertTrue(3 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).standoutImagesSingle()
     verifyLoaderIsShownAndThenHiddenAndImageListIsDisplayed(imageModelList)
+    verify(imageListView).setTag("${TOP_PICKS_TAG}_2")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -159,6 +166,7 @@ class ImageListPresenterImplTest {
     assertTrue(3 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).standoutImagesSingle()
     verifyLoaderIsHiddenAndDisplayImageList(imageModelList)
+    verify(imageListView).setTag("${TOP_PICKS_TAG}_2")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -173,6 +181,7 @@ class ImageListPresenterImplTest {
     assertTrue(4 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).buildingsImagesSingle()
     verifyLoaderIsShownAndThenHiddenAndImageListIsDisplayed(imageModelList)
+    verify(imageListView).setTag("${CATEGORIES_TAG}_0")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -187,6 +196,7 @@ class ImageListPresenterImplTest {
     assertTrue(4 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).buildingsImagesSingle()
     verifyLoaderIsHiddenAndDisplayImageList(imageModelList)
+    verify(imageListView).setTag("${CATEGORIES_TAG}_0")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -201,6 +211,7 @@ class ImageListPresenterImplTest {
     assertTrue(5 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).foodImagesSingle()
     verifyLoaderIsShownAndThenHiddenAndImageListIsDisplayed(imageModelList)
+    verify(imageListView).setTag("${CATEGORIES_TAG}_1")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -215,6 +226,7 @@ class ImageListPresenterImplTest {
     assertTrue(5 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).foodImagesSingle()
     verifyLoaderIsHiddenAndDisplayImageList(imageModelList)
+    verify(imageListView).setTag("${CATEGORIES_TAG}_1")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -229,6 +241,7 @@ class ImageListPresenterImplTest {
     assertTrue(6 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).natureImagesSingle()
     verifyLoaderIsShownAndThenHiddenAndImageListIsDisplayed(imageModelList)
+    verify(imageListView).setTag("${CATEGORIES_TAG}_2")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -243,6 +256,7 @@ class ImageListPresenterImplTest {
     assertTrue(6 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).natureImagesSingle()
     verifyLoaderIsHiddenAndDisplayImageList(imageModelList)
+    verify(imageListView).setTag("${CATEGORIES_TAG}_2")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -257,6 +271,7 @@ class ImageListPresenterImplTest {
     assertTrue(7 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).objectsImagesSingle()
     verifyLoaderIsShownAndThenHiddenAndImageListIsDisplayed(imageModelList)
+    verify(imageListView).setTag("${CATEGORIES_TAG}_3")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -271,6 +286,7 @@ class ImageListPresenterImplTest {
     assertTrue(7 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).objectsImagesSingle()
     verifyLoaderIsHiddenAndDisplayImageList(imageModelList)
+    verify(imageListView).setTag("${CATEGORIES_TAG}_3")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -285,6 +301,7 @@ class ImageListPresenterImplTest {
     assertTrue(8 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).peopleImagesSingle()
     verifyLoaderIsShownAndThenHiddenAndImageListIsDisplayed(imageModelList)
+    verify(imageListView).setTag("${CATEGORIES_TAG}_4")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -299,6 +316,7 @@ class ImageListPresenterImplTest {
     assertTrue(8 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).peopleImagesSingle()
     verifyLoaderIsHiddenAndDisplayImageList(imageModelList)
+    verify(imageListView).setTag("${CATEGORIES_TAG}_4")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -313,6 +331,7 @@ class ImageListPresenterImplTest {
     assertTrue(9 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).technologyImagesSingle()
     verifyLoaderIsShownAndThenHiddenAndImageListIsDisplayed(imageModelList)
+    verify(imageListView).setTag("${CATEGORIES_TAG}_5")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -327,6 +346,7 @@ class ImageListPresenterImplTest {
     assertTrue(9 == imageListPresenter.imageListType)
     verify(wallpaperImagesUseCase).technologyImagesSingle()
     verifyLoaderIsHiddenAndDisplayImageList(imageModelList)
+    verify(imageListView).setTag("${CATEGORIES_TAG}_5")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -345,6 +365,7 @@ class ImageListPresenterImplTest {
     verify(imageListView).hideLoader()
     verify(imageListView).showNoInternetMessageView()
     verify(imageListView).getScope()
+    verify(imageListView).setTag("${CATEGORIES_TAG}_5")
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -363,6 +384,7 @@ class ImageListPresenterImplTest {
     verify(imageListView).showNoInternetMessageView()
     verify(imageListView).hideRefreshing()
     verify(imageListView).getScope()
+    verify(imageListView).setTag("${CATEGORIES_TAG}_5")
     verifyPostExecutionThreadSchedulerCall()
   }
 

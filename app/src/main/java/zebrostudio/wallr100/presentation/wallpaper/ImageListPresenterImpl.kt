@@ -36,7 +36,7 @@ class ImageListPresenterImpl(
     } else if (fragmentTag == CATEGORIES_TAG) {
       imageListType = position + 4
     }
-    imageListView?.setTag("$fragmentTag-$position")
+    imageListView?.setTag("${fragmentTag}_$position")
   }
 
   override fun fetchImages(refresh: Boolean) {

@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit
 private const val SPINNER_IDENTIFIER = "spinner"
 private const val RECYCLERVIEW_IDENTIFIER = "recyclerview"
 private const val ERROR_INFO_LAYOUT_IDENTIFIER = "error_info"
-private const val SWIPE_REFRESH_LAYOUT_IDENTIFIER = "swip_refresh"
 
 abstract class ImageListTestsBase : AndroidTestBase() {
 

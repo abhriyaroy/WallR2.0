@@ -120,10 +120,10 @@ class ImageListFragment : Fragment(), ImageListView {
 
   // For Ui tests
   override fun setTag(tag: String) {
-    spinkitView?.tag = "$tag-$SPINNER_IDENTIFIER"
-    recyclerView?.tag = "$tag-$RECYCLERVIEW_IDENTIFIER"
-    errorInfoRelativeLayout?.tag = "$tag-$ERROR_INFO_LAYOUT_IDENTIFIER"
-    swipeRefreshLayout?.tag = "$tag-$SWIPE_REFRESH_LAYOUT_IDENTIFIER"
+    spinkitView?.tag = "${tag}_$SPINNER_IDENTIFIER"
+    recyclerView?.tag = "${tag}_$RECYCLERVIEW_IDENTIFIER"
+    errorInfoRelativeLayout?.tag = "${tag}_$ERROR_INFO_LAYOUT_IDENTIFIER"
+    swipeRefreshLayout?.tag = "${tag}_$SWIPE_REFRESH_LAYOUT_IDENTIFIER"
   }
 
   private fun initViews(view: View) {
