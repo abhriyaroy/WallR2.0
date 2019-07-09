@@ -1,11 +1,9 @@
-package zebrostudio.wallr100
+package zebrostudio.wallr100.tests
 
 import android.support.test.espresso.matcher.BoundedMatcher
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
-import com.github.ybq.android.spinkit.SpinKitView
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher

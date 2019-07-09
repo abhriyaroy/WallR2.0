@@ -1,4 +1,4 @@
-package zebrostudio.wallr100
+package zebrostudio.wallr100.tests
 
 import android.Manifest
 import android.app.Activity
@@ -29,6 +29,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
+import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.main.MainActivity
 import zebrostudio.wallr100.android.utils.FragmentTag.*
 import zebrostudio.wallr100.data.PREMIUM_USER_TAG

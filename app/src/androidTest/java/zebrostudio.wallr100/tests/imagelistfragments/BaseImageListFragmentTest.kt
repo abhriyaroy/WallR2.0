@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.imagelistfragments
+package zebrostudio.wallr100.tests.imagelistfragments
 
 import android.app.Application
 import android.os.SystemClock
@@ -14,7 +14,7 @@ import org.junit.Rule
 import org.junit.rules.RuleChain
 import org.junit.rules.TestRule
 import org.mockito.Mockito.`when`
-import zebrostudio.wallr100.BaseAndroidTest
+import zebrostudio.wallr100.tests.BaseAndroidTest
 import zebrostudio.wallr100.MockedRepositoryTestRule
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.adapters.ViewHolder

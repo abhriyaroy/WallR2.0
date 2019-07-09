@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.imagelistfragments.toppicks
+package zebrostudio.wallr100.tests.imagelistfragments.toppicks
 
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.click
@@ -11,8 +11,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.FragmentTag.TOP_PICKS_TAG
-import zebrostudio.wallr100.imagelistfragments.BaseImageListFragmentTest
-import zebrostudio.wallr100.imagelistfragments.BaseImageListFragmentTest.ImageListType.RECENT
+import zebrostudio.wallr100.tests.imagelistfragments.BaseImageListFragmentTest
+import zebrostudio.wallr100.tests.imagelistfragments.BaseImageListFragmentTest.ImageListType.RECENT
 
 @RunWith(AndroidJUnit4::class)
 class RecentsFragmentTest : BaseImageListFragmentTest() {

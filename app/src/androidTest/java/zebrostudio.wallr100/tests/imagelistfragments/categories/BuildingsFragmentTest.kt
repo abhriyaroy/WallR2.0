@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.imagelistfragments.categories
+package zebrostudio.wallr100.tests.imagelistfragments.categories
 
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions
@@ -9,8 +9,8 @@ import org.junit.Test
 import org.mockito.Mockito.`when`
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.FragmentTag.CATEGORIES_TAG
-import zebrostudio.wallr100.imagelistfragments.BaseImageListFragmentTest
-import zebrostudio.wallr100.imagelistfragments.BaseImageListFragmentTest.ImageListType.BUILDINGS
+import zebrostudio.wallr100.tests.imagelistfragments.BaseImageListFragmentTest
+import zebrostudio.wallr100.tests.imagelistfragments.BaseImageListFragmentTest.ImageListType.BUILDINGS
 
 class BuildingsFragmentTest : BaseImageListFragmentTest() {
   @Before
