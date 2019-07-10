@@ -5,6 +5,7 @@ import android.os.SystemClock
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions
+import android.support.test.espresso.assertion.ViewAssertions.*
 import android.support.test.espresso.contrib.RecyclerViewActions
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
@@ -53,18 +54,18 @@ abstract class BaseImageListFragmentTest : BaseAndroidTest() {
     val imageList = MockFirebaseImageList.getList()
     `when`(getImageList(imageListType))
         .thenReturn(getImageModelListAfterDelay(SECONDS.toMillis(1),
-          MILLISECONDS, imageList))
+            MILLISECONDS, imageList))
     openImageListFragment()
     onView(allOf(withTagValue(`is`("${tagPrefix}_$SPINNER_IDENTIFIER")),
-      withId(R.id.spinkitView))).check(ViewAssertions.matches(isDisplayed()))
+        withId(R.id.spinkitView))).check(matches(isDisplayed()))
     verifyOnlyRecyclerViewIsVisibleAfterDelay(SECONDS.toMillis(1))
     matchImagesDisplayed(imageList)
   }
 
   protected fun verifyUnableToLoadImagesLayout(imageListType: ImageListType,
-    openImageListFragment: () -> Unit) {
+                                               openImageListFragment: () -> Unit) {
     `when`(getImageList(imageListType)).thenReturn(getErrorAfterDelayOnImageModelListCall(
-      SECONDS.toMillis(1))
+        SECONDS.toMillis(1))
         .delay(SECONDS.toMillis(1), MILLISECONDS)
         .doOnError {
           Thread.sleep(SECONDS.toMillis(1))
@@ -72,23 +73,23 @@ abstract class BaseImageListFragmentTest : BaseAndroidTest() {
 
     openImageListFragment()
     onView(allOf(withTagValue(`is`("${tagPrefix}_$SPINNER_IDENTIFIER")),
-      withId(R.id.spinkitView))).check(ViewAssertions.matches(isDisplayed()))
+        withId(R.id.spinkitView))).check(matches(isDisplayed()))
     verifyOnlyErrorLayoutIsVisibleAfterDelay(SECONDS.toMillis(1))
   }
 
   private fun matchImagesDisplayed(list: List<FirebaseImageEntity>) {
     for (position in 0 until list.size) {
       onView(allOf(withTagValue(`is`("${tagPrefix}_$RECYCLERVIEW_IDENTIFIER")),
-        withId(R.id.recyclerView)))
+          withId(R.id.recyclerView)))
           .perform(RecyclerViewActions.scrollToPosition<ViewHolder>(position))
-          .check(ViewAssertions.matches(hasImageViewWithTagAtPosition(position,
-            R.id.imageView,
-            list[position].imageLinks.thumb)))
+          .check(matches(hasImageViewWithTagInRecyclerView(position,
+              R.id.imageView,
+              list[position].imageLinks.thumb)))
     }
   }
 
   private fun getImageModelListAfterDelay(delay: Long, timeUnit: TimeUnit,
-    imageList: List<FirebaseImageEntity>): Single<List<ImageModel>> {
+                                          imageList: List<FirebaseImageEntity>): Single<List<ImageModel>> {
     return Single.just(FirebasePictureEntityMapperImpl().mapFromEntity(imageList))
         .delay(delay, timeUnit)
   }
@@ -103,33 +104,33 @@ abstract class BaseImageListFragmentTest : BaseAndroidTest() {
   private fun verifyOnlyRecyclerViewIsVisibleAfterDelay(delay: Long) {
     Thread.sleep(delay)
     onView(withTagValue(`is`("${tagPrefix}_$RECYCLERVIEW_IDENTIFIER")))
-        .check(ViewAssertions.matches(isDisplayed()))
+        .check(matches(isDisplayed()))
     onView(withTagValue(`is`("${tagPrefix}_$SPINNER_IDENTIFIER")))
-        .check(ViewAssertions.matches(not(isDisplayed())))
+        .check(matches(not(isDisplayed())))
     onView(withTagValue(`is`("${tagPrefix}_$ERROR_INFO_LAYOUT_IDENTIFIER")))
-        .check(ViewAssertions.matches(not(isDisplayed())))
+        .check(matches(not(isDisplayed())))
   }
 
   private fun verifyOnlyErrorLayoutIsVisibleAfterDelay(delay: Long) {
     Thread.sleep(delay)
     onView(withTagValue(`is`("${tagPrefix}_$ERROR_INFO_LAYOUT_IDENTIFIER")))
-        .check(ViewAssertions.matches(isCompletelyDisplayed()))
+        .check(matches(isCompletelyDisplayed()))
     onView(allOf(withId(R.id.infoImageView),
-      isDescendantOfA(withTagValue(`is`("${tagPrefix}_$ERROR_INFO_LAYOUT_IDENTIFIER")))))
-        .check(ViewAssertions.matches(isCompletelyDisplayed()))
+        isDescendantOfA(withTagValue(`is`("${tagPrefix}_$ERROR_INFO_LAYOUT_IDENTIFIER")))))
+        .check(matches(isCompletelyDisplayed()))
     onView(allOf(withId(R.id.infoTextFirstLine),
-      isDescendantOfA(withTagValue(`is`("${tagPrefix}_$ERROR_INFO_LAYOUT_IDENTIFIER")))))
-        .check(ViewAssertions.matches(isCompletelyDisplayed()))
+        isDescendantOfA(withTagValue(`is`("${tagPrefix}_$ERROR_INFO_LAYOUT_IDENTIFIER")))))
+        .check(matches(isCompletelyDisplayed()))
     onView(allOf(withId(R.id.infoTextSecondLine),
-      isDescendantOfA(withTagValue(`is`("${tagPrefix}_$ERROR_INFO_LAYOUT_IDENTIFIER")))))
-        .check(ViewAssertions.matches(isCompletelyDisplayed()))
+        isDescendantOfA(withTagValue(`is`("${tagPrefix}_$ERROR_INFO_LAYOUT_IDENTIFIER")))))
+        .check(matches(isCompletelyDisplayed()))
     onView(allOf(withId(R.id.infoTextThirdLine),
-      isDescendantOfA(withTagValue(`is`("${tagPrefix}_$ERROR_INFO_LAYOUT_IDENTIFIER")))))
-        .check(ViewAssertions.matches(isCompletelyDisplayed()))
+        isDescendantOfA(withTagValue(`is`("${tagPrefix}_$ERROR_INFO_LAYOUT_IDENTIFIER")))))
+        .check(matches(isCompletelyDisplayed()))
     onView(withTagValue(`is`("${tagPrefix}_$SPINNER_IDENTIFIER")))
-        .check(ViewAssertions.matches(not(isDisplayed())))
+        .check(matches(not(isDisplayed())))
     onView(withTagValue(`is`("${tagPrefix}_$RECYCLERVIEW_IDENTIFIER")))
-        .check(ViewAssertions.matches(not(isDisplayed())))
+        .check(matches(not(isDisplayed())))
   }
 
   private fun getImageList(imageListType: ImageListType): Single<List<ImageModel>> {

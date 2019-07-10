@@ -10,9 +10,9 @@ import org.hamcrest.TypeSafeMatcher
 
 abstract class BaseAndroidTest {
 
-  protected fun hasImageViewWithTagAtPosition(position: Int,
-    imageViewId: Int,
-    viewTag: String): Matcher<View> {
+  protected fun hasImageViewWithTagInRecyclerView(position: Int,
+                                                  imageViewId: Int,
+                                                  viewTag: String): Matcher<View> {
     return object : BoundedMatcher<View, RecyclerView>(RecyclerView::class.java) {
       override fun describeTo(description: Description?) {
         description?.appendText("with Imageview tag at position $position")
@@ -26,18 +26,6 @@ abstract class BaseAndroidTest {
           }
         }
         return false
-      }
-    }
-  }
-
-  fun matchViewByIdAndTag(expectedTag: String): Matcher<View> {
-    return object : TypeSafeMatcher<View>() {
-      override fun describeTo(description: Description) {
-        description.appendText("with first child view of type parentMatcher")
-      }
-
-      override fun matchesSafely(view: View): Boolean {
-        return (view.tag == expectedTag)
       }
     }
   }
