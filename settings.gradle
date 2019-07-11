@@ -2,4 +2,4 @@ include ':app', ':libraryGuillotineMenu', ':libraryPurchaseFlow', ':libraryWallr
         ':librarySearch', ':libraryExpandIcon', ':libraryUCrop',
         ':libraryPhotoView', ':libraryDragSelectRecyclerView', ':libraryMaterialSpinner',
         ':libraryMaterialCab', ':libraryFloatingActionButton', ':libraryColorPickerView',
-        ':libraryLowpolyRx'
+        ':libraryRxLowpoly'

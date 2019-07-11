@@ -7,7 +7,7 @@ import android.graphics.Paint.Style.FILL
 import android.graphics.Shader.TileMode.CLAMP
 import android.graphics.Shader.TileMode.MIRROR
 import android.net.Uri
-import com.zebrostudio.lowpolyrxjava.LowPolyRx
+import com.zebrostudio.rxlowpoly.RxLowpoly
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -26,6 +26,10 @@ import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
+import kotlin.math.max
+import kotlin.math.roundToInt
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 interface ImageHandler {
   fun isImageCached(link: String): Boolean
@@ -194,7 +198,9 @@ class ImageHandlerImpl(
   override fun convertImageInCacheToLowpoly(): Single<Bitmap> {
     return getImageBitmap()
         .flatMap {
-          LowPolyRx().getLowPolyImage(it)
+          RxLowpoly.with(context)
+            .input(it)
+            .generateAsync()
         }.map {
           fileHandler.getCacheFile().outputStream()
               .compressBitmap(it, JPEG, BITMAP_COMPRESS_QUALITY)
@@ -427,7 +433,7 @@ class ImageHandlerImpl(
   private fun generateLowpolyImage(path: String): Completable {
     return Completable.create { emitter ->
       getImageBitmap(path).let {
-        LowPolyRx().getLowPolyImage(it).blockingGet().let { bitmap ->
+       RxLowpoly.with(context).input(it).generate().let { bitmap ->
           try {
             fileHandler.getCacheFile().outputStream()
                 .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
@@ -465,13 +471,13 @@ class ImageHandlerImpl(
         stripeHeight = bigHeight
         shadowThickness = 0f
       } else {
-        stripeHeight = Math.round((i + 1) * initStripeHeight)
+        stripeHeight = ((i + 1) * initStripeHeight).roundToInt()
         val variableColorSpread = (stripeSpread * Math.random() - stripeSpread / 2).toInt()
         stripeHeight += offset + variableColorSpread
         if (stripeHeight < 0) stripeHeight = 0
         if (stripeHeight > bigHeight) stripeHeight = bigHeight
         val variableShadowSpread = (shadowSpread * Math.random() - shadowSpread / 2).toFloat()
-        shadowThickness = Math.max(1f, initShadowHeight + variableShadowSpread)
+        shadowThickness = max(1f, initShadowHeight + variableShadowSpread)
       }
       paint.color = colorsInt[i]
       paint.style = FILL
@@ -530,11 +536,10 @@ class ImageHandlerImpl(
     val period3 = period - spread + spread * random.nextFloat()
     for (x in 0 until height)
       for (y in 0 until height) {
-        val value = (128.0 + 128.0 * Math.sin(x / period1)
-            + 128.0 + 128.0 * Math.sin(y / period2)
-            + 128.0 + 128.0 * Math.sin((x + y) / period1)
-            + 128.0 + 128.0 * Math.sin(
-          Math.sqrt((x * x + y * y).toDouble()) / period3)).toInt() / 4
+        val value = (128.0 + 128.0 * sin(x / period1)
+            + 128.0 + 128.0 * sin(y / period2)
+            + 128.0 + 128.0 * sin((x + y) / period1)
+            + 128.0 + 128.0 * sin(sqrt((x * x + y * y).toDouble()) / period3)).toInt() / 4
         plasma[x][y] = value
       }
     for (x in 0 until height)
