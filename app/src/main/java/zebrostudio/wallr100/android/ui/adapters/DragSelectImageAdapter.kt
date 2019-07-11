@@ -2,7 +2,10 @@ package zebrostudio.wallr100.android.ui.adapters
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Color.*
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.ViewHolder
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -86,7 +89,7 @@ class MinimalViewHolder(
   itemView: View,
   private val context: Context,
   private val callback: DragSelectImageAdapterCallbacks
-) : RecyclerView.ViewHolder(itemView), DragSelectItemViewHolder {
+) : ViewHolder(itemView), DragSelectItemViewHolder {
 
   override fun showAddImageLayout() {
     itemView.colorThumbnail.setBackgroundColor(context.colorRes(R.color.black))
@@ -98,7 +101,7 @@ class MinimalViewHolder(
   }
 
   override fun setImageViewColor(colorHexCode: String) {
-    itemView.colorThumbnail.setBackgroundColor(Color.parseColor(colorHexCode))
+    itemView.colorThumbnail.setBackgroundColor(parseColor(colorHexCode))
   }
 
   override fun showSelectedIndicator() {
