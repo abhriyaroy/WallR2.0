@@ -1,4 +1,4 @@
-package zebrostudio.wallr100.dummylists
+package zebrostudio.wallr100.dummylists.firebaseimage
 
 import zebrostudio.wallr100.data.model.firebasedatabase.FirebaseImageEntity
 import zebrostudio.wallr100.dummylists.firebaseimage.*
