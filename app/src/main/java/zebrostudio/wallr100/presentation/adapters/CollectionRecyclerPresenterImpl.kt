@@ -16,6 +16,7 @@ class CollectionRecyclerPresenterImpl : CollectionRecyclerPresenter {
     selectedItemsMap: HashMap<Int, CollectionsPresenterEntity>,
     position: Int
   ) {
+    collectionsRecyclerItemViewHolder.setTag(imagePathList[position].path)
     collectionsRecyclerItemViewHolder.setImage(imagePathList[position].path)
     collectionsRecyclerItemViewHolder.attachClickListener()
     collectionsRecyclerItemViewHolder.attachLongClickToDragListener()

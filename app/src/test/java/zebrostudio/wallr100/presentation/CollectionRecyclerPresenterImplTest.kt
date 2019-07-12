@@ -47,6 +47,7 @@ class CollectionRecyclerPresenterImplTest {
       selectedIndices,
       position)
 
+    verify(collectionsRecyclerItemViewHolder).setTag(item1.path)
     verify(collectionsRecyclerItemViewHolder).setImage(item1.path)
     verify(collectionsRecyclerItemViewHolder).attachClickListener()
     verify(collectionsRecyclerItemViewHolder).attachLongClickToDragListener()
@@ -68,6 +69,7 @@ class CollectionRecyclerPresenterImplTest {
       selectedIndices,
       position)
 
+    verify(collectionsRecyclerItemViewHolder).setTag(item2.path)
     verify(collectionsRecyclerItemViewHolder).setImage(item2.path)
     verify(collectionsRecyclerItemViewHolder).attachClickListener()
     verify(collectionsRecyclerItemViewHolder).attachLongClickToDragListener()

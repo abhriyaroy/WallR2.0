@@ -5,6 +5,7 @@ import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEn
 interface CollectionRecyclerContract {
 
   interface CollectionsRecyclerItemViewHolder {
+    fun setTag(tag : String)
     fun setImage(imagePath: String)
     fun showSelectedIndicator()
     fun hideSelectedIndicator()

@@ -39,9 +39,9 @@ class CollectionsImageAdapter(
     viewType: Int
   ): CollectionsImageViewHolder {
     return CollectionsImageViewHolder(
-      viewGroupParent.inflate(LayoutInflater.from(viewGroupParent.context),
-        R.layout.item_recyclerview_collections), viewGroupParent.context,
-      collectionsImageAdapterCallback, startDragListener, imageLoader)
+        viewGroupParent.inflate(LayoutInflater.from(viewGroupParent.context),
+            R.layout.item_recyclerview_collections), viewGroupParent.context,
+        collectionsImageAdapterCallback, startDragListener, imageLoader)
   }
 
   override fun getItemCount(): Int {
@@ -50,7 +50,7 @@ class CollectionsImageAdapter(
 
   override fun onBindViewHolder(viewHolder: CollectionsImageViewHolder, position: Int) {
     presenter.onBindRepositoryRowViewAtPosition(viewHolder, imagePathList, selectedHashMap,
-      position)
+        position)
   }
 
   override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
@@ -81,8 +81,11 @@ class CollectionsImageViewHolder(
   private val callback: CollectionsImageAdapterCallbacks,
   private val startDragListener: OnStartDragListener,
   private val imageLoader: ImageLoader
-) : RecyclerView.ViewHolder(itemView),
-    CollectionsRecyclerItemViewHolder {
+) : RecyclerView.ViewHolder(itemView), CollectionsRecyclerItemViewHolder {
+
+  override fun setTag(tag: String) {
+    itemView.imageView.tag = tag
+  }
 
   override fun setImage(imagePath: String) {
     imageLoader.load(context, imagePath, itemView.imageView)
