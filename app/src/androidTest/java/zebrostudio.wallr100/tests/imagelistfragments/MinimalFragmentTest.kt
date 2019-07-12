@@ -17,6 +17,7 @@ import android.widget.ImageView
 import io.reactivex.Single
 import org.hamcrest.Description
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers.not
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -57,6 +58,7 @@ class MinimalFragmentTest : BaseImageListFragmentTest() {
         .perform(RecyclerViewActions.scrollToPosition<ViewHolder>(position))
         .check(matches(
             shouldShowImageViewWithBackgroundColorInRecyclerView(position, mockColorList[index])))
+      shouldNotShowBottomLayout()
     }
   }
 
@@ -74,6 +76,7 @@ class MinimalFragmentTest : BaseImageListFragmentTest() {
         .perform(RecyclerViewActions.scrollToPosition<ViewHolder>(position))
         .check(matches(
             shouldShowImageViewWithBackgroundColorInRecyclerView(position, mockColorList[index])))
+      shouldNotShowBottomLayout()
     }
   }
 
@@ -99,6 +102,13 @@ class MinimalFragmentTest : BaseImageListFragmentTest() {
         return false
       }
     }
+  }
+
+  private fun shouldNotShowBottomLayout(){
+    onView(withId(R.id.minimalBottomLayout))
+      .check(matches(not(isDisplayed())))
+    onView(withId(R.id.minimalBottomLayoutFab))
+      .check(matches(not(isDisplayed())))
   }
 
   private fun shouldShowImageViewWithBackgroundColorInRecyclerView(position: Int,
