@@ -8,6 +8,8 @@ import android.support.test.espresso.Espresso.*
 import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.contrib.RecyclerViewActions
+import android.support.test.espresso.matcher.RootMatchers
+import android.support.test.espresso.matcher.RootMatchers.*
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.GrantPermissionRule
 import android.support.test.rule.GrantPermissionRule.grant
@@ -15,6 +17,8 @@ import android.support.test.runner.AndroidJUnit4
 import android.support.v7.widget.RecyclerView.*
 import io.reactivex.Single
 import org.hamcrest.CoreMatchers.not
+import org.hamcrest.Matchers
+import org.hamcrest.Matchers.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -50,16 +54,20 @@ class CollectionsFragmentTest : BaseImageListFragmentTest() {
     `when`(mockWallrRepository.getImagesInCollection()).thenReturn(Single.just(emptyList()))
     openCollectionsFragment()
     onView(
-        withText(getTargetContext().stringRes(R.string.collections_fragment_purchase_pro_diloag_title)))
+        withText(
+            getTargetContext().stringRes(R.string.collections_fragment_purchase_pro_diloag_title)))
       .check(matches(isCompletelyDisplayed()))
     onView(
-        withText(getTargetContext().stringRes(R.string.collections_fragment_purchase_pro_diloag_description)))
+        withText(getTargetContext().stringRes(
+            R.string.collections_fragment_purchase_pro_diloag_description)))
       .check(matches(isCompletelyDisplayed()))
     onView(
-        withText(getTargetContext().stringRes(R.string.collections_fragment_purchase_pro_diloag_positive_text)))
+        withText(getTargetContext().stringRes(
+            R.string.collections_fragment_purchase_pro_diloag_positive_text)))
       .check(matches(isCompletelyDisplayed()))
     onView(
-        withText(getTargetContext().stringRes(R.string.collections_fragment_purchase_pro_diloag_negative_text)))
+        withText(getTargetContext().stringRes(
+            R.string.collections_fragment_purchase_pro_diloag_negative_text)))
       .check(matches(isCompletelyDisplayed()))
   }
 

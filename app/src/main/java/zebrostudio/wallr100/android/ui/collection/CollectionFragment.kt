@@ -17,7 +17,6 @@ import android.support.v7.widget.SwitchCompat
 import android.support.v7.widget.Toolbar
 import android.support.v7.widget.Toolbar.OnMenuItemClickListener
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.Log
 import android.view.*
 import android.widget.RelativeLayout
 import com.afollestad.materialcab.MaterialCab
@@ -59,7 +58,7 @@ const val COLLECTION_FRAGMENT_REQUEST_CODE = 1
 const val MAXIMUM_SELECTED_IMAGES = 10
 private const val REORDER_HINT_VIEW_POSITION = 1
 private const val APP_BAR_DELAY: Long = 200
-private const val AUTOSTART_HINT_DELAY: Long = 2000
+private const val REORDER_HINT_DELAY: Long = 2000
 private const val UPDATE_EVERY_ITEM_VIEW_DELAY: Long = 700
 
 class CollectionFragment : BaseFragment(),
@@ -211,8 +210,7 @@ class CollectionFragment : BaseFragment(),
   }
 
   override fun showReorderImagesHintWithDelay() {
-    Log.d("showhint","collection")
-    withDelayOnMain(AUTOSTART_HINT_DELAY) {
+    withDelayOnMain(REORDER_HINT_DELAY) {
       collectionsRecyclerView.getChildAt(REORDER_HINT_VIEW_POSITION)
           .findViewById<View>(R.id.hintStubView).let {
             TapTargetView.showFor(activity!!,
