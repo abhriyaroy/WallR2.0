@@ -17,6 +17,7 @@ import android.support.v7.widget.SwitchCompat
 import android.support.v7.widget.Toolbar
 import android.support.v7.widget.Toolbar.OnMenuItemClickListener
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.*
 import android.widget.RelativeLayout
 import com.afollestad.materialcab.MaterialCab
@@ -210,6 +211,7 @@ class CollectionFragment : BaseFragment(),
   }
 
   override fun showReorderImagesHintWithDelay() {
+    Log.d("showhint","collection")
     withDelayOnMain(AUTOSTART_HINT_DELAY) {
       collectionsRecyclerView.getChildAt(REORDER_HINT_VIEW_POSITION)
           .findViewById<View>(R.id.hintStubView).let {

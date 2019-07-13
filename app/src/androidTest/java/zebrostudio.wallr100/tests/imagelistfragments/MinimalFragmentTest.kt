@@ -6,6 +6,7 @@ import android.support.test.espresso.Espresso.*
 import android.support.test.espresso.action.ViewActions
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.contrib.RecyclerViewActions
+import android.support.test.espresso.contrib.RecyclerViewActions.*
 import android.support.test.espresso.matcher.BoundedMatcher
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
@@ -25,6 +26,7 @@ import org.mockito.Mockito.`when`
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.adapters.ViewHolder
 import zebrostudio.wallr100.android.utils.FragmentTag.*
+import java.util.concurrent.TimeUnit
 
 
 @RunWith(AndroidJUnit4::class)
@@ -49,15 +51,15 @@ class MinimalFragmentTest : BaseImageListFragmentTest() {
     `when`(mockWallrRepository.isCustomMinimalColorListPresent()).thenReturn(false)
     `when`(mockWallrRepository.getDefaultMinimalColorList()).thenReturn(Single.just(mockColorList))
     openMinimalFragment()
+
     onView(withId(R.id.minimalFragmentRecyclerView))
       .check(matches(shouldShowAddColorIcon()))
-
-    for (index in 0 until mockColorList.size) {
+    for ((index, color) in mockColorList.withIndex()) {
       val position = index+1
       onView(withId(R.id.minimalFragmentRecyclerView))
-        .perform(RecyclerViewActions.scrollToPosition<ViewHolder>(position))
+        .perform(scrollToPosition<ViewHolder>(position))
         .check(matches(
-            shouldShowImageViewWithBackgroundColorInRecyclerView(position, mockColorList[index])))
+            shouldShowImageViewWithBackgroundColorInRecyclerView(position, color)))
       shouldNotShowBottomLayout()
     }
   }
@@ -67,15 +69,15 @@ class MinimalFragmentTest : BaseImageListFragmentTest() {
     `when`(mockWallrRepository.isCustomMinimalColorListPresent()).thenReturn(true)
     `when`(mockWallrRepository.getCustomMinimalColorList()).thenReturn(Single.just(mockColorList))
     openMinimalFragment()
+
     onView(withId(R.id.minimalFragmentRecyclerView))
       .check(matches(shouldShowAddColorIcon()))
-
-    for (index in 0 until mockColorList.size) {
+    for ((index, color) in mockColorList.withIndex()) {
       val position = index+1
       onView(withId(R.id.minimalFragmentRecyclerView))
-        .perform(RecyclerViewActions.scrollToPosition<ViewHolder>(position))
+        .perform(scrollToPosition<ViewHolder>(position))
         .check(matches(
-            shouldShowImageViewWithBackgroundColorInRecyclerView(position, mockColorList[index])))
+            shouldShowImageViewWithBackgroundColorInRecyclerView(position, color)))
       shouldNotShowBottomLayout()
     }
   }
@@ -115,7 +117,7 @@ class MinimalFragmentTest : BaseImageListFragmentTest() {
     color: String): Matcher<View> {
     return object : BoundedMatcher<View, RecyclerView>(RecyclerView::class.java) {
       override fun describeTo(description: Description?) {
-        description?.appendText("imageview with specified background not found")
+        description?.appendText("imageview with specified background color")
       }
 
       override fun matchesSafely(recycelrView: RecyclerView?): Boolean {

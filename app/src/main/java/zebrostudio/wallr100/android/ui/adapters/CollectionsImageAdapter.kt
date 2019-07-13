@@ -2,6 +2,7 @@ package zebrostudio.wallr100.android.ui.adapters
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -81,7 +82,7 @@ class CollectionsImageViewHolder(
   private val callback: CollectionsImageAdapterCallbacks,
   private val startDragListener: OnStartDragListener,
   private val imageLoader: ImageLoader
-) : RecyclerView.ViewHolder(itemView), CollectionsRecyclerItemViewHolder {
+) : ViewHolder(itemView), CollectionsRecyclerItemViewHolder {
 
   override fun setTag(tag: String) {
     itemView.imageView.tag = tag

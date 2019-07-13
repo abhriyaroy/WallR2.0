@@ -4,7 +4,7 @@ import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageModel
 
 object MockCollectionsImageModelList {
 
-  fun getList(): List<CollectionsImageModel> {
+  fun getMultipleImagesList(): List<CollectionsImageModel> {
     return listOf(
         CollectionImagesModel1.getModel(),
         CollectionImagesModel2.getModel(),
@@ -13,5 +13,9 @@ object MockCollectionsImageModelList {
         CollectionImagesModel5.getModel(),
         CollectionImagesModel6.getModel()
     )
+  }
+
+  fun getSingleImageList(): List<CollectionsImageModel> {
+    return listOf(CollectionImagesModel1.getModel())
   }
 }

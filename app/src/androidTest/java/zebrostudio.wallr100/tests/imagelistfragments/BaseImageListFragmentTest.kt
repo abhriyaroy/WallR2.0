@@ -34,11 +34,11 @@ internal const val ERROR_INFO_LAYOUT_IDENTIFIER = "error_info"
 
 abstract class BaseImageListFragmentTest : BaseAndroidTest() {
 
-  private val testComponentRule =
+  protected val testComponentRule =
       MockedRepositoryTestRule(InstrumentationRegistry.getTargetContext().applicationContext as Application)
   protected val activityTestRule = ActivityTestRule(MainActivity::class.java, false, false)
   @get: Rule
-  var ruleChain: TestRule =
+  open var ruleChain: TestRule =
       RuleChain.outerRule(testComponentRule).around(activityTestRule)
 
   protected lateinit var tagPrefix: String
