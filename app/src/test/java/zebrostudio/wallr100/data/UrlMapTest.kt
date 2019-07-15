@@ -27,11 +27,14 @@ class UrlMapTest {
 
   @Test
   fun `should return valid firebase purchase auth endpoint on getFirebasePurchaseAuthEndpoint call`() {
-    assertEquals(firebasePurchaseAuthEndpoint,
-        UrlMap.getFirebasePurchaseAuthEndpoint(packageName, skuId, purchaseToken))
+    assertEquals(
+      firebasePurchaseAuthEndpoint,
+      UrlMap.getFirebasePurchaseAuthEndpoint(packageName, skuId, purchaseToken)
+    )
   }
 
-  @Test fun `should return valid search query string on getQueryString call`() {
+  @Test
+  fun `should return valid search query string on getQueryString call`() {
     assertEquals(queryString, UrlMap.getQueryString(keyword, queryPage))
   }
 

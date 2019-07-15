@@ -11,12 +11,7 @@ import zebrostudio.wallr100.data.api.RemoteAuthServiceFactory
 import zebrostudio.wallr100.data.api.UnsplashClientFactory
 import zebrostudio.wallr100.data.api.UrlMap
 import zebrostudio.wallr100.data.database.DatabaseImageType.CRYSTALLIZED
-import zebrostudio.wallr100.data.exception.EmptyRecentlyDeletedMapException
-import zebrostudio.wallr100.data.exception.InvalidPurchaseException
-import zebrostudio.wallr100.data.exception.NoResultFoundException
-import zebrostudio.wallr100.data.exception.NotEnoughFreeSpaceException
-import zebrostudio.wallr100.data.exception.UnableToResolveHostException
-import zebrostudio.wallr100.data.exception.UnableToVerifyPurchaseException
+import zebrostudio.wallr100.data.exception.*
 import zebrostudio.wallr100.data.mapper.CollectionsDatabaseImageEntityMapper
 import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapper
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
@@ -32,8 +27,7 @@ import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
 import zebrostudio.wallr100.domain.model.images.ImageModel
 import zebrostudio.wallr100.domain.model.searchpictures.SearchPicturesModel
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
-import java.util.Collections
-import java.util.TreeMap
+import java.util.*
 import java.util.concurrent.TimeUnit.SECONDS
 
 const val SUCCESS_STATUS = "success"
@@ -95,12 +89,12 @@ class WallrDataRepository(
 
   override fun isAppOpenedForTheFirstTime(): Boolean {
     return sharedPrefsHelper.getBoolean(HINT_PREFERENCE_NAME,
-        NAVIGATION_HAMBURGER_HINT_PREFERENCE_TAG)
+      NAVIGATION_HAMBURGER_HINT_PREFERENCE_TAG)
   }
 
   override fun saveAppPreviouslyOpenedState() {
     sharedPrefsHelper.setBoolean(HINT_PREFERENCE_NAME,
-        NAVIGATION_HAMBURGER_HINT_PREFERENCE_TAG, true)
+      NAVIGATION_HAMBURGER_HINT_PREFERENCE_TAG, true)
   }
 
   override fun authenticatePurchase(
@@ -109,7 +103,7 @@ class WallrDataRepository(
     purchaseToken: String
   ): Completable {
     return Completable.fromSingle(retrofitFirebaseAuthFactory.verifyPurchaseService(
-        UrlMap.getFirebasePurchaseAuthEndpoint(packageName, skuId, purchaseToken))
+      UrlMap.getFirebasePurchaseAuthEndpoint(packageName, skuId, purchaseToken))
         .subscribeOn(executionThread.ioScheduler)
         .flatMap {
           if (it.status == SUCCESS_STATUS) {
@@ -123,10 +117,10 @@ class WallrDataRepository(
   }
 
   override fun updateUserPurchaseStatus() = sharedPrefsHelper.setBoolean(PURCHASE_PREFERENCE_NAME,
-      PREMIUM_USER_TAG, true)
+    PREMIUM_USER_TAG, true)
 
   override fun isUserPremium() = sharedPrefsHelper.getBoolean(PURCHASE_PREFERENCE_NAME,
-      PREMIUM_USER_TAG, false)
+    PREMIUM_USER_TAG, false)
 
   override fun getSearchPictures(query: String): Single<List<SearchPicturesModel>> {
     return unsplashClientFactory.getPicturesService(query)
@@ -223,7 +217,7 @@ class WallrDataRepository(
       val observable: Observable<ImageDownloadModel> = Observable.create {
         it.onNext(ImageDownloadModel(IMAGE_DOWNLOAD_PROGRESS_VALUE_99, null))
         it.onNext(ImageDownloadModel(IMAGE_DOWNLOAD_FINISHED_VALUE,
-            imageHandler.getImageBitmap().blockingGet()))
+          imageHandler.getImageBitmap().blockingGet()))
         it.onComplete()
       }
       return observable.subscribeOn(executionThread.ioScheduler)
@@ -296,13 +290,13 @@ class WallrDataRepository(
 
   override fun isCrystallizeDescriptionShown(): Boolean {
     return sharedPrefsHelper.getBoolean(IMAGE_PREFERENCE_NAME,
-        CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_PREFERENCE_TAG)
+      CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_PREFERENCE_TAG)
   }
 
   override fun saveCrystallizeDescriptionShown() {
     sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME,
-        CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_PREFERENCE_TAG,
-        true)
+      CRYSTALLIZE_HINT_DIALOG_SHOWN_BEFORE_PREFERENCE_TAG,
+      true)
   }
 
   override fun checkIfDownloadIsInProgress(link: String): Boolean {
@@ -314,7 +308,7 @@ class WallrDataRepository(
     collectionsImageType: CollectionsImageType
   ): Completable {
     return imageHandler.addImageToCollections(data,
-        databaseImageTypeMapper.mapToDatabaseImageType(collectionsImageType))
+      databaseImageTypeMapper.mapToDatabaseImageType(collectionsImageType))
         .subscribeOn(executionThread.computationScheduler)
   }
 
@@ -324,12 +318,12 @@ class WallrDataRepository(
 
   override fun saveMultiColorModesHintShownState() {
     sharedPrefsHelper.setBoolean(HINT_PREFERENCE_NAME,
-        MULTI_COLOR_IMAGE_HINT_PREFERENCE_TAG, true)
+      MULTI_COLOR_IMAGE_HINT_PREFERENCE_TAG, true)
   }
 
   override fun isCustomMinimalColorListPresent(): Boolean {
     return sharedPrefsHelper.getBoolean(IMAGE_PREFERENCE_NAME,
-        CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_PREFERENCE_TAG, false)
+      CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_PREFERENCE_TAG, false)
   }
 
   override fun getCustomMinimalColorList(): Single<List<String>> {
@@ -346,8 +340,8 @@ class WallrDataRepository(
     return Completable.create {
       if (
           sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME,
-              CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
-              gsonProvider.getGson().toJson(colors))
+            CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
+            gsonProvider.getGson().toJson(colors))
       ) {
         it.onComplete()
       } else {
@@ -379,7 +373,7 @@ class WallrDataRepository(
               list.add(it, map[it]!!)
             }
             sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME,
-                CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG, gsonProvider.getGson().toJson(list))
+              CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG, gsonProvider.getGson().toJson(list))
             Single.just(RestoreColorsModel(list, map))
           }
         }
@@ -425,7 +419,7 @@ class WallrDataRepository(
   override fun reorderImagesInCollectionDatabase(collectionImagesModelList: List<CollectionsImageModel>)
       : Single<List<CollectionsImageModel>> {
     return imageHandler.reorderImagesInCollection(
-        collectionsDatabaseImageEntityMapper.mapToEntity(collectionImagesModelList))
+      collectionsDatabaseImageEntityMapper.mapToEntity(collectionImagesModelList))
         .subscribeOn(executionThread.ioScheduler)
         .map {
           collectionsDatabaseImageEntityMapper.mapFromEntity(it)
@@ -436,7 +430,7 @@ class WallrDataRepository(
     collectionsImageModelList: List<CollectionsImageModel>
   ): Single<List<CollectionsImageModel>> {
     return imageHandler.deleteImagesInCollection(
-        collectionsDatabaseImageEntityMapper.mapToEntity(collectionsImageModelList))
+      collectionsDatabaseImageEntityMapper.mapToEntity(collectionsImageModelList))
         .subscribeOn(executionThread.ioScheduler)
         .map {
           collectionsDatabaseImageEntityMapper.mapFromEntity(it)
@@ -445,30 +439,30 @@ class WallrDataRepository(
 
   override fun getAutomaticWallpaperChangerState(): Boolean {
     return sharedPrefsHelper.getBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_STATE_PREFERENCE_TAG)
+      AUTOMATIC_WALLPAPER_CHANGER_STATE_PREFERENCE_TAG)
   }
 
   override fun isCollectionReorderHintDisplayedBefore(): Boolean {
     return sharedPrefsHelper.getBoolean(HINT_PREFERENCE_NAME,
-        COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG)
+      COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG)
   }
 
   override fun saveCollectionReorderHintShownState() {
     sharedPrefsHelper.setBoolean(HINT_PREFERENCE_NAME, COLLECTION_IMAGE_REORDER_HINT_PREFERENCE_TAG,
-        true)
+      true)
   }
 
   override fun getBitmapFromDatabaseImage(collectionsImageModel: CollectionsImageModel)
       : Single<Bitmap> {
     return Single.just(imageHandler.getImageBitmap(collectionsDatabaseImageEntityMapper.mapToEntity(
-        listOf(collectionsImageModel)).first().path))
+      listOf(collectionsImageModel)).first().path))
         .subscribeOn(executionThread.ioScheduler)
   }
 
   override fun saveCrystallizedImageInDatabase(collectionsImageModel: CollectionsImageModel)
       : Single<List<CollectionsImageModel>> {
     return collectionsDatabaseImageEntityMapper.mapToEntity(
-        listOf(collectionsImageModel)).first().path.let { path ->
+      listOf(collectionsImageModel)).first().path.let { path ->
       imageHandler.convertAndCacheLowpolyImage(path, CRYSTALLIZED)
           .andThen(imageHandler.addImageToCollections(path, CRYSTALLIZED))
           .andThen(imageHandler.getAllImagesInCollection())
@@ -481,48 +475,48 @@ class WallrDataRepository(
 
   override fun getWallpaperChangerInterval(): Long {
     return sharedPrefsHelper.getLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_PREFERENCE_TAG)
+      AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_PREFERENCE_TAG)
   }
 
   override fun setWallpaperChangerInterval(interval: Long) {
     sharedPrefsHelper.setLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_PREFERENCE_TAG, interval)
+      AUTOMATIC_WALLPAPER_CHANGER_INTERVAL_PREFERENCE_TAG, interval)
   }
 
   override fun getLastUsedWallpaperUid(): Long {
     return sharedPrefsHelper.getLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_PREFERENCE_TAG)
+      AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_PREFERENCE_TAG)
   }
 
   override fun setLastUsedWallpaperUid(uid: Long) {
     sharedPrefsHelper.setLong(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_PREFERENCE_TAG, uid)
+      AUTOMATIC_WALLPAPER_CHANGER_LAST_USED_WALLPAPER_UID_PREFERENCE_TAG, uid)
   }
 
   override fun saveAutomaticWallpaperChangerEnabledState() {
     sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG, true)
+      AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG, true)
   }
 
   override fun saveAutomaticWallpaperChangerDisabledState() {
     sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG, false)
+      AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG, false)
   }
 
   override fun wasAutomaticWallpaperChangerEnabled(): Boolean {
     return sharedPrefsHelper.getBoolean(IMAGE_PREFERENCE_NAME,
-        AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG)
+      AUTOMATIC_WALLPAPER_CHANGER_ENABLED_PREFERENCE_TAG)
   }
 
   override fun getLastWallpaperChangeTimeStamp(): Long {
     return sharedPrefsHelper.getLong(IMAGE_PREFERENCE_NAME,
-        LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG)
+      LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG)
   }
 
   override fun updateLastWallpaperChangeTimeStamp(timeStamp: Long) {
     sharedPrefsHelper.setLong(IMAGE_PREFERENCE_NAME,
-        LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG,
-        timeStamp)
+      LAST_WALLPAPER_CHANGED_TIMESTAMP_PREFERENCE_TAG,
+      timeStamp)
   }
 
   internal fun getExploreNodeReference() = firebaseDatabaseHelper.getDatabase()
@@ -542,9 +536,9 @@ class WallrDataRepository(
     return firebaseDatabaseHelper
         .fetch(firebaseDatabaseReference)
         .flatMap {
-          it.values.forEach { jsonString ->
+          it.forEach { jsonString ->
             imageList.add(
-                gsonProvider.getGson().fromJson(jsonString, FirebaseImageEntity::class.java))
+              gsonProvider.getGson().fromJson(jsonString, FirebaseImageEntity::class.java))
           }
           imageList.reverse()
           val image = firebasePictureEntityMapper.mapFromEntity(imageList)
@@ -583,11 +577,11 @@ class WallrDataRepository(
     return Single.create {
       if (
           sharedPrefsHelper.setString(IMAGE_PREFERENCE_NAME,
-              CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
-              gsonProvider.getGson().toJson(colors))) {
+            CUSTOM_MINIMAL_COLOR_LIST_PREFERENCE_TAG,
+            gsonProvider.getGson().toJson(colors))) {
         sharedPrefsHelper.setBoolean(IMAGE_PREFERENCE_NAME,
-            CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_PREFERENCE_TAG,
-            true)
+          CUSTOM_MINIMAL_COLOR_LIST_AVAILABLE_PREFERENCE_TAG,
+          true)
         it.onSuccess(colors)
       } else {
         it.onError(Exception())

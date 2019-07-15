@@ -12,11 +12,8 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.android.system.SystemInfoProvider
-import zebrostudio.wallr100.android.utils.FragmentTag.CATEGORIES_TAG
-import zebrostudio.wallr100.android.utils.FragmentTag.COLLECTIONS_TAG
-import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
-import zebrostudio.wallr100.android.utils.FragmentTag.MINIMAL_TAG
-import zebrostudio.wallr100.android.utils.FragmentTag.TOP_PICKS_TAG
+import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig
+import zebrostudio.wallr100.android.utils.FragmentTag.*
 import zebrostudio.wallr100.domain.interactor.CollectionImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
@@ -37,11 +34,12 @@ class MainPresenterImplTest {
   fun setup() {
     mainPresenter =
         MainPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase, collectionImagesUseCase,
-            systemInfoProvider)
+          systemInfoProvider)
     mainPresenter.attachView(mainView)
   }
 
-  @Test fun `should show hint on handleViewCreated call success and hint is not shown before`() {
+  @Test
+  fun `should show hint on handleViewCreated call success and hint is not shown before`() {
     `when`(widgetHintsUseCase.isNavigationMenuHamburgerHintShown()).thenReturn(false)
     `when`(collectionImagesUseCase.wasAutomaticWallpaperChangerEnabled()).thenReturn(false)
 
@@ -52,7 +50,8 @@ class MainPresenterImplTest {
     verify(mainView).showHamburgerHint()
   }
 
-  @Test fun `should not show hint on handleViewCreated call success and hint is shown before`() {
+  @Test
+  fun `should not show hint on handleViewCreated call success and hint is shown before`() {
     `when`(widgetHintsUseCase.isNavigationMenuHamburgerHintShown()).thenReturn(true)
     `when`(collectionImagesUseCase.wasAutomaticWallpaperChangerEnabled()).thenReturn(false)
 
@@ -75,13 +74,15 @@ class MainPresenterImplTest {
     verify(mainView).showHamburgerHint()
   }
 
-  @Test fun `should save hint shown state on handleHamburgerHintDismissed call success`() {
+  @Test
+  fun `should save hint shown state on handleHamburgerHintDismissed call success`() {
     mainPresenter.handleHamburgerHintDismissed()
 
     verify(widgetHintsUseCase).saveNavigationMenuHamburgerHintShownState()
   }
 
-  @Test fun `should close guillotine menu on handleBackPress call success`() {
+  @Test
+  fun `should close guillotine menu on handleBackPress call success`() {
     mainPresenter.isGuillotineMenuOpen = true
     `when`(mainView.isOperationActive()).thenReturn(false)
 
@@ -226,14 +227,16 @@ class MainPresenterImplTest {
     assertFalse(mainPresenter.isGuillotineMenuOpen)
   }
 
-  @Test fun `should return true on shouldShowPurchaseOption call success`() {
+  @Test
+  fun `should return true on shouldShowPurchaseOption call success`() {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(false)
 
     assertTrue(mainPresenter.shouldShowPurchaseOption())
     verify(userPremiumStatusUseCase).isUserPremium()
   }
 
-  @Test fun `should show feedback client on handleFeedbackMenuItemClick call success`() {
+  @Test
+  fun `should show feedback client on handleFeedbackMenuItemClick call success`() {
     val osVersion = "os_version"
     val buildNumber = "build_number"
     val sdkVersion = "sdk_version"
@@ -264,10 +267,26 @@ class MainPresenterImplTest {
     verify(mainView).showFeedbackClient(messageSubject, arrayOf(emailAddress), contentType)
   }
 
+  @Test fun `should hide buy pro layout on resume after successful purchase`() {
+    `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
+
+    mainPresenter.handleViewResumed()
+
+    verify(userPremiumStatusUseCase).isUserPremium()
+    verify(mainView).hideBuyProLayout()
+  }
+
+  @Test fun `should hide buy pro layout on successful purchase`() {
+    mainPresenter.handleViewResult(PurchaseTransactionConfig.PURCHASE_REQUEST_CODE,
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+
+    verify(mainView).hideBuyProLayout()
+  }
+
   @After
   fun tearDown() {
     verifyNoMoreInteractions(userPremiumStatusUseCase, widgetHintsUseCase, collectionImagesUseCase,
-        mainView, systemInfoProvider)
+      mainView, systemInfoProvider)
     mainPresenter.detachView()
   }
 

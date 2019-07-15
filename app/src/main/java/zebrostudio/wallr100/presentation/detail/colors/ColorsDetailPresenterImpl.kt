@@ -21,12 +21,7 @@ import zebrostudio.wallr100.domain.interactor.ColorImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.EDITED
 import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.MINIMAL_COLOR
-import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.ADD_TO_COLLECTION
-import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.DOWNLOAD
-import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.EDIT_SET
-import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.LOAD_COLOR_WALLPAPER
-import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.QUICK_SET
-import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.SHARE
+import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.*
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.ColorsDetailPresenter
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.ColorsDetailView
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
@@ -100,10 +95,10 @@ class ColorsDetailPresenterImpl(
               == PERMISSION_GRANTED)) {
         handlePermissionGranted(requestCode)
       } else {
+        view?.showPermissionRequiredMessage()
         if (requestCode == LOAD_COLOR_WALLPAPER.ordinal) {
           view?.exitView()
         }
-        view?.showPermissionRequiredMessage()
       }
     }
   }
@@ -164,7 +159,7 @@ class ColorsDetailPresenterImpl(
           .doOnSubscribe {
             isColorWallpaperOperationActive = true
             view?.showIndefiniteLoader(
-                resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
+              resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
           }
           .autoDisposable(view!!.getScope())
           .subscribe({
@@ -185,7 +180,7 @@ class ColorsDetailPresenterImpl(
           .observeOn(postExecutionThread.scheduler)
           .doOnSubscribe {
             view?.showIndefiniteLoader(resourceUtils.getStringResource(
-                R.string.crystallizing_wallpaper_wait_message))
+              R.string.crystallizing_wallpaper_wait_message))
             isColorWallpaperOperationActive = true
           }
           .autoDisposable(view!!.getScope())
@@ -205,20 +200,20 @@ class ColorsDetailPresenterImpl(
     if (isNotInOperation() && hasStoragePermissions(EDIT_SET)) {
       isColorWallpaperOperationActive = true
       view?.showIndefiniteLoader(
-          resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message))
+        resourceUtils.getStringResource(R.string.detail_activity_editing_tool_message))
       Single.zip(colorImagesUseCase.getCroppingSourceUri(),
-          colorImagesUseCase.getCroppingDestinationUri(),
-          BiFunction<Uri, Uri, Pair<Uri, Uri>> { source, destination ->
-            Pair(source, destination)
-          })
+        colorImagesUseCase.getCroppingDestinationUri(),
+        BiFunction<Uri, Uri, Pair<Uri, Uri>> { source, destination ->
+          Pair(source, destination)
+        })
           .observeOn(postExecutionThread.scheduler)
           .autoDisposable(view!!.getScope())
           .subscribe({
             view?.startCroppingActivity(
-                it.first,
-                it.second,
-                wallpaperSetter.getDesiredMinimumWidth(),
-                wallpaperSetter.getDesiredMinimumHeight())
+              it.first,
+              it.second,
+              wallpaperSetter.getDesiredMinimumWidth(),
+              wallpaperSetter.getDesiredMinimumHeight())
             isColorWallpaperOperationActive = false
           }, {
             view?.showGenericErrorMessage()
@@ -230,11 +225,11 @@ class ColorsDetailPresenterImpl(
     if (isNotInOperation() && isUserPremium(ADD_TO_COLLECTION)
         && hasStoragePermissions(ADD_TO_COLLECTION)) {
       colorImagesUseCase.saveToCollectionsCompletable(colorList.toString(),
-          lastImageOperationType)
+        lastImageOperationType)
           .observeOn(postExecutionThread.scheduler)
           .doOnSubscribe {
             view?.showIndefiniteLoader(
-                resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
+              resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
             isColorWallpaperOperationActive = true
           }
           .autoDisposable(view!!.getScope())
@@ -262,7 +257,7 @@ class ColorsDetailPresenterImpl(
           .doOnSubscribe {
             isColorWallpaperOperationActive = true
             view?.showIndefiniteLoader(
-                resourceUtils.getStringResource(R.string.preparing_shareable_wallpaper_message))
+              resourceUtils.getStringResource(R.string.preparing_shareable_wallpaper_message))
           }
           .autoDisposable(view!!.getScope())
           .subscribe({
@@ -301,11 +296,11 @@ class ColorsDetailPresenterImpl(
     } else {
       when (multiColorImageType) {
         MATERIAL -> resourceUtils.getStringResource(
-            R.string.colors_detail_activity_colors_style_name_material)
+          R.string.colors_detail_activity_colors_style_name_material)
         GRADIENT -> resourceUtils.getStringResource(
-            R.string.colors_detail_activity_colors_style_name_gradient)
+          R.string.colors_detail_activity_colors_style_name_gradient)
         else -> resourceUtils.getStringResource(
-            R.string.colors_detail_activity_colors_style_name_plasma)
+          R.string.colors_detail_activity_colors_style_name_plasma)
       }
     }.let {
       view?.showImageTypeText(it)
@@ -335,7 +330,7 @@ class ColorsDetailPresenterImpl(
 
   private fun handleCropResult(cropResultUri: Uri?) {
     view?.showIndefiniteLoader(
-        resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
+      resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
     colorImagesUseCase.getBitmapFromUriSingle(cropResultUri)
         .doOnSubscribe {
           isColorWallpaperOperationActive = true

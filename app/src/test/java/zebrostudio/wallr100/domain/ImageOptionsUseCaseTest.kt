@@ -8,11 +8,8 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -22,17 +19,17 @@ import zebrostudio.wallr100.domain.interactor.ImageOptionsInteractor
 import zebrostudio.wallr100.domain.interactor.ImageOptionsUseCase
 import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.WALLPAPER
 import zebrostudio.wallr100.domain.model.imagedownload.ImageDownloadModel
-import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class ImageOptionsUseCaseTest {
 
-  @get:Rule var trampolineSchedulerRule = TrampolineSchedulerRule()
-
-  @Mock private lateinit var wallrRepository: WallrRepository
-  @Mock private lateinit var mockBitmap: Bitmap
-  @Mock private lateinit var mockUri: Uri
+  @Mock
+  private lateinit var wallrRepository: WallrRepository
+  @Mock
+  private lateinit var mockBitmap: Bitmap
+  @Mock
+  private lateinit var mockUri: Uri
   private lateinit var imageOptionsUseCase: ImageOptionsUseCase
   private var randomString = randomUUID().toString()
   private var downloadCompleteValue: Long = 100
@@ -42,7 +39,8 @@ class ImageOptionsUseCaseTest {
     imageOptionsUseCase = ImageOptionsInteractor(wallrRepository)
   }
 
-  @Test fun `should return imageDownloadModel on getImageBitmap call success`() {
+  @Test
+  fun `should return imageDownloadModel on getImageBitmap call success`() {
     val expectedImageModel = ImageDownloadModel(downloadCompleteValue, mockBitmap)
     `when`(wallrRepository.getImageBitmap(randomString))
         .thenReturn(Observable.just(expectedImageModel))
@@ -53,15 +51,17 @@ class ImageOptionsUseCaseTest {
     verify(wallrRepository).getImageBitmap(randomString)
   }
 
-  @Test fun `should return single of shareable link on getShareableImageLink call success`() {
+  @Test
+  fun `should return single of shareable link on getShareableImageLink call success`() {
     `when`(wallrRepository.getShortImageLink(randomString)).thenReturn(
-        Single.just(randomString))
+      Single.just(randomString))
     imageOptionsUseCase.getImageShareableLinkSingle(randomString)
 
     verify(wallrRepository).getShortImageLink(randomString)
   }
 
-  @Test fun `should return completable on clearImageCaches call success`() {
+  @Test
+  fun `should return completable on clearImageCaches call success`() {
     `when`(wallrRepository.clearImageCaches()).thenReturn(Completable.complete())
 
     imageOptionsUseCase.clearCachesCompletable().test().assertComplete()
@@ -69,13 +69,15 @@ class ImageOptionsUseCaseTest {
     verify(wallrRepository).clearImageCaches()
   }
 
-  @Test fun `should call cancelImageBitmapFetchingOperation on canImageFetching call success`() {
+  @Test
+  fun `should call cancelImageBitmapFetchingOperation on canImageFetching call success`() {
     imageOptionsUseCase.cancelFetchImageOperation()
 
     verify(wallrRepository).cancelImageBitmapFetchOperation()
   }
 
-  @Test fun `should return uri on getCroppingSourceUri call success`() {
+  @Test
+  fun `should return uri on getCroppingSourceUri call success`() {
     `when`(wallrRepository.getCacheSourceUri()).thenReturn(Single.just(mockUri))
 
     val uri = imageOptionsUseCase.getCroppingSourceUri().test().values()[0]
@@ -84,7 +86,8 @@ class ImageOptionsUseCaseTest {
     verify(wallrRepository).getCacheSourceUri()
   }
 
-  @Test fun `should return uri on getCroppingDestinationUri call success`() {
+  @Test
+  fun `should return uri on getCroppingDestinationUri call success`() {
     `when`(wallrRepository.getCacheResultUri()).thenReturn(Single.just(mockUri))
 
     val uri = imageOptionsUseCase.getCroppingDestinationUri().test().values()[0]
@@ -93,7 +96,8 @@ class ImageOptionsUseCaseTest {
     verify(wallrRepository).getCacheResultUri()
   }
 
-  @Test fun `should return Single of bitmap on getBitmapFromUriSingle call success`() {
+  @Test
+  fun `should return Single of bitmap on getBitmapFromUriSingle call success`() {
     `when`(wallrRepository.getBitmapFromUri(mockUri)).thenReturn(Single.just(mockBitmap))
 
     imageOptionsUseCase.getBitmapFromUriSingle(mockUri).test()
@@ -102,7 +106,8 @@ class ImageOptionsUseCaseTest {
     verify(wallrRepository).getBitmapFromUri(mockUri)
   }
 
-  @Test fun `should complete on downloadImageCompletable call success`() {
+  @Test
+  fun `should complete on downloadImageCompletable call success`() {
     `when`(wallrRepository.downloadImage(randomString)).thenReturn(Completable.complete())
 
     imageOptionsUseCase.downloadImageCompletable(randomString).test().assertComplete()
@@ -110,7 +115,8 @@ class ImageOptionsUseCaseTest {
     verify(wallrRepository).downloadImage(randomString)
   }
 
-  @Test fun `should complete on downloadCrystallizedImageCompletable call success`() {
+  @Test
+  fun `should complete on downloadCrystallizedImageCompletable call success`() {
     `when`(wallrRepository.saveCachedImageToDownloads()).thenReturn(Completable.complete())
 
     imageOptionsUseCase.downloadCrystallizedImageCompletable().test().assertComplete()
@@ -118,7 +124,8 @@ class ImageOptionsUseCaseTest {
     verify(wallrRepository).saveCachedImageToDownloads()
   }
 
-  @Test fun `should return true on isDownloadInProgress call success`() {
+  @Test
+  fun `should return true on isDownloadInProgress call success`() {
     `when`(wallrRepository.checkIfDownloadIsInProgress(randomString)).thenReturn(true)
 
     assertTrue(imageOptionsUseCase.isDownloadInProgress(randomString))
@@ -126,7 +133,8 @@ class ImageOptionsUseCaseTest {
     verify(wallrRepository).checkIfDownloadIsInProgress(randomString)
   }
 
-  @Test fun `should return false on isCrystallizeDescriptionDialogShown call success`() {
+  @Test
+  fun `should return false on isCrystallizeDescriptionDialogShown call success`() {
     `when`(wallrRepository.isCrystallizeDescriptionShown()).thenReturn(false)
 
     assertFalse(imageOptionsUseCase.isCrystallizeDescriptionDialogShown())
@@ -141,7 +149,8 @@ class ImageOptionsUseCaseTest {
     verify(wallrRepository).saveCrystallizeDescriptionShown()
   }
 
-  @Test fun `should return Single of bitmap on getCrystallizedBitmapSingle call success`() {
+  @Test
+  fun `should return Single of bitmap on getCrystallizedBitmapSingle call success`() {
     `when`(wallrRepository.getCacheImageBitmap()).thenReturn(Single.just(mockBitmap))
 
     imageOptionsUseCase.getCrystallizedImageSingle().test().assertValue(mockBitmap)
@@ -149,7 +158,8 @@ class ImageOptionsUseCaseTest {
     verify(wallrRepository).getCacheImageBitmap()
   }
 
-  @Test fun `should return Single of bitmap on getEditedImageSingle call success`() {
+  @Test
+  fun `should return Single of bitmap on getEditedImageSingle call success`() {
     `when`(wallrRepository.getCacheImageBitmap()).thenReturn(Single.just(mockBitmap))
 
     imageOptionsUseCase.getEditedImageSingle().test().assertValue(mockBitmap)
@@ -157,9 +167,10 @@ class ImageOptionsUseCaseTest {
     verify(wallrRepository).getCacheImageBitmap()
   }
 
-  @Test fun `should complete on addImageToCollection call success`() {
+  @Test
+  fun `should complete on addImageToCollection call success`() {
     `when`(wallrRepository.saveImageToCollections(randomString,
-        WALLPAPER)).thenReturn(Completable.complete())
+      WALLPAPER)).thenReturn(Completable.complete())
 
     imageOptionsUseCase.addImageToCollection(randomString, WALLPAPER).test()
         .assertComplete()
@@ -167,7 +178,8 @@ class ImageOptionsUseCaseTest {
     verify(wallrRepository).saveImageToCollections(randomString, WALLPAPER)
   }
 
-  @After fun tearDown() {
+  @After
+  fun tearDown() {
     verifyNoMoreInteractions(wallrRepository)
   }
 }

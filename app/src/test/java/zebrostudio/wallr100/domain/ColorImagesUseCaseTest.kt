@@ -15,30 +15,29 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.domain.interactor.ColorImagesInteractor
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.CRYSTALLIZED
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.EDITED
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.MINIMAL_COLOR
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.SEARCH
-import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.WALLPAPER
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
+import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.*
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.*
 import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class ColorImagesUseCaseTest {
 
-  @Mock lateinit var wallrRepository: WallrRepository
-  @Mock lateinit var mockBitmap: Bitmap
-  @Mock lateinit var mockUri: Uri
+  @Mock
+  lateinit var wallrRepository: WallrRepository
+  @Mock
+  lateinit var mockBitmap: Bitmap
+  @Mock
+  lateinit var mockUri: Uri
   private lateinit var colorImagesInteractor: ColorImagesInteractor
   private val randomString = randomUUID().toString()
 
-  @Before fun setup() {
+  @Before
+  fun setup() {
     colorImagesInteractor = ColorImagesInteractor(wallrRepository)
   }
 
-  @Test fun `should return single of bitmap on getSingularColorBitmapSingle call success`() {
+  @Test
+  fun `should return single of bitmap on getSingularColorBitmapSingle call success`() {
     `when`(wallrRepository.getSingleColorBitmap(randomString)).thenReturn(Single.just(mockBitmap))
 
     val result = colorImagesInteractor.getSingularColorBitmapSingle(randomString).test().values()[0]
@@ -104,18 +103,20 @@ class ColorImagesUseCaseTest {
     verify(wallrRepository).getBitmapFromUri(mockUri)
   }
 
-  @Test fun `should complete on saveToCollectionsCompletable of Wallpaper type call success`() {
+  @Test
+  fun `should complete on saveToCollectionsCompletable of Wallpaper type call success`() {
     `when`(wallrRepository.saveImageToCollections(randomString, WALLPAPER))
         .thenReturn(Completable.complete())
 
     colorImagesInteractor.saveToCollectionsCompletable(randomString,
-        WALLPAPER)
+      WALLPAPER)
         .test().assertComplete()
 
     verify(wallrRepository).saveImageToCollections(randomString, WALLPAPER)
   }
 
-  @Test fun `should complete on saveToCollectionsCompletable of Search type call success`() {
+  @Test
+  fun `should complete on saveToCollectionsCompletable of Search type call success`() {
     `when`(wallrRepository.saveImageToCollections(randomString, SEARCH))
         .thenReturn(Completable.complete())
 
@@ -125,18 +126,20 @@ class ColorImagesUseCaseTest {
     verify(wallrRepository).saveImageToCollections(randomString, SEARCH)
   }
 
-  @Test fun `should complete on saveToCollectionsCompletable of Crystallised type call success`() {
+  @Test
+  fun `should complete on saveToCollectionsCompletable of Crystallised type call success`() {
     `when`(wallrRepository.saveImageToCollections(randomString, CRYSTALLIZED))
         .thenReturn(Completable.complete())
 
     colorImagesInteractor.saveToCollectionsCompletable(randomString,
-        CRYSTALLIZED)
+      CRYSTALLIZED)
         .test().assertComplete()
 
     verify(wallrRepository).saveImageToCollections(randomString, CRYSTALLIZED)
   }
 
-  @Test fun `should complete on saveToCollectionsCompletable of Edited type call success`() {
+  @Test
+  fun `should complete on saveToCollectionsCompletable of Edited type call success`() {
     `when`(wallrRepository.saveImageToCollections(randomString, EDITED))
         .thenReturn(Completable.complete())
 
@@ -146,20 +149,22 @@ class ColorImagesUseCaseTest {
     verify(wallrRepository).saveImageToCollections(randomString, EDITED)
   }
 
-  @Test fun `should complete on saveToCollectionsCompletable of Minimal Color type call success`() {
+  @Test
+  fun `should complete on saveToCollectionsCompletable of Minimal Color type call success`() {
     `when`(
-        wallrRepository.saveImageToCollections(randomString, MINIMAL_COLOR))
+      wallrRepository.saveImageToCollections(randomString, MINIMAL_COLOR))
         .thenReturn(Completable.complete())
 
     colorImagesInteractor.saveToCollectionsCompletable(randomString,
-        MINIMAL_COLOR)
+      MINIMAL_COLOR)
         .test().assertComplete()
 
     verify(wallrRepository).saveImageToCollections(randomString,
-        MINIMAL_COLOR)
+      MINIMAL_COLOR)
   }
 
-  @Test fun `should return uri on getCacheSourceUri call success`() {
+  @Test
+  fun `should return uri on getCacheSourceUri call success`() {
     `when`(wallrRepository.getCacheSourceUri()).thenReturn(Single.just(mockUri))
 
     val result = colorImagesInteractor.getCroppingSourceUri().test().values()[0]
@@ -168,7 +173,8 @@ class ColorImagesUseCaseTest {
     verify(wallrRepository).getCacheSourceUri()
   }
 
-  @Test fun `should return uri on getCroppingDestinationUri call success`() {
+  @Test
+  fun `should return uri on getCroppingDestinationUri call success`() {
     `when`(wallrRepository.getCacheResultUri()).thenReturn(Single.just(mockUri))
 
     val result = colorImagesInteractor.getCroppingDestinationUri().test().values()[0]
@@ -177,7 +183,8 @@ class ColorImagesUseCaseTest {
     verify(wallrRepository).getCacheResultUri()
   }
 
-  @Test fun `should return single of uri on getCacheImageUri call success`() {
+  @Test
+  fun `should return single of uri on getCacheImageUri call success`() {
     `when`(wallrRepository.getShareableImageUri()).thenReturn(Single.just(mockUri))
 
     val result = colorImagesInteractor.getCacheImageUri().test().values()[0]
@@ -186,7 +193,8 @@ class ColorImagesUseCaseTest {
     verify(wallrRepository).getShareableImageUri()
   }
 
-  @Test fun `should complete on downloadImage call success`() {
+  @Test
+  fun `should complete on downloadImage call success`() {
     `when`(wallrRepository.saveCachedImageToDownloads()).thenReturn(Completable.complete())
 
     colorImagesInteractor.downloadImage().test().assertComplete()
@@ -195,7 +203,8 @@ class ColorImagesUseCaseTest {
     verifyNoMoreInteractions(wallrRepository)
   }
 
-  @Test fun `should complete on clearCachesCompletable call success`() {
+  @Test
+  fun `should complete on clearCachesCompletable call success`() {
     `when`(wallrRepository.clearImageCaches()).thenReturn(Completable.complete())
 
     colorImagesInteractor.clearCachesCompletable().test().assertComplete()
@@ -203,7 +212,8 @@ class ColorImagesUseCaseTest {
     verify(wallrRepository).clearImageCaches()
   }
 
-  @After fun tearDown() {
+  @After
+  fun tearDown() {
     verifyNoMoreInteractions(wallrRepository)
   }
 }

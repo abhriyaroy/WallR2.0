@@ -28,19 +28,24 @@ import java.util.UUID.randomUUID
 @RunWith(MockitoJUnitRunner::class)
 class BuyProPresenterImplTest {
 
-  @Mock lateinit var postExecutionThread: PostExecutionThread
-  @Mock lateinit var buyProView: BuyProContract.BuyProView
-  @Mock lateinit var authenticatePurchaseUseCase: AuthenticatePurchaseUseCase
-  @Mock lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
+  @Mock
+  lateinit var postExecutionThread: PostExecutionThread
+  @Mock
+  lateinit var buyProView: BuyProContract.BuyProView
+  @Mock
+  lateinit var authenticatePurchaseUseCase: AuthenticatePurchaseUseCase
+  @Mock
+  lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
   private lateinit var buyProPresenterImpl: BuyProPresenterImpl
   private lateinit var testScopeProvider: TestLifecycleScopeProvider
   private val packageName = randomUUID().toString()
   private val skuId = randomUUID().toString()
   private val purchaseToken = randomUUID().toString()
 
-  @Before fun setup() {
+  @Before
+  fun setup() {
     buyProPresenterImpl = BuyProPresenterImpl(
-        authenticatePurchaseUseCase, userPremiumStatusUseCase, postExecutionThread)
+      authenticatePurchaseUseCase, userPremiumStatusUseCase, postExecutionThread)
     buyProPresenterImpl.attachView(buyProView)
     testScopeProvider = TestLifecycleScopeProvider.createInitial(STARTED)
 
@@ -119,12 +124,12 @@ class BuyProPresenterImplTest {
   @Test
   fun `should show invalid purchase exception on verifyPurchase call failure with type Purchase`() {
     `when`(authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
-        purchaseToken)).thenReturn(Completable.error(InvalidPurchaseException()))
+      purchaseToken)).thenReturn(Completable.error(InvalidPurchaseException()))
 
     buyProPresenterImpl.verifyTransaction(packageName, skuId, purchaseToken, PURCHASE)
 
     verify(authenticatePurchaseUseCase).authenticatePurchaseCompletable(packageName, skuId,
-        purchaseToken)
+      purchaseToken)
     verify(buyProView).getScope()
     verify(buyProView).showInvalidPurchaseError()
     verify(buyProView).dismissWaitLoader()
@@ -134,12 +139,12 @@ class BuyProPresenterImplTest {
   @Test
   fun `should show unable to verify purchase error on verifyPurchase call failure due to UnableToVerifyPurchaseException with type Purchase`() {
     `when`(authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
-        purchaseToken)).thenReturn(Completable.error(UnableToVerifyPurchaseException()))
+      purchaseToken)).thenReturn(Completable.error(UnableToVerifyPurchaseException()))
 
     buyProPresenterImpl.verifyTransaction(packageName, skuId, purchaseToken, PURCHASE)
 
     verify(authenticatePurchaseUseCase).authenticatePurchaseCompletable(packageName, skuId,
-        purchaseToken)
+      purchaseToken)
     verify(buyProView).getScope()
     verify(buyProView).showUnableToVerifyPurchaseError()
     verify(buyProView).dismissWaitLoader()
@@ -149,12 +154,12 @@ class BuyProPresenterImplTest {
   @Test
   fun `should show generic purchase error on verifyPurchase call failure with type Purchase`() {
     `when`(authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
-        purchaseToken)).thenReturn(Completable.error(Exception()))
+      purchaseToken)).thenReturn(Completable.error(Exception()))
 
     buyProPresenterImpl.verifyTransaction(packageName, skuId, purchaseToken, PURCHASE)
 
     verify(authenticatePurchaseUseCase).authenticatePurchaseCompletable(packageName, skuId,
-        purchaseToken)
+      purchaseToken)
     verify(buyProView).getScope()
     verify(buyProView).showGenericVerificationError()
     verify(buyProView).dismissWaitLoader()
@@ -164,13 +169,13 @@ class BuyProPresenterImplTest {
   @Test
   fun `should show successful transaction message and finish with result on verifyPurchase call success with type Purchase`() {
     `when`(authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
-        purchaseToken)).thenReturn(Completable.complete())
+      purchaseToken)).thenReturn(Completable.complete())
     `when`(userPremiumStatusUseCase.updateUserPurchaseStatus()).thenReturn(true)
 
     buyProPresenterImpl.verifyTransaction(packageName, skuId, purchaseToken, PURCHASE)
 
     verify(authenticatePurchaseUseCase).authenticatePurchaseCompletable(packageName, skuId,
-        purchaseToken)
+      purchaseToken)
     verify(userPremiumStatusUseCase).updateUserPurchaseStatus()
     verify(buyProView).getScope()
     verify(buyProView).showSuccessfulTransactionMessage(PURCHASE)
@@ -182,12 +187,12 @@ class BuyProPresenterImplTest {
   @Test
   fun `should show invalid purchase exception on verifyPurchase call failure with type Restore`() {
     `when`(authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
-        purchaseToken)).thenReturn(Completable.error(InvalidPurchaseException()))
+      purchaseToken)).thenReturn(Completable.error(InvalidPurchaseException()))
 
     buyProPresenterImpl.verifyTransaction(packageName, skuId, purchaseToken, RESTORE)
 
     verify(authenticatePurchaseUseCase).authenticatePurchaseCompletable(packageName, skuId,
-        purchaseToken)
+      purchaseToken)
     verify(buyProView).getScope()
     verify(buyProView).showInvalidPurchaseError()
     verify(buyProView).dismissWaitLoader()
@@ -197,12 +202,12 @@ class BuyProPresenterImplTest {
   @Test
   fun `should show unable to verify purchase error on verifyPurchase call failure due to UnableToVerifyPurchaseException with type Restore`() {
     `when`(authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
-        purchaseToken)).thenReturn(Completable.error(UnableToVerifyPurchaseException()))
+      purchaseToken)).thenReturn(Completable.error(UnableToVerifyPurchaseException()))
 
     buyProPresenterImpl.verifyTransaction(packageName, skuId, purchaseToken, RESTORE)
 
     verify(authenticatePurchaseUseCase).authenticatePurchaseCompletable(packageName, skuId,
-        purchaseToken)
+      purchaseToken)
     verify(buyProView).getScope()
     verify(buyProView).showUnableToVerifyPurchaseError()
     verify(buyProView).dismissWaitLoader()
@@ -212,12 +217,12 @@ class BuyProPresenterImplTest {
   @Test
   fun `should show generic purchase error on verifyPurchase call failure with type Restore`() {
     `when`(authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
-        purchaseToken)).thenReturn(Completable.error(Exception()))
+      purchaseToken)).thenReturn(Completable.error(Exception()))
 
     buyProPresenterImpl.verifyTransaction(packageName, skuId, purchaseToken, RESTORE)
 
     verify(authenticatePurchaseUseCase).authenticatePurchaseCompletable(packageName, skuId,
-        purchaseToken)
+      purchaseToken)
     verify(buyProView).getScope()
     verify(buyProView).showGenericVerificationError()
     verify(buyProView).dismissWaitLoader()
@@ -227,13 +232,13 @@ class BuyProPresenterImplTest {
   @Test
   fun `should show successful transaction message and finish with result on verifyPurchase call success with type Restore`() {
     `when`(authenticatePurchaseUseCase.authenticatePurchaseCompletable(packageName, skuId,
-        purchaseToken)).thenReturn(Completable.complete())
+      purchaseToken)).thenReturn(Completable.complete())
     `when`(userPremiumStatusUseCase.updateUserPurchaseStatus()).thenReturn(true)
 
     buyProPresenterImpl.verifyTransaction(packageName, skuId, purchaseToken, RESTORE)
 
     verify(authenticatePurchaseUseCase).authenticatePurchaseCompletable(packageName, skuId,
-        purchaseToken)
+      purchaseToken)
     verify(userPremiumStatusUseCase).updateUserPurchaseStatus()
     verify(buyProView).getScope()
     verify(buyProView).showSuccessfulTransactionMessage(RESTORE)
@@ -242,9 +247,10 @@ class BuyProPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @After fun tearDown() {
+  @After
+  fun tearDown() {
     verifyNoMoreInteractions(postExecutionThread, userPremiumStatusUseCase,
-        authenticatePurchaseUseCase, buyProView)
+      authenticatePurchaseUseCase, buyProView)
     buyProPresenterImpl.detachView()
   }
 

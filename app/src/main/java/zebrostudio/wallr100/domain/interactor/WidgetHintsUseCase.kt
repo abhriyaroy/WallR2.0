@@ -12,6 +12,7 @@ interface WidgetHintsUseCase {
 }
 
 class WidgetHintsInteractor(private val wallrRepository: WallrRepository) : WidgetHintsUseCase {
+
   override fun isNavigationMenuHamburgerHintShown(): Boolean {
     return wallrRepository.isAppOpenedForTheFirstTime()
   }

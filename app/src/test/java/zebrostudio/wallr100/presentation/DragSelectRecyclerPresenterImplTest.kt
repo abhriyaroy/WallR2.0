@@ -16,7 +16,8 @@ import java.util.UUID.randomUUID
 @RunWith(MockitoJUnitRunner::class)
 class DragSelectRecyclerPresenterImplTest {
 
-  @Mock private lateinit var dragSelectItemViewHolder: DragSelectItemViewHolder
+  @Mock
+  private lateinit var dragSelectItemViewHolder: DragSelectItemViewHolder
   private lateinit var dragSelectRecyclerIPresenterImpl: DragSelectRecyclerPresenterImpl
   private val randomString = randomUUID().toString()
 
@@ -25,19 +26,21 @@ class DragSelectRecyclerPresenterImplTest {
     dragSelectRecyclerIPresenterImpl = DragSelectRecyclerPresenterImpl()
   }
 
-  @Test fun `should return size of list incremented by 1 on getItemCount call success`() {
+  @Test
+  fun `should return size of list incremented by 1 on getItemCount call success`() {
     val list = listOf<String>()
 
     assertEquals(1, dragSelectRecyclerIPresenterImpl.getItemCount(list))
   }
 
-  @Test fun `should show add color layout on onBindRepositoryRowViewAtPosition call success`() {
+  @Test
+  fun `should show add color layout on onBindRepositoryRowViewAtPosition call success`() {
     val list = listOf<String>()
     val map = hashMapOf<Int, String>()
     val position = 0
 
     dragSelectRecyclerIPresenterImpl.onBindRepositoryRowViewAtPosition(dragSelectItemViewHolder,
-        list, map, position)
+      list, map, position)
 
     verify(dragSelectItemViewHolder).hideSelectedIndicator()
     verify(dragSelectItemViewHolder).showAddImageLayout()
@@ -52,7 +55,7 @@ class DragSelectRecyclerPresenterImplTest {
     val position = 1
 
     dragSelectRecyclerIPresenterImpl.onBindRepositoryRowViewAtPosition(dragSelectItemViewHolder,
-        list, map, position)
+      list, map, position)
 
     verify(dragSelectItemViewHolder).hideSelectedIndicator()
     verify(dragSelectItemViewHolder).hideAddImageLayout()
@@ -70,7 +73,7 @@ class DragSelectRecyclerPresenterImplTest {
     val position = 1
 
     dragSelectRecyclerIPresenterImpl.onBindRepositoryRowViewAtPosition(dragSelectItemViewHolder,
-        list, map, position)
+      list, map, position)
 
     verify(dragSelectItemViewHolder).hideSelectedIndicator()
     verify(dragSelectItemViewHolder).hideAddImageLayout()
@@ -80,7 +83,8 @@ class DragSelectRecyclerPresenterImplTest {
     verify(dragSelectItemViewHolder).showSelectedIndicator()
   }
 
-  @After fun tearDown() {
+  @After
+  fun tearDown() {
     verifyNoMoreInteractions(dragSelectItemViewHolder)
   }
 

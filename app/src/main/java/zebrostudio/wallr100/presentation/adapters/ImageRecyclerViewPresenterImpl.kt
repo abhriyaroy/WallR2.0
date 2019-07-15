@@ -38,9 +38,9 @@ class ImageRecyclerViewPresenterImpl : ImageRecyclerViewPresenter {
     when (imageType) {
       SEARCH -> {
         rowView.setImageViewBackgroundAndAttachClickListener(
-            searchResultList[position].paletteColor)
+          searchResultList[position].paletteColor)
         rowView.setSearchImage(
-            searchResultList[position].imageQualityUrlPresenterEntity.smallImageLink)
+          searchResultList[position].imageQualityUrlPresenterEntity.smallImageLink)
       }
       WALLPAPERS -> {
         rowView.setImageViewBackgroundAndAttachClickListener(wallpaperImageList[position].color)

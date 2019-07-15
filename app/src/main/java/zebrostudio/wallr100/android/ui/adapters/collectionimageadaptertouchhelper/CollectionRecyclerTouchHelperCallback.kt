@@ -2,13 +2,7 @@ package zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelp
 
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper.Callback
-import android.support.v7.widget.helper.ItemTouchHelper.DOWN
-import android.support.v7.widget.helper.ItemTouchHelper.END
-import android.support.v7.widget.helper.ItemTouchHelper.LEFT
-import android.support.v7.widget.helper.ItemTouchHelper.RIGHT
-import android.support.v7.widget.helper.ItemTouchHelper.START
-import android.support.v7.widget.helper.ItemTouchHelper.UP
+import android.support.v7.widget.helper.ItemTouchHelper.*
 
 class CollectionRecyclerTouchHelperCallback(
   private val adapter: ItemTouchHelperAdapter

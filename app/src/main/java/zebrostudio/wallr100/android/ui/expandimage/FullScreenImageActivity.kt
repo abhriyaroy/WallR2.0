@@ -5,10 +5,8 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import kotlinx.android.synthetic.main.activity_full_screen_image.backIcon
 import kotlinx.android.synthetic.main.activity_full_screen_image.highQualityImagePhotoView
@@ -16,14 +14,10 @@ import kotlinx.android.synthetic.main.activity_full_screen_image.lowQualityImage
 import kotlinx.android.synthetic.main.fragment_image_list.spinkitView
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseActivity
+import zebrostudio.wallr100.android.ui.ImageLoader
+import zebrostudio.wallr100.android.ui.LoaderListener
 import zebrostudio.wallr100.android.ui.expandimage.ImageLoadingType.REMOTE
-import zebrostudio.wallr100.android.utils.disableScreenshots
-import zebrostudio.wallr100.android.utils.errorToast
-import zebrostudio.wallr100.android.utils.gone
-import zebrostudio.wallr100.android.utils.hideStatusBarAndNavigationBar
-import zebrostudio.wallr100.android.utils.makeNavigationBarAndStatusBarTransparent
-import zebrostudio.wallr100.android.utils.showStatusBarAndNavigationBar
-import zebrostudio.wallr100.android.utils.visible
+import zebrostudio.wallr100.android.utils.*
 import zebrostudio.wallr100.presentation.detail.images.ILLEGAL_STATE_EXCEPTION_MESSAGE
 import zebrostudio.wallr100.presentation.expandimage.FullScreenImageContract.FullScreenImagePresenter
 import zebrostudio.wallr100.presentation.expandimage.FullScreenImageContract.FullScreenImageView
@@ -31,7 +25,10 @@ import javax.inject.Inject
 
 class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
 
-  @Inject internal lateinit var presenter: FullScreenImagePresenter
+  @Inject
+  internal lateinit var presenter: FullScreenImagePresenter
+  @Inject
+  internal lateinit var imageLoader: ImageLoader
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -69,67 +66,49 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
   }
 
   override fun showLowQualityImage(link: String) {
-    Glide.with(this)
-        .load(link)
-        .into(lowQualityImageView)
+    imageLoader.load(this, link, lowQualityImageView)
   }
 
   override fun startLoadingHighQualityImage(link: String) {
-    Glide.with(this)
-        .load(link)
-        .listener(object : RequestListener<Drawable> {
-          override fun onLoadFailed(
-            e: GlideException?,
-            model: Any?,
-            target: Target<Drawable>?,
-            isFirstResource: Boolean
-          ): Boolean {
-            presenter.handleHighQualityImageLoadingFailed()
-            return false
-          }
+    imageLoader.loadWithListener(this, link, highQualityImagePhotoView, object : LoaderListener {
+      override fun onResourceReady(resource: Drawable?,
+        model: Any?,
+        target: Target<Drawable>?,
+        dataSource: DataSource?,
+        isFirstResource: Boolean): Boolean {
+        presenter.handleHighQualityImageLoadingFinished()
+        return false
+      }
 
-          override fun onResourceReady(
-            resource: Drawable?,
-            model: Any?,
-            target: Target<Drawable>?,
-            dataSource: DataSource?,
-            isFirstResource: Boolean
-          ): Boolean {
-            presenter.handleHighQualityImageLoadingFinished()
-            return false
-          }
-
-        })
-        .into(highQualityImagePhotoView)
+      override fun onLoadFailed(e: GlideException?,
+        model: Any?,
+        target: Target<Drawable>?,
+        isFirstResource: Boolean): Boolean {
+        presenter.handleHighQualityImageLoadingFailed()
+        return false
+      }
+    })
   }
 
   override fun showImage(bitmap: Bitmap) {
-    Glide.with(this)
-        .load(bitmap)
-        .listener(object : RequestListener<Drawable> {
-          override fun onLoadFailed(
-            e: GlideException?,
-            model: Any?,
-            target: Target<Drawable>?,
-            isFirstResource: Boolean
-          ): Boolean {
-            presenter.handleHighQualityImageLoadingFailed()
-            return false
-          }
+    imageLoader.loadWithListener(this, bitmap, highQualityImagePhotoView, object : LoaderListener {
+      override fun onResourceReady(resource: Drawable?,
+        model: Any?,
+        target: Target<Drawable>?,
+        dataSource: DataSource?,
+        isFirstResource: Boolean): Boolean {
+        presenter.handleHighQualityImageLoadingFinished()
+        return false
+      }
 
-          override fun onResourceReady(
-            resource: Drawable?,
-            model: Any?,
-            target: Target<Drawable>?,
-            dataSource: DataSource?,
-            isFirstResource: Boolean
-          ): Boolean {
-            presenter.handleHighQualityImageLoadingFinished()
-            return false
-          }
-
-        })
-        .into(highQualityImagePhotoView)
+      override fun onLoadFailed(e: GlideException?,
+        model: Any?,
+        target: Target<Drawable>?,
+        isFirstResource: Boolean): Boolean {
+        presenter.handleHighQualityImageLoadingFailed()
+        return false
+      }
+    })
   }
 
   override fun showLoader() {

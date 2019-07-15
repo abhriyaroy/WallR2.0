@@ -22,7 +22,7 @@ class WallpaperSetterImpl(private var context: Context) : WallpaperSetter {
       getWallpaperManagerInstance().setBitmap(scaledBitmapToFitPhoneAspectRatio)
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         getWallpaperManagerInstance().setBitmap(scaledBitmapToFitPhoneAspectRatio, null,
-            true, WallpaperManager.FLAG_LOCK)
+          true, WallpaperManager.FLAG_LOCK)
       }
       scaledBitmapToFitPhoneAspectRatio.recycle()
       return true

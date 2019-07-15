@@ -38,7 +38,7 @@
   <string name="adding_image_to_collections_message">Adding wallpaper to collection...</string>
   <string name="add_to_collection_success_message">Wallpaper has been added to collection!</string>
   <string name="download_finished_success_message">Your wallpaper has finished downloading</string>
-  <string name="share_intent_message">Get high-quality wallpapers for your Android device with WallR at %1$s</string>
+  <string name="share_intent_message">Get high-quality wallpapers for your Android device with WallR</string>
   <string name="share_link_using">Share link using</string>
   <string name="preparing_shareable_wallpaper_message">Preparing shareable wallpaper...</string>
   <string name="not_enough_free_space_error_message">Low on memory. Please free some memory for app to work</string>
@@ -222,6 +222,7 @@
   <string name="collections_fragment_purchase_pro_diloag_description">This is a pro user only section. Please purchase pro to continue adding images to collection and using them offline and also to enable Automatic wallpaper changer</string>
   <string name="collections_fragment_purchase_pro_diloag_title">WallR Pro Required</string>
   <string name="collections_fragment_purchase_pro_diloag_positive_text">Purchase Pro</string>
+  <string name="collections_fragment_purchase_pro_diloag_negative_text">Go Back</string>
   <string name="collections_fragment_crystallized_image_already_present_error_message">This image has already been crystallized and added to your collection</string>
 
   <!-- Wallpaper changer service strings -->
@@ -232,5 +233,9 @@
   <string name="wallpaper_changer_service_interval_6_hours">6 hours</string>
   <string name="wallpaper_changer_service_interval_1_day">1 day</string>
   <string name="wallpaper_changer_service_interval_3_days">3 days</string>
+  <string name="permissions_required_rationale_title">Permissions Required</string>
+  <string name="permissions_required_rationale_content">Storage permissions are required by WallR to function. Please grant them in settings.</string>
+  <string name="permissions_required_rationale_positive_text">GO TO SETTINGS</string>
+  <string name="permissions_required_rationale_negative_text">GO BACK</string>
 
 </resources>

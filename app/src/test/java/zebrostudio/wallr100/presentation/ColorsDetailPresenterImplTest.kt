@@ -16,9 +16,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -38,44 +36,48 @@ import zebrostudio.wallr100.domain.interactor.ColorImagesUseCase
 import zebrostudio.wallr100.domain.interactor.UserPremiumStatusUseCase
 import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.EDITED
 import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageType.MINIMAL_COLOR
-import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.ADD_TO_COLLECTION
-import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.DOWNLOAD
-import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.EDIT_SET
-import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.LOAD_COLOR_WALLPAPER
-import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.QUICK_SET
-import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.SHARE
+import zebrostudio.wallr100.presentation.detail.colors.ColorsActionType.*
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailContract.ColorsDetailView
 import zebrostudio.wallr100.presentation.detail.colors.ColorsDetailPresenterImpl
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
-import java.util.UUID
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.*
+import java.util.*
 
 @RunWith(MockitoJUnitRunner::class)
 class ColorsDetailPresenterImplTest {
 
-  @Mock lateinit var colorImagesUseCase: ColorImagesUseCase
-  @Mock lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
-  @Mock lateinit var wallpaperSetter: WallpaperSetter
-  @Mock lateinit var colorsDetailView: ColorsDetailView
-  @Mock lateinit var postExecutionThread: PostExecutionThread
-  @Mock lateinit var permissionsChecker: PermissionsChecker
-  @Mock lateinit var resourceUtils: ResourceUtils
-  @Mock lateinit var mockBitmap: Bitmap
-  @Mock lateinit var mockUri: Uri
-  @Mock lateinit var mockDestiationUri: Uri
+  @Mock
+  lateinit var colorImagesUseCase: ColorImagesUseCase
+  @Mock
+  lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
+  @Mock
+  lateinit var wallpaperSetter: WallpaperSetter
+  @Mock
+  lateinit var colorsDetailView: ColorsDetailView
+  @Mock
+  lateinit var postExecutionThread: PostExecutionThread
+  @Mock
+  lateinit var permissionsChecker: PermissionsChecker
+  @Mock
+  lateinit var resourceUtils: ResourceUtils
+  @Mock
+  lateinit var mockBitmap: Bitmap
+  @Mock
+  lateinit var mockUri: Uri
+  @Mock
+  lateinit var mockDestiationUri: Uri
   private lateinit var colorsDetailPresenterImpl: ColorsDetailPresenterImpl
   private val randomString = UUID.randomUUID().toString()
 
-  @Before fun setup() {
+  @Before
+  fun setup() {
     colorsDetailPresenterImpl =
         ColorsDetailPresenterImpl(resourceUtils, postExecutionThread, userPremiumStatusUseCase,
-            colorImagesUseCase, wallpaperSetter, permissionsChecker)
+          colorImagesUseCase, wallpaperSetter, permissionsChecker)
 
     colorsDetailPresenterImpl.attachView(colorsDetailView)
 
     val testScopeProvider = TestLifecycleScopeProvider.createInitial(
-        TestLifecycleScopeProvider.TestLifecycle.STARTED)
+      TestLifecycleScopeProvider.TestLifecycle.STARTED)
     `when`(colorsDetailView.getScope()).thenReturn(testScopeProvider)
     stubPostExecutionThreadReturnsIoScheduler()
   }
@@ -233,7 +235,7 @@ class ColorsDetailPresenterImplTest {
         .getStringResource(R.string.colors_detail_activity_colors_style_name_solid))
         .thenReturn(randomString)
     `when`(colorImagesUseCase.getSingularColorBitmapSingle(randomString)).thenReturn(
-        Single.just(mockBitmap))
+      Single.just(mockBitmap))
 
     colorsDetailPresenterImpl.handleViewReadyState()
 
@@ -258,7 +260,7 @@ class ColorsDetailPresenterImplTest {
         .getStringResource(R.string.colors_detail_activity_colors_style_name_solid))
         .thenReturn(randomString)
     `when`(colorImagesUseCase.getSingularColorBitmapSingle(randomString)).thenReturn(
-        Single.error(Exception()))
+      Single.error(Exception()))
 
     colorsDetailPresenterImpl.handleViewReadyState()
 
@@ -283,7 +285,7 @@ class ColorsDetailPresenterImplTest {
         .getStringResource(R.string.colors_detail_activity_colors_style_name_material))
         .thenReturn(randomString)
     `when`(colorImagesUseCase.getMultiColorBitmapSingle(list,
-        MATERIAL)).thenReturn(Single.just(mockBitmap))
+      MATERIAL)).thenReturn(Single.just(mockBitmap))
     colorsDetailPresenterImpl.setColorsDetailMode(MULTIPLE)
     colorsDetailPresenterImpl.setColorList(list)
 
@@ -383,7 +385,7 @@ class ColorsDetailPresenterImplTest {
     assertEquals(false, colorsDetailPresenterImpl.areColorOperationsDisabled)
     verify(colorImagesUseCase).getMultiColorBitmapSingle(list, GRADIENT)
     verify(resourceUtils).getStringResource(
-        R.string.colors_detail_activity_colors_style_name_gradient)
+      R.string.colors_detail_activity_colors_style_name_gradient)
     verify(colorsDetailView).getMultiColorImageType()
     verifyImageNotShown()
     verifyPostExecutionThreadSchedulerCall()
@@ -460,9 +462,9 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.setColorList(list)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(LOAD_COLOR_WALLPAPER.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
     assertEquals(MATERIAL, colorsDetailPresenterImpl.multiColorImageType)
@@ -491,9 +493,9 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.setColorList(list)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(LOAD_COLOR_WALLPAPER.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
     assertEquals(GRADIENT, colorsDetailPresenterImpl.multiColorImageType)
@@ -522,9 +524,9 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.setColorList(list)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(LOAD_COLOR_WALLPAPER.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(MULTIPLE, colorsDetailPresenterImpl.colorsDetailMode)
     assertEquals(PLASMA, colorsDetailPresenterImpl.multiColorImageType)
@@ -552,9 +554,9 @@ class ColorsDetailPresenterImplTest {
     colorsDetailPresenterImpl.setColorList(list)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(LOAD_COLOR_WALLPAPER.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertEquals(SINGLE, colorsDetailPresenterImpl.colorsDetailMode)
     assertEquals(list, colorsDetailPresenterImpl.colorList)
@@ -569,21 +571,23 @@ class ColorsDetailPresenterImplTest {
   @Test
   fun `should show permission required and exit view on handlePermissionRequestResult call failure due to permission denied with load color wallpaper request code`() {
     colorsDetailPresenterImpl.handlePermissionRequestResult(LOAD_COLOR_WALLPAPER.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_DENIED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(colorsDetailView).exitView()
     verify(colorsDetailView).showPermissionRequiredMessage()
   }
 
-  @Test fun `should set panel expanded to true on notifyPanelExpanded call success`() {
+  @Test
+  fun `should set panel expanded to true on notifyPanelExpanded call success`() {
     colorsDetailPresenterImpl.notifyPanelExpanded()
 
     assertTrue(colorsDetailPresenterImpl.isPanelExpanded)
   }
 
-  @Test fun `should set panel expanded to false on notifyPanelCollapsed call success`() {
+  @Test
+  fun `should set panel expanded to false on notifyPanelCollapsed call success`() {
     colorsDetailPresenterImpl.notifyPanelCollapsed()
 
     assertFalse(colorsDetailPresenterImpl.isPanelExpanded)
@@ -645,7 +649,7 @@ class ColorsDetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(colorImagesUseCase.getBitmapSingle()).thenReturn(Single.error(java.lang.Exception()))
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)).thenReturn(
-        randomString)
+      randomString)
 
     colorsDetailPresenterImpl.handleQuickSetClick()
 
@@ -666,7 +670,7 @@ class ColorsDetailPresenterImplTest {
     stubGrantStoragePermissions()
     `when`(colorImagesUseCase.getBitmapSingle()).thenReturn(Single.just(mockBitmap))
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)).thenReturn(
-        randomString)
+      randomString)
 
     colorsDetailPresenterImpl.handleQuickSetClick()
 
@@ -691,9 +695,9 @@ class ColorsDetailPresenterImplTest {
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(colorImagesUseCase).getBitmapSingle()
@@ -715,9 +719,9 @@ class ColorsDetailPresenterImplTest {
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(colorImagesUseCase).getBitmapSingle()
@@ -734,9 +738,9 @@ class ColorsDetailPresenterImplTest {
   @Test
   fun `should show permission required on handlePermissionRequestResult call failure with quick set request code due to permission not being granted`() {
     colorsDetailPresenterImpl.handlePermissionRequestResult(QUICK_SET.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_DENIED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(colorsDetailView).showPermissionRequiredMessage()
   }
@@ -791,7 +795,8 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).requestStoragePermission(DOWNLOAD)
   }
 
-  @Test fun `should show error message on handleDownloadCLick call failure`() {
+  @Test
+  fun `should show error message on handleDownloadCLick call failure`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     stubGrantStoragePermissions()
@@ -851,9 +856,9 @@ class ColorsDetailPresenterImplTest {
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(userPremiumStatusUseCase).isUserPremium()
@@ -879,9 +884,9 @@ class ColorsDetailPresenterImplTest {
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(userPremiumStatusUseCase).isUserPremium()
@@ -899,9 +904,9 @@ class ColorsDetailPresenterImplTest {
   @Test
   fun `should show permission required message on handlePermissionRequestResult call failure with download request code due to permission not being granted`() {
     colorsDetailPresenterImpl.handlePermissionRequestResult(DOWNLOAD.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_DENIED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(colorsDetailView).showPermissionRequiredMessage()
   }
@@ -913,7 +918,7 @@ class ColorsDetailPresenterImplTest {
     `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(false)
 
     colorsDetailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(permissionsChecker).isReadPermissionAvailable()
@@ -928,7 +933,7 @@ class ColorsDetailPresenterImplTest {
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(false)
 
     colorsDetailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyStoragePermissionsCheckerCall()
@@ -946,7 +951,7 @@ class ColorsDetailPresenterImplTest {
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(userPremiumStatusUseCase).isUserPremium()
@@ -972,7 +977,7 @@ class ColorsDetailPresenterImplTest {
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handleViewResult(DOWNLOAD.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(userPremiumStatusUseCase).isUserPremium()
@@ -1024,7 +1029,8 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).requestStoragePermission(EDIT_SET)
   }
 
-  @Test fun `should start cropping activity on handleEditSetClick call success`() {
+  @Test
+  fun `should start cropping activity on handleEditSetClick call success`() {
     val width = 1
     val height = 2
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
@@ -1033,7 +1039,7 @@ class ColorsDetailPresenterImplTest {
         .thenReturn(randomString)
     `when`(colorImagesUseCase.getCroppingSourceUri()).thenReturn(Single.just(mockUri))
     `when`(colorImagesUseCase.getCroppingDestinationUri()).thenReturn(
-        Single.just(mockDestiationUri))
+      Single.just(mockDestiationUri))
     `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(width)
     `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(height)
 
@@ -1055,9 +1061,9 @@ class ColorsDetailPresenterImplTest {
   @Test
   fun `should show permission required on handlePermissionRequestResult call failure with edit set request code due to permission not granted`() {
     colorsDetailPresenterImpl.handlePermissionRequestResult(EDIT_SET.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_DENIED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(colorsDetailView).showPermissionRequiredMessage()
   }
@@ -1072,14 +1078,14 @@ class ColorsDetailPresenterImplTest {
         .thenReturn(randomString)
     `when`(colorImagesUseCase.getCroppingSourceUri()).thenReturn(Single.just(mockUri))
     `when`(colorImagesUseCase.getCroppingDestinationUri()).thenReturn(
-        Single.just(mockDestiationUri))
+      Single.just(mockDestiationUri))
     `when`(wallpaperSetter.getDesiredMinimumWidth()).thenReturn(width)
     `when`(wallpaperSetter.getDesiredMinimumHeight()).thenReturn(height)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(EDIT_SET.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(colorImagesUseCase).getCroppingSourceUri()
@@ -1098,7 +1104,7 @@ class ColorsDetailPresenterImplTest {
   fun `should show error on handleViewResult call failure with request type crop due to null crop uri`() {
     `when`(colorsDetailView.getUriFromResultIntent()).thenReturn(null)
     `when`(colorImagesUseCase.getBitmapFromUriSingle(null)).thenReturn(
-        Single.error(NullPointerException()))
+      Single.error(NullPointerException()))
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
 
@@ -1114,7 +1120,8 @@ class ColorsDetailPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should show error on handleViewResult call failure of request type crop`() {
+  @Test
+  fun `should show error on handleViewResult call failure of request type crop`() {
     `when`(colorsDetailView.getUriFromResultIntent()).thenReturn(mockUri)
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
@@ -1160,7 +1167,8 @@ class ColorsDetailPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should set wallpaper on handleViewResult call success of request type crop`() {
+  @Test
+  fun `should set wallpaper on handleViewResult call success of request type crop`() {
     `when`(colorsDetailView.getUriFromResultIntent()).thenReturn(mockUri)
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
@@ -1324,7 +1332,7 @@ class ColorsDetailPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(false)
     colorsDetailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
 
     verify(userPremiumStatusUseCase).isUserPremium()
@@ -1340,7 +1348,7 @@ class ColorsDetailPresenterImplTest {
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(false)
 
     colorsDetailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
 
     verify(userPremiumStatusUseCase).isUserPremium()
@@ -1357,17 +1365,17 @@ class ColorsDetailPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     stubGrantStoragePermissions()
     `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
-        MINIMAL_COLOR)).thenReturn(Completable.error(Exception()))
+      MINIMAL_COLOR)).thenReturn(Completable.error(Exception()))
     `when`(resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(colorImagesUseCase).saveToCollectionsCompletable(list.toString(),
-        MINIMAL_COLOR)
+      MINIMAL_COLOR)
     verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
     verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).getScope()
@@ -1386,17 +1394,17 @@ class ColorsDetailPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     stubGrantStoragePermissions()
     `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
-        MINIMAL_COLOR)).thenReturn(Completable.error(AlreadyPresentInCollectionException()))
+      MINIMAL_COLOR)).thenReturn(Completable.error(AlreadyPresentInCollectionException()))
     `when`(resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(colorImagesUseCase).saveToCollectionsCompletable(list.toString(),
-        MINIMAL_COLOR)
+      MINIMAL_COLOR)
     verify(resourceUtils).getStringResource(R.string.adding_image_to_collections_message)
     verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).getScope()
@@ -1420,7 +1428,7 @@ class ColorsDetailPresenterImplTest {
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handleViewResult(ADD_TO_COLLECTION.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(userPremiumStatusUseCase).isUserPremium()
@@ -1448,9 +1456,9 @@ class ColorsDetailPresenterImplTest {
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(userPremiumStatusUseCase).isUserPremium()
@@ -1473,14 +1481,14 @@ class ColorsDetailPresenterImplTest {
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     stubGrantStoragePermissions()
     `when`(colorImagesUseCase.saveToCollectionsCompletable(list.toString(),
-        MINIMAL_COLOR)).thenReturn(Completable.error(AlreadyPresentInCollectionException()))
+      MINIMAL_COLOR)).thenReturn(Completable.error(AlreadyPresentInCollectionException()))
     `when`(resourceUtils.getStringResource(R.string.adding_image_to_collections_message))
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(userPremiumStatusUseCase).isUserPremium()
@@ -1508,9 +1516,9 @@ class ColorsDetailPresenterImplTest {
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_GRANTED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(userPremiumStatusUseCase).isUserPremium()
@@ -1527,9 +1535,9 @@ class ColorsDetailPresenterImplTest {
   @Test
   fun `should show permission required on handlePermissionRequestResult call failure due to permission denied with add to collection request code`() {
     colorsDetailPresenterImpl.handlePermissionRequestResult(ADD_TO_COLLECTION.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_DENIED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(colorsDetailView).showPermissionRequiredMessage()
   }
@@ -1583,7 +1591,8 @@ class ColorsDetailPresenterImplTest {
     verify(colorsDetailView).requestStoragePermission(SHARE)
   }
 
-  @Test fun `should show generic error on handleShareClick call failure`() {
+  @Test
+  fun `should show generic error on handleShareClick call failure`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     stubGrantStoragePermissions()
@@ -1605,7 +1614,8 @@ class ColorsDetailPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should share image on handleShareClick call success`() {
+  @Test
+  fun `should share image on handleShareClick call success`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     stubGrantStoragePermissions()
@@ -1642,7 +1652,7 @@ class ColorsDetailPresenterImplTest {
     `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(false)
 
     colorsDetailPresenterImpl.handleViewResult(SHARE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(permissionsChecker).isReadPermissionAvailable()
@@ -1657,14 +1667,15 @@ class ColorsDetailPresenterImplTest {
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(false)
 
     colorsDetailPresenterImpl.handleViewResult(SHARE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verifyStoragePermissionsCheckerCall()
     verify(colorsDetailView).requestStoragePermission(SHARE)
   }
 
-  @Test fun `should show generic error on handleViewResult call failure with request code share`() {
+  @Test
+  fun `should show generic error on handleViewResult call failure with request code share`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     stubGrantStoragePermissions()
@@ -1673,7 +1684,7 @@ class ColorsDetailPresenterImplTest {
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handleViewResult(SHARE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(userPremiumStatusUseCase).isUserPremium()
@@ -1687,7 +1698,8 @@ class ColorsDetailPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should share image on handleViewResult call success with request code share`() {
+  @Test
+  fun `should share image on handleViewResult call success with request code share`() {
     colorsDetailPresenterImpl.areColorOperationsDisabled = false
     stubGrantStoragePermissions()
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
@@ -1696,7 +1708,7 @@ class ColorsDetailPresenterImplTest {
         .thenReturn(randomString)
 
     colorsDetailPresenterImpl.handleViewResult(SHARE.ordinal,
-        PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
+      PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE)
 
     assertFalse(colorsDetailPresenterImpl.isColorWallpaperOperationActive)
     verify(userPremiumStatusUseCase).isUserPremium()
@@ -1713,17 +1725,18 @@ class ColorsDetailPresenterImplTest {
   @Test
   fun `should show permission required message on handlePermissionRequestResult call failure due to permission denied with share request code`() {
     colorsDetailPresenterImpl.handlePermissionRequestResult(SHARE.ordinal,
-        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        intArrayOf(PackageManager.PERMISSION_DENIED))
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+      intArrayOf(PackageManager.PERMISSION_DENIED))
 
     verify(colorsDetailView).showPermissionRequiredMessage()
   }
 
-  @After fun tearDown() {
+  @After
+  fun tearDown() {
     verifyNoMoreInteractions(postExecutionThread, wallpaperSetter, userPremiumStatusUseCase,
-        colorImagesUseCase, colorsDetailView, resourceUtils, permissionsChecker, mockUri,
-        mockBitmap)
+      colorImagesUseCase, colorsDetailView, resourceUtils, permissionsChecker, mockUri,
+      mockBitmap)
     colorsDetailPresenterImpl.detachView()
   }
 

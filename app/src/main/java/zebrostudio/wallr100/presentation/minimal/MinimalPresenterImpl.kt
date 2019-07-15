@@ -7,13 +7,9 @@ import zebrostudio.wallr100.domain.interactor.MinimalImagesUseCase
 import zebrostudio.wallr100.domain.interactor.WidgetHintsUseCase
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.*
 import zebrostudio.wallr100.presentation.minimal.mapper.RestoreColorsPresenterEntityMapper
-import java.util.Collections
-import java.util.Random
-import java.util.TreeMap
+import java.util.*
 
 const val MINIMUM_SCROLL_DIST = 15
 const val INITIAL_SIZE = 0
@@ -75,8 +71,8 @@ class MinimalPresenterImpl(
     colorList: List<String>,
     selectedItemsMap: HashMap<Int, String>
   ) {
-    numberOfItemsToBeDeselectedToStartDeletion(colorList, selectedItemsMap).let {
-      if (it == INITIAL_SIZE) {
+    with(numberOfItemsToBeDeselectedToStartDeletion(colorList, selectedItemsMap)) {
+      if (this == INITIAL_SIZE) {
         val reversedSelectedItems = TreeMap<Int, String>(Collections.reverseOrder())
         minimalImagesUseCase.modifyColors(colorList, selectedItemsMap)
             .doOnSuccess {
@@ -99,7 +95,7 @@ class MinimalPresenterImpl(
               minimalView?.showDeleteColorsErrorMessage()
             })
       } else {
-        minimalView?.showDeselectBeforeDeletionMessage(it)
+        minimalView?.showDeselectBeforeDeletionMessage(this)
       }
     }
   }
@@ -143,7 +139,7 @@ class MinimalPresenterImpl(
       }
     } else {
       minimalView?.showColorAlreadyPresentErrorMessageAndScrollToPosition(
-          colorList.indexOf(hexValue) + INITIAL_OFFSET)
+        colorList.indexOf(hexValue) + INITIAL_OFFSET)
     }
   }
 

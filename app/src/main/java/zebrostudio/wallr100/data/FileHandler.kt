@@ -89,7 +89,7 @@ class FileHandlerImpl(private val context: Context) : FileHandler {
 
   override fun getShareableUri(): Uri {
     return FileProvider.getUriForFile(context,
-        context.applicationContext.packageName + ".provider", shareableFile)
+      context.applicationContext.packageName + ".provider", shareableFile)
   }
 
   override fun getShareableFile(): File {

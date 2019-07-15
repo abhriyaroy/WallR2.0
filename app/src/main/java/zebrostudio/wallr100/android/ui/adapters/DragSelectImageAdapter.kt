@@ -7,10 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.afollestad.dragselectrecyclerview.DragSelectReceiver
-import kotlinx.android.synthetic.main.item_recyclerview_minimal_fragment.view.addColorIcon
-import kotlinx.android.synthetic.main.item_recyclerview_minimal_fragment.view.colorThumbnail
-import kotlinx.android.synthetic.main.item_recyclerview_minimal_fragment.view.selectedIndicatorIcon
-import kotlinx.android.synthetic.main.item_recyclerview_minimal_fragment.view.selectedOverlay
+import kotlinx.android.synthetic.main.item_recyclerview_minimal_fragment.view.*
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.utils.colorRes
 import zebrostudio.wallr100.android.utils.gone
@@ -37,7 +34,7 @@ class DragSelectImageAdapter(
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MinimalViewHolder {
     return MinimalViewHolder(parent.inflate(LayoutInflater.from(parent.context),
-        R.layout.item_recyclerview_minimal_fragment), parent.context, callback)
+      R.layout.item_recyclerview_minimal_fragment), parent.context, callback)
   }
 
   override fun getItemCount(): Int {
@@ -46,7 +43,7 @@ class DragSelectImageAdapter(
 
   override fun onBindViewHolder(holder: MinimalViewHolder, position: Int) {
     presenter.onBindRepositoryRowViewAtPosition(holder.getDragSelectItemViewHolder(), colorList,
-        selectedHashMap, position)
+      selectedHashMap, position)
   }
 
   override fun setSelected(index: Int, selected: Boolean) {

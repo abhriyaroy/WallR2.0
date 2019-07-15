@@ -18,11 +18,11 @@ const val WALLPAPER_CHANGER_SERVICE_CODE = 1
 const val WALLPAPER_CHANGER_REQUEST_CODE = 2
 const val ILLEGAL_ACCESS_ERROR_MESSAGE = "Wallpaper changer service cannot be bounded to"
 val WALLPAPER_CHANGER_INTERVALS_LIST = listOf<Long>(
-    TimeUnit.MINUTES.toMillis(30),
-    TimeUnit.HOURS.toMillis(1),
-    TimeUnit.HOURS.toMillis(6),
-    TimeUnit.DAYS.toMillis(1),
-    TimeUnit.DAYS.toMillis(3)
+  TimeUnit.MINUTES.toMillis(30),
+  TimeUnit.HOURS.toMillis(1),
+  TimeUnit.HOURS.toMillis(6),
+  TimeUnit.DAYS.toMillis(1),
+  TimeUnit.DAYS.toMillis(3)
 )
 
 class AutomaticWallpaperChangerServiceImpl : Service(), AutomaticWallpaperChangerService {
@@ -40,8 +40,8 @@ class AutomaticWallpaperChangerServiceImpl : Service(), AutomaticWallpaperChange
 
   override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
     startForeground(WALLPAPER_CHANGER_SERVICE_CODE,
-        notificationFactory.getWallpaperChangerNotification(
-            automaticWallpaperChangerUseCase.getIntervalAsString()))
+      notificationFactory.getWallpaperChangerNotification(
+        automaticWallpaperChangerUseCase.getIntervalAsString()))
     automaticWallpaperChangerUseCase.startAutomaticWallpaperChangerProcess()
     return START_NOT_STICKY
   }

@@ -2,7 +2,7 @@ package zebrostudio.wallr100.android.utils
 
 import android.os.SystemClock
 import android.view.View
-import java.util.WeakHashMap
+import java.util.*
 
 abstract class DebouncedOnClickListener(private val minimumInterval: Long = 1000) :
     View.OnClickListener {

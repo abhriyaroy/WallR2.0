@@ -5,11 +5,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_recyclerview_collections.view.imageView
 import kotlinx.android.synthetic.main.item_recyclerview_minimal_fragment.view.selectedIndicatorIcon
 import kotlinx.android.synthetic.main.item_recyclerview_minimal_fragment.view.selectedOverlay
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.ui.ImageLoader
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.ItemTouchHelperAdapter
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.OnStartDragListener
 import zebrostudio.wallr100.android.utils.gone
@@ -27,7 +27,8 @@ interface CollectionsImageAdapterCallbacks {
 class CollectionsImageAdapter(
   private val collectionsImageAdapterCallback: CollectionsImageAdapterCallbacks,
   private val startDragListener: OnStartDragListener,
-  private val presenter: CollectionRecyclerPresenter
+  private val presenter: CollectionRecyclerPresenter,
+  private val imageLoader: ImageLoader
 ) : RecyclerView.Adapter<CollectionsImageViewHolder>(), ItemTouchHelperAdapter {
 
   private var imagePathList = mutableListOf<CollectionsPresenterEntity>()
@@ -38,9 +39,9 @@ class CollectionsImageAdapter(
     viewType: Int
   ): CollectionsImageViewHolder {
     return CollectionsImageViewHolder(
-        viewGroupParent.inflate(LayoutInflater.from(viewGroupParent.context),
-            R.layout.item_recyclerview_collections), viewGroupParent.context,
-        collectionsImageAdapterCallback, startDragListener)
+      viewGroupParent.inflate(LayoutInflater.from(viewGroupParent.context),
+        R.layout.item_recyclerview_collections), viewGroupParent.context,
+      collectionsImageAdapterCallback, startDragListener, imageLoader)
   }
 
   override fun getItemCount(): Int {
@@ -49,7 +50,7 @@ class CollectionsImageAdapter(
 
   override fun onBindViewHolder(viewHolder: CollectionsImageViewHolder, position: Int) {
     presenter.onBindRepositoryRowViewAtPosition(viewHolder, imagePathList, selectedHashMap,
-        position)
+      position)
   }
 
   override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
@@ -78,14 +79,13 @@ class CollectionsImageViewHolder(
   itemView: View,
   private val context: Context,
   private val callback: CollectionsImageAdapterCallbacks,
-  private val startDragListener: OnStartDragListener
+  private val startDragListener: OnStartDragListener,
+  private val imageLoader: ImageLoader
 ) : RecyclerView.ViewHolder(itemView),
     CollectionsRecyclerItemViewHolder {
 
   override fun setImage(imagePath: String) {
-    Glide.with(context)
-        .load(imagePath)
-        .into(itemView.imageView)
+    imageLoader.load(context, imagePath, itemView.imageView)
   }
 
   override fun showSelectedIndicator() {

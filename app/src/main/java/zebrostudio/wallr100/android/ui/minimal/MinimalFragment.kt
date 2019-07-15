@@ -20,13 +20,9 @@ import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerView
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.activity_main.minimalBottomLayout
-import kotlinx.android.synthetic.main.activity_main.minimalBottomLayoutFab
-import kotlinx.android.synthetic.main.activity_main.spinner
-import kotlinx.android.synthetic.main.activity_main.spinnerStubView
-import kotlinx.android.synthetic.main.fragment_minimal.minimalFragmentRecyclerView
-import kotlinx.android.synthetic.main.fragment_minimal.minimalFragmentRootLayout
-import kotlinx.android.synthetic.main.toolbar_layout.toolbarMultiSelectIcon
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_minimal.*
+import kotlinx.android.synthetic.main.toolbar_layout.*
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.ui.adapters.DragSelectImageAdapter
@@ -34,18 +30,7 @@ import zebrostudio.wallr100.android.ui.adapters.DragSelectImageAdapterCallbacks
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailActivity
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.MULTIPLE
 import zebrostudio.wallr100.android.ui.detail.colors.ColorsDetailMode.SINGLE
-import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
-import zebrostudio.wallr100.android.utils.colorRes
-import zebrostudio.wallr100.android.utils.errorToast
-import zebrostudio.wallr100.android.utils.gone
-import zebrostudio.wallr100.android.utils.inflate
-import zebrostudio.wallr100.android.utils.infoToast
-import zebrostudio.wallr100.android.utils.integerRes
-import zebrostudio.wallr100.android.utils.menuTitleToast
-import zebrostudio.wallr100.android.utils.showAnimation
-import zebrostudio.wallr100.android.utils.stringRes
-import zebrostudio.wallr100.android.utils.successToast
-import zebrostudio.wallr100.android.utils.visible
+import zebrostudio.wallr100.android.utils.*
 import zebrostudio.wallr100.presentation.adapters.DragSelectRecyclerContract.DragSelectItemPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalPresenter
 import zebrostudio.wallr100.presentation.minimal.MinimalContract.MinimalView
@@ -57,8 +42,10 @@ const val BOTTOM_OFFSET = 3
 
 class MinimalFragment : BaseFragment(), MinimalView {
 
-  @Inject internal lateinit var presenter: MinimalPresenter
-  @Inject internal lateinit var recyclerPresenter: DragSelectItemPresenter
+  @Inject
+  internal lateinit var presenter: MinimalPresenter
+  @Inject
+  internal lateinit var recyclerPresenter: DragSelectItemPresenter
   private var dragSelectImageAdapter: DragSelectImageAdapter? = null
   private var touchListener: DragSelectTouchListener? = null
   private var colorPickerDialog: MaterialDialog? = null
@@ -127,7 +114,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
       onSelection {
         if (it.itemId == R.id.delete) {
           presenter.handleDeleteMenuItemClick(dragSelectImageAdapter!!.getColorList(),
-              dragSelectImageAdapter!!.getSelectedItemsMap())
+            dragSelectImageAdapter!!.getSelectedItemsMap())
         }
         true
       }
@@ -146,7 +133,11 @@ class MinimalFragment : BaseFragment(), MinimalView {
   override fun showBottomPanelWithAnimation() {
     activity?.let {
       it.minimalBottomLayout?.showAnimation(R.anim.slide_up, onAnimationEnd = {
-        it.spinner?.isEnabled = true
+        it.spinner?.apply {
+          visible()
+          isClickable = true
+          isEnabled = true
+        }
         it.minimalBottomLayout?.apply {
           visible()
           isClickable = true
@@ -168,17 +159,18 @@ class MinimalFragment : BaseFragment(), MinimalView {
       it.minimalBottomLayout?.showAnimation(R.anim.slide_down, onAnimationStart = {
         it.minimalBottomLayout?.isClickable = false
       }, onAnimationEnd = {
+        it.spinner?.gone()
         it.spinner?.isEnabled = false
         it.minimalBottomLayout?.gone()
       })
 
       it.minimalBottomLayoutFab?.showAnimation(R.anim.shrink_reverse_circular_reveal,
-          onAnimationEnd = {
-            it.minimalBottomLayoutFab?.apply {
-              gone()
-              isClickable = false
-            }
-          })
+        onAnimationEnd = {
+          it.minimalBottomLayoutFab?.apply {
+            gone()
+            isClickable = false
+          }
+        })
     }
   }
 
@@ -191,7 +183,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
       stringRes(R.string.minimal_fragment_deselect_1_color_message)
     } else {
       stringRes(R.string.minimal_fragment_deselect_x_colors_message,
-          numberOfItemsToBeDeselected)
+        numberOfItemsToBeDeselected)
     }.let {
       errorToast(it)
     }
@@ -221,7 +213,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
           val colorPickerHexTextView =
               dialog.findViewById(R.id.colorPickerHexTextView) as TextView
           presenter.handleColorPickerPositiveClick(colorPickerHexTextView.text as String,
-              dragSelectImageAdapter!!.getColorList())
+            dragSelectImageAdapter!!.getColorList())
         }
         .build()
     colorPickerDialog?.show()
@@ -286,7 +278,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
   override fun getTopAndBottomVisiblePositions(): Pair<Int, Int> {
     return (minimalFragmentRecyclerView.layoutManager as GridLayoutManager).let {
       Pair(it.findFirstCompletelyVisibleItemPosition(),
-          it.findLastCompletelyVisibleItemPosition() - BOTTOM_OFFSET)
+        it.findLastCompletelyVisibleItemPosition() - BOTTOM_OFFSET)
     }
   }
 
@@ -322,32 +314,32 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
   override fun showMultiColorImageModesHint() {
     TapTargetView.showFor(activity,
-        TapTarget.forView(activity?.spinnerStubView,
-            stringRes(R.string.minimal_fragment_multi_color_hint_title),
-            stringRes(R.string.minimal_fragment_multi_color_hint_description))
-            .dimColor(android.R.color.transparent)
-            .outerCircleColor(R.color.accent)
-            .transparentTarget(true)
-            .targetCircleColor(R.color.tap_target_hint_inner_circle)
-            .textColor(android.R.color.white)
-            .cancelable(true),
-        object : TapTargetView.Listener() {
-          override fun onTargetClick(view: TapTargetView) {
-            super.onTargetClick(view)
-            presenter.handleHintDismissed()
-            activity?.spinner?.expand()
-          }
+      TapTarget.forView(activity?.spinnerStubView,
+        stringRes(R.string.minimal_fragment_multi_color_hint_title),
+        stringRes(R.string.minimal_fragment_multi_color_hint_description))
+          .dimColor(android.R.color.transparent)
+          .outerCircleColor(R.color.accent)
+          .transparentTarget(true)
+          .targetCircleColor(R.color.tap_target_hint_inner_circle)
+          .textColor(android.R.color.white)
+          .cancelable(true),
+      object : TapTargetView.Listener() {
+        override fun onTargetClick(view: TapTargetView) {
+          super.onTargetClick(view)
+          presenter.handleHintDismissed()
+          activity?.spinner?.expand()
+        }
 
-          override fun onTargetDismissed(view: TapTargetView?, userInitiated: Boolean) {
-            super.onTargetDismissed(view, userInitiated)
-            presenter.handleHintDismissed()
-          }
+        override fun onTargetDismissed(view: TapTargetView?, userInitiated: Boolean) {
+          super.onTargetDismissed(view, userInitiated)
+          presenter.handleHintDismissed()
+        }
 
-          override fun onOuterCircleClick(view: TapTargetView?) {
-            super.onTargetClick(view!!)
-            view.dismiss(true)
-          }
-        })
+        override fun onOuterCircleClick(view: TapTargetView?) {
+          super.onTargetClick(view!!)
+          view.dismiss(true)
+        }
+      })
   }
 
   override fun showMultiColorDetails(hexValueList: List<String>, type: MultiColorImageType) {
@@ -359,12 +351,12 @@ class MinimalFragment : BaseFragment(), MinimalView {
   private fun initRecyclerView() {
     minimalFragmentRecyclerView?.apply {
       GridLayoutManager(context,
-          integerRes(R.integer.minimal_image_recycler_view_span_count)).let {
+        integerRes(R.integer.minimal_image_recycler_view_span_count)).let {
         layoutManager = it
       }
       addItemDecoration(
-          RecyclerViewItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
-              integerRes(R.integer.minimal_image_recycler_view_grid_size)))
+        RecyclerViewItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
+          integerRes(R.integer.minimal_image_recycler_view_grid_size)))
       dragSelectImageAdapter =
           DragSelectImageAdapter(getDragSelectRecyclerViewCallback(), recyclerPresenter)
       adapter = dragSelectImageAdapter
@@ -384,9 +376,9 @@ class MinimalFragment : BaseFragment(), MinimalView {
   private fun initBottomPanel() {
     activity?.spinner?.apply {
       setItems(
-          stringRes(R.string.minimal_fragment_spinner_item_material),
-          stringRes(R.string.minimal_fragment_spinner_item_gradient),
-          stringRes(R.string.minimal_fragment_spinner_item_plasma))
+        stringRes(R.string.minimal_fragment_spinner_item_material),
+        stringRes(R.string.minimal_fragment_spinner_item_gradient),
+        stringRes(R.string.minimal_fragment_spinner_item_plasma))
       // To guarantee popup opening upwards
       setDropdownHeight(Int.MAX_VALUE)
       setOnItemSelectedListener { _, position, _, _ ->
@@ -404,8 +396,8 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
         setOnLongClickListener { view ->
           view.menuTitleToast(context!!,
-              stringRes(R.string.minimal_fragment_toolbar_menu_multiselect_title),
-              activity!!.window)
+            stringRes(R.string.minimal_fragment_toolbar_menu_multiselect_title),
+            activity!!.window)
           true
         }
       }
@@ -419,7 +411,7 @@ class MinimalFragment : BaseFragment(), MinimalView {
   private fun getDragSelectRecyclerViewCallback() = object : DragSelectImageAdapterCallbacks {
     override fun setItemSelected(index: Int, selected: Boolean) {
       presenter.setItemSelected(index, selected, dragSelectImageAdapter!!.getColorList(),
-          dragSelectImageAdapter!!.getSelectedItemsMap())
+        dragSelectImageAdapter!!.getSelectedItemsMap())
     }
 
     override fun isItemSelected(index: Int): Boolean {
@@ -432,12 +424,12 @@ class MinimalFragment : BaseFragment(), MinimalView {
 
     override fun handleClick(index: Int) {
       return presenter.handleClick(index, dragSelectImageAdapter!!.getColorList(),
-          dragSelectImageAdapter!!.getSelectedItemsMap())
+        dragSelectImageAdapter!!.getSelectedItemsMap())
     }
 
     override fun handleLongClick(index: Int): Boolean {
       return presenter.handleImageLongClick(index, dragSelectImageAdapter!!.getColorList(),
-          dragSelectImageAdapter!!.getSelectedItemsMap())
+        dragSelectImageAdapter!!.getSelectedItemsMap())
     }
 
   }

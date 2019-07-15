@@ -17,19 +17,12 @@ import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import dagger.android.support.AndroidSupportInjection
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
-import kotlinx.android.synthetic.main.fragment_image_list.view.errorInfoRelativeLayout
-import kotlinx.android.synthetic.main.fragment_image_list.view.recyclerView
-import kotlinx.android.synthetic.main.fragment_image_list.view.spinkitView
-import kotlinx.android.synthetic.main.fragment_image_list.view.swipeRefreshLayout
+import kotlinx.android.synthetic.main.fragment_image_list.view.*
 import zebrostudio.wallr100.R
+import zebrostudio.wallr100.android.ui.ImageLoader
 import zebrostudio.wallr100.android.ui.adapters.ImageAdapter
-import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
-import zebrostudio.wallr100.android.utils.checkDataConnection
-import zebrostudio.wallr100.android.utils.gone
-import zebrostudio.wallr100.android.utils.inflate
-import zebrostudio.wallr100.android.utils.integerRes
-import zebrostudio.wallr100.android.utils.visible
-import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract
+import zebrostudio.wallr100.android.utils.*
+import zebrostudio.wallr100.presentation.adapters.ImageRecyclerItemContract.ImageRecyclerViewPresenter
 import zebrostudio.wallr100.presentation.adapters.ImageRecyclerViewPresenterImpl.ImageListType.WALLPAPERS
 import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListPresenter
 import zebrostudio.wallr100.presentation.wallpaper.ImageListContract.ImageListView
@@ -40,8 +33,11 @@ import javax.inject.Inject
 class ImageListFragment : Fragment(), ImageListView {
 
   @Inject
-  internal lateinit var imageRecyclerViewPresenter: ImageRecyclerItemContract.ImageRecyclerViewPresenter
-  @Inject internal lateinit var presenter: ImageListPresenter
+  internal lateinit var imageRecyclerViewPresenter: ImageRecyclerViewPresenter
+  @Inject
+  internal lateinit var presenter: ImageListPresenter
+  @Inject
+  internal lateinit var imageLoader: ImageLoader
 
   private var recyclerviewAdapter: ImageAdapter? = null
   private var spinkitView: SpinKitView? = null
@@ -55,20 +51,26 @@ class ImageListFragment : Fragment(), ImageListView {
   }
 
   override fun onCreateView(
-    inflater: LayoutInflater, container: ViewGroup?,
+    inflater: LayoutInflater,
+    container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
     return container?.inflate(inflater, R.layout.fragment_image_list)
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
     super.onViewCreated(view, savedInstanceState)
     initViews(view)
     configureSwipeRefreshLayout()
     presenter.attachView(this)
     val parentFragment = this.parentFragment as WallpaperFragment
-    presenter.setImageListType(parentFragment.fragmentTag,
-        FragmentPagerItem.getPosition(arguments))
+    presenter.setImageListType(
+      parentFragment.fragmentTag,
+      FragmentPagerItem.getPosition(arguments)
+    )
     presenter.fetchImages(false)
   }
 
@@ -123,21 +125,26 @@ class ImageListFragment : Fragment(), ImageListView {
     val layoutManager =
         GridLayoutManager(context, integerRes(R.integer.recycler_view_span_count))
     recyclerView?.layoutManager = layoutManager
-    recyclerviewAdapter = ImageAdapter(imageRecyclerViewPresenter)
+    recyclerviewAdapter = ImageAdapter(imageRecyclerViewPresenter, imageLoader)
     val scaleInAdapter = ScaleInAnimationAdapter(recyclerviewAdapter)
     scaleInAdapter.setDuration(MILLISECONDS.toMillis(500).toInt())
     recyclerView?.addItemDecoration(
-        RecyclerViewItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
-            integerRes(R.integer.recycler_view_grid_size)))
+      RecyclerViewItemDecorator(
+        integerRes(R.integer.recycler_view_grid_spacing_px),
+        integerRes(R.integer.recycler_view_grid_size)
+      )
+    )
     recyclerView?.adapter = scaleInAdapter
     imageRecyclerViewPresenter.setListType(WALLPAPERS)
   }
 
   private fun configureSwipeRefreshLayout() {
     swipeRefreshLayout?.setColorSchemeColors(Color.WHITE, Color.WHITE)
-    swipeRefreshLayout?.setWaveRGBColor(integerRes(R.integer.swipe_refresh_rgb_wave),
-        integerRes(R.integer.swipe_refresh_rgb_wave),
-        integerRes(R.integer.swipe_refresh_rgb_wave))
+    swipeRefreshLayout?.setWaveRGBColor(
+      integerRes(R.integer.swipe_refresh_rgb_wave),
+      integerRes(R.integer.swipe_refresh_rgb_wave),
+      integerRes(R.integer.swipe_refresh_rgb_wave)
+    )
     if (swipeRefreshLayout?.isRefreshing == false) {
       swipeRefreshLayout?.setOnRefreshListener {
         presenter.fetchImages(true)

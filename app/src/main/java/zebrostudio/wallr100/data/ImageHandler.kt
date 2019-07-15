@@ -1,13 +1,8 @@
 package zebrostudio.wallr100.data
 
 import android.content.Context
-import android.graphics.Bitmap
+import android.graphics.*
 import android.graphics.Bitmap.CompressFormat.JPEG
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.LinearGradient
-import android.graphics.Paint
 import android.graphics.Paint.Style.FILL
 import android.graphics.Shader.TileMode.CLAMP
 import android.graphics.Shader.TileMode.MIRROR
@@ -26,19 +21,11 @@ import zebrostudio.wallr100.data.database.entity.CollectionDatabaseImageEntity
 import zebrostudio.wallr100.data.exception.AlreadyPresentInCollectionException
 import zebrostudio.wallr100.data.exception.ImageDownloadException
 import zebrostudio.wallr100.presentation.minimal.MultiColorImageType
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.GRADIENT
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.MATERIAL
-import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.PLASMA
-import java.io.BufferedOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
+import zebrostudio.wallr100.presentation.minimal.MultiColorImageType.*
+import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.ArrayList
-import java.util.Random
+import java.util.*
 
 interface ImageHandler {
   fun isImageCached(link: String): Boolean
@@ -282,11 +269,11 @@ class ImageHandlerImpl(
         uriList.forEach { uri ->
           saveFileToCollections(uri).let { outputFile ->
             databaseHelper.getDatabase().collectionsDao().insert(CollectionDatabaseImageEntity(
-                UID_AUTO_INCREMENT,
-                outputFile.name,
-                outputFile.path,
-                uri.toString(),
-                DatabaseImageType.EXTERNAL.ordinal
+              UID_AUTO_INCREMENT,
+              outputFile.name,
+              outputFile.path,
+              uri.toString(),
+              DatabaseImageType.EXTERNAL.ordinal
             ))
           }
         }
@@ -320,7 +307,7 @@ class ImageHandlerImpl(
           bitmapArray[i] = colorValue
         }
         Bitmap.createBitmap(bitmapArray, COLOR_BITMAP_SIZE, COLOR_BITMAP_SIZE,
-            Bitmap.Config.ARGB_8888)
+          Bitmap.Config.ARGB_8888)
       }.let { bitmap ->
         fileHandler.getCacheFile().outputStream()
             .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
@@ -386,11 +373,11 @@ class ImageHandlerImpl(
           file.outputStream()
               .writeInputStreamUsingByteArray(inputStream, BYTE_ARRAY_SIZE)
           databaseHelper.getDatabase().collectionsDao().insert(CollectionDatabaseImageEntity(
-              UID_AUTO_INCREMENT,
-              file.name,
-              file.path,
-              data,
-              type.ordinal
+            UID_AUTO_INCREMENT,
+            file.name,
+            file.path,
+            data,
+            type.ordinal
           ))
         }
         inputStream.close()
@@ -423,13 +410,13 @@ class ImageHandlerImpl(
         collectionsDao.deleteAllData()
         collectionDatabaseImageEntityList.forEach {
           collectionsDao.insert(
-              CollectionDatabaseImageEntity(
-                  UID_AUTO_INCREMENT,
-                  it.name,
-                  it.path,
-                  it.data,
-                  it.type
-              )
+            CollectionDatabaseImageEntity(
+              UID_AUTO_INCREMENT,
+              it.name,
+              it.path,
+              it.data,
+              it.type
+            )
           )
         }
       }
@@ -495,7 +482,7 @@ class ImageHandlerImpl(
     val startingXCoordinate = (canvas.width - smallHeight) / 2
     val startingYCoordinate = (canvas.height - smallHeight) / 2
     return Bitmap.createBitmap(bigBitmap, startingXCoordinate, startingYCoordinate, smallHeight,
-        smallHeight)
+      smallHeight)
   }
 
   private fun createGradientBitmap(colors: ArrayList<String>): Bitmap {
@@ -507,7 +494,7 @@ class ImageHandlerImpl(
     }
     val paint = Paint()
     val gradientShader = LinearGradient(0f, 0f, height.toFloat(), height.toFloat(), colorsInt,
-        null, CLAMP)
+      null, CLAMP)
     val canvas = Canvas(wallpaperBitmap)
     paint.shader = gradientShader
     canvas.drawRect(0f, 0f, height.toFloat(), height.toFloat(), paint)
@@ -524,7 +511,7 @@ class ImageHandlerImpl(
     val paint = Paint()
     val gradientBitmap = Bitmap.createBitmap(256, 1, Bitmap.Config.ARGB_8888)
     val gradientShader = LinearGradient(0f, 0f, 255f, 0f, colorsInt, null,
-        MIRROR)
+      MIRROR)
     val canvas = Canvas(gradientBitmap)
     paint.shader = gradientShader
     canvas.drawRect(0f, 0f, 256f, 1f, paint)
@@ -547,7 +534,7 @@ class ImageHandlerImpl(
             + 128.0 + 128.0 * Math.sin(y / period2)
             + 128.0 + 128.0 * Math.sin((x + y) / period1)
             + 128.0 + 128.0 * Math.sin(
-            Math.sqrt((x * x + y * y).toDouble()) / period3)).toInt() / 4
+          Math.sqrt((x * x + y * y).toDouble()) / period3)).toInt() / 4
         plasma[x][y] = value
       }
     for (x in 0 until height)
@@ -556,7 +543,7 @@ class ImageHandlerImpl(
         wallpaperBitmap.setPixel(x, y, color)
       }
     return Bitmap.createScaledBitmap(wallpaperBitmap, wallpaperSetter.getDesiredMinimumWidth(),
-        wallpaperSetter.getDesiredMinimumHeight(), true)
+      wallpaperSetter.getDesiredMinimumHeight(), true)
   }
 
 }

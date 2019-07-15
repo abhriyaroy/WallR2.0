@@ -18,7 +18,6 @@ interface BuyProContract {
     fun isIabReady(): Boolean
     fun launchPurchase()
     fun launchRestore()
-
   }
 
   interface BuyProPresenter : BasePresenter<BuyProView> {

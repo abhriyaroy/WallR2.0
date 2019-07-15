@@ -9,8 +9,7 @@ import zebrostudio.wallr100.domain.model.collectionsimages.CollectionsImageModel
 import zebrostudio.wallr100.presentation.collection.Model.CollectionsPresenterEntity
 import zebrostudio.wallr100.presentation.collection.mapper.CollectionImagesPresenterEntityMapper
 import zebrostudio.wallr100.presentation.collection.mapper.CollectionsImagesPresenterEntityMapperImpl
-import java.util.Random
-import java.util.UUID
+import java.util.*
 
 @RunWith(MockitoJUnitRunner::class)
 class CollectionImagesPresenterEntityMapperTest {
@@ -20,7 +19,8 @@ class CollectionImagesPresenterEntityMapperTest {
   private lateinit var collectionPresenterEntity: CollectionsPresenterEntity
   private lateinit var collectionPresenterEntityList: List<CollectionsPresenterEntity>
 
-  @Before fun setup() {
+  @Before
+  fun setup() {
     collectionsImagesPresenterEntityMapper = CollectionsImagesPresenterEntityMapperImpl()
     val uid = Random().nextLong()
     val name = UUID.randomUUID().toString()

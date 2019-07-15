@@ -8,8 +8,7 @@ import android.view.ViewGroup
 import com.ogaclejapan.smarttablayout.SmartTabLayout
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems
-import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_wallpaper.view.wallpaperFragmentViewPager
+import kotlinx.android.synthetic.main.fragment_wallpaper.view.*
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
 import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
@@ -22,11 +21,6 @@ import zebrostudio.wallr100.android.utils.visible
 class WallpaperFragment : BaseFragment() {
 
   private var wallpaperFragmentViewPager: ViewPager? = null
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    AndroidSupportInjection.inject(this)
-  }
 
   override fun onCreateView(
     inflater: LayoutInflater,

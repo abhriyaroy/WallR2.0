@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
 
   <com.skydoves.colorpickerview.ColorPickerView
-      android:id="@+id/colorPickerView"
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/color_picker_view_height"
-      app:palette="@drawable/palette"
-      app:selector="@drawable/wheel"
-      android:layout_margin="@dimen/color_picker_view_margin"/>
+    android:id="@+id/colorPickerView"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/color_picker_view_height"
+    android:layout_margin="@dimen/color_picker_view_margin"
+    app:palette="@drawable/palette"
+    app:selector="@drawable/wheel" />
 
   <RelativeLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_below="@id/colorPickerView"
-      android:layout_centerHorizontal="true">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/colorPickerView"
+    android:layout_centerHorizontal="true">
 
     <View
-        android:id="@+id/sampleColorView"
-        android:layout_width="@dimen/sample_color_view_width"
-        android:layout_height="@dimen/sample_color_view_height"
-        android:background="@color/white"/>
+      android:id="@+id/sampleColorView"
+      android:layout_width="@dimen/sample_color_view_width"
+      android:layout_height="@dimen/sample_color_view_height"
+      android:background="@color/white" />
 
     <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-        android:id="@+id/colorPickerHexTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="@dimen/sample_color_hex_text_view_margin_left"
-        android:layout_toRightOf="@id/sampleColorView"
-        android:layout_centerVertical="true"
-        android:textSize="@dimen/sample_color_hex_text_view_text_size"
-        android:text="@color/white"/>
+      android:id="@+id/colorPickerHexTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerHorizontal="true"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="@dimen/sample_color_hex_text_view_margin_left"
+      android:layout_toRightOf="@id/sampleColorView"
+      android:text="@color/white"
+      android:textSize="@dimen/sample_color_hex_text_view_text_size" />
 
   </RelativeLayout>
 

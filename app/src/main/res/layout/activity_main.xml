@@ -1,206 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rootFrameLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="zebrostudio.wallr100.ui.main.MainActivity">
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:fab="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/rootFrameLayout"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context="zebrostudio.wallr100.ui.main.MainActivity">
 
   <View
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/guillotine_actionbar_background_view_height"
-      android:layout_gravity="top"
-      android:background="@color/primary"/>
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/guillotine_actionbar_background_view_height"
+    android:layout_gravity="top"
+    android:background="@color/primary" />
 
   <android.support.design.widget.CoordinatorLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+      android:id="@+id/appbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:fitsSystemWindows="true">
 
       <android.support.v7.widget.Toolbar
-          android:id="@+id/toolbar"
-          app:contentInsetStart="@dimen/toolbar_contentinset_start"
-          app:layout_scrollFlags="scroll|enterAlways|snap"
-          app:popupTheme="@style/OverflowMenuTheme"
-          style="@style/ToolbarTheme">
+        android:id="@+id/toolbar"
+        style="@style/ToolbarTheme"
+        app:contentInsetStart="@dimen/toolbar_contentinset_start"
+        app:layout_scrollFlags="scroll|enterAlways|snap"
+        app:popupTheme="@style/OverflowMenuTheme">
 
-        <include layout="@layout/toolbar_layout"/>
+        <include layout="@layout/toolbar_layout" />
 
       </android.support.v7.widget.Toolbar>
 
       <com.ogaclejapan.smarttablayout.SmartTabLayout
-          android:id="@+id/tabLayout"
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/main_activity_tab_layout_height"
-          android:textAlignment="center"
-          app:stl_indicatorAlwaysInCenter="true"
-          app:stl_indicatorWithoutPadding="false"
-          app:stl_indicatorInFront="false"
-          app:stl_indicatorInterpolation="smart"
-          app:stl_indicatorGravity="bottom"
-          app:stl_indicatorColor="#e51c23"
-          app:stl_indicatorThickness="@dimen/main_activity_tab_layout_indicator_thickness"
-          app:stl_indicatorWidth="auto"
-          app:stl_indicatorCornerRadius="@dimen/main_activity_tab_layout_corner_radius"
-          app:stl_overlineColor="@color/smart_tab_layout_overline"
-          app:stl_overlineThickness="@dimen/main_activity_tab_layout_overline_thickness"
-          app:stl_underlineColor="@color/smart_tab_layout_overline"
-          app:stl_underlineThickness="@dimen/main_activity_tab_layout_underline_thickness"
-          app:stl_dividerColor="@color/smart_tab_layout_overline"
-          app:stl_dividerThickness="@dimen/main_activity_tab_layout_divider_thickness"
-          app:stl_defaultTabBackground="?attr/selectableItemBackground"
-          app:stl_defaultTabTextAllCaps="true"
-          app:stl_defaultTabTextColor="@color/white"
-          app:stl_defaultTabTextSize="@dimen/main_activity_tab_layout_text_size"
-          app:stl_defaultTabTextHorizontalPadding="@dimen/main_activity_tab_layout_text_horizontal_padding"
-          app:stl_defaultTabTextMinWidth="@dimen/main_activity_tab_layout_text_min_width"
-          app:stl_distributeEvenly="false"
-          app:stl_clickable="true"
-          app:stl_titleOffset="@dimen/main_activity_tab_layout_title_offset"
-          app:stl_drawDecorationAfterTab="true"/>
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_activity_tab_layout_height"
+        android:textAlignment="center"
+        app:stl_clickable="true"
+        app:stl_defaultTabBackground="?attr/selectableItemBackground"
+        app:stl_defaultTabTextAllCaps="true"
+        app:stl_defaultTabTextColor="@color/white"
+        app:stl_defaultTabTextHorizontalPadding="@dimen/main_activity_tab_layout_text_horizontal_padding"
+        app:stl_defaultTabTextMinWidth="@dimen/main_activity_tab_layout_text_min_width"
+        app:stl_defaultTabTextSize="@dimen/main_activity_tab_layout_text_size"
+        app:stl_distributeEvenly="false"
+        app:stl_dividerColor="@color/smart_tab_layout_overline"
+        app:stl_dividerThickness="@dimen/main_activity_tab_layout_divider_thickness"
+        app:stl_drawDecorationAfterTab="true"
+        app:stl_indicatorAlwaysInCenter="true"
+        app:stl_indicatorColor="#e51c23"
+        app:stl_indicatorCornerRadius="@dimen/main_activity_tab_layout_corner_radius"
+        app:stl_indicatorGravity="bottom"
+        app:stl_indicatorInFront="false"
+        app:stl_indicatorInterpolation="smart"
+        app:stl_indicatorThickness="@dimen/main_activity_tab_layout_indicator_thickness"
+        app:stl_indicatorWidth="auto"
+        app:stl_indicatorWithoutPadding="false"
+        app:stl_overlineColor="@color/smart_tab_layout_overline"
+        app:stl_overlineThickness="@dimen/main_activity_tab_layout_overline_thickness"
+        app:stl_titleOffset="@dimen/main_activity_tab_layout_title_offset"
+        app:stl_underlineColor="@color/smart_tab_layout_overline"
+        app:stl_underlineThickness="@dimen/main_activity_tab_layout_underline_thickness" />
 
       <RelativeLayout
-          android:id="@+id/switchLayout"
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/main_activity_switch_layout_height"
-          android:background="@color/primary">
+        android:id="@+id/switchLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_activity_switch_layout_height"
+        android:background="@color/primary">
 
         <android.support.v7.widget.SwitchCompat
-            android:id="@+id/switchView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:theme="@style/SwitchTheme"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/main_activity_switch_view_margin_right"
-            android:layout_centerVertical="true"
-            android:checked="false"/>
+          android:id="@+id/switchView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_marginRight="@dimen/main_activity_switch_view_margin_right"
+          android:checked="false"
+          android:theme="@style/SwitchTheme" />
 
         <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/switchView"
-            android:layout_alignParentLeft="true"
-            android:paddingLeft="@dimen/main_activity_switch_layout_textview_padding_left"
-            android:text="@string/main_activity_switch_layout_automatic_wallpaper_changer"
-            android:textColor="@color/dove_gray"
-            android:textSize="@dimen/main_activity_switch_layout_text_size"
-            android:maxLines="1"
-            android:ellipsize="end"/>
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:layout_alignParentLeft="true"
+          android:layout_centerVertical="true"
+          android:layout_toLeftOf="@id/switchView"
+          android:ellipsize="end"
+          android:maxLines="1"
+          android:paddingLeft="@dimen/main_activity_switch_layout_textview_padding_left"
+          android:text="@string/main_activity_switch_layout_automatic_wallpaper_changer"
+          android:textColor="@color/dove_gray"
+          android:textSize="@dimen/main_activity_switch_layout_text_size" />
 
       </RelativeLayout>
 
     </android.support.design.widget.AppBarLayout>
 
     <ViewStub
-        android:id="@+id/cabStub"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"/>
+      android:id="@+id/cabStub"
+      android:layout_width="match_parent"
+      android:layout_height="?actionBarSize" />
 
     <FrameLayout
-        android:id="@+id/fragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/primary"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+      android:id="@+id/fragmentContainer"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/primary"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
   </android.support.design.widget.CoordinatorLayout>
 
   <RelativeLayout
-      android:id="@+id/minimalBottomLayout"
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/main_activity_minimal_bottom_layout_height"
-      android:layout_gravity="bottom">
+    android:id="@+id/minimalBottomLayout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/main_activity_minimal_bottom_layout_height"
+    android:layout_gravity="bottom">
 
     <View
-        android:id="@+id/shadow_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/shadow_top_height"
-        android:background="@drawable/shadow_top"
-        android:layout_alignParentTop="true"/>
+      android:id="@+id/shadow_spinner"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/shadow_top_height"
+      android:layout_alignParentTop="true"
+      android:background="@drawable/shadow_top" />
 
     <android.support.percent.PercentRelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@id/shadow_spinner"
-        android:background="@color/primary_dark">
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@id/shadow_spinner"
+      android:layout_alignParentBottom="true"
+      android:background="@color/primary_dark">
 
       <com.jaredrummler.materialspinner.MaterialSpinner
-          android:id="@+id/spinner"
-          android:layout_height="wrap_content"
-          app:layout_widthPercent="35%"
-          app:ms_dropdown_max_height="@dimen/main_activity_material_spinner_max_height"
-          app:ms_dropdown_height="wrap_content"
-          app:ms_background_color="@color/primary_dark"/>
+        android:id="@+id/spinner"
+        android:layout_height="wrap_content"
+        app:layout_widthPercent="35%"
+        app:ms_background_color="@color/primary_dark"
+        app:ms_dropdown_height="wrap_content"
+        app:ms_dropdown_max_height="@dimen/main_activity_material_spinner_max_height" />
 
       <View
-          android:id="@+id/spinnerStubView"
-          app:layout_widthPercent="5%"
-          android:layout_marginLeft="@dimen/main_activity_spinner_stub_margin_left"
-          android:clickable="false"/>
+        android:id="@+id/spinnerStubView"
+        android:layout_marginLeft="@dimen/main_activity_spinner_stub_margin_left"
+        android:clickable="false"
+        app:layout_widthPercent="5%" />
 
     </android.support.percent.PercentRelativeLayout>
 
   </RelativeLayout>
 
   <com.getbase.floatingactionbutton.FloatingActionButton
-      android:id="@+id/minimalBottomLayoutFab"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="11dp"
-      fab:fab_colorNormal="@color/accent"
-      fab:fab_colorPressed="@color/fab_ripple"
-      fab:fab_icon="@drawable/ic_arrow_forward_white_small"
-      android:layout_gravity="bottom|end"
-      android:layout_marginBottom="@dimen/main_activity_fab_margin_botom"
-      android:elevation="8dp"
-      android:visibility="visible"/>
+    android:id="@+id/minimalBottomLayoutFab"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|end"
+    android:layout_marginEnd="11dp"
+    android:layout_marginBottom="@dimen/main_activity_fab_margin_botom"
+    android:elevation="8dp"
+    android:visibility="visible"
+    fab:fab_colorNormal="@color/accent"
+    fab:fab_colorPressed="@color/fab_ripple"
+    fab:fab_icon="@drawable/ic_arrow_forward_white_small" />
 
   <eightbitlab.com.blurview.BlurView
-      android:id="@+id/blurView"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:visibility="gone"
-      android:clickable="true"
-      android:longClickable="true">
+    android:id="@+id/blurView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:longClickable="true"
+    android:visibility="gone">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
 
       <com.github.ybq.android.spinkit.SpinKitView
-          android:id="@+id/wallpaperActionProgressSpinkit"
-          style="@style/SpinKitView.Large.FoldingCube"
-          android:layout_width="wrap_content"
-          android:layout_height="@dimen/wallpaper_action_progress_spinkit_height"
-          android:layout_centerInParent="true"
-          android:padding="@dimen/wallpaper_action_progress_spinkit_padding"
-          android:visibility="gone"
-          app:SpinKit_Color="@color/white"/>
+        android:id="@+id/wallpaperActionProgressSpinkit"
+        style="@style/SpinKitView.Large.FoldingCube"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/wallpaper_action_progress_spinkit_height"
+        android:layout_centerInParent="true"
+        android:padding="@dimen/wallpaper_action_progress_spinkit_padding"
+        android:visibility="gone"
+        app:SpinKit_Color="@color/white" />
 
 
       <com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
-          android:id="@+id/loadingHintBelowProgressSpinkit"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_below="@id/wallpaperActionProgressSpinkit"
-          android:layout_centerHorizontal="true"
-          android:layout_marginTop="@dimen/detail_activity_loading_hint_below_progress_spinkit_margin_top"
-          android:paddingTop="@dimen/detail_activity_loading_hint_below_progress_spinkit_padding_top"
-          android:text="@string/finalizing_wallpaper_messsage"
-          android:textSize="@dimen/detail_activity_loading_hint_below_progress_spinkit_text_size"
-          android:visibility="gone"
-          android:maxLines="1"
-          android:ellipsize="end"/>
+        android:id="@+id/loadingHintBelowProgressSpinkit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wallpaperActionProgressSpinkit"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/detail_activity_loading_hint_below_progress_spinkit_margin_top"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingTop="@dimen/detail_activity_loading_hint_below_progress_spinkit_padding_top"
+        android:text="@string/finalizing_wallpaper_messsage"
+        android:textSize="@dimen/detail_activity_loading_hint_below_progress_spinkit_text_size"
+        android:visibility="gone" />
 
     </RelativeLayout>
 

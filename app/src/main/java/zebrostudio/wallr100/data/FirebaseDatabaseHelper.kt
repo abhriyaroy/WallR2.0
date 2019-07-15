@@ -2,18 +2,14 @@ package zebrostudio.wallr100.data
 
 import android.content.Context
 import com.google.firebase.FirebaseApp
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.gson.Gson
 import io.reactivex.Single
 
 interface FirebaseDatabaseHelper {
 
   fun getDatabase(): FirebaseDatabase
-  fun fetch(databaseReference: DatabaseReference): Single<Map<String, String>>
+  fun fetch(databaseReference: DatabaseReference): Single<ArrayList<String>>
 }
 
 class FirebaseDatabaseHelperImpl(private val context: Context) : FirebaseDatabaseHelper {
@@ -28,20 +24,20 @@ class FirebaseDatabaseHelperImpl(private val context: Context) : FirebaseDatabas
     return firebaseDatabase as FirebaseDatabase
   }
 
-  override fun fetch(databaseReference: DatabaseReference): Single<Map<String, String>> {
+  override fun fetch(databaseReference: DatabaseReference): Single<ArrayList<String>> {
     return Single.create { singleSubscriber ->
-      val map = hashMapOf<String, String>()
+      val arrayList = arrayListOf<String>()
       databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
 
         override fun onDataChange(dataSnapshot: DataSnapshot) {
           dataSnapshot.children.forEach {
             try {
-              map[it.key.toString()] = Gson().toJson(it.value)
+              arrayList.add(Gson().toJson(it.value))
             } catch (e: NumberFormatException) {
               e.printStackTrace()
             }
           }
-          singleSubscriber.onSuccess(map)
+          singleSubscriber.onSuccess(arrayList)
         }
 
         override fun onCancelled(databaseError: DatabaseError) {

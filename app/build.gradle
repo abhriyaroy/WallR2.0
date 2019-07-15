@@ -1,24 +1,26 @@
-buildscript {
-  repositories {
-    maven { url 'https://plugins.gradle.org/m2/' }
-  }
-  dependencies {
-    classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.11.0, 0.99.99]'
-  }
-}
 apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
-
-repositories {
-  maven { url 'https://maven.google.com' }
-}
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply from: "../versions.gradle"
 
+def keystorePropertiesFile = project.file("signing.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
+  lintOptions{
+    abortOnError false
+  }
+  signingConfigs {
+    release {
+      keyAlias keystoreProperties['keyAlias']
+      keyPassword keystoreProperties['keyPassword']
+      storeFile file(keystoreProperties['storeFile'])
+      storePassword keystoreProperties['storePassword']
+    }
+  }
   compileSdkVersion COMPILE_SDK_VERSION
   defaultConfig {
     applicationId "zebrostudio.wallr100"
@@ -32,14 +34,20 @@ android {
 
     manifestPlaceholders = [onesignal_app_id               : "ff94f0fe-e700-4b66-9f26-5408fca95297",
                             onesignal_google_project_number: "REMOTE"]
+
+    signingConfig signingConfigs.release
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
   buildTypes {
     release {
-      minifyEnabled true
       debuggable false
+      minifyEnabled true
+      proguardFiles 'proguard-rules.pro'
     }
     debug {
       minifyEnabled false
+      proguardFiles 'proguard-rules.pro'
     }
   }
   testOptions {
@@ -88,8 +96,6 @@ android {
     annotationProcessor "com.github.bumptech.glide:compiler:$GLIDE_VERSION"
     // Material Dialog
     implementation "com.afollestad.material-dialogs:core:$MATERIAL_DIALOG_VERSION"
-    // Ripple View
-    implementation "com.balysv:material-ripple:$RIPPLE_LAYOUT_VERSION"
     // Recyclerview Animator
     implementation "jp.wasabeef:recyclerview-animators:$RECYCLER_VIEW_ANIMATOR_VERSION"
     // Firebase
@@ -134,7 +140,9 @@ android {
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_VERSION"
     // Instrumentation test runners
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION"
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:$ESPRESSO_VERSION"
     androidTestImplementation "com.android.support.test:rules:$TEST_RULES_VERSION"
+    androidTestImplementation "com.android.support.test:runner:$TEST_RUNNER_VERSION"
   }
 }
 apply plugin: 'com.google.gms.google-services'

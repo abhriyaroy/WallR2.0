@@ -12,6 +12,10 @@ android {
     versionName LIBRARY_WALLRCUSTOMS_VERSION_NAME
   }
 
+  lintOptions {
+    abortOnError false
+  }
+
   buildTypes {
     release {
       minifyEnabled true

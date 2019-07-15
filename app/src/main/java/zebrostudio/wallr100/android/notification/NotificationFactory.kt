@@ -34,9 +34,9 @@ class NotificationFactoryImpl(private val context: Context) : NotificationFactor
   private fun createNotificationChannel() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       val serviceChannel = NotificationChannel(
-          NOTIFICATION_CHANNEL_ID,
-          NOTIFICATION_CHANNEL_NAME,
-          NotificationManager.IMPORTANCE_HIGH
+        NOTIFICATION_CHANNEL_ID,
+        NOTIFICATION_CHANNEL_NAME,
+        NotificationManager.IMPORTANCE_HIGH
       )
       getSystemService(context, NotificationManager::class.java)!!
           .createNotificationChannel(serviceChannel)
@@ -45,13 +45,13 @@ class NotificationFactoryImpl(private val context: Context) : NotificationFactor
 
   private fun createAutomaticWallpaperChangerNotification(interval: String): Notification {
     val pendingIntent = PendingIntent.getActivity(context,
-        WALLPAPER_CHANGER_REQUEST_CODE,
-        Intent(context, MainActivity::class.java),
-        0)
+      WALLPAPER_CHANGER_REQUEST_CODE,
+      Intent(context, MainActivity::class.java),
+      0)
     return NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
         .setContentTitle(context.stringRes(R.string.wallpaper_changer_service_notification_title))
         .setContentText("${context.stringRes(
-            R.string.wallpaper_changer_service_notification_description)} $interval")
+          R.string.wallpaper_changer_service_notification_description)} $interval")
         .setSmallIcon(R.drawable.ic_wallr)
         .setContentIntent(pendingIntent)
         .setPriority(NotificationCompat.PRIORITY_MAX)

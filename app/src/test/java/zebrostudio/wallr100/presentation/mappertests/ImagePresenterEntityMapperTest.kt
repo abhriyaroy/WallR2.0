@@ -5,24 +5,17 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import zebrostudio.wallr100.domain.model.images.ImageAuthorModel
-import zebrostudio.wallr100.domain.model.images.ImageLinkModel
-import zebrostudio.wallr100.domain.model.images.ImageModel
-import zebrostudio.wallr100.domain.model.images.ImageResolutionModel
-import zebrostudio.wallr100.domain.model.images.ImageSizeModel
+import zebrostudio.wallr100.domain.model.images.*
 import zebrostudio.wallr100.presentation.wallpaper.mapper.ImagePresenterEntityMapper
-import zebrostudio.wallr100.presentation.wallpaper.model.ImageAuthorPresenterEntity
-import zebrostudio.wallr100.presentation.wallpaper.model.ImageLinkPresenterEntity
-import zebrostudio.wallr100.presentation.wallpaper.model.ImagePresenterEntity
-import zebrostudio.wallr100.presentation.wallpaper.model.ImageResolutionPresenterEntity
-import zebrostudio.wallr100.presentation.wallpaper.model.ImageSizePresenterEntity
-import java.util.UUID
+import zebrostudio.wallr100.presentation.wallpaper.model.*
+import java.util.*
 
 @RunWith(MockitoJUnitRunner::class)
 class ImagePresenterEntityMapperTest {
   private lateinit var imagePresenterEntityMapper: ImagePresenterEntityMapper
 
-  @Before fun setup() {
+  @Before
+  fun setup() {
     imagePresenterEntityMapper = ImagePresenterEntityMapper()
   }
 
@@ -50,27 +43,27 @@ class ImagePresenterEntityMapperTest {
     val referral = UUID.randomUUID().toString()
 
     val imagePresenterEntity = ImagePresenterEntity(
-        ImageLinkPresenterEntity(imageSmallLink, imageThumbLink, imageMediumLink, imageLargeLink,
-            imageRawLink),
-        ImageAuthorPresenterEntity(authorName, authorProfileImageUrl),
-        ImageResolutionPresenterEntity(imageSmallResolution, imageThumbResolution,
-            imageMediumResolution,
-            imageLargeResolution, imageRawResolution),
-        ImageSizePresenterEntity(imageSmallSize, imageThumbSize, imageRegularSize, imageLargeSize,
-            imageRawSize),
-        color, timestamp, referral)
+      ImageLinkPresenterEntity(imageSmallLink, imageThumbLink, imageMediumLink, imageLargeLink,
+        imageRawLink),
+      ImageAuthorPresenterEntity(authorName, authorProfileImageUrl),
+      ImageResolutionPresenterEntity(imageSmallResolution, imageThumbResolution,
+        imageMediumResolution,
+        imageLargeResolution, imageRawResolution),
+      ImageSizePresenterEntity(imageSmallSize, imageThumbSize, imageRegularSize, imageLargeSize,
+        imageRawSize),
+      color, timestamp, referral)
 
     val imageModel = ImageModel(
-        ImageLinkModel(imageSmallLink, imageThumbLink, imageMediumLink, imageLargeLink,
-            imageRawLink),
-        ImageAuthorModel(authorName, authorProfileImageUrl),
-        ImageResolutionModel(imageSmallResolution, imageThumbResolution, imageMediumResolution,
-            imageLargeResolution, imageRawResolution),
-        ImageSizeModel(imageSmallSize, imageThumbSize, imageRegularSize, imageLargeSize,
-            imageRawSize),
-        color, timestamp, referral)
+      ImageLinkModel(imageSmallLink, imageThumbLink, imageMediumLink, imageLargeLink,
+        imageRawLink),
+      ImageAuthorModel(authorName, authorProfileImageUrl),
+      ImageResolutionModel(imageSmallResolution, imageThumbResolution, imageMediumResolution,
+        imageLargeResolution, imageRawResolution),
+      ImageSizeModel(imageSmallSize, imageThumbSize, imageRegularSize, imageLargeSize,
+        imageRawSize),
+      color, timestamp, referral)
 
     Assert.assertEquals(listOf(imagePresenterEntity),
-        imagePresenterEntityMapper.mapToPresenterEntity(listOf(imageModel)))
+      imagePresenterEntityMapper.mapToPresenterEntity(listOf(imageModel)))
   }
 }

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.support.design.widget.AppBarLayout
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v7.app.AppCompatActivity
@@ -16,12 +17,7 @@ import android.support.v7.widget.SwitchCompat
 import android.support.v7.widget.Toolbar
 import android.support.v7.widget.Toolbar.OnMenuItemClickListener
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.RelativeLayout
 import com.afollestad.materialcab.MaterialCab
 import com.afollestad.materialdialogs.MaterialDialog
@@ -33,14 +29,11 @@ import com.qingmei2.rximagepicker_extension_zhihu.ZhihuConfigurationBuilder
 import com.uber.autodispose.autoDisposable
 import dagger.android.support.AndroidSupportInjection
 import eightbitlab.com.blurview.RenderScriptBlur
-import kotlinx.android.synthetic.main.activity_main.blurView
-import kotlinx.android.synthetic.main.activity_main.loadingHintBelowProgressSpinkit
-import kotlinx.android.synthetic.main.activity_main.rootFrameLayout
-import kotlinx.android.synthetic.main.activity_main.wallpaperActionProgressSpinkit
-import kotlinx.android.synthetic.main.fragment_collection.collectionsRecyclerView
-import kotlinx.android.synthetic.main.fragment_collection.imagesAbsentLayout
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_collection.*
 import zebrostudio.wallr100.R
 import zebrostudio.wallr100.android.ui.BaseFragment
+import zebrostudio.wallr100.android.ui.ImageLoader
 import zebrostudio.wallr100.android.ui.adapters.CollectionsImageAdapter
 import zebrostudio.wallr100.android.ui.adapters.CollectionsImageAdapterCallbacks
 import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper.CollectionRecyclerTouchHelperCallback
@@ -48,17 +41,7 @@ import zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelpe
 import zebrostudio.wallr100.android.ui.buypro.BuyProActivity
 import zebrostudio.wallr100.android.ui.detail.images.BLUR_RADIUS
 import zebrostudio.wallr100.android.ui.main.BlockBackPressListener
-import zebrostudio.wallr100.android.utils.RecyclerViewItemDecorator
-import zebrostudio.wallr100.android.utils.colorRes
-import zebrostudio.wallr100.android.utils.errorToast
-import zebrostudio.wallr100.android.utils.gone
-import zebrostudio.wallr100.android.utils.inflate
-import zebrostudio.wallr100.android.utils.infoToast
-import zebrostudio.wallr100.android.utils.integerRes
-import zebrostudio.wallr100.android.utils.stringRes
-import zebrostudio.wallr100.android.utils.successToast
-import zebrostudio.wallr100.android.utils.visible
-import zebrostudio.wallr100.android.utils.withDelayOnMain
+import zebrostudio.wallr100.android.utils.*
 import zebrostudio.wallr100.presentation.adapters.CollectionRecyclerContract.CollectionRecyclerPresenter
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionPresenter
 import zebrostudio.wallr100.presentation.collection.CollectionContract.CollectionView
@@ -84,8 +67,12 @@ class CollectionFragment : BaseFragment(),
     OnStartDragListener,
     CollectionsImageAdapterCallbacks {
 
-  @Inject internal lateinit var presenter: CollectionPresenter
-  @Inject internal lateinit var recyclerPresenter: CollectionRecyclerPresenter
+  @Inject
+  internal lateinit var presenter: CollectionPresenter
+  @Inject
+  internal lateinit var recyclerPresenter: CollectionRecyclerPresenter
+  @Inject
+  internal lateinit var imageLoader: ImageLoader
 
   private lateinit var collectionRecyclerTouchHelperCallback: CollectionRecyclerTouchHelperCallback
   private lateinit var itemTouchHelper: ItemTouchHelper
@@ -114,6 +101,7 @@ class CollectionFragment : BaseFragment(),
 
   override fun onResume() {
     super.onResume()
+    showWallpaperChangerLayoutIfSuitable()
     presenter.attachView(this)
   }
 
@@ -137,7 +125,7 @@ class CollectionFragment : BaseFragment(),
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    presenter.handleActivityResult()
+    presenter.handleViewResult()
   }
 
   override fun onMenuItemClick(item: MenuItem): Boolean {
@@ -160,7 +148,13 @@ class CollectionFragment : BaseFragment(),
 
   override fun handleClick(index: Int) {
     presenter.handleItemClicked(index, collectionsImageAdapter.getImagePathList(),
-        collectionsImageAdapter.getSelectedItemsMap())
+      collectionsImageAdapter.getSelectedItemsMap())
+  }
+
+  override fun onRequestPermissionsResult(requestCode: Int,
+    permissions: Array<String>,
+    grantResults: IntArray) {
+    presenter.handlePermissionRequestResult(requestCode, permissions, grantResults)
   }
 
   override fun showAppBarWithDelay() {
@@ -198,19 +192,21 @@ class CollectionFragment : BaseFragment(),
         .title(stringRes(R.string.collections_fragment_purchase_pro_diloag_title))
         .content(stringRes(R.string.collections_fragment_purchase_pro_diloag_description))
         .onPositive { _, _ -> redirectToBuyProActivity() }
+        .onNegative { _, _ -> fragmentManager?.popBackStack() }
         .cancelable(false)
         .positiveText(stringRes(R.string.collections_fragment_purchase_pro_diloag_positive_text))
+        .negativeText(stringRes(R.string.collections_fragment_purchase_pro_diloag_negative_text))
         .show()
   }
 
   override fun redirectToBuyPro() {
     startActivityForResult(Intent(context, BuyProActivity::class.java),
-        COLLECTION_FRAGMENT_REQUEST_CODE)
+      COLLECTION_FRAGMENT_REQUEST_CODE)
   }
 
   override fun requestStoragePermission() {
     requestPermissions(activity!!, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE), COLLECTION_FRAGMENT_REQUEST_CODE)
+      Manifest.permission.WRITE_EXTERNAL_STORAGE), COLLECTION_FRAGMENT_REQUEST_CODE)
   }
 
   override fun showReorderImagesHintWithDelay() {
@@ -218,29 +214,29 @@ class CollectionFragment : BaseFragment(),
       collectionsRecyclerView.getChildAt(REORDER_HINT_VIEW_POSITION)
           .findViewById<View>(R.id.hintStubView).let {
             TapTargetView.showFor(activity!!,
-                TapTarget.forView(it,
-                    stringRes(R.string.collections_fragment_drag_to_reorder_hint_title),
-                    stringRes(R.string.collections_fragment_drag_to_reorder_hint_description))
-                    .dimColor(android.R.color.transparent)
-                    .outerCircleColor(R.color.accent)
-                    .targetCircleColor(R.color.concrete)
-                    .transparentTarget(true)
-                    .textColor(android.R.color.white)
-                    .cancelable(true),
-                object : TapTargetView.Listener() {
-                  override fun onTargetClick(view: TapTargetView) {
-                    super.onTargetClick(view)
-                    presenter.handleReorderImagesHintHintDismissed()
-                  }
+              TapTarget.forView(it,
+                stringRes(R.string.collections_fragment_drag_to_reorder_hint_title),
+                stringRes(R.string.collections_fragment_drag_to_reorder_hint_description))
+                  .dimColor(android.R.color.transparent)
+                  .outerCircleColor(R.color.accent)
+                  .targetCircleColor(R.color.concrete)
+                  .transparentTarget(true)
+                  .textColor(android.R.color.white)
+                  .cancelable(true),
+              object : TapTargetView.Listener() {
+                override fun onTargetClick(view: TapTargetView) {
+                  super.onTargetClick(view)
+                  presenter.handleReorderImagesHintHintDismissed()
+                }
 
-                  override fun onTargetDismissed(view: TapTargetView, userInitiated: Boolean) {
-                    presenter.handleReorderImagesHintHintDismissed()
-                  }
+                override fun onTargetDismissed(view: TapTargetView, userInitiated: Boolean) {
+                  presenter.handleReorderImagesHintHintDismissed()
+                }
 
-                  override fun onOuterCircleClick(view: TapTargetView) {
-                    view.dismiss(true)
-                  }
-                })
+                override fun onOuterCircleClick(view: TapTargetView) {
+                  view.dismiss(true)
+                }
+              })
           }
     }
   }
@@ -279,12 +275,12 @@ class CollectionFragment : BaseFragment(),
 
   override fun showWallpaperChangerIntervalUpdatedSuccessMessage() {
     successToast(stringRes(
-        R.string.collections_fragment_wallpaper_changer_interval_updated_success_message))
+      R.string.collections_fragment_wallpaper_changer_interval_updated_success_message))
   }
 
   override fun showWallpaperChangerRestartedSuccessMessage() {
     successToast(stringRes(
-        R.string.collections_fragment_wallpaper_changer_service_restarted_success_message))
+      R.string.collections_fragment_wallpaper_changer_service_restarted_success_message))
   }
 
   override fun showWallpaperChangerIntervalDialog(choice: Int) {
@@ -300,7 +296,7 @@ class CollectionFragment : BaseFragment(),
           true
         }
         .positiveText(
-            stringRes(R.string.collections_fragment_wallpaper_changer_dilog_positive_text))
+          stringRes(R.string.collections_fragment_wallpaper_changer_dilog_positive_text))
         .show()
   }
 
@@ -329,7 +325,7 @@ class CollectionFragment : BaseFragment(),
 
   override fun showMultipleImagesAddedSuccessfullyMessage(count: Int) {
     successToast(
-        stringRes(R.string.collections_fragment_add_multiple_image_success_message, count))
+      stringRes(R.string.collections_fragment_add_multiple_image_success_message, count))
   }
 
   override fun removeItemView(position: Int) {
@@ -368,19 +364,19 @@ class CollectionFragment : BaseFragment(),
       closeDrawableRes = R.drawable.ic_close_white
       titleColor = colorRes(R.color.white)
       title = stringRes(R.string.minimal_fragment_cab_title,
-          collectionsImageAdapter.getSelectedItemsMap().size)
+        collectionsImageAdapter.getSelectedItemsMap().size)
       backgroundColor = colorRes(R.color.primary)
       backgroundColorRes(R.color.primary)
 
       onSelection {
         when (it.itemId) {
           R.id.setWallpaperMenuItem -> presenter.handleSetWallpaperMenuItemClicked(
-              collectionsImageAdapter.getSelectedItemsMap())
+            collectionsImageAdapter.getSelectedItemsMap())
           R.id.crystallizeWallpaperMenuItem -> presenter.handleCrystallizeWallpaperMenuItemClicked(
-              collectionsImageAdapter.getSelectedItemsMap())
+            collectionsImageAdapter.getSelectedItemsMap())
           R.id.deleteWallpaperMenuItem -> presenter.handleDeleteWallpaperMenuItemClicked(
-              collectionsImageAdapter.getImagePathList(),
-              collectionsImageAdapter.getSelectedItemsMap()
+            collectionsImageAdapter.getImagePathList(),
+            collectionsImageAdapter.getSelectedItemsMap()
           )
         }
         true
@@ -399,15 +395,15 @@ class CollectionFragment : BaseFragment(),
       closeDrawableRes = R.drawable.ic_close_white
       titleColor = colorRes(R.color.white)
       title = stringRes(R.string.minimal_fragment_cab_title,
-          collectionsImageAdapter.getSelectedItemsMap().size)
+        collectionsImageAdapter.getSelectedItemsMap().size)
       backgroundColor = colorRes(R.color.primary)
       backgroundColorRes(R.color.primary)
 
       onSelection {
         if (it.itemId == R.id.deleteWallpaperMenuItem) {
           presenter.handleDeleteWallpaperMenuItemClicked(
-              collectionsImageAdapter.getImagePathList(),
-              collectionsImageAdapter.getSelectedItemsMap()
+            collectionsImageAdapter.getImagePathList(),
+            collectionsImageAdapter.getSelectedItemsMap()
           )
         }
         true
@@ -466,7 +462,7 @@ class CollectionFragment : BaseFragment(),
 
   override fun showCrystallizedImageAlreadyPresentInCollectionErrorMessage() {
     infoToast(
-        stringRes(R.string.collections_fragment_crystallized_image_already_present_error_message))
+      stringRes(R.string.collections_fragment_crystallized_image_already_present_error_message))
   }
 
   override fun showCrystallizeSuccessMessage() {
@@ -496,6 +492,29 @@ class CollectionFragment : BaseFragment(),
     backPressListener.releaseBackPressBlock()
   }
 
+  override fun showPermissionRequestRationale() {
+    MaterialDialog.Builder(context!!)
+        .backgroundColor(colorRes(R.color.primary))
+        .title(stringRes(R.string.permissions_required_rationale_title))
+        .content(stringRes(R.string.permissions_required_rationale_content))
+        .positiveText(stringRes(R.string.permissions_required_rationale_positive_text))
+        .negativeText(stringRes(R.string.permissions_required_rationale_negative_text))
+        .contentColor(colorRes(R.color.white))
+        .positiveColor(colorRes(R.color.accent))
+        .negativeColor(colorRes(R.color.accent))
+        .cancelable(false)
+        .onPositive { _, _ ->
+          Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", activity!!.packageName, null)).let {
+            startActivity(it)
+          }
+        }
+        .onNegative{_,_->
+          fragmentManager?.popBackStack()
+        }
+        .show()
+  }
+
   private fun initView() {
     activity?.findViewById<Toolbar>(R.id.toolbar)?.setOnMenuItemClickListener(this)
     initRecyclerViewWithListeners()
@@ -505,7 +524,7 @@ class CollectionFragment : BaseFragment(),
 
   private fun initRecyclerViewWithListeners() {
     collectionsImageAdapter = CollectionsImageAdapter(
-        this, this, recyclerPresenter)
+      this, this, recyclerPresenter, imageLoader)
     collectionRecyclerTouchHelperCallback =
         CollectionRecyclerTouchHelperCallback(collectionsImageAdapter)
     itemTouchHelper = ItemTouchHelper(collectionRecyclerTouchHelperCallback)
@@ -514,8 +533,8 @@ class CollectionFragment : BaseFragment(),
         layoutManager = it
       }
       addItemDecoration(
-          RecyclerViewItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
-              integerRes(R.integer.recycler_view_grid_size)))
+        RecyclerViewItemDecorator(integerRes(R.integer.recycler_view_grid_spacing_px),
+          integerRes(R.integer.recycler_view_grid_size)))
       adapter = collectionsImageAdapter
       itemTouchHelper.attachToRecyclerView(this)
     }
@@ -540,7 +559,13 @@ class CollectionFragment : BaseFragment(),
 
   private fun redirectToBuyProActivity() {
     startActivityForResult(Intent(context!!, BuyProActivity::class.java),
-        COLLECTION_FRAGMENT_REQUEST_CODE)
+      COLLECTION_FRAGMENT_REQUEST_CODE)
+  }
+
+  private fun showWallpaperChangerLayoutIfSuitable(){
+    if (collectionsImageAdapter.getImagePathList().size<2){
+      hideWallpaperChangerLayout()
+    }
   }
 
   companion object {

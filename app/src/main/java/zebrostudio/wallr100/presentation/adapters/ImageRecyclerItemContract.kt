@@ -19,9 +19,16 @@ interface ImageRecyclerItemContract {
     fun setSearchResultList(list: List<SearchPicturesPresenterEntity>)
     fun setWallpaperImageList(list: List<ImagePresenterEntity>)
     fun addToSearchResultList(list: List<SearchPicturesPresenterEntity>)
-    fun onBindRepositoryRowViewAtPosition(position: Int, rowView: ImageRecyclerItemView)
+    fun onBindRepositoryRowViewAtPosition(
+      position: Int,
+      rowView: ImageRecyclerItemView
+    )
+
     fun getItemCount(): Int
     fun clearAllSearchResults()
-    fun handleImageClicked(position: Int, rowView: ImageRecyclerItemContract.ImageRecyclerItemView)
+    fun handleImageClicked(
+      position: Int,
+      rowView: ImageRecyclerItemView
+    )
   }
 }

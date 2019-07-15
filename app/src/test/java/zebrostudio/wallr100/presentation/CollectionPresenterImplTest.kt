@@ -1,13 +1,9 @@
 package zebrostudio.wallr100.presentation
 
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.inOrder
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import com.uber.autodispose.lifecycle.TestLifecycleScopeProvider
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -44,28 +40,41 @@ import java.util.concurrent.TimeUnit
 @RunWith(MockitoJUnitRunner::class)
 class CollectionPresenterImplTest {
 
-  @Mock lateinit var widgetHintsUseCase: WidgetHintsUseCase
-  @Mock lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
-  @Mock lateinit var collectionImagesUseCase: CollectionImagesUseCase
-  @Mock lateinit var collectionImagesPresenterEntityMapper: CollectionImagesPresenterEntityMapper
-  @Mock lateinit var wallpaperSetter: WallpaperSetter
-  @Mock lateinit var resourceUtils: ResourceUtils
-  @Mock lateinit var postExecutionThread: PostExecutionThread
-  @Mock lateinit var permissionsChecker: PermissionsChecker
-  @Mock lateinit var systemInfoProvider: SystemInfoProvider
-  @Mock lateinit var collectionView: CollectionView
-  @Mock lateinit var mockUri: Uri
-  @Mock lateinit var mockBitmap: Bitmap
+  @Mock
+  lateinit var widgetHintsUseCase: WidgetHintsUseCase
+  @Mock
+  lateinit var userPremiumStatusUseCase: UserPremiumStatusUseCase
+  @Mock
+  lateinit var collectionImagesUseCase: CollectionImagesUseCase
+  @Mock
+  lateinit var collectionImagesPresenterEntityMapper: CollectionImagesPresenterEntityMapper
+  @Mock
+  lateinit var wallpaperSetter: WallpaperSetter
+  @Mock
+  lateinit var resourceUtils: ResourceUtils
+  @Mock
+  lateinit var postExecutionThread: PostExecutionThread
+  @Mock
+  lateinit var permissionsChecker: PermissionsChecker
+  @Mock
+  lateinit var systemInfoProvider: SystemInfoProvider
+  @Mock
+  lateinit var collectionView: CollectionView
+  @Mock
+  lateinit var mockUri: Uri
+  @Mock
+  lateinit var mockBitmap: Bitmap
   private val randomString = randomUUID().toString()
   private lateinit var collectionPresenterImpl: CollectionPresenterImpl
 
-  @Before fun setUp() {
+  @Before
+  fun setUp() {
     collectionPresenterImpl = CollectionPresenterImpl(widgetHintsUseCase, userPremiumStatusUseCase,
-        collectionImagesUseCase, collectionImagesPresenterEntityMapper, wallpaperSetter,
-        resourceUtils, postExecutionThread, permissionsChecker, systemInfoProvider)
+      collectionImagesUseCase, collectionImagesPresenterEntityMapper, wallpaperSetter,
+      resourceUtils, postExecutionThread, permissionsChecker, systemInfoProvider)
 
     val testScopeProvider = TestLifecycleScopeProvider.createInitial(
-        TestLifecycleScopeProvider.TestLifecycle.STARTED)
+      TestLifecycleScopeProvider.TestLifecycle.STARTED)
     `when`(collectionView.getScope()).thenReturn(testScopeProvider)
     whenever(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
 
@@ -90,8 +99,10 @@ class CollectionPresenterImplTest {
     collectionPresenterImpl.handleViewCreated()
 
     verify(userPremiumStatusUseCase).isUserPremium()
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
     verify(permissionsChecker).isReadPermissionAvailable()
     verify(collectionView).requestStoragePermission()
+    verify(collectionView).hideWallpaperChangerLayout()
   }
 
   @Test
@@ -103,9 +114,11 @@ class CollectionPresenterImplTest {
     collectionPresenterImpl.handleViewCreated()
 
     verify(userPremiumStatusUseCase).isUserPremium()
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
     verify(permissionsChecker).isReadPermissionAvailable()
     verify(permissionsChecker).isWritePermissionAvailable()
     verify(collectionView).requestStoragePermission()
+    verify(collectionView).hideWallpaperChangerLayout()
   }
 
   @Test
@@ -117,9 +130,9 @@ class CollectionPresenterImplTest {
     `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(true)
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(true)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
-        collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
+      collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
 
     collectionPresenterImpl.handleViewCreated()
 
@@ -142,16 +155,16 @@ class CollectionPresenterImplTest {
     val collectionsImageModelList = listOf(getCollectionsImageModel(), getCollectionsImageModel())
     val collectionsPresenterEntityList =
         listOf(getCollectionImagesPresenterEntity(),
-            getCollectionImagesPresenterEntity())
+          getCollectionImagesPresenterEntity())
     `when`(widgetHintsUseCase.isCollectionsImageReorderHintShown()).thenReturn(false)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(true)
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(true)
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(true)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
-        collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
+      collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
 
     collectionPresenterImpl.handleViewCreated()
 
@@ -205,9 +218,9 @@ class CollectionPresenterImplTest {
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(true)
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
-        collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
+      collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
 
     collectionPresenterImpl.handleViewCreated()
 
@@ -232,16 +245,16 @@ class CollectionPresenterImplTest {
     val collectionsImageModelList = listOf(getCollectionsImageModel(), getCollectionsImageModel())
     val collectionsPresenterEntityList =
         listOf(getCollectionImagesPresenterEntity(),
-            getCollectionImagesPresenterEntity())
+          getCollectionImagesPresenterEntity())
     `when`(widgetHintsUseCase.isCollectionsImageReorderHintShown()).thenReturn(false)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(true)
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(true)
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
-        collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
+      collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
 
     collectionPresenterImpl.handleViewCreated()
 
@@ -276,7 +289,7 @@ class CollectionPresenterImplTest {
 
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(listOf())
     verify(userPremiumStatusUseCase).isUserPremium()
-    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
+    verify(collectionImagesUseCase, times(2)).stopAutomaticWallpaperChanger()
     verify(collectionImagesUseCase).getAllImages()
     verify(permissionsChecker).isReadPermissionAvailable()
     verify(permissionsChecker).isWritePermissionAvailable()
@@ -284,7 +297,7 @@ class CollectionPresenterImplTest {
     verify(collectionView).clearImages()
     verify(collectionView).clearAllSelectedItems()
     verify(collectionView).showImagesAbsentLayout()
-    verify(collectionView).hideWallpaperChangerLayout()
+    verify(collectionView, times(2)).hideWallpaperChangerLayout()
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -299,11 +312,11 @@ class CollectionPresenterImplTest {
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(true)
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(true)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
-        collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
+      collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
 
-    collectionPresenterImpl.handleActivityResult()
+    collectionPresenterImpl.handleViewResult()
 
     verify(widgetHintsUseCase).isCollectionsImageReorderHintShown()
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionsImageModelList)
@@ -326,18 +339,18 @@ class CollectionPresenterImplTest {
     val collectionsImageModelList = listOf(getCollectionsImageModel(), getCollectionsImageModel())
     val collectionsPresenterEntityList =
         listOf(getCollectionImagesPresenterEntity(),
-            getCollectionImagesPresenterEntity())
+          getCollectionImagesPresenterEntity())
     `when`(widgetHintsUseCase.isCollectionsImageReorderHintShown()).thenReturn(false)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(true)
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(true)
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(true)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
-        collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
+      collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
 
-    collectionPresenterImpl.handleActivityResult()
+    collectionPresenterImpl.handleViewResult()
 
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionsImageModelList)
     verify(widgetHintsUseCase).isCollectionsImageReorderHintShown()
@@ -364,7 +377,7 @@ class CollectionPresenterImplTest {
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(true)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(Single.error(Exception()))
 
-    collectionPresenterImpl.handleActivityResult()
+    collectionPresenterImpl.handleViewResult()
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(collectionImagesUseCase).getAllImages()
@@ -386,11 +399,11 @@ class CollectionPresenterImplTest {
     `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(true)
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(true)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
-        collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
+      collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
 
-    collectionPresenterImpl.handleActivityResult()
+    collectionPresenterImpl.handleViewResult()
 
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionsImageModelList)
     verify(userPremiumStatusUseCase).isUserPremium()
@@ -417,11 +430,11 @@ class CollectionPresenterImplTest {
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(true)
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
-        collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
+      collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
 
-    collectionPresenterImpl.handleActivityResult()
+    collectionPresenterImpl.handleViewResult()
 
     verify(widgetHintsUseCase).isCollectionsImageReorderHintShown()
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionsImageModelList)
@@ -444,18 +457,18 @@ class CollectionPresenterImplTest {
     val collectionsImageModelList = listOf(getCollectionsImageModel(), getCollectionsImageModel())
     val collectionsPresenterEntityList =
         listOf(getCollectionImagesPresenterEntity(),
-            getCollectionImagesPresenterEntity())
+          getCollectionImagesPresenterEntity())
     `when`(widgetHintsUseCase.isCollectionsImageReorderHintShown()).thenReturn(false)
     `when`(userPremiumStatusUseCase.isUserPremium()).thenReturn(true)
     `when`(permissionsChecker.isReadPermissionAvailable()).thenReturn(true)
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(true)
     `when`(collectionImagesUseCase.isAutomaticWallpaperChangerRunning()).thenReturn(false)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(
-        Single.just(collectionsImageModelList))
+      Single.just(collectionsImageModelList))
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
-        collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
+      collectionsImageModelList)).thenReturn(collectionsPresenterEntityList)
 
-    collectionPresenterImpl.handleActivityResult()
+    collectionPresenterImpl.handleViewResult()
 
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionsImageModelList)
     verify(widgetHintsUseCase).isCollectionsImageReorderHintShown()
@@ -484,19 +497,19 @@ class CollectionPresenterImplTest {
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(listOf()))
         .thenReturn(listOf())
 
-    collectionPresenterImpl.handleActivityResult()
+    collectionPresenterImpl.handleViewResult()
 
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(listOf())
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(collectionImagesUseCase).getAllImages()
-    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
+    verify(collectionImagesUseCase, times(2)).stopAutomaticWallpaperChanger()
     verify(permissionsChecker).isReadPermissionAvailable()
     verify(permissionsChecker).isWritePermissionAvailable()
     verify(collectionView).getScope()
     verify(collectionView).clearImages()
     verify(collectionView).clearAllSelectedItems()
     verify(collectionView).showImagesAbsentLayout()
-    verify(collectionView).hideWallpaperChangerLayout()
+    verify(collectionView, times(2)).hideWallpaperChangerLayout()
     verifyPostExecutionThreadSchedulerCall()
   }
 
@@ -507,7 +520,7 @@ class CollectionPresenterImplTest {
     `when`(permissionsChecker.isWritePermissionAvailable()).thenReturn(true)
     `when`(collectionImagesUseCase.getAllImages()).thenReturn(Single.error(Exception()))
 
-    collectionPresenterImpl.handleActivityResult()
+    collectionPresenterImpl.handleViewResult()
 
     verify(userPremiumStatusUseCase).isUserPremium()
     verify(collectionImagesUseCase).getAllImages()
@@ -539,8 +552,10 @@ class CollectionPresenterImplTest {
     collectionPresenterImpl.handleImportFromLocalStorageClicked()
 
     verify(userPremiumStatusUseCase).isUserPremium()
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
     verify(permissionsChecker).isReadPermissionAvailable()
     verify(collectionView).requestStoragePermission()
+    verify(collectionView).hideWallpaperChangerLayout()
   }
 
   @Test
@@ -552,9 +567,11 @@ class CollectionPresenterImplTest {
     collectionPresenterImpl.handleImportFromLocalStorageClicked()
 
     verify(userPremiumStatusUseCase).isUserPremium()
+    verify(collectionImagesUseCase).stopAutomaticWallpaperChanger()
     verify(permissionsChecker).isReadPermissionAvailable()
     verify(permissionsChecker).isWritePermissionAvailable()
     verify(collectionView).requestStoragePermission()
+    verify(collectionView).hideWallpaperChangerLayout()
   }
 
   @Test
@@ -571,7 +588,8 @@ class CollectionPresenterImplTest {
     verify(collectionView).showImagePicker()
   }
 
-  @Test fun `should redirect to buy pro on handlePurchaseClick call success`() {
+  @Test
+  fun `should redirect to buy pro on handlePurchaseClick call success`() {
     collectionPresenterImpl.handlePurchaseClicked()
 
     verify(collectionView).redirectToBuyPro()
@@ -584,7 +602,8 @@ class CollectionPresenterImplTest {
     verify(widgetHintsUseCase).saveCollectionsImageReorderHintShown()
   }
 
-  @Test fun `should reorder images on handleItemMoved call success`() {
+  @Test
+  fun `should reorder images on handleItemMoved call success`() {
     val fromPosition = 0
     val toPosition = 2
     val firstItem = getCollectionImagesPresenterEntity()
@@ -595,7 +614,7 @@ class CollectionPresenterImplTest {
     val reorderedList = listOf(secondItem, thirdItem, firstItem, fourthItem)
     val collectionImageModelList = listOf(getCollectionsImageModel())
     `when`(collectionImagesPresenterEntityMapper.mapFromPresenterEntity(originalList)).thenReturn(
-        collectionImageModelList)
+      collectionImageModelList)
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(collectionImageModelList))
         .thenReturn(reorderedList)
     `when`(collectionImagesUseCase.reorderImage(collectionImageModelList))
@@ -626,7 +645,7 @@ class CollectionPresenterImplTest {
     val restoredList = listOf(firstItem, secondItem, thirdItem, fourthItem)
     val collectionImageModelList = listOf(getCollectionsImageModel())
     `when`(collectionImagesPresenterEntityMapper.mapFromPresenterEntity(originalList)).thenReturn(
-        collectionImageModelList)
+      collectionImageModelList)
     `when`(collectionImagesUseCase.reorderImage(collectionImageModelList))
         .thenReturn(Single.error(Exception()))
 
@@ -646,16 +665,16 @@ class CollectionPresenterImplTest {
   fun `should add image to selected items and update single image selection changes in cab on handleItemClicked call success`() {
     val position = 1
     val collectionPresenterEntityList = listOf(
-        getCollectionImagesPresenterEntity(),
-        getCollectionImagesPresenterEntity(),
-        getCollectionImagesPresenterEntity(),
-        getCollectionImagesPresenterEntity())
+      getCollectionImagesPresenterEntity(),
+      getCollectionImagesPresenterEntity(),
+      getCollectionImagesPresenterEntity(),
+      getCollectionImagesPresenterEntity())
     val selectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
     val resultantSelectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
     resultantSelectedItemsMap[position] = collectionPresenterEntityList[position]
 
     collectionPresenterImpl.handleItemClicked(position, collectionPresenterEntityList,
-        selectedItemsMap)
+      selectedItemsMap)
 
     assertEquals(resultantSelectedItemsMap, selectedItemsMap)
     verify(collectionView).hideAppBar()
@@ -667,10 +686,10 @@ class CollectionPresenterImplTest {
   fun `should add image to selected items and update multiple image selection changes in cab on handleItemClicked call success`() {
     val position = 2
     val collectionPresenterEntityList = listOf(
-        getCollectionImagesPresenterEntity(),
-        getCollectionImagesPresenterEntity(),
-        getCollectionImagesPresenterEntity(),
-        getCollectionImagesPresenterEntity())
+      getCollectionImagesPresenterEntity(),
+      getCollectionImagesPresenterEntity(),
+      getCollectionImagesPresenterEntity(),
+      getCollectionImagesPresenterEntity())
     val selectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
     selectedItemsMap[1] = collectionPresenterEntityList[1]
     val resultantSelectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
@@ -678,7 +697,7 @@ class CollectionPresenterImplTest {
     resultantSelectedItemsMap[position] = collectionPresenterEntityList[position]
 
     collectionPresenterImpl.handleItemClicked(position, collectionPresenterEntityList,
-        selectedItemsMap)
+      selectedItemsMap)
 
     assertEquals(resultantSelectedItemsMap, selectedItemsMap)
     verify(collectionView).updateChangesInItemView(position)
@@ -689,10 +708,10 @@ class CollectionPresenterImplTest {
   fun `should remove image from selected items and update single image selection changes in cab on handleItemClicked call success`() {
     val position = 2
     val collectionPresenterEntityList = listOf(
-        getCollectionImagesPresenterEntity(),
-        getCollectionImagesPresenterEntity(),
-        getCollectionImagesPresenterEntity(),
-        getCollectionImagesPresenterEntity())
+      getCollectionImagesPresenterEntity(),
+      getCollectionImagesPresenterEntity(),
+      getCollectionImagesPresenterEntity(),
+      getCollectionImagesPresenterEntity())
     val selectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
     selectedItemsMap[1] = collectionPresenterEntityList[1]
     selectedItemsMap[position] = collectionPresenterEntityList[position]
@@ -700,7 +719,7 @@ class CollectionPresenterImplTest {
     resultantSelectedItemsMap[1] = collectionPresenterEntityList[1]
 
     collectionPresenterImpl.handleItemClicked(position, collectionPresenterEntityList,
-        selectedItemsMap)
+      selectedItemsMap)
 
     assertEquals(resultantSelectedItemsMap, selectedItemsMap)
     verify(collectionView).updateChangesInItemView(position)
@@ -711,10 +730,10 @@ class CollectionPresenterImplTest {
   fun `should remove image from selected items and update multiple image selection changes in cab on handleItemClicked call success`() {
     val position = 2
     val collectionPresenterEntityList = listOf(
-        getCollectionImagesPresenterEntity(),
-        getCollectionImagesPresenterEntity(),
-        getCollectionImagesPresenterEntity(),
-        getCollectionImagesPresenterEntity())
+      getCollectionImagesPresenterEntity(),
+      getCollectionImagesPresenterEntity(),
+      getCollectionImagesPresenterEntity(),
+      getCollectionImagesPresenterEntity())
     val selectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
     selectedItemsMap[1] = collectionPresenterEntityList[1]
     selectedItemsMap[3] = collectionPresenterEntityList[3]
@@ -724,7 +743,7 @@ class CollectionPresenterImplTest {
     resultantSelectedItemsMap[3] = collectionPresenterEntityList[3]
 
     collectionPresenterImpl.handleItemClicked(position, collectionPresenterEntityList,
-        selectedItemsMap)
+      selectedItemsMap)
 
     assertEquals(resultantSelectedItemsMap, selectedItemsMap)
     verify(collectionView).updateChangesInItemView(position)
@@ -735,23 +754,24 @@ class CollectionPresenterImplTest {
   fun `should remove image from selected items and hide cab on handleItemClicked call success`() {
     val position = 2
     val collectionPresenterEntityList = listOf(
-        getCollectionImagesPresenterEntity(),
-        getCollectionImagesPresenterEntity(),
-        getCollectionImagesPresenterEntity(),
-        getCollectionImagesPresenterEntity())
+      getCollectionImagesPresenterEntity(),
+      getCollectionImagesPresenterEntity(),
+      getCollectionImagesPresenterEntity(),
+      getCollectionImagesPresenterEntity())
     val selectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
     selectedItemsMap[position] = collectionPresenterEntityList[position]
     val resultantSelectedItemsMap = hashMapOf<Int, CollectionsPresenterEntity>()
 
     collectionPresenterImpl.handleItemClicked(position, collectionPresenterEntityList,
-        selectedItemsMap)
+      selectedItemsMap)
 
     assertEquals(resultantSelectedItemsMap, selectedItemsMap)
     verify(collectionView).updateChangesInItemView(position)
     verify(collectionView).hideCab()
   }
 
-  @Test fun `should hide cab on notifyDragStarted call success when cab is active`() {
+  @Test
+  fun `should hide cab on notifyDragStarted call success when cab is active`() {
     `when`(collectionView.isCabActive()).thenReturn(true)
 
     collectionPresenterImpl.notifyDragStarted()
@@ -760,7 +780,8 @@ class CollectionPresenterImplTest {
     verify(collectionView).hideCab()
   }
 
-  @Test fun `should do nothing on notifyDragStarted call success when cab is not active`() {
+  @Test
+  fun `should do nothing on notifyDragStarted call success when cab is not active`() {
     `when`(collectionView.isCabActive()).thenReturn(false)
 
     collectionPresenterImpl.notifyDragStarted()
@@ -876,7 +897,7 @@ class CollectionPresenterImplTest {
   @Test
   fun `should show wallpaper changer interval dialog with 30 minutes highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call success`() {
     `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(
-        TimeUnit.MINUTES.toMillis(30))
+      TimeUnit.MINUTES.toMillis(30))
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
 
@@ -887,7 +908,7 @@ class CollectionPresenterImplTest {
   @Test
   fun `should show wallpaper changer interval dialog with 1 hour highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call success`() {
     `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(
-        TimeUnit.HOURS.toMillis(1))
+      TimeUnit.HOURS.toMillis(1))
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
 
@@ -898,7 +919,7 @@ class CollectionPresenterImplTest {
   @Test
   fun `should show wallpaper changer interval dialog with 6 hours highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call success`() {
     `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(
-        TimeUnit.HOURS.toMillis(6))
+      TimeUnit.HOURS.toMillis(6))
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
 
@@ -909,7 +930,7 @@ class CollectionPresenterImplTest {
   @Test
   fun `should show wallpaper changer interval dialog with 1 day highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call success`() {
     `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(
-        TimeUnit.DAYS.toMillis(1))
+      TimeUnit.DAYS.toMillis(1))
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
 
@@ -920,7 +941,7 @@ class CollectionPresenterImplTest {
   @Test
   fun `should show wallpaper changer interval dialog with 3 days highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call success`() {
     `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(
-        TimeUnit.DAYS.toMillis(3))
+      TimeUnit.DAYS.toMillis(3))
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
 
@@ -931,39 +952,39 @@ class CollectionPresenterImplTest {
   @Test
   fun `should show wallpaper changer interval dialog with 30 minutes highlighted on handleAutomaticWallpaperChangerIntervalMenuItemClicked call failure`() {
     `when`(collectionImagesUseCase.getAutomaticWallpaperChangerInterval()).thenReturn(
-        Int.MAX_VALUE.toLong())
+      Int.MAX_VALUE.toLong())
 
     collectionPresenterImpl.handleAutomaticWallpaperChangerIntervalMenuItemClicked()
 
     verify(collectionImagesUseCase).getAutomaticWallpaperChangerInterval()
     verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(
-        TimeUnit.MINUTES.toMillis(30))
+      TimeUnit.MINUTES.toMillis(30))
     verify(collectionView).showWallpaperChangerIntervalDialog(0)
   }
 
   @Test
   fun `should show interval updated message on updateWallpaperChangerInterval call success with 30 minutes interval`() {
     `when`(
-        collectionImagesUseCase.setAutomaticWallpaperChangerInterval(TimeUnit.MINUTES.toMillis(30)))
+      collectionImagesUseCase.setAutomaticWallpaperChangerInterval(TimeUnit.MINUTES.toMillis(30)))
         .thenReturn(INTERVAL_UPDATED)
 
     collectionPresenterImpl.updateWallpaperChangerInterval(0)
 
     verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(
-        TimeUnit.MINUTES.toMillis(30))
+      TimeUnit.MINUTES.toMillis(30))
     verify(collectionView).showWallpaperChangerIntervalUpdatedSuccessMessage()
   }
 
   @Test
   fun `should show service restarted message on updateWallpaperChangerInterval call success with 30 minutes interval`() {
     `when`(
-        collectionImagesUseCase.setAutomaticWallpaperChangerInterval(TimeUnit.MINUTES.toMillis(30)))
+      collectionImagesUseCase.setAutomaticWallpaperChangerInterval(TimeUnit.MINUTES.toMillis(30)))
         .thenReturn(SERVICE_RESTARTED)
 
     collectionPresenterImpl.updateWallpaperChangerInterval(0)
 
     verify(collectionImagesUseCase).setAutomaticWallpaperChangerInterval(
-        TimeUnit.MINUTES.toMillis(30))
+      TimeUnit.MINUTES.toMillis(30))
     verify(collectionView).showWallpaperChangerRestartedSuccessMessage()
   }
 
@@ -1127,16 +1148,17 @@ class CollectionPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should set wallpaper on handleSetWallpaperMenuItemClicked call success`() {
+  @Test
+  fun `should set wallpaper on handleSetWallpaperMenuItemClicked call success`() {
     val collectionImagesModelList = listOf(getCollectionsImageModel())
     val collectionPresenterEntityList = listOf(getCollectionImagesPresenterEntity())
     val selectedItemsMap = hashMapOf(Pair(0, collectionPresenterEntityList.first()))
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)).thenReturn(
-        randomString)
+      randomString)
     `when`(collectionView.isCabActive()).thenReturn(true)
     `when`(
-        collectionImagesPresenterEntityMapper.mapFromPresenterEntity(
-            collectionPresenterEntityList.first()))
+      collectionImagesPresenterEntityMapper.mapFromPresenterEntity(
+        collectionPresenterEntityList.first()))
         .thenReturn(collectionImagesModelList)
     `when`(collectionImagesUseCase.getImageBitmap(collectionImagesModelList.first()))
         .thenReturn(Single.just(mockBitmap))
@@ -1146,7 +1168,7 @@ class CollectionPresenterImplTest {
     verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
     verify(wallpaperSetter).setWallpaper(mockBitmap)
     verify(collectionImagesPresenterEntityMapper).mapFromPresenterEntity(
-        collectionPresenterEntityList.first())
+      collectionPresenterEntityList.first())
     verify(collectionImagesUseCase).getImageBitmap(collectionImagesModelList.first())
     verify(collectionView).getScope()
     verify(collectionView).disableBackPress()
@@ -1166,11 +1188,11 @@ class CollectionPresenterImplTest {
     val collectionPresenterEntityList = listOf(getCollectionImagesPresenterEntity())
     val selectedItemsMap = hashMapOf(Pair(0, collectionPresenterEntityList.first()))
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)).thenReturn(
-        randomString)
+      randomString)
     `when`(collectionView.isCabActive()).thenReturn(true)
     `when`(
-        collectionImagesPresenterEntityMapper.mapFromPresenterEntity(
-            collectionPresenterEntityList.first()))
+      collectionImagesPresenterEntityMapper.mapFromPresenterEntity(
+        collectionPresenterEntityList.first()))
         .thenReturn(collectionImagesModelList)
     `when`(collectionImagesUseCase.getImageBitmap(collectionImagesModelList.first()))
         .thenReturn(Single.error(Exception()))
@@ -1179,7 +1201,7 @@ class CollectionPresenterImplTest {
 
     verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
     verify(collectionImagesPresenterEntityMapper).mapFromPresenterEntity(
-        collectionPresenterEntityList.first())
+      collectionPresenterEntityList.first())
     verify(collectionImagesUseCase).getImageBitmap(collectionImagesModelList.first())
     verify(collectionView).getScope()
     verify(collectionView).disableBackPress()
@@ -1213,7 +1235,7 @@ class CollectionPresenterImplTest {
 
     verify(resourceUtils).getStringResource(R.string.crystallizing_wallpaper_wait_message)
     verify(collectionImagesPresenterEntityMapper).mapFromPresenterEntity(
-        collectionPresenterEntityList.first())
+      collectionPresenterEntityList.first())
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(collectionImagesModelList)
     verify(collectionImagesUseCase).saveCrystallizedImage(collectionImagesModelList.first())
     verify(collectionView).getScope()
@@ -1248,7 +1270,7 @@ class CollectionPresenterImplTest {
 
     verify(resourceUtils).getStringResource(R.string.crystallizing_wallpaper_wait_message)
     verify(collectionImagesPresenterEntityMapper).mapFromPresenterEntity(
-        collectionPresenterEntityList.first())
+      collectionPresenterEntityList.first())
     verify(collectionImagesUseCase).saveCrystallizedImage(collectionImagesModelList.first())
     verify(collectionView).getScope()
     verify(collectionView).disableBackPress()
@@ -1281,7 +1303,7 @@ class CollectionPresenterImplTest {
 
     verify(resourceUtils).getStringResource(R.string.crystallizing_wallpaper_wait_message)
     verify(collectionImagesPresenterEntityMapper).mapFromPresenterEntity(
-        collectionPresenterEntityList.first())
+      collectionPresenterEntityList.first())
     verify(collectionImagesUseCase).saveCrystallizedImage(collectionImagesModelList.first())
     verify(collectionView).getScope()
     verify(collectionView).disableBackPress()
@@ -1311,7 +1333,7 @@ class CollectionPresenterImplTest {
     val inOrder = inOrder(collectionView)
     `when`(collectionImagesPresenterEntityMapper
         .mapFromPresenterEntity(anyList())).thenReturn(collectionImagesModelList,
-        restoreCollectionImagesModelList)
+      restoreCollectionImagesModelList)
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(collectionImagesModelList))
         .thenReturn(resultCollectionPresenterEntityList)
     `when`(collectionView.isCabActive()).thenReturn(true)
@@ -1321,7 +1343,7 @@ class CollectionPresenterImplTest {
         .thenReturn(Single.just(restoreCollectionImagesModelList))
 
     collectionPresenterImpl.handleDeleteWallpaperMenuItemClicked(collectionPresenterEntityList,
-        selectedItemsMap)
+      selectedItemsMap)
 
     verify(collectionImagesUseCase).deleteImages(collectionImagesModelList)
     verify(collectionImagesUseCase).reorderImage(restoreCollectionImagesModelList)
@@ -1359,7 +1381,7 @@ class CollectionPresenterImplTest {
     val inOrder = inOrder(collectionView)
     `when`(collectionImagesPresenterEntityMapper
         .mapFromPresenterEntity(anyList())).thenReturn(collectionImagesModelList,
-        restoreCollectionImagesModelList)
+      restoreCollectionImagesModelList)
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(collectionImagesModelList))
         .thenReturn(resultCollectionPresenterEntityList)
     `when`(collectionView.isCabActive()).thenReturn(true)
@@ -1369,7 +1391,7 @@ class CollectionPresenterImplTest {
         .thenReturn(Single.just(restoreCollectionImagesModelList))
 
     collectionPresenterImpl.handleDeleteWallpaperMenuItemClicked(collectionPresenterEntityList,
-        selectedItemsMap)
+      selectedItemsMap)
 
     verify(collectionImagesUseCase).deleteImages(collectionImagesModelList)
     verify(collectionImagesUseCase).reorderImage(restoreCollectionImagesModelList)
@@ -1403,9 +1425,9 @@ class CollectionPresenterImplTest {
     val inOrder = inOrder(collectionView)
     `when`(collectionImagesPresenterEntityMapper
         .mapFromPresenterEntity(anyList())).thenReturn(collectionImagesModelList,
-        restoreCollectionImagesModelList)
+      restoreCollectionImagesModelList)
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
-        restoreCollectionImagesModelList))
+      restoreCollectionImagesModelList))
         .thenReturn(listOf(item0, item1, item2))
     `when`(collectionView.isCabActive()).thenReturn(true)
     `when`(collectionImagesUseCase.deleteImages(collectionImagesModelList))
@@ -1414,13 +1436,13 @@ class CollectionPresenterImplTest {
         .thenReturn(Single.just(restoreCollectionImagesModelList))
 
     collectionPresenterImpl.handleDeleteWallpaperMenuItemClicked(collectionPresenterEntityList,
-        selectedItemsMap)
+      selectedItemsMap)
 
     verify(collectionImagesUseCase).deleteImages(collectionImagesModelList)
     verify(collectionImagesUseCase).reorderImage(restoreCollectionImagesModelList)
     verify(collectionImagesPresenterEntityMapper, times(2)).mapFromPresenterEntity(captor.capture())
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(
-        restoreCollectionImagesModelList)
+      restoreCollectionImagesModelList)
     assertEquals(listOf(item2, item0), captor.firstValue)
     assertEquals(listOf(item0, item1, item2), captor.secondValue)
     listOf(2, 0).forEach {
@@ -1449,7 +1471,7 @@ class CollectionPresenterImplTest {
     val captor = argumentCaptor<List<CollectionsPresenterEntity>>()
     `when`(collectionImagesPresenterEntityMapper
         .mapFromPresenterEntity(anyList())).thenReturn(collectionImagesModelList,
-        restoreCollectionImagesModelList)
+      restoreCollectionImagesModelList)
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(collectionImagesModelList))
         .thenReturn(resultCollectionPresenterEntityList)
     `when`(collectionView.isCabActive()).thenReturn(true)
@@ -1459,7 +1481,7 @@ class CollectionPresenterImplTest {
         .thenReturn(Single.just(restoreCollectionImagesModelList))
 
     collectionPresenterImpl.handleDeleteWallpaperMenuItemClicked(collectionPresenterEntityList,
-        selectedItemsMap)
+      selectedItemsMap)
 
     verify(collectionImagesUseCase).deleteImages(collectionImagesModelList)
     verify(collectionImagesUseCase).reorderImage(restoreCollectionImagesModelList)
@@ -1494,7 +1516,7 @@ class CollectionPresenterImplTest {
     val captor = argumentCaptor<List<CollectionsPresenterEntity>>()
     `when`(collectionImagesPresenterEntityMapper
         .mapFromPresenterEntity(anyList())).thenReturn(collectionImagesModelList,
-        restoreCollectionImagesModelList)
+      restoreCollectionImagesModelList)
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(collectionImagesModelList))
         .thenReturn(resultCollectionPresenterEntityList)
     `when`(collectionView.isCabActive()).thenReturn(true)
@@ -1504,7 +1526,7 @@ class CollectionPresenterImplTest {
         .thenReturn(Single.just(restoreCollectionImagesModelList))
 
     collectionPresenterImpl.handleDeleteWallpaperMenuItemClicked(collectionPresenterEntityList,
-        selectedItemsMap)
+      selectedItemsMap)
 
     verify(collectionImagesUseCase).deleteImages(collectionImagesModelList)
     verify(collectionImagesUseCase).reorderImage(restoreCollectionImagesModelList)
@@ -1534,9 +1556,9 @@ class CollectionPresenterImplTest {
     val captor = argumentCaptor<List<CollectionsPresenterEntity>>()
     `when`(collectionImagesPresenterEntityMapper
         .mapFromPresenterEntity(anyList())).thenReturn(collectionImagesModelList,
-        restoreCollectionImagesModelList)
+      restoreCollectionImagesModelList)
     `when`(collectionImagesPresenterEntityMapper.mapToPresenterEntity(
-        restoreCollectionImagesModelList))
+      restoreCollectionImagesModelList))
         .thenReturn(listOf(item0, item1))
     `when`(collectionView.isCabActive()).thenReturn(true)
     `when`(collectionImagesUseCase.deleteImages(collectionImagesModelList))
@@ -1545,13 +1567,13 @@ class CollectionPresenterImplTest {
         .thenReturn(Single.just(restoreCollectionImagesModelList))
 
     collectionPresenterImpl.handleDeleteWallpaperMenuItemClicked(collectionPresenterEntityList,
-        selectedItemsMap)
+      selectedItemsMap)
 
     verify(collectionImagesUseCase).deleteImages(collectionImagesModelList)
     verify(collectionImagesUseCase).reorderImage(restoreCollectionImagesModelList)
     verify(collectionImagesPresenterEntityMapper, times(2)).mapFromPresenterEntity(captor.capture())
     verify(collectionImagesPresenterEntityMapper).mapToPresenterEntity(
-        restoreCollectionImagesModelList)
+      restoreCollectionImagesModelList)
     assertEquals(listOf(item0), captor.firstValue)
     assertEquals(listOf(item0, item1), captor.secondValue)
     verify(collectionView).removeItemView(0)
@@ -1564,7 +1586,22 @@ class CollectionPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should refresh screen on handleCabDestroyed call success`() {
+  @Test fun `should show permissions required rationale on permissions not granted`() {
+    collectionPresenterImpl.handlePermissionRequestResult(0,
+      arrayOf(android.Manifest.permission_group.STORAGE),
+      intArrayOf(PackageManager.PERMISSION_DENIED))
+
+    verify(collectionView).showPermissionRequestRationale()
+  }
+
+  @Test fun `should not show permissions required rationale on permissions granted`() {
+    collectionPresenterImpl.handlePermissionRequestResult(0,
+      arrayOf(android.Manifest.permission_group.STORAGE),
+      intArrayOf(PackageManager.PERMISSION_GRANTED))
+  }
+
+  @Test
+  fun `should refresh screen on handleCabDestroyed call success`() {
     collectionPresenterImpl.handleCabDestroyed()
 
     verify(collectionView).clearAllSelectedItems()
@@ -1573,10 +1610,11 @@ class CollectionPresenterImplTest {
     verify(collectionView).showAppBarWithDelay()
   }
 
-  @After fun tearDown() {
+  @After
+  fun tearDown() {
     verifyNoMoreInteractions(collectionView, widgetHintsUseCase, userPremiumStatusUseCase,
-        collectionImagesUseCase, collectionImagesPresenterEntityMapper, wallpaperSetter,
-        resourceUtils, postExecutionThread, systemInfoProvider)
+      collectionImagesUseCase, collectionImagesPresenterEntityMapper, wallpaperSetter,
+      resourceUtils, postExecutionThread, systemInfoProvider)
 
     collectionPresenterImpl.detachView()
   }

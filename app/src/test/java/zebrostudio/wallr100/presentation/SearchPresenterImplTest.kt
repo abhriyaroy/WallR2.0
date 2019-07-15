@@ -11,7 +11,6 @@ import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -26,37 +25,39 @@ import zebrostudio.wallr100.domain.interactor.SearchPicturesUseCase
 import zebrostudio.wallr100.presentation.search.SearchContract
 import zebrostudio.wallr100.presentation.search.SearchPresenterImpl
 import zebrostudio.wallr100.presentation.search.mapper.SearchPicturesPresenterEntityMapper
-import zebrostudio.wallr100.rules.TrampolineSchedulerRule
 import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
 class SearchPresenterImplTest {
 
-  @get:Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
-
-  @Mock lateinit var postExecutionThread: PostExecutionThread
-  @Mock lateinit var searchView: SearchContract.SearchView
-  @Mock lateinit var searchPicturesUseCase: SearchPicturesUseCase
+  @Mock
+  lateinit var postExecutionThread: PostExecutionThread
+  @Mock
+  lateinit var searchView: SearchContract.SearchView
+  @Mock
+  lateinit var searchPicturesUseCase: SearchPicturesUseCase
   private lateinit var searchPicturesPresenterEntityMapper: SearchPicturesPresenterEntityMapper
   private lateinit var searchPresenterImpl: SearchPresenterImpl
 
   private val randomString = randomUUID().toString()
   private val queryPage = 1
 
-  @Before fun setup() {
+  @Before
+  fun setup() {
     searchPicturesPresenterEntityMapper = SearchPicturesPresenterEntityMapper()
     searchPresenterImpl =
         SearchPresenterImpl(searchPicturesUseCase, searchPicturesPresenterEntityMapper,
-            postExecutionThread)
+          postExecutionThread)
     searchPresenterImpl.attachView(searchView)
 
     `when`(searchView.getScope()).thenReturn(createInitial(STARTED))
     `when`(postExecutionThread.scheduler).thenReturn(Schedulers.trampoline())
   }
 
-  @Test fun `should return query string on getQueryStringCallSuccess`() {
+  @Test
+  fun `should return query string on getQueryStringCallSuccess`() {
     assertEquals(getQueryString(randomString, queryPage),
-        "photos/search?query=$randomString&per_page=30&page=1")
+      "photos/search?query=$randomString&per_page=30&page=1")
   }
 
   @Test
@@ -89,7 +90,8 @@ class SearchPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should show generic error view on notifyQuerySubmitted call failure`() {
+  @Test
+  fun `should show generic error view on notifyQuerySubmitted call failure`() {
     `when`(searchPicturesUseCase.buildUseCaseSingle(getQueryString(randomString, queryPage)))
         .thenReturn(Single.error(Exception()))
 
@@ -138,7 +140,8 @@ class SearchPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should show generic error toast on fetchMoreImages call failure`() {
+  @Test
+  fun `should show generic error toast on fetchMoreImages call failure`() {
     `when`(searchPicturesUseCase.buildUseCaseSingle(getQueryString("", queryPage)))
         .thenReturn(Single.error(Exception()))
 
@@ -194,7 +197,8 @@ class SearchPresenterImplTest {
     verifyPostExecutionThreadSchedulerCall()
   }
 
-  @Test fun `should show generic error toast on notifyRetryButtonClicked call failure`() {
+  @Test
+  fun `should show generic error toast on notifyRetryButtonClicked call failure`() {
     searchPresenterImpl.keyword = randomString
     `when`(searchPicturesUseCase.buildUseCaseSingle(getQueryString(randomString, queryPage)))
         .thenReturn(Single.error(Exception()))
@@ -235,13 +239,14 @@ class SearchPresenterImplTest {
     `when`(searchView.recognizeWordsFromSpeech()).thenReturn(wordsArrayList)
 
     searchPresenterImpl.notifyActivityResult(
-        MaterialSearchView.REQUEST_VOICE, Activity.RESULT_OK)
+      MaterialSearchView.REQUEST_VOICE, Activity.RESULT_OK)
 
     verify(searchView).recognizeWordsFromSpeech()
     verify(searchView).setSearchQueryWithoutSubmitting(randomString)
   }
 
-  @After fun tearDown() {
+  @After
+  fun tearDown() {
     verifyNoMoreInteractions(postExecutionThread, searchPicturesUseCase, searchView)
     searchPresenterImpl.detachView()
   }

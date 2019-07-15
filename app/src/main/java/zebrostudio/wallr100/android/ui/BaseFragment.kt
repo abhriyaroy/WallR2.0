@@ -8,25 +8,17 @@ import android.support.v4.app.Fragment
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import android.widget.Spinner
 import com.getbase.floatingactionbutton.FloatingActionButton
+import com.jaredrummler.materialspinner.MaterialSpinner
 import com.ogaclejapan.smarttablayout.SmartTabLayout
 import com.uber.autodispose.ScopeProvider
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.zebrostudio.wallrcustoms.customtextview.WallrCustomTextView
 import dagger.android.support.AndroidSupportInjection
 import zebrostudio.wallr100.R
-import zebrostudio.wallr100.android.utils.FragmentNameTagFetcher
-import zebrostudio.wallr100.android.utils.FragmentTag
-import zebrostudio.wallr100.android.utils.FragmentTag.CATEGORIES_TAG
-import zebrostudio.wallr100.android.utils.FragmentTag.COLLECTIONS_TAG
-import zebrostudio.wallr100.android.utils.FragmentTag.EXPLORE_TAG
-import zebrostudio.wallr100.android.utils.FragmentTag.MINIMAL_TAG
-import zebrostudio.wallr100.android.utils.FragmentTag.TOP_PICKS_TAG
-import zebrostudio.wallr100.android.utils.checkDataConnection
-import zebrostudio.wallr100.android.utils.colorRes
-import zebrostudio.wallr100.android.utils.gone
-import zebrostudio.wallr100.android.utils.invisible
-import zebrostudio.wallr100.android.utils.visible
+import zebrostudio.wallr100.android.utils.*
+import zebrostudio.wallr100.android.utils.FragmentTag.*
 import zebrostudio.wallr100.presentation.BaseView
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -35,15 +27,16 @@ private const val COLLECTIONS_TITLE_PADDING = 48
 
 abstract class BaseFragment : Fragment(), BaseView {
 
-  @Inject lateinit var fragmentNameTagFetcherImpl: FragmentNameTagFetcher
+  @Inject
+  lateinit var fragmentNameTagFetcherImpl: FragmentNameTagFetcher
   internal var fragmentTag: FragmentTag = EXPLORE_TAG
 
   private val menuItemIdList: List<Int> = listOf(
-      R.string.explore_title,
-      R.string.top_picks_title,
-      R.string.categories_title,
-      R.string.minimal_title,
-      R.string.collection_title
+    R.string.explore_title,
+    R.string.top_picks_title,
+    R.string.categories_title,
+    R.string.minimal_title,
+    R.string.collection_title
   )
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -124,10 +117,14 @@ abstract class BaseFragment : Fragment(), BaseView {
 
   private fun hideBottomLayout() {
     activity?.let {
-      it.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.invisible()
-      it.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.isClickable = false
-      it.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.invisible()
-      it.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.isClickable = false
+      it.findViewById<RelativeLayout>(R.id.minimalBottomLayout)?.apply {
+        invisible()
+        isClickable = false
+        isEnabled = false
+      }
+      it.findViewById<FloatingActionButton>(R.id.minimalBottomLayoutFab)?.apply{
+        invisible()
+      }
     }
   }
 
