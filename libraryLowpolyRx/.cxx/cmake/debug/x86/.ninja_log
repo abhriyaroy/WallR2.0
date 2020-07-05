@@ -1,0 +1,13 @@
+# ninja log v5
+0	7	0	clean	94fbb72b8c76e907
+0	6	0	clean	94fbb72b8c76e907
+0	6	0	clean	94fbb72b8c76e907
+0	5	0	clean	94fbb72b8c76e907
+7	541	1593942101	CMakeFiles/lowpolyrx-lib.dir/src/main/jni/lowpoly.c.o	25b5fc05a3c3473f
+10	542	1593942101	CMakeFiles/lowpolyrx-lib.dir/src/main/jni/point.c.o	f09d00ed068eef9
+11	543	1593942101	CMakeFiles/lowpolyrx-lib.dir/src/main/jni/dedup.c.o	1a43612f41f97ca9
+0	543	1593942101	CMakeFiles/lowpolyrx-lib.dir/src/main/jni/lowpoly-lib.c.o	7aa57d71e44d801
+4	544	1593942101	CMakeFiles/lowpolyrx-lib.dir/src/main/jni/sobel.c.o	80c088fe8ee3ff71
+9	546	1593942101	CMakeFiles/lowpolyrx-lib.dir/src/main/jni/dilution.c.o	1bd57038eb095800
+6	575	1593942101	CMakeFiles/lowpolyrx-lib.dir/src/main/jni/delaunay.c.o	7699abec380433cc
+575	652	1593942101	../../../../build/intermediates/cmake/debug/obj/x86/liblowpolyrx-lib.so	325251e4fd85c27c

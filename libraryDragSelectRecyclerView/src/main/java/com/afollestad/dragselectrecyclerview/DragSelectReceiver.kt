@@ -1,6 +1,6 @@
 package com.afollestad.dragselectrecyclerview
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 
 interface DragSelectReceiver {
 

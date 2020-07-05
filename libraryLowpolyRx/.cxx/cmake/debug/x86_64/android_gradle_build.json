@@ -1,0 +1,73 @@
+{
+  "stringTable": {
+    "0": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/x86_64",
+    "1": "--target=x86_64-none-linux-android21 --gcc-toolchain=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Dlowpolyrx_lib_EXPORTS -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -O0 -fno-limit-debug-info -fPIC"
+  },
+  "buildFiles": [
+    "/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/build/cmake/android.toolchain.cmake",
+    "/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/build/cmake/platforms.cmake",
+    "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/abhriyaroy/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/x86_64\" clean"
+  ],
+  "buildTargetsCommand": "/Users/abhriyaroy/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja  -C \"/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/x86_64\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "lowpolyrx-lib-Debug-x86_64": {
+      "buildCommand": "/Users/abhriyaroy/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/x86_64\" lowpolyrx-lib",
+      "buildType": "debug",
+      "toolchain": "576737184",
+      "abi": "x86_64",
+      "artifactName": "lowpolyrx-lib",
+      "files": [
+        {
+          "src": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/lowpoly-lib.c",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/sobel.c",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/delaunay.c",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/lowpoly.c",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/dilution.c",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/point.c",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/dedup.c",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        }
+      ],
+      "headers": [],
+      "output": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/build/intermediates/cmake/debug/obj/x86_64/liblowpolyrx-lib.so",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {
+    "576737184": {
+      "cCompilerExecutable": "/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang"
+    }
+  },
+  "cFileExtensions": [
+    "c"
+  ],
+  "cppFileExtensions": []
+}

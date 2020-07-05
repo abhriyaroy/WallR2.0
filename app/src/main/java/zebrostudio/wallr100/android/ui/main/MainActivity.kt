@@ -5,13 +5,13 @@ import android.content.Intent.*
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.IdRes
-import android.support.v4.app.ActivityOptionsCompat
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.IdRes
+import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialcab.MaterialCab
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetView
@@ -217,9 +217,9 @@ class MainActivity : AppCompatActivity(),
   }
 
   private inline fun <reified T : BaseFragment> addFragment(
-    @IdRes id: Int,
-    fragment: T,
-    fragmentTag: FragmentTag
+          @IdRes id: Int,
+          fragment: T,
+          fragmentTag: FragmentTag
   ) {
     if (!fragmentExistsOnStackTop(fragmentTag)) {
       if (fragmentTag == EXPLORE_TAG) {

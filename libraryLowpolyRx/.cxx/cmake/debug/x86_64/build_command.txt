@@ -1,0 +1,22 @@
+Executable : /Users/abhriyaroy/Library/Android/sdk/cmake/3.10.2.4988404/bin/cmake
+arguments : 
+-H/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx
+-DCMAKE_CXX_FLAGS=-std=c++11 -frtti -fexceptions
+-DCMAKE_FIND_ROOT_PATH=/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/prefab/x86_64/prefab
+-DCMAKE_BUILD_TYPE=Debug
+-DCMAKE_TOOLCHAIN_FILE=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/build/cmake/android.toolchain.cmake
+-DANDROID_ABI=x86_64
+-DANDROID_NDK=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669
+-DANDROID_PLATFORM=android-17
+-DCMAKE_ANDROID_ARCH_ABI=x86_64
+-DCMAKE_ANDROID_NDK=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669
+-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/build/intermediates/cmake/debug/obj/x86_64
+-DCMAKE_MAKE_PROGRAM=/Users/abhriyaroy/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja
+-DCMAKE_SYSTEM_NAME=Android
+-DCMAKE_SYSTEM_VERSION=17
+-B/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/x86_64
+-GNinja
+jvmArgs : 
+
+Build command args:

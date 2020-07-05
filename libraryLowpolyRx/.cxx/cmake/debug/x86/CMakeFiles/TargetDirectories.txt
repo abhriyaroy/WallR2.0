@@ -1,0 +1,3 @@
+/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/x86/CMakeFiles/rebuild_cache.dir
+/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/x86/CMakeFiles/edit_cache.dir
+/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/x86/CMakeFiles/lowpolyrx-lib.dir

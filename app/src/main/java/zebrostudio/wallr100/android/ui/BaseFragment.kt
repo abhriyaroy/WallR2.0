@@ -1,14 +1,14 @@
 package zebrostudio.wallr100.android.ui
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle
 import android.graphics.PorterDuff.Mode.MULTIPLY
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.Spinner
+import androidx.fragment.app.Fragment
 import com.getbase.floatingactionbutton.FloatingActionButton
 import com.jaredrummler.materialspinner.MaterialSpinner
 import com.ogaclejapan.smarttablayout.SmartTabLayout

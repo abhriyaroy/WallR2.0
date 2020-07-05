@@ -1,0 +1,43 @@
+[
+{
+  "directory": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/x86_64",
+  "command": "/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=x86_64-none-linux-android21 --gcc-toolchain=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Dlowpolyrx_lib_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/lowpolyrx-lib.dir/src/main/jni/lowpoly-lib.c.o   -c /Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/lowpoly-lib.c",
+  "file": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/lowpoly-lib.c"
+},
+
+{
+  "directory": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/x86_64",
+  "command": "/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=x86_64-none-linux-android21 --gcc-toolchain=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Dlowpolyrx_lib_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/lowpolyrx-lib.dir/src/main/jni/sobel.c.o   -c /Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/sobel.c",
+  "file": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/sobel.c"
+},
+
+{
+  "directory": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/x86_64",
+  "command": "/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=x86_64-none-linux-android21 --gcc-toolchain=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Dlowpolyrx_lib_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/lowpolyrx-lib.dir/src/main/jni/delaunay.c.o   -c /Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/delaunay.c",
+  "file": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/delaunay.c"
+},
+
+{
+  "directory": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/x86_64",
+  "command": "/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=x86_64-none-linux-android21 --gcc-toolchain=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Dlowpolyrx_lib_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/lowpolyrx-lib.dir/src/main/jni/lowpoly.c.o   -c /Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/lowpoly.c",
+  "file": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/lowpoly.c"
+},
+
+{
+  "directory": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/x86_64",
+  "command": "/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=x86_64-none-linux-android21 --gcc-toolchain=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Dlowpolyrx_lib_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/lowpolyrx-lib.dir/src/main/jni/dilution.c.o   -c /Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/dilution.c",
+  "file": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/dilution.c"
+},
+
+{
+  "directory": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/x86_64",
+  "command": "/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=x86_64-none-linux-android21 --gcc-toolchain=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Dlowpolyrx_lib_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/lowpolyrx-lib.dir/src/main/jni/point.c.o   -c /Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/point.c",
+  "file": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/point.c"
+},
+
+{
+  "directory": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/x86_64",
+  "command": "/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=x86_64-none-linux-android21 --gcc-toolchain=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/abhriyaroy/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Dlowpolyrx_lib_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/lowpolyrx-lib.dir/src/main/jni/dedup.c.o   -c /Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/dedup.c",
+  "file": "/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/src/main/jni/dedup.c"
+}
+]

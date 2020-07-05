@@ -1,7 +1,8 @@
 package zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper
 
-import android.support.v7.widget.RecyclerView.ViewHolder
+import androidx.recyclerview.widget.RecyclerView
+
 
 interface OnStartDragListener {
-  fun onStartDrag(viewHolder: ViewHolder)
+  fun onStartDrag(viewHolder: RecyclerView.ViewHolder)
 }

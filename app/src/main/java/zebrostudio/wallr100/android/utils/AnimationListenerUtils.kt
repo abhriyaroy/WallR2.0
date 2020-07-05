@@ -1,9 +1,9 @@
 package zebrostudio.wallr100.android.utils
 
-import android.support.annotation.AnimRes
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.annotation.AnimRes
 
 private class AnimationListener(
   private val onAnimationRepeat: () -> Unit,
@@ -16,11 +16,11 @@ private class AnimationListener(
 }
 
 fun View.showAnimation(
-  @AnimRes animResId: Int,
-  fillAfter: Boolean = true,
-  onAnimationRepeat: () -> Unit = {},
-  onAnimationStart: () -> Unit = {},
-  onAnimationEnd: () -> Unit = {}
+        @AnimRes animResId: Int,
+        fillAfter: Boolean = true,
+        onAnimationRepeat: () -> Unit = {},
+        onAnimationStart: () -> Unit = {},
+        onAnimationEnd: () -> Unit = {}
 ) = with(AnimationUtils.loadAnimation(context, animResId)) {
   setAnimationListener(AnimationListener(onAnimationRepeat, onAnimationStart, onAnimationEnd))
   this.fillAfter = fillAfter

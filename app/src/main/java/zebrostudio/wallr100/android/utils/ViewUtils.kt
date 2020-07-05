@@ -4,13 +4,13 @@ import android.content.Context
 import android.graphics.Rect
 import android.os.Handler
 import android.os.Looper
-import android.support.annotation.LayoutRes
 import android.util.DisplayMetrics
 import android.view.*
 import android.view.View.*
 import android.view.View.MeasureSpec.UNSPECIFIED
 import android.view.View.MeasureSpec.makeMeasureSpec
 import android.widget.Toast
+import androidx.annotation.LayoutRes
 import zebrostudio.wallr100.R
 
 fun View.setOnDebouncedClickListener(onClick: (v: View) -> Unit) {
@@ -62,9 +62,9 @@ fun View.menuTitleToast(
 }
 
 fun ViewGroup.inflate(
-  inflater: LayoutInflater, @LayoutRes layoutRes: Int,
-  root: ViewGroup = this,
-  attachToRoot: Boolean = false
+        inflater: LayoutInflater, @LayoutRes layoutRes: Int,
+        root: ViewGroup = this,
+        attachToRoot: Boolean = false
 ) = inflater.inflate(layoutRes, root, attachToRoot)!!
 
 fun withDelayOnMain(delay: Long, block: () -> Unit) {

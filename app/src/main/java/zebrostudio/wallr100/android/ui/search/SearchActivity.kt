@@ -1,13 +1,13 @@
 package zebrostudio.wallr100.android.ui.search
 
-import android.arch.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.speech.RecognizerIntent
-import android.support.design.widget.AppBarLayout
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.appbar.AppBarLayout
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.uber.autodispose.ScopeProvider
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
@@ -60,14 +60,12 @@ class SearchActivity : AppCompatActivity(), SearchContract.SearchView {
     super.onDestroy()
   }
 
-  override fun onActivityResult(
-    requestCode: Int,
-    resultCode: Int,
-    data: Intent?
-  ) {
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
     activityResultIntent = data
     presenter.notifyActivityResult(requestCode, resultCode)
   }
+
 
   override fun onBackPressed() {
     if (appBarIsCollapsed) {
