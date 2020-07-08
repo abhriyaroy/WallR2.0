@@ -899,12 +899,12 @@ class DetailPresenterImplTest {
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).hideIndefiniteLoader()
-    verify(detailView).getScope()
+    verify(detailView, times(2)).getScope()
     verify(detailView).startCroppingActivity(mockUri,
       mockDestinationUri,
       width,
       height)
-    verifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall(2)
   }
 
   @Test
@@ -1039,12 +1039,12 @@ class DetailPresenterImplTest {
     verify(detailView).internetAvailability()
     verify(detailView).blurScreenAndInitializeProgressPercentage()
     verify(detailView).hideIndefiniteLoader()
-    verify(detailView).getScope()
+    verify(detailView, times(2)).getScope()
     verify(detailView).startCroppingActivity(mockUri,
       mockDestinationUri,
       width,
       height)
-    verifyPostExecutionThreadSchedulerCall()
+    verifyPostExecutionThreadSchedulerCall(2)
   }
 
   @Test
@@ -1139,16 +1139,16 @@ class DetailPresenterImplTest {
 
   @Test
   fun `should show generic error message when crop activity results to failure`() {
+    val resultNotOk = 1
     `when`(detailView.getUriFromResultIntent()).thenReturn(mockUri)
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri))
         .thenReturn(Single.error(Exception()))
 
-    detailPresenterImpl.handleViewResult(REQUEST_CROP, RESULT_OK)
+    detailPresenterImpl.handleViewResult(REQUEST_CROP, resultNotOk)
 
     assertEquals(false, detailPresenterImpl.isImageOperationInProgress)
-    verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
     verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
     verify(detailView).getUriFromResultIntent()
     verify(detailView).blurScreen()

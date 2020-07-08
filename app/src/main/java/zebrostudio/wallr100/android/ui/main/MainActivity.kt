@@ -37,6 +37,8 @@ import zebrostudio.wallr100.android.utils.*
 import zebrostudio.wallr100.android.utils.FragmentTag.*
 import zebrostudio.wallr100.presentation.main.MainContract
 import zebrostudio.wallr100.presentation.main.MainContract.MainView
+import java.lang.Exception
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
 private const val RIPPLE_DURATION: Long = 250
