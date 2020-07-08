@@ -653,6 +653,7 @@ public class UCropActivity extends AppCompatActivity {
   }
 
   protected void setResultError(Throwable throwable) {
+    throwable.printStackTrace();
     setResult(UCrop.RESULT_ERROR, new Intent().putExtra(UCrop.EXTRA_ERROR, throwable));
   }
 

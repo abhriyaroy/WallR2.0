@@ -65,7 +65,9 @@ public class UCrop {
    */
   @Nullable
   public static Uri getOutput(@NonNull Intent intent) {
-    return intent.getParcelableExtra(EXTRA_OUTPUT_URI);
+    Uri res = intent.getParcelableExtra(EXTRA_OUTPUT_URI);
+    System.out.println("output uri "+res);
+    return res;
   }
 
   /**

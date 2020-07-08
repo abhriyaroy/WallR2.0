@@ -281,6 +281,7 @@ class DetailActivity : BaseActivity(), DetailView {
     if (activityResultIntent != null) {
       return UCrop.getOutput(activityResultIntent!!)
     }
+    println("null result intent")
     return null
   }
 

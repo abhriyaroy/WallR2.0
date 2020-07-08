@@ -1,2 +1,0 @@
-ninja: Entering directory `/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/x86'
-ninja: no work to do.

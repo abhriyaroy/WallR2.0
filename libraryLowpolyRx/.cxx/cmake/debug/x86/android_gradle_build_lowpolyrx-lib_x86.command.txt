@@ -1,7 +1,0 @@
-Executable : /Users/abhriyaroy/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja
-arguments : 
--C
-/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/x86
-lowpolyrx-lib
-jvmArgs : 
-

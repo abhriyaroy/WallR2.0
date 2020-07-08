@@ -1,3 +1,0 @@
-/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/rebuild_cache.dir
-/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/edit_cache.dir
-/Users/abhriyaroy/android/WallR2.0/libraryLowpolyRx/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/lowpolyrx-lib.dir
