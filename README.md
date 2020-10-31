@@ -46,9 +46,9 @@ Salient features of the app :-
   <img src="https://i.imgur.com/xDNyaOn.png" alt="Collections" width=250 height=450 hspace="3">
 </p> 
 <p align="center">
-  <img src="https://i.imgur.com/bODjKaX.jpg" alt="Search Wallpapers" width=280 height=500 hspace="3">
-  <img src="https://i.imgur.com/BfUPBLr.jpg" alt="Minimal Wallpapers" width=280 height=500 hspace="3">
-  <img src="https://i.imgur.com/2fJsYzR.jpg" alt="Wallpaper Details" width=280 height=500 hspace="3">
+  <img src="https://i.imgur.com/bODjKaX.jpg" alt="Search Wallpapers" width=250 height=450 hspace="3">
+  <img src="https://i.imgur.com/BfUPBLr.jpg" alt="Minimal Wallpapers" width=250 height=450 hspace="3">
+  <img src="https://i.imgur.com/2fJsYzR.jpg" alt="Wallpaper Details" width=250 height=450 hspace="3">
 </p>
  
 # App Details
