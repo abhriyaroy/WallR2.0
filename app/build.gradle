@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply from: "../versions.gradle"
+apply plugin: 'com.google.firebase.crashlytics'
 
 def keystorePropertiesFile = project.file("signing.properties")
 def keystoreProperties = new Properties()
@@ -37,7 +38,7 @@ android {
 
     signingConfig signingConfigs.release
 
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
   }
   buildTypes {
     release {
@@ -57,11 +58,10 @@ android {
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
     // Android support libraries
-    implementation "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
-    implementation "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
-    implementation "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
-    implementation "com.android.support:percent:$SUPPORT_LIBRARY_VERSION"
-    implementation "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION"
+    implementation "com.android.support:appcompat-v7:$APP_COMPAT_VERSION"
+    implementation "com.google.android.material:material:$MATERIAL_DESIGN_VERSION"
+    implementation "androidx.percentlayout:percentlayout:$PERCENT_LAYOUT_VERSION"
+    implementation "androidx.constraintlayout:constraintlayout:$CONSTRAINT_LAYOUT_VERSION"
     // Dagger
     implementation "com.google.dagger:dagger:$DAGGER_VERSION"
     implementation "com.google.dagger:dagger-android-support:$DAGGER_VERSION"
@@ -82,6 +82,7 @@ android {
     implementation "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
     implementation "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$RETROFIT_VERSION"
+    implementation "com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION"
     // Toasty
     implementation "com.github.GrenderG:Toasty:$TOASTY_VERSION"
     // Spinkit
@@ -93,15 +94,16 @@ android {
     implementation "com.ogaclejapan.smarttablayout:utils-v4:$SMART_TAB_VERSION"
     // Glide
     implementation "com.github.bumptech.glide:glide:$GLIDE_VERSION"
-    annotationProcessor "com.github.bumptech.glide:compiler:$GLIDE_VERSION"
+    kapt "com.github.bumptech.glide:compiler:$GLIDE_VERSION"
     // Material Dialog
     implementation "com.afollestad.material-dialogs:core:$MATERIAL_DIALOG_VERSION"
     // Recyclerview Animator
     implementation "jp.wasabeef:recyclerview-animators:$RECYCLER_VIEW_ANIMATOR_VERSION"
     // Firebase
-    implementation "com.google.firebase:firebase-core:$FIREBASE_CORE_VERSION"
     implementation "com.google.firebase:firebase-database:$FIREBASE_DATABASE_VERSION"
     implementation "com.google.firebase:firebase-dynamic-links:$FIREBASE_DYNAMIC_LINKS_VERSION"
+    implementation "com.google.firebase:firebase-crashlytics:$FIREBASE_CRASHLYTICS_VERSION"
+    implementation "com.google.firebase:firebase-analytics:$FIREBASE_ANALYTICS_VERSION"
     // Sliding up panel
     implementation "com.sothree.slidinguppanel:library:$SLIDING_UP_PANEL_VERSION"
     // Circle ImageView

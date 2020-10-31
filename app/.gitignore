@@ -3,3 +3,4 @@
 /src/release
 signing.properties
 wallrkey.jks
+/src/main/java/zebrostudio/waller100/data/api/ApiKey.kt

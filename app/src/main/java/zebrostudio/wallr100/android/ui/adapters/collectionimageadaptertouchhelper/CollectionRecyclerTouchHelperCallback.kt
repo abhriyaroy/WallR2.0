@@ -1,8 +1,8 @@
 package zebrostudio.wallr100.android.ui.adapters.collectionimageadaptertouchhelper
 
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper.*
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper.*
 
 class CollectionRecyclerTouchHelperCallback(
   private val adapter: ItemTouchHelperAdapter
@@ -17,8 +17,8 @@ class CollectionRecyclerTouchHelperCallback(
   }
 
   override fun getMovementFlags(
-    recyclerView: RecyclerView,
-    viewHolder: RecyclerView.ViewHolder
+          recyclerView: RecyclerView,
+          viewHolder: RecyclerView.ViewHolder
   ): Int {
     return if (recyclerView.layoutManager is GridLayoutManager) {
       val swipeFlags = 0

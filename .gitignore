@@ -6,3 +6,4 @@
 /build
 /captures
 .externalNativeBuild
+ app/src/main/java/zebrostudio/wallr100/data/api/ApiKey.kt

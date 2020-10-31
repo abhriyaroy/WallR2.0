@@ -8,7 +8,7 @@ import android.content.Intent.*
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat.requestPermissions
+import androidx.core.app.ActivityCompat.requestPermissions
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout

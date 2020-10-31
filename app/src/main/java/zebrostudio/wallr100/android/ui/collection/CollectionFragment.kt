@@ -7,18 +7,18 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.support.design.widget.AppBarLayout
-import android.support.v4.app.ActivityCompat.requestPermissions
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.view.menu.MenuBuilder
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView.ViewHolder
-import android.support.v7.widget.SwitchCompat
-import android.support.v7.widget.Toolbar
-import android.support.v7.widget.Toolbar.OnMenuItemClickListener
-import android.support.v7.widget.helper.ItemTouchHelper
+import com.google.android.material.appbar.AppBarLayout
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener
 import android.view.*
 import android.widget.RelativeLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.widget.SwitchCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialcab.MaterialCab
 import com.afollestad.materialdialogs.MaterialDialog
 import com.getkeepsafe.taptargetview.TapTarget
@@ -110,8 +110,10 @@ class CollectionFragment : BaseFragment(),
     setHasOptionsMenu(true)
   }
 
+
   @SuppressLint("RestrictedApi")
-  override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+  override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    super.onCreateOptionsMenu(menu, inflater)
     activity!!.menuInflater.inflate(R.menu.collection, menu)
     if (menu is MenuBuilder) {
       menu.setOptionalIconsVisible(true)
@@ -137,7 +139,7 @@ class CollectionFragment : BaseFragment(),
     return true
   }
 
-  override fun onStartDrag(viewHolder: ViewHolder) {
+  override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
     presenter.notifyDragStarted()
     itemTouchHelper.startDrag(viewHolder)
   }

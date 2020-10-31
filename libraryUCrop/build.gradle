@@ -31,6 +31,6 @@ android {
 }
 
 dependencies {
-  implementation "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+  implementation 'androidx.appcompat:appcompat:1.0.0'
   implementation "com.squareup.okhttp3:okhttp:$OK_HTTP3_VERSION"
 }

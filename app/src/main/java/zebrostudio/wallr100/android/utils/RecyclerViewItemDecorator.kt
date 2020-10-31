@@ -1,9 +1,8 @@
 package zebrostudio.wallr100.android.utils
 
 import android.graphics.Rect
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.State
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerViewItemDecorator(
   private val sizeGridSpacingPx: Int,
@@ -16,7 +15,7 @@ class RecyclerViewItemDecorator(
     outRect: Rect,
     view: View,
     parent: RecyclerView,
-    state: State
+    state: RecyclerView.State
   ) {
     val frameWidth =
         ((parent.width - sizeGridSpacingPx.toFloat() * (gridSize - 1)) / gridSize).toInt()

@@ -2,7 +2,7 @@ package zebrostudio.wallr100.android.service
 
 import android.content.Context
 import android.content.Intent
-import android.support.v4.content.ContextCompat.startForegroundService
+import androidx.core.content.ContextCompat.startForegroundService
 import zebrostudio.wallr100.android.utils.isServiceRunningInForeground
 
 interface ServiceManager {

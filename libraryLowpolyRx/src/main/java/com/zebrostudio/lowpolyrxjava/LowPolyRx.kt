@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 

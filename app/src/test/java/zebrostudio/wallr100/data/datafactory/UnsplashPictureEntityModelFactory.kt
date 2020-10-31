@@ -1,6 +1,6 @@
 package zebrostudio.wallr100.data.datafactory
 
-import zebrostudio.wallr100.data.model.unsplashmodel.ProfileImage
+import zebrostudio.wallr100.data.model.unsplashmodel.ProfileImageEntity
 import zebrostudio.wallr100.data.model.unsplashmodel.UnsplashPicturesEntity
 import zebrostudio.wallr100.data.model.unsplashmodel.UrlEntity
 import zebrostudio.wallr100.data.model.unsplashmodel.UserEntity
@@ -17,7 +17,7 @@ object UnsplashPictureEntityModelFactory {
       Random().nextInt(),
       randomUUID().toString(),
       UserEntity(randomUUID().toString(),
-        ProfileImage(randomUUID().toString())),
+        ProfileImageEntity(randomUUID().toString())),
       Random().nextInt(),
       true,
       UrlEntity(

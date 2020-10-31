@@ -1,10 +1,10 @@
 package zebrostudio.wallr100.android.utils
 
-import android.support.annotation.ColorRes
-import android.support.annotation.IntegerRes
-import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
 import android.widget.Toast
+import androidx.annotation.ColorRes
+import androidx.annotation.IntegerRes
+import androidx.annotation.StringRes
+import androidx.fragment.app.Fragment
 import es.dmoral.toasty.Toasty
 
 fun Fragment.stringRes(@StringRes id: Int) = getString(id)

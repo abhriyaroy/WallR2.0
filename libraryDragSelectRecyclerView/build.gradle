@@ -24,6 +24,6 @@ android {
 }
 
 dependencies {
-  implementation "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
+  implementation 'androidx.recyclerview:recyclerview:1.0.0'
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
 }

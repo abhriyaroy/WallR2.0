@@ -61,6 +61,7 @@ class DetailPresenterImpl(
   internal var lastImageOperationType = WALLPAPER
   private var downloadProgress: Long = 0
   private var detailView: DetailContract.DetailView? = null
+  private var cropDestinationUri : Uri?=null
 
   override fun attachView(view: DetailContract.DetailView) {
     detailView = view
@@ -204,6 +205,7 @@ class DetailPresenterImpl(
     requestCode: Int,
     resultCode: Int
   ) {
+    println("request code is $requestCode $resultCode")
     if (requestCode == DOWNLOAD.ordinal) {
       if (resultCode == PurchaseTransactionConfig.PURCHASE_SUCCESSFUL_RESULT_CODE) {
         handleDownloadClick()
@@ -229,7 +231,7 @@ class DetailPresenterImpl(
         detailView?.showUnsuccessfulPurchaseError()
       }
     } else if (requestCode == REQUEST_CROP && resultCode == RESULT_OK) {
-      handleCropResult(detailView?.getUriFromResultIntent())
+      handleCropResult()
     } else {
       isDownloadInProgress = false
       isImageOperationInProgress = false
@@ -255,6 +257,7 @@ class DetailPresenterImpl(
             .subscribe({
               detailView?.showDownloadCompletedSuccessMessage()
             }, {
+              it.printStackTrace()
               detailView?.showGenericErrorMessage()
             })
       }
@@ -274,6 +277,7 @@ class DetailPresenterImpl(
             detailView?.hideScreenBlur()
             detailView?.showDownloadCompletedSuccessMessage()
           }, {
+            it.printStackTrace()
             detailView?.hideScreenBlur()
             detailView?.showGenericErrorMessage()
           })
@@ -431,6 +435,7 @@ class DetailPresenterImpl(
   }
 
   private fun handleQuickSetWallpaperOnError(throwable: Throwable) {
+    throwable.printStackTrace()
     if (throwable is ImageDownloadException) {
       detailView?.showUnableToDownloadErrorMessage()
     } else {
@@ -541,6 +546,7 @@ class DetailPresenterImpl(
           }
 
           override fun onError(throwable: Throwable) {
+            throwable.printStackTrace()
             handleEditSetWallpaperOnError(throwable)
           }
         })
@@ -549,12 +555,7 @@ class DetailPresenterImpl(
   private fun handleEditSetWallpaperOnNext(it: ImageDownloadPresenterEntity) {
     val progress = it.progress
     if (progress == DOWNLOAD_COMPLETED_VALUE) {
-      detailView?.startCroppingActivity(
-        imageOptionsUseCase.getCroppingSourceUri().blockingGet(),
-        imageOptionsUseCase.getCroppingDestinationUri().blockingGet(),
-        wallpaperSetter.getDesiredMinimumWidth(),
-        wallpaperSetter.getDesiredMinimumHeight()
-      )
+     openCropView()
     } else if (progress == PROGRESS_VALUE_99) {
       isDownloadInProgress = false
       isImageOperationInProgress = true
@@ -566,6 +567,26 @@ class DetailPresenterImpl(
       isDownloadInProgress = true
       detailView?.updateProgressPercentage("$progress%")
     }
+  }
+
+  private fun openCropView(){
+    imageOptionsUseCase.getCroppingDestinationUri()
+            .flatMap {
+              cropDestinationUri = it
+              imageOptionsUseCase.getCroppingSourceUri()
+            }
+            .observeOn(postExecutionThread.scheduler)
+            .autoDisposable(detailView!!.getScope())
+            .subscribe({
+              detailView?.startCroppingActivity(
+                      it,
+                      cropDestinationUri!!,
+                      wallpaperSetter.getDesiredMinimumWidth(),
+                      wallpaperSetter.getDesiredMinimumHeight()
+              )
+            },{
+              detailView?.showGenericErrorMessage()
+            })
   }
 
   private fun handleEditSetWallpaperOnError(throwable: Throwable) {
@@ -641,13 +662,13 @@ class DetailPresenterImpl(
     resetImageOperationFlags()
   }
 
-  private fun handleCropResult(cropResultUri: Uri?) {
+  private fun handleCropResult() {
     var hasWallpaperBeenSet = false
     detailView?.blurScreen()
     detailView?.showIndefiniteLoader(
       resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage)
     )
-    imageOptionsUseCase.getBitmapFromUriSingle(cropResultUri)
+    imageOptionsUseCase.getBitmapFromUriSingle(cropDestinationUri)
         .doOnSuccess {
           hasWallpaperBeenSet = wallpaperSetter.setWallpaper(it)
         }
@@ -665,6 +686,7 @@ class DetailPresenterImpl(
           isImageOperationInProgress = false
           detailView?.hideScreenBlur()
         }, {
+          it.printStackTrace()
           detailView?.showGenericErrorMessage()
           resetImageOperationFlags()
           detailView?.hideScreenBlur()

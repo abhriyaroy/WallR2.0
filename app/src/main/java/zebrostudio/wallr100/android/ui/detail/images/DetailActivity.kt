@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.support.v4.app.ActivityCompat.requestPermissions
+import androidx.core.app.ActivityCompat.requestPermissions
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -281,6 +281,7 @@ class DetailActivity : BaseActivity(), DetailView {
     if (activityResultIntent != null) {
       return UCrop.getOutput(activityResultIntent!!)
     }
+    println("null result intent")
     return null
   }
 
