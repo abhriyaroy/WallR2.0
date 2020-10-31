@@ -41,14 +41,14 @@ Salient features of the app :-
 # Screenshots
 
 <p align="center">
-  <img src="https://i.imgur.com/xlTXmLD.jpg" alt="Explore Wallpapers" width=300 height=500 hspace="3">
-  <img src="https://i.imgur.com/tCYtXOg.jpg" alt="Wallpaper Categories" width=300 height=500 hspace="3">
-  <img src="https://i.imgur.com/xDNyaOn.png" alt="Collections" width=300 height=500 hspace="3">
+  <img src="https://i.imgur.com/xlTXmLD.jpg" alt="Explore Wallpapers" width=250 height=450 hspace="3">
+  <img src="https://i.imgur.com/tCYtXOg.jpg" alt="Wallpaper Categories" width=250 height=450 hspace="3">
+  <img src="https://i.imgur.com/xDNyaOn.png" alt="Collections" width=250 height=450 hspace="3">
 </p> 
 <p align="center">
-  <img src="https://i.imgur.com/bODjKaX.jpg" alt="Search Wallpapers" width=300 height=500 hspace="3">
-  <img src="https://i.imgur.com/BfUPBLr.jpg" alt="Minimal Wallpapers" width=300 height=500 hspace="3">
-  <img src="https://i.imgur.com/2fJsYzR.jpg" alt="Wallpaper Details" width=300 height=500 hspace="3">
+  <img src="https://i.imgur.com/bODjKaX.jpg" alt="Search Wallpapers" width=280 height=500 hspace="3">
+  <img src="https://i.imgur.com/BfUPBLr.jpg" alt="Minimal Wallpapers" width=280 height=500 hspace="3">
+  <img src="https://i.imgur.com/2fJsYzR.jpg" alt="Wallpaper Details" width=280 height=500 hspace="3">
 </p>
  
 # App Details
