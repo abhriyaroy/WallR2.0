@@ -2,25 +2,27 @@ package zebrostudio.wallr100.data.api
 
 import io.reactivex.Single
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import zebrostudio.wallr100.data.api.UrlMap.UNSPLASH_BASE_URL
 import zebrostudio.wallr100.data.model.unsplashmodel.UnsplashPicturesEntity
+import zebrostudio.wallr100.data.model.unsplashmodel.UnsplashSearchEntity
 
 interface UnsplashClientFactory {
-  fun getPicturesService(url: String): Single<List<UnsplashPicturesEntity>>
+  fun getPicturesService(url: String): Single<UnsplashSearchEntity>
 }
 
 class UnsplashClientFactoryImpl : UnsplashClientFactory {
 
   private val headerName = "Authorization"
   private val headerValue =
-      "Client-ID 0ff70d0b9b2ed4f5799f59f282407253b8c86084da7876845fea2c2f4d9b90de"
+      "Client-ID $API_KEY"
   private var retrofit: Retrofit? = null
   private var okHttpClient: OkHttpClient? = null
 
-  override fun getPicturesService(url: String): Single<List<UnsplashPicturesEntity>> {
+  override fun getPicturesService(url: String): Single<UnsplashSearchEntity> {
     if (okHttpClient == null) {
       val builder = OkHttpClient().newBuilder()
       builder.addInterceptor { chain ->
@@ -29,6 +31,10 @@ class UnsplashClientFactoryImpl : UnsplashClientFactory {
             .build()
         chain.proceed(request)
       }
+      val interceptor = HttpLoggingInterceptor()
+      interceptor.level = HttpLoggingInterceptor.Level.BODY
+      builder.addInterceptor(interceptor).build()
+
       okHttpClient = builder.build()
     }
 

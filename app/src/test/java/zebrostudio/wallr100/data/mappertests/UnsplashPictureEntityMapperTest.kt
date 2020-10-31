@@ -7,7 +7,7 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapperImpl
-import zebrostudio.wallr100.data.model.unsplashmodel.ProfileImage
+import zebrostudio.wallr100.data.model.unsplashmodel.ProfileImageEntity
 import zebrostudio.wallr100.data.model.unsplashmodel.UnsplashPicturesEntity
 import zebrostudio.wallr100.data.model.unsplashmodel.UrlEntity
 import zebrostudio.wallr100.data.model.unsplashmodel.UserEntity
@@ -49,7 +49,7 @@ class UnsplashPictureEntityMapperTest {
       imageWidth,
       imageHeight,
       color,
-      UserEntity(authorName, ProfileImage(authorProfileImageUrl)),
+      UserEntity(authorName, ProfileImageEntity(authorProfileImageUrl)),
       likes,
       likedByUser,
       UrlEntity(imageRawLink, imageLargeLink, imageMediumLink, imageSmallLink, imageThumbLink))

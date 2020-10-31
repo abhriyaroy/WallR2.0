@@ -17,7 +17,7 @@ object UrlMap {
   fun getQueryString(
     keyword: String,
     queryPage: Int
-  ) = "photos/search?query=$keyword&per_page=30&page=$queryPage"
+  ) = "search/photos?query=$keyword&per_page=30&page=$queryPage"
 
   fun getDynamicLinkPrefixUri(): String {
     return if (BuildConfig.BUILD_TYPE == "debug") {

@@ -123,17 +123,19 @@ class WallrDataRepository(
     PREMIUM_USER_TAG, false)
 
   override fun getSearchPictures(query: String): Single<List<SearchPicturesModel>> {
+    println("query is $query")
     return unsplashClientFactory.getPicturesService(query)
         .subscribeOn(executionThread.ioScheduler)
         .flatMap {
-          if (it.isEmpty()) {
+          if (it.results.isEmpty()) {
             Single.error(NoResultFoundException())
           } else {
-            val map = unsplashPictureEntityMapper.mapFromEntity(it)
+            val map = unsplashPictureEntityMapper.mapFromEntity(it.results)
             Single.just(map)
           }
         }
         .onErrorResumeNext {
+          it.printStackTrace()
           if (it.message != null && it.message == UNABLE_TO_RESOLVE_HOST_EXCEPTION_MESSAGE) {
             Single.error(UnableToResolveHostException())
           } else {
