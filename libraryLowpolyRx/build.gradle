@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply from: './versions.gradle'
 
 android {
@@ -45,8 +45,4 @@ dependencies {
   testImplementation "junit:junit:$JUNIT_VERSION"
   testImplementation "org.assertj:assertj-core:$ASSERTJ_VERSION"
   testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$MOCKITO_VERSION"
-}
-
-repositories {
-  mavenCentral()
 }
