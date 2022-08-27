@@ -18,7 +18,8 @@ class UnsplashClientFactoryImpl : UnsplashClientFactory {
 
   private val headerName = "Authorization"
   private val headerValue =
-      "Client-ID $API_KEY"
+      "Client-ID API_KEY"
+//      "Client-ID $API_KEY"
   private var retrofit: Retrofit? = null
   private var okHttpClient: OkHttpClient? = null
 

@@ -177,11 +177,13 @@ class ImageHandlerImpl(
       } else {
         try {
           with(context.contentResolver.openFileDescriptor(uri, READ_MODE)) {
-            BitmapFactory.decodeFileDescriptor(fileDescriptor).let { bitmap ->
-              this?.close()
-              fileHandler.getCacheFile().outputStream()
+            this?.fileDescriptor?.let { fileDescriptor->
+              BitmapFactory.decodeFileDescriptor(fileDescriptor).let { bitmap ->
+                this.close()
+                fileHandler.getCacheFile().outputStream()
                   .compressBitmap(bitmap, JPEG, BITMAP_COMPRESS_QUALITY)
-              it.onSuccess(bitmap)
+                it.onSuccess(bitmap)
+              }
             }
           }
         } catch (exception: IOException) {

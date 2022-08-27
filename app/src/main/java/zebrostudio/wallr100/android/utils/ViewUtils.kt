@@ -51,8 +51,8 @@ fun View.menuTitleToast(
           makeMeasureSpec(metrics.widthPixels, UNSPECIFIED)
       val heightMeasureSpec =
           makeMeasureSpec(metrics.heightPixels, UNSPECIFIED)
-      toast.view.measure(widthMeasureSpec, heightMeasureSpec)
-      val toastWidth = toast.view.measuredWidth
+      toast.view?.measure(widthMeasureSpec, heightMeasureSpec)
+      val toastWidth = toast.view?.measuredWidth?:0
       val toastX = rect.right - toastWidth - offsetX
       val toastY = viewTop + height + offsetY
       toast.setGravity(Gravity.START or Gravity.TOP, toastX, toastY)

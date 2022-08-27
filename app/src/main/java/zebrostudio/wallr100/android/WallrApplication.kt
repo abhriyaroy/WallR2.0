@@ -38,10 +38,19 @@ class WallrApplication : Application(), HasActivityInjector, HasServiceInjector 
   override fun serviceInjector() = serviceDispatchingAndroidInjector
 
   private fun initPushNotifications() {
-    OneSignal.startInit(this)
-        .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
-        .unsubscribeWhenNotificationsAreDisabled(true)
-        .init()
+      OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
+
+      // OneSignal Initialization
+      OneSignal.initWithContext(this);
+      OneSignal.setAppId("ff94f0fe-e700-4b66-9f26-5408fca95297");
+
+      // promptForPushNotifications will show the native Android notification permission prompt.
+      // We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 7)
+      OneSignal.promptForPushNotifications();
+//    OneSignal.startInit(this)
+//        .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+//        .unsubscribeWhenNotificationsAreDisabled(true)
+//        .init()
   }
 
 }
