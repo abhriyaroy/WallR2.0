@@ -10,6 +10,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.HasServiceInjector
 import zebrostudio.wallr100.android.di.DaggerAppComponent
+import zebrostudio.wallr100.secrets.ApiKeys.ONE_SIGNAL_API_KEY
 import javax.inject.Inject
 
 class WallrApplication : Application(), HasActivityInjector, HasServiceInjector {
@@ -42,7 +43,7 @@ class WallrApplication : Application(), HasActivityInjector, HasServiceInjector 
 
       // OneSignal Initialization
       OneSignal.initWithContext(this);
-      OneSignal.setAppId("ff94f0fe-e700-4b66-9f26-5408fca95297");
+      OneSignal.setAppId(ONE_SIGNAL_API_KEY);
 
       // promptForPushNotifications will show the native Android notification permission prompt.
       // We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 7)
