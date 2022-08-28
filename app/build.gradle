@@ -101,7 +101,7 @@ android {
     implementation "com.google.firebase:firebase-database"
     implementation "com.google.firebase:firebase-dynamic-links"
     implementation "com.google.firebase:firebase-crashlytics"
-    implementation "com.google.firebase:firebase-analytics"
+    implementation "com.google.firebase:firebase-analytics-ktx"
     // Sliding up panel
     implementation "com.sothree.slidinguppanel:library:$SLIDING_UP_PANEL_VERSION"
     // Circle ImageView

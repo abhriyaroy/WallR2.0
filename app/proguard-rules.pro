@@ -71,3 +71,6 @@
 # LowpolyRx
 -dontwarn com.zebrostudio.lowpolyrxjava**
 -keep class com.zebrostudio.lowpolyrxjava** { *; }
+
+-keep class com.google.android.gms.** { *; }
+-keep class com.google.firebase.** { *; }

@@ -52,6 +52,9 @@
         <meta-data
             android:name="android.max_aspect"
             android:value="2.1" />
+
+        <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
+
     </application>
 
 </manifest>
