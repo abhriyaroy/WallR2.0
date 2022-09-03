@@ -57,7 +57,7 @@ class SearchPresenterImplTest {
   @Test
   fun `should return query string on getQueryStringCallSuccess`() {
     assertEquals(getQueryString(randomString, queryPage),
-      "photos/search?query=$randomString&per_page=30&page=1")
+      "search/photos?query=$randomString&per_page=30&page=1")
   }
 
   @Test

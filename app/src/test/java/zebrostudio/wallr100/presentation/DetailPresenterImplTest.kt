@@ -1049,7 +1049,6 @@ class DetailPresenterImplTest {
 
   @Test
   fun `should show error on handleViewResult call failure due to null crop uri`() {
-    `when`(detailView.getUriFromResultIntent()).thenReturn(null)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(null)).thenReturn(
       Single.error(NullPointerException()))
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
@@ -1059,7 +1058,6 @@ class DetailPresenterImplTest {
 
     verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
     verify(imageOptionsUseCase).getBitmapFromUriSingle(null)
-    verify(detailView).getUriFromResultIntent()
     verify(detailView).getScope()
     verify(detailView).blurScreen()
     verify(detailView).showIndefiniteLoader(randomString)
@@ -1070,19 +1068,18 @@ class DetailPresenterImplTest {
 
   @Test
   fun `should set wallpaper and show success message on handleViewResult call success with request code crop`() {
-    `when`(detailView.getUriFromResultIntent()).thenReturn(mockUri)
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri)).thenReturn(Single.just(mockBitmap))
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(true)
 
+    detailPresenterImpl.cropDestinationUri = mockUri
     detailPresenterImpl.handleViewResult(REQUEST_CROP, RESULT_OK)
 
     assertEquals(false, detailPresenterImpl.isImageOperationInProgress)
     verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
     verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
     verify(wallpaperSetter).setWallpaper(mockBitmap)
-    verify(detailView).getUriFromResultIntent()
     verify(detailView).blurScreen()
     verify(detailView).showIndefiniteLoader(randomString)
     verify(detailView).getScope()
@@ -1094,19 +1091,18 @@ class DetailPresenterImplTest {
 
   @Test
   fun `should show wallpaper setting error message on handleViewResult call failure with request code crop due to wallpaper setter error`() {
-    `when`(detailView.getUriFromResultIntent()).thenReturn(mockUri)
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri)).thenReturn(Single.just(mockBitmap))
     `when`(wallpaperSetter.setWallpaper(mockBitmap)).thenReturn(false)
 
+    detailPresenterImpl.cropDestinationUri = mockUri
     detailPresenterImpl.handleViewResult(REQUEST_CROP, RESULT_OK)
 
     assertEquals(false, detailPresenterImpl.isImageOperationInProgress)
     verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
     verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
     verify(wallpaperSetter).setWallpaper(mockBitmap)
-    verify(detailView).getUriFromResultIntent()
     verify(detailView).blurScreen()
     verify(detailView).showIndefiniteLoader(randomString)
     verify(detailView).getScope()
@@ -1117,18 +1113,17 @@ class DetailPresenterImplTest {
 
   @Test
   fun `should show generic error message on handleViewResult call failure with request code crop due to getBitmapFromUriSingle error`() {
-    `when`(detailView.getUriFromResultIntent()).thenReturn(mockUri)
     `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
         .thenReturn(randomString)
     `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri))
         .thenReturn(Single.error(Exception()))
 
+    detailPresenterImpl.cropDestinationUri = mockUri
     detailPresenterImpl.handleViewResult(REQUEST_CROP, RESULT_OK)
 
     assertEquals(false, detailPresenterImpl.isImageOperationInProgress)
     verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
     verify(resourceUtils).getStringResource(R.string.finalizing_wallpaper_messsage)
-    verify(detailView).getUriFromResultIntent()
     verify(detailView).blurScreen()
     verify(detailView).showIndefiniteLoader(randomString)
     verify(detailView).getScope()
@@ -1140,23 +1135,11 @@ class DetailPresenterImplTest {
   @Test
   fun `should show generic error message when crop activity results to failure`() {
     val resultNotOk = 1
-    `when`(detailView.getUriFromResultIntent()).thenReturn(mockUri)
-    `when`(resourceUtils.getStringResource(R.string.finalizing_wallpaper_messsage))
-        .thenReturn(randomString)
-    `when`(imageOptionsUseCase.getBitmapFromUriSingle(mockUri))
-        .thenReturn(Single.error(Exception()))
-
     detailPresenterImpl.handleViewResult(REQUEST_CROP, resultNotOk)
 
     assertEquals(false, detailPresenterImpl.isImageOperationInProgress)
-    verify(imageOptionsUseCase).getBitmapFromUriSingle(mockUri)
-    verify(detailView).getUriFromResultIntent()
-    verify(detailView).blurScreen()
-    verify(detailView).showIndefiniteLoader(randomString)
-    verify(detailView).getScope()
     verify(detailView).showGenericErrorMessage()
     verify(detailView).hideScreenBlur()
-    verifyPostExecutionThreadSchedulerCall()
   }
 
   @Test

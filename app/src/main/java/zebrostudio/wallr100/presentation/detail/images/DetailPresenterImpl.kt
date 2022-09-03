@@ -61,7 +61,7 @@ class DetailPresenterImpl(
   internal var lastImageOperationType = WALLPAPER
   private var downloadProgress: Long = 0
   private var detailView: DetailContract.DetailView? = null
-  private var cropDestinationUri : Uri?=null
+  internal var cropDestinationUri : Uri?=null
 
   override fun attachView(view: DetailContract.DetailView) {
     detailView = view
@@ -236,6 +236,7 @@ class DetailPresenterImpl(
       isDownloadInProgress = false
       isImageOperationInProgress = false
       detailView?.hideScreenBlur()
+      detailView?.showGenericErrorMessage()
     }
   }
 

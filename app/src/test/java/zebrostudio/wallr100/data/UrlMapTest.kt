@@ -18,7 +18,7 @@ class UrlMapTest {
   private val firebasePurchaseAuthUrl = "https://us-central1-wallrproduction.cloudfunctions.net/"
   private val firebasePurchaseAuthEndpoint =
       "purchaseVerification?packageName=$packageName&skuId=$skuId&purchaseToken=$purchaseToken"
-  private val queryString = "photos/search?query=$keyword&per_page=30&page=$queryPage"
+  private val queryString = "search/photos?query=$keyword&per_page=30&page=$queryPage"
 
   @Test
   fun `should return valid firebase purchase auth base url on firebase_puchase_auth_url call`() {
