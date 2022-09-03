@@ -9,6 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import zebrostudio.wallr100.data.api.UrlMap.UNSPLASH_BASE_URL
 import zebrostudio.wallr100.data.model.unsplashmodel.UnsplashPicturesEntity
 import zebrostudio.wallr100.data.model.unsplashmodel.UnsplashSearchEntity
+import zebrostudio.wallr100.secrets.ApiKeys.UNSPLASH_API_KEY
 
 interface UnsplashClientFactory {
   fun getPicturesService(url: String): Single<UnsplashSearchEntity>
@@ -18,7 +19,7 @@ class UnsplashClientFactoryImpl : UnsplashClientFactory {
 
   private val headerName = "Authorization"
   private val headerValue =
-      "Client-ID $API_KEY"
+      "Client-ID $UNSPLASH_API_KEY"
   private var retrofit: Retrofit? = null
   private var okHttpClient: OkHttpClient? = null
 

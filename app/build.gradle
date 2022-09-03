@@ -33,9 +33,6 @@ android {
     versionCode APP_VERSION
     versionName APP_VERSION_NAME
 
-    manifestPlaceholders = [onesignal_app_id               : "ff94f0fe-e700-4b66-9f26-5408fca95297",
-                            onesignal_google_project_number: "REMOTE"]
-
     signingConfig signingConfigs.release
 
     testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -100,10 +97,11 @@ android {
     // Recyclerview Animator
     implementation "jp.wasabeef:recyclerview-animators:$RECYCLER_VIEW_ANIMATOR_VERSION"
     // Firebase
-    implementation "com.google.firebase:firebase-database:$FIREBASE_DATABASE_VERSION"
-    implementation "com.google.firebase:firebase-dynamic-links:$FIREBASE_DYNAMIC_LINKS_VERSION"
-    implementation "com.google.firebase:firebase-crashlytics:$FIREBASE_CRASHLYTICS_VERSION"
-    implementation "com.google.firebase:firebase-analytics:$FIREBASE_ANALYTICS_VERSION"
+    implementation platform("com.google.firebase:firebase-bom:$FIREBASE_BOM_VERSION")
+    implementation "com.google.firebase:firebase-database"
+    implementation "com.google.firebase:firebase-dynamic-links"
+    implementation "com.google.firebase:firebase-crashlytics"
+    implementation "com.google.firebase:firebase-analytics-ktx"
     // Sliding up panel
     implementation "com.sothree.slidinguppanel:library:$SLIDING_UP_PANEL_VERSION"
     // Circle ImageView
@@ -111,9 +109,10 @@ android {
     // BlurView
     implementation "com.eightbitlab:blurview:$BLURVIEW_VERSION"
     // Room
-    implementation "android.arch.persistence.room:runtime:$ROOM_VERSION"
-    implementation "android.arch.persistence.room:rxjava2:$ROOM_VERSION"
-    kapt "android.arch.persistence.room:compiler:$ROOM_VERSION"
+    implementation "androidx.room:room-runtime:$ROOM_VERSION"
+    annotationProcessor "androidx.room:room-compiler:$ROOM_VERSION"
+    implementation "androidx.room:room-rxjava2:$ROOM_VERSION"
+    kapt "androidx.room:room-compiler:$ROOM_VERSION"
     // Taptarget view
     implementation "com.getkeepsafe.taptargetview:taptargetview:$TAP_TARGER_VIEW_VERSION"
     // Rx Image Picker
@@ -148,3 +147,4 @@ android {
   }
 }
 apply plugin: 'com.google.gms.google-services'
+googleServices.disableVersionCheck = true

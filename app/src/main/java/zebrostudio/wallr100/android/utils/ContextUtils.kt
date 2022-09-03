@@ -36,7 +36,7 @@ fun Context.errorToast(message: String, length: Int = Toast.LENGTH_LONG) {
 
 fun Context.checkDataConnection(): Boolean {
   (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).let { manager ->
-    return manager.activeNetworkInfo.isConnected
+    return manager.activeNetworkInfo?.isConnected ?: false
   }
 }
 

@@ -18,7 +18,8 @@
         android:largeHeap="true"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme">
-        <activity android:name=".android.ui.main.MainActivity">
+        <activity android:name=".android.ui.main.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -51,6 +52,9 @@
         <meta-data
             android:name="android.max_aspect"
             android:value="2.1" />
+
+        <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
+
     </application>
 
 </manifest>

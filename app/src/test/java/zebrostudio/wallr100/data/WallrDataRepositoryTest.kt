@@ -31,12 +31,15 @@ import zebrostudio.wallr100.data.database.DatabaseImageType.*
 import zebrostudio.wallr100.data.datafactory.CollectionsDatabaseImageEntityModelFactory.getCollectionsDatabaseImageEntity
 import zebrostudio.wallr100.data.datafactory.FirebaseImageEntityModelFactory.getFirebaseImageEntity
 import zebrostudio.wallr100.data.datafactory.UnsplashPictureEntityModelFactory.getUnsplashPictureEntityModel
+import zebrostudio.wallr100.data.datafactory.UnsplashSearchPicturesEntityModelFactory.getEmptyUnsplashSearchPictureEntityModel
+import zebrostudio.wallr100.data.datafactory.UnsplashSearchPicturesEntityModelFactory.getUnsplashSearchPictureEntityModel
 import zebrostudio.wallr100.data.exception.*
 import zebrostudio.wallr100.data.mapper.CollectionsDatabaseImageEntityMapper
 import zebrostudio.wallr100.data.mapper.DatabaseImageTypeMapper
 import zebrostudio.wallr100.data.mapper.FirebasePictureEntityMapper
 import zebrostudio.wallr100.data.mapper.UnsplashPictureEntityMapper
 import zebrostudio.wallr100.data.model.PurchaseAuthResponseEntity
+import zebrostudio.wallr100.data.model.unsplashmodel.UnsplashSearchEntity
 import zebrostudio.wallr100.data.urlshortener.UrlShortener
 import zebrostudio.wallr100.domain.datafactory.CollectionsImageModelFactory.getCollectionsImageModel
 import zebrostudio.wallr100.domain.datafactory.ImageModelFactory.getImageModel
@@ -212,8 +215,9 @@ class WallrDataRepositoryTest {
 
   @Test
   fun `should return no result found exception on getPictures call success`() {
+    val searchEntity = getEmptyUnsplashSearchPictureEntityModel()
     `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
-      Single.just(emptyList()))
+      Single.just(searchEntity))
 
     wallrDataRepository.getSearchPictures(randomString)
         .test()
@@ -238,13 +242,12 @@ class WallrDataRepositoryTest {
 
   @Test
   fun `should return mapped search pictures model list on getPictures call failure`() {
-    val unsplashPicturesEntityList = mutableListOf(
-      getUnsplashPictureEntityModel())
+    val unsplashSearchPicturesEntity = getUnsplashSearchPictureEntityModel()
     val searchPicturesModelList = listOf(getSearchPicturesModel())
-    `when`(unsplashPictureEntityMapper.mapFromEntity(unsplashPicturesEntityList)).thenReturn(
+    `when`(unsplashPictureEntityMapper.mapFromEntity(unsplashSearchPicturesEntity.results)).thenReturn(
       searchPicturesModelList)
     `when`(unsplashClientFactory.getPicturesService(randomString)).thenReturn(
-      Single.just(unsplashPicturesEntityList))
+      Single.just(unsplashSearchPicturesEntity))
 
     val searchPicturesResult = wallrDataRepository.getSearchPictures(randomString)
         .test()
@@ -252,7 +255,7 @@ class WallrDataRepositoryTest {
 
     assertTrue(searchPicturesModelList[0] == searchPicturesResult)
     verify(unsplashClientFactory).getPicturesService(randomString)
-    verify(unsplashPictureEntityMapper).mapFromEntity(unsplashPicturesEntityList)
+    verify(unsplashPictureEntityMapper).mapFromEntity(unsplashSearchPicturesEntity.results)
     verifyIoSchedulerSubscription()
   }
 

@@ -31,7 +31,7 @@ class SharedPrefsHelperImpl(private val context: Context) : SharedPrefsHelper {
     preferenceName: String,
     key: String,
     defaultValue: String
-  ) = getPreference(preferenceName).getString(key, defaultValue)
+  ) = getPreference(preferenceName).getString(key, defaultValue)?: ""
 
   override fun setString(
     preferenceName: String,

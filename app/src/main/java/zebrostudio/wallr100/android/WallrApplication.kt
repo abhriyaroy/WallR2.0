@@ -10,6 +10,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.HasServiceInjector
 import zebrostudio.wallr100.android.di.DaggerAppComponent
+import zebrostudio.wallr100.secrets.ApiKeys.ONE_SIGNAL_API_KEY
 import javax.inject.Inject
 
 class WallrApplication : Application(), HasActivityInjector, HasServiceInjector {
@@ -38,10 +39,10 @@ class WallrApplication : Application(), HasActivityInjector, HasServiceInjector 
   override fun serviceInjector() = serviceDispatchingAndroidInjector
 
   private fun initPushNotifications() {
-    OneSignal.startInit(this)
-        .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
-        .unsubscribeWhenNotificationsAreDisabled(true)
-        .init()
+      OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
+      OneSignal.initWithContext(this);
+      OneSignal.setAppId(ONE_SIGNAL_API_KEY);
+      OneSignal.promptForPushNotifications();
   }
 
 }

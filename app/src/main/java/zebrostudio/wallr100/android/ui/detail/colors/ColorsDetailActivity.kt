@@ -343,7 +343,8 @@ class ColorsDetailActivity : BaseActivity(), ColorsDetailView {
           } else {
             MULTIPLE
           })
-        presenter.setColorList(it.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG))
+        it.getStringArrayListExtra(COLORS_HEX_VALUE_LIST_INTENT_EXTRA_TAG)
+          ?.let { it1 -> presenter.setColorList(it1) }
       } else {
         throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
       }

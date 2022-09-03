@@ -57,8 +57,10 @@ class FullScreenImageActivity : BaseActivity(), FullScreenImageView {
   override fun getImageLinks() {
     intent.let {
       if (it.hasExtra(LOW_QUALITY_IMAGE_TAG) && it.hasExtra(HIGH_QUALITY_IMAGE_TAG)) {
-        presenter.setLowQualityImageLink(it.getStringExtra(LOW_QUALITY_IMAGE_TAG))
-        presenter.setHighQualityImageLink(it.getStringExtra(HIGH_QUALITY_IMAGE_TAG))
+        it.getStringExtra(LOW_QUALITY_IMAGE_TAG)
+          ?.let { it1 -> presenter.setLowQualityImageLink(it1) }
+        it.getStringExtra(HIGH_QUALITY_IMAGE_TAG)
+          ?.let { it1 -> presenter.setHighQualityImageLink(it1) }
       } else {
         throw IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE)
       }
