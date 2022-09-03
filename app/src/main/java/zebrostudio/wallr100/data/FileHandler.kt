@@ -38,10 +38,18 @@ class FileHandlerImpl(private val context: Context) : FileHandler {
       Environment.getExternalStorageDirectory().path + File.separator + APP_DIRECTORY_NAME
     }, CACHE_DIRECTORY_NAME)
   private val downloadsFolder: File =
-      File(Environment.getExternalStorageDirectory().path + File.separator + APP_DIRECTORY_NAME
+      File(if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath + File.separator + APP_DIRECTORY_NAME
+      } else {
+        Environment.getExternalStorageDirectory().path + File.separator + APP_DIRECTORY_NAME
+      }
           + File.separator + DOWNLOADS_DIRECTORY_NAME)
   private val collectionsFolder: File =
-      File(Environment.getExternalStorageDirectory().path + File.separator + APP_DIRECTORY_NAME
+      File(if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath + File.separator + APP_DIRECTORY_NAME
+      } else {
+        Environment.getExternalStorageDirectory().path + File.separator + APP_DIRECTORY_NAME
+      }
           + File.separator + COLLECTIONS_DIRECTORY_NAME)
   private val cacheFile: File = File(cacheFolder, System.currentTimeMillis().toString())
   private val cacheCroppedFile: File =
