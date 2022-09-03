@@ -52,7 +52,7 @@ fun View.menuTitleToast(
       val heightMeasureSpec =
           makeMeasureSpec(metrics.heightPixels, UNSPECIFIED)
       toast.view?.measure(widthMeasureSpec, heightMeasureSpec)
-      val toastWidth = toast.view?.measuredWidth?:0
+      val toastWidth = toast.view?.measuredWidth ?: DEFAULT_TOAST_WIDTH
       val toastX = rect.right - toastWidth - offsetX
       val toastY = viewTop + height + offsetY
       toast.setGravity(Gravity.START or Gravity.TOP, toastX, toastY)
@@ -70,3 +70,5 @@ fun ViewGroup.inflate(
 fun withDelayOnMain(delay: Long, block: () -> Unit) {
   Handler(Looper.getMainLooper()).postDelayed(Runnable(block), delay)
 }
+
+const val DEFAULT_TOAST_WIDTH = 100
