@@ -2,11 +2,11 @@ package zebrostudio.wallr100.android.ui.buypro
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import com.afollestad.materialdialogs.MaterialDialog
-import com.zebrostudio.librarypurchaseflow.IabHelper
-import com.zebrostudio.librarypurchaseflow.IabHelper.OnIabPurchaseFinishedListener
-import com.zebrostudio.librarypurchaseflow.IabHelper.QueryInventoryFinishedListener
+import com.android.billingclient.api.*
+import com.google.firebase.crashlytics.internal.model.ImmutableList
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_buy_pro.*
 import kotlinx.android.synthetic.main.item_buy_pro_features.view.*
@@ -15,6 +15,9 @@ import zebrostudio.wallr100.android.ui.BaseActivity
 import zebrostudio.wallr100.android.ui.ImageLoader
 import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.PURCHASE
 import zebrostudio.wallr100.android.ui.buypro.PremiumTransactionType.RESTORE
+import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig.Companion.ITEM_SKU
+import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig.Companion.ITEM_SKU_TEST
+import zebrostudio.wallr100.android.ui.buypro.PurchaseTransactionConfig.Companion.NA
 import zebrostudio.wallr100.android.utils.*
 import zebrostudio.wallr100.presentation.buypro.BuyProContract
 import zebrostudio.wallr100.presentation.buypro.BuyProContract.BuyProView
@@ -27,34 +30,73 @@ class BuyProActivity : BaseActivity(), BuyProView {
   internal lateinit var imageLoader: ImageLoader
 
   private lateinit var materialDialog: MaterialDialog
-  private var iabHelper: IabHelper? = null
 
-  private val purchaseFinishedListener = OnIabPurchaseFinishedListener { result, purchase ->
-    if (result.isSuccess) {
-      buyProPresenter.verifyTransaction(
-        purchase.packageName,
-        purchase.sku,
-        purchase.token,
-        PURCHASE
-      )
-    } else {
-      showTryRestoringInfo()
-      dismissWaitLoader()
+  private var billingClient: BillingClient? = null
+  private var billingFlowParams: BillingFlowParams? = null
+
+//  private val purchaseFinishedListener = OnIabPurchaseFinishedListener { result, purchase ->
+//    if (result.isSuccess) {
+//      buyProPresenter.verifyTransaction(
+//        purchase.packageName,
+//        purchase.sku,
+//        purchase.token,
+//        PURCHASE
+//      )
+//    } else {
+//      showTryRestoringInfo()
+//      dismissWaitLoader()
+//    }
+//  }
+//  private val queryInventoryFinishedListener = QueryInventoryFinishedListener { result, inventory ->
+//    if (result.isSuccess) {
+//      buyProPresenter.verifyTransaction(
+//        inventory.getPurchase(ITEM_SKU_TEST).packageName,
+//        inventory.getPurchase(ITEM_SKU_TEST).sku,
+//        inventory.getPurchase(ITEM_SKU_TEST).token,
+//        RESTORE
+//      )
+//    } else {
+//      showGenericVerificationError()
+//      dismissWaitLoader()
+//    }
+//  }
+
+  private val purchasesUpdatedListener =
+    PurchasesUpdatedListener { billingResult, purchases ->
+//      buyProPresenter.handlePurchaseUpdationEvent(billingResult, purchases)
+      billingResult
+      purchases
+      if((purchases?.size ?: 0) > 0){
+        purchases!![0].apply {
+          buyProPresenter.verifyTransaction(
+            billingResult.responseCode,
+            packageName,
+            products[0],
+            purchaseToken,
+            PURCHASE
+          )
+        }
+      } else {
+        buyProPresenter.verifyTransaction(
+          billingResult.responseCode,
+          NA,
+          NA,
+          NA,
+          PURCHASE
+        )
+      }
+
     }
-  }
-  private val queryInventoryFinishedListener = QueryInventoryFinishedListener { result, inventory ->
-    if (result.isSuccess) {
-      buyProPresenter.verifyTransaction(
-        inventory.getPurchase(PurchaseTransactionConfig.ITEM_SKU).packageName,
-        inventory.getPurchase(PurchaseTransactionConfig.ITEM_SKU).sku,
-        inventory.getPurchase(PurchaseTransactionConfig.ITEM_SKU).token,
-        RESTORE
-      )
-    } else {
-      showGenericVerificationError()
-      dismissWaitLoader()
-    }
-  }
+
+  val queryProductDetailsParams =
+    QueryProductDetailsParams.newBuilder()
+      .setProductList(
+        ImmutableList.from(
+          QueryProductDetailsParams.Product.newBuilder()
+            .setProductId(ITEM_SKU)
+            .setProductType(BillingClient.ProductType.INAPP)
+            .build()))
+      .build()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     AndroidInjection.inject(this)
@@ -66,33 +108,12 @@ class BuyProActivity : BaseActivity(), BuyProView {
     loadWallrLogo()
     showProFeatures(buildProFeaturesList())
     attachClickListeners()
-  }
-
-  override fun onResume() {
-    super.onResume()
-    if (iabHelper == null || iabHelper?.isSetupDone == false) {
-      iabHelper = IabHelper(this, PurchaseTransactionConfig.BASE64_ENCODED_PUBLIC_KEY)
-      iabHelper?.startSetup {}
-    }
+    initBiller()
   }
 
   override fun onDestroy() {
     buyProPresenter.detachView()
     super.onDestroy()
-  }
-
-  override fun onActivityResult(
-    requestCode: Int,
-    resultCode: Int,
-    data: Intent?
-  ) {
-    if (iabHelper?.handleActivityResult(
-          requestCode,
-          resultCode, data
-        ) == false
-    ) {
-      super.onActivityResult(requestCode, resultCode, data)
-    }
   }
 
   override fun onBackPressed() {
@@ -166,23 +187,22 @@ class BuyProActivity : BaseActivity(), BuyProView {
     finish()
   }
 
-  override fun isIabReady(): Boolean {
-    if (iabHelper?.isSetupDone == true && iabHelper?.isAsyncInProgress != true) {
-      return true
-    }
-    return false
+  override fun isBillerReady(): Boolean = billingClient?.isReady ?: false
+
+  override fun initBiller(isForced: Boolean){
+    billingClient =  BillingClient.newBuilder(this)
+      .setListener(purchasesUpdatedListener)
+      .enablePendingPurchases()
+      .build()
+    establishBillingConnection(isForced)
   }
 
   override fun launchPurchase() {
-    iabHelper?.launchPurchaseFlow(
-      this, PurchaseTransactionConfig.ITEM_SKU,
-      PurchaseTransactionConfig.VERIFICATION_REQUEST_CODE,
-      purchaseFinishedListener
-    )
+    billingClient?.launchBillingFlow(this@BuyProActivity, billingFlowParams!!)
   }
 
   override fun launchRestore() {
-    iabHelper?.queryInventoryAsync(queryInventoryFinishedListener)
+    billingClient?.launchBillingFlow(this@BuyProActivity, billingFlowParams!!)
   }
 
   private fun loadWallrLogo() {
@@ -255,6 +275,41 @@ class BuyProActivity : BaseActivity(), BuyProView {
 
   private fun showTryRestoringInfo() {
     infoToast(stringRes(R.string.buy_pro_try_restoring_message))
+  }
+
+  private fun establishBillingConnection(isForced : Boolean = false){
+    billingClient?.startConnection(object : BillingClientStateListener {
+      override fun onBillingSetupFinished(billingResult: BillingResult) {
+        if (billingResult.responseCode ==  BillingClient.BillingResponseCode.OK) {
+          billingClient?.queryProductDetailsAsync(queryProductDetailsParams) {
+              billingResult,
+              productDetailsList ->
+            Log.d(this.javaClass.name, "the queryProductDetailsAsync response is $billingResult, $productDetailsList")
+
+
+            val productDetailsParamsList = listOf(
+              BillingFlowParams.ProductDetailsParams.newBuilder()
+                // retrieve a value for "productDetails" by calling queryProductDetailsAsync()
+                .setProductDetails(productDetailsList.first())
+                .build()
+            )
+
+            billingFlowParams = BillingFlowParams.newBuilder()
+              .setProductDetailsParamsList(productDetailsParamsList)
+              .build()
+
+            if(isForced){
+              buyProPresenter.handlePurchaseClicked()
+            }
+          }
+        }
+      }
+      override fun onBillingServiceDisconnected() {
+        // Try to restart the connection on the next request to
+        // Google Play by calling the startConnection() method.
+
+      }
+    })
   }
 
 }
