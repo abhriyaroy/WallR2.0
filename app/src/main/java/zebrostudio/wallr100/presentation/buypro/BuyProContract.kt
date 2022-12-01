@@ -15,9 +15,10 @@ interface BuyProContract {
     fun showWaitLoader(proTransactionType: PremiumTransactionType)
     fun dismissWaitLoader()
     fun finishWithResult()
-    fun isIabReady(): Boolean
+    fun isBillerReady(): Boolean
     fun launchPurchase()
     fun launchRestore()
+    fun initBiller(isForced : Boolean = false)
   }
 
   interface BuyProPresenter : BasePresenter<BuyProView> {
@@ -25,11 +26,13 @@ interface BuyProContract {
     fun handlePurchaseClicked()
     fun handleRestoreClicked()
     fun verifyTransaction(
+      responseCode : Int,
       packageName: String,
       skuId: String,
       purchaseToken: String,
       premiumTransactionType: PremiumTransactionType
     )
+//    fun handlePurchaseUpdationEvent()
   }
 
 }

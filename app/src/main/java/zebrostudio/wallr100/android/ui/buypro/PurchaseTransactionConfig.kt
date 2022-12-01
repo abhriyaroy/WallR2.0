@@ -4,6 +4,7 @@ class PurchaseTransactionConfig {
 
   companion object {
     const val ITEM_SKU = "zebrostudio_wallr_product_id"
+    const val ITEM_SKU_TEST = "android.test.purchased"
     const val BASE64_ENCODED_PUBLIC_KEY =
         "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkjSVkJJ7vAwN+p2o82l9Qbu5BdiM6UQIu1VQ2a1" +
             "INPKHReYqEA44UC6eSfOCoQlQSONdvFjQbilPjJwKwqfFQZPcvbCmiqNdGavLhbNNswCB6zL+/7mIIQNh5" +
@@ -14,6 +15,7 @@ class PurchaseTransactionConfig {
     const val PURCHASE_TAG = "purchase"
     const val PURCHASE_REQUEST_CODE = 300
     const val PURCHASE_SUCCESSFUL_RESULT_CODE = 200
+    const val NA= "NA"
   }
 
 }
